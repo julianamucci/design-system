@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';
-export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+export type ButtonSize = 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
 
 export type ButtonOptions = {
   variant?: ButtonVariant;
@@ -29,13 +29,18 @@ export type ButtonOptions = {
 //   btnClass('default', 'default')  → 'nds-button nds-button-default'
 //   btnClass('outline', 'sm')       → 'nds-button nds-button-sm nds-button-outline'
 //   btnClass('ghost',   'icon-lg')  → 'nds-button nds-button-icon-lg nds-button-ghost'
+//
+// `default` não tem classe de tamanho: o dimensionamento base vive em
+// `.nds-button`. Os demais são modificadores.
 
 export function btnClass(variant: ButtonVariant | string = 'default', size: ButtonSize | string = 'default'): string {
   const base = 'nds-button';
   const sizeClass =
     size === 'icon'    ? 'nds-button-icon' :
+    size === 'icon-xs' ? 'nds-button-icon-xs' :
     size === 'icon-sm' ? 'nds-button-icon-sm' :
     size === 'icon-lg' ? 'nds-button-icon-lg' :
+    size === 'xs'      ? 'nds-button-xs' :
     size === 'sm'      ? 'nds-button-sm' :
     size === 'lg'      ? 'nds-button-lg' :
                          '';

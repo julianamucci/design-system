@@ -1055,39 +1055,25 @@ por stack e conferir o cabeçalho `RUN … /<stack>` antes de concluir número.
 
 ## /quality button — 2026-08-04
 
-### `xs` / `icon-xs`: tamanho real, inalcançável e não documentado
+Os quatro itens abertos aqui foram resolvidos em seguida: `xs`/`icon-xs`
+implementados e documentados, rótulo do link saindo do `translations.json`,
+rótulos dos snippets alinhados aos das stories e spy do Vanilla movido para o
+`meta`. Ficou um achado novo, de outra natureza:
 
-`docs/shared/styles/nds/button.css` define `.nds-button-xs` (12px, padding-block
-2px) e `.nds-button-icon-xs` (24px). React, Vue e Svelte expõem os dois no
-`cva`. O Vanilla **não**: `ButtonSize` lista 6 valores e `btnClass()` não mapeia
-`xs`/`icon-xs`, então quem usa a factory não alcança um tamanho que existe no
-CSS compartilhado. E nenhuma stack documenta: `variants.sizes` do
-`translations.json` tem 6 entradas, os `argTypes` oferecem 6 opções e não há
-story.
+### Stories do Svelte: `Meta<typeof Button>` contra `ButtonStory`
 
-- [ ] Vanilla: incluir `xs` e `icon-xs` em `ButtonSize` e em `btnClass()`
-- [ ] `translations.json`: `variants.sizes.xs` e `.icon-xs` nos 3 idiomas
-- [ ] `argTypes.size.options` das 4 stacks: 8 opções
-- [ ] Stories `ExtraSmall` / `IconExtraSmall` nas 4 (nascem juntas ou nenhuma —
-  criar só numa gera `coverage_divergence`)
+O `meta` declara `component: Button`, então o Storybook tipa os args com
+`ButtonProps`; o `render` devolve `{ Component: ButtonStory }`, cujas props são
+outro tipo. Toda story desses arquivos falha no svelte-check com a mesma
+mensagem (`disabled: boolean | null` contra `boolean`) — 25 erros só nos
+arquivos do button, e o padrão se repete em badge e provavelmente nos demais
+wrappers `*Story.svelte`.
 
-### "Ver documentação" em pt-BR fixo na demo de link — 4 stacks
+O efeito prático é que **cada story nova soma um erro ao baseline**: as duas de
+`xs` levaram o svelte-check de 351 para 353 sem terem defeito próprio. Enquanto
+isso não for resolvido, o número não mede qualidade — mede quantas stories
+existem.
 
-O exemplo "como link" das 4 docs pages renderiza o rótulo em português direto no
-código, sem passar por `translations.json`. Numa página trilíngue o texto não
-troca com o idioma. Precisa de chave nova (`variants.items.asLink.linkLabel`)
-consumida pelas 4.
-
-### Rótulos dos snippets divergem das stories
-
-Os `code*` das docs pages usam "Excluir item", "Editar", "Ver detalhes"; as
-stories de variantes usam "Excluir conta", "Fechar", "Ver detalhes". O Chromatic
-fotografa a story, então a regressão visual protege um exemplo que a
-documentação não mostra. Alinhar os snippets aos rótulos das stories nas 4.
-
-### Spy preso ao nó do DOM — vanilla, `button-estados`
-
-`Disabled` cria o `fn()` dentro do `render` e o pendura no elemento
-(`btn.__handler`) para o `play` alcançar. Funciona, mas o spy fica fora do
-escopo de módulo e o padrão não se repete em nenhuma outra stack. Trocar por
-spy de módulo quando o `createButton` aceitar handler injetável na story.
+- [ ] Decidir uma vez: `Meta<typeof ButtonStory>` nos arquivos que renderizam
+  pelo wrapper, ou alargar as props do wrapper para aceitar as formas nulas dos
+  atributos DOM. Aplicar em todos os `*Story.svelte`.

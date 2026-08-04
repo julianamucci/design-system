@@ -19,7 +19,7 @@ const meta: Meta<any> = {
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
+      options: ['default', 'xs', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg'],
       description: 'Tamanho do botão',
     },
     disabled: {

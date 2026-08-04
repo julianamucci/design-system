@@ -132,21 +132,25 @@ export function ButtonDocs() {
 import { Plus } from "lucide-react";`;
 
   const codeDefault = `<Button>Salvar</Button>`;
-  const codeDestructive = `<Button variant="destructive">Excluir item</Button>`;
-  const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
-  const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
-  const codeGhost = `<Button variant="ghost">Editar</Button>`;
+  const codeDestructive = `<Button variant="destructive">Excluir conta</Button>`;
+  const codeOutline = `<Button variant="outline">Cancelar</Button>`;
+  const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
+  const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
-  const codeSizeDefault = `<Button>Salvar</Button>`;
-  const codeSizeSm = `<Button size="sm">Salvar</Button>`;
-  const codeSizeLg = `<Button size="lg">Salvar</Button>`;
-  const codeSizeIcon = `<Button size="icon" aria-label="Excluir item">
+  const codeSizeDefault = `<Button>Padrão</Button>`;
+  const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
+  const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
+  const codeSizeLg = `<Button size="lg">Grande</Button>`;
+  const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Trash2 aria-hidden="true" />
 </Button>`;
-  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Editar">
+  const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Pencil aria-hidden="true" />
 </Button>`;
-  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Pencil aria-hidden="true" />
+</Button>`;
+  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -164,7 +168,7 @@ import { Plus } from "lucide-react";`;
 
   const interfaceCode = `interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-  size?: "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
+  size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
   /** Elemento que substitui o <button> mantendo os estilos — ex.: <a href="…" />. */
   render?: React.ReactElement;
   disabled?: boolean;
@@ -404,7 +408,7 @@ import { Plus } from "lucide-react";`;
                   // link. Passar o <a> pelo `render` do Button faz a lib impor
                   // role="button" por cima, anulando o ponto do exemplo.
                   <a href="#docs" className={buttonVariants({ variant: "link" })}>
-                    Ver documentação
+                    {tContent("variants.items.asLink.linkLabel")}
                   </a>
                 ),
               },
@@ -420,6 +424,12 @@ import { Plus } from "lucide-react";`;
                 description: stripHtml(tContent("variants.sizes.default")),
                 code: codeSizeDefault,
                 preview: <Button>{tContent("demonstration.labels.primary")}</Button>,
+              },
+              {
+                name: "xs",
+                description: stripHtml(tContent("variants.sizes.xs")),
+                code: codeSizeXs,
+                preview: <Button size="xs">{tContent("demonstration.labels.primary")}</Button>,
               },
               {
                 name: "sm",
@@ -440,6 +450,16 @@ import { Plus } from "lucide-react";`;
                 preview: (
                   <Button size="icon" aria-label={tContent("demonstration.labels.iconOnly")}>
                     <Trash2 aria-hidden="true" />
+                  </Button>
+                ),
+              },
+              {
+                name: "icon-xs",
+                description: stripHtml(tContent("variants.sizes.icon-xs")),
+                code: codeSizeIconXs,
+                preview: (
+                  <Button size="icon-xs" aria-label={tContent("demonstration.labels.ghost")}>
+                    <Pencil aria-hidden="true" />
                   </Button>
                 ),
               },
@@ -588,7 +608,7 @@ import { Plus } from "lucide-react";`;
                   },
                   {
                     name: "size",
-                    type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',
+                    type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
                     defaultValue: '"default"',
                     required: "Não",
                     description: stripHtml(tContent("props.table.size")),

@@ -28,8 +28,21 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /padrão/i });
     await expect(btn).toHaveClass('nds-button');
+    await expect(btn).not.toHaveClass('nds-button-xs');
     await expect(btn).not.toHaveClass('nds-button-sm');
     await expect(btn).not.toHaveClass('nds-button-lg');
+  },
+};
+
+export const ExtraSmall: Story = {
+  render: () => ({
+    components: { Button },
+    template: '<Button size="xs">Mínimo</Button>',
+  }),
+  parameters: { docs: { description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' } } },
+  play: async ({ canvasElement }) => {
+    const btn = within(canvasElement).getByRole('button', { name: /mínimo/i });
+    await expect(btn).toHaveClass('nds-button-xs');
   },
 };
 
@@ -78,6 +91,19 @@ export const Icon: Story = {
     covers: ['functional.item6', 'accessibility.item4'],
     docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
   },
+  play: iconAriaLabelPlay,
+};
+
+export const IconExtraSmall: Story = {
+  render: () => ({
+    components: { Button, Plus },
+    template: `
+      <Button size="icon-xs" aria-label="Adicionar item">
+        <Plus aria-hidden="true" />
+      </Button>
+    `,
+  }),
+  parameters: { docs: { description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' } } },
   play: iconAriaLabelPlay,
 };
 

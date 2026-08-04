@@ -2,30 +2,37 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
 
-const meta: Meta = {
+type EstadosArgs = { onClick: (e: MouseEvent) => void };
+
+const meta: Meta<EstadosArgs> = {
   tags: ['form'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
   },
+  // Spy no meta, como nas outras três stacks. Antes o `fn()` nascia dentro do
+  // `render` e era pendurado no próprio nó (`btn.__handler`) para o `play`
+  // alcançar — funcionava, mas prendia o spy ao DOM e não se repetia em
+  // nenhuma outra stack.
+  args: {
+    onClick: fn(),
+  },
   title: 'UI/Button/Estados',
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<EstadosArgs>;
 
 export const Disabled: Story = {
-  render: () => {
-    const handler = fn();
-    const btn = createButton({ variant: 'default', label: 'Salvar', disabled: true, onClick: handler });
-    (btn as HTMLButtonElement & { __handler: ReturnType<typeof fn> }).__handler = handler;
-    return btn;
-  },
+  render: (args) =>
+    createButton({ variant: 'default', label: 'Salvar', disabled: true, onClick: args.onClick }),
   parameters: {
-    covers: ['functional.item2', 'visual.item4'], docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
-  play: async ({ canvasElement, step }) => {
+    covers: ['functional.item2', 'visual.item4'],
+    docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } },
+  },
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button') as HTMLButtonElement & { __handler: ReturnType<typeof fn> };
+    const button = canvas.getByRole('button');
 
     await step('Botão possui atributo disabled', async () => {
       await expect(button).toBeDisabled();
@@ -33,7 +40,7 @@ export const Disabled: Story = {
 
     await step('Clique não dispara onClick quando disabled', async () => {
       await userEvent.click(button, { pointerEventsCheck: 0 });
-      await expect(button.__handler).not.toHaveBeenCalled();
+      await expect(args.onClick).not.toHaveBeenCalled();
     });
   },
 };

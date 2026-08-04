@@ -7,7 +7,7 @@
     "seo": {
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
-      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho, foco visível e suporte a ícones decorativos.",
+      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamanhos, composição com elemento filho, foco visível e suporte a ícones decorativos.",
       "aiEntities": "Button, botão, design system, componente de formulário, WCAG 2.2, acessibilidade, foco visível, ícone"
     },
     "demonstration": {
@@ -151,15 +151,18 @@
         "asLink": {
           "name": "Como link",
           "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes do botão. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
-          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa."
+          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa.",
+          "linkLabel": "Ver documentação"
         }
       },
       "sizesTitle": "Tamanhos",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamanho padrão para a maioria dos contextos.",
+        "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro e ações dentro de linha de tabela.",
         "sm": "Texto 12px, padding vertical 4px. Para toolbars densos ou áreas compactas.",
         "lg": "Texto 16px, padding vertical 8px. Para CTAs principais em landing pages.",
         "icon": "Quadrado 36px. Para botões icon-only padrão.",
+        "icon-xs": "Quadrado 24px. Para ações de ícone em linhas de tabela e listas densas.",
         "icon-sm": "Quadrado 32px. Para toolbars compactos com ícone.",
         "icon-lg": "Quadrado 40px. Para ações de ícone com destaque."
       },
@@ -449,7 +452,7 @@
     "seo": {
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
-      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition, visible focus ring, and support for decorative icons.",
+      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 8 sizes, child element composition, visible focus ring, and support for decorative icons.",
       "aiEntities": "Button, design system, form component, WCAG 2.2, accessibility, focus ring, icon button"
     },
     "demonstration": {
@@ -593,15 +596,18 @@
         "asLink": {
           "name": "As link",
           "description": "<code>&lt;a&gt;</code> element receiving the button classes. Preserves native link semantics (href, target, browser navigation) with button appearance.",
-          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility."
+          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility.",
+          "linkLabel": "View documentation"
         }
       },
       "sizesTitle": "Sizes",
       "sizes": {
         "default": "Text 14px, vertical padding 8px. Standard size for most contexts.",
+        "xs": "12px text, 2px vertical padding. For maximum density: filter chips and inline table row actions.",
         "sm": "Text 12px, vertical padding 4px. For dense toolbars or compact areas.",
         "lg": "Text 16px, vertical padding 8px. For primary CTAs on landing pages.",
         "icon": "Square 36px. For standard icon-only buttons.",
+        "icon-xs": "24px square. For icon actions in table rows and dense lists.",
         "icon-sm": "Square 32px. For compact toolbars with icons.",
         "icon-lg": "Square 40px. For emphasized icon actions."
       },
@@ -891,7 +897,7 @@
     "seo": {
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
-      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo, foco visible y soporte para íconos decorativos.",
+      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamaños, composición con elemento hijo, foco visible y soporte para íconos decorativos.",
       "aiEntities": "Button, botón, design system, componente de formulario, WCAG 2.2, accesibilidad, foco visible, ícono"
     },
     "demonstration": {
@@ -1035,15 +1041,18 @@
         "asLink": {
           "name": "Como link",
           "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases del botón. Preserva la semántica nativa de enlace (href, target, navegación del navegador) con apariencia de botón.",
-          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa."
+          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa.",
+          "linkLabel": "Ver documentación"
         }
       },
       "sizesTitle": "Tamaños",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamaño estándar para la mayoría de contextos.",
+        "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro y acciones dentro de una fila de tabla.",
         "sm": "Texto 12px, padding vertical 4px. Para toolbars densos o áreas compactas.",
         "lg": "Texto 16px, padding vertical 8px. Para CTAs principales en landing pages.",
         "icon": "Cuadrado 36px. Para botones icon-only estándar.",
+        "icon-xs": "Cuadrado 24px. Para acciones de ícono en filas de tabla y listas densas.",
         "icon-sm": "Cuadrado 32px. Para toolbars compactos con ícono.",
         "icon-lg": "Cuadrado 40px. Para acciones de ícono con énfasis."
       },

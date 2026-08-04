@@ -145,15 +145,19 @@ const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
 const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
 const codeSizeDefault = `<Button>Padrão</Button>`;
+const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
 const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
 const codeSizeLg = `<Button size="lg">Grande</Button>`;
-const codeSizeIcon = `<Button size="icon" aria-label="Adicionar">
+const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
-const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar">
+const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
-const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Plus aria-hidden="true" />
+</Button>`;
+const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -170,7 +174,7 @@ const codeCustomizationTokens = `/* Em globals.css — sobrescrever tokens de co
 
 const interfaceCode = `interface ButtonProps {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  size?: 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+  size?: 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
   asChild?: boolean;
   disabled?: boolean;
   class?: string;
@@ -201,9 +205,11 @@ const variantItems = computed(() => [
 
 const sizeItems = computed(() => [
   { name: 'default',  description: stripHtml(tContent('variants.sizes.default')),  code: codeSizeDefault  },
+  { name: 'xs',       description: stripHtml(tContent('variants.sizes.xs')),       code: codeSizeXs       },
   { name: 'sm',       description: stripHtml(tContent('variants.sizes.sm')),       code: codeSizeSm       },
   { name: 'lg',       description: stripHtml(tContent('variants.sizes.lg')),       code: codeSizeLg       },
   { name: 'icon',     description: stripHtml(tContent('variants.sizes.icon')),     code: codeSizeIcon     },
+  { name: 'icon-xs',  description: stripHtml(tContent('variants.sizes.icon-xs')), code: codeSizeIconXs   },
   { name: 'icon-sm',  description: stripHtml(tContent('variants.sizes.icon-sm')), code: codeSizeIconSm   },
   { name: 'icon-lg',  description: stripHtml(tContent('variants.sizes.icon-lg')), code: codeSizeIconLg   },
 ]);
@@ -252,7 +258,7 @@ const propCols = computed(() => ({
 
 const buttonPropItems = computed(() => [
   { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant')) },
-  { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.size')) },
+  { name: 'size',     type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.size')) },
   { name: 'asChild',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.asChild')) },
   { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.disabled')) },
   // htmlType, não `type`: esta última é o cabeçalho da coluna.
@@ -541,7 +547,7 @@ function handleDemoClick(variant: string) {
           href="#docs"
           variant="link"
         >
-          Ver documentação
+          {{ tContent('variants.items.asLink.linkLabel') }}
         </Button>
       </template>
     </DocsCompositions>

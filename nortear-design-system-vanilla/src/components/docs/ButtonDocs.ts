@@ -331,10 +331,10 @@ export function createButtonDocs(): HTMLElement {
 
       case 'variantes': {
         const codeDefault     = `createButton({ variant: 'default', label: 'Salvar' });`;
-        const codeDestructive = `createButton({ variant: 'destructive', label: 'Excluir' });`;
+        const codeDestructive = `createButton({ variant: 'destructive', label: 'Excluir conta' });`;
         const codeOutline     = `createButton({ variant: 'outline', label: 'Cancelar' });`;
-        const codeSecondary   = `createButton({ variant: 'secondary', label: 'Ver mais' });`;
-        const codeGhost       = `createButton({ variant: 'ghost', label: 'Editar' });`;
+        const codeSecondary   = `createButton({ variant: 'secondary', label: 'Ver detalhes' });`;
+        const codeGhost       = `createButton({ variant: 'ghost', label: 'Fechar' });`;
 
         return createDocsCompositions({
           id: 'variantes',
@@ -387,7 +387,7 @@ export function createButtonDocs(): HTMLElement {
                 const a = document.createElement('a');
                 a.href = '#docs';
                 a.className = btnClass('link', 'default');
-                a.textContent = 'Ver documentação';
+                a.textContent = t('variants.items.asLink.linkLabel');
                 return a;
               },
             },
@@ -407,6 +407,12 @@ export function createButtonDocs(): HTMLElement {
               previewFactory: () => createButton({ size: 'default', label: 'Padrão' }),
             },
             {
+              name: 'xs',
+              description: stripHtml(t('variants.sizes.xs')),
+              code: `createButton({ size: 'xs', label: 'Mínimo' });`,
+              previewFactory: () => createButton({ size: 'xs', label: 'Mínimo' }),
+            },
+            {
               name: 'sm',
               description: stripHtml(t('variants.sizes.sm')),
               code: `createButton({ size: 'sm', label: 'Pequeno' });`,
@@ -421,19 +427,25 @@ export function createButtonDocs(): HTMLElement {
             {
               name: 'icon',
               description: stripHtml(t('variants.sizes.icon')),
-              code: `const btn = createButton({ size: 'icon', ariaLabel: 'Adicionar' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon', 'Adicionar'),
+            },
+            {
+              name: 'icon-xs',
+              description: stripHtml(t('variants.sizes.icon-xs')),
+              code: `const btn = createButton({ size: 'icon-xs', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              previewFactory: () => buildIconButton('default', 'icon-xs', 'Adicionar'),
             },
             {
               name: 'icon-sm',
               description: stripHtml(t('variants.sizes.icon-sm')),
-              code: `const btn = createButton({ size: 'icon-sm', ariaLabel: 'Adicionar' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon-sm', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon-sm', 'Adicionar'),
             },
             {
               name: 'icon-lg',
               description: stripHtml(t('variants.sizes.icon-lg')),
-              code: `const btn = createButton({ size: 'icon-lg', ariaLabel: 'Adicionar' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon-lg', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon-lg', 'Adicionar'),
             },
           ],
@@ -580,7 +592,7 @@ export interface ButtonOptions {
               cols: propsCols,
               items: [
                 { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
-                { name: 'size',      type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: t('props.table.size') },
+                { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: t('props.table.size') },
                 { name: 'label',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Texto visível do botão.' },
                 { name: 'ariaLabel', type: 'string',                                                                 defaultValue: '—',         required: 'Condicional', description: 'Obrigatório em botões icon-only.' },
                 { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(t('props.table.disabled')) },

@@ -113,21 +113,25 @@
 import Plus from '@lucide/svelte/icons/plus';`;
 
   const codeDefault = `<Button>Salvar</Button>`;
-  const codeDestructive = `<Button variant="destructive">Excluir item</Button>`;
-  const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
-  const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
-  const codeGhost = `<Button variant="ghost">Editar</Button>`;
+  const codeDestructive = `<Button variant="destructive">Excluir conta</Button>`;
+  const codeOutline = `<Button variant="outline">Cancelar</Button>`;
+  const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
+  const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
-  const codeSizeDefault = `<Button>Salvar</Button>`;
-  const codeSizeSm = `<Button size="sm">Salvar</Button>`;
-  const codeSizeLg = `<Button size="lg">Salvar</Button>`;
-  const codeSizeIcon = `<Button size="icon" aria-label="Excluir item">
+  const codeSizeDefault = `<Button>Padrão</Button>`;
+  const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
+  const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
+  const codeSizeLg = `<Button size="lg">Grande</Button>`;
+  const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Trash2 aria-hidden="true" />
 </Button>`;
-  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Editar">
+  const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Pencil aria-hidden="true" />
 </Button>`;
-  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Pencil aria-hidden="true" />
+</Button>`;
+  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -148,7 +152,8 @@ export type ButtonVariant =
   | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 
 export type ButtonSize =
-  | 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+  | 'default' | 'xs' | 'sm' | 'lg'
+  | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
 
 export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
   WithElementRef<HTMLAnchorAttributes> & {
@@ -181,11 +186,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           <Button variant="ghost" onclick={() => handleDemoClick('ghost')}>{$tStore('demonstration.labels.ghost')}</Button>
           <Button variant="link" onclick={() => handleDemoClick('link')}>{$tStore('demonstration.labels.link')}</Button>
           <Button variant="outline" onclick={() => handleDemoClick('outline-icon')}>
-            <Plus class="nds-icon" aria-hidden="true" />
+            <Plus class="nds-button-icon-svg" aria-hidden="true" />
             {$tStore('demonstration.labels.withIcon')}
           </Button>
           <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')} onclick={() => handleDemoClick('icon-only')}>
-            <Trash2 class="nds-icon" aria-hidden="true" />
+            <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
           </Button>
         </div>
       </DocsDemonstration>
@@ -356,7 +361,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {#snippet variantAsLink()}
         <!-- O snippet ao lado mostra buttonVariants aplicado num <a>; a demo
              renderizava um link de texto comum, então ilustrava outra coisa. -->
-        <a href="#docs" class={buttonVariants({ variant: 'link' })}>Ver documentação</a>
+        <a href="#docs" class={buttonVariants({ variant: 'link' })}>{$tStore('variants.items.asLink.linkLabel')}</a>
       {/snippet}
 
       <!-- ── Tamanhos ───────────────────────────────────────────────── -->
@@ -365,9 +370,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         title={$tStore('variants.sizesTitle')}
         items={[
           { name: 'default', description: stripHtml($tStore('variants.sizes.default')), code: codeSizeDefault, preview: sizeDefault },
+          { name: 'xs',      description: stripHtml($tStore('variants.sizes.xs')),      code: codeSizeXs,      preview: sizeXs      },
           { name: 'sm',      description: stripHtml($tStore('variants.sizes.sm')),      code: codeSizeSm,      preview: sizeSm      },
           { name: 'lg',      description: stripHtml($tStore('variants.sizes.lg')),      code: codeSizeLg,      preview: sizeLg      },
           { name: 'icon',    description: stripHtml($tStore('variants.sizes.icon')),    code: codeSizeIcon,    preview: sizeIcon    },
+          { name: 'icon-xs', description: stripHtml($tStore('variants.sizes.icon-xs')), code: codeSizeIconXs,  preview: sizeIconXs  },
           { name: 'icon-sm', description: stripHtml($tStore('variants.sizes.icon-sm')), code: codeSizeIconSm,  preview: sizeIconSm  },
           { name: 'icon-lg', description: stripHtml($tStore('variants.sizes.icon-lg')), code: codeSizeIconLg,  preview: sizeIconLg  },
         ]}
@@ -375,6 +382,9 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       {#snippet sizeDefault()}
         <Button>{$tStore('demonstration.labels.primary')}</Button>
+      {/snippet}
+      {#snippet sizeXs()}
+        <Button size="xs">{$tStore('demonstration.labels.primary')}</Button>
       {/snippet}
       {#snippet sizeSm()}
         <Button size="sm">{$tStore('demonstration.labels.primary')}</Button>
@@ -384,17 +394,22 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
       {#snippet sizeIcon()}
         <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')}>
-          <Trash2 class="nds-icon" aria-hidden="true" />
+          <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
+        </Button>
+      {/snippet}
+      {#snippet sizeIconXs()}
+        <Button size="icon-xs" aria-label={$tStore('demonstration.labels.ghost')}>
+          <Pencil class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconSm()}
         <Button size="icon-sm" aria-label={$tStore('demonstration.labels.ghost')}>
-          <Pencil class="nds-icon" aria-hidden="true" />
+          <Pencil class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconLg()}
         <Button size="icon-lg" aria-label={$tStore('demonstration.labels.withIcon')}>
-          <Plus class="nds-icon" aria-hidden="true" />
+          <Plus class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
 
@@ -437,19 +452,19 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       {#snippet compIconLeft()}
         <Button>
-          <Plus class="nds-icon" aria-hidden="true" />
+          <Plus class="nds-button-icon-svg" aria-hidden="true" />
           Adicionar item
         </Button>
       {/snippet}
       {#snippet compIconRight()}
         <Button variant="outline">
           Próximo
-          <ChevronRight class="nds-icon" aria-hidden="true" />
+          <ChevronRight class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet compDestructive()}
         <Button variant="destructive">
-          <Trash2 class="nds-icon" aria-hidden="true" />
+          <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
           Excluir
         </Button>
       {/snippet}
@@ -493,7 +508,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             },
             items: [
               { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
-              { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
+              { name: 'size',     type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
               { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos e a semântica de link.' },
               { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.disabled')) },
               { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml($tStore('props.table.htmlType')) },

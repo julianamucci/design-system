@@ -28,7 +28,7 @@ const meta: Meta<ButtonArgs> = {
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
+      options: ['default', 'xs', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg'],
       description: 'Tamanho do Button',
     },
     label:    { control: 'text',    description: 'Texto visível do botão' },

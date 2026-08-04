@@ -29,8 +29,24 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole("button", { name: /padrão/i });
     await expect(btn).toHaveClass("nds-button");
+    await expect(btn).not.toHaveClass("nds-button-xs");
     await expect(btn).not.toHaveClass("nds-button-sm");
     await expect(btn).not.toHaveClass("nds-button-lg");
+  },
+};
+
+export const ExtraSmall: Story = {
+  render: () => <Button size="xs">Mínimo</Button>,
+  parameters: {
+    docs: {
+      description: {
+        story: "Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const btn = within(canvasElement).getByRole("button", { name: /mínimo/i });
+    await expect(btn).toHaveClass("nds-button-xs");
   },
 };
 
@@ -64,6 +80,16 @@ export const Large: Story = {
   },
 };
 
+// Os quatro botões icon-only provam a mesma coisa: o nome acessível vem do
+// aria-label, não do ícone. Uma função só, como nas outras stacks.
+const iconAriaLabelPlay: Story["play"] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  await step("Botão icon-only é acessível via aria-label", async () => {
+    const button = canvas.getByRole("button", { name: "Adicionar item" });
+    await expect(button).toBeInTheDocument();
+  });
+};
+
 export const Icon: Story = {
   render: () => (
     <Button size="icon" aria-label="Adicionar item">
@@ -78,13 +104,23 @@ export const Icon: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão icon-only é acessível via aria-label", async () => {
-      const button = canvas.getByRole("button", { name: "Adicionar item" });
-      await expect(button).toBeInTheDocument();
-    });
+  play: iconAriaLabelPlay,
+};
+
+export const IconExtraSmall: Story = {
+  render: () => (
+    <Button size="icon-xs" aria-label="Adicionar item">
+      <Plus aria-hidden="true" />
+    </Button>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Botão ícone mínimo. Use em linhas de tabela e listas densas.",
+      },
+    },
   },
+  play: iconAriaLabelPlay,
 };
 
 export const IconSmall: Story = {
@@ -100,13 +136,7 @@ export const IconSmall: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão icon-only é acessível via aria-label", async () => {
-      const button = canvas.getByRole("button", { name: "Adicionar item" });
-      await expect(button).toBeInTheDocument();
-    });
-  },
+  play: iconAriaLabelPlay,
 };
 
 export const IconLarge: Story = {
@@ -122,11 +152,5 @@ export const IconLarge: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão icon-only é acessível via aria-label", async () => {
-      const button = canvas.getByRole("button", { name: "Adicionar item" });
-      await expect(button).toBeInTheDocument();
-    });
-  },
+  play: iconAriaLabelPlay,
 };
