@@ -597,6 +597,56 @@ function auditStoryQuality(slug) {
   /** story → { stack → nº de expects } — base da comparação cross-stack. */
   const coverage = {};
 
+  /**
+   * `play: nomeDaFuncao` não tem expect no corpo da story — ele mora na função
+   * referenciada, normalmente compartilhada por várias stories do arquivo.
+   * Sem resolver, a regra acusava "play sem asserção" em story que verifica de
+   * verdade: 9 falsos positivos só no button (Icon/IconSmall/IconLarge × 3
+   * stacks), todos apontando para `iconAriaLabelPlay`, que assere getByRole +
+   * toBeInTheDocument. Falso positivo aqui é pior que falta de cobertura —
+   * leva alguém a "consertar" story que já estava certa.
+   *
+   * Devolve o corpo da story somado ao da função, para o expect ser contado uma
+   * vez só, onde quer que esteja.
+   */
+  const corpoEfetivoDoPlay = (storyBody, fileContent) => {
+    // Play inline começa com `async (` — o identificador só casa em referência.
+    const ref = /\bplay:\s*([A-Za-z_$][\w$]*)\s*[,}\n]/.exec(storyBody);
+    if (!ref) return storyBody;
+    const decl = new RegExp(`\\b(?:const|let|var|function)\\s+${ref[1]}\\b`).exec(fileContent);
+    if (!decl) return storyBody;               // definida fora do arquivo: não dá para resolver
+
+    // A primeira `{` depois do `const` é a DESESTRUTURAÇÃO dos parâmetros
+    // (`async ({ canvasElement, step }) =>`), não o corpo. Pegar aquela devolvia
+    // `{ canvasElement, step }` — sem expect nenhum, e o falso positivo
+    // sobrevivia à correção. O corpo começa depois do `=>`.
+    const janela = fileContent.slice(decl.index, decl.index + 400);
+    const seta = janela.indexOf('=>');
+    let abre;
+    if (seta !== -1) {
+      abre = fileContent.indexOf('{', decl.index + seta + 2);
+    } else {
+      // `function nome(params) { … }`: pula a lista de parâmetros balanceando.
+      let par = fileContent.indexOf('(', decl.index), d = 0, i = par;
+      if (par === -1) return storyBody;
+      for (; i < fileContent.length; i++) {
+        if (fileContent[i] === '(') d++;
+        else if (fileContent[i] === ')' && --d === 0) break;
+      }
+      abre = fileContent.indexOf('{', i);
+    }
+    if (abre === -1) return storyBody;
+    let profundidade = 0;
+    for (let i = abre; i < fileContent.length; i++) {
+      const c = fileContent[i];
+      if (c === '{') profundidade++;
+      else if (c === '}' && --profundidade === 0) {
+        return `${storyBody}\n${fileContent.slice(abre, i + 1)}`;
+      }
+    }
+    return storyBody;
+  };
+
   for (const stack of STACKS) {
     // Casa o slug EXATO seguido só de um sufixo de VARIAÇÃO conhecido. Um
     // `startsWith` (ou `-[a-z]+` genérico) atribuiria alert-dialog-estados ao
@@ -626,7 +676,8 @@ function auditStoryQuality(slug) {
 
       for (const [name, body] of splitStories(content)) {
         if (!/\bplay:/.test(body)) continue;
-        const expects = (body.match(/\bexpect\(/g) || []).length;
+        const corpoPlay = corpoEfetivoDoPlay(body, content);
+        const expects = (corpoPlay.match(/\bexpect\(/g) || []).length;
         (coverage[name] ??= {})[stack] = expects;
 
         if (expects === 0) {
@@ -635,7 +686,7 @@ function auditStoryQuality(slug) {
             file: rel, rule: 'play_without_assertion',
             message: `story ${name}: play function sem nenhum expect() — não verifica nada`,
           });
-        } else if (NOOP_ASSERTION_RX.test(body) && expects <= 2) {
+        } else if (NOOP_ASSERTION_RX.test(corpoPlay) && expects <= 2) {
           violations.push({
             category: 'quality', severity: 'medium', slug, stack,
             file: rel, rule: 'noop_assertion',
