@@ -2,173 +2,533 @@
   "superficie": {
     "background": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "foreground": {
       "$type": "color",
-      "$value": "#0a0a0a"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.04,
+          0.04,
+          0.04
+        ],
+        "alpha": 1,
+        "hex": "#0a0a0a"
+      }
     },
     "card": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "card-foreground": {
       "$type": "color",
-      "$value": "#0a0a0a"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.04,
+          0.04,
+          0.04
+        ],
+        "alpha": 1,
+        "hex": "#0a0a0a"
+      }
     },
     "popover": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "popover-foreground": {
       "$type": "color",
-      "$value": "#0a0a0a"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.04,
+          0.04,
+          0.04
+        ],
+        "alpha": 1,
+        "hex": "#0a0a0a"
+      }
     }
   },
   "marca": {
     "primary": {
       "$type": "color",
-      "$value": "#171717"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09,
+          0.09,
+          0.09
+        ],
+        "alpha": 1,
+        "hex": "#171717"
+      }
     },
     "primary-foreground": {
       "$type": "color",
-      "$value": "#fafafa"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.98,
+          0.98,
+          0.98
+        ],
+        "alpha": 1,
+        "hex": "#fafafa"
+      }
     },
     "secondary": {
       "$type": "color",
-      "$value": "#f5f5f5"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.96,
+          0.96,
+          0.96
+        ],
+        "alpha": 1,
+        "hex": "#f5f5f5"
+      }
     },
     "secondary-foreground": {
       "$type": "color",
-      "$value": "#0a0a0a"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.04,
+          0.04,
+          0.04
+        ],
+        "alpha": 1,
+        "hex": "#0a0a0a"
+      }
     },
     "muted": {
       "$type": "color",
-      "$value": "#f5f5f5"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.96,
+          0.96,
+          0.96
+        ],
+        "alpha": 1,
+        "hex": "#f5f5f5"
+      }
     },
     "muted-foreground": {
       "$type": "color",
-      "$value": "#666666"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4,
+          0.4,
+          0.4
+        ],
+        "alpha": 1,
+        "hex": "#666666"
+      }
     },
     "accent": {
       "$type": "color",
-      "$value": "#f5f5f5"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.96,
+          0.96,
+          0.96
+        ],
+        "alpha": 1,
+        "hex": "#f5f5f5"
+      }
     },
     "accent-foreground": {
       "$type": "color",
-      "$value": "#171717"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09,
+          0.09,
+          0.09
+        ],
+        "alpha": 1,
+        "hex": "#171717"
+      }
     }
   },
   "feedback": {
     "destructive": {
       "$type": "color",
-      "$value": "#ba1c1c"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7308,
+          0.1092,
+          0.1092
+        ],
+        "alpha": 1,
+        "hex": "#ba1c1c"
+      }
     },
     "destructive-foreground": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "success": {
       "$type": "color",
-      "$value": "#08682b"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.033,
+          0.407,
+          0.170133
+        ],
+        "alpha": 1,
+        "hex": "#08682b"
+      }
     },
     "success-foreground": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "warning": {
       "$type": "color",
-      "$value": "#b38705"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.702,
+          0.531,
+          0.018
+        ],
+        "alpha": 1,
+        "hex": "#b38705"
+      }
     },
     "warning-foreground": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "info": {
       "$type": "color",
-      "$value": "#134cc9"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0731,
+          0.299137,
+          0.7869
+        ],
+        "alpha": 1,
+        "hex": "#134cc9"
+      }
     },
     "info-foreground": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     }
   },
   "estrutura": {
     "border": {
       "$type": "color",
-      "$value": "#e6e6e6"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9,
+          0.9,
+          0.9
+        ],
+        "alpha": 1,
+        "hex": "#e6e6e6"
+      }
     },
     "input": {
       "$type": "color",
-      "$value": "#e6e6e6"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9,
+          0.9,
+          0.9
+        ],
+        "alpha": 1,
+        "hex": "#e6e6e6"
+      }
     },
     "input-background": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     },
     "ring": {
       "$type": "color",
-      "$value": "#737373"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.45,
+          0.45,
+          0.45
+        ],
+        "alpha": 1,
+        "hex": "#737373"
+      }
     },
     "ring-offset-color": {
       "$type": "color",
-      "$value": "#ffffff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#ffffff"
+      }
     }
   },
   "grafico": {
     "chart-1": {
       "$type": "color",
-      "$value": "#56c3f5"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3385,
+          0.764217,
+          0.9615
+        ],
+        "alpha": 1,
+        "hex": "#56c3f5"
+      }
     },
     "chart-2": {
       "$type": "color",
-      "$value": "#00aaff"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0.666667,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#00aaff"
+      }
     },
     "chart-3": {
       "$type": "color",
-      "$value": "#029ef2"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0096,
+          0.62112,
+          0.9504
+        ],
+        "alpha": 1,
+        "hex": "#029ef2"
+      }
     },
     "chart-4": {
       "$type": "color",
-      "$value": "#0d8bce"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0516,
+          0.54352,
+          0.8084
+        ],
+        "alpha": 1,
+        "hex": "#0d8bce"
+      }
     },
     "chart-5": {
       "$type": "color",
-      "$value": "#113b64"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0667,
+          0.23,
+          0.3933
+        ],
+        "alpha": 1,
+        "hex": "#113b64"
+      }
     }
   },
   "sidebar": {
     "sidebar": {
       "$type": "color",
-      "$value": "#fafafa"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.98,
+          0.98,
+          0.98
+        ],
+        "alpha": 1,
+        "hex": "#fafafa"
+      }
     },
     "sidebar-foreground": {
       "$type": "color",
-      "$value": "#0a0a0a"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.04,
+          0.04,
+          0.04
+        ],
+        "alpha": 1,
+        "hex": "#0a0a0a"
+      }
     },
     "sidebar-primary": {
       "$type": "color",
-      "$value": "#171717"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09,
+          0.09,
+          0.09
+        ],
+        "alpha": 1,
+        "hex": "#171717"
+      }
     },
     "sidebar-primary-foreground": {
       "$type": "color",
-      "$value": "#fafafa"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.98,
+          0.98,
+          0.98
+        ],
+        "alpha": 1,
+        "hex": "#fafafa"
+      }
     },
     "sidebar-accent": {
       "$type": "color",
-      "$value": "#f5f5f5"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.96,
+          0.96,
+          0.96
+        ],
+        "alpha": 1,
+        "hex": "#f5f5f5"
+      }
     },
     "sidebar-accent-foreground": {
       "$type": "color",
-      "$value": "#171717"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09,
+          0.09,
+          0.09
+        ],
+        "alpha": 1,
+        "hex": "#171717"
+      }
     },
     "sidebar-border": {
       "$type": "color",
-      "$value": "#d4d4d4"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.83,
+          0.83,
+          0.83
+        ],
+        "alpha": 1,
+        "hex": "#d4d4d4"
+      }
     },
     "sidebar-ring": {
       "$type": "color",
-      "$value": "#737373"
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.45,
+          0.45,
+          0.45
+        ],
+        "alpha": 1,
+        "hex": "#737373"
+      }
     }
   }
 }

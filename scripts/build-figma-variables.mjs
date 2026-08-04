@@ -19,7 +19,9 @@
  *
  * ── Conversões ───────────────────────────────────────────────────────────────
  * - Cor: os tokens são triplets HSL sem `hsl()` (`0 0% 100%`) porque o CSS os
- *   compõe com alpha. O Figma quer cor resolvida → converte para hex.
+ *   compõe com alpha. Viram o OBJETO DTCG que o import nativo do Figma exige —
+ *   `{ colorSpace: "srgb", components: [r,g,b], alpha, hex }`. String hex pura é
+ *   recusada, uma falha por cor.
  * - Dimensão: rem → px (base 16), `calc()` de spacing/radius resolvido.
  * - Duração: `200ms` → 200 (FLOAT). Easing e font-family → STRING.
  * - Sombra: STRING. O Figma não tem variável de efeito; o valor fica legível
@@ -74,7 +76,26 @@ function readBlocks(files) {
 
 const HSL = /^(-?[\d.]+)\s+([\d.]+)%\s+([\d.]+)%$/;
 
-function hslToHex(triplet) {
+/**
+ * Valor de cor no formato que o import NATIVO de variáveis do Figma exige:
+ * objeto DTCG com colorSpace + components (0..1) + alpha + hex. String hex pura
+ * é recusada — foi a causa de "Encountered errors importing 40 tokens", uma
+ * falha por cor, com number e string passando.
+ */
+function hslToDtcg(triplet) {
+  const rgb = hslToRgb(triplet);
+  if (!rgb) return null;
+  const q = (v) => Math.round(v * 1e6) / 1e6;
+  const hex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
+  return {
+    colorSpace: 'srgb',
+    components: [q(rgb.r), q(rgb.g), q(rgb.b)],
+    alpha: 1,
+    hex: `#${hex(rgb.r)}${hex(rgb.g)}${hex(rgb.b)}`,
+  };
+}
+
+function hslToRgb(triplet) {
   const m = HSL.exec(triplet.trim());
   if (!m) return null;
   const h = parseFloat(m[1]) / 360;
@@ -98,13 +119,7 @@ function hslToHex(triplet) {
     g = hue(p, q, h);
     b = hue(p, q, h - 1 / 3);
   }
-  const hex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
-  // MINÚSCULA de propósito. Vários `parseColor` de importador testam
-  // /^#([a-f0-9]{6})$/ SEM a flag `i` — com hex maiúsculo eles lançam "invalid
-  // color format" e a importação reprova só as cores, deixando number e string
-  // passarem. Foi o que aconteceu: "Encountered errors importing 40 tokens",
-  // exatamente as 40 cores de um modo.
-  return `#${hex(r)}${hex(g)}${hex(b)}`;
+  return { r, g, b };
 }
 
 /** Resolve dimensão para px. Aceita rem, px, 0, var() e o calc() usado nos tokens. */
@@ -190,16 +205,16 @@ for (const tema of TEMAS) {
   for (const [modo, decls] of [[`${tema}-light`, light], [`${tema}-dark`, dark]]) {
     const tree = {};
     for (const [token, raw] of Object.entries(decls)) {
-      const hex = hslToHex(raw);
-      if (!hex) continue;
+      const cor = hslToDtcg(raw);
+      if (!cor) continue;
       const name = token.slice(2);
-      put(tree, `${colorGroupOf(name)}/${name}`, { $type: 'color', $value: hex });
+      put(tree, `${colorGroupOf(name)}/${name}`, { $type: 'color', $value: cor });
     }
     corModes[modo] = tree;
   }
 
   // Token de cor que existe no claro e some no escuro seria buraco de modo.
-  const claras = Object.keys(light).filter((t) => hslToHex(light[t]));
+  const claras = Object.keys(light).filter((t) => hslToDtcg(light[t]));
   const escuras = new Set(Object.keys(layer(':root', `.tema-${tema}`, '.dark', `.dark.tema-${tema}`)));
   for (const t of claras) if (!escuras.has(t)) avisos.push(`${t} existe em ${tema}-light e não em ${tema}-dark`);
 }
@@ -359,8 +374,7 @@ if (process.argv.includes('--split')) {
  */
 if (process.argv.includes('--validate')) {
   const TIPO = { color: 'COLOR', number: 'FLOAT', string: 'STRING', boolean: 'BOOLEAN' };
-  // Sem a flag `i`: o gerador tem que emitir minúscula, pelo motivo em hslToHex.
-  const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/;
+  const HEX = /^#([0-9a-f]{6})$/i;
   const problemas = [];
   const colecoes = new Map();
 
@@ -369,7 +383,16 @@ if (process.argv.includes('--validate')) {
     if (obj.$value !== undefined) {
       const figma = TIPO[tipo];
       if (!figma) return problemas.push(`${key}: $type "${tipo}" nao suportado`);
-      if (figma === 'COLOR' && !HEX.test(String(obj.$value))) return problemas.push(`${key}: cor "${obj.$value}" nao e hex`);
+      if (figma === 'COLOR') {
+        // O import nativo exige o objeto DTCG; string hex é recusada.
+        const v = obj.$value;
+        if (!v || typeof v !== 'object') return problemas.push(`${key}: cor precisa ser objeto DTCG, veio ${typeof v}`);
+        if (v.colorSpace !== 'srgb') return problemas.push(`${key}: colorSpace "${v.colorSpace}"`);
+        if (!Array.isArray(v.components) || v.components.length !== 3) return problemas.push(`${key}: components inválido`);
+        if (v.components.some((c) => typeof c !== 'number' || c < 0 || c > 1)) return problemas.push(`${key}: components fora de 0..1`);
+        if (typeof v.alpha !== 'number') return problemas.push(`${key}: alpha ausente`);
+        if (!HEX.test(String(v.hex))) return problemas.push(`${key}: hex "${v.hex}" inválido`);
+      }
       if (figma === 'FLOAT' && typeof obj.$value !== 'number') return problemas.push(`${key}: number nao-numerico`);
       return out.push([key, figma]);
     }
