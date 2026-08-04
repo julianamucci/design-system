@@ -58,7 +58,11 @@
   border: 0;
   border-radius: var(--radius);
   text-align: left;
-  font-family: inherit;
+  /* `inherit` era o reset de <button> (o UA impõe font-family própria). Passa a
+     apontar o token direto: o valor é o mesmo, mas fica explícito de onde vem —
+     e é o que o seletor de fonte (.fonte-*) troca. Mesma razão da entrelinha:
+     herdado, o Figma não tem como saber qual família espelhar. */
+  font-family: var(--font-family);
   /* Corpo de texto, não label: o gatilho é a pergunta, e ela se lê como texto
      corrido. Era `0.875rem` literal — fora da escala, e o token mais próximo
      (--text-label, 13.3px em minor-third) seria menor ainda.
