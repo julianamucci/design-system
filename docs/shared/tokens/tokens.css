@@ -10,6 +10,11 @@
  * z-index, e nada o lê para gerar este CSS. Não existe passo de build entre os
  * dois: editar o JSON não muda nada aqui. Ao alterar um token que exista nos
  * dois, atualize ambos.
+ *
+ * figma-variables.json, também ao lado, é o oposto: GERADO a partir DESTE
+ * arquivo (mais motion.css e themes/*.css) por scripts/build-figma-variables.mjs,
+ * para importar como variáveis no Figma. Não editar à mão — mexeu em token,
+ * rode o script. `--check` falha se estiver defasado.
  */
 
 /* Google Fonts: cada stack faz o hoist em seu próprio globals.css (React/Vue/Svelte)
