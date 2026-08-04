@@ -1,0 +1,8 @@
+{
+  "teste": {
+    "texto": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.2, 0, 0, 1)"
+    }
+  }
+}

@@ -352,17 +352,61 @@ const json = JSON.stringify(doc, null, 2) + '\n';
  * tira coleção e modo do NOME DO ARQUIVO e espera token puro dentro.
  */
 if (process.argv.includes('--split')) {
-  mkdirSync(OUT_SPLIT, { recursive: true });
-  for (const f of readdirSync(OUT_SPLIT)) if (f.endsWith('.json')) rmSync(join(OUT_SPLIT, f));
+  rmSync(OUT_SPLIT, { recursive: true, force: true });
   let n = 0;
   for (const [colecao, col] of Object.entries(doc)) {
     if (colecao.startsWith('$')) continue;
+    // UMA PASTA POR COLEÇÃO. No import nativo cada arquivo vira um MODO da
+    // coleção — então só faz sentido importar junto o que pertence à mesma
+    // coleção. Solto num diretório só, selecionar tudo mistura as 7 coleções
+    // numa. Com a pasta, "selecionar todos os arquivos de Cor/" é a operação
+    // certa por construção, e o nome do arquivo vira o nome do modo.
+    const dir = join(OUT_SPLIT, colecao);
+    mkdirSync(dir, { recursive: true });
     for (const [modo, tree] of Object.entries(col.modes)) {
-      writeFileSync(join(OUT_SPLIT, `${colecao}.${modo}.json`), JSON.stringify(tree, null, 2) + '\n');
+      writeFileSync(join(dir, `${modo}.json`), JSON.stringify(tree, null, 2) + '\n');
       n++;
     }
   }
-  console.log(`✓ ${relative(ROOT, OUT_SPLIT)} — ${n} arquivos (<Colecao>.<modo>.json)`);
+  console.log(`✓ ${relative(ROOT, OUT_SPLIT)} — ${n} arquivos em pastas por coleção`);
+  process.exit(0);
+}
+
+/**
+ * `--probe`: dois arquivos mínimos para isolar, no próprio Figma, por que uma
+ * importação em lote acusa erro. Cada um tem 2 tokens; a contagem de erro que o
+ * Figma devolver diz qual das hipóteses é a verdadeira, sem depender de eu
+ * adivinhar de fora.
+ */
+if (process.argv.includes('--probe')) {
+  const dir = join(ROOT, 'docs/shared/tokens/figma-probe');
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, 'numero.json'),
+    JSON.stringify(
+      {
+        teste: {
+          inteiro: { $type: 'number', $value: 16 },
+          decimal: { $type: 'number', $value: 12.8 },
+        },
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+  writeFileSync(
+    join(dir, 'texto.json'),
+    JSON.stringify(
+      {
+        teste: {
+          texto: { $type: 'string', $value: 'cubic-bezier(0.2, 0, 0, 1)' },
+        },
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+  console.log(`✓ ${relative(ROOT, dir)} — numero.json (1 inteiro + 1 decimal), texto.json (1 string)`);
   process.exit(0);
 }
 
@@ -402,18 +446,17 @@ if (process.argv.includes('--validate')) {
     }
   };
 
-  for (const file of readdirSync(OUT_SPLIT).filter((f) => f.endsWith('.json'))) {
-    const [colecao, modo, ext] = file.split('.');
-    if (!colecao || !modo || ext !== 'json') {
-      problemas.push(`${file}: nome nao rende <Colecao>.<modo>.json`);
-      continue;
-    }
+  // Pasta = coleção, arquivo = modo (ver --split).
+  for (const colecao of readdirSync(OUT_SPLIT)) {
+    for (const file of readdirSync(join(OUT_SPLIT, colecao)).filter((f) => f.endsWith('.json'))) {
+    const modo = file.replace(/\.json$/, '');
     const out = [];
-    walk(JSON.parse(readFileSync(join(OUT_SPLIT, file), 'utf8')), '', undefined, out);
+    walk(JSON.parse(readFileSync(join(OUT_SPLIT, colecao, file), 'utf8')), '', undefined, out);
     const c = colecoes.get(colecao) ?? { modos: [], porModo: new Map() };
     c.modos.push(modo);
     c.porModo.set(modo, out);
     colecoes.set(colecao, c);
+    }
   }
 
   for (const [nome, c] of colecoes) {
