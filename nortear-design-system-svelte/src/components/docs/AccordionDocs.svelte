@@ -830,8 +830,8 @@ type AccordionProps = {
         items={[
           $tStore('accessibility.aria.ariaExpanded'),
           $tStore('accessibility.aria.ariaControls'),
-          $tStore('accessibility.aria.role'),
-          $tStore('accessibility.aria.ariaLabelledBy'),
+          $tStore('accessibility.aria.hiddenUntilFound'),
+          $tStore('accessibility.aria.noRegion'),
         ]}
         keyboardTitle={$tStore('accessibility.keyboardTitle')}
         contrast={$tStore('accessibility.contrast')}

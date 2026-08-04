@@ -198,7 +198,7 @@ export const Playground: Story = {
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
-    await step('Trigger e painel se apontam (aria-controls / role=region + aria-labelledby)', async () => {
+    await step('Trigger aponta para o painel por aria-controls, e o painel NAO e landmark', async () => {
       // Documentado em accessibility.aria.* como automático. Nesta stack NÃO é:
       // o bits-ui não emite nenhum dos três — ver accordion-a11y.ts.
       // Medido com o item ABERTO: onde o painel desmonta ao fechar, apontar
@@ -209,9 +209,28 @@ export const Playground: Story = {
       const contentId = trigger.getAttribute('aria-controls');
       await expect(contentId).toBeTruthy();
       const panel = canvasElement.querySelector(`#${CSS.escape(contentId!)}`);
-      await expect(panel).toHaveAttribute('role', 'region');
-      await expect(panel).toHaveAttribute('aria-labelledby', trigger.id);
+      // Sem role="region": o painel fica sempre montado por causa do
+      // until-found, e um landmark por item proliferaria — medido na docs
+      // page, 41 paineis viraram 41 landmarks (axe landmark-unique).
+      await expect(panel).not.toHaveAttribute('role');
       await expect(trigger.id).toBeTruthy();
+    });
+
+    await step('Painel fechado continua no DOM, achável pelo Ctrl+F', async () => {
+      // `hidden="until-found"` esconde por content-visibility, não por display —
+      // é o que deixa a busca do navegador achar a resposta e abrir o item.
+      // O display computado entra na asserção de propósito: uma regra de autor
+      // com `display: none` anula o recurso sem quebrar nada visível.
+      const trigger = canvas.getAllByRole('button')[0];
+      await userEvent.click(trigger);
+      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'));
+      const panel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
+        if (!el || el.getAttribute('hidden') === null) throw new Error('painel ainda fechando');
+        return el;
+      });
+      await expect(panel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(panel).display).not.toBe('none');
     });
 
     await step('Setas movem o foco entre triggers (com loop) e Home/End vão às pontas', async () => {

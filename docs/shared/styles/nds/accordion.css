@@ -125,8 +125,21 @@
   grid-template-rows: 1fr;
 }
 
-/* `hidden` precisa vencer o `display: grid` acima (UA style perde em specificity). */
-.nds-accordion-content[hidden] {
+/*
+ * `hidden` precisa vencer o `display: grid` acima (UA style perde em
+ * specificity) — MENOS quando vale "until-found".
+ *
+ * O `hidden="until-found"` não esconde por `display: none`: ele depende de
+ * `content-visibility: hidden`, que deixa o texto alcançável pelo Ctrl+F do
+ * navegador (e dispara `beforematch` para abrir o painel). Um `display: none`
+ * de autor anula isso em silêncio — o atributo continua no DOM, tudo parece
+ * configurado, e a busca simplesmente não acha nada.
+ *
+ * Medido no browser dos testes, mesmo elemento com e sem esta regra:
+ *   sem a regra:  display=block  content-visibility=hidden   → alcançável
+ *   com [hidden]: display=none   content-visibility=hidden   → morto
+ */
+.nds-accordion-content[hidden]:not([hidden="until-found"]) {
   display: none;
 }
 

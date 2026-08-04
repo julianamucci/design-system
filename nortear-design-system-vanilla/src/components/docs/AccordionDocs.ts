@@ -688,8 +688,8 @@ export function createAccordionDocs(): HTMLElement {
           items: [
             t('accessibility.aria.ariaExpanded'),
             t('accessibility.aria.ariaControls'),
-            t('accessibility.aria.role'),
-            t('accessibility.aria.ariaLabelledBy'),
+            t('accessibility.aria.hiddenUntilFound'),
+            t('accessibility.aria.noRegion'),
           ],
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [

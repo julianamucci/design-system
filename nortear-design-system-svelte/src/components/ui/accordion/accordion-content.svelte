@@ -18,10 +18,9 @@
 	bind:ref
 	data-slot="accordion-content"
 	class="nds-accordion-content"
+	hiddenUntilFound
 	{...restProps}
 	id={ids?.contentId}
-	role="region"
-	aria-labelledby={ids?.triggerId}
 >
 	<div
 		class={cn(

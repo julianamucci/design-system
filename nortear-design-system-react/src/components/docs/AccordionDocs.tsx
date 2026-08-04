@@ -868,8 +868,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             items={[
               tContent("accessibility.aria.ariaExpanded"),
               tContent("accessibility.aria.ariaControls"),
-              tContent("accessibility.aria.role"),
-              tContent("accessibility.aria.ariaLabelledBy"),
+              tContent("accessibility.aria.hiddenUntilFound"),
+              tContent("accessibility.aria.noRegion"),
             ]}
             contrast={tContent("accessibility.contrast")}
             screenReaderTitle={tNav("common.screenReader")}

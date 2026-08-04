@@ -1,7 +1,7 @@
 // GERADO por script (docs-smoke) — CSF estático: um export por docs page.
 // Fumaça: prova que cada página monta (section[id] presente); axe roda após a play.
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import AboutDocs from '@/components/docs/AboutDocs.vue';
 import AccessibilityDocs from '@/components/docs/AccessibilityDocs.vue';
@@ -84,6 +84,24 @@ type Story = StoryObj<typeof meta>;
 // dois casos e continua provando o mount (crash = teste vermelho).
 const smokePlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   await expect(canvasElement.querySelector('section[id], section')).not.toBeNull();
+};
+
+// Página que anima a entrada (opacity 0 → 1 via style inline, rAF) precisa
+// assentar ANTES do axe, que roda no postVisit — logo depois da play. Sem isto
+// ele mede no quadro em que o texto ainda está invisível e reprova por
+// color-contrast: o "1.01 (#fdfdfd sobre #ffffff)" não é contraste ruim, é
+// corrida com a animação. Mesmo tratamento já aplicado no React.
+const settledPlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  await smokePlay({ canvasElement });
+  await waitFor(
+    () => {
+      const midFlight = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('[style*="opacity"]'),
+      ).filter((el) => Number(el.style.opacity || '1') < 1);
+      expect(midFlight).toHaveLength(0);
+    },
+    { timeout: 5000 },
+  );
 };
 
 export const About: Story = {
@@ -280,7 +298,7 @@ export const Menubar: Story = {
 
 export const Motion: Story = {
   render: () => ({ components: { MotionDocs }, template: '<MotionDocs />' }),
-  play: smokePlay,
+  play: settledPlay,
 };
 
 export const NavigationMenu: Story = {

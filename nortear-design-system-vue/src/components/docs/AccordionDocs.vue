@@ -338,8 +338,8 @@ const screenReaderItems = computed(() =>
 const accessibilityItems = computed(() => [
   tContent('accessibility.aria.ariaExpanded'),
   tContent('accessibility.aria.ariaControls'),
-  tContent('accessibility.aria.role'),
-  tContent('accessibility.aria.ariaLabelledBy'),
+  tContent('accessibility.aria.hiddenUntilFound'),
+  tContent('accessibility.aria.noRegion'),
 ]);
 
 const relatedItems = computed(() => [

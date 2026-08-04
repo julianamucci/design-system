@@ -396,8 +396,8 @@
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> no trigger — aplicado automaticamente.",
         "ariaControls": "<code>aria-controls</code> aponta para o id do conteúdo — aplicado automaticamente.",
-        "role": "<code>role=\"region\"</code> no AccordionContent — aplicado automaticamente.",
-        "ariaLabelledBy": "<code>aria-labelledby</code> no content aponta para o trigger — aplicado automaticamente."
+        "hiddenUntilFound": "<code>hidden=\"until-found\"</code> no conteúdo fechado — a busca do navegador acha o texto e abre o item.",
+        "noRegion": "O conteúdo não usa <code>role=\"region\"</code>: como o painel fechado permanece no documento, um landmark por item se multiplicaria. A relação com o gatilho fica no <code>aria-controls</code>."
       },
       "screenReader": {
         "closed": "Trigger anunciado como botão com estado \"recolhido\" (collapsed).",
@@ -969,8 +969,8 @@
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> on trigger — applied automatically.",
         "ariaControls": "<code>aria-controls</code> points to the content id — applied automatically.",
-        "role": "<code>role=\"region\"</code> on AccordionContent — applied automatically.",
-        "ariaLabelledBy": "<code>aria-labelledby</code> on content points to trigger — applied automatically."
+        "hiddenUntilFound": "<code>hidden=\"until-found\"</code> on collapsed content — browser find reaches the text and opens the item.",
+        "noRegion": "Content does not use <code>role=\"region\"</code>: since the collapsed panel stays in the document, one landmark per item would multiply. The link to the trigger lives in <code>aria-controls</code>."
       },
       "screenReader": {
         "closed": "Trigger announced as button with \"collapsed\" state.",
@@ -1542,8 +1542,8 @@
       "aria": {
         "ariaExpanded": "<code>aria-expanded=\"true/false\"</code> en el trigger — aplicado automáticamente.",
         "ariaControls": "<code>aria-controls</code> apunta al id del contenido — aplicado automáticamente.",
-        "role": "<code>role=\"region\"</code> en AccordionContent — aplicado automáticamente.",
-        "ariaLabelledBy": "<code>aria-labelledby</code> en el contenido apunta al trigger — aplicado automáticamente."
+        "hiddenUntilFound": "<code>hidden=\"until-found\"</code> en el contenido cerrado — la búsqueda del navegador encuentra el texto y abre el ítem.",
+        "noRegion": "El contenido no usa <code>role=\"region\"</code>: como el panel cerrado permanece en el documento, un landmark por ítem se multiplicaría. La relación con el disparador está en <code>aria-controls</code>."
       },
       "screenReader": {
         "closed": "Trigger anunciado como botón con estado \"contraído\" (collapsed).",
