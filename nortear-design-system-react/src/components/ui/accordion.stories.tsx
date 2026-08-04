@@ -121,6 +121,20 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
+    // Idempotentes de propósito: clicam SÓ se o estado atual já não for o
+    // desejado. Um clique cego ALTERNA — a partir do estado errado ele inverte
+    // o resultado e a asserção seguinte falha. É o que fazia este Playground
+    // passar no vitest (montagem limpa) e falhar no painel Interactions, onde
+    // o replay reaproveita o componente já mexido.
+    const abrir = async (t: HTMLElement) => {
+      if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
+      await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
+    };
+    const fechar = async (t: HTMLElement) => {
+      if (t.getAttribute("aria-expanded") !== "false") await userEvent.click(t);
+      await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "false"));
+    };
+
     await step("A raiz registra o modo recebido", async () => {
       const root = canvasElement.querySelector('[data-slot="accordion"]');
       await expect(root).toHaveAttribute("data-type", args.multiple ? "multiple" : "single");
@@ -191,12 +205,14 @@ export const Playground: Story = {
     await step("Trigger aponta para o painel por aria-controls, e o painel NAO e landmark", async () => {
       // Documentado em accessibility.aria.* como automático — esta asserção é o
       // que impede a docs page de afirmar o que a lib não faz.
-      // Medido com o item ABERTO: o base-ui só emite aria-controls enquanto o
-      // painel existe (keepMounted=false), e apontar para id ausente seria ARIA
-      // inválido. Fechado, não há região para anunciar.
+      // Medido com o item ABERTO: o aria-controls só existe enquanto o painel
+      // existe, e apontar para id ausente seria ARIA inválido.
       const trigger = canvas.getAllByRole("button")[0];
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+      // Leva ao estado desejado em vez de assumir o que o passo anterior deixou:
+      // um clique cego alterna, e alternar a partir do estado errado inverte o
+      // resultado. Foi assim que este passo passou no vitest e falhou no painel
+      // Interactions, onde o replay não remonta o componente.
+      await abrir(trigger);
       const contentId = trigger.getAttribute("aria-controls");
       await expect(contentId).toBeTruthy();
       const panel = canvasElement.querySelector(`#${CSS.escape(contentId!)}`);
@@ -213,8 +229,8 @@ export const Playground: Story = {
       // O display computado entra na asserção de propósito: uma regra de autor
       // com `display: none` anula o recurso sem quebrar nada visível.
       const trigger = canvas.getAllByRole("button")[0];
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
+      await abrir(trigger);      // parte de aberto, seja qual for o estado herdado
+      await fechar(trigger);
       const panel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || el.getAttribute("hidden") === null) throw new Error("painel ainda fechando");
