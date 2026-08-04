@@ -1077,3 +1077,25 @@ existem.
 - [ ] Decidir uma vez: `Meta<typeof ButtonStory>` nos arquivos que renderizam
   pelo wrapper, ou alargar as props do wrapper para aceitar as formas nulas dos
   atributos DOM. Aplicar em todos os `*Story.svelte`.
+
+### Escape de entidades em superfície de texto — 7 componentes além do button
+
+O `translations.json` guarda `<button>` escapado (`&lt;button&gt;`) porque
+containers como DocsAnatomy e DocsAccessibility renderizam HTML sanitizado. Mas
+DocsTestes, DocsProps, o teclado e os cenários escrevem textNode: ali a entidade
+aparece literal na tela ("Elemento &lt;button&gt; nativo presente").
+
+A ponte entre os dois mundos é o `stripHtml` — que só removia tags. Corrigido
+para decodificar entidades nas 4 docs pages do button, mas ele é **copiado em
+cada docs page** (45 cópias por stack, ~180 no total), então os demais seguem
+com a versão antiga.
+
+Componentes com entidade em chave que cai em superfície de texto:
+breadcrumb (3), avatar (2), data-table (2), form (2), aspect-ratio (1),
+calendar (1), textarea (1).
+
+- [ ] Promover `stripHtml` a helper compartilhado (`src/lib/`) por stack e
+  migrar as docs pages, em vez de propagar a correção 180 vezes.
+- [ ] Regra no `audit.mjs`: chave com `&lt;`/`&gt;` referenciada fora de
+  `stripHtml()` num container de texto. Nada nos testes pega isso hoje — só
+  aparece na tela.

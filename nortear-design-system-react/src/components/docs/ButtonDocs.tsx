@@ -26,8 +26,24 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 
+// Converte markup em texto puro para as superfícies que NÃO renderizam HTML
+// (tabelas de testes, props, teclado e cenários — todas escrevem via textNode).
+//
+// Só tirar as tags não bastava: o `translations.json` é compartilhado com
+// containers que renderizam HTML, então `<button>` mora no JSON escapado como
+// `&lt;button&gt;`. Sem decodificar, a tabela mostrava literalmente
+// "Elemento &lt;button&gt; nativo presente".
+//
+// `&amp;` por último: decodificado antes, `&amp;lt;` viraria `<` em vez de `&lt;`.
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
 }
 
 const priorityKeyMap: Record<string, string> = {
@@ -257,11 +273,11 @@ import { Plus } from "lucide-react";`;
                 alternative: tContent("usage.scenarios.cols.alternative"),
               },
               items: [
-                { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-                { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-                { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-                { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-                { s: tContent("usage.scenarios.item5.s"), u: tContent("usage.scenarios.item5.u"), a: tContent("usage.scenarios.item5.a") },
+                { s: stripHtml(tContent("usage.scenarios.item1.s")), u: stripHtml(tContent("usage.scenarios.item1.u")), a: stripHtml(tContent("usage.scenarios.item1.a")) },
+                { s: stripHtml(tContent("usage.scenarios.item2.s")), u: stripHtml(tContent("usage.scenarios.item2.u")), a: stripHtml(tContent("usage.scenarios.item2.a")) },
+                { s: stripHtml(tContent("usage.scenarios.item3.s")), u: stripHtml(tContent("usage.scenarios.item3.u")), a: stripHtml(tContent("usage.scenarios.item3.a")) },
+                { s: stripHtml(tContent("usage.scenarios.item4.s")), u: stripHtml(tContent("usage.scenarios.item4.u")), a: stripHtml(tContent("usage.scenarios.item4.a")) },
+                { s: stripHtml(tContent("usage.scenarios.item5.s")), u: stripHtml(tContent("usage.scenarios.item5.u")), a: stripHtml(tContent("usage.scenarios.item5.a")) },
               ],
             }}
             uxWriting={{
@@ -699,7 +715,7 @@ import { Plus } from "lucide-react";`;
             ]}
             keyboardTitle={tContent("accessibility.keyboardTitle")}
             keyboardItems={[
-              { key: "Tab",     description: tContent("accessibility.keyboard.tab") },
+              { key: "Tab",     description: stripHtml(tContent("accessibility.keyboard.tab")) },
               { key: "Enter",   description: stripHtml(tContent("accessibility.keyboard.enter")) },
               { key: "Space",   description: stripHtml(tContent("accessibility.keyboard.space")) },
               { key: "—",       description: stripHtml(tContent("accessibility.keyboard.disabled")) },

@@ -43,8 +43,24 @@ const { t, subscribe } = createTranslation(buttonTranslations as Record<string, 
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// Converte markup em texto puro para as superfícies que NÃO renderizam HTML
+// (tabelas de testes, props, teclado e cenários — todas escrevem via textNode).
+//
+// Só tirar as tags não bastava: o `translations.json` é compartilhado com
+// containers que renderizam HTML, então `<button>` mora no JSON escapado como
+// `&lt;button&gt;`. Sem decodificar, a tabela mostrava literalmente
+// "Elemento &lt;button&gt; nativo presente".
+//
+// `&amp;` por último: decodificado antes, `&amp;lt;` viraria `<` em vez de `&lt;`.
 function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
+  return s
+    .replace(/<[^>]*>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&');
 }
 
 const priorityKeyMap: Record<string, string> = {
@@ -239,9 +255,9 @@ export function createButtonDocs(): HTMLElement {
               alternative: t('usage.scenarios.cols.alternative'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              s: t(`usage.scenarios.item${i}.s`),
-              u: t(`usage.scenarios.item${i}.u`),
-              a: t(`usage.scenarios.item${i}.a`),
+              s: stripHtml(t(`usage.scenarios.item${i}.s`)),
+              u: stripHtml(t(`usage.scenarios.item${i}.u`)),
+              a: stripHtml(t(`usage.scenarios.item${i}.a`)),
             })),
           },
           uxWriting: {
@@ -591,14 +607,14 @@ export interface ButtonOptions {
               title: t('props.buttonTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
-                { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: t('props.table.size') },
+                { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(stripHtml(t('props.table.variant'))) },
+                { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.size')) },
                 { name: 'label',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Texto visível do botão.' },
                 { name: 'ariaLabel', type: 'string',                                                                 defaultValue: '—',         required: 'Condicional', description: 'Obrigatório em botões icon-only.' },
-                { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(t('props.table.disabled')) },
-                { name: 'type',      type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(t('props.table.htmlType')) },
-                { name: 'onClick',   type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onClick')) },
-                { name: 'class',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(stripHtml(t('props.table.disabled'))) },
+                { name: 'type',      type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(stripHtml(t('props.table.htmlType'))) },
+                { name: 'onClick',   type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml(stripHtml(t('props.table.onClick'))) },
+                { name: 'class',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(stripHtml(t('props.table.className'))) },
               ],
             },
           ],
@@ -662,7 +678,7 @@ export interface ButtonOptions {
           ],
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
-            { key: 'Tab',   description: t('accessibility.keyboard.tab') },
+            { key: 'Tab',   description: stripHtml(t('accessibility.keyboard.tab')) },
             { key: 'Enter', description: stripHtml(t('accessibility.keyboard.enter')) },
             { key: 'Space', description: stripHtml(t('accessibility.keyboard.space')) },
             { key: '—',     description: stripHtml(t('accessibility.keyboard.disabled')) },
@@ -719,7 +735,7 @@ export interface ButtonOptions {
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
               action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              result: stripHtml(stripHtml(t(`testes.functional.item${i}.result`))),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -739,7 +755,7 @@ export interface ButtonOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: stripHtml(stripHtml(t(`testes.visual.item${i}.story`))),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

@@ -92,8 +92,24 @@
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+  // Converte markup em texto puro para as superfícies que NÃO renderizam HTML
+  // (tabelas de testes, props, teclado e cenários — todas escrevem via textNode).
+  //
+  // Só tirar as tags não bastava: o `translations.json` é compartilhado com
+  // containers que renderizam HTML, então `<button>` mora no JSON escapado como
+  // `&lt;button&gt;`. Sem decodificar, a tabela mostrava literalmente
+  // "Elemento &lt;button&gt; nativo presente".
+  //
+  // `&amp;` por último: decodificado antes, `&amp;lt;` viraria `<` em vez de `&lt;`.
   function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
+    return s
+      .replace(/<[^>]*>/g, '')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#0?39;/g, "'")
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&');
   }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
@@ -228,11 +244,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             alternative: $tStore('usage.scenarios.cols.alternative'),
           },
           items: [
-            { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-            { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-            { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-            { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
-            { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: stripHtml($tStore('usage.scenarios.item5.a')) },
+            { s: stripHtml($tStore('usage.scenarios.item1.s')), u: stripHtml($tStore('usage.scenarios.item1.u')), a: stripHtml($tStore('usage.scenarios.item1.a')) },
+            { s: stripHtml($tStore('usage.scenarios.item2.s')), u: stripHtml($tStore('usage.scenarios.item2.u')), a: stripHtml($tStore('usage.scenarios.item2.a')) },
+            { s: stripHtml($tStore('usage.scenarios.item3.s')), u: stripHtml($tStore('usage.scenarios.item3.u')), a: stripHtml($tStore('usage.scenarios.item3.a')) },
+            { s: stripHtml($tStore('usage.scenarios.item4.s')), u: stripHtml($tStore('usage.scenarios.item4.u')), a: stripHtml($tStore('usage.scenarios.item4.a')) },
+            { s: stripHtml($tStore('usage.scenarios.item5.s')), u: stripHtml($tStore('usage.scenarios.item5.u')), a: stripHtml(stripHtml($tStore('usage.scenarios.item5.a'))) },
           ],
         }}
         uxWriting={{
@@ -562,7 +578,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         ]}
         keyboardTitle={$tStore('accessibility.keyboardTitle')}
         keyboardItems={[
-          { key: 'Tab',   description: $tStore('accessibility.keyboard.tab') },
+          { key: 'Tab',   description: stripHtml($tStore('accessibility.keyboard.tab')) },
           { key: 'Enter', description: stripHtml($tStore('accessibility.keyboard.enter')) },
           { key: 'Space', description: stripHtml($tStore('accessibility.keyboard.space')) },
           { key: '—',     description: stripHtml($tStore('accessibility.keyboard.disabled')) },
@@ -623,7 +639,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
             { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
             { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item5.action')), result: $tStore('testes.functional.item5.result'),            priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+            { action: stripHtml($tStore('testes.functional.item5.action')), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
             { action: $tStore('testes.functional.item6.action'),            result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
           ],
         }}
@@ -635,11 +651,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             how: $tNavStore('common.howToVerify'),
           },
           items: [
-            { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-            { criterion: $tStore('testes.accessibility.item2.criterion'),            level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-            { criterion: $tStore('testes.accessibility.item3.criterion'),            level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-            { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-            { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
+            { criterion: stripHtml(stripHtml($tStore('testes.accessibility.item1.criterion'))), level: $tStore('testes.accessibility.item1.level'), how: stripHtml($tStore('testes.accessibility.item1.how')) },
+            { criterion: stripHtml($tStore('testes.accessibility.item2.criterion')),            level: $tStore('testes.accessibility.item2.level'), how: stripHtml($tStore('testes.accessibility.item2.how')) },
+            { criterion: stripHtml($tStore('testes.accessibility.item3.criterion')),            level: $tStore('testes.accessibility.item3.level'), how: stripHtml($tStore('testes.accessibility.item3.how')) },
+            { criterion: stripHtml($tStore('testes.accessibility.item4.criterion')),            level: $tStore('testes.accessibility.item4.level'), how: stripHtml($tStore('testes.accessibility.item4.how')) },
+            { criterion: stripHtml($tStore('testes.accessibility.item5.criterion')),            level: $tStore('testes.accessibility.item5.level'), how: stripHtml($tStore('testes.accessibility.item5.how')) },
           ],
         }}
         visual={{
@@ -649,11 +665,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             priority: $tNavStore('common.priority'),
           },
           items: [
-            { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
+            { story: stripHtml($tStore('testes.visual.item1.story')), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
+            { story: stripHtml($tStore('testes.visual.item2.story')), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
+            { story: stripHtml($tStore('testes.visual.item3.story')), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
+            { story: stripHtml($tStore('testes.visual.item4.story')), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
+            { story: stripHtml($tStore('testes.visual.item5.story')), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
           ],
         }}
       />

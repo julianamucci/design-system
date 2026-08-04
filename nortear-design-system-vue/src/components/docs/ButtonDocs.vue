@@ -45,8 +45,24 @@ const screenReaderItems = computed(() =>
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// Converte markup em texto puro para as superfícies que NÃO renderizam HTML
+// (tabelas de testes, props, teclado e cenários — todas escrevem via textNode).
+//
+// Só tirar as tags não bastava: o `translations.json` é compartilhado com
+// containers que renderizam HTML, então `<button>` mora no JSON escapado como
+// `&lt;button&gt;`. Sem decodificar, a tabela mostrava literalmente
+// "Elemento &lt;button&gt; nativo presente".
+//
+// `&amp;` por último: decodificado antes, `&amp;lt;` viraria `<` em vez de `&lt;`.
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&');
 }
 
 const priorityKeyMap: Record<string, string> = {
@@ -287,13 +303,13 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',    description: tContent('accessibility.keyboard.tab')    },
-  { key: 'Enter',  description: tContent('accessibility.keyboard.enter')  },
-  { key: 'Space',  description: tContent('accessibility.keyboard.space')  },
+  { key: 'Tab',    description: stripHtml(tContent('accessibility.keyboard.tab'))    },
+  { key: 'Enter',  description: stripHtml(tContent('accessibility.keyboard.enter'))  },
+  { key: 'Space',  description: stripHtml(tContent('accessibility.keyboard.space'))  },
   // Era `Escape`, tecla que o button não trata e cuja chave não existe — a
   // linha saía com o nome da chave como texto. As outras stacks documentam
   // aqui o comportamento em disabled.
-  { key: '—',      description: tContent('accessibility.keyboard.disabled') },
+  { key: '—',      description: stripHtml(tContent('accessibility.keyboard.disabled')) },
 ]);
 
 const relatedItems = computed(() => [
@@ -325,28 +341,28 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: stripHtml(tContent('testes.functional.item1.action')), result: stripHtml(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: stripHtml(tContent('testes.functional.item2.action')), result: stripHtml(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: stripHtml(tContent('testes.functional.item3.action')), result: stripHtml(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: stripHtml(tContent('testes.functional.item4.action')), result: stripHtml(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: stripHtml(tContent('testes.functional.item5.action')), result: stripHtml(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: stripHtml(tContent('testes.functional.item6.action')), result: stripHtml(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-  { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: stripHtml(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: stripHtml(tContent('testes.accessibility.item1.how')) },
+  { criterion: stripHtml(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: stripHtml(tContent('testes.accessibility.item2.how')) },
+  { criterion: stripHtml(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: stripHtml(tContent('testes.accessibility.item3.how')) },
+  { criterion: stripHtml(tContent('testes.accessibility.item4.criterion')), level: tContent('testes.accessibility.item4.level'), how: stripHtml(tContent('testes.accessibility.item4.how')) },
+  { criterion: stripHtml(tContent('testes.accessibility.item5.criterion')), level: tContent('testes.accessibility.item5.level'), how: stripHtml(tContent('testes.accessibility.item5.how')) },
 ]);
 
 const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
+  { story: stripHtml(tContent('testes.visual.item1.story')), priority: localPriority(tContent('testes.visual.item1.priority')) },
+  { story: stripHtml(tContent('testes.visual.item2.story')), priority: localPriority(tContent('testes.visual.item2.priority')) },
+  { story: stripHtml(tContent('testes.visual.item3.story')), priority: localPriority(tContent('testes.visual.item3.priority')) },
+  { story: stripHtml(tContent('testes.visual.item4.story')), priority: localPriority(tContent('testes.visual.item4.priority')) },
+  { story: stripHtml(tContent('testes.visual.item5.story')), priority: localPriority(tContent('testes.visual.item5.priority')) },
 ]);
 
 function handleDemoClick(variant: string) {
@@ -445,10 +461,10 @@ function handleDemoClick(variant: string) {
         title: tContent('usage.scenarios.title'),
         cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
         items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+          { s: stripHtml(tContent('usage.scenarios.item1.s')), u: stripHtml(tContent('usage.scenarios.item1.u')), a: stripHtml(tContent('usage.scenarios.item1.a')) },
+          { s: stripHtml(tContent('usage.scenarios.item2.s')), u: stripHtml(tContent('usage.scenarios.item2.u')), a: stripHtml(tContent('usage.scenarios.item2.a')) },
+          { s: stripHtml(tContent('usage.scenarios.item3.s')), u: stripHtml(tContent('usage.scenarios.item3.u')), a: stripHtml(tContent('usage.scenarios.item3.a')) },
+          { s: stripHtml(tContent('usage.scenarios.item4.s')), u: stripHtml(tContent('usage.scenarios.item4.u')), a: stripHtml(tContent('usage.scenarios.item4.a')) },
         ],
       }"
       :ux-writing="{
