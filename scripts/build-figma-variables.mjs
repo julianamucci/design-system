@@ -7,8 +7,18 @@
  * tokens.css avisa que editá-lo não muda nada. Um segundo arquivo estático
  * repetiria a dívida. Este roda de novo a cada mudança de token.
  *
- *   node scripts/build-figma-variables.mjs           # escreve o arquivo
- *   node scripts/build-figma-variables.mjs --check   # falha se estiver defasado
+ *   node scripts/build-figma-variables.mjs             # arquivo agregado
+ *   node scripts/build-figma-variables.mjs --split    # pasta por coleção (IMPORTAR ESTES)
+ *   node scripts/build-figma-variables.mjs --validate # simula o import
+ *   node scripts/build-figma-variables.mjs --check    # falha se estiver defasado
+ *
+ * ── Como importar no Figma ───────────────────────────────────────────────────
+ * Uma pasta de `docs/shared/tokens/figma/` por vez, selecionando TODOS os
+ * arquivos dela de uma vez. Cada arquivo vira um modo da coleção; o nome da
+ * coleção não vem do arquivo, então renomeie "Collection" depois do primeiro
+ * import. NUNCA misture pastas na mesma seleção: arquivos de coleções
+ * diferentes declaram variáveis diferentes, e cada nome ausente num dos modos
+ * conta um erro.
  *
  * ── Formato ──────────────────────────────────────────────────────────────────
  * Coleção → modos → árvore de tokens com `$type`/`$value`, que é o formato que
@@ -463,13 +473,25 @@ if (process.argv.includes('--validate')) {
     const base = c.porModo.get(c.modos[0]);
     const tipos = base.reduce((a, [, t]) => ((a[t] = (a[t] || 0) + 1), a), {});
     console.log(`  ${nome.padEnd(11)} ${String(base.length).padStart(3)} variáveis × ${c.modos.length} modo(s)  ${JSON.stringify(tipos)}`);
+    // INVARIANTE CRÍTICO — os modos de uma coleção precisam declarar EXATAMENTE
+    // o mesmo conjunto de nomes. O import nativo trata cada arquivo como um
+    // modo; nome presente num arquivo e ausente noutro fica sem valor naquele
+    // modo e o Figma acusa erro, um por lacuna. Medido com duas sondas de 2 e 1
+    // token: separadas importam limpo, juntas dão 3 erros — exatamente as 3
+    // lacunas. É por isso que --split agrupa em pasta por coleção: a pasta é o
+    // conjunto que pode ser importado de uma vez.
     const nomes = new Set(base.map(([k]) => k));
     for (const m of c.modos.slice(1)) {
       const outros = c.porModo.get(m).map(([k]) => k);
-      const faltam = [...nomes].filter((k) => !outros.includes(k)).length;
-      const sobram = outros.filter((k) => !nomes.has(k)).length;
-      // Nome presente num modo e ausente em outro vira variável sem valor lá.
-      if (faltam || sobram) problemas.push(`${nome}: modo "${m}" diverge de "${c.modos[0]}" — faltam ${faltam}, sobram ${sobram}`);
+      const faltam = [...nomes].filter((k) => !outros.includes(k));
+      const sobram = outros.filter((k) => !nomes.has(k));
+      if (faltam.length || sobram.length) {
+        problemas.push(
+          `${nome}: modo "${m}" diverge de "${c.modos[0]}" — ` +
+            `${faltam.length} lacuna(s) [${faltam.slice(0, 3).join(', ')}], ` +
+            `${sobram.length} extra(s) [${sobram.slice(0, 3).join(', ')}]`,
+        );
+      }
     }
   }
 
