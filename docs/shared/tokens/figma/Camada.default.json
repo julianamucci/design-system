@@ -1,0 +1,30 @@
+{
+  "z-dropdown": {
+    "$type": "number",
+    "$value": 1000
+  },
+  "z-sticky": {
+    "$type": "number",
+    "$value": 1020
+  },
+  "z-fixed": {
+    "$type": "number",
+    "$value": 1030
+  },
+  "z-modal-backdrop": {
+    "$type": "number",
+    "$value": 1040
+  },
+  "z-modal": {
+    "$type": "number",
+    "$value": 1050
+  },
+  "z-popover": {
+    "$type": "number",
+    "$value": 1060
+  },
+  "z-tooltip": {
+    "$type": "number",
+    "$value": 1070
+  }
+}

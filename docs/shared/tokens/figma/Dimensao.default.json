@@ -1,0 +1,130 @@
+{
+  "espacamento": {
+    "spacing-base": {
+      "$type": "number",
+      "$value": 4
+    },
+    "spacing-0": {
+      "$type": "number",
+      "$value": 0
+    },
+    "spacing-px": {
+      "$type": "number",
+      "$value": 1
+    },
+    "spacing-0-5": {
+      "$type": "number",
+      "$value": 2
+    },
+    "spacing-1": {
+      "$type": "number",
+      "$value": 4
+    },
+    "spacing-2": {
+      "$type": "number",
+      "$value": 8
+    },
+    "spacing-4": {
+      "$type": "number",
+      "$value": 16
+    },
+    "spacing-6": {
+      "$type": "number",
+      "$value": 24
+    },
+    "spacing-8": {
+      "$type": "number",
+      "$value": 32
+    },
+    "spacing-10": {
+      "$type": "number",
+      "$value": 40
+    },
+    "spacing-12": {
+      "$type": "number",
+      "$value": 48
+    },
+    "spacing-14": {
+      "$type": "number",
+      "$value": 56
+    },
+    "spacing-16": {
+      "$type": "number",
+      "$value": 64
+    },
+    "spacing-20": {
+      "$type": "number",
+      "$value": 80
+    },
+    "spacing-24": {
+      "$type": "number",
+      "$value": 96
+    },
+    "spacing-btn-x": {
+      "$type": "number",
+      "$value": 10
+    },
+    "spacing-btn-x-sm": {
+      "$type": "number",
+      "$value": 10
+    },
+    "spacing-btn-x-lg": {
+      "$type": "number",
+      "$value": 10
+    }
+  },
+  "altura": {
+    "height-badge": {
+      "$type": "number",
+      "$value": 20
+    },
+    "height-xs": {
+      "$type": "number",
+      "$value": 24
+    },
+    "height-sm": {
+      "$type": "number",
+      "$value": 28
+    },
+    "height-default": {
+      "$type": "number",
+      "$value": 32
+    },
+    "height-lg": {
+      "$type": "number",
+      "$value": 36
+    },
+    "height-xl": {
+      "$type": "number",
+      "$value": 40
+    }
+  },
+  "tamanho": {
+    "size-xs": {
+      "$type": "number",
+      "$value": 24
+    },
+    "size-sm": {
+      "$type": "number",
+      "$value": 28
+    },
+    "size-default": {
+      "$type": "number",
+      "$value": 32
+    },
+    "size-lg": {
+      "$type": "number",
+      "$value": 36
+    },
+    "size-xl": {
+      "$type": "number",
+      "$value": 40
+    }
+  },
+  "traco": {
+    "border-width-default": {
+      "$type": "number",
+      "$value": 1
+    }
+  }
+}

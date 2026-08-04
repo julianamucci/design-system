@@ -1,0 +1,88 @@
+{
+  "tamanho": {
+    "text-label": {
+      "$type": "number",
+      "$value": 12.003
+    },
+    "text-p": {
+      "$type": "number",
+      "$value": 16
+    },
+    "text-h4": {
+      "$type": "number",
+      "$value": 21.328
+    },
+    "text-h3": {
+      "$type": "number",
+      "$value": 28.43
+    },
+    "text-h2": {
+      "$type": "number",
+      "$value": 37.897
+    },
+    "text-h1": {
+      "$type": "number",
+      "$value": 50.517
+    }
+  },
+  "escala": {
+    "type-base": {
+      "$type": "number",
+      "$value": 16
+    },
+    "type-scale": {
+      "$type": "number",
+      "$value": 1.333
+    }
+  },
+  "peso": {
+    "font-weight-extra-bold": {
+      "$type": "number",
+      "$value": 800
+    },
+    "font-weight-semi-bold": {
+      "$type": "number",
+      "$value": 600
+    },
+    "font-weight-medium": {
+      "$type": "number",
+      "$value": 500
+    },
+    "font-weight-regular": {
+      "$type": "number",
+      "$value": 400
+    }
+  },
+  "entrelinha": {
+    "line-height-tight": {
+      "$type": "number",
+      "$value": 1.2
+    },
+    "line-height-normal": {
+      "$type": "number",
+      "$value": 1.5
+    },
+    "line-height-relaxed": {
+      "$type": "number",
+      "$value": 1.75
+    },
+    "line-height-loose": {
+      "$type": "number",
+      "$value": 2
+    }
+  },
+  "espacamento-letra": {
+    "letter-spacing-tight": {
+      "$type": "string",
+      "$value": "-0.02em"
+    },
+    "letter-spacing-normal": {
+      "$type": "string",
+      "$value": "0em"
+    },
+    "letter-spacing-wide": {
+      "$type": "string",
+      "$value": "0.02em"
+    }
+  }
+}

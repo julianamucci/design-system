@@ -25,11 +25,12 @@
  * - Sombra: STRING. O Figma não tem variável de efeito; o valor fica legível
  *   para quem for montar o estilo de efeito à mão.
  */
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const OUT = join(ROOT, 'docs/shared/tokens/figma-variables.json');
+const OUT_SPLIT = join(ROOT, 'docs/shared/tokens/figma');
 
 const SOURCES = [
   'docs/shared/tokens/tokens.css',
@@ -323,6 +324,27 @@ const doc = {
 };
 
 const json = JSON.stringify(doc, null, 2) + '\n';
+
+/**
+ * `--split`: um arquivo por coleção×modo, nomeado `<Colecao>.<modo>.json`, com
+ * a árvore de tokens NA RAIZ — sem `modes`, sem `$description`, sem `$sources`.
+ * É o formato que o plugin oficial de import/export de variáveis consome: ele
+ * tira coleção e modo do NOME DO ARQUIVO e espera token puro dentro.
+ */
+if (process.argv.includes('--split')) {
+  mkdirSync(OUT_SPLIT, { recursive: true });
+  for (const f of readdirSync(OUT_SPLIT)) if (f.endsWith('.json')) rmSync(join(OUT_SPLIT, f));
+  let n = 0;
+  for (const [colecao, col] of Object.entries(doc)) {
+    if (colecao.startsWith('$')) continue;
+    for (const [modo, tree] of Object.entries(col.modes)) {
+      writeFileSync(join(OUT_SPLIT, `${colecao}.${modo}.json`), JSON.stringify(tree, null, 2) + '\n');
+      n++;
+    }
+  }
+  console.log(`✓ ${relative(ROOT, OUT_SPLIT)} — ${n} arquivos (<Colecao>.<modo>.json)`);
+  process.exit(0);
+}
 
 if (process.argv.includes('--check')) {
   const atual = existsSync(OUT) ? readFileSync(OUT, 'utf8') : '';
