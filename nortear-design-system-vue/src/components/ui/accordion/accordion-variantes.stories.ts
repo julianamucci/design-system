@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { ref } from 'vue';
@@ -12,6 +13,7 @@ const meta = {
   title: 'UI/Accordion/Variantes',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
   },

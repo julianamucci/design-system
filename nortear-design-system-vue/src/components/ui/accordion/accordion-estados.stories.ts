@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import {
@@ -11,6 +12,7 @@ const meta = {
   title: 'UI/Accordion/Estados',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordionItem'),
     controls: { disable: true },
     actions: { disable: true },
   },

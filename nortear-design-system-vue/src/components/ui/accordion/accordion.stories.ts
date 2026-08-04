@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect , waitFor, fn } from 'storybook/test';
 import {
@@ -14,6 +15,7 @@ const meta = {
   component: Accordion,
   tags: ['autodocs', 'disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Declarar a API

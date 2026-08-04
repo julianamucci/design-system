@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
@@ -12,6 +13,7 @@ const meta: Meta = {
   title: "UI/Accordion/Variantes",
   tags: ["disclosure"],
   parameters: {
+    design: figmaDesign("accordion"),
     controls: { disable: true },
     actions: { disable: true },
   },

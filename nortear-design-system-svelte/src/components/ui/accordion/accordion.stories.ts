@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
@@ -17,6 +18,7 @@ const meta = {
   component: Accordion,
   tags: ['autodocs', 'disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     docs: { page: withAutoDocsTab(AccordionDocs) },
   },
   // A aba "API Reference" é montada só a partir destes argTypes: o docgen do

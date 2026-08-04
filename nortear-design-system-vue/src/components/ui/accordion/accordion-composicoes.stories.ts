@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect , waitFor } from 'storybook/test';
 import {
@@ -13,6 +14,7 @@ const meta = {
   title: 'UI/Accordion/Composicoes',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
   },

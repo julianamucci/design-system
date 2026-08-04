@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect, userEvent, waitFor, within } from 'storybook/test';
@@ -7,6 +8,7 @@ import AccordionControlledStory from './AccordionControlledStory.svelte';
 
 const meta = {
   parameters: {
+    design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
   },

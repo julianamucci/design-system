@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect , waitFor } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
@@ -6,6 +7,7 @@ import DOMPurify from 'dompurify';
 const meta: Meta = {
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
   },

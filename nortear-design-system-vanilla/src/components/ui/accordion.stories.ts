@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
@@ -21,6 +22,7 @@ const meta: Meta<AccordionArgs> = {
   title: 'UI/Accordion',
   tags: ['autodocs', 'disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     docs: { page: withAutoDocsTab(createAccordionDocs) },
   },
   // Esta stack não tem docgen (não há componente de framework para introspectar):

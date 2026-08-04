@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect , waitFor } from 'storybook/test';
 import DOMPurify from 'dompurify';
@@ -8,6 +9,7 @@ import { Info, AlertTriangle, CheckCircle2 } from 'lucide';
 const meta: Meta = {
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
   },

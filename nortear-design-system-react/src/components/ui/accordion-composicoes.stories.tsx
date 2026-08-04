@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Info, AlertTriangle, CheckCircle } from "lucide-react";
@@ -13,6 +14,7 @@ const meta: Meta = {
   title: "UI/Accordion/Composicoes",
   tags: ["disclosure"],
   parameters: {
+    design: figmaDesign("accordionTrigger"),
     controls: { disable: true },
     actions: { disable: true },
   },

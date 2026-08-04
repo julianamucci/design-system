@@ -6,7 +6,9 @@
     "src/**/*.vue",
     // `composite: true` exige que todo arquivo do programa esteja listado; sem
     // isto, importar de @shared/primitives dá TS6307.
-    "../docs/shared/primitives/**/*.ts"
+    "../docs/shared/primitives/**/*.ts",
+    // Mesma razão: as stories importam @shared/figma/design-links.
+    "../docs/shared/figma/**/*.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
