@@ -346,6 +346,66 @@ if (process.argv.includes('--split')) {
   process.exit(0);
 }
 
+/**
+ * `--validate`: reproduz a travessia do plugin oficial sobre os arquivos de
+ * --split e relata o que o Figma criaria. Existe porque a primeira entrega
+ * saiu num formato que o plugin lia sem erro nenhum e mesmo assim nao produzia
+ * variavel de cor — "gerou sem falhar" nao prova que importa.
+ */
+if (process.argv.includes('--validate')) {
+  const TIPO = { color: 'COLOR', number: 'FLOAT', string: 'STRING', boolean: 'BOOLEAN' };
+  const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+  const problemas = [];
+  const colecoes = new Map();
+
+  const walk = (obj, key, herdado, out) => {
+    const tipo = herdado || obj.$type;
+    if (obj.$value !== undefined) {
+      const figma = TIPO[tipo];
+      if (!figma) return problemas.push(`${key}: $type "${tipo}" nao suportado`);
+      if (figma === 'COLOR' && !HEX.test(String(obj.$value))) return problemas.push(`${key}: cor "${obj.$value}" nao e hex`);
+      if (figma === 'FLOAT' && typeof obj.$value !== 'number') return problemas.push(`${key}: number nao-numerico`);
+      return out.push([key, figma]);
+    }
+    for (const k of Object.keys(obj)) {
+      if (k.charAt(0) === '$') continue;
+      walk(obj[k], key ? `${key}/${k}` : k, tipo, out);
+    }
+  };
+
+  for (const file of readdirSync(OUT_SPLIT).filter((f) => f.endsWith('.json'))) {
+    const [colecao, modo, ext] = file.split('.');
+    if (!colecao || !modo || ext !== 'json') {
+      problemas.push(`${file}: nome nao rende <Colecao>.<modo>.json`);
+      continue;
+    }
+    const out = [];
+    walk(JSON.parse(readFileSync(join(OUT_SPLIT, file), 'utf8')), '', undefined, out);
+    const c = colecoes.get(colecao) ?? { modos: [], porModo: new Map() };
+    c.modos.push(modo);
+    c.porModo.set(modo, out);
+    colecoes.set(colecao, c);
+  }
+
+  for (const [nome, c] of colecoes) {
+    const base = c.porModo.get(c.modos[0]);
+    const tipos = base.reduce((a, [, t]) => ((a[t] = (a[t] || 0) + 1), a), {});
+    console.log(`  ${nome.padEnd(11)} ${String(base.length).padStart(3)} variáveis × ${c.modos.length} modo(s)  ${JSON.stringify(tipos)}`);
+    const nomes = new Set(base.map(([k]) => k));
+    for (const m of c.modos.slice(1)) {
+      const outros = c.porModo.get(m).map(([k]) => k);
+      const faltam = [...nomes].filter((k) => !outros.includes(k)).length;
+      const sobram = outros.filter((k) => !nomes.has(k)).length;
+      // Nome presente num modo e ausente em outro vira variável sem valor lá.
+      if (faltam || sobram) problemas.push(`${nome}: modo "${m}" diverge de "${c.modos[0]}" — faltam ${faltam}, sobram ${sobram}`);
+    }
+  }
+
+  console.log(`\nProblemas: ${problemas.length}`);
+  for (const p of problemas) console.log('  ! ' + p);
+  process.exit(problemas.length ? 1 : 0);
+}
+
 if (process.argv.includes('--check')) {
   const atual = existsSync(OUT) ? readFileSync(OUT, 'utf8') : '';
   if (atual !== json) {
