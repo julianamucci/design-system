@@ -5,13 +5,11 @@
  * As 4 stacks importam via @import "@shared/tokens/tokens.css"; o registry
  * (registry/v1/init.json) embute uma cópia do conteúdo para consumo externo.
  *
- * tokens.json, ao lado, é um espelho PARCIAL em formato DTCG para interop com
- * ferramentas de design — cobre só color, typography, radius, elevation e
- * z-index, e nada o lê para gerar este CSS. Não existe passo de build entre os
- * dois: editar o JSON não muda nada aqui. Ao alterar um token que exista nos
- * dois, atualize ambos.
+ * Existiu aqui um tokens.json — espelho DTCG parcial que ninguém lia nem gerava,
+ * e cujo cabeçalho ainda mandava editá-lo em vez deste arquivo. Removido em
+ * 2026-08-04: espelho sem passo de build só serve para divergir em silêncio.
  *
- * figma-variables.json, também ao lado, é o oposto: GERADO a partir DESTE
+ * figma-variables.json, ao lado, é o oposto: GERADO a partir DESTE
  * arquivo (mais motion.css e themes/*.css) por scripts/build-figma-variables.mjs,
  * para importar como variáveis no Figma. Não editar à mão — mexeu em token,
  * rode o script. `--check` falha se estiver defasado.

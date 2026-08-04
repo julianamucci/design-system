@@ -2,10 +2,11 @@
  * Gera `docs/shared/tokens/figma-variables.json` a partir do CSS que é fonte de
  * verdade — nunca à mão.
  *
- * Por quê gerador e não arquivo escrito: `docs/shared/tokens/tokens.json` já é
- * um espelho parcial em DTCG que ninguém lê nem gera, e o próprio cabeçalho do
- * tokens.css avisa que editá-lo não muda nada. Um segundo arquivo estático
- * repetiria a dívida. Este roda de novo a cada mudança de token.
+ * Por quê gerador e não arquivo escrito: existia aqui um `tokens.json`, espelho
+ * DTCG parcial que ninguém lia nem gerava — e que por isso divergiu do CSS a
+ * ponto de mandar, no cabeçalho, editar a si mesmo em vez da fonte de verdade.
+ * Foi removido. Um segundo arquivo estático repetiria a dívida; este roda de
+ * novo a cada mudança de token, e `--check` reprova se ficar defasado.
  *
  *   node scripts/build-figma-variables.mjs             # arquivo agregado
  *   node scripts/build-figma-variables.mjs --split    # pasta por coleção (IMPORTAR ESTES)
