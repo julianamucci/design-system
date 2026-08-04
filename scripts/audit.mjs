@@ -484,12 +484,16 @@ function splitStories(content) {
  * isolar `argTypes` e `args` do meta sem depender de indentação.
  */
 function blockBody(content, name) {
-  const start = content.search(new RegExp(`(^|[\\s,{])${name}\\s*:\\s*\\{`, 'm'));
+  // Casa chaves sobre o texto SEM comentários (stripComments preserva offsets,
+  // então os índices continuam válidos no original): uma chave dentro de um
+  // comentário desbalanceava a contagem e o bloco terminava no lugar errado.
+  const limpo = stripComments(content);
+  const start = limpo.search(new RegExp(`(^|[\\s,{])${name}\\s*:\\s*\\{`, 'm'));
   if (start < 0) return null;
-  const open = content.indexOf('{', start);
+  const open = limpo.indexOf('{', start);
   let depth = 0;
-  for (let i = open; i < content.length; i++) {
-    const c = content[i];
+  for (let i = open; i < limpo.length; i++) {
+    const c = limpo[i];
     if (c === '{') depth++;
     else if (c === '}' && --depth === 0) return content.slice(open + 1, i);
   }
@@ -497,12 +501,50 @@ function blockBody(content, name) {
 }
 
 /**
+ * Troca comentários por espaço, preservando os offsets.
+ *
+ * Sem isto, um comentário dentro de `argTypes` vira código para o walker: a
+ * linha `// Estavam em args sem argType: ficavam fora da aba` registrava uma
+ * chave fantasma chamada "argType", e a regra `argtype_without_arg` acusava um
+ * control sem valor inicial que não existe. Crase em comentário era pior ainda
+ * — abria uma string que só fechava linhas adiante, comendo o resto do objeto.
+ */
+function stripComments(src) {
+  let out = '', inStr = null, i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    if (inStr) {
+      out += c;
+      if (c === '\\') { out += src[i + 1] ?? ''; i += 2; continue; }
+      if (c === inStr) inStr = null;
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; out += c; i++; continue; }
+    if (c === '/' && src[i + 1] === '/') {
+      while (i < src.length && src[i] !== '\n') { out += ' '; i++; }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '*') {
+      const fim = src.indexOf('*/', i + 2);
+      const ate = fim === -1 ? src.length : fim + 2;
+      for (; i < ate; i++) out += src[i] === '\n' ? '\n' : ' ';
+      continue;
+    }
+    out += c;
+    i++;
+  }
+  return out;
+}
+
+/**
  * Pares [chave, valor] de primeiro nível de um corpo de objeto literal.
  * Precisa varrer em profundidade: uma busca textual por `<chave>:` acharia a
  * ocorrência aninhada (`table: { defaultValue: … }`) antes da de primeiro nível.
  */
-function topLevelEntries(body) {
-  if (!body) return [];
+function topLevelEntries(bodyBruto) {
+  if (!bodyBruto) return [];
+  const body = stripComments(bodyBruto);
   const entries = [];
   let depth = 0, inStr = null, pendingKey = null, valueStart = 0;
   for (let i = 0; i < body.length; i++) {

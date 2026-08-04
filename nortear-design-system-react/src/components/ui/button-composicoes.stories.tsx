@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect } from "storybook/test";
+import { within, expect } from "storybook/test";
 import { Plus, Trash2, ChevronRight, Download } from "lucide-react";
-import { Button } from "./button";
+import { Button, buttonVariants } from "./button";
 
 const meta = {
   title: "UI/Button/Composicoes",
@@ -24,6 +24,7 @@ export const ComIconeAEsquerda: Story = {
     </Button>
   ),
   parameters: {
+    covers: ["visual.item5"],
     docs: {
       description: {
         story: "Ícone à esquerda do label. O SVG deve ter aria-hidden=\"true\" para não poluir leitores de tela.",
@@ -31,8 +32,10 @@ export const ComIconeAEsquerda: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /adicionar item/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: "Adicionar item" });
+    // Nome exato: se o ícone deixasse de ser aria-hidden ele entraria no nome.
+    await expect(btn.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    await expect(btn.firstElementChild).toBe(btn.querySelector("svg"));
   },
 };
 
@@ -51,8 +54,11 @@ export const ComIconeADireita: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /próximo/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: "Próximo" });
+    const svg = btn.querySelector("svg");
+    await expect(svg).toHaveAttribute("aria-hidden", "true");
+    // É o que distingue esta story da anterior: o ícone vem DEPOIS do label.
+    await expect(btn.lastElementChild).toBe(svg);
   },
 };
 
@@ -71,8 +77,9 @@ export const IconeDestrutivo: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /excluir/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: "Excluir" });
+    await expect(btn).toHaveClass("nds-button-destructive");
+    await expect(btn.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   },
 };
 
@@ -115,21 +122,31 @@ export const ParDeAcoes: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: /confirmar/i })).toBeInTheDocument();
+    const cancelar = canvas.getByRole("button", { name: "Cancelar" });
+    const confirmar = canvas.getByRole("button", { name: "Confirmar" });
+    await expect(cancelar).toHaveClass("nds-button-outline");
+    await expect(confirmar).toHaveClass("nds-button-default");
+    // A regra documentada é a ordem: a primária fica à direita.
+    await expect(cancelar.compareDocumentPosition(confirmar)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   },
 };
 
-export const AsChildAsLink: Story = {
+export const AsLink: Story = {
   render: () => (
-    <Button render={<a href="#docs" />} variant="link">
+    // Link com aparência de botão = classes num <a> real, não o componente
+    // Button. Passar um <a> pelo `render` faz a lib avisar em runtime que a
+    // semântica de botão nativo se perdeu, e `nativeButton={false}` "conserta"
+    // impondo role="button" no link — o oposto do que a story demonstra.
+    // Mesma solução das outras stacks: só as classes da variante.
+    <a href="#docs" className={buttonVariants({ variant: "link" })}>
       Ver documentação
-    </Button>
+    </a>
   ),
   parameters: {
+    covers: ["functional.item5"],
     docs: {
       description: {
-        story: "Usando a prop render do Base UI para renderizar um <a> com estilos de botão, preservando semântica de link.",
+        story: "Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.",
       },
     },
   },
@@ -144,34 +161,3 @@ export const AsChildAsLink: Story = {
   },
 };
 
-export const ClickCounter: Story = {
-  render: function ClickCounterRender() {
-    return (
-      <Button onClick={() => {}} data-testid="click-target">
-        Clique em mim
-      </Button>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "Exemplo interativo para validar disparo de onClick via teclado e mouse.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const button = canvas.getByTestId("click-target");
-
-    await step("Mouse click funciona", async () => {
-      await userEvent.click(button);
-      await expect(button).toBeVisible();
-    });
-
-    await step("Keyboard Enter funciona", async () => {
-      button.focus();
-      await userEvent.keyboard("{Enter}");
-      await expect(button).toHaveFocus();
-    });
-  },
-};

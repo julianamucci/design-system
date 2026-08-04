@@ -26,6 +26,17 @@ const meta = {
       control: "boolean",
       description: "Desabilita interação com o botão",
     },
+    // Estavam em `args` sem argType: ficavam fora da aba API Reference.
+    children: {
+      control: "text",
+      description: "Conteúdo do botão — texto, ícone ou ambos.",
+      table: { type: { summary: "ReactNode" } },
+    },
+    onClick: {
+      control: false,
+      description: "Callback disparado ao clique. Não dispara quando desabilitado.",
+      table: { type: { summary: "(e: MouseEvent) => void" } },
+    },
   },
   args: {
     variant: "default",
@@ -40,6 +51,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1",
+      "functional.item3",
+      "functional.item4",
+      "accessibility.item1",
+      "accessibility.item2",
+      "accessibility.item5",
+      "visual.item1",
+    ],
+  },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole("button");

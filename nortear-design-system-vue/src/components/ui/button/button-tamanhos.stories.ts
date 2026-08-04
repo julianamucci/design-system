@@ -19,33 +19,41 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => ({
     components: { Button },
-    template: '<Button>Padrão (h-9)</Button>',
+    template: '<Button>Padrão</Button>',
   }),
-  parameters: { docs: { description: { story: 'Tamanho padrão (36px). Use em formulários e diálogos como default.' } } },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } },
+  },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const btn = within(canvasElement).getByRole('button', { name: /padrão/i });
+    await expect(btn).toHaveClass('nds-button');
+    await expect(btn).not.toHaveClass('nds-button-sm');
+    await expect(btn).not.toHaveClass('nds-button-lg');
   },
 };
 
 export const Small: Story = {
   render: () => ({
     components: { Button },
-    template: '<Button size="sm">Pequeno (h-8)</Button>',
+    template: '<Button size="sm">Pequeno</Button>',
   }),
-  parameters: { docs: { description: { story: 'Tamanho pequeno (32px). Use em toolbars e áreas densas.' } } },
+  parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const btn = within(canvasElement).getByRole('button', { name: /pequeno/i });
+    await expect(btn).toHaveClass('nds-button-sm');
   },
 };
 
 export const Large: Story = {
   render: () => ({
     components: { Button },
-    template: '<Button size="lg">Grande (h-10)</Button>',
+    template: '<Button size="lg">Grande</Button>',
   }),
-  parameters: { docs: { description: { story: 'Tamanho grande (40px). Use em CTAs de destaque e hero sections.' } } },
+  parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const btn = within(canvasElement).getByRole('button', { name: /grande/i });
+    await expect(btn).toHaveClass('nds-button-lg');
   },
 };
 
@@ -66,7 +74,10 @@ export const Icon: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Botão ícone padrão (36×36). Sempre forneça aria-label descritivo.' } } },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4'],
+    docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
+  },
   play: iconAriaLabelPlay,
 };
 
@@ -79,7 +90,7 @@ export const IconSmall: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Botão ícone pequeno (32×32). Use em toolbars compactas.' } } },
+  parameters: { docs: { description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' } } },
   play: iconAriaLabelPlay,
 };
 
@@ -92,6 +103,6 @@ export const IconLarge: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Botão ícone grande (40×40). Use como FAB ou CTAs visuais.' } } },
+  parameters: { docs: { description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' } } },
   play: iconAriaLabelPlay,
 };

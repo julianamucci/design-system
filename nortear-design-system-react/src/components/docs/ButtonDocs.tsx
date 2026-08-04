@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Plus, Trash2, Pencil, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -162,11 +162,13 @@ import { Plus } from "lucide-react";`;
   --primary-foreground: 222 47% 11%;
 }`;
 
-  const interfaceCode = `interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+  const interfaceCode = `interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
-  asChild?: boolean;
+  /** Elemento que substitui o <button> mantendo os estilos — ex.: <a href="…" />. */
+  render?: React.ReactElement;
+  disabled?: boolean;
+  className?: string;
 }`;
 
   return (
@@ -396,11 +398,14 @@ import { Plus } from "lucide-react";`;
                 name: tContent("variants.items.asLink.name"),
                 description: tContent("variants.items.asLink.description"),
                 useWhen: tContent("variants.items.asLink.use"),
-                code: `<Button render={<a href="/docs" />} variant="link">\n  Ver documentação\n</Button>`,
+                code: `<a href="/docs" className={buttonVariants({ variant: "link" })}>\n  Ver documentação\n</a>`,
                 preview: (
-                  <Button render={<a href="#docs" />} variant="link">
+                  // Classes da variante num <a> real: preserva a semântica de
+                  // link. Passar o <a> pelo `render` do Button faz a lib impor
+                  // role="button" por cima, anulando o ponto do exemplo.
+                  <a href="#docs" className={buttonVariants({ variant: "link" })}>
                     Ver documentação
-                  </Button>
+                  </a>
                 ),
               },
             ]}
@@ -589,9 +594,11 @@ import { Plus } from "lucide-react";`;
                     description: stripHtml(tContent("props.table.size")),
                   },
                   {
-                    name: "asChild",
-                    type: "boolean",
-                    defaultValue: "false",
+                    // Nesta stack a composição é `render` (base-ui). Não existe
+                    // `asChild`: a tabela documentava uma prop inexistente.
+                    name: "render",
+                    type: "ReactElement",
+                    defaultValue: "—",
                     required: "Não",
                     description: stripHtml(tContent("props.table.asChild")),
                   },
@@ -607,7 +614,8 @@ import { Plus } from "lucide-react";`;
                     type: '"button" | "submit" | "reset"',
                     defaultValue: '"button"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.type")),
+                    // htmlType, não `type`: esta última é o cabeçalho da coluna.
+                    description: stripHtml(tContent("props.table.htmlType")),
                   },
                   {
                     name: "onClick",
@@ -640,14 +648,17 @@ import { Plus } from "lucide-react";`;
               description: tContent("tokens.table.part"),
             }}
             items={[
-              { token: "--primary", value: "bg-primary", description: tContent("tokens.table.primary") },
-              { token: "--primary-foreground", value: "text-primary-foreground", description: tContent("tokens.table.primaryForeground") },
-              { token: "--secondary", value: "bg-secondary", description: tContent("tokens.table.secondary") },
-              { token: "--destructive", value: "bg-destructive text-white", description: tContent("tokens.table.destructive") },
-              { token: "--border", value: "border", description: tContent("tokens.table.border") },
-              { token: "--accent", value: "nds-hover-bg-accent", description: tContent("tokens.table.accent") },
-              { token: "--ring", value: "nds-focus-ring", description: tContent("tokens.table.ring") },
-              { token: "--radius", value: "rounded-md", description: tContent("tokens.table.radius") },
+              // A coluna aponta ONDE o token é lido no CSS do componente.
+              // Antes listava classes do Tailwind (bg-primary, rounded-md) que
+              // não existem mais: quem seguisse a tabela não mudava nada.
+              { token: "--primary", value: ".nds-button-default", description: tContent("tokens.table.primary") },
+              { token: "--primary-foreground", value: ".nds-button-default", description: tContent("tokens.table.primaryForeground") },
+              { token: "--secondary", value: ".nds-button-secondary", description: tContent("tokens.table.secondary") },
+              { token: "--destructive", value: ".nds-button-destructive", description: tContent("tokens.table.destructive") },
+              { token: "--border", value: ".nds-button-outline", description: tContent("tokens.table.border") },
+              { token: "--accent", value: ".nds-button-outline:hover, .nds-button-ghost:hover", description: tContent("tokens.table.accent") },
+              { token: "--ring", value: ".nds-button:focus-visible", description: tContent("tokens.table.ring") },
+              { token: "--radius-button", value: ".nds-button", description: tContent("tokens.table.radius") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={codeCustomizationTokens}

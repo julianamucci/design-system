@@ -25,7 +25,8 @@ export const Disabled: Story = {
     setup() { return { args }; },
     template: '<Button v-bind="args" disabled @click="args.onClick">Salvar</Button>',
   }),
-  parameters: { docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
+  parameters: {
+    covers: ['functional.item2', 'visual.item4'], docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
@@ -46,7 +47,7 @@ export const Loading: Story = {
     components: { Button, Loader2 },
     template: `
       <Button disabled aria-busy="true">
-        <Loader2 aria-hidden="true" class="animate-spin" />
+        <Loader2 aria-hidden="true" class="nds-button-icon-svg nds-spin" />
         Salvando…
       </Button>
     `,
@@ -71,7 +72,8 @@ export const FocusVisible: Story = {
     components: { Button },
     template: '<Button>Foco visível</Button>',
   }),
-  parameters: { docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
+  parameters: {
+    covers: ['accessibility.item3'], docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;

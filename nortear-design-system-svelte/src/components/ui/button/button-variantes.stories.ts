@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 
@@ -19,10 +19,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => ({ Component: ButtonStory, props: { variant: 'default', label: 'Salvar' } }),
-  parameters: { docs: { description: { story: 'Variante primária. Use para a ação principal de uma seção.' } } },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { description: { story: 'Variante primária. Use para a ação principal de uma seção.' } },
+  },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /salvar/i });
+    await expect(btn).toHaveClass('nds-button-default');
   },
 };
 
@@ -31,7 +35,8 @@ export const Destructive: Story = {
   parameters: { docs: { description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /excluir conta/i });
+    await expect(btn).toHaveClass('nds-button-destructive');
   },
 };
 
@@ -40,7 +45,8 @@ export const Outline: Story = {
   parameters: { docs: { description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /cancelar/i });
+    await expect(btn).toHaveClass('nds-button-outline');
   },
 };
 
@@ -49,7 +55,8 @@ export const Secondary: Story = {
   parameters: { docs: { description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /ver detalhes/i });
+    await expect(btn).toHaveClass('nds-button-secondary');
   },
 };
 
@@ -58,7 +65,8 @@ export const Ghost: Story = {
   parameters: { docs: { description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /fechar/i });
+    await expect(btn).toHaveClass('nds-button-ghost');
   },
 };
 
@@ -67,6 +75,7 @@ export const Link: Story = {
   parameters: { docs: { description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /saiba mais/i });
+    await expect(btn).toHaveClass('nds-button-link');
   },
 };

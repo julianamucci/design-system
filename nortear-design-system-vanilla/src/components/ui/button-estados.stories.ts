@@ -21,7 +21,8 @@ export const Disabled: Story = {
     (btn as HTMLButtonElement & { __handler: ReturnType<typeof fn> }).__handler = handler;
     return btn;
   },
-  parameters: { docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
+  parameters: {
+    covers: ['functional.item2', 'visual.item4'], docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLButtonElement & { __handler: ReturnType<typeof fn> };
@@ -63,7 +64,8 @@ export const Loading: Story = {
 
 export const FocusVisible: Story = {
   render: () => createButton({ variant: 'default', label: 'Foco visível' }),
-  parameters: { docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
+  parameters: {
+    covers: ['accessibility.item3'], docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;

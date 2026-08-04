@@ -19,10 +19,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'default', label: 'Padrão' } }),
-  parameters: { docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } } },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } },
+  },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /padrão/i });
+    await expect(btn).toHaveClass('nds-button');
+    await expect(btn).not.toHaveClass('nds-button-sm');
+    await expect(btn).not.toHaveClass('nds-button-lg');
   },
 };
 
@@ -31,7 +37,8 @@ export const Small: Story = {
   parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /pequeno/i });
+    await expect(btn).toHaveClass('nds-button-sm');
   },
 };
 
@@ -40,7 +47,8 @@ export const Large: Story = {
   parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: /grande/i });
+    await expect(btn).toHaveClass('nds-button-lg');
   },
 };
 
@@ -54,7 +62,10 @@ const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
 
 export const Icon: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
-  parameters: { docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } } },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4'],
+    docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
+  },
   play: iconAriaLabelPlay,
 };
 

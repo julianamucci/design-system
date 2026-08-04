@@ -33,6 +33,12 @@ const meta: Meta<ButtonArgs> = {
     },
     label:    { control: 'text',    description: 'Texto visível do botão' },
     disabled: { control: 'boolean', description: 'Desabilita o botão'      },
+    // Estava em `args` sem argType: ficava fora da aba API Reference.
+    onClick: {
+      control: false,
+      description: 'Callback disparado ao clique. Não dispara quando desabilitado.',
+      table: { type: { summary: '(e: MouseEvent) => void' } },
+    },
   },
   args: {
     variant:  'default',
@@ -49,6 +55,17 @@ type Story = StoryObj<ButtonArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item5',
+      'visual.item1',
+    ],
+  },
   render: (args) => {
     const isIcon = args.size === 'icon' || args.size === 'icon-sm' || args.size === 'icon-lg';
     const btn = createButton({

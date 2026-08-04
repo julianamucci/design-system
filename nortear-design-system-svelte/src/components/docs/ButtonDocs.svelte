@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Button } from '@/components/ui/button';
+  import { Button, buttonVariants } from '@/components/ui/button';
   import Plus from '@lucide/svelte/icons/plus';
   import Trash2 from '@lucide/svelte/icons/trash-2';
   import Pencil from '@lucide/svelte/icons/pencil';
@@ -172,7 +172,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+        <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
+        <div class="nds-cluster" data-spacing="sm">
           <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
           <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
           <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
@@ -353,7 +354,9 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button variant="ghost">{$tStore('demonstration.labels.ghost')}</Button>
       {/snippet}
       {#snippet variantAsLink()}
-        <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
+        <!-- O snippet ao lado mostra buttonVariants aplicado num <a>; a demo
+             renderizava um link de texto comum, então ilustrava outra coisa. -->
+        <a href="#docs" class={buttonVariants({ variant: 'link' })}>Ver documentação</a>
       {/snippet}
 
       <!-- ── Tamanhos ───────────────────────────────────────────────── -->
@@ -493,7 +496,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
               { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
               { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos e a semântica de link.' },
               { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.disabled')) },
-              { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml($tStore('props.table.type')) },
+              { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml($tStore('props.table.htmlType')) },
               { name: 'onclick',  type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.onClick')) },
               { name: 'class',    type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: $tStore('props.table.className') },
             ],
@@ -513,14 +516,17 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           description: $tStore('tokens.table.part'),
         }}
         items={[
-          { token: '--primary',            value: 'bg-primary',                  description: $tStore('tokens.table.primary') },
-          { token: '--primary-foreground', value: 'text-primary-foreground',     description: $tStore('tokens.table.primaryForeground') },
-          { token: '--secondary',          value: 'bg-secondary',                description: $tStore('tokens.table.secondary') },
-          { token: '--destructive',        value: 'bg-destructive text-white',   description: $tStore('tokens.table.destructive') },
-          { token: '--border',             value: 'border',                      description: $tStore('tokens.table.border') },
-          { token: '--accent',             value: 'nds-hover-bg-accent',             description: $tStore('tokens.table.accent') },
-          { token: '--ring',               value: 'nds-focus-ring',  description: $tStore('tokens.table.ring') },
-          { token: '--radius',             value: 'rounded-lg',                  description: $tStore('tokens.table.radius') },
+          // A coluna aponta ONDE o token é lido no CSS do componente. Antes
+          // listava classes do Tailwind (bg-primary, rounded-lg) que não
+          // existem mais: quem seguisse a tabela não mudava nada.
+          { token: '--primary',            value: '.nds-button-default',     description: $tStore('tokens.table.primary') },
+          { token: '--primary-foreground', value: '.nds-button-default',     description: $tStore('tokens.table.primaryForeground') },
+          { token: '--secondary',          value: '.nds-button-secondary',   description: $tStore('tokens.table.secondary') },
+          { token: '--destructive',        value: '.nds-button-destructive', description: $tStore('tokens.table.destructive') },
+          { token: '--border',             value: '.nds-button-outline',     description: $tStore('tokens.table.border') },
+          { token: '--accent',             value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: $tStore('tokens.table.accent') },
+          { token: '--ring',               value: '.nds-button:focus-visible', description: $tStore('tokens.table.ring') },
+          { token: '--radius-button',      value: '.nds-button',             description: $tStore('tokens.table.radius') },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeCustomizationTokens}

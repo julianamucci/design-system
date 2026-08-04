@@ -18,6 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => <Button>Salvar</Button>,
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story: "Variante primária. Use para a ação principal de uma seção.",
@@ -25,8 +26,8 @@ export const Default: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /salvar/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /salvar/i });
+    await expect(btn).toHaveClass("nds-button-default");
   },
 };
 
@@ -40,8 +41,8 @@ export const Destructive: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /excluir conta/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /excluir conta/i });
+    await expect(btn).toHaveClass("nds-button-destructive");
   },
 };
 
@@ -55,8 +56,8 @@ export const Outline: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /cancelar/i });
+    await expect(btn).toHaveClass("nds-button-outline");
   },
 };
 
@@ -70,8 +71,8 @@ export const Secondary: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /ver detalhes/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /ver detalhes/i });
+    await expect(btn).toHaveClass("nds-button-secondary");
   },
 };
 
@@ -85,8 +86,8 @@ export const Ghost: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /fechar/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /fechar/i });
+    await expect(btn).toHaveClass("nds-button-ghost");
   },
 };
 
@@ -100,7 +101,7 @@ export const Link: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /saiba mais/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /saiba mais/i });
+    await expect(btn).toHaveClass("nds-button-link");
   },
 };

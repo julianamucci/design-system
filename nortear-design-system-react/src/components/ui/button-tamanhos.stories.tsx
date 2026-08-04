@@ -17,47 +17,50 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => <Button>Padrão (h-9)</Button>,
+  render: () => <Button>Padrão</Button>,
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
-        story: "Tamanho padrão (36px). Use em formulários e diálogos como default.",
+        story: "Tamanho padrão. Use em formulários e diálogos como default.",
       },
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /padrão/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /padrão/i });
+    await expect(btn).toHaveClass("nds-button");
+    await expect(btn).not.toHaveClass("nds-button-sm");
+    await expect(btn).not.toHaveClass("nds-button-lg");
   },
 };
 
 export const Small: Story = {
-  render: () => <Button size="sm">Pequeno (h-8)</Button>,
+  render: () => <Button size="sm">Pequeno</Button>,
   parameters: {
     docs: {
       description: {
-        story: "Tamanho pequeno (32px). Use em toolbars e áreas densas.",
+        story: "Tamanho pequeno. Use em toolbars e áreas densas.",
       },
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /pequeno/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /pequeno/i });
+    await expect(btn).toHaveClass("nds-button-sm");
   },
 };
 
 export const Large: Story = {
-  render: () => <Button size="lg">Grande (h-10)</Button>,
+  render: () => <Button size="lg">Grande</Button>,
   parameters: {
     docs: {
       description: {
-        story: "Tamanho grande (40px). Use em CTAs de destaque e hero sections.",
+        story: "Tamanho grande. Use em CTAs de destaque e hero sections.",
       },
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("button", { name: /grande/i })).toBeInTheDocument();
+    const btn = within(canvasElement).getByRole("button", { name: /grande/i });
+    await expect(btn).toHaveClass("nds-button-lg");
   },
 };
 
@@ -68,9 +71,10 @@ export const Icon: Story = {
     </Button>
   ),
   parameters: {
+    covers: ["functional.item6", "accessibility.item4"],
     docs: {
       description: {
-        story: "Botão ícone padrão (36×36). Sempre forneça aria-label descritivo.",
+        story: "Botão ícone padrão. Sempre forneça aria-label descritivo.",
       },
     },
   },
@@ -92,7 +96,7 @@ export const IconSmall: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Botão ícone pequeno (32×32). Use em toolbars compactas.",
+        story: "Botão ícone pequeno. Use em toolbars compactas.",
       },
     },
   },
@@ -114,7 +118,7 @@ export const IconLarge: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Botão ícone grande (40×40). Use como FAB ou CTAs visuais.",
+        story: "Botão ícone grande. Use como FAB ou CTAs visuais.",
       },
     },
   },

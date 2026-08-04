@@ -23,10 +23,16 @@ export const ComIconeAEsquerda: Story = {
     Component: ButtonStory,
     props: { variant: 'default', label: 'Adicionar item', iconStart: 'plus' },
   }),
-  parameters: { docs: { description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' } } },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' } },
+  },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: 'Adicionar item' });
+    // Nome exato: se o ícone deixasse de ser aria-hidden ele entraria no nome.
+    await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    await expect(btn.firstElementChild).toBe(btn.querySelector('svg'));
   },
 };
 
@@ -38,7 +44,11 @@ export const ComIconeADireita: Story = {
   parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: 'Próximo' });
+    const svg = btn.querySelector('svg');
+    await expect(svg).toHaveAttribute('aria-hidden', 'true');
+    // É o que distingue esta story da anterior: o ícone vem DEPOIS do label.
+    await expect(btn.lastElementChild).toBe(svg);
   },
 };
 
@@ -50,7 +60,9 @@ export const IconeDestrutivo: Story = {
   parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const btn = within(canvasElement).getByRole('button', { name: 'Excluir' });
+    await expect(btn).toHaveClass('nds-button-destructive');
+    await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 
@@ -78,7 +90,13 @@ export const ParDeAcoes: Story = {
   parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
 
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const canvas = within(canvasElement);
+    const cancelar = canvas.getByRole('button', { name: 'Cancelar' });
+    const confirmar = canvas.getByRole('button', { name: 'Confirmar' });
+    await expect(cancelar).toHaveClass('nds-button-outline');
+    await expect(confirmar).toHaveClass('nds-button-default');
+    // A regra documentada é a ordem: a primária fica à direita.
+    await expect(cancelar.compareDocumentPosition(confirmar)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   },
 };
 
@@ -87,7 +105,10 @@ export const AsLink: Story = {
     Component: ButtonStory,
     props: { variant: 'link', label: 'Ver documentação', href: '#docs' },
   }),
-  parameters: { docs: { description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' } } },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

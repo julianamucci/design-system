@@ -22,6 +22,7 @@ export const Disabled: Story = {
     </Button>
   ),
   parameters: {
+    covers: ["functional.item2", "visual.item4"],
     docs: {
       description: {
         story: "Estado desabilitado. Previne cliques e reduz opacidade para 50%.",
@@ -46,7 +47,9 @@ export const Disabled: Story = {
 export const Loading: Story = {
   render: (args) => (
     <Button {...args} disabled aria-busy="true">
-      <Loader2 aria-hidden="true" className="nds-animate-spin" />
+      {/* .nds-spin (button.css) tem guarda de prefers-reduced-motion;
+          .nds-animate-spin (utilities.css) não tem. */}
+      <Loader2 aria-hidden="true" className="nds-button-icon-svg nds-spin" />
       Salvando…
     </Button>
   ),
@@ -74,6 +77,7 @@ export const Loading: Story = {
 export const FocusVisible: Story = {
   render: (args) => <Button {...args}>Foco visível</Button>,
   parameters: {
+    covers: ["accessibility.item3"],
     docs: {
       description: {
         story: "Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.",

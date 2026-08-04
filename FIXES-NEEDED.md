@@ -1052,3 +1052,42 @@ Falhas pré-existentes, sem relação com animação (falham com e sem emulaçã
 Os 4 agents compartilham o mesmo diretório de scratchpad: um baseline foi
 sobrescrito por outro agent e houve stdout interleaved. Exigir nome de arquivo
 por stack e conferir o cabeçalho `RUN … /<stack>` antes de concluir número.
+
+## /quality button — 2026-08-04
+
+### `xs` / `icon-xs`: tamanho real, inalcançável e não documentado
+
+`docs/shared/styles/nds/button.css` define `.nds-button-xs` (12px, padding-block
+2px) e `.nds-button-icon-xs` (24px). React, Vue e Svelte expõem os dois no
+`cva`. O Vanilla **não**: `ButtonSize` lista 6 valores e `btnClass()` não mapeia
+`xs`/`icon-xs`, então quem usa a factory não alcança um tamanho que existe no
+CSS compartilhado. E nenhuma stack documenta: `variants.sizes` do
+`translations.json` tem 6 entradas, os `argTypes` oferecem 6 opções e não há
+story.
+
+- [ ] Vanilla: incluir `xs` e `icon-xs` em `ButtonSize` e em `btnClass()`
+- [ ] `translations.json`: `variants.sizes.xs` e `.icon-xs` nos 3 idiomas
+- [ ] `argTypes.size.options` das 4 stacks: 8 opções
+- [ ] Stories `ExtraSmall` / `IconExtraSmall` nas 4 (nascem juntas ou nenhuma —
+  criar só numa gera `coverage_divergence`)
+
+### "Ver documentação" em pt-BR fixo na demo de link — 4 stacks
+
+O exemplo "como link" das 4 docs pages renderiza o rótulo em português direto no
+código, sem passar por `translations.json`. Numa página trilíngue o texto não
+troca com o idioma. Precisa de chave nova (`variants.items.asLink.linkLabel`)
+consumida pelas 4.
+
+### Rótulos dos snippets divergem das stories
+
+Os `code*` das docs pages usam "Excluir item", "Editar", "Ver detalhes"; as
+stories de variantes usam "Excluir conta", "Fechar", "Ver detalhes". O Chromatic
+fotografa a story, então a regressão visual protege um exemplo que a
+documentação não mostra. Alinhar os snippets aos rótulos das stories nas 4.
+
+### Spy preso ao nó do DOM — vanilla, `button-estados`
+
+`Disabled` cria o `fn()` dentro do `render` e o pendura no elemento
+(`btn.__handler`) para o `play` alcançar. Funciona, mas o spy fica fora do
+escopo de módulo e o padrão não se repete em nenhuma outra stack. Trocar por
+spy de módulo quando o `createButton` aceitar handler injetável na story.

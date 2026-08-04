@@ -255,20 +255,24 @@ const buttonPropItems = computed(() => [
   { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.size')) },
   { name: 'asChild',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.asChild')) },
   { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.disabled')) },
-  { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(tContent('props.table.type')) },
+  // htmlType, não `type`: esta última é o cabeçalho da coluna.
+  { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(tContent('props.table.htmlType')) },
   { name: '@click',   type: '(event: MouseEvent) => void',                                            defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.onClick')) },
   { name: 'class',    type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className')) },
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--primary',            value: 'bg-primary',            description: tContent('tokens.table.primary')            },
-  { token: '--primary-foreground', value: 'text-primary-foreground', description: tContent('tokens.table.primaryForeground') },
-  { token: '--secondary',          value: 'bg-secondary',          description: tContent('tokens.table.secondary')          },
-  { token: '--destructive',        value: 'bg-destructive',        description: tContent('tokens.table.destructive')        },
-  { token: '--border',             value: 'border',                description: tContent('tokens.table.border')             },
-  { token: '--accent',             value: 'bg-accent',             description: tContent('tokens.table.accent')             },
-  { token: '--ring',               value: 'nds-focus-ring', description: tContent('tokens.table.ring')          },
-  { token: '--radius',             value: 'rounded-md',            description: tContent('tokens.table.radius')             },
+  // A coluna aponta ONDE o token é lido no CSS do componente. Antes listava
+  // classes do Tailwind (bg-primary, rounded-md) que não existem mais: quem
+  // seguisse a tabela não mudava nada.
+  { token: '--primary',            value: '.nds-button-default',   description: tContent('tokens.table.primary')            },
+  { token: '--primary-foreground', value: '.nds-button-default',   description: tContent('tokens.table.primaryForeground') },
+  { token: '--secondary',          value: '.nds-button-secondary', description: tContent('tokens.table.secondary')          },
+  { token: '--destructive',        value: '.nds-button-destructive', description: tContent('tokens.table.destructive')      },
+  { token: '--border',             value: '.nds-button-outline',   description: tContent('tokens.table.border')             },
+  { token: '--accent',             value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: tContent('tokens.table.accent') },
+  { token: '--ring',               value: '.nds-button:focus-visible', description: tContent('tokens.table.ring')          },
+  { token: '--radius-button',      value: '.nds-button',           description: tContent('tokens.table.radius')             },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -280,7 +284,10 @@ const keyboardItems = computed(() => [
   { key: 'Tab',    description: tContent('accessibility.keyboard.tab')    },
   { key: 'Enter',  description: tContent('accessibility.keyboard.enter')  },
   { key: 'Space',  description: tContent('accessibility.keyboard.space')  },
-  { key: 'Escape', description: tContent('accessibility.keyboard.escape') },
+  // Era `Escape`, tecla que o button não trata e cuja chave não existe — a
+  // linha saía com o nome da chave como texto. As outras stacks documentam
+  // aqui o comportamento em disabled.
+  { key: '—',      description: tContent('accessibility.keyboard.disabled') },
 ]);
 
 const relatedItems = computed(() => [
@@ -361,10 +368,10 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
+      <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
       <div
         class="nds-cluster"
         data-spacing="sm"
-        style="flex-wrap: wrap"
       >
         <Button @click="handleDemoClick('default')">
           {{ tContent('demonstration.labels.primary') }}
@@ -442,9 +449,10 @@ function handleDemoClick(variant: string) {
         title: tContent('usage.uxWriting.title'),
         cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
         items: [
-          { element: tContent('usage.uxWriting.table.primary.name'), rules: tContent('usage.uxWriting.table.primary.format'), do: tContent('usage.uxWriting.table.primary.good'), dont: tContent('usage.uxWriting.table.primary.bad') },
-          { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
-          { element: tContent('usage.uxWriting.table.cancel.name'), rules: tContent('usage.uxWriting.table.cancel.format'), do: tContent('usage.uxWriting.table.cancel.good'), dont: tContent('usage.uxWriting.table.cancel.bad') },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
+          { element: tContent('usage.uxWriting.table.iconOnly.name'), rules: tContent('usage.uxWriting.table.iconOnly.format'), do: stripHtml(tContent('usage.uxWriting.table.iconOnly.good')), dont: stripHtml(tContent('usage.uxWriting.table.iconOnly.bad')) },
+          { element: tContent('usage.uxWriting.table.loading.name'), rules: tContent('usage.uxWriting.table.loading.format'), do: tContent('usage.uxWriting.table.loading.good'), dont: tContent('usage.uxWriting.table.loading.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"

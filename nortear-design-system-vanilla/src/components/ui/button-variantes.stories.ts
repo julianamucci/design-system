@@ -16,60 +16,63 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => createButton({ variant: 'default', label: 'Salvar' }),
-  parameters: { docs: { description: { story: 'Ação primária. Use uma única vez por seção.' } } },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { description: { story: 'Variante primária. Use para a ação principal de uma seção.' } },
+  },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /salvar/i });
+    await expect(btn).toHaveClass('nds-button-default');
   },
 };
 
 export const Destructive: Story = {
-  render: () => createButton({ variant: 'destructive', label: 'Excluir' }),
-  parameters: { docs: { description: { story: 'Ações irreversíveis. Sempre confirmar via AlertDialog.' } } },
+  render: () => createButton({ variant: 'destructive', label: 'Excluir conta' }),
+  parameters: { docs: { description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /excluir conta/i });
+    await expect(btn).toHaveClass('nds-button-destructive');
   },
 };
 
 export const Outline: Story = {
   render: () => createButton({ variant: 'outline', label: 'Cancelar' }),
-  parameters: { docs: { description: { story: 'Ação secundária com destaque. Combina com default em par de ações.' } } },
+  parameters: { docs: { description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /cancelar/i });
+    await expect(btn).toHaveClass('nds-button-outline');
   },
 };
 
 export const Secondary: Story = {
-  render: () => createButton({ variant: 'secondary', label: 'Ver mais' }),
-  parameters: { docs: { description: { story: 'Ação secundária neutra, menos proeminente que outline.' } } },
+  render: () => createButton({ variant: 'secondary', label: 'Ver detalhes' }),
+  parameters: { docs: { description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /ver detalhes/i });
+    await expect(btn).toHaveClass('nds-button-secondary');
   },
 };
 
 export const Ghost: Story = {
-  render: () => createButton({ variant: 'ghost', label: 'Editar' }),
-  parameters: { docs: { description: { story: 'Ação discreta em toolbars e menus. Sem borda, hover com accent.' } } },
+  render: () => createButton({ variant: 'ghost', label: 'Fechar' }),
+  parameters: { docs: { description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /fechar/i });
+    await expect(btn).toHaveClass('nds-button-ghost');
   },
 };
 
 export const Link: Story = {
   render: () => createButton({ variant: 'link', label: 'Saiba mais' }),
-  parameters: { docs: { description: { story: 'Aparência de link. Prefira um <a> real quando possível.' } } },
+  parameters: { docs: { description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /saiba mais/i });
+    await expect(btn).toHaveClass('nds-button-link');
   },
 };
