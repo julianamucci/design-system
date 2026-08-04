@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(carouselTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -661,13 +658,13 @@ const carousel = createCarousel({ items });`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: ['single', 'multi', 'autoplay', 'vertical', 'disabled'].map((key) => ({
             label: t(`states.${key}.label`),
-            trigger: stripHtml(t(`states.${key}.trigger`)),
-            behavior: stripHtml(t(`states.${key}.behavior`)),
+            trigger: toPlainText(t(`states.${key}.trigger`)),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
           })),
         });
 
@@ -706,35 +703,35 @@ export type CarouselOptions = {
                   type: 'HTMLElement[]',
                   defaultValue: '—',
                   required: 'Sim',
-                  description: stripHtml(t('props.table.children')),
+                  description: toPlainText(t('props.table.children')),
                 },
                 {
                   name: 'autoplay',
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: stripHtml(t('props.table.plugins')),
+                  description: toPlainText(t('props.table.plugins')),
                 },
                 {
                   name: 'autoplayInterval',
                   type: 'number',
                   defaultValue: '3000',
                   required: 'Não',
-                  description: stripHtml(t('props.table.opts')),
+                  description: toPlainText(t('props.table.opts')),
                 },
                 {
                   name: 'onIndexChange',
                   type: '(index: number) => void',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.setApi')),
+                  description: toPlainText(t('props.table.setApi')),
                 },
                 {
                   name: 'class',
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.className')),
+                  description: toPlainText(t('props.table.className')),
                 },
               ],
             },
@@ -827,33 +824,33 @@ export type CarouselOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: t('analytics.table.slideChange'),
-              trigger: t('analytics.table.slideChangeTrigger'),
+              trigger: toPlainText(t('analytics.table.slideChangeTrigger')),
               payload: t('analytics.table.slideChangePayload'),
             },
             {
               event: t('analytics.table.autoplayPause'),
-              trigger: t('analytics.table.autoplayPauseTrigger'),
+              trigger: toPlainText(t('analytics.table.autoplayPauseTrigger')),
               payload: t('analytics.table.autoplayPausePayload'),
             },
             {
               event: t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event: t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event: t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],
@@ -870,8 +867,8 @@ export type CarouselOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -883,9 +880,9 @@ export type CarouselOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map((i) => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -895,7 +892,7 @@ export type CarouselOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map((i) => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

@@ -26,6 +26,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/collapsible/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -121,8 +118,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -310,23 +305,23 @@ const compositionItems = computed(() => [
 const stateItems = computed(() => [
   {
     label: tContent('states.closed.label'),
-    trigger: stripHtml(tContent('states.closed.trigger')),
-    behavior: tContent('states.closed.behavior'),
+    trigger: toPlainText(tContent('states.closed.trigger')),
+    behavior: toPlainText(tContent('states.closed.behavior')),
   },
   {
     label: tContent('states.open.label'),
-    trigger: stripHtml(tContent('states.open.trigger')),
-    behavior: tContent('states.open.behavior'),
+    trigger: toPlainText(tContent('states.open.trigger')),
+    behavior: toPlainText(tContent('states.open.behavior')),
   },
   {
     label: tContent('states.defaultOpen.label'),
-    trigger: stripHtml(tContent('states.defaultOpen.trigger')),
-    behavior: tContent('states.defaultOpen.behavior'),
+    trigger: toPlainText(tContent('states.defaultOpen.trigger')),
+    behavior: toPlainText(tContent('states.defaultOpen.behavior')),
   },
   {
     label: tContent('states.disabled.label'),
-    trigger: stripHtml(tContent('states.disabled.trigger')),
-    behavior: tContent('states.disabled.behavior'),
+    trigger: toPlainText(tContent('states.disabled.trigger')),
+    behavior: toPlainText(tContent('states.disabled.behavior')),
   },
 ]);
 
@@ -339,14 +334,14 @@ const propCols = computed(() => ({
 }));
 
 const collapsiblePropItems = computed(() => [
-  { name: 'open',          type: 'boolean',                       defaultValue: '—',       required: 'Não', description: stripHtml(tContent('props.table.open'))         },
+  { name: 'open',          type: 'boolean',                       defaultValue: '—',       required: 'Não', description: toPlainText(tContent('props.table.open'))         },
   { name: 'defaultOpen',   type: 'boolean',                       defaultValue: 'false',   required: 'Não', description: tContent('props.table.defaultOpen')             },
   { name: 'disabled',      type: 'boolean',                       defaultValue: 'false',   required: 'Não', description: tContent('props.table.disabled')                },
   { name: 'onOpenChange',  type: '(open: boolean) => void',       defaultValue: '—',       required: 'Não', description: tContent('props.table.onOpenChange')            },
 ]);
 
 const triggerPropItems = computed(() => [
-  { name: 'asChild', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.asChild')) },
+  { name: 'asChild', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.asChild')) },
 ]);
 
 const contentPropItems = computed(() => [
@@ -391,10 +386,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.toggle'),       trigger: tContent('analytics.table.toggleTrigger'),       payload: tContent('analytics.table.togglePayload')       },
-  { event: tContent('analytics.table.pageView'),     trigger: tContent('analytics.table.pageViewTrigger'),     payload: tContent('analytics.table.pageViewPayload')     },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),   trigger: tContent('analytics.table.langSwitchTrigger'),   payload: tContent('analytics.table.langSwitchPayload')   },
+  { event: tContent('analytics.table.toggle'),       trigger: toPlainText(tContent('analytics.table.toggleTrigger')),       payload: tContent('analytics.table.togglePayload')       },
+  { event: tContent('analytics.table.pageView'),     trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),     payload: tContent('analytics.table.pageViewPayload')     },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),   trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),   payload: tContent('analytics.table.langSwitchPayload')   },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -939,8 +934,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -999,7 +994,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

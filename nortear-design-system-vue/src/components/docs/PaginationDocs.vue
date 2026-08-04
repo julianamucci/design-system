@@ -32,6 +32,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -52,15 +53,11 @@ const { t: tNav } = useTranslation(uiTranslations);
 // ─── Locale-aware column labels ───────────────────────────────────────────────
 const stateCols = computed(() => ({
   state: tContent('states.cols.state'),
-  trigger: tContent('states.cols.trigger'),
-  behavior: tContent('states.cols.behavior'),
+  trigger: toPlainText(tContent('states.cols.trigger')),
+  behavior: toPlainText(tContent('states.cols.behavior')),
 }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'Alta',
@@ -140,8 +137,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -320,14 +315,13 @@ const codeCompInteractive = `const current = ref(3);
 </Pagination>
 <p>Página {{ current }} de 8</p>`;
 
-
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: stripHtml(tContent('states.default.behavior')) },
-  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.active.label'),   trigger: tContent('states.active.trigger'),   behavior: stripHtml(tContent('states.active.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
-  { label: tContent('states.lastPage.label'), trigger: stripHtml(tContent('states.lastPage.trigger')), behavior: stripHtml(tContent('states.lastPage.behavior')) },
+  { label: tContent('states.default.label'),  trigger: toPlainText(tContent('states.default.trigger')),  behavior: toPlainText(tContent('states.default.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: toPlainText(tContent('states.hover.trigger')),    behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.active.label'),   trigger: toPlainText(tContent('states.active.trigger')),   behavior: toPlainText(tContent('states.active.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior')) },
+  { label: tContent('states.lastPage.label'), trigger: toPlainText(tContent('states.lastPage.trigger')), behavior: toPlainText(tContent('states.lastPage.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -339,16 +333,16 @@ const propCols = computed(() => ({
 }));
 
 const linkPropItems = computed(() => [
-  { name: 'isActive',  type: tContent('props.table.isActive.type'),  defaultValue: tContent('props.table.isActive.default'),  required: tContent('props.table.isActive.required'),  description: stripHtml(tContent('props.table.isActive.description'))  },
-  { name: 'size',      type: tContent('props.table.size.type'),      defaultValue: tContent('props.table.size.default'),      required: tContent('props.table.size.required'),      description: stripHtml(tContent('props.table.size.description'))      },
+  { name: 'isActive',  type: tContent('props.table.isActive.type'),  defaultValue: tContent('props.table.isActive.default'),  required: tContent('props.table.isActive.required'),  description: toPlainText(tContent('props.table.isActive.description'))  },
+  { name: 'size',      type: tContent('props.table.size.type'),      defaultValue: tContent('props.table.size.default'),      required: tContent('props.table.size.required'),      description: toPlainText(tContent('props.table.size.description'))      },
   { name: 'href',      type: 'string',                                defaultValue: '—',                                       required: 'Não',                                        description: 'URL do link. Em SPA pode ser omitido — o componente dispara onClick.' },
-  { name: 'class',     type: tContent('props.table.className.type'), defaultValue: tContent('props.table.className.default'), required: tContent('props.table.className.required'), description: stripHtml(tContent('props.table.className.description')) },
+  { name: 'class',     type: tContent('props.table.className.type'), defaultValue: tContent('props.table.className.default'), required: tContent('props.table.className.required'), description: toPlainText(tContent('props.table.className.description')) },
 ]);
 
 const directionalPropItems = computed(() => [
-  { name: 'text',  type: tContent('props.table.text.type'),  defaultValue: tContent('props.table.text.default'),  required: tContent('props.table.text.required'),  description: stripHtml(tContent('props.table.text.description'))  },
-  { name: 'size',  type: tContent('props.table.size.type'),  defaultValue: '"default"',                            required: tContent('props.table.size.required'),  description: stripHtml(tContent('props.table.size.description'))  },
-  { name: 'class', type: tContent('props.table.className.type'), defaultValue: tContent('props.table.className.default'), required: tContent('props.table.className.required'), description: stripHtml(tContent('props.table.className.description')) },
+  { name: 'text',  type: tContent('props.table.text.type'),  defaultValue: tContent('props.table.text.default'),  required: tContent('props.table.text.required'),  description: toPlainText(tContent('props.table.text.description'))  },
+  { name: 'size',  type: tContent('props.table.size.type'),  defaultValue: '"default"',                            required: tContent('props.table.size.required'),  description: toPlainText(tContent('props.table.size.description'))  },
+  { name: 'class', type: tContent('props.table.className.type'), defaultValue: tContent('props.table.className.default'), required: tContent('props.table.className.required'), description: toPlainText(tContent('props.table.className.description')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -392,14 +386,14 @@ const noteItems = computed(() => [
 const analyticsItems = computed(() => [
   {
     event: 'page_change',
-    trigger: tContent('analytics.table.page_change.trigger'),
+    trigger: toPlainText(tContent('analytics.table.page_change.trigger')),
     payload: tContent('analytics.table.page_change.payload'),
   },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
-  action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-  result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
@@ -959,7 +953,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

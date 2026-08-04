@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -75,7 +72,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -618,7 +614,7 @@ interface ToasterProps {
           <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
             <p className="nds-text-body nds-font-semibold">{tContent("states.items.withAction.label")}</p>
             <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {stripHtml(tContent("states.items.withAction.description"))}
+              {toPlainText(tContent("states.items.withAction.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
@@ -688,7 +684,7 @@ interface ToasterProps {
           <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
             <p className="nds-text-body nds-font-semibold">{tContent("states.items.persistent.label")}</p>
             <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {stripHtml(tContent("states.items.persistent.description"))}
+              {toPlainText(tContent("states.items.persistent.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
@@ -734,7 +730,7 @@ interface ToasterProps {
                 type: "ToastPosition",
                 defaultValue: '"bottom-right"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.position")),
+                description: toPlainText(tContent("props.table.position")),
               },
               {
                 name: "richColors",
@@ -762,7 +758,7 @@ interface ToasterProps {
                 type: '"light" | "dark" | "system"',
                 defaultValue: '"system"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.theme")),
+                description: toPlainText(tContent("props.table.theme")),
               },
               {
                 name: "icons",
@@ -776,7 +772,7 @@ interface ToasterProps {
                 type: "ToastOptions",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.toastOptions")),
+                description: toPlainText(tContent("props.table.toastOptions")),
               },
             ],
           },
@@ -869,28 +865,28 @@ interface ToasterProps {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.actionClick"),
-            trigger: tContent("analytics.table.actionClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.actionClickTrigger")),
             payload: tContent("analytics.table.actionClickPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

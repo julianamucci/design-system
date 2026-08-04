@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(checkboxTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -672,15 +669,15 @@ label.textContent = 'Aceito os termos e condições';`,
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.unchecked.label'),     trigger: t('states.unchecked.trigger'),     behavior: stripHtml(t('states.unchecked.behavior')) },
-            { label: t('states.checked.label'),       trigger: stripHtml(t('states.checked.trigger')),       behavior: stripHtml(t('states.checked.behavior')) },
-            { label: t('states.indeterminate.label'), trigger: stripHtml(t('states.indeterminate.trigger')), behavior: stripHtml(t('states.indeterminate.behavior')) },
-            { label: t('states.disabled.label'),      trigger: stripHtml(t('states.disabled.trigger')),      behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.error.label'),         trigger: stripHtml(t('states.error.trigger')),         behavior: stripHtml(t('states.error.behavior')) },
+            { label: t('states.unchecked.label'),     trigger: toPlainText(t('states.unchecked.trigger')),     behavior: toPlainText(t('states.unchecked.behavior')) },
+            { label: t('states.checked.label'),       trigger: toPlainText(t('states.checked.trigger')),       behavior: toPlainText(t('states.checked.behavior')) },
+            { label: t('states.indeterminate.label'), trigger: toPlainText(t('states.indeterminate.trigger')), behavior: toPlainText(t('states.indeterminate.behavior')) },
+            { label: t('states.disabled.label'),      trigger: toPlainText(t('states.disabled.trigger')),      behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.error.label'),         trigger: toPlainText(t('states.error.trigger')),         behavior: toPlainText(t('states.error.behavior')) },
           ],
         });
 
@@ -777,9 +774,9 @@ export type CheckboxOptions = {
           keyboardTitle: 'Navegação por teclado',
           keyboardItems: [
             { key: 'Tab',       description: t('accessibility.keyboard.tab') },
-            { key: 'Space',     description: stripHtml(t('accessibility.keyboard.space')) },
+            { key: 'Space',     description: toPlainText(t('accessibility.keyboard.space')) },
             { key: 'Shift+Tab', description: t('accessibility.keyboard.shiftTab') },
-            { key: '—',         description: stripHtml(t('accessibility.keyboard.disabled')) },
+            { key: '—',         description: toPlainText(t('accessibility.keyboard.disabled')) },
           ],
         });
 
@@ -810,14 +807,14 @@ export type CheckboxOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.fieldChange'),    trigger: t('analytics.table.fieldChangeTrigger'),    payload: t('analytics.table.fieldChangePayload') },
-            { event: t('analytics.table.pageView'),       trigger: t('analytics.table.pageViewTrigger'),       payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'),  trigger: t('analytics.table.sectionViewedTrigger'),  payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),     trigger: t('analytics.table.langSwitchTrigger'),     payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.fieldChange'),    trigger: toPlainText(t('analytics.table.fieldChangeTrigger')),    payload: t('analytics.table.fieldChangePayload') },
+            { event: t('analytics.table.pageView'),       trigger: toPlainText(t('analytics.table.pageViewTrigger')),       payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'),  trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),  payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),     trigger: toPlainText(t('analytics.table.langSwitchTrigger')),     payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 
@@ -832,8 +829,8 @@ export type CheckboxOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -845,9 +842,9 @@ export type CheckboxOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -857,7 +854,7 @@ export type CheckboxOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

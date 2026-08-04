@@ -55,12 +55,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -107,7 +104,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Sidebar Demo Preview ─────────────────────────────────────────────────────
 
@@ -994,34 +990,34 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.expanded.label"),
-            trigger: stripHtml(tContent("states.expanded.trigger")),
-            behavior: tContent("states.expanded.behavior"),
+            trigger: toPlainText(tContent("states.expanded.trigger")),
+            behavior: toPlainText(tContent("states.expanded.behavior")),
           },
           {
             label: tContent("states.collapsed.label"),
-            trigger: stripHtml(tContent("states.collapsed.trigger")),
-            behavior: tContent("states.collapsed.behavior"),
+            trigger: toPlainText(tContent("states.collapsed.trigger")),
+            behavior: toPlainText(tContent("states.collapsed.behavior")),
           },
           {
             label: tContent("states.offcanvas.label"),
-            trigger: stripHtml(tContent("states.offcanvas.trigger")),
-            behavior: tContent("states.offcanvas.behavior"),
+            trigger: toPlainText(tContent("states.offcanvas.trigger")),
+            behavior: toPlainText(tContent("states.offcanvas.behavior")),
           },
           {
             label: tContent("states.mobile.label"),
-            trigger: stripHtml(tContent("states.mobile.trigger")),
-            behavior: tContent("states.mobile.behavior"),
+            trigger: toPlainText(tContent("states.mobile.trigger")),
+            behavior: toPlainText(tContent("states.mobile.behavior")),
           },
           {
             label: tContent("states.hidden.label"),
-            trigger: stripHtml(tContent("states.hidden.trigger")),
-            behavior: tContent("states.hidden.behavior"),
+            trigger: toPlainText(tContent("states.hidden.trigger")),
+            behavior: toPlainText(tContent("states.hidden.behavior")),
           },
         ]}
       />
@@ -1316,33 +1312,33 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.navClick"),
-            trigger: tContent("analytics.table.navClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.navClickTrigger")),
             payload: tContent("analytics.table.navClickPayload"),
           },
           {
             event: tContent("analytics.table.toggleOpen"),
-            trigger: tContent("analytics.table.toggleOpenTrigger"),
+            trigger: toPlainText(tContent("analytics.table.toggleOpenTrigger")),
             payload: tContent("analytics.table.togglePayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

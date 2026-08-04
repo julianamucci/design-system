@@ -26,6 +26,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import labelTranslations from '@shared/content/label/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(labelTranslations);
@@ -62,7 +63,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -98,10 +98,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -313,24 +309,24 @@ interface LabelProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
       {
         label: $tStore('states.default.label'),
-        trigger: stripHtml($tStore('states.default.trigger')),
-        behavior: $tStore('states.default.behavior'),
+        trigger: toPlainText($tStore('states.default.trigger')),
+        behavior: toPlainText($tStore('states.default.behavior')),
       },
       {
         label: $tStore('states.disabled.label'),
-        trigger: stripHtml($tStore('states.disabled.trigger')),
-        behavior: stripHtml($tStore('states.disabled.behavior')),
+        trigger: toPlainText($tStore('states.disabled.trigger')),
+        behavior: toPlainText($tStore('states.disabled.behavior')),
       },
       {
         label: $tStore('states.required.label'),
-        trigger: $tStore('states.required.trigger'),
-        behavior: stripHtml($tStore('states.required.behavior')),
+        trigger: toPlainText($tStore('states.required.trigger')),
+        behavior: toPlainText($tStore('states.required.behavior')),
       },
     ]}
   />
@@ -348,7 +344,7 @@ interface LabelProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'for',      type: 'string',  defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.htmlFor'))   },
+          { name: 'for',      type: 'string',  defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.htmlFor'))   },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')             },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children')              },
         ],

@@ -24,6 +24,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -125,8 +122,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -216,10 +211,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.idle.label'),      trigger: tContent('states.idle.trigger'),      behavior: stripHtml(tContent('states.idle.behavior')) },
-  { label: tContent('states.scrolling.label'), trigger: tContent('states.scrolling.trigger'), behavior: stripHtml(tContent('states.scrolling.behavior')) },
-  { label: tContent('states.hover.label'),     trigger: tContent('states.hover.trigger'),     behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.focus.label'),     trigger: tContent('states.focus.trigger'),     behavior: stripHtml(tContent('states.focus.behavior')) },
+  { label: tContent('states.idle.label'),      trigger: toPlainText(tContent('states.idle.trigger')),      behavior: toPlainText(tContent('states.idle.behavior')) },
+  { label: tContent('states.scrolling.label'), trigger: toPlainText(tContent('states.scrolling.trigger')), behavior: toPlainText(tContent('states.scrolling.behavior')) },
+  { label: tContent('states.hover.label'),     trigger: toPlainText(tContent('states.hover.trigger')),     behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),     trigger: toPlainText(tContent('states.focus.trigger')),     behavior: toPlainText(tContent('states.focus.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -231,15 +226,15 @@ const propCols = computed(() => ({
 }));
 
 const scrollAreaPropItems = computed(() => [
-  { name: 'type',            type: tContent('props.table.type_prop.type'),        defaultValue: tContent('props.table.type_prop.default'),        required: tContent('props.table.type_prop.required'),        description: stripHtml(tContent('props.table.type_prop.description'))        },
-  { name: 'scrollHideDelay', type: tContent('props.table.scrollHideDelay.type'),  defaultValue: tContent('props.table.scrollHideDelay.default'),  required: tContent('props.table.scrollHideDelay.required'),  description: stripHtml(tContent('props.table.scrollHideDelay.description'))  },
-  { name: 'class',           type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: stripHtml(tContent('props.table.className.description'))        },
-  { name: 'slot:default',    type: tContent('props.table.children.type'),         defaultValue: tContent('props.table.children.default'),         required: tContent('props.table.children.required'),         description: stripHtml(tContent('props.table.children.description'))         },
+  { name: 'type',            type: tContent('props.table.type_prop.type'),        defaultValue: tContent('props.table.type_prop.default'),        required: tContent('props.table.type_prop.required'),        description: toPlainText(tContent('props.table.type_prop.description'))        },
+  { name: 'scrollHideDelay', type: tContent('props.table.scrollHideDelay.type'),  defaultValue: tContent('props.table.scrollHideDelay.default'),  required: tContent('props.table.scrollHideDelay.required'),  description: toPlainText(tContent('props.table.scrollHideDelay.description'))  },
+  { name: 'class',           type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: toPlainText(tContent('props.table.className.description'))        },
+  { name: 'slot:default',    type: tContent('props.table.children.type'),         defaultValue: tContent('props.table.children.default'),         required: tContent('props.table.children.required'),         description: toPlainText(tContent('props.table.children.description'))         },
 ]);
 
 const scrollBarPropItems = computed(() => [
-  { name: 'orientation', type: tContent('props.table.orientation.type'), defaultValue: tContent('props.table.orientation.default'), required: tContent('props.table.orientation.required'), description: stripHtml(tContent('props.table.orientation.description')) },
-  { name: 'class',       type: tContent('props.table.className.type'),   defaultValue: tContent('props.table.className.default'),   required: tContent('props.table.className.required'),   description: stripHtml(tContent('props.table.className.description'))   },
+  { name: 'orientation', type: tContent('props.table.orientation.type'), defaultValue: tContent('props.table.orientation.default'), required: tContent('props.table.orientation.required'), description: toPlainText(tContent('props.table.orientation.description')) },
+  { name: 'class',       type: tContent('props.table.className.type'),   defaultValue: tContent('props.table.className.default'),   required: tContent('props.table.className.required'),   description: toPlainText(tContent('props.table.className.description'))   },
 ]);
 
 const tokenRows = computed(() => [
@@ -287,7 +282,7 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'content_scroll', trigger: tContent('analytics.table.content_scroll.trigger'), payload: tContent('analytics.table.content_scroll.payload') },
+  { event: 'content_scroll', trigger: toPlainText(tContent('analytics.table.content_scroll.trigger')), payload: tContent('analytics.table.content_scroll.payload') },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -744,8 +739,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -803,7 +798,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

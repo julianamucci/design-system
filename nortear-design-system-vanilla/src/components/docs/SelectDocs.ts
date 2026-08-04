@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(selectTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -684,17 +681,17 @@ form.addEventListener('submit', (e) => {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.selected.label'), trigger: t('states.selected.trigger'), behavior: stripHtml(t('states.selected.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.invalid.label'),  trigger: t('states.invalid.trigger'),  behavior: stripHtml(t('states.invalid.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),     behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.selected.label'), trigger: toPlainText(t('states.selected.trigger')), behavior: toPlainText(t('states.selected.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),  trigger: toPlainText(t('states.invalid.trigger')),  behavior: toPlainText(t('states.invalid.behavior')) },
           ],
         });
 
@@ -731,10 +728,10 @@ export type SelectOptions = {
               cols: propsCols,
               items: [
                 { name: 'items',         type: 'SelectItem[]',                  defaultValue: '—',          required: 'Sim', description: 'Lista plana de opções. Cada item: { value, label, disabled? }.' },
-                { name: 'placeholder',   type: 'string',                        defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.placeholder.description')) + ' Renderizado como `<option>` disabled+hidden no topo.' },
-                { name: 'defaultValue',  type: 'string',                        defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
-                { name: 'disabled',      type: 'boolean',                       defaultValue: 'false',      required: 'Não', description: stripHtml(t('props.table.disabled.description')) },
-                { name: 'onValueChange', type: '(value: string) => void',       defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) },
+                { name: 'placeholder',   type: 'string',                        defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.placeholder.description')) + ' Renderizado como `<option>` disabled+hidden no topo.' },
+                { name: 'defaultValue',  type: 'string',                        defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
+                { name: 'disabled',      type: 'boolean',                       defaultValue: 'false',      required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
+                { name: 'onValueChange', type: '(value: string) => void',       defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
                 { name: 'class',         type: 'string',                        defaultValue: '—',          required: 'Não', description: 'Classes .nds-* adicionais no `<select>` raiz.' },
               ],
             },
@@ -755,14 +752,14 @@ export type SelectOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--input',              value: stripHtml(t('tokens.table.input.class')),              description: stripHtml(t('tokens.table.input.part')) },
-            { token: '--popover',            value: stripHtml(t('tokens.table.popover.class')),            description: stripHtml(t('tokens.table.popover.part')) },
-            { token: '--popover-foreground', value: stripHtml(t('tokens.table.popoverForeground.class')),  description: stripHtml(t('tokens.table.popoverForeground.part')) },
-            { token: '--accent',             value: stripHtml(t('tokens.table.accent.class')),             description: stripHtml(t('tokens.table.accent.part')) },
-            { token: '--accent-foreground',  value: stripHtml(t('tokens.table.accentForeground.class')),   description: stripHtml(t('tokens.table.accentForeground.part')) },
-            { token: '--ring',               value: stripHtml(t('tokens.table.ring.class')),               description: stripHtml(t('tokens.table.ring.part')) },
-            { token: '--destructive',        value: stripHtml(t('tokens.table.destructive.class')),        description: stripHtml(t('tokens.table.destructive.part')) },
-            { token: '--muted-foreground',   value: stripHtml(t('tokens.table.mutedForeground.class')),    description: stripHtml(t('tokens.table.mutedForeground.part')) },
+            { token: '--input',              value: toPlainText(t('tokens.table.input.class')),              description: toPlainText(t('tokens.table.input.part')) },
+            { token: '--popover',            value: toPlainText(t('tokens.table.popover.class')),            description: toPlainText(t('tokens.table.popover.part')) },
+            { token: '--popover-foreground', value: toPlainText(t('tokens.table.popoverForeground.class')),  description: toPlainText(t('tokens.table.popoverForeground.part')) },
+            { token: '--accent',             value: toPlainText(t('tokens.table.accent.class')),             description: toPlainText(t('tokens.table.accent.part')) },
+            { token: '--accent-foreground',  value: toPlainText(t('tokens.table.accentForeground.class')),   description: toPlainText(t('tokens.table.accentForeground.part')) },
+            { token: '--ring',               value: toPlainText(t('tokens.table.ring.class')),               description: toPlainText(t('tokens.table.ring.part')) },
+            { token: '--destructive',        value: toPlainText(t('tokens.table.destructive.class')),        description: toPlainText(t('tokens.table.destructive.part')) },
+            { token: '--muted-foreground',   value: toPlainText(t('tokens.table.mutedForeground.class')),    description: toPlainText(t('tokens.table.mutedForeground.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -823,11 +820,11 @@ export type SelectOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'option_select',        trigger: t('analytics.table.option_select.trigger'), payload: t('analytics.table.option_select.payload') },
+            { event: 'option_select',        trigger: toPlainText(t('analytics.table.option_select.trigger')), payload: t('analytics.table.option_select.payload') },
             { event: 'docs_page_view',       trigger: 'Carregamento da docs page',                payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed',  trigger: 'Seção visível no viewport',                payload: '{ section_id, component_name, locale }' },
           ],
@@ -844,8 +841,8 @@ export type SelectOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -857,7 +854,7 @@ export type SelectOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
             })),
@@ -869,7 +866,7 @@ export type SelectOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

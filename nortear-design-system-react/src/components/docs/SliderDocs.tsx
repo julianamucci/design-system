@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -77,7 +74,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo helpers ────────────────────────────────────────────────────────────
 
@@ -653,34 +649,34 @@ interface SliderProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.active.label"),
-            trigger: tContent("states.active.trigger"),
-            behavior: stripHtml(tContent("states.active.behavior")),
+            trigger: toPlainText(tContent("states.active.trigger")),
+            behavior: toPlainText(tContent("states.active.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -842,14 +838,14 @@ interface SliderProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
-          { key: "Arrow Right",  description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "Arrow Left",   description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
-          { key: "Arrow Up",     description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "Arrow Down",   description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "Home",        description: stripHtml(tContent("accessibility.keyboard.home")) },
-          { key: "End",         description: stripHtml(tContent("accessibility.keyboard.end")) },
-          { key: "PageUp",      description: stripHtml(tContent("accessibility.keyboard.pageUp")) },
-          { key: "PageDown",    description: stripHtml(tContent("accessibility.keyboard.pageDown")) },
+          { key: "Arrow Right",  description: toPlainText(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left",   description: toPlainText(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Arrow Up",     description: toPlainText(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Down",   description: toPlainText(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Home",        description: toPlainText(tContent("accessibility.keyboard.home")) },
+          { key: "End",         description: toPlainText(tContent("accessibility.keyboard.end")) },
+          { key: "PageUp",      description: toPlainText(tContent("accessibility.keyboard.pageUp")) },
+          { key: "PageDown",    description: toPlainText(tContent("accessibility.keyboard.pageDown")) },
         ]}
       />
 
@@ -898,7 +894,7 @@ interface SliderProps {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[

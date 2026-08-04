@@ -19,6 +19,7 @@ import { createInput } from '@/components/ui/input';
 import { createPagination } from '@/components/ui/pagination';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -769,24 +770,24 @@ container.appendChild(pagination);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.empty.label'),
-              trigger: t('states.empty.trigger'),
-              behavior: DOMPurify.sanitize(t('states.empty.behavior')),
+              trigger: toPlainText(t('states.empty.trigger')),
+              behavior: toPlainText(t('states.empty.behavior')),
             },
             {
               label: t('states.selected.label'),
-              trigger: DOMPurify.sanitize(t('states.selected.trigger')),
-              behavior: DOMPurify.sanitize(t('states.selected.behavior')),
+              trigger: toPlainText(t('states.selected.trigger')),
+              behavior: toPlainText(t('states.selected.behavior')),
             },
             {
               label: t('states.loading.label'),
-              trigger: DOMPurify.sanitize(t('states.loading.trigger')),
-              behavior: DOMPurify.sanitize(t('states.loading.behavior')),
+              trigger: toPlainText(t('states.loading.trigger')),
+              behavior: toPlainText(t('states.loading.behavior')),
             },
           ],
         });
@@ -949,13 +950,13 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

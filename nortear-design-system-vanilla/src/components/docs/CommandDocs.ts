@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(commandTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -479,34 +476,34 @@ wrap.appendChild(
           title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
-            trigger:  t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label:    t('states.empty.label'),
-              trigger:  stripHtml(t('states.empty.trigger')),
-              behavior: t('states.empty.behavior'),
+              trigger:  toPlainText(t('states.empty.trigger')),
+              behavior: toPlainText(t('states.empty.behavior')),
             },
             {
               label:    t('states.selected.label'),
-              trigger:  stripHtml(t('states.selected.trigger')),
-              behavior: t('states.selected.behavior'),
+              trigger:  toPlainText(t('states.selected.trigger')),
+              behavior: toPlainText(t('states.selected.behavior')),
             },
             {
               label:    t('states.disabled.label'),
-              trigger:  stripHtml(t('states.disabled.trigger')),
-              behavior: t('states.disabled.behavior'),
+              trigger:  toPlainText(t('states.disabled.trigger')),
+              behavior: toPlainText(t('states.disabled.behavior')),
             },
             {
               label:    t('states.loading.label'),
-              trigger:  stripHtml(t('states.loading.trigger')),
-              behavior: t('states.loading.behavior'),
+              trigger:  toPlainText(t('states.loading.trigger')),
+              behavior: toPlainText(t('states.loading.behavior')),
             },
             {
               label:    t('states.longList.label'),
-              trigger:  stripHtml(t('states.longList.trigger')),
-              behavior: t('states.longList.behavior'),
+              trigger:  toPlainText(t('states.longList.trigger')),
+              behavior: toPlainText(t('states.longList.behavior')),
             },
           ],
         });
@@ -547,20 +544,20 @@ export type CommandItem = {
               title: t('props.commandTitle'),
               cols: propsCols,
               items: [
-                { name: 'placeholder', type: 'string',                defaultValue: '"Search…"', required: 'Não', description: stripHtml(t('props.table.inputPlaceholder')) },
+                { name: 'placeholder', type: 'string',                defaultValue: '"Search…"', required: 'Não', description: toPlainText(t('props.table.inputPlaceholder')) },
                 { name: 'items',       type: 'CommandItem[]',          defaultValue: '—',         required: 'Sim', description: 'Lista de itens renderizados e filtrados.' },
-                { name: 'onSelect',    type: '(value: string) => void', defaultValue: '—',        required: 'Não', description: stripHtml(t('props.table.itemOnSelect')) },
-                { name: 'class',       type: 'string',                defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'onSelect',    type: '(value: string) => void', defaultValue: '—',        required: 'Não', description: toPlainText(t('props.table.itemOnSelect')) },
+                { name: 'class',       type: 'string',                defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
               title: t('props.commandItemTitle'),
               cols: propsCols,
               items: [
-                { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: stripHtml(t('props.table.itemValue'))    },
+                { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: toPlainText(t('props.table.itemValue'))    },
                 { name: 'label',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Texto exibido no item.'                  },
                 { name: 'group',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Nome do grupo para agrupar itens.'        },
-                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.itemDisabled'))  },
+                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.itemDisabled'))  },
               ],
             },
           ],
@@ -617,12 +614,12 @@ export type CommandItem = {
           items: [1, 2, 3, 4].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: tNav('common.keyboardNav') || 'Navegação por teclado',
           keyboardItems: [
-            { key: 'Arrow Down',      description: stripHtml(t('accessibility.keyboard.arrowDown')) },
-            { key: 'Arrow Up',      description: stripHtml(t('accessibility.keyboard.arrowUp'))   },
-            { key: 'Enter',  description: stripHtml(t('accessibility.keyboard.enter'))      },
-            { key: 'Escape', description: stripHtml(t('accessibility.keyboard.escape'))     },
-            { key: 'Tab',    description: stripHtml(t('accessibility.keyboard.tab'))        },
-            { key: '⌘K',    description: stripHtml(t('accessibility.keyboard.cmdK'))       },
+            { key: 'Arrow Down',      description: toPlainText(t('accessibility.keyboard.arrowDown')) },
+            { key: 'Arrow Up',      description: toPlainText(t('accessibility.keyboard.arrowUp'))   },
+            { key: 'Enter',  description: toPlainText(t('accessibility.keyboard.enter'))      },
+            { key: 'Escape', description: toPlainText(t('accessibility.keyboard.escape'))     },
+            { key: 'Tab',    description: toPlainText(t('accessibility.keyboard.tab'))        },
+            { key: '⌘K',    description: toPlainText(t('accessibility.keyboard.cmdK'))       },
           ],
         });
 
@@ -656,33 +653,33 @@ export type CommandItem = {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event:   t('analytics.table.itemSelect'),
-              trigger: t('analytics.table.itemSelectTrigger'),
+              trigger: toPlainText(t('analytics.table.itemSelectTrigger')),
               payload: t('analytics.table.itemSelectPayload'),
             },
             {
               event:   t('analytics.table.paletteOpen'),
-              trigger: t('analytics.table.paletteOpenTrigger'),
+              trigger: toPlainText(t('analytics.table.paletteOpenTrigger')),
               payload: t('analytics.table.paletteOpenPayload'),
             },
             {
               event:   t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event:   t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event:   t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],

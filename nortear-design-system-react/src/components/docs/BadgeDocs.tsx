@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -77,7 +74,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -423,14 +419,14 @@ const badgeVariants = cva(
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.countBadge.label"),
-            trigger: stripHtml(tContent("states.countBadge.trigger")),
-            behavior: stripHtml(tContent("states.countBadge.behavior")),
+            trigger: toPlainText(tContent("states.countBadge.trigger")),
+            behavior: toPlainText(tContent("states.countBadge.behavior")),
           },
         ]}
       />
@@ -454,7 +450,7 @@ const badgeVariants = cva(
                 type: '"default" | "secondary" | "destructive" | "outline"',
                 defaultValue: '"default"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.variant")),
+                description: toPlainText(tContent("props.table.variant")),
               },
               {
                 name: "className",
@@ -560,28 +556,28 @@ const badgeVariants = cva(
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.click"),
-            trigger: tContent("analytics.table.clickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.clickTrigger")),
             payload: tContent("analytics.table.clickPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

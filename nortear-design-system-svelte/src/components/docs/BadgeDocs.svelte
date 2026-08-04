@@ -16,6 +16,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import badgeTranslations from '@shared/content/badge/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(badgeTranslations);
@@ -40,7 +41,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -78,10 +78,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -375,11 +371,11 @@ interface BadgeProps extends HTMLAnchorAttributes {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.countBadge.label'),  trigger: stripHtml($tStore('states.countBadge.trigger')),  behavior: stripHtml($tStore('states.countBadge.behavior'))  },
+      { label: $tStore('states.countBadge.label'),  trigger: toPlainText($tStore('states.countBadge.trigger')),  behavior: toPlainText($tStore('states.countBadge.behavior'))  },
     ]}
   />
 
@@ -397,7 +393,7 @@ interface BadgeProps extends HTMLAnchorAttributes {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant',  type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
+          { name: 'variant',  type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className') },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children')  },
         ],
@@ -479,14 +475,14 @@ interface BadgeProps extends HTMLAnchorAttributes {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
-      { event: $tStore('analytics.table.click'),         trigger: $tStore('analytics.table.clickTrigger'),         payload: $tStore('analytics.table.clickPayload')         },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.click'),         trigger: toPlainText($tStore('analytics.table.clickTrigger')),         payload: $tStore('analytics.table.clickPayload')         },
     ]}
   />
 

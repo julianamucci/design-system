@@ -25,6 +25,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -313,24 +314,24 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: tContent("states.default.behavior"),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: tContent("states.disabled.behavior"),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.required.label"),
-            trigger: tContent("states.required.trigger"),
-            behavior: tContent("states.required.behavior"),
+            trigger: toPlainText(tContent("states.required.trigger")),
+            behavior: toPlainText(tContent("states.required.behavior")),
           },
         ]}
       />
@@ -464,7 +465,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
         items={[
           {
             event: "docs_page_view",
-            trigger: tContent("analytics.description"),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "{ component_name: 'label', locale }",
           },
         ]}

@@ -30,6 +30,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -48,10 +49,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -124,8 +121,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -293,12 +288,12 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),     trigger: stripHtml(tContent('states.default.trigger')),     behavior: stripHtml(tContent('states.default.behavior'))     },
-  { label: tContent('states.selected.label'),    trigger: stripHtml(tContent('states.selected.trigger')),    behavior: stripHtml(tContent('states.selected.behavior'))    },
-  { label: tContent('states.disabled.label'),    trigger: stripHtml(tContent('states.disabled.trigger')),    behavior: stripHtml(tContent('states.disabled.behavior'))    },
-  { label: tContent('states.today.label'),       trigger: stripHtml(tContent('states.today.trigger')),       behavior: stripHtml(tContent('states.today.behavior'))       },
-  { label: tContent('states.outside.label'),     trigger: stripHtml(tContent('states.outside.trigger')),     behavior: stripHtml(tContent('states.outside.behavior'))     },
-  { label: tContent('states.rangeMiddle.label'), trigger: stripHtml(tContent('states.rangeMiddle.trigger')), behavior: stripHtml(tContent('states.rangeMiddle.behavior')) },
+  { label: tContent('states.default.label'),     trigger: toPlainText(tContent('states.default.trigger')),     behavior: toPlainText(tContent('states.default.behavior'))     },
+  { label: tContent('states.selected.label'),    trigger: toPlainText(tContent('states.selected.trigger')),    behavior: toPlainText(tContent('states.selected.behavior'))    },
+  { label: tContent('states.disabled.label'),    trigger: toPlainText(tContent('states.disabled.trigger')),    behavior: toPlainText(tContent('states.disabled.behavior'))    },
+  { label: tContent('states.today.label'),       trigger: toPlainText(tContent('states.today.trigger')),       behavior: toPlainText(tContent('states.today.behavior'))       },
+  { label: tContent('states.outside.label'),     trigger: toPlainText(tContent('states.outside.trigger')),     behavior: toPlainText(tContent('states.outside.behavior'))     },
+  { label: tContent('states.rangeMiddle.label'), trigger: toPlainText(tContent('states.rangeMiddle.trigger')), behavior: toPlainText(tContent('states.rangeMiddle.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -312,9 +307,9 @@ const propCols = computed(() => ({
 const calendarPropItems = computed(() => [
   { name: 'modelValue',      type: 'DateValue | DateValue[]',                  defaultValue: '—',            required: 'Não', description: 'Valor controlado (v-model). DateValue[] quando multiple=true.' },
   { name: 'multiple',        type: 'boolean',                                  defaultValue: 'false',        required: 'Não', description: 'Habilita seleção de várias datas (modelValue vira DateValue[]).' },
-  { name: 'locale',          type: 'string',                                   defaultValue: '"en"',         required: 'Sim', description: stripHtml(tContent('props.table.locale')) },
-  { name: 'numberOfMonths',  type: 'number',                                   defaultValue: '1',            required: 'Não', description: stripHtml(tContent('props.table.numberOfMonths')) },
-  { name: 'isDateDisabled',  type: '(date: DateValue) => boolean',             defaultValue: '—',            required: 'Não', description: stripHtml(tContent('props.table.disabled')) },
+  { name: 'locale',          type: 'string',                                   defaultValue: '"en"',         required: 'Sim', description: toPlainText(tContent('props.table.locale')) },
+  { name: 'numberOfMonths',  type: 'number',                                   defaultValue: '1',            required: 'Não', description: toPlainText(tContent('props.table.numberOfMonths')) },
+  { name: 'isDateDisabled',  type: '(date: DateValue) => boolean',             defaultValue: '—',            required: 'Não', description: toPlainText(tContent('props.table.disabled')) },
   { name: 'isDateUnavailable', type: '(date: DateValue) => boolean',           defaultValue: '—',            required: 'Não', description: 'Marca a data como indisponível (linha riscada) sem desabilitar o foco.' },
   { name: 'minValue',        type: 'DateValue',                                defaultValue: '—',            required: 'Não', description: 'Data mínima selecionável.' },
   { name: 'maxValue',        type: 'DateValue',                                defaultValue: '—',            required: 'Não', description: 'Data máxima selecionável.' },
@@ -331,7 +326,7 @@ const calendarPropItems = computed(() => [
   { name: 'layout',          type: '"month-and-year" | "month-only" | "year-only"', defaultValue: 'undefined', required: 'Não', description: 'Controla a legenda (texto padrão vs NativeSelect). Equivalente ao captionLayout do React.' },
   { name: 'yearRange',       type: 'DateValue[]',                              defaultValue: '-100..+10',    required: 'Não', description: 'Lista de anos disponíveis no dropdown (quando layout expõe ano).' },
   { name: 'dir',             type: '"ltr" | "rtl"',                            defaultValue: '"ltr"',        required: 'Não', description: 'Direção de leitura.' },
-  { name: 'class',           type: 'string',                                   defaultValue: '—',            required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'class',           type: 'string',                                   defaultValue: '—',            required: 'Não', description: toPlainText(tContent('props.table.className')) },
 ]);
 
 const cellTriggerPropItems = computed(() => [
@@ -347,8 +342,8 @@ const tokenRows = computed(() => [
   { token: '--muted-foreground',   value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground') },
   { token: '--foreground',         value: 'text-foreground',                       description: tContent('tokens.table.foreground')      },
   { token: '--ring',               value: 'nds-focus-ring',            description: tContent('tokens.table.ring')            },
-  { token: '--nds-cell-size',      value: '2rem',                                  description: stripHtml(tContent('tokens.table.cellSize'))   },
-  { token: '--nds-cell-radius',    value: 'var(--radius-md)',                      description: stripHtml(tContent('tokens.table.cellRadius')) },
+  { token: '--nds-cell-size',      value: '2rem',                                  description: toPlainText(tContent('tokens.table.cellSize'))   },
+  { token: '--nds-cell-radius',    value: 'var(--radius-md)',                      description: toPlainText(tContent('tokens.table.cellRadius')) },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -361,11 +356,11 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
-  { key: 'PgUp/PgDn', description: stripHtml(tContent('accessibility.keyboard.pageUpDown')) },
-  { key: 'Home/End',  description: stripHtml(tContent('accessibility.keyboard.homeEnd'))   },
-  { key: 'Enter',     description: stripHtml(tContent('accessibility.keyboard.enter'))     },
-  { key: 'Tab',       description: stripHtml(tContent('accessibility.keyboard.tab'))       },
+  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: toPlainText(tContent('accessibility.keyboard.arrows'))    },
+  { key: 'PgUp/PgDn', description: toPlainText(tContent('accessibility.keyboard.pageUpDown')) },
+  { key: 'Home/End',  description: toPlainText(tContent('accessibility.keyboard.homeEnd'))   },
+  { key: 'Enter',     description: toPlainText(tContent('accessibility.keyboard.enter'))     },
+  { key: 'Tab',       description: toPlainText(tContent('accessibility.keyboard.tab'))       },
 ]);
 
 const relatedItems = computed(() => [
@@ -383,11 +378,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.fieldChange'),   trigger: tContent('analytics.table.fieldChangeTrigger'),   payload: tContent('analytics.table.fieldChangePayload')   },
-  { event: tContent('analytics.table.dialogOpen'),    trigger: tContent('analytics.table.dialogOpenTrigger'),    payload: tContent('analytics.table.dialogOpenPayload')    },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.fieldChange'),   trigger: toPlainText(tContent('analytics.table.fieldChangeTrigger')),   payload: tContent('analytics.table.fieldChangePayload')   },
+  { event: tContent('analytics.table.dialogOpen'),    trigger: toPlainText(tContent('analytics.table.dialogOpenTrigger')),    payload: tContent('analytics.table.dialogOpenPayload')    },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -397,19 +392,19 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: stripHtml(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: stripHtml(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: stripHtml(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: stripHtml(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: stripHtml(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: stripHtml(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
-  { action: stripHtml(tContent('testes.functional.item7.action')), result: stripHtml(tContent('testes.functional.item7.result')), priority: localPriority(tContent('testes.functional.item7.priority')) },
+  { action: tContent('testes.functional.item1.action'), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: tContent('testes.functional.item2.action'), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: tContent('testes.functional.item3.action'), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: tContent('testes.functional.item4.action'), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: tContent('testes.functional.item5.action'), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: tContent('testes.functional.item6.action'), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: toPlainText(tContent('testes.functional.item7.action')), result: toPlainText(tContent('testes.functional.item7.result')), priority: localPriority(tContent('testes.functional.item7.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: stripHtml(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
   { criterion: tContent('testes.accessibility.item4.criterion'),            level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
   { criterion: tContent('testes.accessibility.item5.criterion'),            level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
   { criterion: tContent('testes.accessibility.item6.criterion'),            level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
@@ -628,7 +623,7 @@ const visualTestItems = computed(() => [
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -679,7 +674,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

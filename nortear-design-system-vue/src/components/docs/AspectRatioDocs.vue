@@ -24,6 +24,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -127,8 +124,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -201,9 +196,9 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.item1.label'), trigger: tContent('states.item1.trigger'), behavior: tContent('states.item1.behavior') },
-  { label: tContent('states.item2.label'), trigger: tContent('states.item2.trigger'), behavior: tContent('states.item2.behavior') },
-  { label: tContent('states.item3.label'), trigger: tContent('states.item3.trigger'), behavior: stripHtml(tContent('states.item3.behavior')) },
+  { label: tContent('states.item1.label'), trigger: toPlainText(tContent('states.item1.trigger')), behavior: toPlainText(tContent('states.item1.behavior'))},
+  { label: tContent('states.item2.label'), trigger: toPlainText(tContent('states.item2.trigger')), behavior: toPlainText(tContent('states.item2.behavior'))},
+  { label: tContent('states.item3.label'), trigger: toPlainText(tContent('states.item3.trigger')), behavior: toPlainText(tContent('states.item3.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -215,13 +210,13 @@ const propCols = computed(() => ({
 }));
 
 const aspectRatioPropItems = computed(() => [
-  { name: 'ratio',   type: 'number',  defaultValue: '1',     required: 'Não', description: stripHtml(tContent('props.table.ratio'))     },
-  { name: 'asChild', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.asChild'))   },
-  { name: 'class',   type: 'string',  defaultValue: '—',     required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'ratio',   type: 'number',  defaultValue: '1',     required: 'Não', description: toPlainText(tContent('props.table.ratio'))     },
+  { name: 'asChild', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.asChild'))   },
+  { name: 'class',   type: 'string',  defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className')) },
 ]);
 
 const slotPropItems = computed(() => [
-  { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -257,7 +252,7 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: '—', trigger: tContent('analytics.note'), payload: '—' },
+  { event: '—', trigger: toPlainText(tContent('analytics.note')), payload: '—' },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -267,19 +262,19 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: stripHtml(tContent('testes.functional.item1.action')), result: stripHtml(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: stripHtml(tContent('testes.functional.item2.action')), result: stripHtml(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: stripHtml(tContent('testes.functional.item3.action')), result: stripHtml(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: stripHtml(tContent('testes.functional.item4.action')), result: stripHtml(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: stripHtml(tContent('testes.functional.item5.action')), result: stripHtml(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: toPlainText(tContent('testes.functional.item1.action')), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: toPlainText(tContent('testes.functional.item2.action')), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: toPlainText(tContent('testes.functional.item3.action')), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: stripHtml(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: stripHtml(tContent('testes.accessibility.item3.how')) },
-  { criterion: stripHtml(tContent('testes.accessibility.item4.criterion')), level: tContent('testes.accessibility.item4.level'), how: stripHtml(tContent('testes.accessibility.item4.how')) },
-  { criterion: stripHtml(tContent('testes.accessibility.item5.criterion')), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: toPlainText(tContent('testes.accessibility.item3.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item4.criterion')), level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item5.criterion')), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
 ]);
 
 const visualTestItems = computed(() => [
@@ -414,7 +409,7 @@ const visualTestItems = computed(() => [
           alternative: tContent('usage.scenarios.cols.alternative'),
         },
         items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: stripHtml(tContent('usage.scenarios.item1.a')) },
+          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: toPlainText(tContent('usage.scenarios.item1.a')) },
           { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
           { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
           { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
@@ -604,8 +599,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('props.table.prop'),
-        trigger: tContent('usage.scenarios.cols.scenario'),
-        behavior: tContent('usage.scenarios.cols.use'),
+        trigger: toPlainText(tContent('usage.scenarios.cols.scenario')),
+        behavior: toPlainText(tContent('usage.scenarios.cols.use')),
       }"
       :items="stateItems"
     />
@@ -663,7 +658,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

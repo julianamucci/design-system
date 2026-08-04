@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(paginationTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -530,16 +527,16 @@ const nav = createPagination({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.lastPage.label'), trigger: t('states.lastPage.trigger'), behavior: stripHtml(t('states.lastPage.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.active.label'),   trigger: toPlainText(t('states.active.trigger')),   behavior: toPlainText(t('states.active.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.lastPage.label'), trigger: toPlainText(t('states.lastPage.trigger')), behavior: toPlainText(t('states.lastPage.behavior')) },
           ],
         });
 
@@ -613,10 +610,10 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Enter',       description: stripHtml(t('accessibility.keyboard.enter'))    },
-            { key: 'Space',       description: stripHtml(t('accessibility.keyboard.space'))    },
-            { key: 'Shift+Tab',   description: stripHtml(t('accessibility.keyboard.shiftTab')) },
+            { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))      },
+            { key: 'Enter',       description: toPlainText(t('accessibility.keyboard.enter'))    },
+            { key: 'Space',       description: toPlainText(t('accessibility.keyboard.space'))    },
+            { key: 'Shift+Tab',   description: toPlainText(t('accessibility.keyboard.shiftTab')) },
           ],
         });
 
@@ -641,13 +638,13 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: 'page_change',
-              trigger: t('analytics.table.page_change.trigger'),
+              trigger: toPlainText(t('analytics.table.page_change.trigger')),
               payload: t('analytics.table.page_change.payload'),
             },
             {

@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(progressTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -447,14 +444,14 @@ export function createProgressDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),       trigger: t('states.default.trigger'),       behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.loading.label'),       trigger: t('states.loading.trigger'),       behavior: stripHtml(t('states.loading.behavior')) },
-            { label: t('states.complete.label'),      trigger: t('states.complete.trigger'),      behavior: stripHtml(t('states.complete.behavior')) },
-            { label: t('states.indeterminate.label'), trigger: t('states.indeterminate.trigger'), behavior: stripHtml(t('states.indeterminate.behavior')) },
+            { label: t('states.default.label'),       trigger: toPlainText(t('states.default.trigger')),       behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.loading.label'),       trigger: toPlainText(t('states.loading.trigger')),       behavior: toPlainText(t('states.loading.behavior')) },
+            { label: t('states.complete.label'),      trigger: toPlainText(t('states.complete.trigger')),      behavior: toPlainText(t('states.complete.behavior')) },
+            { label: t('states.indeterminate.label'), trigger: toPlainText(t('states.indeterminate.trigger')), behavior: toPlainText(t('states.indeterminate.behavior')) },
           ],
         });
 
@@ -596,12 +593,12 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'task_progress', trigger: t('analytics.table.task_progress.trigger'), payload: t('analytics.table.task_progress.payload') },
-            { event: 'task_complete', trigger: t('analytics.table.task_complete.trigger'), payload: t('analytics.table.task_complete.payload') },
+            { event: 'task_progress', trigger: toPlainText(t('analytics.table.task_progress.trigger')), payload: t('analytics.table.task_progress.payload') },
+            { event: 'task_complete', trigger: toPlainText(t('analytics.table.task_complete.trigger')), payload: t('analytics.table.task_complete.payload') },
           ],
         });
 

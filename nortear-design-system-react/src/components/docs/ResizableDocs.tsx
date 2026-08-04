@@ -28,12 +28,9 @@ import { DocsRelated } from "@/components/docs/shared/sections/DocsRelated";
 import { DocsNotes } from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics } from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes } from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -79,7 +76,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -444,7 +440,7 @@ interface PanelResizeHandleProps {
             {
               element: tContent("usage.uxWriting.table.size.name"),
               rules: tContent("usage.uxWriting.table.size.format"),
-              do: stripHtml(tContent("usage.uxWriting.table.size.good")),
+              do: toPlainText(tContent("usage.uxWriting.table.size.good")),
               dont: tContent("usage.uxWriting.table.size.bad"),
             },
           ],
@@ -638,34 +634,34 @@ interface PanelResizeHandleProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.idle.label"),
-            trigger: tContent("states.idle.trigger"),
-            behavior: stripHtml(tContent("states.idle.behavior")),
+            trigger: toPlainText(tContent("states.idle.trigger")),
+            behavior: toPlainText(tContent("states.idle.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.dragging.label"),
-            trigger: tContent("states.dragging.trigger"),
-            behavior: stripHtml(tContent("states.dragging.behavior")),
+            trigger: toPlainText(tContent("states.dragging.trigger")),
+            behavior: toPlainText(tContent("states.dragging.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -800,12 +796,12 @@ interface PanelResizeHandleProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrow Left / Arrow Right", description: `${stripHtml(tContent("accessibility.keyboard.arrowLeft"))} · ${stripHtml(tContent("accessibility.keyboard.arrowRight"))}` },
-          { key: "Arrow Up / Arrow Down", description: `${stripHtml(tContent("accessibility.keyboard.arrowUp"))} · ${stripHtml(tContent("accessibility.keyboard.arrowDown"))}` },
-          { key: "Home", description: stripHtml(tContent("accessibility.keyboard.home")) },
-          { key: "End", description: stripHtml(tContent("accessibility.keyboard.end")) },
-          { key: "Enter", description: stripHtml(tContent("accessibility.keyboard.enter")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Left / Arrow Right", description: `${toPlainText(tContent("accessibility.keyboard.arrowLeft"))} · ${toPlainText(tContent("accessibility.keyboard.arrowRight"))}` },
+          { key: "Arrow Up / Arrow Down", description: `${toPlainText(tContent("accessibility.keyboard.arrowUp"))} · ${toPlainText(tContent("accessibility.keyboard.arrowDown"))}` },
+          { key: "Home", description: toPlainText(tContent("accessibility.keyboard.home")) },
+          { key: "End", description: toPlainText(tContent("accessibility.keyboard.end")) },
+          { key: "Enter", description: toPlainText(tContent("accessibility.keyboard.enter")) },
         ]}
       />
 
@@ -854,7 +850,7 @@ interface PanelResizeHandleProps {
         items={[
           {
             event: "panel_resize",
-            trigger: tContent("analytics.table.panel_resize.trigger"),
+            trigger: toPlainText(tContent("analytics.table.panel_resize.trigger")),
             payload: tContent("analytics.table.panel_resize.payload"),
           },
         ]}

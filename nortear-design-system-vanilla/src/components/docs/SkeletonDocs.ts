@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(skeletonTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -471,12 +468,12 @@ export function createSkeletonDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),       trigger: t('states.default.trigger'),       behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.motionReduced.label'), trigger: t('states.motionReduced.trigger'), behavior: stripHtml(t('states.motionReduced.behavior')) },
+            { label: t('states.default.label'),       trigger: toPlainText(t('states.default.trigger')),       behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.motionReduced.label'), trigger: toPlainText(t('states.motionReduced.trigger')), behavior: toPlainText(t('states.motionReduced.behavior')) },
           ],
         });
 
@@ -592,7 +589,7 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
           items: [
             {
               event: '—',
-              trigger: DOMPurify.sanitize(t('analytics.description')),
+              trigger: toPlainText(t('analytics.description')),
               payload: '—',
             },
           ],

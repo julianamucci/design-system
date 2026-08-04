@@ -23,12 +23,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -74,7 +71,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -387,19 +383,19 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.decorative.label"),
-            trigger: tContent("states.decorative.trigger"),
-            behavior: stripHtml(tContent("states.decorative.behavior")),
+            trigger: toPlainText(tContent("states.decorative.trigger")),
+            behavior: toPlainText(tContent("states.decorative.behavior")),
           },
           {
             label: tContent("states.semantic.label"),
-            trigger: tContent("states.semantic.trigger"),
-            behavior: stripHtml(tContent("states.semantic.behavior")),
+            trigger: toPlainText(tContent("states.semantic.trigger")),
+            behavior: toPlainText(tContent("states.semantic.behavior")),
           },
         ]}
       />
@@ -422,21 +418,21 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: stripHtml(tContent("props.table.orientation.description")),
+                description: toPlainText(tContent("props.table.orientation.description")),
               },
               {
                 name: "decorative",
                 type: tContent("props.table.decorative.type"),
                 defaultValue: tContent("props.table.decorative.default"),
                 required: tContent("props.table.decorative.required"),
-                description: stripHtml(tContent("props.table.decorative.description")),
+                description: toPlainText(tContent("props.table.decorative.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
             ],
           },
@@ -552,7 +548,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
         items={[
           {
             event: "—",
-            trigger: tContent("analytics.description"),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "—",
           },
         ]}

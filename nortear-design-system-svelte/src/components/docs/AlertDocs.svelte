@@ -18,6 +18,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import alertTranslations from '@shared/content/alert/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(alertTranslations);
@@ -53,7 +54,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -95,10 +95,6 @@
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -485,15 +481,15 @@ interface AlertTitleProps {
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.complete.label'),      trigger: stripHtml($tStore('states.complete.trigger')),      behavior: $tStore('states.complete.behavior')             },
-          { label: $tStore('states.withoutTitle.label'),  trigger: stripHtml($tStore('states.withoutTitle.trigger')),  behavior: $tStore('states.withoutTitle.behavior')         },
-          { label: $tStore('states.withoutIcon.label'),   trigger: $tStore('states.withoutIcon.trigger'),              behavior: $tStore('states.withoutIcon.behavior')          },
-          { label: $tStore('states.dynamicInsert.label'), trigger: $tStore('states.dynamicInsert.trigger'),            behavior: stripHtml($tStore('states.dynamicInsert.behavior')) },
-          { label: $tStore('states.dismissed.label'),     trigger: $tStore('states.dismissed.trigger'),                behavior: $tStore('states.dismissed.behavior')            },
+          { label: $tStore('states.complete.label'),      trigger: toPlainText($tStore('states.complete.trigger')),      behavior: toPlainText($tStore('states.complete.behavior'))},
+          { label: $tStore('states.withoutTitle.label'),  trigger: toPlainText($tStore('states.withoutTitle.trigger')),  behavior: toPlainText($tStore('states.withoutTitle.behavior'))},
+          { label: $tStore('states.withoutIcon.label'),   trigger: toPlainText($tStore('states.withoutIcon.trigger')),              behavior: toPlainText($tStore('states.withoutIcon.behavior'))},
+          { label: $tStore('states.dynamicInsert.label'), trigger: toPlainText($tStore('states.dynamicInsert.trigger')),            behavior: toPlainText($tStore('states.dynamicInsert.behavior')) },
+          { label: $tStore('states.dismissed.label'),     trigger: toPlainText($tStore('states.dismissed.trigger')),                behavior: toPlainText($tStore('states.dismissed.behavior'))},
         ]}
       />
 
@@ -511,9 +507,9 @@ interface AlertTitleProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
-              { name: 'role',     type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml($tStore('props.table.role')) },
-              { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.className'))           },
+              { name: 'variant',  type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
+              { name: 'role',     type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText($tStore('props.table.role')) },
+              { name: 'class',    type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.className'))           },
               { name: 'children', type: 'Snippet',                   defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')            },
               { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: $tStore('props.table.dismissible')  },
               { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: $tStore('props.table.onDismiss')    },
@@ -530,7 +526,7 @@ interface AlertTitleProps {
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: stripHtml($tStore('props.table.titleAs')) },
+              { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: toPlainText($tStore('props.table.titleAs')) },
               { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: $tStore('props.table.children') },
             ],
           },
@@ -625,14 +621,14 @@ interface AlertTitleProps {
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.dismiss'),       trigger: $tStore('analytics.table.dismissTrigger'),       payload: $tStore('analytics.table.dismissPayload')       },
-          { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-          { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-          { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+          { event: $tStore('analytics.table.dismiss'),       trigger: toPlainText($tStore('analytics.table.dismissTrigger')),       payload: $tStore('analytics.table.dismissPayload')       },
+          { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+          { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+          { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
         ]}
       />
 

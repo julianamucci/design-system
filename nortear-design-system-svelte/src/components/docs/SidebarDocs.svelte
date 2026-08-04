@@ -57,6 +57,7 @@ import uiTranslations from '@/i18n/ui.json';
   import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.svelte';
   import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.svelte';
   import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.svelte';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(sidebarTranslations);
@@ -92,7 +93,6 @@ import uiTranslations from '@/i18n/ui.json';
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -133,10 +133,6 @@ import uiTranslations from '@/i18n/ui.json';
   let subOpen = $state(false);
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -1117,15 +1113,15 @@ interface SidebarMenuButtonProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.expanded.label'),  trigger: stripHtml($tStore('states.expanded.trigger')),  behavior: $tStore('states.expanded.behavior')  },
-      { label: $tStore('states.collapsed.label'), trigger: stripHtml($tStore('states.collapsed.trigger')), behavior: $tStore('states.collapsed.behavior') },
-      { label: $tStore('states.offcanvas.label'), trigger: stripHtml($tStore('states.offcanvas.trigger')), behavior: $tStore('states.offcanvas.behavior') },
-      { label: $tStore('states.mobile.label'),    trigger: stripHtml($tStore('states.mobile.trigger')),    behavior: $tStore('states.mobile.behavior')    },
-      { label: $tStore('states.hidden.label'),    trigger: stripHtml($tStore('states.hidden.trigger')),    behavior: $tStore('states.hidden.behavior')    },
+      { label: $tStore('states.expanded.label'),  trigger: toPlainText($tStore('states.expanded.trigger')),  behavior: toPlainText($tStore('states.expanded.behavior'))},
+      { label: $tStore('states.collapsed.label'), trigger: toPlainText($tStore('states.collapsed.trigger')), behavior: toPlainText($tStore('states.collapsed.behavior'))},
+      { label: $tStore('states.offcanvas.label'), trigger: toPlainText($tStore('states.offcanvas.trigger')), behavior: toPlainText($tStore('states.offcanvas.behavior'))},
+      { label: $tStore('states.mobile.label'),    trigger: toPlainText($tStore('states.mobile.trigger')),    behavior: toPlainText($tStore('states.mobile.behavior'))},
+      { label: $tStore('states.hidden.label'),    trigger: toPlainText($tStore('states.hidden.trigger')),    behavior: toPlainText($tStore('states.hidden.behavior'))},
     ]}
   />
 
@@ -1279,15 +1275,15 @@ interface SidebarMenuButtonProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.navClick'),      trigger: $tStore('analytics.table.navClickTrigger'),      payload: $tStore('analytics.table.navClickPayload')      },
-      { event: $tStore('analytics.table.toggleOpen'),    trigger: $tStore('analytics.table.toggleOpenTrigger'),    payload: $tStore('analytics.table.togglePayload')        },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.navClick'),      trigger: toPlainText($tStore('analytics.table.navClickTrigger')),      payload: $tStore('analytics.table.navClickPayload')      },
+      { event: $tStore('analytics.table.toggleOpen'),    trigger: toPlainText($tStore('analytics.table.toggleOpenTrigger')),    payload: $tStore('analytics.table.togglePayload')        },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

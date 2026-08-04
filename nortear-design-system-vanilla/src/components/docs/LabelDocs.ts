@@ -7,6 +7,7 @@ import { createLabel } from '@/components/ui/label';
 import { createInput } from '@/components/ui/input';
 import uiTranslations from '@/i18n/ui.json';
 import labelTranslations from '@shared/content/label/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -349,24 +350,24 @@ export function createLabelDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.default.label'),
-              trigger: t('states.default.trigger'),
-              behavior: t('states.default.behavior'),
+              trigger: toPlainText(t('states.default.trigger')),
+              behavior: toPlainText(t('states.default.behavior')),
             },
             {
               label: t('states.disabled.label'),
-              trigger: DOMPurify.sanitize(t('states.disabled.trigger')),
-              behavior: DOMPurify.sanitize(t('states.disabled.behavior')),
+              trigger: toPlainText(t('states.disabled.trigger')),
+              behavior: toPlainText(t('states.disabled.behavior')),
             },
             {
               label: t('states.required.label'),
-              trigger: t('states.required.trigger'),
-              behavior: DOMPurify.sanitize(t('states.required.behavior')),
+              trigger: toPlainText(t('states.required.trigger')),
+              behavior: toPlainText(t('states.required.behavior')),
             },
           ],
         });
@@ -474,7 +475,7 @@ export function createLabelDocs(): HTMLElement {
           items: [
             {
               event: 'docs_page_view',
-              trigger: t('analytics.description'),
+              trigger: toPlainText(t('analytics.description')),
               payload: "{ component_name: 'label', locale }",
             },
             {

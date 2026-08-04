@@ -29,12 +29,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -80,7 +77,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Animated demo (incremental value) ───────────────────────────────────────
 
@@ -471,29 +467,29 @@ interface ProgressProps extends Progress.Root.Props {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.loading.label"),
-            trigger: tContent("states.loading.trigger"),
-            behavior: stripHtml(tContent("states.loading.behavior")),
+            trigger: toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
           {
             label: tContent("states.complete.label"),
-            trigger: tContent("states.complete.trigger"),
-            behavior: stripHtml(tContent("states.complete.behavior")),
+            trigger: toPlainText(tContent("states.complete.trigger")),
+            behavior: toPlainText(tContent("states.complete.behavior")),
           },
           {
             label: tContent("states.indeterminate.label"),
-            trigger: tContent("states.indeterminate.trigger"),
-            behavior: stripHtml(tContent("states.indeterminate.behavior")),
+            trigger: toPlainText(tContent("states.indeterminate.trigger")),
+            behavior: toPlainText(tContent("states.indeterminate.behavior")),
           },
         ]}
       />
@@ -516,7 +512,7 @@ interface ProgressProps extends Progress.Root.Props {
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: stripHtml(tContent("props.table.value.description")),
+                description: toPlainText(tContent("props.table.value.description")),
               },
               {
                 name: "max",
@@ -544,7 +540,7 @@ interface ProgressProps extends Progress.Root.Props {
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
               {
                 name: "aria-label",
@@ -676,18 +672,18 @@ interface ProgressProps extends Progress.Root.Props {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "task_progress",
-            trigger: tContent("analytics.table.task_progress.trigger"),
+            trigger: toPlainText(tContent("analytics.table.task_progress.trigger")),
             payload: tContent("analytics.table.task_progress.payload"),
           },
           {
             event: "task_complete",
-            trigger: tContent("analytics.table.task_complete.trigger"),
+            trigger: toPlainText(tContent("analytics.table.task_complete.trigger")),
             payload: tContent("analytics.table.task_complete.payload"),
           },
         ]}

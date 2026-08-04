@@ -27,6 +27,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations       from '@/i18n/ui.json';
 import checkboxTranslations from '@shared/content/checkbox/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // IMPORTANT: locale comes from useTranslation — NEVER from useLocaleStore/Pinia
@@ -45,10 +46,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -122,8 +119,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -267,11 +262,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.unchecked.label'),     trigger: tContent('states.unchecked.trigger'),     behavior: tContent('states.unchecked.behavior')     },
-  { label: tContent('states.checked.label'),       trigger: tContent('states.checked.trigger'),       behavior: tContent('states.checked.behavior')       },
-  { label: tContent('states.disabled.label'),      trigger: tContent('states.disabled.trigger'),      behavior: tContent('states.disabled.behavior')      },
-  { label: tContent('states.error.label'),         trigger: tContent('states.error.trigger'),         behavior: tContent('states.error.behavior')         },
-  { label: tContent('states.indeterminate.label'), trigger: tContent('states.indeterminate.trigger'), behavior: tContent('states.indeterminate.behavior') },
+  { label: tContent('states.unchecked.label'),     trigger: toPlainText(tContent('states.unchecked.trigger')),     behavior: toPlainText(tContent('states.unchecked.behavior'))},
+  { label: tContent('states.checked.label'),       trigger: toPlainText(tContent('states.checked.trigger')),       behavior: toPlainText(tContent('states.checked.behavior'))},
+  { label: tContent('states.disabled.label'),      trigger: toPlainText(tContent('states.disabled.trigger')),      behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.error.label'),         trigger: toPlainText(tContent('states.error.trigger')),         behavior: toPlainText(tContent('states.error.behavior'))},
+  { label: tContent('states.indeterminate.label'), trigger: toPlainText(tContent('states.indeterminate.trigger')), behavior: toPlainText(tContent('states.indeterminate.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -331,10 +326,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.fieldChange'),    trigger: tContent('analytics.table.fieldChangeTrigger'),    payload: tContent('analytics.table.fieldChangePayload')    },
-  { event: tContent('analytics.table.pageView'),       trigger: tContent('analytics.table.pageViewTrigger'),       payload: tContent('analytics.table.pageViewPayload')       },
-  { event: tContent('analytics.table.sectionViewed'),  trigger: tContent('analytics.table.sectionViewedTrigger'),  payload: tContent('analytics.table.sectionViewedPayload')  },
-  { event: tContent('analytics.table.langSwitch'),     trigger: tContent('analytics.table.langSwitchTrigger'),     payload: tContent('analytics.table.langSwitchPayload')     },
+  { event: tContent('analytics.table.fieldChange'),    trigger: toPlainText(tContent('analytics.table.fieldChangeTrigger')),    payload: tContent('analytics.table.fieldChangePayload')    },
+  { event: tContent('analytics.table.pageView'),       trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),       payload: tContent('analytics.table.pageViewPayload')       },
+  { event: tContent('analytics.table.sectionViewed'),  trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),  payload: tContent('analytics.table.sectionViewedPayload')  },
+  { event: tContent('analytics.table.langSwitch'),     trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),     payload: tContent('analytics.table.langSwitchPayload')     },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -888,8 +883,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -947,7 +942,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

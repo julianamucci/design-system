@@ -30,6 +30,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -37,10 +38,6 @@ const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>)
 const { t, subscribe } = createTranslation(avatarTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -327,7 +324,7 @@ export function createAvatarDocs(): HTMLElement {
             items: [1, 2, 3, 4].map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
-              a: t(`usage.scenarios.item${i}.a`),
+              a: toPlainText(t(`usage.scenarios.item${i}.a`)),
             })),
           },
           uxWriting: {
@@ -495,14 +492,14 @@ wrapper.appendChild(status);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.loaded.label'),  trigger: stripHtml(t('states.loaded.trigger')),  behavior: t('states.loaded.behavior') },
-            { label: t('states.loading.label'), trigger: stripHtml(t('states.loading.trigger')), behavior: t('states.loading.behavior') },
-            { label: t('states.failed.label'),  trigger: stripHtml(t('states.failed.trigger')),  behavior: t('states.failed.behavior') },
-            { label: t('states.noImage.label'), trigger: stripHtml(t('states.noImage.trigger')), behavior: t('states.noImage.behavior') },
+            { label: t('states.loaded.label'),  trigger: toPlainText(t('states.loaded.trigger')),  behavior: toPlainText(t('states.loaded.behavior'))},
+            { label: t('states.loading.label'), trigger: toPlainText(t('states.loading.trigger')), behavior: toPlainText(t('states.loading.behavior'))},
+            { label: t('states.failed.label'),  trigger: toPlainText(t('states.failed.trigger')),  behavior: toPlainText(t('states.failed.behavior'))},
+            { label: t('states.noImage.label'), trigger: toPlainText(t('states.noImage.trigger')), behavior: toPlainText(t('states.noImage.behavior'))},
           ],
         });
 
@@ -548,24 +545,24 @@ export interface AvatarFallbackOptions {
               title: t('props.avatarTitle'),
               cols: propsCols,
               items: [
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
               title: t('props.avatarImageTitle'),
               cols: propsCols,
               items: [
-                { name: 'src',       type: 'string', defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.src')) },
-                { name: 'alt',       type: 'string', defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.alt')) },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'src',       type: 'string', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.src')) },
+                { name: 'alt',       type: 'string', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.alt')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
               title: t('props.avatarFallbackTitle'),
               cols: propsCols,
               items: [
-                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -584,14 +581,14 @@ export interface AvatarFallbackOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--muted',            value: 'bg-muted',                 description: stripHtml(t('tokens.table.muted')) },
-            { token: '--muted-foreground', value: 'nds-text-muted-foreground',    description: stripHtml(t('tokens.table.mutedForeground')) },
-            { token: '--background',       value: 'ring-background',          description: stripHtml(t('tokens.table.background')) },
-            { token: '--border',           value: 'border',                   description: stripHtml(t('tokens.table.border')) },
-            { token: '--primary',          value: 'bg-primary',               description: stripHtml(t('tokens.table.primary')) },
-            { token: '--avatar-size',      value: 'var(--spacing-8)',         description: stripHtml(t('tokens.table.avatarSize')) },
-            { token: '--radius',           value: 'rounded-full',             description: stripHtml(t('tokens.table.radius')) },
-            { token: '--ring',             value: 'nds-focus-ring',  description: stripHtml(t('tokens.table.ring')) },
+            { token: '--muted',            value: 'bg-muted',                 description: toPlainText(t('tokens.table.muted')) },
+            { token: '--muted-foreground', value: 'nds-text-muted-foreground',    description: toPlainText(t('tokens.table.mutedForeground')) },
+            { token: '--background',       value: 'ring-background',          description: toPlainText(t('tokens.table.background')) },
+            { token: '--border',           value: 'border',                   description: toPlainText(t('tokens.table.border')) },
+            { token: '--primary',          value: 'bg-primary',               description: toPlainText(t('tokens.table.primary')) },
+            { token: '--avatar-size',      value: 'var(--spacing-8)',         description: toPlainText(t('tokens.table.avatarSize')) },
+            { token: '--radius',           value: 'rounded-full',             description: toPlainText(t('tokens.table.radius')) },
+            { token: '--ring',             value: 'nds-focus-ring',  description: toPlainText(t('tokens.table.ring')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -643,14 +640,14 @@ export interface AvatarFallbackOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.profileClick'),  trigger: t('analytics.table.profileClickTrigger'),  payload: t('analytics.table.profileClickPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.profileClick'),  trigger: toPlainText(t('analytics.table.profileClickTrigger')),  payload: t('analytics.table.profileClickPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

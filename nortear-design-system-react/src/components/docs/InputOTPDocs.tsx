@@ -33,12 +33,9 @@ import { DocsRelated } from "@/components/docs/shared/sections/DocsRelated";
 import { DocsNotes } from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics } from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes } from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -85,7 +82,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Locale resolver para item de breadcrumb (Form/Formulário) ──────────────
 
@@ -702,34 +698,34 @@ interface InputOTPProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.empty.label"),
-            trigger: tContent("states.empty.trigger"),
-            behavior: stripHtml(tContent("states.empty.behavior")),
+            trigger: toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label: tContent("states.filling.label"),
-            trigger: tContent("states.filling.trigger"),
-            behavior: stripHtml(tContent("states.filling.behavior")),
+            trigger: toPlainText(tContent("states.filling.trigger")),
+            behavior: toPlainText(tContent("states.filling.behavior")),
           },
           {
             label: tContent("states.complete.label"),
-            trigger: tContent("states.complete.trigger"),
-            behavior: stripHtml(tContent("states.complete.behavior")),
+            trigger: toPlainText(tContent("states.complete.trigger")),
+            behavior: toPlainText(tContent("states.complete.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.error.label"),
-            trigger: tContent("states.error.trigger"),
-            behavior: stripHtml(tContent("states.error.behavior")),
+            trigger: toPlainText(tContent("states.error.trigger")),
+            behavior: toPlainText(tContent("states.error.behavior")),
           },
         ]}
       />
@@ -869,10 +865,10 @@ interface InputOTPProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrows")) },
-          { key: "Backspace", description: stripHtml(tContent("accessibility.keyboard.backspace")) },
-          { key: "Ctrl+V", description: stripHtml(tContent("accessibility.keyboard.paste")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Left / Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrows")) },
+          { key: "Backspace", description: toPlainText(tContent("accessibility.keyboard.backspace")) },
+          { key: "Ctrl+V", description: toPlainText(tContent("accessibility.keyboard.paste")) },
         ]}
       />
 
@@ -924,7 +920,7 @@ interface InputOTPProps {
         items={[
           {
             event: "otp_complete / otp_paste / otp_resend",
-            trigger: DOMPurify.sanitize(tContent("analytics.description")),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "component, location, length",
           },
         ]}

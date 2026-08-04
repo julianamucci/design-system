@@ -13,6 +13,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import codeBlockTranslations from '@shared/content/code-block/translations.json';
+  import { toPlainText } from '@/lib/strip-html';
 
   /** Interface real desta stack — a seção de props documenta o contrato de tipos,
       não um exemplo de uso. */
@@ -638,16 +639,16 @@ render(items, total);`;
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.idle.label'),            trigger: $tStore('states.idle.trigger'),            behavior: $tStore('states.idle.behavior')            },
-          { label: $tStore('states.copied.label'),          trigger: $tStore('states.copied.trigger'),          behavior: $tStore('states.copied.behavior')          },
-          { label: $tStore('states.numbered.label'),        trigger: $tStore('states.numbered.trigger'),        behavior: $tStore('states.numbered.behavior')        },
-          { label: $tStore('states.unnumbered.label'),      trigger: $tStore('states.unnumbered.trigger'),      behavior: $tStore('states.unnumbered.behavior')      },
-          { label: $tStore('states.scrolling.label'),       trigger: $tStore('states.scrolling.trigger'),       behavior: $tStore('states.scrolling.behavior')       },
-          { label: $tStore('states.unknownLanguage.label'), trigger: $tStore('states.unknownLanguage.trigger'), behavior: $tStore('states.unknownLanguage.behavior') },
+          { label: $tStore('states.idle.label'),            trigger: toPlainText($tStore('states.idle.trigger')),            behavior: toPlainText($tStore('states.idle.behavior'))},
+          { label: $tStore('states.copied.label'),          trigger: toPlainText($tStore('states.copied.trigger')),          behavior: toPlainText($tStore('states.copied.behavior'))},
+          { label: $tStore('states.numbered.label'),        trigger: toPlainText($tStore('states.numbered.trigger')),        behavior: toPlainText($tStore('states.numbered.behavior'))},
+          { label: $tStore('states.unnumbered.label'),      trigger: toPlainText($tStore('states.unnumbered.trigger')),      behavior: toPlainText($tStore('states.unnumbered.behavior'))},
+          { label: $tStore('states.scrolling.label'),       trigger: toPlainText($tStore('states.scrolling.trigger')),       behavior: toPlainText($tStore('states.scrolling.behavior'))},
+          { label: $tStore('states.unknownLanguage.label'), trigger: toPlainText($tStore('states.unknownLanguage.trigger')), behavior: toPlainText($tStore('states.unknownLanguage.behavior'))},
         ]}
       />
 
@@ -739,14 +740,14 @@ render(items, total);`;
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.copy'),          trigger: $tStore('analytics.table.copyTrigger'),          payload: $tStore('analytics.table.copyPayload')          },
-          { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-          { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-          { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+          { event: $tStore('analytics.table.copy'),          trigger: toPlainText($tStore('analytics.table.copyTrigger')),          payload: $tStore('analytics.table.copyPayload')          },
+          { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+          { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+          { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
         ]}
       />
 

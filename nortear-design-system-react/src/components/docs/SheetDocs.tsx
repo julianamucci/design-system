@@ -37,10 +37,7 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 import { mapCloseReason }    from "@/components/docs/shared/close-reason";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -85,7 +82,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 type DemoProps = {
   trigger: string;
@@ -656,34 +652,34 @@ export function SheetDocs() {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: tContent("states.closed.trigger"),
-            behavior: stripHtml(tContent("states.closed.behavior")),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: tContent("states.open.trigger"),
-            behavior: stripHtml(tContent("states.open.behavior")),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.transitioning.label"),
-            trigger: tContent("states.transitioning.trigger"),
-            behavior: stripHtml(tContent("states.transitioning.behavior")),
+            trigger: toPlainText(tContent("states.transitioning.trigger")),
+            behavior: toPlainText(tContent("states.transitioning.behavior")),
           },
           {
             label: tContent("states.focused.label"),
-            trigger: tContent("states.focused.trigger"),
-            behavior: stripHtml(tContent("states.focused.behavior")),
+            trigger: toPlainText(tContent("states.focused.trigger")),
+            behavior: toPlainText(tContent("states.focused.behavior")),
           },
           {
             label: tContent("states.longScrollBody.label"),
-            trigger: stripHtml(tContent("states.longScrollBody.trigger")),
-            behavior: stripHtml(tContent("states.longScrollBody.behavior")),
+            trigger: toPlainText(tContent("states.longScrollBody.trigger")),
+            behavior: toPlainText(tContent("states.longScrollBody.behavior")),
           },
         ]}
       />
@@ -705,42 +701,42 @@ export function SheetDocs() {
                 type: tContent("props.table.open.type"),
                 defaultValue: tContent("props.table.open.default"),
                 required: tContent("props.table.open.required"),
-                description: stripHtml(tContent("props.table.open.description")),
+                description: toPlainText(tContent("props.table.open.description")),
               },
               {
                 name: "defaultOpen",
                 type: tContent("props.table.defaultOpen.type"),
                 defaultValue: tContent("props.table.defaultOpen.default"),
                 required: tContent("props.table.defaultOpen.required"),
-                description: stripHtml(tContent("props.table.defaultOpen.description")),
+                description: toPlainText(tContent("props.table.defaultOpen.description")),
               },
               {
                 name: "onOpenChange",
                 type: tContent("props.table.onOpenChange.type"),
                 defaultValue: tContent("props.table.onOpenChange.default"),
                 required: tContent("props.table.onOpenChange.required"),
-                description: stripHtml(tContent("props.table.onOpenChange.description")),
+                description: toPlainText(tContent("props.table.onOpenChange.description")),
               },
               {
                 name: "side",
                 type: tContent("props.table.side.type"),
                 defaultValue: tContent("props.table.side.default"),
                 required: tContent("props.table.side.required"),
-                description: stripHtml(tContent("props.table.side.description")),
+                description: toPlainText(tContent("props.table.side.description")),
               },
               {
                 name: "showCloseButton",
                 type: tContent("props.table.showCloseButton.type"),
                 defaultValue: tContent("props.table.showCloseButton.default"),
                 required: tContent("props.table.showCloseButton.required"),
-                description: stripHtml(tContent("props.table.showCloseButton.description")),
+                description: toPlainText(tContent("props.table.showCloseButton.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
             ],
           },
@@ -818,23 +814,23 @@ export function SheetDocs() {
         title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "dialog_open",
-            trigger: tContent("analytics.table.dialog_open.trigger"),
+            trigger: toPlainText(tContent("analytics.table.dialog_open.trigger")),
             payload: tContent("analytics.table.dialog_open.payload"),
           },
           {
             event: "dialog_close",
-            trigger: tContent("analytics.table.dialog_close.trigger"),
+            trigger: toPlainText(tContent("analytics.table.dialog_close.trigger")),
             payload: tContent("analytics.table.dialog_close.payload"),
           },
           {
             event: "dialog_confirm",
-            trigger: tContent("analytics.table.dialog_confirm.trigger"),
+            trigger: toPlainText(tContent("analytics.table.dialog_confirm.trigger")),
             payload: tContent("analytics.table.dialog_confirm.payload"),
           },
         ]}

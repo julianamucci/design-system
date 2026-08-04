@@ -29,12 +29,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -81,7 +78,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -645,39 +641,39 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.selected.label"),
-            trigger: tContent("states.selected.trigger"),
-            behavior: stripHtml(tContent("states.selected.behavior")),
+            trigger: toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.disabledItem.label"),
-            trigger: stripHtml(tContent("states.disabledItem.trigger")),
-            behavior: stripHtml(tContent("states.disabledItem.behavior")),
+            trigger: toPlainText(tContent("states.disabledItem.trigger")),
+            behavior: toPlainText(tContent("states.disabledItem.behavior")),
           },
         ]}
       />
@@ -700,63 +696,63 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 type: tContent("props.table.type_prop.type"),
                 defaultValue: tContent("props.table.type_prop.default"),
                 required: tContent("props.table.type_prop.required"),
-                description: stripHtml(tContent("props.table.type_prop.description")),
+                description: toPlainText(tContent("props.table.type_prop.description")),
               },
               {
                 name: "value",
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: stripHtml(tContent("props.table.value.description")),
+                description: toPlainText(tContent("props.table.value.description")),
               },
               {
                 name: "defaultValue",
                 type: tContent("props.table.defaultValue.type"),
                 defaultValue: tContent("props.table.defaultValue.default"),
                 required: tContent("props.table.defaultValue.required"),
-                description: stripHtml(tContent("props.table.defaultValue.description")),
+                description: toPlainText(tContent("props.table.defaultValue.description")),
               },
               {
                 name: "onValueChange",
                 type: tContent("props.table.onValueChange.type"),
                 defaultValue: tContent("props.table.onValueChange.default"),
                 required: tContent("props.table.onValueChange.required"),
-                description: stripHtml(tContent("props.table.onValueChange.description")),
+                description: toPlainText(tContent("props.table.onValueChange.description")),
               },
               {
                 name: "disabled",
                 type: tContent("props.table.disabled.type"),
                 defaultValue: tContent("props.table.disabled.default"),
                 required: tContent("props.table.disabled.required"),
-                description: stripHtml(tContent("props.table.disabled.description")),
+                description: toPlainText(tContent("props.table.disabled.description")),
               },
               {
                 name: "orientation",
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: stripHtml(tContent("props.table.orientation.description")),
+                description: toPlainText(tContent("props.table.orientation.description")),
               },
               {
                 name: "variant",
                 type: tContent("props.table.variant.type"),
                 defaultValue: tContent("props.table.variant.default"),
                 required: tContent("props.table.variant.required"),
-                description: stripHtml(tContent("props.table.variant.description")),
+                description: toPlainText(tContent("props.table.variant.description")),
               },
               {
                 name: "size",
                 type: tContent("props.table.size.type"),
                 defaultValue: tContent("props.table.size.default"),
                 required: tContent("props.table.size.required"),
-                description: stripHtml(tContent("props.table.size.description")),
+                description: toPlainText(tContent("props.table.size.description")),
               },
               {
                 name: "spacing",
                 type: tContent("props.table.spacing.type"),
                 defaultValue: tContent("props.table.spacing.default"),
                 required: tContent("props.table.spacing.required"),
-                description: stripHtml(tContent("props.table.spacing.description")),
+                description: toPlainText(tContent("props.table.spacing.description")),
               },
             ],
           },
@@ -857,13 +853,13 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "field_change",
-            trigger: tContent("analytics.table.field_change.trigger"),
+            trigger: toPlainText(tContent("analytics.table.field_change.trigger")),
             payload: tContent("analytics.table.field_change.payload"),
           },
           {
@@ -890,8 +886,8 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             priority: tNav("common.priority"),
           },
           items: [1, 2, 3, 4].map((i) => ({
-            action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -903,7 +899,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}`)),
             level: "AA",
             how: "—",
           })),

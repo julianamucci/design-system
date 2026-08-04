@@ -5,6 +5,7 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCodeBlock, type CodeBlockOptions } from '@/components/ui/code-block';
 import uiTranslations from '@/i18n/ui.json';
 import codeBlockTranslations from '@shared/content/code-block/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -601,13 +602,13 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: ['idle', 'copied', 'numbered', 'unnumbered', 'highlighted', 'scrolling', 'unknownLanguage'].map(key => ({
             label: t(`states.${key}.label`),
-            trigger: t(`states.${key}.trigger`),
-            behavior: t(`states.${key}.behavior`),
+            trigger: toPlainText(t(`states.${key}.trigger`)),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
           })),
         });
 
@@ -698,12 +699,12 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: ['copy', 'pageView', 'sectionViewed', 'langSwitch'].map(key => ({
             event: t(`analytics.table.${key}`),
-            trigger: t(`analytics.table.${key}Trigger`),
+            trigger: toPlainText(t(`analytics.table.${key}Trigger`)),
             payload: t(`analytics.table.${key}Payload`),
           })),
         });

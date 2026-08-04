@@ -50,6 +50,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -68,10 +69,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -145,8 +142,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -317,11 +312,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.expanded.label'),  trigger: stripHtml(tContent('states.expanded.trigger')),  behavior: tContent('states.expanded.behavior')  },
-  { label: tContent('states.collapsed.label'), trigger: stripHtml(tContent('states.collapsed.trigger')), behavior: tContent('states.collapsed.behavior') },
-  { label: tContent('states.offcanvas.label'), trigger: stripHtml(tContent('states.offcanvas.trigger')), behavior: tContent('states.offcanvas.behavior') },
-  { label: tContent('states.mobile.label'),    trigger: stripHtml(tContent('states.mobile.trigger')),    behavior: tContent('states.mobile.behavior')    },
-  { label: tContent('states.hidden.label'),    trigger: stripHtml(tContent('states.hidden.trigger')),    behavior: tContent('states.hidden.behavior')    },
+  { label: tContent('states.expanded.label'),  trigger: toPlainText(tContent('states.expanded.trigger')),  behavior: toPlainText(tContent('states.expanded.behavior'))},
+  { label: tContent('states.collapsed.label'), trigger: toPlainText(tContent('states.collapsed.trigger')), behavior: toPlainText(tContent('states.collapsed.behavior'))},
+  { label: tContent('states.offcanvas.label'), trigger: toPlainText(tContent('states.offcanvas.trigger')), behavior: toPlainText(tContent('states.offcanvas.behavior'))},
+  { label: tContent('states.mobile.label'),    trigger: toPlainText(tContent('states.mobile.trigger')),    behavior: toPlainText(tContent('states.mobile.behavior'))},
+  { label: tContent('states.hidden.label'),    trigger: toPlainText(tContent('states.hidden.trigger')),    behavior: toPlainText(tContent('states.hidden.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -407,11 +402,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.navClick'),      trigger: tContent('analytics.table.navClickTrigger'),      payload: tContent('analytics.table.navClickPayload')      },
-  { event: tContent('analytics.table.toggleOpen'),    trigger: tContent('analytics.table.toggleOpenTrigger'),    payload: tContent('analytics.table.togglePayload')        },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.navClick'),      trigger: toPlainText(tContent('analytics.table.navClickTrigger')),      payload: tContent('analytics.table.navClickPayload')      },
+  { event: tContent('analytics.table.toggleOpen'),    trigger: toPlainText(tContent('analytics.table.toggleOpenTrigger')),    payload: tContent('analytics.table.togglePayload')        },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -1518,7 +1513,7 @@ const compositionItems = computed(() => [
     <!-- ── Estados ────────────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -1571,7 +1566,7 @@ const compositionItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

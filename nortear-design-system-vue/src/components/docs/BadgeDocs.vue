@@ -26,6 +26,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -33,10 +34,6 @@ const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(badgeTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -111,8 +108,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -183,7 +178,7 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.countBadge.label'),  trigger: stripHtml(tContent('states.countBadge.trigger')),  behavior: stripHtml(tContent('states.countBadge.behavior'))  },
+  { label: tContent('states.countBadge.label'),  trigger: toPlainText(tContent('states.countBadge.trigger')),  behavior: toPlainText(tContent('states.countBadge.behavior'))  },
 ]);
 
 const propCols = computed(() => ({
@@ -193,9 +188,9 @@ const propCols = computed(() => ({
 }));
 
 const badgePropItems = computed(() => [
-  { name: 'variant',      type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
-  { name: 'class',        type: 'string',                                              defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className')) },
-  { name: 'default slot', type: 'VNode',                                               defaultValue: '—',         required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'variant',      type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'class',        type: 'string',                                              defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
+  { name: 'default slot', type: 'VNode',                                               defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -241,10 +236,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.click'),         trigger: tContent('analytics.table.clickTrigger'),         payload: tContent('analytics.table.clickPayload')         },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.click'),         trigger: toPlainText(tContent('analytics.table.clickTrigger')),         payload: tContent('analytics.table.clickPayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -505,7 +500,7 @@ const visualTestItems = computed(() => [
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -553,7 +548,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

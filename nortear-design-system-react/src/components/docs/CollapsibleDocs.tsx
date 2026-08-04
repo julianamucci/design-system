@@ -29,12 +29,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -81,7 +78,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo: Controlled ─────────────────────────────────────────────────────────
 
@@ -727,29 +723,29 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: stripHtml(tContent("states.closed.trigger")),
-            behavior: tContent("states.closed.behavior"),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: stripHtml(tContent("states.open.trigger")),
-            behavior: tContent("states.open.behavior"),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.defaultOpen.label"),
-            trigger: stripHtml(tContent("states.defaultOpen.trigger")),
-            behavior: tContent("states.defaultOpen.behavior"),
+            trigger: toPlainText(tContent("states.defaultOpen.trigger")),
+            behavior: toPlainText(tContent("states.defaultOpen.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -827,7 +823,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.asChild")),
+                description: toPlainText(tContent("props.table.asChild")),
               },
               {
                 name: "disabled",
@@ -961,28 +957,28 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.toggle"),
-            trigger: tContent("analytics.table.toggleTrigger"),
+            trigger: toPlainText(tContent("analytics.table.toggleTrigger")),
             payload: tContent("analytics.table.togglePayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

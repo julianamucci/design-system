@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(dataTableTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -280,7 +277,7 @@ export function createDataTableDocs(): HTMLElement {
               alternative: t('usage.scenarios.cols.alternative'),
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              s: t(`usage.scenarios.item${i}.s`),
+              s: toPlainText(t(`usage.scenarios.item${i}.s`)),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
             })),
@@ -462,13 +459,13 @@ export function createDataTableDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: ['empty', 'sorted', 'filtered', 'selected', 'editing', 'resizing', 'virtualized'].map(key => ({
             label: t(`states.${key}.label`),
-            trigger: stripHtml(t(`states.${key}.trigger`)),
-            behavior: stripHtml(t(`states.${key}.behavior`)),
+            trigger: toPlainText(t(`states.${key}.trigger`)),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
           })),
         });
 
@@ -514,33 +511,33 @@ export function createDataTableDocs(): HTMLElement {
               title: t('props.containerTitle'),
               cols: propsCols,
               items: [
-                { name: 'columns',                 type: 'ColumnDef<TData>[]',                  defaultValue: '—',              required: YES, description: stripHtml(t('props.table.columns')) },
-                { name: 'data',                    type: 'TData[]',                              defaultValue: '—',              required: YES, description: stripHtml(t('props.table.data')) },
-                { name: 'enableGlobalFilter',      type: 'boolean',                              defaultValue: 'true',           required: NO,  description: stripHtml(t('props.table.enableGlobalFilter')) },
-                { name: 'globalFilterPlaceholder', type: 'string',                               defaultValue: '"Buscar..."',    required: NO,  description: stripHtml(t('props.table.globalFilterPlaceholder')) },
-                { name: 'enableRowSelection',      type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.enableRowSelection')) },
-                { name: 'enableColumnVisibility',  type: 'boolean',                              defaultValue: 'true',           required: NO,  description: stripHtml(t('props.table.enableColumnVisibility')) },
-                { name: 'enableColumnFilters',     type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.enableColumnFilters')) },
-                { name: 'enableColumnResizing',    type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.enableColumnResizing')) },
-                { name: 'enableColumnOrdering',    type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.enableColumnOrdering')) },
-                { name: 'enableColumnPinning',     type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.enableColumnPinning')) },
-                { name: 'enablePagination',        type: 'boolean',                              defaultValue: 'true',           required: NO,  description: stripHtml(t('props.table.enablePagination')) },
-                { name: 'virtualized',             type: 'boolean',                              defaultValue: 'false',          required: NO,  description: stripHtml(t('props.table.virtualized')) },
-                { name: 'virtualRowHeight',        type: 'number',                               defaultValue: '36',             required: NO,  description: stripHtml(t('props.table.virtualRowHeight')) },
-                { name: 'maxHeight',               type: 'string',                               defaultValue: '"480px"',        required: NO,  description: stripHtml(t('props.table.maxHeight')) },
-                { name: 'pageSize',                type: 'number',                               defaultValue: '10',             required: NO,  description: stripHtml(t('props.table.pageSize')) },
-                { name: 'pageSizeOptions',         type: 'number[]',                             defaultValue: '[10,20,50,100]', required: NO,  description: stripHtml(t('props.table.pageSizeOptions')) },
-                { name: 'emptyMessage',            type: 'string',                               defaultValue: '"Sem resultados."', required: NO, description: stripHtml(t('props.table.emptyMessage')) },
-                { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void',  defaultValue: '—',              required: NO,  description: stripHtml(t('props.table.onCellEdit')) },
-                { name: 'onTableReady',            type: '(table: Table<TData>) => void',        defaultValue: '—',              required: NO,  description: stripHtml(t('props.table.onTableReady')) },
+                { name: 'columns',                 type: 'ColumnDef<TData>[]',                  defaultValue: '—',              required: YES, description: toPlainText(t('props.table.columns')) },
+                { name: 'data',                    type: 'TData[]',                              defaultValue: '—',              required: YES, description: toPlainText(t('props.table.data')) },
+                { name: 'enableGlobalFilter',      type: 'boolean',                              defaultValue: 'true',           required: NO,  description: toPlainText(t('props.table.enableGlobalFilter')) },
+                { name: 'globalFilterPlaceholder', type: 'string',                               defaultValue: '"Buscar..."',    required: NO,  description: toPlainText(t('props.table.globalFilterPlaceholder')) },
+                { name: 'enableRowSelection',      type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.enableRowSelection')) },
+                { name: 'enableColumnVisibility',  type: 'boolean',                              defaultValue: 'true',           required: NO,  description: toPlainText(t('props.table.enableColumnVisibility')) },
+                { name: 'enableColumnFilters',     type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.enableColumnFilters')) },
+                { name: 'enableColumnResizing',    type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.enableColumnResizing')) },
+                { name: 'enableColumnOrdering',    type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.enableColumnOrdering')) },
+                { name: 'enableColumnPinning',     type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.enableColumnPinning')) },
+                { name: 'enablePagination',        type: 'boolean',                              defaultValue: 'true',           required: NO,  description: toPlainText(t('props.table.enablePagination')) },
+                { name: 'virtualized',             type: 'boolean',                              defaultValue: 'false',          required: NO,  description: toPlainText(t('props.table.virtualized')) },
+                { name: 'virtualRowHeight',        type: 'number',                               defaultValue: '36',             required: NO,  description: toPlainText(t('props.table.virtualRowHeight')) },
+                { name: 'maxHeight',               type: 'string',                               defaultValue: '"480px"',        required: NO,  description: toPlainText(t('props.table.maxHeight')) },
+                { name: 'pageSize',                type: 'number',                               defaultValue: '10',             required: NO,  description: toPlainText(t('props.table.pageSize')) },
+                { name: 'pageSizeOptions',         type: 'number[]',                             defaultValue: '[10,20,50,100]', required: NO,  description: toPlainText(t('props.table.pageSizeOptions')) },
+                { name: 'emptyMessage',            type: 'string',                               defaultValue: '"Sem resultados."', required: NO, description: toPlainText(t('props.table.emptyMessage')) },
+                { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void',  defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.onCellEdit')) },
+                { name: 'onTableReady',            type: '(table: Table<TData>) => void',        defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.onTableReady')) },
               ],
             },
             {
               title: t('props.tooltipTitle'),
               cols: propsCols,
               items: [
-                { name: 'meta.filter',     type: '{ type: "text" | "select"; options?: string[] }', defaultValue: '—', required: NO, description: stripHtml(t('props.table.metaFilter')) },
-                { name: 'meta.editable',   type: 'boolean',                                          defaultValue: '—', required: NO, description: stripHtml(t('props.table.metaEditable')) },
+                { name: 'meta.filter',     type: '{ type: "text" | "select"; options?: string[] }', defaultValue: '—', required: NO, description: toPlainText(t('props.table.metaFilter')) },
+                { name: 'meta.editable',   type: 'boolean',                                          defaultValue: '—', required: NO, description: toPlainText(t('props.table.metaEditable')) },
                 { name: 'meta.headerLabel', type: 'string',                                          defaultValue: '—', required: NO, description: 'Label legível usado em aria-labels (sort, filter, pin) — fallback é header se for string.' },
                 { name: 'meta.renderCell', type: '({ value, row, rowIndex }) => string | HTMLElement', defaultValue: '—', required: NO, description: 'Renderiza conteúdo customizado da célula (badge, formatação, etc.).' },
               ],
@@ -571,12 +568,12 @@ export function createDataTableDocs(): HTMLElement {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--border',           value: stripHtml(t('tokens.table.border')),          description: t('tokens.table.borderPart') },
-            { token: '--muted',            value: stripHtml(t('tokens.table.muted')),           description: t('tokens.table.mutedPart') },
-            { token: '--muted-foreground', value: stripHtml(t('tokens.table.mutedForeground')), description: t('tokens.table.mutedForegroundPart') },
-            { token: '--primary',          value: stripHtml(t('tokens.table.primary')),         description: t('tokens.table.primaryPart') },
-            { token: '--background',       value: stripHtml(t('tokens.table.background')),      description: t('tokens.table.backgroundPart') },
-            { token: '--ring',             value: stripHtml(t('tokens.table.ring')),            description: t('tokens.table.ringPart') },
+            { token: '--border',           value: toPlainText(t('tokens.table.border')),          description: t('tokens.table.borderPart') },
+            { token: '--muted',            value: toPlainText(t('tokens.table.muted')),           description: t('tokens.table.mutedPart') },
+            { token: '--muted-foreground', value: toPlainText(t('tokens.table.mutedForeground')), description: t('tokens.table.mutedForegroundPart') },
+            { token: '--primary',          value: toPlainText(t('tokens.table.primary')),         description: t('tokens.table.primaryPart') },
+            { token: '--background',       value: toPlainText(t('tokens.table.background')),      description: t('tokens.table.backgroundPart') },
+            { token: '--ring',             value: toPlainText(t('tokens.table.ring')),            description: t('tokens.table.ringPart') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -624,13 +621,13 @@ export function createDataTableDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

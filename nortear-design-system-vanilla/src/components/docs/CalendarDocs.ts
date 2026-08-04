@@ -24,6 +24,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -41,10 +42,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(calendarTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -367,7 +364,7 @@ const el = createCalendar({
             },
             {
               name: 'withDisabledDates',
-              description: stripHtml(t('states.disabled.behavior')),
+              description: toPlainText(t('states.disabled.behavior')),
               code: codeDisabled,
               previewFactory: () =>
                 createCalendar({ locale: 'pt-BR',
@@ -378,7 +375,7 @@ const el = createCalendar({
             },
             {
               name: 'customStyled',
-              description: stripHtml(t('props.table.className')),
+              description: toPlainText(t('props.table.className')),
               code: codeCustomClass,
               previewFactory: () =>
                 createCalendar({ locale: 'pt-BR',
@@ -425,29 +422,29 @@ const el = createCalendar({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.default.label'),
-              trigger: stripHtml(t('states.default.trigger')),
-              behavior: stripHtml(t('states.default.behavior')),
+              trigger: toPlainText(t('states.default.trigger')),
+              behavior: toPlainText(t('states.default.behavior')),
             },
             {
               label: t('states.selected.label'),
-              trigger: stripHtml(t('states.selected.trigger')),
-              behavior: stripHtml(t('states.selected.behavior')),
+              trigger: toPlainText(t('states.selected.trigger')),
+              behavior: toPlainText(t('states.selected.behavior')),
             },
             {
               label: t('states.disabled.label'),
-              trigger: stripHtml(t('states.disabled.trigger')),
-              behavior: stripHtml(t('states.disabled.behavior')),
+              trigger: toPlainText(t('states.disabled.trigger')),
+              behavior: toPlainText(t('states.disabled.behavior')),
             },
             {
               label: t('states.today.label'),
-              trigger: stripHtml(t('states.today.trigger')),
-              behavior: stripHtml(t('states.today.behavior')),
+              trigger: toPlainText(t('states.today.trigger')),
+              behavior: toPlainText(t('states.today.behavior')),
             },
           ],
         });
@@ -491,7 +488,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
                   type: '(date: Date) => void',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.onSelect')),
+                  description: toPlainText(t('props.table.onSelect')),
                 },
                 {
                   name: 'disabled',
@@ -532,8 +529,8 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
             { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
             { token: '--foreground', value: 'text-foreground', description: t('tokens.table.foreground') },
             { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
-            { token: '--nds-cell-size', value: '2rem', description: stripHtml(t('tokens.table.cellSize')) },
-            { token: '--nds-cell-radius', value: 'var(--radius-md)', description: stripHtml(t('tokens.table.cellRadius')) },
+            { token: '--nds-cell-size', value: '2rem', description: toPlainText(t('tokens.table.cellSize')) },
+            { token: '--nds-cell-radius', value: 'var(--radius-md)', description: toPlainText(t('tokens.table.cellRadius')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -556,11 +553,11 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           ],
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
-            { key: 'Tab', description: stripHtml(t('accessibility.keyboard.tab')) },
-            { key: 'Enter / Space', description: stripHtml(t('accessibility.keyboard.enter')) },
-            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(t('accessibility.keyboard.arrows')) },
-            { key: 'Page Up / Page Down', description: stripHtml(t('accessibility.keyboard.pageUpDown')) },
-            { key: 'Home / End', description: stripHtml(t('accessibility.keyboard.homeEnd')) },
+            { key: 'Tab', description: toPlainText(t('accessibility.keyboard.tab')) },
+            { key: 'Enter / Space', description: toPlainText(t('accessibility.keyboard.enter')) },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: toPlainText(t('accessibility.keyboard.arrows')) },
+            { key: 'Page Up / Page Down', description: toPlainText(t('accessibility.keyboard.pageUpDown')) },
+            { key: 'Home / End', description: toPlainText(t('accessibility.keyboard.homeEnd')) },
           ],
         });
 
@@ -591,33 +588,33 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: t('analytics.table.fieldChange'),
-              trigger: t('analytics.table.fieldChangeTrigger'),
+              trigger: toPlainText(t('analytics.table.fieldChangeTrigger')),
               payload: t('analytics.table.fieldChangePayload'),
             },
             {
               event: t('analytics.table.dialogOpen'),
-              trigger: t('analytics.table.dialogOpenTrigger'),
+              trigger: toPlainText(t('analytics.table.dialogOpenTrigger')),
               payload: t('analytics.table.dialogOpenPayload'),
             },
             {
               event: t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event: t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event: t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],
@@ -635,7 +632,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
             },
             items: [1, 2, 4, 5, 6].map((i) => ({
               action: t(`testes.functional.item${i}.action`),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -647,7 +644,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
             })),

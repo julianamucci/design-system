@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(alertTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -483,15 +480,15 @@ export function createAlertDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.complete.label'),      trigger: stripHtml(t('states.complete.trigger')),      behavior: t('states.complete.behavior') },
-            { label: t('states.withoutTitle.label'),  trigger: stripHtml(t('states.withoutTitle.trigger')),  behavior: t('states.withoutTitle.behavior') },
-            { label: t('states.withoutIcon.label'),   trigger: t('states.withoutIcon.trigger'),              behavior: t('states.withoutIcon.behavior') },
-            { label: t('states.dynamicInsert.label'), trigger: t('states.dynamicInsert.trigger'),            behavior: stripHtml(t('states.dynamicInsert.behavior')) },
-            { label: t('states.dismissed.label'),     trigger: stripHtml(t('states.dismissed.trigger')),     behavior: t('states.dismissed.behavior') },
+            { label: t('states.complete.label'),      trigger: toPlainText(t('states.complete.trigger')),      behavior: toPlainText(t('states.complete.behavior'))},
+            { label: t('states.withoutTitle.label'),  trigger: toPlainText(t('states.withoutTitle.trigger')),  behavior: toPlainText(t('states.withoutTitle.behavior'))},
+            { label: t('states.withoutIcon.label'),   trigger: toPlainText(t('states.withoutIcon.trigger')),              behavior: toPlainText(t('states.withoutIcon.behavior'))},
+            { label: t('states.dynamicInsert.label'), trigger: toPlainText(t('states.dynamicInsert.trigger')),            behavior: toPlainText(t('states.dynamicInsert.behavior')) },
+            { label: t('states.dismissed.label'),     trigger: toPlainText(t('states.dismissed.trigger')),     behavior: toPlainText(t('states.dismissed.behavior'))},
           ],
         });
 
@@ -528,12 +525,12 @@ export interface AlertTitleOptions {
               title: t('props.alertTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
-                { name: 'role',      type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml(t('props.table.role')) },
-                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
-                { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: stripHtml(t('props.table.dismissible')) },
-                { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: stripHtml(t('props.table.onDismiss')) },
-                { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: stripHtml(t('props.table.dismissLabel')) },
+                { name: 'variant',   type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
+                { name: 'role',      type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText(t('props.table.role')) },
+                { name: 'className', type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'dismissible',  type: 'boolean',    defaultValue: 'false',            required: 'Não', description: toPlainText(t('props.table.dismissible')) },
+                { name: 'onDismiss',    type: '() => void', defaultValue: '—',                required: 'Não', description: toPlainText(t('props.table.onDismiss')) },
+                { name: 'dismissLabel', type: 'string',     defaultValue: "'Fechar alerta'",  required: 'Não', description: toPlainText(t('props.table.dismissLabel')) },
               ],
             },
             {
@@ -541,8 +538,8 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'as',        type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: 'Não', description: stripHtml(t('props.table.titleAs')) },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'as',        type: "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'", defaultValue: "'h5'", required: 'Não', description: toPlainText(t('props.table.titleAs')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
@@ -550,7 +547,7 @@ export interface AlertTitleOptions {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -633,14 +630,14 @@ export interface AlertTitleOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.dismiss'),       trigger: t('analytics.table.dismissTrigger'),       payload: t('analytics.table.dismissPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.dismiss'),       trigger: toPlainText(t('analytics.table.dismissTrigger')),       payload: t('analytics.table.dismissPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

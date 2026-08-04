@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(alertDialogTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -459,15 +456,15 @@ createAlertDialog({ trigger, title: 'Sair da conta', description: '...', cancelB
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),                   behavior: t('states.closed.behavior') },
-            { label: t('states.open.label'),       trigger: stripHtml(t('states.open.trigger')),          behavior: t('states.open.behavior') },
-            { label: t('states.confirmed.label'),  trigger: stripHtml(t('states.confirmed.trigger')),     behavior: stripHtml(t('states.confirmed.behavior')) },
-            { label: t('states.cancelled.label'),  trigger: stripHtml(t('states.cancelled.trigger')),     behavior: t('states.cancelled.behavior') },
-            { label: t('states.controlled.label'), trigger: stripHtml(t('states.controlled.trigger')),    behavior: t('states.controlled.behavior') },
+            { label: t('states.closed.label'),     trigger: toPlainText(t('states.closed.trigger')),                   behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.open.label'),       trigger: toPlainText(t('states.open.trigger')),          behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.confirmed.label'),  trigger: toPlainText(t('states.confirmed.trigger')),     behavior: toPlainText(t('states.confirmed.behavior')) },
+            { label: t('states.cancelled.label'),  trigger: toPlainText(t('states.cancelled.trigger')),     behavior: toPlainText(t('states.cancelled.behavior'))},
+            { label: t('states.controlled.label'), trigger: toPlainText(t('states.controlled.trigger')),    behavior: toPlainText(t('states.controlled.behavior'))},
           ],
         });
 
@@ -498,11 +495,11 @@ export interface AlertDialogOptions {
               title: t('props.rootTitle'),
               cols: propsCols,
               items: [
-                { name: 'trigger',       type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'title',         type: 'string',                   defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'cancelButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'actionButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
+                { name: 'trigger',       type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'title',         type: 'string',                   defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'cancelButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'actionButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
                 { name: 'onOpenChange',  type: '(open: boolean) => void',  defaultValue: '—', required: 'Não', description: t('props.table.onOpenChange') },
                 { name: 'class',         type: 'string',                   defaultValue: '—', required: 'Não', description: t('props.table.className') },
               ],
@@ -633,16 +630,16 @@ export interface AlertDialogOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.open'),          trigger: t('analytics.table.openTrigger'),          payload: t('analytics.table.openPayload') },
-            { event: t('analytics.table.confirm'),       trigger: t('analytics.table.confirmTrigger'),       payload: t('analytics.table.confirmPayload') },
-            { event: t('analytics.table.close'),         trigger: t('analytics.table.closeTrigger'),         payload: t('analytics.table.closePayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.open'),          trigger: toPlainText(t('analytics.table.openTrigger')),          payload: t('analytics.table.openPayload') },
+            { event: t('analytics.table.confirm'),       trigger: toPlainText(t('analytics.table.confirmTrigger')),       payload: t('analytics.table.confirmPayload') },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

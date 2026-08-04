@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -77,7 +74,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── SelectAll preview (parent + children pattern) ───────────────────────────
 
@@ -185,7 +181,6 @@ export function CheckboxDocs() {
   const codeImportWithLabel = `import { Checkbox } from "@/components/ui/checkbox";`;
 
   const codeDefault = `<Checkbox id="termos" />`;
-
 
   const codeWithLabel = `<div className="nds-cluster" data-spacing="xs">
   <Checkbox id="termos" />
@@ -632,34 +627,34 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
             title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
-              trigger: tContent("states.cols.trigger"),
-              behavior: tContent("states.cols.behavior"),
+              trigger: toPlainText(tContent("states.cols.trigger")),
+              behavior: toPlainText(tContent("states.cols.behavior")),
             }}
             items={[
               {
                 label: tContent("states.unchecked.label"),
-                trigger: tContent("states.unchecked.trigger"),
-                behavior: stripHtml(tContent("states.unchecked.behavior")),
+                trigger: toPlainText(tContent("states.unchecked.trigger")),
+                behavior: toPlainText(tContent("states.unchecked.behavior")),
               },
               {
                 label: tContent("states.checked.label"),
-                trigger: stripHtml(tContent("states.checked.trigger")),
-                behavior: stripHtml(tContent("states.checked.behavior")),
+                trigger: toPlainText(tContent("states.checked.trigger")),
+                behavior: toPlainText(tContent("states.checked.behavior")),
               },
               {
                 label: tContent("states.indeterminate.label"),
-                trigger: stripHtml(tContent("states.indeterminate.trigger")),
-                behavior: stripHtml(tContent("states.indeterminate.behavior")),
+                trigger: toPlainText(tContent("states.indeterminate.trigger")),
+                behavior: toPlainText(tContent("states.indeterminate.behavior")),
               },
               {
                 label: tContent("states.disabled.label"),
-                trigger: stripHtml(tContent("states.disabled.trigger")),
-                behavior: stripHtml(tContent("states.disabled.behavior")),
+                trigger: toPlainText(tContent("states.disabled.trigger")),
+                behavior: toPlainText(tContent("states.disabled.behavior")),
               },
               {
                 label: tContent("states.error.label"),
-                trigger: stripHtml(tContent("states.error.trigger")),
-                behavior: stripHtml(tContent("states.error.behavior")),
+                trigger: toPlainText(tContent("states.error.trigger")),
+                behavior: toPlainText(tContent("states.error.behavior")),
               },
             ]}
           />
@@ -778,7 +773,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
               { key: "Tab",       description: tContent("accessibility.keyboard.tab") },
               { key: "Space",     description: tContent("accessibility.keyboard.space") },
               { key: "Shift+Tab", description: tContent("accessibility.keyboard.shiftTab") },
-              { key: "—",         description: stripHtml(tContent("accessibility.keyboard.disabled")) },
+              { key: "—",         description: toPlainText(tContent("accessibility.keyboard.disabled")) },
             ]}
           />
 
@@ -825,28 +820,28 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
             title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
-              trigger: tContent("analytics.table.trigger"),
+              trigger: toPlainText(tContent("analytics.table.trigger")),
               payload: tContent("analytics.table.payload"),
             }}
             items={[
               {
                 event: tContent("analytics.table.fieldChange"),
-                trigger: tContent("analytics.table.fieldChangeTrigger"),
+                trigger: toPlainText(tContent("analytics.table.fieldChangeTrigger")),
                 payload: tContent("analytics.table.fieldChangePayload"),
               },
               {
                 event: tContent("analytics.table.pageView"),
-                trigger: tContent("analytics.table.pageViewTrigger"),
+                trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
                 payload: tContent("analytics.table.pageViewPayload"),
               },
               {
                 event: tContent("analytics.table.sectionViewed"),
-                trigger: tContent("analytics.table.sectionViewedTrigger"),
+                trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
                 payload: tContent("analytics.table.sectionViewedPayload"),
               },
               {
                 event: tContent("analytics.table.langSwitch"),
-                trigger: tContent("analytics.table.langSwitchTrigger"),
+                trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
                 payload: tContent("analytics.table.langSwitchPayload"),
               },
             ]}
@@ -863,8 +858,8 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 priority: tNav("common.priority"),
               },
               items: [1, 2, 3, 4, 5, 6].map((i) => ({
-                action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-                result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+                action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+                result: toPlainText(tContent(`testes.functional.item${i}.result`)),
                 priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
               })),
             }}
@@ -876,7 +871,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 how: tNav("common.howToVerify"),
               },
               items: [1, 2, 3, 4, 5].map((i) => ({
-                criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+                criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),
               })),

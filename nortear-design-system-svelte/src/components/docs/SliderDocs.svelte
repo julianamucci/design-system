@@ -15,6 +15,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import sliderTranslations from '@shared/content/slider/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(sliderTranslations);
@@ -58,7 +59,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -95,10 +95,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -525,15 +521,15 @@ interface SliderProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.active.label'),   trigger: $tStore('states.active.trigger'),   behavior: stripHtml($tStore('states.active.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),  behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: toPlainText($tStore('states.hover.trigger')),    behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.active.label'),   trigger: toPlainText($tStore('states.active.trigger')),   behavior: toPlainText($tStore('states.active.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
     ]}
   />
 
@@ -605,12 +601,12 @@ interface SliderProps {
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
       { key: 'Tab',        description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
-      { key: 'Arrow Left',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft'))  },
-      { key: 'Arrow Up',    description: stripHtml($tStore('accessibility.keyboard.arrowUp'))    },
-      { key: 'Arrow Down',  description: stripHtml($tStore('accessibility.keyboard.arrowDown'))  },
-      { key: 'Home',       description: stripHtml($tStore('accessibility.keyboard.home'))       },
-      { key: 'End',        description: stripHtml($tStore('accessibility.keyboard.end'))        },
+      { key: 'Arrow Right', description: toPlainText($tStore('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: toPlainText($tStore('accessibility.keyboard.arrowLeft'))  },
+      { key: 'Arrow Up',    description: toPlainText($tStore('accessibility.keyboard.arrowUp'))    },
+      { key: 'Arrow Down',  description: toPlainText($tStore('accessibility.keyboard.arrowDown'))  },
+      { key: 'Home',       description: toPlainText($tStore('accessibility.keyboard.home'))       },
+      { key: 'End',        description: toPlainText($tStore('accessibility.keyboard.end'))        },
       { key: 'PageUp',     description: $tStore('accessibility.keyboard.pageUp')     },
       { key: 'PageDown',   description: $tStore('accessibility.keyboard.pageDown')   },
     ]}
@@ -643,11 +639,11 @@ interface SliderProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'slider_change', trigger: $tStore('analytics.table.slider_change.trigger'), payload: $tStore('analytics.table.slider_change.payload') },
+      { event: 'slider_change', trigger: toPlainText($tStore('analytics.table.slider_change.trigger')), payload: $tStore('analytics.table.slider_change.payload') },
     ]}
   />
 

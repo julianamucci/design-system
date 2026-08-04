@@ -26,6 +26,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -121,8 +118,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -269,11 +264,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.complete.label'),      trigger: stripHtml(tContent('states.complete.trigger')),      behavior: tContent('states.complete.behavior')                     },
-  { label: tContent('states.withoutTitle.label'),  trigger: stripHtml(tContent('states.withoutTitle.trigger')),  behavior: tContent('states.withoutTitle.behavior')                 },
-  { label: tContent('states.withoutIcon.label'),   trigger: tContent('states.withoutIcon.trigger'),              behavior: tContent('states.withoutIcon.behavior')                  },
-  { label: tContent('states.dynamicInsert.label'), trigger: tContent('states.dynamicInsert.trigger'),            behavior: stripHtml(tContent('states.dynamicInsert.behavior'))    },
-  { label: tContent('states.dismissed.label'),     trigger: tContent('states.dismissed.trigger'),                behavior: tContent('states.dismissed.behavior')                    },
+  { label: tContent('states.complete.label'),      trigger: toPlainText(tContent('states.complete.trigger')),      behavior: toPlainText(tContent('states.complete.behavior'))},
+  { label: tContent('states.withoutTitle.label'),  trigger: toPlainText(tContent('states.withoutTitle.trigger')),  behavior: toPlainText(tContent('states.withoutTitle.behavior'))},
+  { label: tContent('states.withoutIcon.label'),   trigger: toPlainText(tContent('states.withoutIcon.trigger')),              behavior: toPlainText(tContent('states.withoutIcon.behavior'))},
+  { label: tContent('states.dynamicInsert.label'), trigger: toPlainText(tContent('states.dynamicInsert.trigger')),            behavior: toPlainText(tContent('states.dynamicInsert.behavior'))    },
+  { label: tContent('states.dismissed.label'),     trigger: toPlainText(tContent('states.dismissed.trigger')),                behavior: toPlainText(tContent('states.dismissed.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -283,12 +278,12 @@ const propCols = computed(() => ({
 }));
 
 const alertPropItems = computed(() => [
-  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
-  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: stripHtml(tContent('props.table.role'))                  },
-  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className'))             },
-  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: stripHtml(tContent('props.table.dismissible'))  },
-  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: stripHtml(tContent('props.table.onDismiss'))    },
-  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: stripHtml(tContent('props.table.dismissLabel')) },
+  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText(tContent('props.table.role'))                  },
+  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className'))             },
+  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: toPlainText(tContent('props.table.dismissible'))  },
+  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: toPlainText(tContent('props.table.onDismiss'))    },
+  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: toPlainText(tContent('props.table.dismissLabel')) },
 ]);
 
 const slotPropItems = computed(() => [
@@ -296,7 +291,7 @@ const slotPropItems = computed(() => [
 ]);
 
 const alertTitlePropItems = computed(() => [
-  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: stripHtml(tContent('props.table.titleAs')) },
+  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: toPlainText(tContent('props.table.titleAs')) },
   ...slotPropItems.value,
 ]);
 
@@ -339,10 +334,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.dismiss'),       trigger: tContent('analytics.table.dismissTrigger'),       payload: tContent('analytics.table.dismissPayload')       },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.dismiss'),       trigger: toPlainText(tContent('analytics.table.dismissTrigger')),       payload: tContent('analytics.table.dismissPayload')       },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -655,7 +650,7 @@ const visualTestItems = computed(() => [
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -707,7 +702,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

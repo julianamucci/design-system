@@ -25,6 +25,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -121,8 +118,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -178,18 +173,18 @@ const variantItems = computed(() => [
 const stateItems = computed(() => [
   {
     label: tContent('states.default.label'),
-    trigger: tContent('states.default.trigger'),
-    behavior: tContent('states.default.behavior'),
+    trigger: toPlainText(tContent('states.default.trigger')),
+    behavior: toPlainText(tContent('states.default.behavior')),
   },
   {
     label: tContent('states.disabled.label'),
-    trigger: stripHtml(tContent('states.disabled.trigger')),
-    behavior: stripHtml(tContent('states.disabled.behavior')),
+    trigger: toPlainText(tContent('states.disabled.trigger')),
+    behavior: toPlainText(tContent('states.disabled.behavior')),
   },
   {
     label: tContent('states.required.label'),
-    trigger: tContent('states.required.trigger'),
-    behavior: stripHtml(tContent('states.required.behavior')),
+    trigger: toPlainText(tContent('states.required.trigger')),
+    behavior: toPlainText(tContent('states.required.behavior')),
   },
 ]);
 
@@ -202,7 +197,7 @@ const propCols = computed(() => ({
 }));
 
 const labelPropItems = computed(() => [
-  { name: 'for', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.htmlFor')) },
+  { name: 'for', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.htmlFor')) },
   { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: tContent('props.table.className') },
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
 ]);
@@ -486,8 +481,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />

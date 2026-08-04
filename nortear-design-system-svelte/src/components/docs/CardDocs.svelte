@@ -24,6 +24,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import cardTranslations from '@shared/content/card/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(cardTranslations);
@@ -60,7 +61,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -96,10 +96,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -518,13 +514,13 @@ interface CardPartProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),     trigger: $tStore('states.default.trigger'),                behavior: stripHtml($tStore('states.default.behavior'))     },
-      { label: $tStore('states.small.label'),       trigger: stripHtml($tStore('states.small.trigger')),       behavior: stripHtml($tStore('states.small.behavior'))       },
-      { label: $tStore('states.interactive.label'), trigger: stripHtml($tStore('states.interactive.trigger')), behavior: stripHtml($tStore('states.interactive.behavior')) },
+      { label: $tStore('states.default.label'),     trigger: toPlainText($tStore('states.default.trigger')),                behavior: toPlainText($tStore('states.default.behavior'))     },
+      { label: $tStore('states.small.label'),       trigger: toPlainText($tStore('states.small.trigger')),       behavior: toPlainText($tStore('states.small.behavior'))       },
+      { label: $tStore('states.interactive.label'), trigger: toPlainText($tStore('states.interactive.trigger')), behavior: toPlainText($tStore('states.interactive.behavior')) },
     ]}
   />
 
@@ -542,7 +538,7 @@ interface CardPartProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'size',     type: '"default" | "sm"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
+          { name: 'size',     type: '"default" | "sm"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.size')) },
           { name: 'class',    type: 'string',           defaultValue: '—',         required: 'Não', description: $tStore('props.table.className')        },
           { name: 'children', type: 'Snippet',          defaultValue: '—',         required: 'Não', description: $tStore('props.table.children')         },
         ],
@@ -649,9 +645,9 @@ interface CardPartProps {
       { token: '--radius-card',      value: 'rounded-(--radius-card)', description: $tStore('tokens.table.radiusCard')      },
       { token: '--card',             value: 'bg-card',                 description: $tStore('tokens.table.card')            },
       { token: '--card-foreground',  value: 'text-card-foreground',    description: $tStore('tokens.table.cardForeground')  },
-      { token: '--muted',            value: 'nds-bg-muted-50',             description: stripHtml($tStore('tokens.table.muted')) },
+      { token: '--muted',            value: 'nds-bg-muted-50',             description: toPlainText($tStore('tokens.table.muted')) },
       { token: '--muted-foreground', value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedForeground') },
-      { token: '--foreground',       value: 'ring-foreground/10',      description: stripHtml($tStore('tokens.table.foreground')) },
+      { token: '--foreground',       value: 'ring-foreground/10',      description: toPlainText($tStore('tokens.table.foreground')) },
       { token: '--border',           value: 'border-t',                description: $tStore('tokens.table.border')          },
       { token: '--card-bg',          value: 'hsl(var(--card))',        description: $tStore('tokens.table.cardBg')          },
       { token: '--card-fg',          value: 'hsl(var(--card-foreground))', description: $tStore('tokens.table.cardFg')      },
@@ -711,15 +707,15 @@ interface CardPartProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.buttonClick'),   trigger: $tStore('analytics.table.buttonClickTrigger'),   payload: $tStore('analytics.table.buttonClickPayload')   },
-      { event: $tStore('analytics.table.cardClick'),     trigger: $tStore('analytics.table.cardClickTrigger'),     payload: $tStore('analytics.table.cardClickPayload')     },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.buttonClick'),   trigger: toPlainText($tStore('analytics.table.buttonClickTrigger')),   payload: $tStore('analytics.table.buttonClickPayload')   },
+      { event: $tStore('analytics.table.cardClick'),     trigger: toPlainText($tStore('analytics.table.cardClickTrigger')),     payload: $tStore('analytics.table.cardClickPayload')     },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 
@@ -734,12 +730,12 @@ interface CardPartProps {
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: $tStore('testes.functional.item1.action'), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item1.action'), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item2.action'), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item3.action'), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item4.action'), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'),            priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item6.action')), result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item6.action')), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -751,8 +747,8 @@ interface CardPartProps {
       },
       items: [
         { criterion: $tStore('testes.accessibility.item1.criterion'),             level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item2.criterion')),  level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item3.criterion')),  level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')),  level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')),  level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'),             level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
         { criterion: $tStore('testes.accessibility.item5.criterion'),             level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
         { criterion: $tStore('testes.accessibility.item6.criterion'),             level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },

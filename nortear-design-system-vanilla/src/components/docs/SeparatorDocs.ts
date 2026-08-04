@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(separatorTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -482,12 +479,12 @@ export function createSeparatorDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.decorative.label'), trigger: t('states.decorative.trigger'), behavior: stripHtml(t('states.decorative.behavior')) },
-            { label: t('states.semantic.label'),   trigger: t('states.semantic.trigger'),   behavior: stripHtml(t('states.semantic.behavior')) },
+            { label: t('states.decorative.label'), trigger: toPlainText(t('states.decorative.trigger')), behavior: toPlainText(t('states.decorative.behavior')) },
+            { label: t('states.semantic.label'),   trigger: toPlainText(t('states.semantic.trigger')),   behavior: toPlainText(t('states.semantic.behavior')) },
           ],
         });
 
@@ -621,7 +618,7 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
           items: [
             {
               event: '—',
-              trigger: DOMPurify.sanitize(t('analytics.description')),
+              trigger: toPlainText(t('analytics.description')),
               payload: '—',
             },
           ],

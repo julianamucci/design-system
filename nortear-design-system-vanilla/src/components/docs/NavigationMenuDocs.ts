@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(navigationMenuTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -653,13 +650,13 @@ content.insertBefore(card, content.firstChild);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'), trigger: t('states.closed.trigger'), behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),   trigger: t('states.open.trigger'),   behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.active.label'), trigger: t('states.active.trigger'), behavior: stripHtml(t('states.active.behavior')) },
+            { label: t('states.closed.label'), trigger: toPlainText(t('states.closed.trigger')), behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),   trigger: toPlainText(t('states.open.trigger')),   behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.active.label'), trigger: toPlainText(t('states.active.trigger')), behavior: toPlainText(t('states.active.behavior')) },
           ],
         });
 
@@ -699,12 +696,12 @@ export function createNavigationMenu(
               items: [
                 { name: 'items',         type: 'NavigationMenuItem[]',                defaultValue: '—',          required: 'Sim', description: 'Lista de items (label + href ou children) renderizados na barra.' },
                 { name: 'options.class', type: 'string',                              defaultValue: '—',          required: 'Não', description: 'Classes adicionais no Root <nav>.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use child.onClick manual).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
-                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: stripHtml(t('props.table.delayDuration.description'))     + ' NOTA: factory Nortear abre apenas em click; hover delay não implementado.' },
-                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: stripHtml(t('props.table.skipDelayDuration.description')) + ' NOTA: factory Nortear não implementa.' },
-                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: stripHtml(t('props.table.orientation.description'))       + ' NOTA: factory Nortear fixa horizontal; vertical via composição manual.' },
+                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
+                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use child.onClick manual).' },
+                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
+                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: toPlainText(t('props.table.delayDuration.description'))     + ' NOTA: factory Nortear abre apenas em click; hover delay não implementado.' },
+                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: toPlainText(t('props.table.skipDelayDuration.description')) + ' NOTA: factory Nortear não implementa.' },
+                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: toPlainText(t('props.table.orientation.description'))       + ' NOTA: factory Nortear fixa horizontal; vertical via composição manual.' },
               ],
             },
           ],
@@ -747,11 +744,11 @@ export function createNavigationMenu(
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',          description: stripHtml(t('accessibility.keyboard.tab'))     },
-            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml(t('accessibility.keyboard.arrows')) },
-            { key: 'Enter/Space',  description: stripHtml(t('accessibility.keyboard.enter'))   },
-            { key: 'Esc',          description: stripHtml(t('accessibility.keyboard.escape'))  },
-            { key: 'Home/End',     description: stripHtml(t('accessibility.keyboard.homeEnd')) },
+            { key: 'Tab',          description: toPlainText(t('accessibility.keyboard.tab'))     },
+            { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: toPlainText(t('accessibility.keyboard.arrows')) },
+            { key: 'Enter/Space',  description: toPlainText(t('accessibility.keyboard.enter'))   },
+            { key: 'Esc',          description: toPlainText(t('accessibility.keyboard.escape'))  },
+            { key: 'Home/End',     description: toPlainText(t('accessibility.keyboard.homeEnd')) },
           ],
         });
 

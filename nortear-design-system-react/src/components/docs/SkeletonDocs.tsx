@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -76,7 +73,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -486,19 +482,19 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.motionReduced.label"),
-            trigger: tContent("states.motionReduced.trigger"),
-            behavior: stripHtml(tContent("states.motionReduced.behavior")),
+            trigger: toPlainText(tContent("states.motionReduced.trigger")),
+            behavior: toPlainText(tContent("states.motionReduced.behavior")),
           },
         ]}
       />
@@ -647,7 +643,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         items={[
           {
             event: "—",
-            trigger: DOMPurify.sanitize(tContent("analytics.description")),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "—",
           },
         ]}

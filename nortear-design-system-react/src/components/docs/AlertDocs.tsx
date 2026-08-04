@@ -30,12 +30,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -82,7 +79,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -578,34 +574,34 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
-              trigger: tContent("states.cols.trigger"),
-              behavior: tContent("states.cols.behavior"),
+              trigger: toPlainText(tContent("states.cols.trigger")),
+              behavior: toPlainText(tContent("states.cols.behavior")),
             }}
             items={[
               {
                 label: tContent("states.complete.label"),
-                trigger: stripHtml(tContent("states.complete.trigger")),
-                behavior: tContent("states.complete.behavior"),
+                trigger: toPlainText(tContent("states.complete.trigger")),
+                behavior: toPlainText(tContent("states.complete.behavior")),
               },
               {
                 label: tContent("states.withoutTitle.label"),
-                trigger: stripHtml(tContent("states.withoutTitle.trigger")),
-                behavior: tContent("states.withoutTitle.behavior"),
+                trigger: toPlainText(tContent("states.withoutTitle.trigger")),
+                behavior: toPlainText(tContent("states.withoutTitle.behavior")),
               },
               {
                 label: tContent("states.withoutIcon.label"),
-                trigger: tContent("states.withoutIcon.trigger"),
-                behavior: tContent("states.withoutIcon.behavior"),
+                trigger: toPlainText(tContent("states.withoutIcon.trigger")),
+                behavior: toPlainText(tContent("states.withoutIcon.behavior")),
               },
               {
                 label: tContent("states.dynamicInsert.label"),
-                trigger: tContent("states.dynamicInsert.trigger"),
-                behavior: stripHtml(tContent("states.dynamicInsert.behavior")),
+                trigger: toPlainText(tContent("states.dynamicInsert.trigger")),
+                behavior: toPlainText(tContent("states.dynamicInsert.behavior")),
               },
               {
                 label: tContent("states.dismissed.label"),
-                trigger: stripHtml(tContent("states.dismissed.trigger")),
-                behavior: tContent("states.dismissed.behavior"),
+                trigger: toPlainText(tContent("states.dismissed.trigger")),
+                behavior: toPlainText(tContent("states.dismissed.behavior")),
               },
             ]}
           />
@@ -629,21 +625,21 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: '"default" | "destructive" | "success" | "warning" | "info"',
                     defaultValue: '"default"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.variant")),
+                    description: toPlainText(tContent("props.table.variant")),
                   },
                   {
                     name: "role",
                     type: '"alert" | "status" | "note"',
                     defaultValue: '"alert"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.role")),
+                    description: toPlainText(tContent("props.table.role")),
                   },
                   {
                     name: "className",
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -657,21 +653,21 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "boolean",
                     defaultValue: "false",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.dismissible")),
+                    description: toPlainText(tContent("props.table.dismissible")),
                   },
                   {
                     name: "onDismiss",
                     type: "() => void",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.onDismiss")),
+                    description: toPlainText(tContent("props.table.onDismiss")),
                   },
                   {
                     name: "dismissLabel",
                     type: "string",
                     defaultValue: '"Fechar alerta"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.dismissLabel")),
+                    description: toPlainText(tContent("props.table.dismissLabel")),
                   },
                 ],
               },
@@ -690,14 +686,14 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "React.ElementType",
                     defaultValue: '"h5"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.titleAs")),
+                    description: toPlainText(tContent("props.table.titleAs")),
                   },
                   {
                     name: "className",
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -723,7 +719,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -828,28 +824,28 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
-              trigger: tContent("analytics.table.trigger"),
+              trigger: toPlainText(tContent("analytics.table.trigger")),
               payload: tContent("analytics.table.payload"),
             }}
             items={[
               {
                 event: tContent("analytics.table.dismiss"),
-                trigger: tContent("analytics.table.dismissTrigger"),
+                trigger: toPlainText(tContent("analytics.table.dismissTrigger")),
                 payload: tContent("analytics.table.dismissPayload"),
               },
               {
                 event: tContent("analytics.table.pageView"),
-                trigger: tContent("analytics.table.pageViewTrigger"),
+                trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
                 payload: tContent("analytics.table.pageViewPayload"),
               },
               {
                 event: tContent("analytics.table.sectionViewed"),
-                trigger: tContent("analytics.table.sectionViewedTrigger"),
+                trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
                 payload: tContent("analytics.table.sectionViewedPayload"),
               },
               {
                 event: tContent("analytics.table.langSwitch"),
-                trigger: tContent("analytics.table.langSwitchTrigger"),
+                trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
                 payload: tContent("analytics.table.langSwitchPayload"),
               },
             ]}

@@ -35,6 +35,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -53,10 +54,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -133,8 +130,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -273,9 +268,9 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),     trigger: stripHtml(tContent('states.default.trigger')),     behavior: stripHtml(tContent('states.default.behavior'))     },
-  { label: tContent('states.small.label'),       trigger: stripHtml(tContent('states.small.trigger')),       behavior: stripHtml(tContent('states.small.behavior'))       },
-  { label: tContent('states.interactive.label'), trigger: stripHtml(tContent('states.interactive.trigger')), behavior: stripHtml(tContent('states.interactive.behavior')) },
+  { label: tContent('states.default.label'),     trigger: toPlainText(tContent('states.default.trigger')),     behavior: toPlainText(tContent('states.default.behavior'))     },
+  { label: tContent('states.small.label'),       trigger: toPlainText(tContent('states.small.trigger')),       behavior: toPlainText(tContent('states.small.behavior'))       },
+  { label: tContent('states.interactive.label'), trigger: toPlainText(tContent('states.interactive.trigger')), behavior: toPlainText(tContent('states.interactive.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -287,7 +282,7 @@ const propCols = computed(() => ({
 }));
 
 const cardPropItems = computed(() => [
-  { name: 'size',         type: '"default" | "sm"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.size'))     },
+  { name: 'size',         type: '"default" | "sm"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.size'))     },
   { name: 'class',        type: 'string',           defaultValue: '—',         required: 'Não', description: tContent('props.table.className')           },
   { name: 'default slot', type: 'VNode',            defaultValue: '—',         required: 'Sim', description: tContent('props.table.children')            },
 ]);
@@ -301,9 +296,9 @@ const tokenRows = computed(() => [
   { token: '--radius-card',     value: 'rounded-(--radius-card)', description: tContent('tokens.table.radiusCard')      },
   { token: '--card',            value: 'bg-card',                 description: tContent('tokens.table.card')            },
   { token: '--card-foreground', value: 'text-card-foreground',    description: tContent('tokens.table.cardForeground')  },
-  { token: '--muted',           value: 'nds-bg-muted-50',             description: stripHtml(tContent('tokens.table.muted'))       },
+  { token: '--muted',           value: 'nds-bg-muted-50',             description: toPlainText(tContent('tokens.table.muted'))       },
   { token: '--muted-foreground', value: 'nds-text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
-  { token: '--foreground',      value: 'ring-foreground/10',      description: stripHtml(tContent('tokens.table.foreground'))  },
+  { token: '--foreground',      value: 'ring-foreground/10',      description: toPlainText(tContent('tokens.table.foreground'))  },
   { token: '--border',          value: 'border-t',                description: tContent('tokens.table.border')          },
   { token: '--card-bg',         value: 'hsl(var(--card))',            description: tContent('tokens.table.cardBg')      },
   { token: '--card-fg',         value: 'hsl(var(--card-foreground))', description: tContent('tokens.table.cardFg')      },
@@ -341,11 +336,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.buttonClick'),   trigger: tContent('analytics.table.buttonClickTrigger'),   payload: tContent('analytics.table.buttonClickPayload')   },
-  { event: tContent('analytics.table.cardClick'),     trigger: tContent('analytics.table.cardClickTrigger'),     payload: tContent('analytics.table.cardClickPayload')     },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.buttonClick'),   trigger: toPlainText(tContent('analytics.table.buttonClickTrigger')),   payload: tContent('analytics.table.buttonClickPayload')   },
+  { event: tContent('analytics.table.cardClick'),     trigger: toPlainText(tContent('analytics.table.cardClickTrigger')),     payload: tContent('analytics.table.cardClickPayload')     },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -355,19 +350,19 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: stripHtml(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: stripHtml(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: stripHtml(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: stripHtml(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: stripHtml(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: stripHtml(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: tContent('testes.functional.item1.action'), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: tContent('testes.functional.item2.action'), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: tContent('testes.functional.item3.action'), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: tContent('testes.functional.item4.action'), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: tContent('testes.functional.item5.action'), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: tContent('testes.functional.item6.action'), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item1.criterion'),            level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: stripHtml(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'),            level: tContent('testes.accessibility.item4.level'), how: stripHtml(tContent('testes.accessibility.item4.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
+  { criterion: tContent('testes.accessibility.item4.criterion'),            level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
   { criterion: tContent('testes.accessibility.item5.criterion'),            level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
   { criterion: tContent('testes.accessibility.item6.criterion'),            level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
 ]);
@@ -741,8 +736,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -805,7 +800,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

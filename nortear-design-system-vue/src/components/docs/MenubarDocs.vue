@@ -38,6 +38,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -56,10 +57,6 @@ const screenReaderItems = computed(() =>
 const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'Alta',
@@ -139,8 +136,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -330,12 +325,11 @@ const compShowSidebar = ref(true);
 const compShowGrid = ref(false);
 const compTheme = ref('system');
 
-
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: stripHtml(tContent('states.closed.behavior')) },
-  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.checked.label'),  trigger: tContent('states.checked.trigger'),  behavior: stripHtml(tContent('states.checked.behavior')) },
+  { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),     trigger: toPlainText(tContent('states.open.trigger')),     behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.checked.label'),  trigger: toPlainText(tContent('states.checked.trigger')),  behavior: toPlainText(tContent('states.checked.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -347,12 +341,12 @@ const propCols = computed(() => ({
 }));
 
 const menubarPropItems = computed(() => [
-  { name: 'value',           type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: stripHtml(tContent('props.table.value.description'))          },
-  { name: '@update:value',   type: tContent('props.table.onValueChange.type'),  defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: stripHtml(tContent('props.table.onValueChange.description'))  },
-  { name: 'defaultValue',    type: tContent('props.table.defaultValue.type'),   defaultValue: tContent('props.table.defaultValue.default'),   required: tContent('props.table.defaultValue.required'),   description: stripHtml(tContent('props.table.defaultValue.description'))   },
-  { name: 'loop',            type: tContent('props.table.loop.type'),           defaultValue: tContent('props.table.loop.default'),           required: tContent('props.table.loop.required'),           description: stripHtml(tContent('props.table.loop.description'))           },
-  { name: 'side',            type: tContent('props.table.side.type'),           defaultValue: tContent('props.table.side.default'),           required: tContent('props.table.side.required'),           description: stripHtml(tContent('props.table.side.description'))           },
-  { name: 'align',           type: tContent('props.table.align.type'),          defaultValue: tContent('props.table.align.default'),          required: tContent('props.table.align.required'),          description: stripHtml(tContent('props.table.align.description'))          },
+  { name: 'value',           type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: toPlainText(tContent('props.table.value.description'))          },
+  { name: '@update:value',   type: tContent('props.table.onValueChange.type'),  defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: toPlainText(tContent('props.table.onValueChange.description'))  },
+  { name: 'defaultValue',    type: tContent('props.table.defaultValue.type'),   defaultValue: tContent('props.table.defaultValue.default'),   required: tContent('props.table.defaultValue.required'),   description: toPlainText(tContent('props.table.defaultValue.description'))   },
+  { name: 'loop',            type: tContent('props.table.loop.type'),           defaultValue: tContent('props.table.loop.default'),           required: tContent('props.table.loop.required'),           description: toPlainText(tContent('props.table.loop.description'))           },
+  { name: 'side',            type: tContent('props.table.side.type'),           defaultValue: tContent('props.table.side.default'),           required: tContent('props.table.side.required'),           description: toPlainText(tContent('props.table.side.description'))           },
+  { name: 'align',           type: tContent('props.table.align.type'),          defaultValue: tContent('props.table.align.default'),          required: tContent('props.table.align.required'),          description: toPlainText(tContent('props.table.align.description'))          },
 ]);
 
 const tokenRows = computed(() => [
@@ -376,13 +370,13 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',           description: stripHtml(tContent('accessibility.keyboard.tab'))              },
-  { key: 'Arrow Left / Arrow Right',         description: stripHtml(tContent('accessibility.keyboard.arrowsHorizontal')) },
-  { key: 'Arrow Up / Arrow Down',         description: stripHtml(tContent('accessibility.keyboard.arrowsVertical'))   },
-  { key: 'Enter / Space', description: stripHtml(tContent('accessibility.keyboard.enter'))            },
-  { key: 'Escape',        description: stripHtml(tContent('accessibility.keyboard.escape'))           },
-  { key: 'Home / End',    description: stripHtml(tContent('accessibility.keyboard.homeEnd'))          },
-  { key: 'A–Z',           description: stripHtml(tContent('accessibility.keyboard.typeahead'))        },
+  { key: 'Tab',           description: toPlainText(tContent('accessibility.keyboard.tab'))              },
+  { key: 'Arrow Left / Arrow Right',         description: toPlainText(tContent('accessibility.keyboard.arrowsHorizontal')) },
+  { key: 'Arrow Up / Arrow Down',         description: toPlainText(tContent('accessibility.keyboard.arrowsVertical'))   },
+  { key: 'Enter / Space', description: toPlainText(tContent('accessibility.keyboard.enter'))            },
+  { key: 'Escape',        description: toPlainText(tContent('accessibility.keyboard.escape'))           },
+  { key: 'Home / End',    description: toPlainText(tContent('accessibility.keyboard.homeEnd'))          },
+  { key: 'A–Z',           description: toPlainText(tContent('accessibility.keyboard.typeahead'))        },
 ]);
 
 const relatedItems = computed(() => [
@@ -408,8 +402,8 @@ const analyticsItems = computed(() => [
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
-  action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-  result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
@@ -833,8 +827,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />

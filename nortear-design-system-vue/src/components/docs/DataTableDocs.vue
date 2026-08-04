@@ -25,6 +25,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 const { t: tNav } = useTranslation(uiTranslations);
@@ -41,10 +42,6 @@ const screenReaderItems = computed(() =>
   ),
 );
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function stripHtml(html: string): string {
-  return String(html ?? '').replace(/<[^>]*>/g, '');
-}
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -264,13 +261,13 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.empty.label'),       trigger: stripHtml(tContent('states.empty.trigger')),       behavior: stripHtml(tContent('states.empty.behavior'))       },
-  { label: tContent('states.sorted.label'),      trigger: tContent('states.sorted.trigger'),                 behavior: stripHtml(tContent('states.sorted.behavior'))      },
-  { label: tContent('states.filtered.label'),    trigger: tContent('states.filtered.trigger'),               behavior: tContent('states.filtered.behavior')               },
-  { label: tContent('states.selected.label'),    trigger: tContent('states.selected.trigger'),               behavior: stripHtml(tContent('states.selected.behavior'))    },
-  { label: tContent('states.editing.label'),     trigger: stripHtml(tContent('states.editing.trigger')),     behavior: stripHtml(tContent('states.editing.behavior'))     },
-  { label: tContent('states.resizing.label'),    trigger: tContent('states.resizing.trigger'),               behavior: stripHtml(tContent('states.resizing.behavior'))    },
-  { label: tContent('states.virtualized.label'), trigger: stripHtml(tContent('states.virtualized.trigger')), behavior: tContent('states.virtualized.behavior')            },
+  { label: tContent('states.empty.label'),       trigger: toPlainText(tContent('states.empty.trigger')),       behavior: toPlainText(tContent('states.empty.behavior'))       },
+  { label: tContent('states.sorted.label'),      trigger: toPlainText(tContent('states.sorted.trigger')),                 behavior: toPlainText(tContent('states.sorted.behavior'))      },
+  { label: tContent('states.filtered.label'),    trigger: toPlainText(tContent('states.filtered.trigger')),               behavior: toPlainText(tContent('states.filtered.behavior'))},
+  { label: tContent('states.selected.label'),    trigger: toPlainText(tContent('states.selected.trigger')),               behavior: toPlainText(tContent('states.selected.behavior'))    },
+  { label: tContent('states.editing.label'),     trigger: toPlainText(tContent('states.editing.trigger')),     behavior: toPlainText(tContent('states.editing.behavior'))     },
+  { label: tContent('states.resizing.label'),    trigger: toPlainText(tContent('states.resizing.trigger')),               behavior: toPlainText(tContent('states.resizing.behavior'))    },
+  { label: tContent('states.virtualized.label'), trigger: toPlainText(tContent('states.virtualized.trigger')), behavior: toPlainText(tContent('states.virtualized.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -282,42 +279,42 @@ const propCols = computed(() => ({
 }));
 
 const dataTablePropItems = computed(() => [
-  { name: 'columns',                 type: 'DataTableColumn<TData>[]', defaultValue: '—',        required: 'Sim', description: stripHtml(tContent('props.table.columns'))               },
-  { name: 'data',                    type: 'TData[]',                  defaultValue: '—',        required: 'Sim', description: stripHtml(tContent('props.table.data'))                  },
+  { name: 'columns',                 type: 'DataTableColumn<TData>[]', defaultValue: '—',        required: 'Sim', description: toPlainText(tContent('props.table.columns'))               },
+  { name: 'data',                    type: 'TData[]',                  defaultValue: '—',        required: 'Sim', description: toPlainText(tContent('props.table.data'))                  },
   { name: 'enableGlobalFilter',      type: 'boolean',                  defaultValue: 'true',     required: 'Não', description: tContent('props.table.enableGlobalFilter')              },
   { name: 'globalFilterPlaceholder', type: 'string',                   defaultValue: '"Buscar..."', required: 'Não', description: tContent('props.table.globalFilterPlaceholder')     },
   { name: 'enableRowSelection',      type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableRowSelection')              },
   { name: 'enableColumnVisibility',  type: 'boolean',                  defaultValue: 'true',     required: 'Não', description: tContent('props.table.enableColumnVisibility')          },
   { name: 'enableColumnFilters',     type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnFilters')             },
-  { name: 'enableColumnResizing',    type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: stripHtml(tContent('props.table.enableColumnResizing')) },
+  { name: 'enableColumnResizing',    type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: toPlainText(tContent('props.table.enableColumnResizing')) },
   { name: 'enableColumnOrdering',    type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnOrdering')            },
   { name: 'enableColumnPinning',     type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnPinning')             },
   { name: 'enablePagination',        type: 'boolean',                  defaultValue: 'true',     required: 'Não', description: tContent('props.table.enablePagination')                },
   { name: 'virtualized',             type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.virtualized')                     },
   { name: 'virtualRowHeight',        type: 'number',                   defaultValue: '36',       required: 'Não', description: tContent('props.table.virtualRowHeight')                },
-  { name: 'maxHeight',               type: 'string',                   defaultValue: '"480px"',  required: 'Não', description: stripHtml(tContent('props.table.maxHeight'))            },
+  { name: 'maxHeight',               type: 'string',                   defaultValue: '"480px"',  required: 'Não', description: toPlainText(tContent('props.table.maxHeight'))            },
   { name: 'pageSize',                type: 'number',                   defaultValue: '10',       required: 'Não', description: tContent('props.table.pageSize')                        },
-  { name: 'pageSizeOptions',         type: 'number[]',                 defaultValue: '[10,20,50,100]', required: 'Não', description: stripHtml(tContent('props.table.pageSizeOptions')) },
+  { name: 'pageSizeOptions',         type: 'number[]',                 defaultValue: '[10,20,50,100]', required: 'Não', description: toPlainText(tContent('props.table.pageSizeOptions')) },
   { name: 'emptyMessage',            type: 'string',                   defaultValue: '"Sem resultados."', required: 'Não', description: tContent('props.table.emptyMessage')      },
 ]);
 
 const emitsItems = computed(() => [
-  { name: '@cell-edit',    type: '(rowIndex, columnId, value) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onCellEdit'))    },
+  { name: '@cell-edit',    type: '(rowIndex, columnId, value) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onCellEdit'))    },
   { name: '@table-ready',  type: '(table) => void',                     defaultValue: '—', required: 'Não', description: tContent('props.table.onTableReady')              },
 ]);
 
 const columnMetaItems = computed(() => [
-  { name: 'meta.filter',   type: '{ type: "text" | "select"; options?: string[]; placeholder?: string }', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.metaFilter')) },
-  { name: 'meta.editable', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.metaEditable')) },
+  { name: 'meta.filter',   type: '{ type: "text" | "select"; options?: string[]; placeholder?: string }', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.metaFilter')) },
+  { name: 'meta.editable', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.metaEditable')) },
 ]);
 
 const tokenRows = computed(() => [
-  { token: 'border-input',          value: stripHtml(tContent('tokens.table.border')),           description: tContent('tokens.table.borderPart')           },
-  { token: 'nds-bg-muted-50',           value: stripHtml(tContent('tokens.table.muted')),            description: tContent('tokens.table.mutedPart')            },
-  { token: 'nds-text-muted-foreground', value: stripHtml(tContent('tokens.table.mutedForeground')),  description: tContent('tokens.table.mutedForegroundPart')  },
-  { token: 'text-primary',          value: stripHtml(tContent('tokens.table.primary')),          description: tContent('tokens.table.primaryPart')          },
-  { token: 'bg-background',         value: stripHtml(tContent('tokens.table.background')),       description: tContent('tokens.table.backgroundPart')       },
-  { token: 'ring-ring/50',          value: stripHtml(tContent('tokens.table.ring')),             description: tContent('tokens.table.ringPart')             },
+  { token: 'border-input',          value: toPlainText(tContent('tokens.table.border')),           description: tContent('tokens.table.borderPart')           },
+  { token: 'nds-bg-muted-50',           value: toPlainText(tContent('tokens.table.muted')),            description: tContent('tokens.table.mutedPart')            },
+  { token: 'nds-text-muted-foreground', value: toPlainText(tContent('tokens.table.mutedForeground')),  description: tContent('tokens.table.mutedForegroundPart')  },
+  { token: 'text-primary',          value: toPlainText(tContent('tokens.table.primary')),          description: tContent('tokens.table.primaryPart')          },
+  { token: 'bg-background',         value: toPlainText(tContent('tokens.table.background')),       description: tContent('tokens.table.backgroundPart')       },
+  { token: 'ring-ring/50',          value: toPlainText(tContent('tokens.table.ring')),             description: tContent('tokens.table.ringPart')             },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -356,9 +353,9 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -448,9 +445,9 @@ const visualTestItems = computed(() => [
         title: tContent('usage.scenarios.title'),
         cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
         items: [
-          { s: stripHtml(tContent('usage.scenarios.item1.s')), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
+          { s: toPlainText(tContent('usage.scenarios.item1.s')), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
           { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: stripHtml(tContent('usage.scenarios.item3.s')), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
+          { s: toPlainText(tContent('usage.scenarios.item3.s')), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
           { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
           { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
           { s: tContent('usage.scenarios.item6.s'), u: tContent('usage.scenarios.item6.u'), a: tContent('usage.scenarios.item6.a') },
@@ -541,7 +538,7 @@ const visualTestItems = computed(() => [
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -593,7 +590,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

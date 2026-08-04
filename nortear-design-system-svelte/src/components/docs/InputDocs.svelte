@@ -26,6 +26,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import inputTranslations from '@shared/content/input/translations.json';
+  import { toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(inputTranslations);
@@ -482,15 +483,15 @@ interface InputProps extends HTMLInputAttributes {
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: $tStore('states.default.behavior')  },
-          { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: $tStore('states.focus.behavior')    },
-          { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: $tStore('states.disabled.behavior') },
-          { label: $tStore('states.error.label'),    trigger: $tStore('states.error.trigger'),    behavior: $tStore('states.error.behavior')    },
-          { label: $tStore('states.file.label'),     trigger: $tStore('states.file.trigger'),     behavior: $tStore('states.file.behavior')     },
+          { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),  behavior: toPlainText($tStore('states.default.behavior'))},
+          { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior'))},
+          { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior'))},
+          { label: $tStore('states.error.label'),    trigger: toPlainText($tStore('states.error.trigger')),    behavior: toPlainText($tStore('states.error.behavior'))},
+          { label: $tStore('states.file.label'),     trigger: toPlainText($tStore('states.file.trigger')),     behavior: toPlainText($tStore('states.file.behavior'))},
         ]}
       />
 
@@ -598,16 +599,16 @@ interface InputProps extends HTMLInputAttributes {
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.fieldFocus'),    trigger: $tStore('analytics.table.fieldFocusTrigger'),    payload: $tStore('analytics.table.fieldFocusPayload')    },
-          { event: $tStore('analytics.table.fieldBlur'),     trigger: $tStore('analytics.table.fieldBlurTrigger'),     payload: $tStore('analytics.table.fieldBlurPayload')     },
-          { event: $tStore('analytics.table.fieldError'),    trigger: $tStore('analytics.table.fieldErrorTrigger'),    payload: $tStore('analytics.table.fieldErrorPayload')    },
-          { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-          { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-          { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+          { event: $tStore('analytics.table.fieldFocus'),    trigger: toPlainText($tStore('analytics.table.fieldFocusTrigger')),    payload: $tStore('analytics.table.fieldFocusPayload')    },
+          { event: $tStore('analytics.table.fieldBlur'),     trigger: toPlainText($tStore('analytics.table.fieldBlurTrigger')),     payload: $tStore('analytics.table.fieldBlurPayload')     },
+          { event: $tStore('analytics.table.fieldError'),    trigger: toPlainText($tStore('analytics.table.fieldErrorTrigger')),    payload: $tStore('analytics.table.fieldErrorPayload')    },
+          { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+          { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+          { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
         ]}
       />
 

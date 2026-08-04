@@ -27,6 +27,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(textareaTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -760,16 +757,16 @@ form.dataset.spacing = 'md';
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.filled.label'),   trigger: t('states.filled.trigger'),   behavior: stripHtml(t('states.filled.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.invalid.label'),  trigger: t('states.invalid.trigger'),  behavior: stripHtml(t('states.invalid.behavior')) },
-            { label: t('states.readonly.label'), trigger: t('states.readonly.trigger'), behavior: stripHtml(t('states.readonly.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.filled.label'),   trigger: toPlainText(t('states.filled.trigger')),   behavior: toPlainText(t('states.filled.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),  trigger: toPlainText(t('states.invalid.trigger')),  behavior: toPlainText(t('states.invalid.behavior')) },
+            { label: t('states.readonly.label'), trigger: toPlainText(t('states.readonly.trigger')), behavior: toPlainText(t('states.readonly.behavior')) },
           ],
         });
 
@@ -805,7 +802,7 @@ export type TextareaOptions = {
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.placeholder.description')),
+                  description: toPlainText(t('props.table.placeholder.description')),
                 },
                 {
                   name: 'value',
@@ -819,21 +816,21 @@ export type TextareaOptions = {
                   type: 'number',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.rows.description')),
+                  description: toPlainText(t('props.table.rows.description')),
                 },
                 {
                   name: 'disabled',
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: stripHtml(t('props.table.disabled.description')),
+                  description: toPlainText(t('props.table.disabled.description')),
                 },
                 {
                   name: 'class',
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.className.description')),
+                  description: toPlainText(t('props.table.className.description')),
                 },
                 {
                   name: 'id',
@@ -875,12 +872,12 @@ export type TextareaOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--input',            value: stripHtml(t('tokens.table.input.class')),           description: stripHtml(t('tokens.table.input.part'))           },
-            { token: '—',                  value: stripHtml(t('tokens.table.background.class')),      description: stripHtml(t('tokens.table.background.part'))      },
-            { token: '--foreground',       value: stripHtml(t('tokens.table.foreground.class')),      description: stripHtml(t('tokens.table.foreground.part'))      },
-            { token: '--muted-foreground', value: stripHtml(t('tokens.table.mutedForeground.class')), description: stripHtml(t('tokens.table.mutedForeground.part')) },
-            { token: '--ring',             value: stripHtml(t('tokens.table.ring.class')),            description: stripHtml(t('tokens.table.ring.part'))            },
-            { token: '--destructive',      value: stripHtml(t('tokens.table.destructive.class')),     description: stripHtml(t('tokens.table.destructive.part'))     },
+            { token: '--input',            value: toPlainText(t('tokens.table.input.class')),           description: toPlainText(t('tokens.table.input.part'))           },
+            { token: '—',                  value: toPlainText(t('tokens.table.background.class')),      description: toPlainText(t('tokens.table.background.part'))      },
+            { token: '--foreground',       value: toPlainText(t('tokens.table.foreground.class')),      description: toPlainText(t('tokens.table.foreground.part'))      },
+            { token: '--muted-foreground', value: toPlainText(t('tokens.table.mutedForeground.class')), description: toPlainText(t('tokens.table.mutedForeground.part')) },
+            { token: '--ring',             value: toPlainText(t('tokens.table.ring.class')),            description: toPlainText(t('tokens.table.ring.part'))            },
+            { token: '--destructive',      value: toPlainText(t('tokens.table.destructive.class')),     description: toPlainText(t('tokens.table.destructive.part'))     },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -941,11 +938,11 @@ export type TextareaOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'field_blur',          trigger: t('analytics.table.field_blur.trigger'), payload: t('analytics.table.field_blur.payload') },
+            { event: 'field_blur',          trigger: toPlainText(t('analytics.table.field_blur.trigger')), payload: t('analytics.table.field_blur.payload') },
             { event: 'docs_page_view',      trigger: 'Carregamento da docs page',              payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed', trigger: 'Seção visível no viewport',              payload: '{ section_id, component_name, locale }' },
           ],
@@ -962,8 +959,8 @@ export type TextareaOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -975,7 +972,7 @@ export type TextareaOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: 'axe-core + manual',
             })),
@@ -987,7 +984,7 @@ export type TextareaOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

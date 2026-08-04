@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(menubarTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -637,14 +634,14 @@ const panel = bar.querySelector('[role="menu"]');
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),   trigger: t('states.closed.trigger'),   behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'),  behavior: stripHtml(t('states.checked.behavior')) },
+            { label: t('states.closed.label'),   trigger: toPlainText(t('states.closed.trigger')),   behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),     behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.checked.label'),  trigger: toPlainText(t('states.checked.trigger')),  behavior: toPlainText(t('states.checked.behavior')) },
           ],
         });
 
@@ -688,12 +685,12 @@ export function createMenubar(
               items: [
                 { name: 'menus',         type: 'MenubarMenu[]',                       defaultValue: '—',    required: 'Sim', description: 'Lista de menus (label + items) renderizados na barra.' },
                 { name: 'options.class', type: 'string',                              defaultValue: '—',    required: 'Não', description: 'Classes adicionais no Root.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use item.onClick).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',    required: 'Não', description: stripHtml(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
-                { name: 'loop',          type: 'boolean',                             defaultValue: 'true', required: 'Não', description: stripHtml(t('props.table.loop.description'))          + ' NOTA: factory Nortear não implementa loop (setas Esquerda/Direita não navegam).' },
-                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
-                { name: 'align',         type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Nortear fixa start.' },
+                { name: 'value',         type: 'string',                              defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
+                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use item.onClick).' },
+                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
+                { name: 'loop',          type: 'boolean',                             defaultValue: 'true', required: 'Não', description: toPlainText(t('props.table.loop.description'))          + ' NOTA: factory Nortear não implementa loop (setas Esquerda/Direita não navegam).' },
+                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
+                { name: 'align',         type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: 'Não', description: toPlainText(t('props.table.align.description')) + ' NOTA: factory Nortear fixa start.' },
               ],
             },
           ],
@@ -736,13 +733,13 @@ export function createMenubar(
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))              },
-            { key: 'Arrow Left / Arrow Right',       description: stripHtml(t('accessibility.keyboard.arrowsHorizontal')) },
-            { key: 'Arrow Up / Arrow Down',       description: stripHtml(t('accessibility.keyboard.arrowsVertical'))   },
-            { key: 'Enter/Space', description: stripHtml(t('accessibility.keyboard.enter'))            },
-            { key: 'Esc',         description: stripHtml(t('accessibility.keyboard.escape'))           },
-            { key: 'Home/End',    description: stripHtml(t('accessibility.keyboard.homeEnd'))          },
-            { key: 'A–Z',         description: stripHtml(t('accessibility.keyboard.typeahead'))        },
+            { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))              },
+            { key: 'Arrow Left / Arrow Right',       description: toPlainText(t('accessibility.keyboard.arrowsHorizontal')) },
+            { key: 'Arrow Up / Arrow Down',       description: toPlainText(t('accessibility.keyboard.arrowsVertical'))   },
+            { key: 'Enter/Space', description: toPlainText(t('accessibility.keyboard.enter'))            },
+            { key: 'Esc',         description: toPlainText(t('accessibility.keyboard.escape'))           },
+            { key: 'Home/End',    description: toPlainText(t('accessibility.keyboard.homeEnd'))          },
+            { key: 'A–Z',         description: toPlainText(t('accessibility.keyboard.typeahead'))        },
           ],
         });
 

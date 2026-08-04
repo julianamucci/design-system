@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(hoverCardTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -639,13 +636,13 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),     behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),       trigger: t('states.open.trigger'),       behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.controlled.label'), trigger: t('states.controlled.trigger'), behavior: stripHtml(t('states.controlled.behavior')) },
+            { label: t('states.closed.label'),     trigger: toPlainText(t('states.closed.trigger')),     behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),       trigger: toPlainText(t('states.open.trigger')),       behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.controlled.label'), trigger: toPlainText(t('states.controlled.trigger')), behavior: toPlainText(t('states.controlled.behavior')) },
           ],
         });
 
@@ -682,11 +679,11 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                              defaultValue: '—',         required: 'Sim', description: 'Elemento que dispara o hover (link, botão, texto).' },
                 { name: 'content',      type: 'HTMLElement',                              defaultValue: '—',         required: 'Sim', description: 'Conteúdo flutuante exibido após o delay.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'",      defaultValue: "'bottom'",  required: 'Não', description: stripHtml(t('props.table.side.description')) },
-                { name: 'align',        type: "'start' | 'center' | 'end'",               defaultValue: "'center'",  required: 'Não', description: stripHtml(t('props.table.align.description')) },
-                { name: 'onOpenChange', type: '(open: boolean) => void',                  defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'",      defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) },
+                { name: 'align',        type: "'start' | 'center' | 'end'",               defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) },
+                { name: 'onOpenChange', type: '(open: boolean) => void',                  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                                   defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'openDelay',    type: 'number',                                   defaultValue: '300',       required: 'Não', description: stripHtml(t('props.table.openDelay.description')) + ' NOTA: factory Nortear usa constante interna SHOW_DELAY (não-prop).' },
+                { name: 'openDelay',    type: 'number',                                   defaultValue: '300',       required: 'Não', description: toPlainText(t('props.table.openDelay.description')) + ' NOTA: factory Nortear usa constante interna SHOW_DELAY (não-prop).' },
               ],
             },
           ],
@@ -726,10 +723,10 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',       description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Esc',       description: stripHtml(t('accessibility.keyboard.escape'))   },
-            { key: 'Shift+Tab', description: stripHtml(t('accessibility.keyboard.shiftTab')) },
-            { key: 'Enter',     description: stripHtml(t('accessibility.keyboard.enter'))    },
+            { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
+            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   },
+            { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
+            { key: 'Enter',     description: toPlainText(t('accessibility.keyboard.enter'))    },
           ],
         });
 

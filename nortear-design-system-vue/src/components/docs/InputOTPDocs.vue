@@ -34,6 +34,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -52,10 +53,6 @@ const screenReaderItems = computed(() =>
 const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'Alta',
@@ -136,8 +133,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -292,11 +287,11 @@ const compErrorValue = ref('123');
 const compResendValue = ref('');
 
 const stateItems = computed(() => [
-  { label: tContent('states.empty.label'),    trigger: tContent('states.empty.trigger'),    behavior: stripHtml(tContent('states.empty.behavior')) },
-  { label: tContent('states.filling.label'),  trigger: tContent('states.filling.trigger'),  behavior: stripHtml(tContent('states.filling.behavior')) },
-  { label: tContent('states.complete.label'), trigger: tContent('states.complete.trigger'), behavior: stripHtml(tContent('states.complete.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.error.label'),    trigger: tContent('states.error.trigger'),    behavior: stripHtml(tContent('states.error.behavior')) },
+  { label: tContent('states.empty.label'),    trigger: toPlainText(tContent('states.empty.trigger')),    behavior: toPlainText(tContent('states.empty.behavior')) },
+  { label: tContent('states.filling.label'),  trigger: toPlainText(tContent('states.filling.trigger')),  behavior: toPlainText(tContent('states.filling.behavior')) },
+  { label: tContent('states.complete.label'), trigger: toPlainText(tContent('states.complete.trigger')), behavior: toPlainText(tContent('states.complete.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.error.label'),    trigger: toPlainText(tContent('states.error.trigger')),    behavior: toPlainText(tContent('states.error.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -308,13 +303,13 @@ const propCols = computed(() => ({
 }));
 
 const inputOtpPropItems = computed(() => [
-  { name: 'maxLength',  type: tContent('props.table.maxLength.type'),  defaultValue: tContent('props.table.maxLength.default'),  required: tContent('props.table.maxLength.required'),  description: stripHtml(tContent('props.table.maxLength.description'))  },
-  { name: 'value',      type: tContent('props.table.value.type'),      defaultValue: tContent('props.table.value.default'),      required: tContent('props.table.value.required'),      description: stripHtml(tContent('props.table.value.description'))      },
-  { name: 'onChange',   type: tContent('props.table.onChange.type'),   defaultValue: tContent('props.table.onChange.default'),   required: tContent('props.table.onChange.required'),   description: stripHtml(tContent('props.table.onChange.description'))   },
-  { name: 'onComplete', type: tContent('props.table.onComplete.type'), defaultValue: tContent('props.table.onComplete.default'), required: tContent('props.table.onComplete.required'), description: stripHtml(tContent('props.table.onComplete.description')) },
-  { name: 'pattern',    type: tContent('props.table.pattern.type'),    defaultValue: tContent('props.table.pattern.default'),    required: tContent('props.table.pattern.required'),    description: stripHtml(tContent('props.table.pattern.description'))    },
-  { name: 'disabled',   type: tContent('props.table.disabled.type'),   defaultValue: tContent('props.table.disabled.default'),   required: tContent('props.table.disabled.required'),   description: stripHtml(tContent('props.table.disabled.description'))   },
-  { name: 'autoFocus',  type: tContent('props.table.autoFocus.type'),  defaultValue: tContent('props.table.autoFocus.default'),  required: tContent('props.table.autoFocus.required'),  description: stripHtml(tContent('props.table.autoFocus.description'))  },
+  { name: 'maxLength',  type: tContent('props.table.maxLength.type'),  defaultValue: tContent('props.table.maxLength.default'),  required: tContent('props.table.maxLength.required'),  description: toPlainText(tContent('props.table.maxLength.description'))  },
+  { name: 'value',      type: tContent('props.table.value.type'),      defaultValue: tContent('props.table.value.default'),      required: tContent('props.table.value.required'),      description: toPlainText(tContent('props.table.value.description'))      },
+  { name: 'onChange',   type: tContent('props.table.onChange.type'),   defaultValue: tContent('props.table.onChange.default'),   required: tContent('props.table.onChange.required'),   description: toPlainText(tContent('props.table.onChange.description'))   },
+  { name: 'onComplete', type: tContent('props.table.onComplete.type'), defaultValue: tContent('props.table.onComplete.default'), required: tContent('props.table.onComplete.required'), description: toPlainText(tContent('props.table.onComplete.description')) },
+  { name: 'pattern',    type: tContent('props.table.pattern.type'),    defaultValue: tContent('props.table.pattern.default'),    required: tContent('props.table.pattern.required'),    description: toPlainText(tContent('props.table.pattern.description'))    },
+  { name: 'disabled',   type: tContent('props.table.disabled.type'),   defaultValue: tContent('props.table.disabled.default'),   required: tContent('props.table.disabled.required'),   description: toPlainText(tContent('props.table.disabled.description'))   },
+  { name: 'autoFocus',  type: tContent('props.table.autoFocus.type'),  defaultValue: tContent('props.table.autoFocus.default'),  required: tContent('props.table.autoFocus.required'),  description: toPlainText(tContent('props.table.autoFocus.description'))  },
 ]);
 
 const tokenRows = computed(() => [
@@ -337,11 +332,11 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',         description: stripHtml(tContent('accessibility.keyboard.tab'))       },
-  { key: 'Arrow Left / Arrow Right',       description: stripHtml(tContent('accessibility.keyboard.arrows'))    },
-  { key: 'Backspace',   description: stripHtml(tContent('accessibility.keyboard.backspace')) },
-  { key: 'Ctrl/Cmd+V',  description: stripHtml(tContent('accessibility.keyboard.paste'))     },
-  { key: '0-9 / A-Z',   description: stripHtml(tContent('accessibility.keyboard.digit'))     },
+  { key: 'Tab',         description: toPlainText(tContent('accessibility.keyboard.tab'))       },
+  { key: 'Arrow Left / Arrow Right',       description: toPlainText(tContent('accessibility.keyboard.arrows'))    },
+  { key: 'Backspace',   description: toPlainText(tContent('accessibility.keyboard.backspace')) },
+  { key: 'Ctrl/Cmd+V',  description: toPlainText(tContent('accessibility.keyboard.paste'))     },
+  { key: '0-9 / A-Z',   description: toPlainText(tContent('accessibility.keyboard.digit'))     },
 ]);
 
 const relatedItems = computed(() => [
@@ -364,8 +359,8 @@ const analyticsItems = computed(() => [
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-  action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-  result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
@@ -846,8 +841,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />

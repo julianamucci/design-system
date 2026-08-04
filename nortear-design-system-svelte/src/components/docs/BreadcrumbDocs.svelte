@@ -28,6 +28,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import breadcrumbTranslations from '@shared/content/breadcrumb/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(breadcrumbTranslations);
@@ -64,7 +65,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -100,10 +100,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -354,9 +350,9 @@ interface BreadcrumbEllipsisProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.link.name'),      rules: stripHtml($tStore('usage.uxWriting.table.link.format')),      do: $tStore('usage.uxWriting.table.link.good'),               dont: $tStore('usage.uxWriting.table.link.bad') },
-        { element: $tStore('usage.uxWriting.table.page.name'),      rules: stripHtml($tStore('usage.uxWriting.table.page.format')),      do: stripHtml($tStore('usage.uxWriting.table.page.good')),    dont: $tStore('usage.uxWriting.table.page.bad') },
-        { element: $tStore('usage.uxWriting.table.separator.name'), rules: stripHtml($tStore('usage.uxWriting.table.separator.format')), do: stripHtml($tStore('usage.uxWriting.table.separator.good')), dont: $tStore('usage.uxWriting.table.separator.bad') },
+        { element: $tStore('usage.uxWriting.table.link.name'),      rules: toPlainText($tStore('usage.uxWriting.table.link.format')),      do: $tStore('usage.uxWriting.table.link.good'),               dont: $tStore('usage.uxWriting.table.link.bad') },
+        { element: $tStore('usage.uxWriting.table.page.name'),      rules: toPlainText($tStore('usage.uxWriting.table.page.format')),      do: toPlainText($tStore('usage.uxWriting.table.page.good')),    dont: $tStore('usage.uxWriting.table.page.bad') },
+        { element: $tStore('usage.uxWriting.table.separator.name'), rules: toPlainText($tStore('usage.uxWriting.table.separator.format')), do: toPlainText($tStore('usage.uxWriting.table.separator.good')), dont: $tStore('usage.uxWriting.table.separator.bad') },
       ],
     }}
     do={{
@@ -601,12 +597,12 @@ interface BreadcrumbEllipsisProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.simple.label'),          trigger: stripHtml($tStore('states.simple.trigger')),          behavior: stripHtml($tStore('states.simple.behavior'))          },
-      { label: $tStore('states.asChildLink.label'),     trigger: stripHtml($tStore('states.asChildLink.trigger')),     behavior: stripHtml($tStore('states.asChildLink.behavior'))     },
+      { label: $tStore('states.simple.label'),          trigger: toPlainText($tStore('states.simple.trigger')),          behavior: toPlainText($tStore('states.simple.behavior'))          },
+      { label: $tStore('states.asChildLink.label'),     trigger: toPlainText($tStore('states.asChildLink.trigger')),     behavior: toPlainText($tStore('states.asChildLink.behavior'))     },
     ]}
   />
 
@@ -666,8 +662,8 @@ interface BreadcrumbEllipsisProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'href',     type: 'string',                                 defaultValue: '—', required: 'Sim', description: stripHtml($tStore('props.table.href'))    },
-          { name: 'child',    type: 'Snippet<[{ props: HTMLAnchorAttributes }]>', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.asChild')) },
+          { name: 'href',     type: 'string',                                 defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.href'))    },
+          { name: 'child',    type: 'Snippet<[{ props: HTMLAnchorAttributes }]>', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.asChild')) },
           { name: 'class',    type: 'string',                                 defaultValue: '—', required: 'Não', description: $tStore('props.table.className')          },
           { name: 'children', type: 'Snippet',                                defaultValue: '—', required: 'Sim', description: $tStore('props.table.children')           },
         ],
@@ -788,15 +784,15 @@ interface BreadcrumbEllipsisProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
       { event: $tStore('analytics.table.navigationClick'), trigger: stripHtml($tStore('analytics.table.navigationClickTrigger')), payload: $tStore('analytics.table.navigationClickPayload') },
       { event: $tStore('analytics.table.ellipsisOpen'),    trigger: stripHtml($tStore('analytics.table.ellipsisOpenTrigger')),    payload: $tStore('analytics.table.ellipsisOpenPayload')    },
-      { event: $tStore('analytics.table.pageView'),        trigger: $tStore('analytics.table.pageViewTrigger'),                   payload: $tStore('analytics.table.pageViewPayload')        },
-      { event: $tStore('analytics.table.sectionViewed'),   trigger: $tStore('analytics.table.sectionViewedTrigger'),              payload: $tStore('analytics.table.sectionViewedPayload')   },
-      { event: $tStore('analytics.table.langSwitch'),      trigger: $tStore('analytics.table.langSwitchTrigger'),                 payload: $tStore('analytics.table.langSwitchPayload')      },
+      { event: $tStore('analytics.table.pageView'),        trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),                   payload: $tStore('analytics.table.pageViewPayload')        },
+      { event: $tStore('analytics.table.sectionViewed'),   trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),              payload: $tStore('analytics.table.sectionViewedPayload')   },
+      { event: $tStore('analytics.table.langSwitch'),      trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),                 payload: $tStore('analytics.table.langSwitchPayload')      },
     ]}
   />
 
@@ -811,12 +807,12 @@ interface BreadcrumbEllipsisProps {
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: $tStore('testes.functional.item1.action'), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'), result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item1.action'), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item2.action'), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item3.action'), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item4.action'), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item5.action'), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item6.action'), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -827,11 +823,11 @@ interface BreadcrumbEllipsisProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-        { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: stripHtml($tStore('testes.accessibility.item5.how')) },
+        { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: toPlainText($tStore('testes.accessibility.item5.how')) },
         { criterion: $tStore('testes.accessibility.item6.criterion'),            level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
       ],
     }}

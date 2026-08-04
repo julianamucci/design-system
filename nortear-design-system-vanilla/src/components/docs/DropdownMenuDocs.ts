@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(dropdownMenuTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -557,14 +554,14 @@ function makeItem(label, shortcut) {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),   trigger: t('states.closed.trigger'),   behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'),  behavior: stripHtml(t('states.checked.behavior')) },
+            { label: t('states.closed.label'),   trigger: toPlainText(t('states.closed.trigger')),   behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),     behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.checked.label'),  trigger: toPlainText(t('states.checked.trigger')),  behavior: toPlainText(t('states.checked.behavior')) },
           ],
         });
 
@@ -604,13 +601,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Sim', description: 'Elemento que abre o menu ao receber click.' },
                 { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: 'Sim', description: 'Lista de itens, separadores e labels do menu.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
+                { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controle externo via .click() no trigger no Nortear).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: factory Nortear não tem prop nativa.' },
-                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.modal.description')) },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: stripHtml(t('props.table.align.description')) },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' (controle externo via .click() no trigger no Nortear).' },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) + ' NOTA: factory Nortear não tem prop nativa.' },
+                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: toPlainText(t('props.table.align.description')) },
               ],
             },
           ],

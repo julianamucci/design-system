@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -76,7 +73,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -356,7 +352,7 @@ import { Bold } from "lucide-react";`;
             {
               element: tContent("usage.uxWriting.table.icon.name"),
               rules: tContent("usage.uxWriting.table.icon.format"),
-              do: tContent("usage.uxWriting.table.icon.good"),
+              do: toPlainText(tContent("usage.uxWriting.table.icon.good")),
               dont: tContent("usage.uxWriting.table.icon.bad"),
             },
           ],
@@ -589,39 +585,39 @@ import { Bold } from "lucide-react";`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.off.label"),
-            trigger: tContent("states.off.trigger"),
-            behavior: stripHtml(tContent("states.off.behavior")),
+            trigger: toPlainText(tContent("states.off.trigger")),
+            behavior: toPlainText(tContent("states.off.behavior")),
           },
           {
             label: tContent("states.on.label"),
-            trigger: tContent("states.on.trigger"),
-            behavior: stripHtml(tContent("states.on.behavior")),
+            trigger: toPlainText(tContent("states.on.trigger")),
+            behavior: toPlainText(tContent("states.on.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.invalid.label"),
-            trigger: tContent("states.invalid.trigger"),
-            behavior: stripHtml(tContent("states.invalid.behavior")),
+            trigger: toPlainText(tContent("states.invalid.trigger")),
+            behavior: toPlainText(tContent("states.invalid.behavior")),
           },
         ]}
       />
@@ -644,49 +640,49 @@ import { Bold } from "lucide-react";`;
                 type: tContent("props.table.pressed.type"),
                 defaultValue: tContent("props.table.pressed.default"),
                 required: tContent("props.table.pressed.required"),
-                description: stripHtml(tContent("props.table.pressed.description")),
+                description: toPlainText(tContent("props.table.pressed.description")),
               },
               {
                 name: "defaultPressed",
                 type: tContent("props.table.defaultPressed.type"),
                 defaultValue: tContent("props.table.defaultPressed.default"),
                 required: tContent("props.table.defaultPressed.required"),
-                description: stripHtml(tContent("props.table.defaultPressed.description")),
+                description: toPlainText(tContent("props.table.defaultPressed.description")),
               },
               {
                 name: "onPressedChange",
                 type: tContent("props.table.onPressedChange.type"),
                 defaultValue: tContent("props.table.onPressedChange.default"),
                 required: tContent("props.table.onPressedChange.required"),
-                description: stripHtml(tContent("props.table.onPressedChange.description")),
+                description: toPlainText(tContent("props.table.onPressedChange.description")),
               },
               {
                 name: "disabled",
                 type: tContent("props.table.disabled.type"),
                 defaultValue: tContent("props.table.disabled.default"),
                 required: tContent("props.table.disabled.required"),
-                description: stripHtml(tContent("props.table.disabled.description")),
+                description: toPlainText(tContent("props.table.disabled.description")),
               },
               {
                 name: "variant",
                 type: tContent("props.table.variant.type"),
                 defaultValue: tContent("props.table.variant.default"),
                 required: tContent("props.table.variant.required"),
-                description: stripHtml(tContent("props.table.variant.description")),
+                description: toPlainText(tContent("props.table.variant.description")),
               },
               {
                 name: "size",
                 type: tContent("props.table.size.type"),
                 defaultValue: tContent("props.table.size.default"),
                 required: tContent("props.table.size.required"),
-                description: stripHtml(tContent("props.table.size.description")),
+                description: toPlainText(tContent("props.table.size.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
             ],
           },
@@ -781,13 +777,13 @@ import { Bold } from "lucide-react";`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "field_change",
-            trigger: tContent("analytics.table.field_change.trigger"),
+            trigger: toPlainText(tContent("analytics.table.field_change.trigger")),
             payload: tContent("analytics.table.field_change.payload"),
           },
           {
@@ -814,8 +810,8 @@ import { Bold } from "lucide-react";`;
             priority: tNav("common.priority"),
           },
           items: [1, 2, 3, 4].map((i) => ({
-            action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -827,7 +823,7 @@ import { Bold } from "lucide-react";`;
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}`)),
             level: "AA",
             how: "—",
           })),

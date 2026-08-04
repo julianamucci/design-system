@@ -35,10 +35,7 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 import { mapCloseReason }    from "@/components/docs/shared/close-reason";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -82,7 +79,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 type DestructiveDemoProps = {
   triggerLabel: string;
@@ -572,15 +568,15 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
-          { label: tContent("states.closed.label"),    trigger: tContent("states.closed.trigger"),    behavior: tContent("states.closed.behavior") },
-          { label: tContent("states.open.label"),      trigger: stripHtml(tContent("states.open.trigger")),      behavior: tContent("states.open.behavior") },
-          { label: tContent("states.confirmed.label"), trigger: stripHtml(tContent("states.confirmed.trigger")), behavior: stripHtml(tContent("states.confirmed.behavior")) },
-          { label: tContent("states.cancelled.label"), trigger: stripHtml(tContent("states.cancelled.trigger")), behavior: tContent("states.cancelled.behavior") },
-          { label: tContent("states.controlled.label"),trigger: stripHtml(tContent("states.controlled.trigger")),behavior: tContent("states.controlled.behavior") },
+          { label: tContent("states.closed.label"),    trigger: toPlainText(tContent("states.closed.trigger")),    behavior: toPlainText(tContent("states.closed.behavior"))},
+          { label: tContent("states.open.label"),      trigger: toPlainText(tContent("states.open.trigger")),      behavior: toPlainText(tContent("states.open.behavior"))},
+          { label: tContent("states.confirmed.label"), trigger: toPlainText(tContent("states.confirmed.trigger")), behavior: toPlainText(tContent("states.confirmed.behavior")) },
+          { label: tContent("states.cancelled.label"), trigger: toPlainText(tContent("states.cancelled.trigger")), behavior: toPlainText(tContent("states.cancelled.behavior"))},
+          { label: tContent("states.controlled.label"),trigger: toPlainText(tContent("states.controlled.trigger")),behavior: toPlainText(tContent("states.controlled.behavior"))},
         ]}
       />
 
@@ -597,7 +593,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "open",         type: "boolean",                  defaultValue: "—",       required: "Não", description: stripHtml(tContent("props.table.open")) },
+              { name: "open",         type: "boolean",                  defaultValue: "—",       required: "Não", description: toPlainText(tContent("props.table.open")) },
               { name: "defaultOpen",  type: "boolean",                  defaultValue: "false",   required: "Não", description: tContent("props.table.defaultOpen") },
               { name: "onOpenChange", type: "(open: boolean) => void",  defaultValue: "—",       required: "Não", description: tContent("props.table.onOpenChange") },
               { name: "children",     type: "React.ReactNode",          defaultValue: "—",       required: "Sim", description: tContent("props.table.children") },
@@ -613,7 +609,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "asChild",   type: "boolean",             defaultValue: "false", required: "Não", description: stripHtml(tContent("props.table.asChild")) },
+              { name: "asChild",   type: "boolean",             defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.asChild")) },
               { name: "className", type: "string",              defaultValue: "—",     required: "Não", description: tContent("props.table.className") },
               { name: "children",  type: "React.ReactNode",     defaultValue: "—",     required: "Sim", description: tContent("props.table.children") },
             ],
@@ -736,16 +732,16 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
-          { event: tContent("analytics.table.open"),          trigger: tContent("analytics.table.openTrigger"),          payload: tContent("analytics.table.openPayload") },
-          { event: tContent("analytics.table.confirm"),       trigger: tContent("analytics.table.confirmTrigger"),       payload: tContent("analytics.table.confirmPayload") },
-          { event: tContent("analytics.table.close"),         trigger: tContent("analytics.table.closeTrigger"),         payload: tContent("analytics.table.closePayload") },
-          { event: tContent("analytics.table.pageView"),      trigger: tContent("analytics.table.pageViewTrigger"),      payload: tContent("analytics.table.pageViewPayload") },
-          { event: tContent("analytics.table.sectionViewed"), trigger: tContent("analytics.table.sectionViewedTrigger"), payload: tContent("analytics.table.sectionViewedPayload") },
-          { event: tContent("analytics.table.langSwitch"),    trigger: tContent("analytics.table.langSwitchTrigger"),    payload: tContent("analytics.table.langSwitchPayload") },
+          { event: tContent("analytics.table.open"),          trigger: toPlainText(tContent("analytics.table.openTrigger")),          payload: tContent("analytics.table.openPayload") },
+          { event: tContent("analytics.table.confirm"),       trigger: toPlainText(tContent("analytics.table.confirmTrigger")),       payload: tContent("analytics.table.confirmPayload") },
+          { event: tContent("analytics.table.close"),         trigger: toPlainText(tContent("analytics.table.closeTrigger")),         payload: tContent("analytics.table.closePayload") },
+          { event: tContent("analytics.table.pageView"),      trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),      payload: tContent("analytics.table.pageViewPayload") },
+          { event: tContent("analytics.table.sectionViewed"), trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")), payload: tContent("analytics.table.sectionViewedPayload") },
+          { event: tContent("analytics.table.langSwitch"),    trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),    payload: tContent("analytics.table.langSwitchPayload") },
         ]}
       />
 

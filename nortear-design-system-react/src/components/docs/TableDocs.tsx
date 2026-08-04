@@ -45,12 +45,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high:   "common.high",
@@ -107,7 +104,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -1035,24 +1031,24 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         title={tContent("states.title")}
         cols={{
           state:    tContent("states.cols.state"),
-          trigger:  tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label:    tContent("states.empty.label"),
-            trigger:  stripHtml(tContent("states.empty.trigger")),
-            behavior: tContent("states.empty.behavior"),
+            trigger:  toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label:    tContent("states.selected.label"),
-            trigger:  stripHtml(tContent("states.selected.trigger")),
-            behavior: tContent("states.selected.behavior"),
+            trigger:  toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label:    tContent("states.loading.label"),
-            trigger:  stripHtml(tContent("states.loading.trigger")),
-            behavior: tContent("states.loading.behavior"),
+            trigger:  toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
         ]}
       />
@@ -1272,23 +1268,23 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event:   tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event:   tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event:   tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

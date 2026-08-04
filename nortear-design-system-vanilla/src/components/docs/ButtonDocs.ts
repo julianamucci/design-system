@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,26 +43,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(buttonTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// Converte markup em texto puro para as superfícies que NÃO renderizam HTML
-// (tabelas de testes, props, teclado e cenários — todas escrevem via textNode).
-//
-// Só tirar as tags não bastava: o `translations.json` é compartilhado com
-// containers que renderizam HTML, então `<button>` mora no JSON escapado como
-// `&lt;button&gt;`. Sem decodificar, a tabela mostrava literalmente
-// "Elemento &lt;button&gt; nativo presente".
-//
-// `&amp;` por último: decodificado antes, `&amp;lt;` viraria `<` em vez de `&lt;`.
-function stripHtml(s: string): string {
-  return s
-    .replace(/<[^>]*>/g, '')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -255,9 +236,9 @@ export function createButtonDocs(): HTMLElement {
               alternative: t('usage.scenarios.cols.alternative'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              s: stripHtml(t(`usage.scenarios.item${i}.s`)),
-              u: stripHtml(t(`usage.scenarios.item${i}.u`)),
-              a: stripHtml(t(`usage.scenarios.item${i}.a`)),
+              s: toPlainText(t(`usage.scenarios.item${i}.s`)),
+              u: toPlainText(t(`usage.scenarios.item${i}.u`)),
+              a: toPlainText(t(`usage.scenarios.item${i}.a`)),
             })),
           },
           uxWriting: {
@@ -562,16 +543,16 @@ export function createButtonDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),      trigger: t('states.default.trigger'),      behavior: t('states.default.behavior') },
-            { label: t('states.hover.label'),        trigger: t('states.hover.trigger'),        behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focusVisible.label'), trigger: t('states.focusVisible.trigger'), behavior: stripHtml(t('states.focusVisible.behavior')) },
-            { label: t('states.disabled.label'),     trigger: stripHtml(t('states.disabled.trigger')), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.loading.label'),      trigger: stripHtml(t('states.loading.trigger')),  behavior: t('states.loading.behavior') },
-            { label: t('states.invalid.label'),      trigger: stripHtml(t('states.invalid.trigger')),  behavior: stripHtml(t('states.invalid.behavior')) },
+            { label: t('states.default.label'),      trigger: toPlainText(t('states.default.trigger')),      behavior: toPlainText(t('states.default.behavior'))},
+            { label: t('states.hover.label'),        trigger: toPlainText(t('states.hover.trigger')),        behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focusVisible.label'), trigger: toPlainText(t('states.focusVisible.trigger')), behavior: toPlainText(t('states.focusVisible.behavior')) },
+            { label: t('states.disabled.label'),     trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.loading.label'),      trigger: toPlainText(t('states.loading.trigger')),  behavior: toPlainText(t('states.loading.behavior'))},
+            { label: t('states.invalid.label'),      trigger: toPlainText(t('states.invalid.trigger')),  behavior: toPlainText(t('states.invalid.behavior')) },
           ],
         });
 
@@ -607,14 +588,14 @@ export interface ButtonOptions {
               title: t('props.buttonTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(stripHtml(t('props.table.variant'))) },
-                { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.size')) },
+                { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(toPlainText(t('props.table.variant'))) },
+                { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.size')) },
                 { name: 'label',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Texto visível do botão.' },
                 { name: 'ariaLabel', type: 'string',                                                                 defaultValue: '—',         required: 'Condicional', description: 'Obrigatório em botões icon-only.' },
-                { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(stripHtml(t('props.table.disabled'))) },
-                { name: 'type',      type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(stripHtml(t('props.table.htmlType'))) },
-                { name: 'onClick',   type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml(stripHtml(t('props.table.onClick'))) },
-                { name: 'class',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(stripHtml(t('props.table.className'))) },
+                { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(toPlainText(t('props.table.disabled'))) },
+                { name: 'type',      type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(toPlainText(t('props.table.htmlType'))) },
+                { name: 'onClick',   type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.onClick'))) },
+                { name: 'class',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.className'))) },
               ],
             },
           ],
@@ -678,10 +659,10 @@ export interface ButtonOptions {
           ],
           keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
-            { key: 'Tab',   description: stripHtml(t('accessibility.keyboard.tab')) },
-            { key: 'Enter', description: stripHtml(t('accessibility.keyboard.enter')) },
-            { key: 'Space', description: stripHtml(t('accessibility.keyboard.space')) },
-            { key: '—',     description: stripHtml(t('accessibility.keyboard.disabled')) },
+            { key: 'Tab',   description: toPlainText(t('accessibility.keyboard.tab')) },
+            { key: 'Enter', description: toPlainText(t('accessibility.keyboard.enter')) },
+            { key: 'Space', description: toPlainText(t('accessibility.keyboard.space')) },
+            { key: '—',     description: toPlainText(t('accessibility.keyboard.disabled')) },
           ],
         });
 
@@ -712,14 +693,14 @@ export interface ButtonOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             { event: t('analytics.table.click'),         trigger: stripHtml(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),                 payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'),            payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),               payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),                 payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),            payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),               payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 
@@ -734,8 +715,8 @@ export interface ButtonOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(stripHtml(t(`testes.functional.item${i}.result`))),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: stripHtml(toPlainText(t(`testes.functional.item${i}.result`))),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -743,9 +724,9 @@ export interface ButtonOptions {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -755,7 +736,7 @@ export interface ButtonOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(stripHtml(t(`testes.visual.item${i}.story`))),
+              story: stripHtml(toPlainText(t(`testes.visual.item${i}.story`))),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

@@ -28,6 +28,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import collapsibleTranslations from '@shared/content/collapsible/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(collapsibleTranslations);
@@ -63,7 +64,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -101,10 +101,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -644,29 +640,29 @@ interface CollapsibleContentProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
       {
         label: $tStore('states.closed.label'),
-        trigger: stripHtml($tStore('states.closed.trigger')),
-        behavior: $tStore('states.closed.behavior'),
+        trigger: toPlainText($tStore('states.closed.trigger')),
+        behavior: toPlainText($tStore('states.closed.behavior')),
       },
       {
         label: $tStore('states.open.label'),
-        trigger: stripHtml($tStore('states.open.trigger')),
-        behavior: $tStore('states.open.behavior'),
+        trigger: toPlainText($tStore('states.open.trigger')),
+        behavior: toPlainText($tStore('states.open.behavior')),
       },
       {
         label: $tStore('states.defaultOpen.label'),
-        trigger: stripHtml($tStore('states.defaultOpen.trigger')),
-        behavior: $tStore('states.defaultOpen.behavior'),
+        trigger: toPlainText($tStore('states.defaultOpen.trigger')),
+        behavior: toPlainText($tStore('states.defaultOpen.behavior')),
       },
       {
         label: $tStore('states.disabled.label'),
-        trigger: stripHtml($tStore('states.disabled.trigger')),
-        behavior: stripHtml($tStore('states.disabled.behavior')),
+        trigger: toPlainText($tStore('states.disabled.trigger')),
+        behavior: toPlainText($tStore('states.disabled.behavior')),
       },
     ]}
   />
@@ -795,14 +791,14 @@ interface CollapsibleContentProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.toggle'),      trigger: $tStore('analytics.table.toggleTrigger'),      payload: $tStore('analytics.table.togglePayload')      },
-      { event: $tStore('analytics.table.pageView'),    trigger: $tStore('analytics.table.pageViewTrigger'),    payload: $tStore('analytics.table.pageViewPayload')    },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),  trigger: $tStore('analytics.table.langSwitchTrigger'),  payload: $tStore('analytics.table.langSwitchPayload')  },
+      { event: $tStore('analytics.table.toggle'),      trigger: toPlainText($tStore('analytics.table.toggleTrigger')),      payload: $tStore('analytics.table.togglePayload')      },
+      { event: $tStore('analytics.table.pageView'),    trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),    payload: $tStore('analytics.table.pageViewPayload')    },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),  trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),  payload: $tStore('analytics.table.langSwitchPayload')  },
     ]}
   />
 

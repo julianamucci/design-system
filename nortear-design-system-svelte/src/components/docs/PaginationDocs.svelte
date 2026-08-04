@@ -22,6 +22,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import paginationTranslations from '@shared/content/pagination/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(paginationTranslations);
@@ -65,7 +66,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     const tContent = $tStore;
@@ -102,10 +102,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -547,7 +543,6 @@ interface PaginationDirectionalProps {
     </Pagination>
   {/snippet}
 
-
   {#snippet variantSimple()}
     <Pagination count={50} perPage={10} page={1} aria-label={$tStore('variants.items.simple.name')}>
       {#snippet children({ pages, currentPage })}
@@ -612,16 +607,16 @@ interface PaginationDirectionalProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),             behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),               behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.active.label'),   trigger: $tStore('states.active.trigger'),              behavior: stripHtml($tStore('states.active.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'),            behavior: stripHtml($tStore('states.disabled.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),               behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.lastPage.label'), trigger: stripHtml($tStore('states.lastPage.trigger')), behavior: stripHtml($tStore('states.lastPage.behavior')) },
+      { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),             behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: toPlainText($tStore('states.hover.trigger')),               behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.active.label'),   trigger: toPlainText($tStore('states.active.trigger')),              behavior: toPlainText($tStore('states.active.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')),            behavior: toPlainText($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),               behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.lastPage.label'), trigger: toPlainText($tStore('states.lastPage.trigger')), behavior: toPlainText($tStore('states.lastPage.behavior')) },
     ]}
   />
 
@@ -632,8 +627,8 @@ interface PaginationDirectionalProps {
       {
         cols: propsTableCols,
         items: [
-          { name: 'isActive',  type: $tStore('props.table.isActive.type'),  defaultValue: $tStore('props.table.isActive.default'),  required: $tStore('props.table.isActive.required'),  description: stripHtml($tStore('props.table.isActive.description'))  },
-          { name: 'size',      type: $tStore('props.table.size.type'),      defaultValue: $tStore('props.table.size.default'),      required: $tStore('props.table.size.required'),      description: stripHtml($tStore('props.table.size.description'))      },
+          { name: 'isActive',  type: $tStore('props.table.isActive.type'),  defaultValue: $tStore('props.table.isActive.default'),  required: $tStore('props.table.isActive.required'),  description: toPlainText($tStore('props.table.isActive.description'))  },
+          { name: 'size',      type: $tStore('props.table.size.type'),      defaultValue: $tStore('props.table.size.default'),      required: $tStore('props.table.size.required'),      description: toPlainText($tStore('props.table.size.description'))      },
           { name: 'text',      type: $tStore('props.table.text.type'),      defaultValue: $tStore('props.table.text.default'),      required: $tStore('props.table.text.required'),      description: $tStore('props.table.text.description')                  },
           { name: 'class',     type: $tStore('props.table.className.type'), defaultValue: $tStore('props.table.className.default'), required: $tStore('props.table.className.required'), description: $tStore('props.table.className.description')             },
           { name: 'children',  type: 'Snippet',                              defaultValue: $tStore('props.table.children.default'), required: $tStore('props.table.children.required'),  description: $tStore('props.table.children.description')              },
@@ -714,11 +709,11 @@ interface PaginationDirectionalProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'page_change',         trigger: $tStore('analytics.table.page_change.trigger'), payload: $tStore('analytics.table.page_change.payload') },
+      { event: 'page_change',         trigger: toPlainText($tStore('analytics.table.page_change.trigger')), payload: $tStore('analytics.table.page_change.payload') },
       { event: 'docs_page_view',      trigger: 'Docs page mount',  payload: "{ component_name: 'pagination', locale, page_title }" },
       { event: 'docs_section_viewed', trigger: 'Section visible',  payload: "{ section_id, component_name: 'pagination', locale }" },
     ]}
@@ -735,8 +730,8 @@ interface PaginationDirectionalProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -748,11 +743,11 @@ interface PaginationDirectionalProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.3', how: 'Contrast analyzer' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.3', how: 'Contrast analyzer' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
       ],
     }}
     visual={{

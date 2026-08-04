@@ -24,6 +24,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── Overrides da stack ───────────────────────────────────────────────────────
 // O JSON compartilhado descreve a API em JSX (`className`, `ReactNode`, tags com
@@ -365,12 +366,12 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.idle.label'),            trigger: tContent('states.idle.trigger'),            behavior: tContent('states.idle.behavior')            },
-  { label: tContent('states.copied.label'),          trigger: tContent('states.copied.trigger'),          behavior: tContent('states.copied.behavior')          },
-  { label: tContent('states.numbered.label'),        trigger: tContent('states.numbered.trigger'),        behavior: tContent('states.numbered.behavior')        },
-  { label: tContent('states.unnumbered.label'),      trigger: tContent('states.unnumbered.trigger'),      behavior: tContent('states.unnumbered.behavior')      },
-  { label: tContent('states.scrolling.label'),       trigger: tContent('states.scrolling.trigger'),       behavior: tContent('states.scrolling.behavior')       },
-  { label: tContent('states.unknownLanguage.label'), trigger: tContent('states.unknownLanguage.trigger'), behavior: tContent('states.unknownLanguage.behavior') },
+  { label: tContent('states.idle.label'),            trigger: toPlainText(tContent('states.idle.trigger')),            behavior: toPlainText(tContent('states.idle.behavior'))},
+  { label: tContent('states.copied.label'),          trigger: toPlainText(tContent('states.copied.trigger')),          behavior: toPlainText(tContent('states.copied.behavior'))},
+  { label: tContent('states.numbered.label'),        trigger: toPlainText(tContent('states.numbered.trigger')),        behavior: toPlainText(tContent('states.numbered.behavior'))},
+  { label: tContent('states.unnumbered.label'),      trigger: toPlainText(tContent('states.unnumbered.trigger')),      behavior: toPlainText(tContent('states.unnumbered.behavior'))},
+  { label: tContent('states.scrolling.label'),       trigger: toPlainText(tContent('states.scrolling.trigger')),       behavior: toPlainText(tContent('states.scrolling.behavior'))},
+  { label: tContent('states.unknownLanguage.label'), trigger: toPlainText(tContent('states.unknownLanguage.trigger')), behavior: toPlainText(tContent('states.unknownLanguage.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -452,10 +453,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.copy'),          trigger: tContent('analytics.table.copyTrigger'),          payload: tContent('analytics.table.copyPayload')          },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.copy'),          trigger: toPlainText(tContent('analytics.table.copyTrigger')),          payload: tContent('analytics.table.copyPayload')          },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
@@ -785,7 +786,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Configurações ──────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -836,7 +837,7 @@ const a11yCritCols = computed(() => ({
     <!-- ── Analytics ──────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

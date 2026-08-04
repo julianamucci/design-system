@@ -15,6 +15,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import calendarTranslations from '@shared/content/calendar/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(calendarTranslations);
@@ -51,7 +52,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -87,10 +87,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -281,10 +277,10 @@ interface CalendarProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.label.name'),    rules: stripHtml($tStore('usage.uxWriting.table.label.format')),    do: $tStore('usage.uxWriting.table.label.good'),    dont: $tStore('usage.uxWriting.table.label.bad') },
-        { element: $tStore('usage.uxWriting.table.trigger.name'),  rules: stripHtml($tStore('usage.uxWriting.table.trigger.format')),  do: $tStore('usage.uxWriting.table.trigger.good'),  dont: $tStore('usage.uxWriting.table.trigger.bad') },
-        { element: $tStore('usage.uxWriting.table.disabled.name'), rules: stripHtml($tStore('usage.uxWriting.table.disabled.format')), do: stripHtml($tStore('usage.uxWriting.table.disabled.good')), dont: $tStore('usage.uxWriting.table.disabled.bad') },
-        { element: $tStore('usage.uxWriting.table.srOnly.name'),   rules: stripHtml($tStore('usage.uxWriting.table.srOnly.format')),   do: $tStore('usage.uxWriting.table.srOnly.good'),   dont: $tStore('usage.uxWriting.table.srOnly.bad') },
+        { element: $tStore('usage.uxWriting.table.label.name'),    rules: toPlainText($tStore('usage.uxWriting.table.label.format')),    do: $tStore('usage.uxWriting.table.label.good'),    dont: $tStore('usage.uxWriting.table.label.bad') },
+        { element: $tStore('usage.uxWriting.table.trigger.name'),  rules: toPlainText($tStore('usage.uxWriting.table.trigger.format')),  do: $tStore('usage.uxWriting.table.trigger.good'),  dont: $tStore('usage.uxWriting.table.trigger.bad') },
+        { element: $tStore('usage.uxWriting.table.disabled.name'), rules: toPlainText($tStore('usage.uxWriting.table.disabled.format')), do: toPlainText($tStore('usage.uxWriting.table.disabled.good')), dont: $tStore('usage.uxWriting.table.disabled.bad') },
+        { element: $tStore('usage.uxWriting.table.srOnly.name'),   rules: toPlainText($tStore('usage.uxWriting.table.srOnly.format')),   do: $tStore('usage.uxWriting.table.srOnly.good'),   dont: $tStore('usage.uxWriting.table.srOnly.bad') },
       ],
     }}
     do={{
@@ -413,16 +409,16 @@ interface CalendarProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),     trigger: stripHtml($tStore('states.default.trigger')),     behavior: stripHtml($tStore('states.default.behavior'))     },
-      { label: $tStore('states.selected.label'),    trigger: stripHtml($tStore('states.selected.trigger')),    behavior: stripHtml($tStore('states.selected.behavior'))    },
-      { label: $tStore('states.disabled.label'),    trigger: stripHtml($tStore('states.disabled.trigger')),    behavior: stripHtml($tStore('states.disabled.behavior'))    },
-      { label: $tStore('states.today.label'),       trigger: stripHtml($tStore('states.today.trigger')),       behavior: stripHtml($tStore('states.today.behavior'))       },
-      { label: $tStore('states.outside.label'),     trigger: stripHtml($tStore('states.outside.trigger')),     behavior: stripHtml($tStore('states.outside.behavior'))     },
-      { label: $tStore('states.rangeMiddle.label'), trigger: stripHtml($tStore('states.rangeMiddle.trigger')), behavior: stripHtml($tStore('states.rangeMiddle.behavior')) },
+      { label: $tStore('states.default.label'),     trigger: toPlainText($tStore('states.default.trigger')),     behavior: toPlainText($tStore('states.default.behavior'))     },
+      { label: $tStore('states.selected.label'),    trigger: toPlainText($tStore('states.selected.trigger')),    behavior: toPlainText($tStore('states.selected.behavior'))    },
+      { label: $tStore('states.disabled.label'),    trigger: toPlainText($tStore('states.disabled.trigger')),    behavior: toPlainText($tStore('states.disabled.behavior'))    },
+      { label: $tStore('states.today.label'),       trigger: toPlainText($tStore('states.today.trigger')),       behavior: toPlainText($tStore('states.today.behavior'))       },
+      { label: $tStore('states.outside.label'),     trigger: toPlainText($tStore('states.outside.trigger')),     behavior: toPlainText($tStore('states.outside.behavior'))     },
+      { label: $tStore('states.rangeMiddle.label'), trigger: toPlainText($tStore('states.rangeMiddle.trigger')), behavior: toPlainText($tStore('states.rangeMiddle.behavior')) },
     ]}
   />
 
@@ -442,19 +438,19 @@ interface CalendarProps {
         items: [
           { name: 'type',            type: '"single" | "multiple"',                      defaultValue: '—',        required: 'Sim', description: 'Modo de seleção. bits-ui não expõe "range" nativo — componha dois selects ou use `multiple`.' },
           { name: 'value',           type: 'DateValue | DateValue[]',                    defaultValue: 'undefined', required: 'Não', description: 'Valor selecionado. Use `bind:value` para two-way binding. Tipo depende de `type`.' },
-          { name: 'onValueChange',   type: '(v) => void',                                defaultValue: '—',        required: 'Não', description: stripHtml($tStore('props.table.onSelect')) },
+          { name: 'onValueChange',   type: '(v) => void',                                defaultValue: '—',        required: 'Não', description: toPlainText($tStore('props.table.onSelect')) },
           { name: 'locale',          type: 'string',                                     defaultValue: '"en-US"',   required: 'Não', description: 'String de locale BCP-47 (ex: "pt-BR", "en-US"). Controla nomes de meses e dias.' },
-          { name: 'isDateDisabled',  type: '(d: DateValue) => boolean',                  defaultValue: '—',        required: 'Não', description: stripHtml($tStore('props.table.disabled')) },
+          { name: 'isDateDisabled',  type: '(d: DateValue) => boolean',                  defaultValue: '—',        required: 'Não', description: toPlainText($tStore('props.table.disabled')) },
           { name: 'isDateUnavailable', type: '(d: DateValue) => boolean',                defaultValue: '—',        required: 'Não', description: 'Datas marcadas como indisponíveis — focáveis mas marcam o calendar como inválido.' },
           { name: 'minValue',        type: 'DateValue',                                  defaultValue: '—',        required: 'Não', description: 'Data mínima selecionável.' },
           { name: 'maxValue',        type: 'DateValue',                                  defaultValue: '—',        required: 'Não', description: 'Data máxima selecionável.' },
-          { name: 'captionLayout',   type: '"label" | "dropdown" | "dropdown-months" | "dropdown-years"', defaultValue: '"label"', required: 'Não', description: stripHtml($tStore('props.table.captionLayout')) },
-          { name: 'buttonVariant',   type: 'ButtonVariant',                              defaultValue: '"ghost"',   required: 'Não', description: stripHtml($tStore('props.table.buttonVariant')) },
-          { name: 'numberOfMonths',  type: 'number',                                     defaultValue: '1',        required: 'Não', description: stripHtml($tStore('props.table.numberOfMonths')) },
+          { name: 'captionLayout',   type: '"label" | "dropdown" | "dropdown-months" | "dropdown-years"', defaultValue: '"label"', required: 'Não', description: toPlainText($tStore('props.table.captionLayout')) },
+          { name: 'buttonVariant',   type: 'ButtonVariant',                              defaultValue: '"ghost"',   required: 'Não', description: toPlainText($tStore('props.table.buttonVariant')) },
+          { name: 'numberOfMonths',  type: 'number',                                     defaultValue: '1',        required: 'Não', description: toPlainText($tStore('props.table.numberOfMonths')) },
           { name: 'weekdayFormat',   type: '"long" | "short" | "narrow"',                defaultValue: '"short"',   required: 'Não', description: 'Formato dos rótulos dos dias da semana no cabeçalho.' },
           { name: 'fixedWeeks',      type: 'boolean',                                    defaultValue: 'false',    required: 'Não', description: 'Exibe sempre 6 semanas — preenche com dias do mês vizinho (outside-month).' },
           { name: 'disableDaysOutsideMonth', type: 'boolean',                            defaultValue: 'false',    required: 'Não', description: 'Esconde/desabilita os dias fora do mês exibido.' },
-          { name: 'class',           type: 'string',                                     defaultValue: '—',        required: 'Não', description: stripHtml($tStore('props.table.className')) },
+          { name: 'class',           type: 'string',                                     defaultValue: '—',        required: 'Não', description: toPlainText($tStore('props.table.className')) },
           { name: 'day',             type: 'Snippet<[{ day; outsideMonth }]>',           defaultValue: '—',        required: 'Não', description: 'Snippet opcional para renderizar customizações por célula.' },
         ],
       },
@@ -475,12 +471,12 @@ interface CalendarProps {
     items={[
       { token: '--primary',          value: 'data-[selected]:bg-primary',     description: $tStore('tokens.table.primary')         },
       { token: '--primary-foreground', value: 'data-[selected]:text-primary-foreground', description: 'Texto da data selecionada'  },
-      { token: '--accent',           value: '[&[data-today]]:bg-accent',      description: stripHtml($tStore('tokens.table.muted')) },
-      { token: '--muted-foreground', value: 'nds-text-muted-foreground',          description: stripHtml($tStore('tokens.table.mutedForeground')) },
+      { token: '--accent',           value: '[&[data-today]]:bg-accent',      description: toPlainText($tStore('tokens.table.muted')) },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',          description: toPlainText($tStore('tokens.table.mutedForeground')) },
       { token: '--foreground',       value: 'text-foreground',                description: $tStore('tokens.table.foreground')      },
       { token: '--ring',             value: 'focus:ring-ring/50',             description: $tStore('tokens.table.ring')            },
-      { token: '--nds-cell-radius',  value: 'var(--radius-md)',               description: stripHtml($tStore('tokens.table.cellRadius')) },
-      { token: '--nds-cell-size',    value: '2rem',                           description: stripHtml($tStore('tokens.table.cellSize')) },
+      { token: '--nds-cell-radius',  value: 'var(--radius-md)',               description: toPlainText($tStore('tokens.table.cellRadius')) },
+      { token: '--nds-cell-size',    value: '2rem',                           description: toPlainText($tStore('tokens.table.cellSize')) },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
@@ -502,11 +498,11 @@ interface CalendarProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
-      { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
-      { key: 'Page Up/Down',   description: stripHtml($tStore('accessibility.keyboard.pageUpDown')) },
-      { key: 'Home/End',       description: stripHtml($tStore('accessibility.keyboard.homeEnd'))   },
-      { key: 'Enter',          description: stripHtml($tStore('accessibility.keyboard.enter'))     },
-      { key: 'Tab',            description: stripHtml($tStore('accessibility.keyboard.tab'))       },
+      { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right', description: toPlainText($tStore('accessibility.keyboard.arrows'))    },
+      { key: 'Page Up/Down',   description: toPlainText($tStore('accessibility.keyboard.pageUpDown')) },
+      { key: 'Home/End',       description: toPlainText($tStore('accessibility.keyboard.homeEnd'))   },
+      { key: 'Enter',          description: toPlainText($tStore('accessibility.keyboard.enter'))     },
+      { key: 'Tab',            description: toPlainText($tStore('accessibility.keyboard.tab'))       },
     ]}
   />
 
@@ -537,15 +533,15 @@ interface CalendarProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
       { event: $tStore('analytics.table.fieldChange'), trigger: stripHtml($tStore('analytics.table.fieldChangeTrigger')), payload: $tStore('analytics.table.fieldChangePayload') },
       { event: $tStore('analytics.table.dialogOpen'),  trigger: stripHtml($tStore('analytics.table.dialogOpenTrigger')),  payload: $tStore('analytics.table.dialogOpenPayload')  },
-      { event: $tStore('analytics.table.pageView'),    trigger: $tStore('analytics.table.pageViewTrigger'),               payload: $tStore('analytics.table.pageViewPayload')    },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'),         payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),  trigger: $tStore('analytics.table.langSwitchTrigger'),             payload: $tStore('analytics.table.langSwitchPayload')  },
+      { event: $tStore('analytics.table.pageView'),    trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),               payload: $tStore('analytics.table.pageViewPayload')    },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),         payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),  trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),             payload: $tStore('analytics.table.langSwitchPayload')  },
     ]}
   />
 
@@ -560,13 +556,13 @@ interface CalendarProps {
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: $tStore('testes.functional.item1.action'), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'), result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item7.action'), result: stripHtml($tStore('testes.functional.item7.result')), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item1.action'), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item2.action'), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item3.action'), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item4.action'), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item5.action'), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item6.action'), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item7.action'), result: toPlainText($tStore('testes.functional.item7.result')), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -577,11 +573,11 @@ interface CalendarProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: stripHtml($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-        { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: stripHtml($tStore('testes.accessibility.item5.how')) },
+        { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: toPlainText($tStore('testes.accessibility.item5.how')) },
         { criterion: $tStore('testes.accessibility.item6.criterion'),            level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
       ],
     }}

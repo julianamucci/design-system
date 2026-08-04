@@ -13,6 +13,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import progressTranslations from '@shared/content/progress/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(progressTranslations);
@@ -56,7 +57,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -92,10 +92,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -377,14 +373,14 @@ interface ProgressProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),       trigger: $tStore('states.default.trigger'),       behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.loading.label'),       trigger: $tStore('states.loading.trigger'),       behavior: stripHtml($tStore('states.loading.behavior')) },
-      { label: $tStore('states.complete.label'),      trigger: $tStore('states.complete.trigger'),      behavior: stripHtml($tStore('states.complete.behavior')) },
-      { label: $tStore('states.indeterminate.label'), trigger: $tStore('states.indeterminate.trigger'), behavior: stripHtml($tStore('states.indeterminate.behavior')) },
+      { label: $tStore('states.default.label'),       trigger: toPlainText($tStore('states.default.trigger')),       behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.loading.label'),       trigger: toPlainText($tStore('states.loading.trigger')),       behavior: toPlainText($tStore('states.loading.behavior')) },
+      { label: $tStore('states.complete.label'),      trigger: toPlainText($tStore('states.complete.trigger')),      behavior: toPlainText($tStore('states.complete.behavior')) },
+      { label: $tStore('states.indeterminate.label'), trigger: toPlainText($tStore('states.indeterminate.trigger')), behavior: toPlainText($tStore('states.indeterminate.behavior')) },
     ]}
   />
 
@@ -401,11 +397,11 @@ interface ProgressProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',            type: $tStore('props.table.value.type'),            defaultValue: $tStore('props.table.value.default'),            required: $tStore('props.table.value.required'),            description: stripHtml($tStore('props.table.value.description'))            },
+          { name: 'value',            type: $tStore('props.table.value.type'),            defaultValue: $tStore('props.table.value.default'),            required: $tStore('props.table.value.required'),            description: toPlainText($tStore('props.table.value.description'))            },
           { name: 'max',              type: $tStore('props.table.max.type'),              defaultValue: $tStore('props.table.max.default'),              required: $tStore('props.table.max.required'),              description: $tStore('props.table.max.description')                          },
           { name: 'min',              type: $tStore('props.table.min.type'),              defaultValue: $tStore('props.table.min.default'),              required: $tStore('props.table.min.required'),              description: $tStore('props.table.min.description')                          },
           { name: 'getAriaValueText', type: $tStore('props.table.getAriaValueText.type'), defaultValue: $tStore('props.table.getAriaValueText.default'), required: $tStore('props.table.getAriaValueText.required'), description: $tStore('props.table.getAriaValueText.description')            },
-          { name: 'class',            type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: stripHtml($tStore('props.table.className.description'))        },
+          { name: 'class',            type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: toPlainText($tStore('props.table.className.description'))        },
           { name: 'aria-label',       type: 'string',                                     defaultValue: '—',                                             required: 'Sim',                                            description: 'Obrigatório. Descreve o que está sendo medido para leitores de tela.' },
         ],
       },
@@ -483,12 +479,12 @@ interface ProgressProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'task_progress', trigger: $tStore('analytics.table.task_progress.trigger'), payload: $tStore('analytics.table.task_progress.payload') },
-      { event: 'task_complete', trigger: $tStore('analytics.table.task_complete.trigger'), payload: $tStore('analytics.table.task_complete.payload') },
+      { event: 'task_progress', trigger: toPlainText($tStore('analytics.table.task_progress.trigger')), payload: $tStore('analytics.table.task_progress.payload') },
+      { event: 'task_complete', trigger: toPlainText($tStore('analytics.table.task_complete.trigger')), payload: $tStore('analytics.table.task_complete.payload') },
     ]}
   />
 

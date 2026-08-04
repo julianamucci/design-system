@@ -35,12 +35,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -87,7 +84,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -223,7 +219,7 @@ interface PopoverContentProps {
 
   const analyticsCols = {
     event: tContent("analytics.table.event"),
-    trigger: tContent("analytics.table.trigger"),
+    trigger: toPlainText(tContent("analytics.table.trigger")),
     payload: tContent("analytics.table.payload"),
   };
 
@@ -907,29 +903,29 @@ interface PopoverContentProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: tContent("states.closed.trigger"),
-            behavior: stripHtml(tContent("states.closed.behavior")),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: tContent("states.open.trigger"),
-            behavior: stripHtml(tContent("states.open.behavior")),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.transitioning.label"),
-            trigger: tContent("states.transitioning.trigger"),
-            behavior: stripHtml(tContent("states.transitioning.behavior")),
+            trigger: toPlainText(tContent("states.transitioning.trigger")),
+            behavior: toPlainText(tContent("states.transitioning.behavior")),
           },
           {
             label: tContent("states.focused.label"),
-            trigger: tContent("states.focused.trigger"),
-            behavior: stripHtml(tContent("states.focused.behavior")),
+            trigger: toPlainText(tContent("states.focused.trigger")),
+            behavior: toPlainText(tContent("states.focused.behavior")),
           },
         ]}
       />
@@ -1064,11 +1060,11 @@ interface PopoverContentProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Shift+Tab", description: stripHtml(tContent("accessibility.keyboard.shiftTab")) },
-          { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
-          { key: "Enter", description: stripHtml(tContent("accessibility.keyboard.enter")) },
-          { key: "Space", description: stripHtml(tContent("accessibility.keyboard.space")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Shift+Tab", description: toPlainText(tContent("accessibility.keyboard.shiftTab")) },
+          { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+          { key: "Enter", description: toPlainText(tContent("accessibility.keyboard.enter")) },
+          { key: "Space", description: toPlainText(tContent("accessibility.keyboard.space")) },
         ]}
       />
 
@@ -1119,12 +1115,12 @@ interface PopoverContentProps {
         items={[
           {
             event: "popover_open",
-            trigger: DOMPurify.sanitize(tContent("analytics.table.popover_open.trigger")),
+            trigger: toPlainText(tContent("analytics.table.popover_open.trigger")),
             payload: tContent("analytics.table.popover_open.payload"),
           },
           {
             event: "popover_close",
-            trigger: DOMPurify.sanitize(tContent("analytics.table.popover_close.trigger")),
+            trigger: toPlainText(tContent("analytics.table.popover_close.trigger")),
             payload: tContent("analytics.table.popover_close.payload"),
           },
         ]}

@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -408,12 +405,12 @@ declare module "@tanstack/react-table" {
             alternative: tContent("usage.scenarios.cols.alternative"),
           },
           items: [
-            { s: stripHtml(tContent("usage.scenarios.item1.s")), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-            { s: stripHtml(tContent("usage.scenarios.item2.s")), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-            { s: stripHtml(tContent("usage.scenarios.item3.s")), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-            { s: stripHtml(tContent("usage.scenarios.item4.s")), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-            { s: stripHtml(tContent("usage.scenarios.item5.s")), u: tContent("usage.scenarios.item5.u"), a: tContent("usage.scenarios.item5.a") },
-            { s: stripHtml(tContent("usage.scenarios.item6.s")), u: tContent("usage.scenarios.item6.u"), a: tContent("usage.scenarios.item6.a") },
+            { s: toPlainText(tContent("usage.scenarios.item1.s")), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
+            { s: toPlainText(tContent("usage.scenarios.item2.s")), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
+            { s: toPlainText(tContent("usage.scenarios.item3.s")), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
+            { s: toPlainText(tContent("usage.scenarios.item4.s")), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
+            { s: toPlainText(tContent("usage.scenarios.item5.s")), u: tContent("usage.scenarios.item5.u"), a: tContent("usage.scenarios.item5.a") },
+            { s: toPlainText(tContent("usage.scenarios.item6.s")), u: tContent("usage.scenarios.item6.u"), a: tContent("usage.scenarios.item6.a") },
           ],
         }}
         uxWriting={{
@@ -660,44 +657,44 @@ declare module "@tanstack/react-table" {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.empty.label"),
-            trigger: stripHtml(tContent("states.empty.trigger")),
-            behavior: stripHtml(tContent("states.empty.behavior")),
+            trigger: toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label: tContent("states.sorted.label"),
-            trigger: tContent("states.sorted.trigger"),
-            behavior: stripHtml(tContent("states.sorted.behavior")),
+            trigger: toPlainText(tContent("states.sorted.trigger")),
+            behavior: toPlainText(tContent("states.sorted.behavior")),
           },
           {
             label: tContent("states.filtered.label"),
-            trigger: tContent("states.filtered.trigger"),
-            behavior: tContent("states.filtered.behavior"),
+            trigger: toPlainText(tContent("states.filtered.trigger")),
+            behavior: toPlainText(tContent("states.filtered.behavior")),
           },
           {
             label: tContent("states.selected.label"),
-            trigger: tContent("states.selected.trigger"),
-            behavior: stripHtml(tContent("states.selected.behavior")),
+            trigger: toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label: tContent("states.editing.label"),
-            trigger: stripHtml(tContent("states.editing.trigger")),
-            behavior: stripHtml(tContent("states.editing.behavior")),
+            trigger: toPlainText(tContent("states.editing.trigger")),
+            behavior: toPlainText(tContent("states.editing.behavior")),
           },
           {
             label: tContent("states.resizing.label"),
-            trigger: tContent("states.resizing.trigger"),
-            behavior: stripHtml(tContent("states.resizing.behavior")),
+            trigger: toPlainText(tContent("states.resizing.trigger")),
+            behavior: toPlainText(tContent("states.resizing.behavior")),
           },
           {
             label: tContent("states.virtualized.label"),
-            trigger: stripHtml(tContent("states.virtualized.trigger")),
-            behavior: tContent("states.virtualized.behavior"),
+            trigger: toPlainText(tContent("states.virtualized.trigger")),
+            behavior: toPlainText(tContent("states.virtualized.behavior")),
           },
         ]}
       />
@@ -716,24 +713,24 @@ declare module "@tanstack/react-table" {
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "columns", type: "ColumnDef<TData>[]", defaultValue: "—", required: "Sim", description: stripHtml(tContent("props.table.columns")) },
-              { name: "data", type: "TData[]", defaultValue: "—", required: "Sim", description: stripHtml(tContent("props.table.data")) },
+              { name: "columns", type: "ColumnDef<TData>[]", defaultValue: "—", required: "Sim", description: toPlainText(tContent("props.table.columns")) },
+              { name: "data", type: "TData[]", defaultValue: "—", required: "Sim", description: toPlainText(tContent("props.table.data")) },
               { name: "enableGlobalFilter", type: "boolean", defaultValue: "true", required: "Não", description: tContent("props.table.enableGlobalFilter") },
               { name: "globalFilterPlaceholder", type: "string", defaultValue: '"Buscar..."', required: "Não", description: tContent("props.table.globalFilterPlaceholder") },
               { name: "enableRowSelection", type: "boolean", defaultValue: "false", required: "Não", description: tContent("props.table.enableRowSelection") },
               { name: "enableColumnVisibility", type: "boolean", defaultValue: "true", required: "Não", description: tContent("props.table.enableColumnVisibility") },
-              { name: "enableColumnFilters", type: "boolean", defaultValue: "false", required: "Não", description: stripHtml(tContent("props.table.enableColumnFilters")) },
-              { name: "enableColumnResizing", type: "boolean", defaultValue: "false", required: "Não", description: stripHtml(tContent("props.table.enableColumnResizing")) },
+              { name: "enableColumnFilters", type: "boolean", defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.enableColumnFilters")) },
+              { name: "enableColumnResizing", type: "boolean", defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.enableColumnResizing")) },
               { name: "enableColumnOrdering", type: "boolean", defaultValue: "false", required: "Não", description: tContent("props.table.enableColumnOrdering") },
               { name: "enableColumnPinning", type: "boolean", defaultValue: "false", required: "Não", description: tContent("props.table.enableColumnPinning") },
               { name: "enablePagination", type: "boolean", defaultValue: "true", required: "Não", description: tContent("props.table.enablePagination") },
               { name: "virtualized", type: "boolean", defaultValue: "false", required: "Não", description: tContent("props.table.virtualized") },
               { name: "virtualRowHeight", type: "number", defaultValue: "36", required: "Não", description: tContent("props.table.virtualRowHeight") },
-              { name: "maxHeight", type: "string", defaultValue: '"480px"', required: "Não", description: stripHtml(tContent("props.table.maxHeight")) },
+              { name: "maxHeight", type: "string", defaultValue: '"480px"', required: "Não", description: toPlainText(tContent("props.table.maxHeight")) },
               { name: "pageSize", type: "number", defaultValue: "10", required: "Não", description: tContent("props.table.pageSize") },
-              { name: "pageSizeOptions", type: "number[]", defaultValue: "[10, 20, 50, 100]", required: "Não", description: stripHtml(tContent("props.table.pageSizeOptions")) },
+              { name: "pageSizeOptions", type: "number[]", defaultValue: "[10, 20, 50, 100]", required: "Não", description: toPlainText(tContent("props.table.pageSizeOptions")) },
               { name: "emptyMessage", type: "string", defaultValue: '"Sem resultados."', required: "Não", description: tContent("props.table.emptyMessage") },
-              { name: "onCellEdit", type: "(rowIndex, columnId, value) => void", defaultValue: "—", required: "Não", description: stripHtml(tContent("props.table.onCellEdit")) },
+              { name: "onCellEdit", type: "(rowIndex, columnId, value) => void", defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.onCellEdit")) },
               { name: "onTableReady", type: "(table: Table<TData>) => void", defaultValue: "—", required: "Não", description: tContent("props.table.onTableReady") },
             ],
           },
@@ -747,8 +744,8 @@ declare module "@tanstack/react-table" {
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "meta.filter", type: '{ type: "text" | "select"; options?: string[] }', defaultValue: "—", required: "Não", description: stripHtml(tContent("props.table.metaFilter")) },
-              { name: "meta.editable", type: "boolean", defaultValue: "false", required: "Não", description: stripHtml(tContent("props.table.metaEditable")) },
+              { name: "meta.filter", type: '{ type: "text" | "select"; options?: string[] }', defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.metaFilter")) },
+              { name: "meta.editable", type: "boolean", defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.metaEditable")) },
             ],
           },
         ]}
@@ -766,12 +763,12 @@ declare module "@tanstack/react-table" {
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--border", value: stripHtml(tContent("tokens.table.border")), description: tContent("tokens.table.borderPart") },
-          { token: "--muted", value: stripHtml(tContent("tokens.table.muted")), description: tContent("tokens.table.mutedPart") },
-          { token: "--muted-foreground", value: stripHtml(tContent("tokens.table.mutedForeground")), description: tContent("tokens.table.mutedForegroundPart") },
-          { token: "--primary", value: stripHtml(tContent("tokens.table.primary")), description: tContent("tokens.table.primaryPart") },
-          { token: "--background", value: stripHtml(tContent("tokens.table.background")), description: tContent("tokens.table.backgroundPart") },
-          { token: "--ring", value: stripHtml(tContent("tokens.table.ring")), description: tContent("tokens.table.ringPart") },
+          { token: "--border", value: toPlainText(tContent("tokens.table.border")), description: tContent("tokens.table.borderPart") },
+          { token: "--muted", value: toPlainText(tContent("tokens.table.muted")), description: tContent("tokens.table.mutedPart") },
+          { token: "--muted-foreground", value: toPlainText(tContent("tokens.table.mutedForeground")), description: tContent("tokens.table.mutedForegroundPart") },
+          { token: "--primary", value: toPlainText(tContent("tokens.table.primary")), description: tContent("tokens.table.primaryPart") },
+          { token: "--background", value: toPlainText(tContent("tokens.table.background")), description: tContent("tokens.table.backgroundPart") },
+          { token: "--ring", value: toPlainText(tContent("tokens.table.ring")), description: tContent("tokens.table.ringPart") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}
@@ -832,23 +829,23 @@ declare module "@tanstack/react-table" {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

@@ -34,12 +34,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -86,7 +83,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -657,24 +653,24 @@ interface DrawerProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: tContent("states.closed.trigger"),
-            behavior: stripHtml(tContent("states.closed.behavior")),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: tContent("states.open.trigger"),
-            behavior: stripHtml(tContent("states.open.behavior")),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.controlled.label"),
-            trigger: tContent("states.controlled.trigger"),
-            behavior: stripHtml(tContent("states.controlled.behavior")),
+            trigger: toPlainText(tContent("states.controlled.trigger")),
+            behavior: toPlainText(tContent("states.controlled.behavior")),
           },
         ]}
       />
@@ -802,10 +798,10 @@ interface DrawerProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab / Shift+Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
-          { key: "Enter / Space", description: stripHtml(tContent("accessibility.keyboard.enter")) },
-          { key: "Swipe", description: stripHtml(tContent("accessibility.keyboard.swipe")) },
+          { key: "Tab / Shift+Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+          { key: "Enter / Space", description: toPlainText(tContent("accessibility.keyboard.enter")) },
+          { key: "Swipe", description: toPlainText(tContent("accessibility.keyboard.swipe")) },
         ]}
       />
 
@@ -857,7 +853,7 @@ interface DrawerProps {
         items={[
           {
             event: "drawer_open / drawer_close",
-            trigger: DOMPurify.sanitize(tContent("analytics.description")),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "component, label, location",
           },
         ]}

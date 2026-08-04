@@ -28,6 +28,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations     from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/switch/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // IMPORTANT: locale comes from useTranslation — NEVER from useLocaleStore/Pinia
@@ -46,10 +47,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -137,8 +134,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -285,12 +280,12 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.unchecked.label'), trigger: tContent('states.unchecked.trigger'), behavior: tContent('states.unchecked.behavior') },
-  { label: tContent('states.checked.label'),   trigger: tContent('states.checked.trigger'),   behavior: tContent('states.checked.behavior') },
-  { label: tContent('states.hover.label'),     trigger: tContent('states.hover.trigger'),     behavior: tContent('states.hover.behavior') },
-  { label: tContent('states.focus.label'),     trigger: tContent('states.focus.trigger'),     behavior: tContent('states.focus.behavior') },
-  { label: tContent('states.disabled.label'),  trigger: tContent('states.disabled.trigger'),  behavior: tContent('states.disabled.behavior') },
-  { label: tContent('states.invalid.label'),   trigger: tContent('states.invalid.trigger'),   behavior: tContent('states.invalid.behavior') },
+  { label: tContent('states.unchecked.label'), trigger: toPlainText(tContent('states.unchecked.trigger')), behavior: toPlainText(tContent('states.unchecked.behavior'))},
+  { label: tContent('states.checked.label'),   trigger: toPlainText(tContent('states.checked.trigger')),   behavior: toPlainText(tContent('states.checked.behavior'))},
+  { label: tContent('states.hover.label'),     trigger: toPlainText(tContent('states.hover.trigger')),     behavior: toPlainText(tContent('states.hover.behavior'))},
+  { label: tContent('states.focus.label'),     trigger: toPlainText(tContent('states.focus.trigger')),     behavior: toPlainText(tContent('states.focus.behavior'))},
+  { label: tContent('states.disabled.label'),  trigger: toPlainText(tContent('states.disabled.trigger')),  behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.invalid.label'),   trigger: toPlainText(tContent('states.invalid.trigger')),   behavior: toPlainText(tContent('states.invalid.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -302,13 +297,13 @@ const propCols = computed(() => ({
 }));
 
 const switchPropItems = computed(() => [
-  { name: 'modelValue',         type: 'boolean',                       defaultValue: '—',         required: tContent('props.table.checked.required'),         description: stripHtml(tContent('props.table.checked.description'))         },
-  { name: 'defaultValue',       type: 'boolean',                       defaultValue: 'false',     required: tContent('props.table.defaultChecked.required'),  description: stripHtml(tContent('props.table.defaultChecked.description'))  },
-  { name: '@update:modelValue', type: '(value: boolean) => void',      defaultValue: '—',         required: tContent('props.table.onCheckedChange.required'), description: stripHtml(tContent('props.table.onCheckedChange.description')) },
-  { name: 'disabled',           type: 'boolean',                       defaultValue: 'false',     required: tContent('props.table.disabled.required'),        description: stripHtml(tContent('props.table.disabled.description'))        },
-  { name: 'name',               type: 'string',                        defaultValue: '—',         required: tContent('props.table.name.required'),            description: stripHtml(tContent('props.table.name.description'))            },
-  { name: 'size',               type: '"default" | "sm"',              defaultValue: '"default"', required: tContent('props.table.size.required'),            description: stripHtml(tContent('props.table.size.description'))            },
-  { name: 'id',                 type: 'string',                        defaultValue: '—',         required: tContent('props.table.id.required'),              description: stripHtml(tContent('props.table.id.description'))              },
+  { name: 'modelValue',         type: 'boolean',                       defaultValue: '—',         required: tContent('props.table.checked.required'),         description: toPlainText(tContent('props.table.checked.description'))         },
+  { name: 'defaultValue',       type: 'boolean',                       defaultValue: 'false',     required: tContent('props.table.defaultChecked.required'),  description: toPlainText(tContent('props.table.defaultChecked.description'))  },
+  { name: '@update:modelValue', type: '(value: boolean) => void',      defaultValue: '—',         required: tContent('props.table.onCheckedChange.required'), description: toPlainText(tContent('props.table.onCheckedChange.description')) },
+  { name: 'disabled',           type: 'boolean',                       defaultValue: 'false',     required: tContent('props.table.disabled.required'),        description: toPlainText(tContent('props.table.disabled.description'))        },
+  { name: 'name',               type: 'string',                        defaultValue: '—',         required: tContent('props.table.name.required'),            description: toPlainText(tContent('props.table.name.description'))            },
+  { name: 'size',               type: '"default" | "sm"',              defaultValue: '"default"', required: tContent('props.table.size.required'),            description: toPlainText(tContent('props.table.size.description'))            },
+  { name: 'id',                 type: 'string',                        defaultValue: '—',         required: tContent('props.table.id.required'),              description: toPlainText(tContent('props.table.id.description'))              },
 ]);
 
 const tokenRows = computed(() => [
@@ -351,7 +346,7 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'field_change', trigger: tContent('analytics.table.field_change.trigger'), payload: tContent('analytics.table.field_change.payload') },
+  { event: 'field_change', trigger: toPlainText(tContent('analytics.table.field_change.trigger')), payload: tContent('analytics.table.field_change.payload') },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -804,8 +799,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -863,7 +858,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

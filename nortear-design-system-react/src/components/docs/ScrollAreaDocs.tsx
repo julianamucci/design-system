@@ -24,12 +24,9 @@ import { DocsRelated } from "@/components/docs/shared/sections/DocsRelated";
 import { DocsNotes } from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics } from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes } from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -75,7 +72,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo data ───────────────────────────────────────────────────────────────
 
@@ -350,15 +346,15 @@ interface ScrollBarProps {
           items: [
             {
               element: tContent("usage.uxWriting.table.container.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.container.format")),
-              do: stripHtml(tContent("usage.uxWriting.table.container.good")),
-              dont: stripHtml(tContent("usage.uxWriting.table.container.bad")),
+              rules: toPlainText(tContent("usage.uxWriting.table.container.format")),
+              do: toPlainText(tContent("usage.uxWriting.table.container.good")),
+              dont: toPlainText(tContent("usage.uxWriting.table.container.bad")),
             },
             {
               element: tContent("usage.uxWriting.table.scrollArea.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.scrollArea.format")),
-              do: stripHtml(tContent("usage.uxWriting.table.scrollArea.good")),
-              dont: stripHtml(tContent("usage.uxWriting.table.scrollArea.bad")),
+              rules: toPlainText(tContent("usage.uxWriting.table.scrollArea.format")),
+              do: toPlainText(tContent("usage.uxWriting.table.scrollArea.good")),
+              dont: toPlainText(tContent("usage.uxWriting.table.scrollArea.bad")),
             },
             {
               element: tContent("usage.uxWriting.table.orientation.name"),
@@ -541,29 +537,29 @@ interface ScrollBarProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.idle.label"),
-            trigger: tContent("states.idle.trigger"),
-            behavior: stripHtml(tContent("states.idle.behavior")),
+            trigger: toPlainText(tContent("states.idle.trigger")),
+            behavior: toPlainText(tContent("states.idle.behavior")),
           },
           {
             label: tContent("states.scrolling.label"),
-            trigger: tContent("states.scrolling.trigger"),
-            behavior: stripHtml(tContent("states.scrolling.behavior")),
+            trigger: toPlainText(tContent("states.scrolling.trigger")),
+            behavior: toPlainText(tContent("states.scrolling.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
         ]}
       />
@@ -684,15 +680,15 @@ interface ScrollBarProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "Arrow Up", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "Arrow Left", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
-          { key: "PageDown", description: stripHtml(tContent("accessibility.keyboard.pageDown")) },
-          { key: "PageUp", description: stripHtml(tContent("accessibility.keyboard.pageUp")) },
-          { key: "Home", description: stripHtml(tContent("accessibility.keyboard.home")) },
-          { key: "End", description: stripHtml(tContent("accessibility.keyboard.end")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Down", description: toPlainText(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Up", description: toPlainText(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left", description: toPlainText(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "PageDown", description: toPlainText(tContent("accessibility.keyboard.pageDown")) },
+          { key: "PageUp", description: toPlainText(tContent("accessibility.keyboard.pageUp")) },
+          { key: "Home", description: toPlainText(tContent("accessibility.keyboard.home")) },
+          { key: "End", description: toPlainText(tContent("accessibility.keyboard.end")) },
         ]}
       />
 
@@ -741,7 +737,7 @@ interface ScrollBarProps {
         items={[
           {
             event: "content_scroll",
-            trigger: tContent("analytics.table.content_scroll.trigger"),
+            trigger: toPlainText(tContent("analytics.table.content_scroll.trigger")),
             payload: tContent("analytics.table.content_scroll.payload"),
           },
         ]}

@@ -27,6 +27,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(drawerTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -610,13 +607,13 @@ form.dataset.spacing = 'sm';
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),     behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),       trigger: t('states.open.trigger'),       behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.controlled.label'), trigger: t('states.controlled.trigger'), behavior: stripHtml(t('states.controlled.behavior')) },
+            { label: t('states.closed.label'),     trigger: toPlainText(t('states.closed.trigger')),     behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),       trigger: toPlainText(t('states.open.trigger')),       behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.controlled.label'), trigger: toPlainText(t('states.controlled.trigger')), behavior: toPlainText(t('states.controlled.behavior')) },
           ],
         });
 
@@ -656,11 +653,11 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
                 { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) },
-                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
-                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.modal.description')) },
-                { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.dismissible.description')) },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
+                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
+                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
+                { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.dismissible.description')) },
               ],
             },
           ],

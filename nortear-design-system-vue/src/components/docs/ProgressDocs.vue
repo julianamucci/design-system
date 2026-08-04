@@ -24,6 +24,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -126,7 +123,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -200,10 +196,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),       trigger: tContent('states.default.trigger'),       behavior: stripHtml(tContent('states.default.behavior')) },
-  { label: tContent('states.loading.label'),       trigger: tContent('states.loading.trigger'),       behavior: stripHtml(tContent('states.loading.behavior')) },
-  { label: tContent('states.complete.label'),      trigger: tContent('states.complete.trigger'),      behavior: stripHtml(tContent('states.complete.behavior')) },
-  { label: tContent('states.indeterminate.label'), trigger: tContent('states.indeterminate.trigger'), behavior: stripHtml(tContent('states.indeterminate.behavior')) },
+  { label: tContent('states.default.label'),       trigger: toPlainText(tContent('states.default.trigger')),       behavior: toPlainText(tContent('states.default.behavior')) },
+  { label: tContent('states.loading.label'),       trigger: toPlainText(tContent('states.loading.trigger')),       behavior: toPlainText(tContent('states.loading.behavior')) },
+  { label: tContent('states.complete.label'),      trigger: toPlainText(tContent('states.complete.trigger')),      behavior: toPlainText(tContent('states.complete.behavior')) },
+  { label: tContent('states.indeterminate.label'), trigger: toPlainText(tContent('states.indeterminate.trigger')), behavior: toPlainText(tContent('states.indeterminate.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -215,10 +211,10 @@ const propCols = computed(() => ({
 }));
 
 const progressPropItems = computed(() => [
-  { name: 'modelValue',       type: tContent('props.table.value.type'),            defaultValue: tContent('props.table.value.default'),            required: tContent('props.table.value.required'),            description: stripHtml(tContent('props.table.value.description')) },
-  { name: 'max',              type: tContent('props.table.max.type'),              defaultValue: tContent('props.table.max.default'),              required: tContent('props.table.max.required'),              description: stripHtml(tContent('props.table.max.description')) },
-  { name: 'getValueLabel',    type: '(value, max) => string | undefined',          defaultValue: '—',                                              required: tContent('props.table.getAriaValueText.required'),    description: stripHtml(tContent('props.table.getAriaValueText.description')) },
-  { name: 'class',            type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: stripHtml(tContent('props.table.className.description')) },
+  { name: 'modelValue',       type: tContent('props.table.value.type'),            defaultValue: tContent('props.table.value.default'),            required: tContent('props.table.value.required'),            description: toPlainText(tContent('props.table.value.description')) },
+  { name: 'max',              type: tContent('props.table.max.type'),              defaultValue: tContent('props.table.max.default'),              required: tContent('props.table.max.required'),              description: toPlainText(tContent('props.table.max.description')) },
+  { name: 'getValueLabel',    type: '(value, max) => string | undefined',          defaultValue: '—',                                              required: tContent('props.table.getAriaValueText.required'),    description: toPlainText(tContent('props.table.getAriaValueText.description')) },
+  { name: 'class',            type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: toPlainText(tContent('props.table.className.description')) },
   { name: 'aria-label',       type: 'string',                                       defaultValue: '—',                                              required: 'Sim',                                                 description: stripHtml(tContent('accessibility.aria.label')) },
 ]);
 
@@ -260,8 +256,8 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'task_progress', trigger: tContent('analytics.table.task_progress.trigger'), payload: tContent('analytics.table.task_progress.payload') },
-  { event: 'task_complete', trigger: tContent('analytics.table.task_complete.trigger'), payload: tContent('analytics.table.task_complete.payload') },
+  { event: 'task_progress', trigger: toPlainText(tContent('analytics.table.task_progress.trigger')), payload: tContent('analytics.table.task_progress.payload') },
+  { event: 'task_complete', trigger: toPlainText(tContent('analytics.table.task_complete.trigger')), payload: tContent('analytics.table.task_complete.payload') },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -618,8 +614,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -676,7 +672,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -84,7 +81,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -306,7 +302,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             alternative: tContent("usage.scenarios.cols.alternative"),
           },
           items: [
-            { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: stripHtml(tContent("usage.scenarios.item1.a")) },
+            { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: toPlainText(tContent("usage.scenarios.item1.a")) },
             { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
             { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
             { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
@@ -475,18 +471,18 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
         items={[
           {
             label: tContent("states.item1.label"),
-            trigger: tContent("states.item1.trigger"),
-            behavior: tContent("states.item1.behavior"),
+            trigger: toPlainText(tContent("states.item1.trigger")),
+            behavior: toPlainText(tContent("states.item1.behavior")),
           },
           {
             label: tContent("states.item2.label"),
-            trigger: tContent("states.item2.trigger"),
-            behavior: tContent("states.item2.behavior"),
+            trigger: toPlainText(tContent("states.item2.trigger")),
+            behavior: toPlainText(tContent("states.item2.behavior")),
           },
           {
             label: tContent("states.item3.label"),
-            trigger: tContent("states.item3.trigger"),
-            behavior: stripHtml(tContent("states.item3.behavior")),
+            trigger: toPlainText(tContent("states.item3.trigger")),
+            behavior: toPlainText(tContent("states.item3.behavior")),
           },
         ]}
       />
@@ -509,28 +505,28 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 type: "number",
                 defaultValue: "1",
                 required: "Não",
-                description: stripHtml(tContent("props.table.ratio")),
+                description: toPlainText(tContent("props.table.ratio")),
               },
               {
                 name: "children",
                 type: "React.ReactNode",
                 defaultValue: "—",
                 required: "Sim",
-                description: stripHtml(tContent("props.table.children")),
+                description: toPlainText(tContent("props.table.children")),
               },
               {
                 name: "asChild",
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.asChild")),
+                description: toPlainText(tContent("props.table.asChild")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
             ],
           },
@@ -615,13 +611,13 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "—",
-            trigger: tContent("analytics.note"),
+            trigger: toPlainText(tContent("analytics.note")),
             payload: "—",
           },
         ]}
@@ -639,17 +635,17 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
           },
           items: [
             {
-              action: stripHtml(tContent("testes.functional.item1.action")),
-              result: stripHtml(tContent("testes.functional.item1.result")),
+              action: toPlainText(tContent("testes.functional.item1.action")),
+              result: toPlainText(tContent("testes.functional.item1.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
             },
             {
-              action: stripHtml(tContent("testes.functional.item2.action")),
-              result: stripHtml(tContent("testes.functional.item2.result")),
+              action: toPlainText(tContent("testes.functional.item2.action")),
+              result: toPlainText(tContent("testes.functional.item2.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
             },
             {
-              action: stripHtml(tContent("testes.functional.item3.action")),
+              action: toPlainText(tContent("testes.functional.item3.action")),
               result: tContent("testes.functional.item3.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
             },
@@ -674,24 +670,24 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
           },
           items: [
             {
-              criterion: stripHtml(tContent("testes.accessibility.item1.criterion")),
+              criterion: toPlainText(tContent("testes.accessibility.item1.criterion")),
               level: tContent("testes.accessibility.item1.level"),
               how: tContent("testes.accessibility.item1.how"),
             },
             {
-              criterion: stripHtml(tContent("testes.accessibility.item2.criterion")),
+              criterion: toPlainText(tContent("testes.accessibility.item2.criterion")),
               level: tContent("testes.accessibility.item2.level"),
               how: tContent("testes.accessibility.item2.how"),
             },
             {
-              criterion: stripHtml(tContent("testes.accessibility.item3.criterion")),
+              criterion: toPlainText(tContent("testes.accessibility.item3.criterion")),
               level: tContent("testes.accessibility.item3.level"),
               how: tContent("testes.accessibility.item3.how"),
             },
             {
               criterion: tContent("testes.accessibility.item4.criterion"),
               level: tContent("testes.accessibility.item4.level"),
-              how: stripHtml(tContent("testes.accessibility.item4.how")),
+              how: toPlainText(tContent("testes.accessibility.item4.how")),
             },
             {
               criterion: tContent("testes.accessibility.item5.criterion"),

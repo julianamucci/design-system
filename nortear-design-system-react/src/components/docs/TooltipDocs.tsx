@@ -31,12 +31,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -83,7 +80,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -717,34 +713,34 @@ interface TooltipContentProps {
           title={tContent("states.title")}
           cols={{
             state: tContent("states.cols.state"),
-            trigger: tContent("states.cols.trigger"),
-            behavior: tContent("states.cols.behavior"),
+            trigger: toPlainText(tContent("states.cols.trigger")),
+            behavior: toPlainText(tContent("states.cols.behavior")),
           }}
           items={[
             {
               label: tContent("states.closed.label"),
-              trigger: tContent("states.closed.trigger"),
-              behavior: stripHtml(tContent("states.closed.behavior")),
+              trigger: toPlainText(tContent("states.closed.trigger")),
+              behavior: toPlainText(tContent("states.closed.behavior")),
             },
             {
               label: tContent("states.open.label"),
-              trigger: tContent("states.open.trigger"),
-              behavior: stripHtml(tContent("states.open.behavior")),
+              trigger: toPlainText(tContent("states.open.trigger")),
+              behavior: toPlainText(tContent("states.open.behavior")),
             },
             {
               label: tContent("states.hover.label"),
-              trigger: tContent("states.hover.trigger"),
-              behavior: stripHtml(tContent("states.hover.behavior")),
+              trigger: toPlainText(tContent("states.hover.trigger")),
+              behavior: toPlainText(tContent("states.hover.behavior")),
             },
             {
               label: tContent("states.focus.label"),
-              trigger: tContent("states.focus.trigger"),
-              behavior: stripHtml(tContent("states.focus.behavior")),
+              trigger: toPlainText(tContent("states.focus.trigger")),
+              behavior: toPlainText(tContent("states.focus.behavior")),
             },
             {
               label: tContent("states.delayed.label"),
-              trigger: tContent("states.delayed.trigger"),
-              behavior: stripHtml(tContent("states.delayed.behavior")),
+              trigger: toPlainText(tContent("states.delayed.trigger")),
+              behavior: toPlainText(tContent("states.delayed.behavior")),
             },
           ]}
         />
@@ -881,9 +877,9 @@ interface TooltipContentProps {
           ]}
           keyboardTitle={tContent("accessibility.keyboard.title")}
           keyboardItems={[
-            { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-            { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
-            { key: "Shift+Tab", description: stripHtml(tContent("accessibility.keyboard.shiftTab")) },
+            { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+            { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+            { key: "Shift+Tab", description: toPlainText(tContent("accessibility.keyboard.shiftTab")) },
           ]}
         />
 
@@ -934,7 +930,7 @@ interface TooltipContentProps {
           items={[
             {
               event: "tooltip_view",
-              trigger: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.trigger")),
+              trigger: toPlainText(tContent("analytics.table.tooltip_view.trigger")),
               payload: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.payload")),
             },
           ]}

@@ -22,6 +22,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import accordionTranslations from '@shared/content/accordion/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(accordionTranslations);
@@ -46,7 +47,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -84,10 +84,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -147,7 +143,6 @@
     <AccordionContent>Estado gerenciado externamente.</AccordionContent>
   </AccordionItem>
 </Accordion>`;
-
 
   // Bloco de tipo, não de argumentação: a divergência em relação a outras
   // stacks (ausência de collapsible/defaultValue) é explicada uma única vez,
@@ -743,14 +738,14 @@ type AccordionProps = {
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.closed.label'),   trigger: $tStore('states.closed.trigger'),   behavior: stripHtml($tStore('states.closed.behavior')) },
-          { label: $tStore('states.open.label'),     trigger: $tStore('states.open.trigger'),     behavior: stripHtml($tStore('states.open.behavior')) },
-          { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
-          { label: $tStore('states.focused.label'),  trigger: $tStore('states.focused.trigger'),  behavior: stripHtml($tStore('states.focused.behavior')) },
+          { label: $tStore('states.closed.label'),   trigger: toPlainText($tStore('states.closed.trigger')),   behavior: toPlainText($tStore('states.closed.behavior')) },
+          { label: $tStore('states.open.label'),     trigger: toPlainText($tStore('states.open.trigger')),     behavior: toPlainText($tStore('states.open.behavior')) },
+          { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
+          { label: $tStore('states.focused.label'),  trigger: toPlainText($tStore('states.focused.trigger')),  behavior: toPlainText($tStore('states.focused.behavior')) },
         ]}
       />
 
@@ -876,12 +871,12 @@ type AccordionProps = {
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.events.expand.event'),   trigger: $tStore('analytics.events.expand.trigger'),   payload: $tStore('analytics.events.expand.payload')   },
-          { event: $tStore('analytics.events.collapse.event'), trigger: $tStore('analytics.events.collapse.trigger'), payload: $tStore('analytics.events.collapse.payload') },
+          { event: $tStore('analytics.events.expand.event'),   trigger: toPlainText($tStore('analytics.events.expand.trigger')),   payload: $tStore('analytics.events.expand.payload')   },
+          { event: $tStore('analytics.events.collapse.event'), trigger: toPlainText($tStore('analytics.events.collapse.trigger')), payload: $tStore('analytics.events.collapse.payload') },
         ]}
       />
 
@@ -896,8 +891,8 @@ type AccordionProps = {
             priority: $tNavStore('common.priority'),
           },
           items: [1, 2, 3, 4, 5, 6].map(i => ({
-            action:   stripHtml($tStore(`testes.functional.item${i}.action`)),
-            result:   stripHtml($tStore(`testes.functional.item${i}.result`)),
+            action:   toPlainText($tStore(`testes.functional.item${i}.action`)),
+            result:   toPlainText($tStore(`testes.functional.item${i}.result`)),
             priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
           })),
         }}
@@ -909,7 +904,7 @@ type AccordionProps = {
             how: $tNavStore('common.howToVerify'),
           },
           items: [1, 2, 3, 4, 5, 6].map(i => ({
-            criterion: stripHtml($tStore(`testes.accessibility.item${i}.criterion`)),
+            criterion: toPlainText($tStore(`testes.accessibility.item${i}.criterion`)),
             level:     $tStore(`testes.accessibility.item${i}.level`),
             how:       $tStore(`testes.accessibility.item${i}.how`),
           })),

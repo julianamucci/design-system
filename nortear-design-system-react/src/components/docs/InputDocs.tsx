@@ -33,12 +33,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -85,7 +82,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── PasswordToggle helper ────────────────────────────────────────────────────
 
@@ -697,34 +693,34 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: stripHtml(tContent("states.default.trigger")),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: stripHtml(tContent("states.focus.trigger")),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.error.label"),
-            trigger: stripHtml(tContent("states.error.trigger")),
-            behavior: stripHtml(tContent("states.error.behavior")),
+            trigger: toPlainText(tContent("states.error.trigger")),
+            behavior: toPlainText(tContent("states.error.behavior")),
           },
           {
             label: tContent("states.file.label"),
-            trigger: stripHtml(tContent("states.file.trigger")),
-            behavior: stripHtml(tContent("states.file.behavior")),
+            trigger: toPlainText(tContent("states.file.trigger")),
+            behavior: toPlainText(tContent("states.file.behavior")),
           },
         ]}
       />
@@ -748,42 +744,42 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 type: '"text" | "email" | "password" | "number" | "tel" | "url" | "search" | "date" | "file"',
                 defaultValue: '"text"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.type_prop")),
+                description: toPlainText(tContent("props.table.type_prop")),
               },
               {
                 name: "placeholder",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.placeholder")),
+                description: toPlainText(tContent("props.table.placeholder")),
               },
               {
                 name: "disabled",
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.disabled")),
+                description: toPlainText(tContent("props.table.disabled")),
               },
               {
                 name: "aria-invalid",
                 type: '"true" | "false"',
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.ariaInvalid")),
+                description: toPlainText(tContent("props.table.ariaInvalid")),
               },
               {
                 name: "autoComplete",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.autoComplete")),
+                description: toPlainText(tContent("props.table.autoComplete")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
             ],
           },
@@ -802,7 +798,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 type: '"inline-start" | "inline-end" | "block-start" | "block-end"',
                 defaultValue: '"inline-start"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.align_addon")),
+                description: toPlainText(tContent("props.table.align_addon")),
               },
             ],
           },
@@ -908,38 +904,38 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.fieldFocus"),
-            trigger: tContent("analytics.table.fieldFocusTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldFocusTrigger")),
             payload: tContent("analytics.table.fieldFocusPayload"),
           },
           {
             event: tContent("analytics.table.fieldBlur"),
-            trigger: tContent("analytics.table.fieldBlurTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldBlurTrigger")),
             payload: tContent("analytics.table.fieldBlurPayload"),
           },
           {
             event: tContent("analytics.table.fieldError"),
-            trigger: tContent("analytics.table.fieldErrorTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldErrorTrigger")),
             payload: tContent("analytics.table.fieldErrorPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

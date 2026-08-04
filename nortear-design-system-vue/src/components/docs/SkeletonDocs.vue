@@ -25,6 +25,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -120,8 +117,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -162,8 +157,8 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),       trigger: tContent('states.default.trigger'),       behavior: stripHtml(tContent('states.default.behavior')) },
-  { label: tContent('states.motionReduced.label'), trigger: tContent('states.motionReduced.trigger'), behavior: stripHtml(tContent('states.motionReduced.behavior')) },
+  { label: tContent('states.default.label'),       trigger: toPlainText(tContent('states.default.trigger')),       behavior: toPlainText(tContent('states.default.behavior')) },
+  { label: tContent('states.motionReduced.label'), trigger: toPlainText(tContent('states.motionReduced.trigger')), behavior: toPlainText(tContent('states.motionReduced.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -175,9 +170,9 @@ const propCols = computed(() => ({
 }));
 
 const skeletonPropItems = computed(() => [
-  { name: 'class',       type: tContent('props.table.className.type'),  defaultValue: tContent('props.table.className.default'),  required: tContent('props.table.className.required'),  description: stripHtml(tContent('props.table.className.description')) },
-  { name: 'aria-hidden', type: tContent('props.table.ariaHidden.type'), defaultValue: tContent('props.table.ariaHidden.default'), required: tContent('props.table.ariaHidden.required'), description: stripHtml(tContent('props.table.ariaHidden.description')) },
-  { name: '...rest',     type: tContent('props.table.rest.type'),       defaultValue: tContent('props.table.rest.default'),       required: tContent('props.table.rest.required'),       description: stripHtml(tContent('props.table.rest.description')) },
+  { name: 'class',       type: tContent('props.table.className.type'),  defaultValue: tContent('props.table.className.default'),  required: tContent('props.table.className.required'),  description: toPlainText(tContent('props.table.className.description')) },
+  { name: 'aria-hidden', type: tContent('props.table.ariaHidden.type'), defaultValue: tContent('props.table.ariaHidden.default'), required: tContent('props.table.ariaHidden.required'), description: toPlainText(tContent('props.table.ariaHidden.description')) },
+  { name: '...rest',     type: tContent('props.table.rest.type'),       defaultValue: tContent('props.table.rest.default'),       required: tContent('props.table.rest.required'),       description: toPlainText(tContent('props.table.rest.description')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -226,11 +221,11 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: stripHtml(tContent('testes.functional.item1.action')), result: stripHtml(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: stripHtml(tContent('testes.functional.item2.action')), result: stripHtml(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: stripHtml(tContent('testes.functional.item3.action')), result: stripHtml(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: stripHtml(tContent('testes.functional.item4.action')), result: stripHtml(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: stripHtml(tContent('testes.functional.item5.action')), result: stripHtml(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: toPlainText(tContent('testes.functional.item1.action')), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: toPlainText(tContent('testes.functional.item2.action')), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: toPlainText(tContent('testes.functional.item3.action')), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -606,8 +601,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />

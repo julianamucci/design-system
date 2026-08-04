@@ -1078,24 +1078,21 @@ existem.
   pelo wrapper, ou alargar as props do wrapper para aceitar as formas nulas dos
   atributos DOM. Aplicar em todos os `*Story.svelte`.
 
-### Escape de entidades em superfície de texto — 7 componentes além do button
+### Escape de entidades em superfície de texto — RESOLVIDO
 
-O `translations.json` guarda `<button>` escapado (`&lt;button&gt;`) porque
-containers como DocsAnatomy e DocsAccessibility renderizam HTML sanitizado. Mas
-DocsTestes, DocsProps, o teclado e os cenários escrevem textNode: ali a entidade
-aparece literal na tela ("Elemento &lt;button&gt; nativo presente").
+`stripHtml` virou helper compartilhado (`src/lib/strip-html.ts` por stack) e as
+179 docs pages passaram a importá-lo. As cópias locais sumiram.
 
-A ponte entre os dois mundos é o `stripHtml` — que só removia tags. Corrigido
-para decodificar entidades nas 4 docs pages do button, mas ele é **copiado em
-cada docs page** (45 cópias por stack, ~180 no total), então os demais seguem
-com a versão antiga.
+O helper exporta **duas** funções, porque os destinos são dois e confundi-los
+quebra em direções opostas:
 
-Componentes com entidade em chave que cai em superfície de texto:
-breadcrumb (3), avatar (2), data-table (2), form (2), aspect-ratio (1),
-calendar (1), textarea (1).
+- `toPlainText` tira tags **e** decodifica entidades — para quem escreve
+  textNode (testes, tabela de props, tokens, estados, teclado, cenários,
+  analytics). Sem isso a tabela mostrava "Elemento &lt;button&gt; nativo".
+- `stripHtml` tira só as tags — para quem renderiza HTML sanitizado. Decodificar
+  ali transforma texto em markup vivo: `&lt;img&gt;` virou um `<img>` real sem
+  `alt` e o axe reprovou Avatar e Card. Foi assim que o erro apareceu.
 
-- [ ] Promover `stripHtml` a helper compartilhado (`src/lib/`) por stack e
-  migrar as docs pages, em vez de propagar a correção 180 vezes.
-- [ ] Regra no `audit.mjs`: chave com `&lt;`/`&gt;` referenciada fora de
-  `stripHtml()` num container de texto. Nada nos testes pega isso hoje — só
-  aparece na tela.
+Fica um resíduo conhecido: `stripHtml` continua aplicado em destinos de HTML
+(anatomia, variantes, do/dont), onde ele descarta a formatação `<code>` que o
+conteúdo pede. É decisão visual, não bug — vale revisitar com o design.

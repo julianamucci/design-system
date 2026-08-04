@@ -5,6 +5,7 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createContextMenu } from '@/components/ui/context-menu';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -819,16 +820,16 @@ lbl.textContent = 'Ações';`,
           title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
-            trigger:  t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),  trigger: t('states.closed.trigger'),  behavior: t('states.closed.behavior')  },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),    behavior: t('states.open.behavior')    },
-            { label: t('states.focused.label'),  trigger: t('states.focused.trigger'), behavior: t('states.focused.behavior') },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'),behavior: t('states.disabled.behavior')},
-            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'), behavior: t('states.checked.behavior') },
-            { label: t('states.subOpen.label'),  trigger: t('states.subOpen.trigger'), behavior: t('states.subOpen.behavior') },
+            { label: t('states.closed.label'),  trigger: toPlainText(t('states.closed.trigger')),  behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),    behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.focused.label'),  trigger: toPlainText(t('states.focused.trigger')), behavior: toPlainText(t('states.focused.behavior'))},
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')),behavior: toPlainText(t('states.disabled.behavior'))},
+            { label: t('states.checked.label'),  trigger: toPlainText(t('states.checked.trigger')), behavior: toPlainText(t('states.checked.behavior'))},
+            { label: t('states.subOpen.label'),  trigger: toPlainText(t('states.subOpen.trigger')), behavior: toPlainText(t('states.subOpen.behavior'))},
           ],
         });
 
@@ -996,15 +997,15 @@ export type ContextMenuOptions = {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.menuOpen'),      trigger: t('analytics.table.menuOpenTrigger'),      payload: t('analytics.table.menuOpenPayload')      },
-            { event: t('analytics.table.itemClick'),     trigger: t('analytics.table.itemClickTrigger'),     payload: t('analytics.table.itemClickPayload')     },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload')      },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload')    },
+            { event: t('analytics.table.menuOpen'),      trigger: toPlainText(t('analytics.table.menuOpenTrigger')),      payload: t('analytics.table.menuOpenPayload')      },
+            { event: t('analytics.table.itemClick'),     trigger: toPlainText(t('analytics.table.itemClickTrigger')),     payload: t('analytics.table.itemClickPayload')     },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
           ],
         });
 

@@ -27,6 +27,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -34,10 +35,6 @@ const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>)
 const { t, subscribe } = createTranslation(accordionTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -623,14 +620,14 @@ export function createAccordionDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),   trigger: t('states.closed.trigger'),   behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),     behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.focused.label'),  trigger: t('states.focused.trigger'),  behavior: stripHtml(t('states.focused.behavior')) },
+            { label: t('states.closed.label'),   trigger: toPlainText(t('states.closed.trigger')),   behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),     behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.focused.label'),  trigger: toPlainText(t('states.focused.trigger')),  behavior: toPlainText(t('states.focused.behavior')) },
           ],
         });
 
@@ -728,12 +725,12 @@ export function createAccordionDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.events.expand.event'),   trigger: t('analytics.events.expand.trigger'),   payload: t('analytics.events.expand.payload')   },
-            { event: t('analytics.events.collapse.event'), trigger: t('analytics.events.collapse.trigger'), payload: t('analytics.events.collapse.payload') },
+            { event: t('analytics.events.expand.event'),   trigger: toPlainText(t('analytics.events.expand.trigger')),   payload: t('analytics.events.expand.payload')   },
+            { event: t('analytics.events.collapse.event'), trigger: toPlainText(t('analytics.events.collapse.trigger')), payload: t('analytics.events.collapse.payload') },
           ],
         });
 
@@ -748,8 +745,8 @@ export function createAccordionDocs(): HTMLElement {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -757,7 +754,7 @@ export function createAccordionDocs(): HTMLElement {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
             })),

@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -33,10 +34,6 @@ const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>)
 const { t, subscribe } = createTranslation(badgeTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -497,11 +494,11 @@ export function createBadgeDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.countBadge.label'),  trigger: stripHtml(t('states.countBadge.trigger')),  behavior: stripHtml(t('states.countBadge.behavior'))  },
+            { label: t('states.countBadge.label'),  trigger: toPlainText(t('states.countBadge.trigger')),  behavior: toPlainText(t('states.countBadge.behavior'))  },
           ],
         });
 
@@ -530,9 +527,9 @@ export interface BadgeOptions {
               title: t('props.badgeTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant')) },
-                { name: 'children',  type: 'string | HTMLElement | Array<string | HTMLElement>',  defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'className', type: 'string',                                               defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'variant',   type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
+                { name: 'children',  type: 'string | HTMLElement | Array<string | HTMLElement>',  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'className', type: 'string',                                               defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -612,14 +609,14 @@ export interface BadgeOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.click'),         trigger: t('analytics.table.clickTrigger'),         payload: t('analytics.table.clickPayload')         },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload')      },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload')    },
+            { event: t('analytics.table.click'),         trigger: toPlainText(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload')         },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
           ],
         });
 

@@ -26,6 +26,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -249,11 +250,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: tContent('states.default.behavior')  },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: tContent('states.focus.behavior')    },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: tContent('states.disabled.behavior') },
-  { label: tContent('states.error.label'),    trigger: tContent('states.error.trigger'),    behavior: tContent('states.error.behavior')    },
-  { label: tContent('states.file.label'),     trigger: tContent('states.file.trigger'),     behavior: tContent('states.file.behavior')     },
+  { label: tContent('states.default.label'),  trigger: toPlainText(tContent('states.default.trigger')),  behavior: toPlainText(tContent('states.default.behavior'))},
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior'))},
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.error.label'),    trigger: toPlainText(tContent('states.error.trigger')),    behavior: toPlainText(tContent('states.error.behavior'))},
+  { label: tContent('states.file.label'),     trigger: toPlainText(tContent('states.file.trigger')),     behavior: toPlainText(tContent('states.file.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -316,12 +317,12 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.fieldFocus'),   trigger: tContent('analytics.table.fieldFocusTrigger'),   payload: tContent('analytics.table.fieldFocusPayload')   },
-  { event: tContent('analytics.table.fieldBlur'),    trigger: tContent('analytics.table.fieldBlurTrigger'),    payload: tContent('analytics.table.fieldBlurPayload')    },
-  { event: tContent('analytics.table.fieldError'),   trigger: tContent('analytics.table.fieldErrorTrigger'),   payload: tContent('analytics.table.fieldErrorPayload')   },
-  { event: tContent('analytics.table.pageView'),     trigger: tContent('analytics.table.pageViewTrigger'),     payload: tContent('analytics.table.pageViewPayload')     },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),   trigger: tContent('analytics.table.langSwitchTrigger'),   payload: tContent('analytics.table.langSwitchPayload')   },
+  { event: tContent('analytics.table.fieldFocus'),   trigger: toPlainText(tContent('analytics.table.fieldFocusTrigger')),   payload: tContent('analytics.table.fieldFocusPayload')   },
+  { event: tContent('analytics.table.fieldBlur'),    trigger: toPlainText(tContent('analytics.table.fieldBlurTrigger')),    payload: tContent('analytics.table.fieldBlurPayload')    },
+  { event: tContent('analytics.table.fieldError'),   trigger: toPlainText(tContent('analytics.table.fieldErrorTrigger')),   payload: tContent('analytics.table.fieldErrorPayload')   },
+  { event: tContent('analytics.table.pageView'),     trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),     payload: tContent('analytics.table.pageViewPayload')     },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),   trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),   payload: tContent('analytics.table.langSwitchPayload')   },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -743,8 +744,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -803,7 +804,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

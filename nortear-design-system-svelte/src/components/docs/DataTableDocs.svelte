@@ -14,6 +14,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import dataTableTranslations from '@shared/content/data-table/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(dataTableTranslations);
@@ -84,9 +85,6 @@
     track('docs_section_viewed', { section_id: id, component_name: 'data-table', locale: $locale });
   });
   $effect(() => section.attach());
-
-  // ─── Helpers ─────────────────────────────────────────────────────────────
-  function stripHtml(s: string) { return s.replace(/<[^>]*>/g, ''); }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -223,7 +221,7 @@ const columns: DataTableColumn<Invoice>[] = [
       items: [
         { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
         { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
+        { s: toPlainText($tStore('usage.scenarios.item3.s')), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
         { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
         { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: $tStore('usage.scenarios.item5.a') },
         { s: $tStore('usage.scenarios.item6.s'), u: $tStore('usage.scenarios.item6.u'), a: $tStore('usage.scenarios.item6.a') },
@@ -379,17 +377,17 @@ const columns: DataTableColumn<Invoice>[] = [
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.empty.label'),       trigger: stripHtml($tStore('states.empty.trigger')),       behavior: stripHtml($tStore('states.empty.behavior'))       },
-      { label: $tStore('states.sorted.label'),      trigger: $tStore('states.sorted.trigger'),                 behavior: stripHtml($tStore('states.sorted.behavior'))      },
-      { label: $tStore('states.filtered.label'),    trigger: $tStore('states.filtered.trigger'),               behavior: $tStore('states.filtered.behavior')               },
-      { label: $tStore('states.selected.label'),    trigger: $tStore('states.selected.trigger'),               behavior: stripHtml($tStore('states.selected.behavior'))    },
-      { label: $tStore('states.editing.label'),     trigger: stripHtml($tStore('states.editing.trigger')),     behavior: stripHtml($tStore('states.editing.behavior'))     },
-      { label: $tStore('states.resizing.label'),    trigger: $tStore('states.resizing.trigger'),               behavior: stripHtml($tStore('states.resizing.behavior'))    },
-      { label: $tStore('states.virtualized.label'), trigger: stripHtml($tStore('states.virtualized.trigger')), behavior: $tStore('states.virtualized.behavior')            },
+      { label: $tStore('states.empty.label'),       trigger: toPlainText($tStore('states.empty.trigger')),       behavior: toPlainText($tStore('states.empty.behavior'))       },
+      { label: $tStore('states.sorted.label'),      trigger: toPlainText($tStore('states.sorted.trigger')),                 behavior: toPlainText($tStore('states.sorted.behavior'))      },
+      { label: $tStore('states.filtered.label'),    trigger: toPlainText($tStore('states.filtered.trigger')),               behavior: toPlainText($tStore('states.filtered.behavior'))},
+      { label: $tStore('states.selected.label'),    trigger: toPlainText($tStore('states.selected.trigger')),               behavior: toPlainText($tStore('states.selected.behavior'))    },
+      { label: $tStore('states.editing.label'),     trigger: toPlainText($tStore('states.editing.trigger')),     behavior: toPlainText($tStore('states.editing.behavior'))     },
+      { label: $tStore('states.resizing.label'),    trigger: toPlainText($tStore('states.resizing.trigger')),               behavior: toPlainText($tStore('states.resizing.behavior'))    },
+      { label: $tStore('states.virtualized.label'), trigger: toPlainText($tStore('states.virtualized.trigger')), behavior: toPlainText($tStore('states.virtualized.behavior'))},
     ]}
   />
 
@@ -407,24 +405,24 @@ const columns: DataTableColumn<Invoice>[] = [
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'columns',                 type: 'ColumnDef<TData>[]',     defaultValue: '—',         required: 'Sim', description: stripHtml($tStore('props.table.columns')) },
-          { name: 'data',                    type: 'TData[]',                defaultValue: '—',         required: 'Sim', description: stripHtml($tStore('props.table.data')) },
+          { name: 'columns',                 type: 'ColumnDef<TData>[]',     defaultValue: '—',         required: 'Sim', description: toPlainText($tStore('props.table.columns')) },
+          { name: 'data',                    type: 'TData[]',                defaultValue: '—',         required: 'Sim', description: toPlainText($tStore('props.table.data')) },
           { name: 'enableGlobalFilter',      type: 'boolean',                defaultValue: 'true',      required: 'Não', description: $tStore('props.table.enableGlobalFilter') },
           { name: 'globalFilterPlaceholder', type: 'string',                 defaultValue: '"Buscar..."', required: 'Não', description: $tStore('props.table.globalFilterPlaceholder') },
           { name: 'enableRowSelection',      type: 'boolean',                defaultValue: 'false',     required: 'Não', description: $tStore('props.table.enableRowSelection') },
           { name: 'enableColumnVisibility',  type: 'boolean',                defaultValue: 'true',      required: 'Não', description: $tStore('props.table.enableColumnVisibility') },
-          { name: 'enableColumnFilters',     type: 'boolean',                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.enableColumnFilters')) },
-          { name: 'enableColumnResizing',    type: 'boolean',                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.enableColumnResizing')) },
+          { name: 'enableColumnFilters',     type: 'boolean',                defaultValue: 'false',     required: 'Não', description: toPlainText($tStore('props.table.enableColumnFilters')) },
+          { name: 'enableColumnResizing',    type: 'boolean',                defaultValue: 'false',     required: 'Não', description: toPlainText($tStore('props.table.enableColumnResizing')) },
           { name: 'enableColumnOrdering',    type: 'boolean',                defaultValue: 'false',     required: 'Não', description: $tStore('props.table.enableColumnOrdering') },
           { name: 'enableColumnPinning',     type: 'boolean',                defaultValue: 'false',     required: 'Não', description: $tStore('props.table.enableColumnPinning') },
           { name: 'enablePagination',        type: 'boolean',                defaultValue: 'true',      required: 'Não', description: $tStore('props.table.enablePagination') },
           { name: 'virtualized',             type: 'boolean',                defaultValue: 'false',     required: 'Não', description: $tStore('props.table.virtualized') },
           { name: 'virtualRowHeight',        type: 'number',                 defaultValue: '36',        required: 'Não', description: $tStore('props.table.virtualRowHeight') },
-          { name: 'maxHeight',               type: 'string',                 defaultValue: '"480px"',   required: 'Não', description: stripHtml($tStore('props.table.maxHeight')) },
+          { name: 'maxHeight',               type: 'string',                 defaultValue: '"480px"',   required: 'Não', description: toPlainText($tStore('props.table.maxHeight')) },
           { name: 'pageSize',                type: 'number',                 defaultValue: '10',        required: 'Não', description: $tStore('props.table.pageSize') },
-          { name: 'pageSizeOptions',         type: 'number[]',               defaultValue: '[10,20,50,100]', required: 'Não', description: stripHtml($tStore('props.table.pageSizeOptions')) },
+          { name: 'pageSizeOptions',         type: 'number[]',               defaultValue: '[10,20,50,100]', required: 'Não', description: toPlainText($tStore('props.table.pageSizeOptions')) },
           { name: 'emptyMessage',            type: 'string',                 defaultValue: '"Sem resultados."', required: 'Não', description: $tStore('props.table.emptyMessage') },
-          { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.onCellEdit')) },
+          { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onCellEdit')) },
           { name: 'onTableReady',            type: '(table: Table<TData>) => void',        defaultValue: '—', required: 'Não', description: $tStore('props.table.onTableReady') },
         ],
       },
@@ -438,8 +436,8 @@ const columns: DataTableColumn<Invoice>[] = [
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'meta.filter',   type: '{ type: "text" | "select"; options?: string[]; placeholder?: string }', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.metaFilter')) },
-          { name: 'meta.editable', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.table.metaEditable')) },
+          { name: 'meta.filter',   type: '{ type: "text" | "select"; options?: string[]; placeholder?: string }', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.metaFilter')) },
+          { name: 'meta.editable', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText($tStore('props.table.metaEditable')) },
         ],
       },
     ]}
@@ -457,12 +455,12 @@ const columns: DataTableColumn<Invoice>[] = [
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--border',           value: 'border-input',                description: stripHtml($tStore('tokens.table.borderPart'))          },
-      { token: '--muted',            value: 'nds-bg-muted-50',                 description: stripHtml($tStore('tokens.table.mutedPart'))           },
-      { token: '--muted-foreground', value: 'nds-text-muted-foreground',       description: stripHtml($tStore('tokens.table.mutedForegroundPart')) },
-      { token: '--primary',          value: 'text-primary',                description: stripHtml($tStore('tokens.table.primaryPart'))         },
-      { token: '--background',       value: 'bg-background',               description: stripHtml($tStore('tokens.table.backgroundPart'))      },
-      { token: '--ring',             value: 'ring-ring/50',                description: stripHtml($tStore('tokens.table.ringPart'))            },
+      { token: '--border',           value: 'border-input',                description: toPlainText($tStore('tokens.table.borderPart'))          },
+      { token: '--muted',            value: 'nds-bg-muted-50',                 description: toPlainText($tStore('tokens.table.mutedPart'))           },
+      { token: '--muted-foreground', value: 'nds-text-muted-foreground',       description: toPlainText($tStore('tokens.table.mutedForegroundPart')) },
+      { token: '--primary',          value: 'text-primary',                description: toPlainText($tStore('tokens.table.primaryPart'))         },
+      { token: '--background',       value: 'bg-background',               description: toPlainText($tStore('tokens.table.backgroundPart'))      },
+      { token: '--ring',             value: 'ring-ring/50',                description: toPlainText($tStore('tokens.table.ringPart'))            },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}
@@ -523,13 +521,13 @@ const columns: DataTableColumn<Invoice>[] = [
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

@@ -35,6 +35,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -52,10 +53,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(sidebarTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high:   'common.high',
@@ -975,15 +972,15 @@ export function createSidebarDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
-            trigger:  t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.expanded.label'),  trigger: stripHtml(t('states.expanded.trigger')),  behavior: t('states.expanded.behavior') },
-            { label: t('states.collapsed.label'), trigger: stripHtml(t('states.collapsed.trigger')), behavior: t('states.collapsed.behavior') },
-            { label: t('states.offcanvas.label'), trigger: stripHtml(t('states.offcanvas.trigger')), behavior: t('states.offcanvas.behavior') },
-            { label: t('states.mobile.label'),    trigger: stripHtml(t('states.mobile.trigger')),    behavior: t('states.mobile.behavior') },
-            { label: t('states.hidden.label'),    trigger: stripHtml(t('states.hidden.trigger')),    behavior: t('states.hidden.behavior') },
+            { label: t('states.expanded.label'),  trigger: toPlainText(t('states.expanded.trigger')),  behavior: toPlainText(t('states.expanded.behavior'))},
+            { label: t('states.collapsed.label'), trigger: toPlainText(t('states.collapsed.trigger')), behavior: toPlainText(t('states.collapsed.behavior'))},
+            { label: t('states.offcanvas.label'), trigger: toPlainText(t('states.offcanvas.trigger')), behavior: toPlainText(t('states.offcanvas.behavior'))},
+            { label: t('states.mobile.label'),    trigger: toPlainText(t('states.mobile.trigger')),    behavior: toPlainText(t('states.mobile.behavior'))},
+            { label: t('states.hidden.label'),    trigger: toPlainText(t('states.hidden.trigger')),    behavior: toPlainText(t('states.hidden.behavior'))},
           ],
         });
 
@@ -1163,15 +1160,15 @@ export function createSidebarDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.navClick'),      trigger: t('analytics.table.navClickTrigger'),      payload: t('analytics.table.navClickPayload') },
-            { event: t('analytics.table.toggleOpen'),    trigger: t('analytics.table.toggleOpenTrigger'),    payload: t('analytics.table.togglePayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.navClick'),      trigger: toPlainText(t('analytics.table.navClickTrigger')),      payload: t('analytics.table.navClickPayload') },
+            { event: t('analytics.table.toggleOpen'),    trigger: toPlainText(t('analytics.table.toggleOpenTrigger')),    payload: t('analytics.table.togglePayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

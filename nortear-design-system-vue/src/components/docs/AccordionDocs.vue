@@ -32,6 +32,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -39,10 +40,6 @@ const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(accordionTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -117,8 +114,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -166,7 +161,6 @@ const openItem = ref('item-1');
     <AccordionContent>Estado gerenciado externamente.</AccordionContent>
   </AccordionItem>
 </Accordion>`;
-
 
 const interfaceCode = `interface AccordionProps {
   type: 'single' | 'multiple';
@@ -226,10 +220,10 @@ const tokenRows = computed(() => {
 });
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: tContent('states.closed.behavior') },
-  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: tContent('states.open.behavior') },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.focused.label'),  trigger: tContent('states.focused.trigger'),  behavior: tContent('states.focused.behavior') },
+  { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior'))},
+  { label: tContent('states.open.label'),     trigger: toPlainText(tContent('states.open.trigger')),     behavior: toPlainText(tContent('states.open.behavior'))},
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.focused.label'),  trigger: toPlainText(tContent('states.focused.trigger')),  behavior: toPlainText(tContent('states.focused.behavior'))},
 ]);
 
 const modeItems = computed(() => [
@@ -357,8 +351,8 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.events.expand.event'),   trigger: tContent('analytics.events.expand.trigger'),   payload: tContent('analytics.events.expand.payload')   },
-  { event: tContent('analytics.events.collapse.event'), trigger: tContent('analytics.events.collapse.trigger'), payload: tContent('analytics.events.collapse.payload') },
+  { event: tContent('analytics.events.expand.event'),   trigger: toPlainText(tContent('analytics.events.expand.trigger')),   payload: tContent('analytics.events.expand.payload')   },
+  { event: tContent('analytics.events.collapse.event'), trigger: toPlainText(tContent('analytics.events.collapse.trigger')), payload: tContent('analytics.events.collapse.payload') },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6].map(i => ({
@@ -820,8 +814,8 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -876,7 +870,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

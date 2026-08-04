@@ -39,6 +39,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -57,10 +58,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -133,8 +130,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -324,12 +319,12 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: tContent('states.closed.behavior')   },
-  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: tContent('states.open.behavior')     },
-  { label: tContent('states.focused.label'),  trigger: stripHtml(tContent('states.focused.trigger')),  behavior: tContent('states.focused.behavior')  },
-  { label: tContent('states.disabled.label'), trigger: stripHtml(tContent('states.disabled.trigger')), behavior: tContent('states.disabled.behavior') },
-  { label: tContent('states.checked.label'),  trigger: stripHtml(tContent('states.checked.trigger')),  behavior: tContent('states.checked.behavior')  },
-  { label: tContent('states.subOpen.label'),  trigger: tContent('states.subOpen.trigger'),  behavior: tContent('states.subOpen.behavior')  },
+  { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior'))},
+  { label: tContent('states.open.label'),     trigger: toPlainText(tContent('states.open.trigger')),     behavior: toPlainText(tContent('states.open.behavior'))},
+  { label: tContent('states.focused.label'),  trigger: toPlainText(tContent('states.focused.trigger')),  behavior: toPlainText(tContent('states.focused.behavior'))},
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.checked.label'),  trigger: toPlainText(tContent('states.checked.trigger')),  behavior: toPlainText(tContent('states.checked.behavior'))},
+  { label: tContent('states.subOpen.label'),  trigger: toPlainText(tContent('states.subOpen.trigger')),  behavior: toPlainText(tContent('states.subOpen.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -431,11 +426,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.menuOpen'),     trigger: tContent('analytics.table.menuOpenTrigger'),     payload: tContent('analytics.table.menuOpenPayload')     },
-  { event: tContent('analytics.table.itemClick'),    trigger: tContent('analytics.table.itemClickTrigger'),    payload: tContent('analytics.table.itemClickPayload')    },
-  { event: tContent('analytics.table.pageView'),     trigger: tContent('analytics.table.pageViewTrigger'),     payload: tContent('analytics.table.pageViewPayload')     },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),   trigger: tContent('analytics.table.langSwitchTrigger'),   payload: tContent('analytics.table.langSwitchPayload')   },
+  { event: tContent('analytics.table.menuOpen'),     trigger: toPlainText(tContent('analytics.table.menuOpenTrigger')),     payload: tContent('analytics.table.menuOpenPayload')     },
+  { event: tContent('analytics.table.itemClick'),    trigger: toPlainText(tContent('analytics.table.itemClickTrigger')),    payload: tContent('analytics.table.itemClickPayload')    },
+  { event: tContent('analytics.table.pageView'),     trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),     payload: tContent('analytics.table.pageViewPayload')     },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),   trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),   payload: tContent('analytics.table.langSwitchPayload')   },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -1000,8 +995,8 @@ const codeCompositionShortcuts = `<ContextMenu>
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -1063,7 +1058,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

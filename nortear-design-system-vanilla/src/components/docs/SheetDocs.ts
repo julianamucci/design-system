@@ -27,6 +27,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,10 +45,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(sheetTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -531,15 +528,15 @@ createSheet({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),         trigger: t('states.closed.trigger'),         behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),           trigger: t('states.open.trigger'),           behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.transitioning.label'),  trigger: t('states.transitioning.trigger'),  behavior: stripHtml(t('states.transitioning.behavior')) },
-            { label: t('states.focused.label'),        trigger: t('states.focused.trigger'),        behavior: stripHtml(t('states.focused.behavior')) },
-            { label: t('states.longScrollBody.label'), trigger: t('states.longScrollBody.trigger'), behavior: stripHtml(t('states.longScrollBody.behavior')) },
+            { label: t('states.closed.label'),         trigger: toPlainText(t('states.closed.trigger')),         behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),           trigger: toPlainText(t('states.open.trigger')),           behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.transitioning.label'),  trigger: toPlainText(t('states.transitioning.trigger')),  behavior: toPlainText(t('states.transitioning.behavior')) },
+            { label: t('states.focused.label'),        trigger: toPlainText(t('states.focused.trigger')),        behavior: toPlainText(t('states.focused.behavior')) },
+            { label: t('states.longScrollBody.label'), trigger: toPlainText(t('states.longScrollBody.trigger')), behavior: toPlainText(t('states.longScrollBody.behavior')) },
           ],
         });
 
@@ -576,13 +573,13 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
               cols: propsCols,
               items: [
                 { name: 'trigger',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Sim', description: 'Elemento que abre o Sheet ao receber click (geralmente Button).' },
-                { name: 'side',            type: "'top' | 'right' | 'bottom' | 'left'",               defaultValue: "'right'", required: 'Não', description: stripHtml(t('props.table.side.description')) },
+                { name: 'side',            type: "'top' | 'right' | 'bottom' | 'left'",               defaultValue: "'right'", required: 'Não', description: toPlainText(t('props.table.side.description')) },
                 { name: 'title',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: 'Texto do SheetTitle — fonte do aria-labelledby. RECOMENDADO para acessibilidade.' },
                 { name: 'description',     type: 'string',                                            defaultValue: '—',       required: 'Não', description: 'Texto da SheetDescription — fonte do aria-describedby. RECOMENDADO para acessibilidade.' },
                 { name: 'content',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Sim', description: 'Body do painel (formulário, lista, mensagem).' },
                 { name: 'footer',          type: 'HTMLElement',                                       defaultValue: '—',       required: 'Não', description: 'Container das ações (Cancelar + ação primária).' },
-                { name: 'onOpenChange',    type: '(open: boolean) => void',                           defaultValue: '—',       required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
-                { name: 'class',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: stripHtml(t('props.table.className.description')) },
+                { name: 'onOpenChange',    type: '(open: boolean) => void',                           defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
+                { name: 'class',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.className.description')) },
                 { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — estado é interno (uncontrolled). Use onOpenChange para observar mudanças.' },
                 { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: 'false',   required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — para abrir programaticamente, chame `trigger.click()`.' },
                 { name: 'showCloseButton', type: 'boolean',                                           defaultValue: 'true',    required: 'Não', description: 'NÃO SUPORTADO como prop — o botão X é sempre exibido. Esconda via CSS no `class` se necessário.' },
@@ -661,13 +658,13 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'dialog_open',    trigger: t('analytics.table.dialog_open.trigger'),    payload: t('analytics.table.dialog_open.payload') },
-            { event: 'dialog_close',   trigger: t('analytics.table.dialog_close.trigger'),   payload: t('analytics.table.dialog_close.payload') },
-            { event: 'dialog_confirm', trigger: t('analytics.table.dialog_confirm.trigger'), payload: t('analytics.table.dialog_confirm.payload') },
+            { event: 'dialog_open',    trigger: toPlainText(t('analytics.table.dialog_open.trigger')),    payload: t('analytics.table.dialog_open.payload') },
+            { event: 'dialog_close',   trigger: toPlainText(t('analytics.table.dialog_close.trigger')),   payload: t('analytics.table.dialog_close.payload') },
+            { event: 'dialog_confirm', trigger: toPlainText(t('analytics.table.dialog_confirm.trigger')), payload: t('analytics.table.dialog_confirm.payload') },
           ],
         });
 

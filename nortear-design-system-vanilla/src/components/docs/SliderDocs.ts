@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -43,10 +44,6 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(sliderTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -698,15 +695,15 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.active.label'),   trigger: toPlainText(t('states.active.trigger')),   behavior: toPlainText(t('states.active.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
           ],
         });
 
@@ -739,10 +736,10 @@ export type SliderOptions = {
               items: [
                 { name: 'value',         type: 'number',                       defaultValue: 'min',     required: 'Não', description: 'Valor inicial. NOTA Nortear: é `number` (não `number[]` como nas libs upstream) — sem suporte a range.' },
                 { name: 'onValueChange', type: '(value: number) => void',      defaultValue: '—',       required: 'Não', description: 'Callback disparado durante o arrasto e em cada tecla. NOTA Nortear: não existe `onValueCommitted` separado — debounce ou ouça `change` no input nativo.' },
-                { name: 'min',           type: 'number',                       defaultValue: '0',       required: 'Não', description: stripHtml(t('props.table.min.description')) },
-                { name: 'max',           type: 'number',                       defaultValue: '100',     required: 'Não', description: stripHtml(t('props.table.max.description')) },
-                { name: 'step',          type: 'number',                       defaultValue: '1',       required: 'Não', description: stripHtml(t('props.table.step.description')) },
-                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',   required: 'Não', description: stripHtml(t('props.table.disabled.description')) },
+                { name: 'min',           type: 'number',                       defaultValue: '0',       required: 'Não', description: toPlainText(t('props.table.min.description')) },
+                { name: 'max',           type: 'number',                       defaultValue: '100',     required: 'Não', description: toPlainText(t('props.table.max.description')) },
+                { name: 'step',          type: 'number',                       defaultValue: '1',       required: 'Não', description: toPlainText(t('props.table.step.description')) },
+                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',   required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
                 { name: 'class',         type: 'string',                       defaultValue: '—',      required: 'Não', description: 'Classes .nds-* adicionais no `<div>` raiz.' },
               ],
             },
@@ -763,12 +760,12 @@ export type SliderOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--muted',            value: stripHtml(t('tokens.table.muted.class')),            description: stripHtml(t('tokens.table.muted.part')) },
-            { token: '--primary',          value: stripHtml(t('tokens.table.primary.class')),          description: stripHtml(t('tokens.table.primary.part')) },
-            { token: '--ring',             value: stripHtml(t('tokens.table.ring.class')),             description: stripHtml(t('tokens.table.ring.part')) },
-            { token: '--background',       value: stripHtml(t('tokens.table.background.class')),       description: stripHtml(t('tokens.table.background.part')) },
-            { token: '--foreground',       value: stripHtml(t('tokens.table.foreground.class')),       description: stripHtml(t('tokens.table.foreground.part')) },
-            { token: '--muted-foreground', value: stripHtml(t('tokens.table.mutedForeground.class')),  description: stripHtml(t('tokens.table.mutedForeground.part')) },
+            { token: '--muted',            value: toPlainText(t('tokens.table.muted.class')),            description: toPlainText(t('tokens.table.muted.part')) },
+            { token: '--primary',          value: toPlainText(t('tokens.table.primary.class')),          description: toPlainText(t('tokens.table.primary.part')) },
+            { token: '--ring',             value: toPlainText(t('tokens.table.ring.class')),             description: toPlainText(t('tokens.table.ring.part')) },
+            { token: '--background',       value: toPlainText(t('tokens.table.background.class')),       description: toPlainText(t('tokens.table.background.part')) },
+            { token: '--foreground',       value: toPlainText(t('tokens.table.foreground.class')),       description: toPlainText(t('tokens.table.foreground.part')) },
+            { token: '--muted-foreground', value: toPlainText(t('tokens.table.mutedForeground.class')),  description: toPlainText(t('tokens.table.mutedForeground.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -791,15 +788,15 @@ export type SliderOptions = {
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',        description: stripHtml(t('accessibility.keyboard.tab'))        },
-            { key: 'Arrow Right', description: stripHtml(t('accessibility.keyboard.arrowRight')) },
-            { key: 'Arrow Left',  description: stripHtml(t('accessibility.keyboard.arrowLeft'))  },
-            { key: 'Arrow Up',    description: stripHtml(t('accessibility.keyboard.arrowUp'))    },
-            { key: 'Arrow Down',  description: stripHtml(t('accessibility.keyboard.arrowDown'))  },
-            { key: 'Home',       description: stripHtml(t('accessibility.keyboard.home'))       },
-            { key: 'End',        description: stripHtml(t('accessibility.keyboard.end'))        },
-            { key: 'PageUp',     description: stripHtml(t('accessibility.keyboard.pageUp'))     },
-            { key: 'PageDown',   description: stripHtml(t('accessibility.keyboard.pageDown'))   },
+            { key: 'Tab',        description: toPlainText(t('accessibility.keyboard.tab'))        },
+            { key: 'Arrow Right', description: toPlainText(t('accessibility.keyboard.arrowRight')) },
+            { key: 'Arrow Left',  description: toPlainText(t('accessibility.keyboard.arrowLeft'))  },
+            { key: 'Arrow Up',    description: toPlainText(t('accessibility.keyboard.arrowUp'))    },
+            { key: 'Arrow Down',  description: toPlainText(t('accessibility.keyboard.arrowDown'))  },
+            { key: 'Home',       description: toPlainText(t('accessibility.keyboard.home'))       },
+            { key: 'End',        description: toPlainText(t('accessibility.keyboard.end'))        },
+            { key: 'PageUp',     description: toPlainText(t('accessibility.keyboard.pageUp'))     },
+            { key: 'PageDown',   description: toPlainText(t('accessibility.keyboard.pageDown'))   },
           ],
         });
 
@@ -836,7 +833,7 @@ export type SliderOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
@@ -857,8 +854,8 @@ export type SliderOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -870,7 +867,7 @@ export type SliderOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
             })),
@@ -882,7 +879,7 @@ export type SliderOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

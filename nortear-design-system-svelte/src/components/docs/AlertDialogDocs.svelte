@@ -25,6 +25,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(alertDialogTranslations);
@@ -60,7 +61,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -98,10 +98,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -465,15 +461,15 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),     trigger: stripHtml($tStore('states.closed.trigger')),     behavior: $tStore('states.closed.behavior')     },
-      { label: $tStore('states.open.label'),       trigger: stripHtml($tStore('states.open.trigger')),       behavior: $tStore('states.open.behavior')       },
-      { label: $tStore('states.confirmed.label'),  trigger: stripHtml($tStore('states.confirmed.trigger')),  behavior: $tStore('states.confirmed.behavior')  },
-      { label: $tStore('states.cancelled.label'),  trigger: stripHtml($tStore('states.cancelled.trigger')),  behavior: $tStore('states.cancelled.behavior') },
-      { label: $tStore('states.controlled.label'), trigger: stripHtml($tStore('states.controlled.trigger')), behavior: $tStore('states.controlled.behavior') },
+      { label: $tStore('states.closed.label'),     trigger: toPlainText($tStore('states.closed.trigger')),     behavior: toPlainText($tStore('states.closed.behavior'))},
+      { label: $tStore('states.open.label'),       trigger: toPlainText($tStore('states.open.trigger')),       behavior: toPlainText($tStore('states.open.behavior'))},
+      { label: $tStore('states.confirmed.label'),  trigger: toPlainText($tStore('states.confirmed.trigger')),  behavior: toPlainText($tStore('states.confirmed.behavior'))},
+      { label: $tStore('states.cancelled.label'),  trigger: toPlainText($tStore('states.cancelled.trigger')),  behavior: toPlainText($tStore('states.cancelled.behavior'))},
+      { label: $tStore('states.controlled.label'), trigger: toPlainText($tStore('states.controlled.trigger')), behavior: toPlainText($tStore('states.controlled.behavior'))},
     ]}
   />
 
@@ -485,19 +481,19 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         title: $tStore('props.rootTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'open',         type: 'boolean',                     defaultValue: '—',      required: 'Não', description: stripHtml($tStore('props.table.open'))         },
-          { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false',  required: 'Não', description: stripHtml($tStore('props.table.defaultOpen')) },
-          { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',      required: 'Não', description: stripHtml($tStore('props.table.onOpenChange'))},
-          { name: 'children',     type: 'Snippet',                     defaultValue: '—',      required: 'Sim', description: stripHtml($tStore('props.table.children'))    },
+          { name: 'open',         type: 'boolean',                     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.open'))         },
+          { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false',  required: 'Não', description: toPlainText($tStore('props.table.defaultOpen')) },
+          { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.onOpenChange'))},
+          { name: 'children',     type: 'Snippet',                     defaultValue: '—',      required: 'Sim', description: toPlainText($tStore('props.table.children'))    },
         ],
       },
       {
         title: $tStore('props.triggerTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.asChild'))  },
+          { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.asChild'))  },
           { name: 'class',    type: 'string',               defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',              defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.children')) },
+          { name: 'children', type: 'Snippet',              defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
@@ -505,25 +501,25 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         cols: propsTableCols,
         items: [
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: stripHtml($tStore('props.table.children')) },
+          { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
         title: $tStore('props.actionTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.onClick'))  },
+          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onClick'))  },
           { name: 'class',    type: 'string',                  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: stripHtml($tStore('props.table.children')) },
+          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
         title: $tStore('props.cancelTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.onClick'))  },
+          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onClick'))  },
           { name: 'class',    type: 'string',                  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: stripHtml($tStore('props.table.children')) },
+          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
         ],
       },
     ]}
@@ -605,16 +601,16 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.open'),          trigger: $tStore('analytics.table.openTrigger'),          payload: $tStore('analytics.table.openPayload')          },
-      { event: $tStore('analytics.table.confirm'),       trigger: $tStore('analytics.table.confirmTrigger'),       payload: $tStore('analytics.table.confirmPayload')       },
-      { event: $tStore('analytics.table.close'),         trigger: $tStore('analytics.table.closeTrigger'),         payload: $tStore('analytics.table.closePayload')         },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.open'),          trigger: toPlainText($tStore('analytics.table.openTrigger')),          payload: $tStore('analytics.table.openPayload')          },
+      { event: $tStore('analytics.table.confirm'),       trigger: toPlainText($tStore('analytics.table.confirmTrigger')),       payload: $tStore('analytics.table.confirmPayload')       },
+      { event: $tStore('analytics.table.close'),         trigger: toPlainText($tStore('analytics.table.closeTrigger')),         payload: $tStore('analytics.table.closePayload')         },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

@@ -31,6 +31,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -49,10 +50,6 @@ const screenReaderItems = computed(() =>
 const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'Alta',
@@ -132,8 +129,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -328,11 +323,10 @@ const codeComCardDestacado = `<NavigationMenu aria-label="Navegação principal"
   </NavigationMenuList>
 </NavigationMenu>`;
 
-
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'), trigger: tContent('states.closed.trigger'), behavior: stripHtml(tContent('states.closed.behavior')) },
-  { label: tContent('states.open.label'),   trigger: tContent('states.open.trigger'),   behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.active.label'), trigger: tContent('states.active.trigger'), behavior: stripHtml(tContent('states.active.behavior')) },
+  { label: tContent('states.closed.label'), trigger: toPlainText(tContent('states.closed.trigger')), behavior: toPlainText(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),   trigger: toPlainText(tContent('states.open.trigger')),   behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.active.label'), trigger: toPlainText(tContent('states.active.trigger')), behavior: toPlainText(tContent('states.active.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -344,12 +338,12 @@ const propCols = computed(() => ({
 }));
 
 const navMenuPropItems = computed(() => [
-  { name: 'value',             type: tContent('props.table.value.type'),             defaultValue: tContent('props.table.value.default'),             required: tContent('props.table.value.required'),             description: stripHtml(tContent('props.table.value.description'))             },
-  { name: '@update:value',     type: tContent('props.table.onValueChange.type'),     defaultValue: tContent('props.table.onValueChange.default'),     required: tContent('props.table.onValueChange.required'),     description: stripHtml(tContent('props.table.onValueChange.description'))     },
-  { name: 'defaultValue',      type: tContent('props.table.defaultValue.type'),      defaultValue: tContent('props.table.defaultValue.default'),      required: tContent('props.table.defaultValue.required'),      description: stripHtml(tContent('props.table.defaultValue.description'))      },
-  { name: 'delayDuration',     type: tContent('props.table.delayDuration.type'),     defaultValue: tContent('props.table.delayDuration.default'),     required: tContent('props.table.delayDuration.required'),     description: stripHtml(tContent('props.table.delayDuration.description'))     },
-  { name: 'skipDelayDuration', type: tContent('props.table.skipDelayDuration.type'), defaultValue: tContent('props.table.skipDelayDuration.default'), required: tContent('props.table.skipDelayDuration.required'), description: stripHtml(tContent('props.table.skipDelayDuration.description')) },
-  { name: 'orientation',       type: tContent('props.table.orientation.type'),       defaultValue: tContent('props.table.orientation.default'),       required: tContent('props.table.orientation.required'),       description: stripHtml(tContent('props.table.orientation.description'))       },
+  { name: 'value',             type: tContent('props.table.value.type'),             defaultValue: tContent('props.table.value.default'),             required: tContent('props.table.value.required'),             description: toPlainText(tContent('props.table.value.description'))             },
+  { name: '@update:value',     type: tContent('props.table.onValueChange.type'),     defaultValue: tContent('props.table.onValueChange.default'),     required: tContent('props.table.onValueChange.required'),     description: toPlainText(tContent('props.table.onValueChange.description'))     },
+  { name: 'defaultValue',      type: tContent('props.table.defaultValue.type'),      defaultValue: tContent('props.table.defaultValue.default'),      required: tContent('props.table.defaultValue.required'),      description: toPlainText(tContent('props.table.defaultValue.description'))      },
+  { name: 'delayDuration',     type: tContent('props.table.delayDuration.type'),     defaultValue: tContent('props.table.delayDuration.default'),     required: tContent('props.table.delayDuration.required'),     description: toPlainText(tContent('props.table.delayDuration.description'))     },
+  { name: 'skipDelayDuration', type: tContent('props.table.skipDelayDuration.type'), defaultValue: tContent('props.table.skipDelayDuration.default'), required: tContent('props.table.skipDelayDuration.required'), description: toPlainText(tContent('props.table.skipDelayDuration.description')) },
+  { name: 'orientation',       type: tContent('props.table.orientation.type'),       defaultValue: tContent('props.table.orientation.default'),       required: tContent('props.table.orientation.required'),       description: toPlainText(tContent('props.table.orientation.description'))       },
 ]);
 
 const tokenRows = computed(() => [
@@ -373,11 +367,11 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',           description: stripHtml(tContent('accessibility.keyboard.tab'))     },
-  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',  description: stripHtml(tContent('accessibility.keyboard.arrows')) },
-  { key: 'Enter / Space', description: stripHtml(tContent('accessibility.keyboard.enter'))  },
-  { key: 'Escape',        description: stripHtml(tContent('accessibility.keyboard.escape')) },
-  { key: 'Home / End',    description: stripHtml(tContent('accessibility.keyboard.homeEnd'))},
+  { key: 'Tab',           description: toPlainText(tContent('accessibility.keyboard.tab'))     },
+  { key: 'Arrow Up / Arrow Down / Arrow Left / Arrow Right',  description: toPlainText(tContent('accessibility.keyboard.arrows')) },
+  { key: 'Enter / Space', description: toPlainText(tContent('accessibility.keyboard.enter'))  },
+  { key: 'Escape',        description: toPlainText(tContent('accessibility.keyboard.escape')) },
+  { key: 'Home / End',    description: toPlainText(tContent('accessibility.keyboard.homeEnd'))},
 ]);
 
 const relatedItems = computed(() => [
@@ -402,8 +396,8 @@ const analyticsItems = computed(() => [
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-  action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-  result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
@@ -1073,8 +1067,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />

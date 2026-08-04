@@ -37,6 +37,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -55,10 +56,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -141,8 +138,6 @@ const navGroups = computed(() => [
 const allSectionIds = computed(() =>
   navGroups.value.flatMap((g) => g.sections.map((s) => s.id))
 );
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -306,11 +301,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),         trigger: tContent('states.closed.trigger'),         behavior: stripHtml(tContent('states.closed.behavior')) },
-  { label: tContent('states.open.label'),           trigger: tContent('states.open.trigger'),           behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.transitioning.label'),  trigger: tContent('states.transitioning.trigger'),  behavior: stripHtml(tContent('states.transitioning.behavior')) },
-  { label: tContent('states.focused.label'),        trigger: tContent('states.focused.trigger'),        behavior: stripHtml(tContent('states.focused.behavior')) },
-  { label: tContent('states.longScrollBody.label'), trigger: stripHtml(tContent('states.longScrollBody.trigger')), behavior: stripHtml(tContent('states.longScrollBody.behavior')) },
+  { label: tContent('states.closed.label'),         trigger: toPlainText(tContent('states.closed.trigger')),         behavior: toPlainText(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),           trigger: toPlainText(tContent('states.open.trigger')),           behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.transitioning.label'),  trigger: toPlainText(tContent('states.transitioning.trigger')),  behavior: toPlainText(tContent('states.transitioning.behavior')) },
+  { label: tContent('states.focused.label'),        trigger: toPlainText(tContent('states.focused.trigger')),        behavior: toPlainText(tContent('states.focused.behavior')) },
+  { label: tContent('states.longScrollBody.label'), trigger: toPlainText(tContent('states.longScrollBody.trigger')), behavior: toPlainText(tContent('states.longScrollBody.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -322,12 +317,12 @@ const propCols = computed(() => ({
 }));
 
 const propRows = computed(() => [
-  { name: 'open',            type: tContent('props.table.open.type'),            defaultValue: tContent('props.table.open.default'),            required: tContent('props.table.open.required'),            description: stripHtml(tContent('props.table.open.description'))            },
-  { name: 'defaultOpen',     type: tContent('props.table.defaultOpen.type'),     defaultValue: tContent('props.table.defaultOpen.default'),     required: tContent('props.table.defaultOpen.required'),     description: stripHtml(tContent('props.table.defaultOpen.description'))     },
-  { name: 'onUpdate:open',   type: tContent('props.table.onOpenChange.type'),    defaultValue: tContent('props.table.onOpenChange.default'),    required: tContent('props.table.onOpenChange.required'),    description: stripHtml(tContent('props.table.onOpenChange.description'))    },
-  { name: 'side',            type: tContent('props.table.side.type'),            defaultValue: tContent('props.table.side.default'),            required: tContent('props.table.side.required'),            description: stripHtml(tContent('props.table.side.description'))            },
-  { name: 'showCloseButton', type: tContent('props.table.showCloseButton.type'), defaultValue: tContent('props.table.showCloseButton.default'), required: tContent('props.table.showCloseButton.required'), description: stripHtml(tContent('props.table.showCloseButton.description')) },
-  { name: 'class',           type: tContent('props.table.className.type'),       defaultValue: tContent('props.table.className.default'),       required: tContent('props.table.className.required'),       description: stripHtml(tContent('props.table.className.description'))       },
+  { name: 'open',            type: tContent('props.table.open.type'),            defaultValue: tContent('props.table.open.default'),            required: tContent('props.table.open.required'),            description: toPlainText(tContent('props.table.open.description'))            },
+  { name: 'defaultOpen',     type: tContent('props.table.defaultOpen.type'),     defaultValue: tContent('props.table.defaultOpen.default'),     required: tContent('props.table.defaultOpen.required'),     description: toPlainText(tContent('props.table.defaultOpen.description'))     },
+  { name: 'onUpdate:open',   type: tContent('props.table.onOpenChange.type'),    defaultValue: tContent('props.table.onOpenChange.default'),    required: tContent('props.table.onOpenChange.required'),    description: toPlainText(tContent('props.table.onOpenChange.description'))    },
+  { name: 'side',            type: tContent('props.table.side.type'),            defaultValue: tContent('props.table.side.default'),            required: tContent('props.table.side.required'),            description: toPlainText(tContent('props.table.side.description'))            },
+  { name: 'showCloseButton', type: tContent('props.table.showCloseButton.type'), defaultValue: tContent('props.table.showCloseButton.default'), required: tContent('props.table.showCloseButton.required'), description: toPlainText(tContent('props.table.showCloseButton.description')) },
+  { name: 'class',           type: tContent('props.table.className.type'),       defaultValue: tContent('props.table.className.default'),       required: tContent('props.table.className.required'),       description: toPlainText(tContent('props.table.className.description'))       },
 ]);
 
 const tokenRows = computed(() => [
@@ -372,9 +367,9 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'dialog_open',    trigger: tContent('analytics.table.dialog_open.trigger'),    payload: tContent('analytics.table.dialog_open.payload')    },
-  { event: 'dialog_close',   trigger: tContent('analytics.table.dialog_close.trigger'),   payload: tContent('analytics.table.dialog_close.payload')   },
-  { event: 'dialog_confirm', trigger: tContent('analytics.table.dialog_confirm.trigger'), payload: tContent('analytics.table.dialog_confirm.payload') },
+  { event: 'dialog_open',    trigger: toPlainText(tContent('analytics.table.dialog_open.trigger')),    payload: tContent('analytics.table.dialog_open.payload')    },
+  { event: 'dialog_close',   trigger: toPlainText(tContent('analytics.table.dialog_close.trigger')),   payload: tContent('analytics.table.dialog_close.payload')   },
+  { event: 'dialog_confirm', trigger: toPlainText(tContent('analytics.table.dialog_confirm.trigger')), payload: tContent('analytics.table.dialog_confirm.payload') },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
@@ -777,8 +772,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -835,7 +830,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

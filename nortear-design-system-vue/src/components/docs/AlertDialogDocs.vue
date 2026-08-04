@@ -24,6 +24,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,10 +43,6 @@ const screenReaderItems = computed(() =>
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -120,8 +117,6 @@ const navGroups = computed(() => [
 const allSectionIds = computed(() =>
   navGroups.value.flatMap((g) => g.sections.map((s) => s.id))
 );
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -252,11 +247,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),     trigger: stripHtml(tContent('states.closed.trigger')),     behavior: tContent('states.closed.behavior')     },
-  { label: tContent('states.open.label'),       trigger: stripHtml(tContent('states.open.trigger')),       behavior: tContent('states.open.behavior')       },
-  { label: tContent('states.confirmed.label'),  trigger: stripHtml(tContent('states.confirmed.trigger')),  behavior: tContent('states.confirmed.behavior')  },
-  { label: tContent('states.cancelled.label'),  trigger: stripHtml(tContent('states.cancelled.trigger')),  behavior: tContent('states.cancelled.behavior') },
-  { label: tContent('states.controlled.label'), trigger: stripHtml(tContent('states.controlled.trigger')), behavior: tContent('states.controlled.behavior') },
+  { label: tContent('states.closed.label'),     trigger: toPlainText(tContent('states.closed.trigger')),     behavior: toPlainText(tContent('states.closed.behavior'))},
+  { label: tContent('states.open.label'),       trigger: toPlainText(tContent('states.open.trigger')),       behavior: toPlainText(tContent('states.open.behavior'))},
+  { label: tContent('states.confirmed.label'),  trigger: toPlainText(tContent('states.confirmed.trigger')),  behavior: toPlainText(tContent('states.confirmed.behavior'))},
+  { label: tContent('states.cancelled.label'),  trigger: toPlainText(tContent('states.cancelled.trigger')),  behavior: toPlainText(tContent('states.cancelled.behavior'))},
+  { label: tContent('states.controlled.label'), trigger: toPlainText(tContent('states.controlled.trigger')), behavior: toPlainText(tContent('states.controlled.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -266,33 +261,33 @@ const propCols = computed(() => ({
 }));
 
 const rootProps = computed(() => [
-  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.open'))         },
-  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: 'Não', description: stripHtml(tContent('props.table.defaultOpen')) },
-  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.onOpenChange'))},
-  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: 'Sim', description: stripHtml(tContent('props.table.children'))    },
+  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.open'))         },
+  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: 'Não', description: toPlainText(tContent('props.table.defaultOpen')) },
+  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.onOpenChange'))},
+  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: 'Sim', description: toPlainText(tContent('props.table.children'))    },
 ]);
 
 const triggerProps = computed(() => [
-  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.asChild'))  },
+  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.asChild'))  },
   { name: 'class',        type: 'string',  defaultValue: '—',     required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const contentProps = computed(() => [
   { name: 'class',        type: 'string', defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const actionProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onClick'))  },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
   { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const cancelProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onClick'))  },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
   { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -338,12 +333,12 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.open'),          trigger: tContent('analytics.table.openTrigger'),          payload: tContent('analytics.table.openPayload')          },
-  { event: tContent('analytics.table.confirm'),       trigger: tContent('analytics.table.confirmTrigger'),       payload: tContent('analytics.table.confirmPayload')       },
-  { event: tContent('analytics.table.close'),         trigger: tContent('analytics.table.closeTrigger'),         payload: tContent('analytics.table.closePayload')         },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.open'),          trigger: toPlainText(tContent('analytics.table.openTrigger')),          payload: tContent('analytics.table.openPayload')          },
+  { event: tContent('analytics.table.confirm'),       trigger: toPlainText(tContent('analytics.table.confirmTrigger')),       payload: tContent('analytics.table.confirmPayload')       },
+  { event: tContent('analytics.table.close'),         trigger: toPlainText(tContent('analytics.table.closeTrigger')),         payload: tContent('analytics.table.closePayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
@@ -579,8 +574,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -641,7 +636,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

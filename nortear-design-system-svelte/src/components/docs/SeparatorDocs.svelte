@@ -13,6 +13,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import separatorTranslations from '@shared/content/separator/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(separatorTranslations);
@@ -49,7 +50,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     return [
@@ -85,10 +85,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -222,11 +218,11 @@
         alternative: $tStore('usage.scenarios.cols.alternative'),
       },
       items: [
-        { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: stripHtml($tStore('usage.scenarios.item1.a')) },
-        { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: stripHtml($tStore('usage.scenarios.item2.a')) },
-        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: stripHtml($tStore('usage.scenarios.item3.a')) },
-        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: stripHtml($tStore('usage.scenarios.item4.a')) },
-        { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: stripHtml($tStore('usage.scenarios.item5.a')) },
+        { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: toPlainText($tStore('usage.scenarios.item1.a')) },
+        { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: toPlainText($tStore('usage.scenarios.item2.a')) },
+        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: toPlainText($tStore('usage.scenarios.item3.a')) },
+        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: toPlainText($tStore('usage.scenarios.item4.a')) },
+        { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: toPlainText($tStore('usage.scenarios.item5.a')) },
       ],
     }}
     do={{
@@ -340,12 +336,12 @@
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.decorative.label'), trigger: $tStore('states.decorative.trigger'), behavior: stripHtml($tStore('states.decorative.behavior')) },
-      { label: $tStore('states.semantic.label'),   trigger: $tStore('states.semantic.trigger'),   behavior: stripHtml($tStore('states.semantic.behavior')) },
+      { label: $tStore('states.decorative.label'), trigger: toPlainText($tStore('states.decorative.trigger')), behavior: toPlainText($tStore('states.decorative.behavior')) },
+      { label: $tStore('states.semantic.label'),   trigger: toPlainText($tStore('states.semantic.trigger')),   behavior: toPlainText($tStore('states.semantic.behavior')) },
     ]}
   />
 
@@ -457,11 +453,11 @@
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: stripHtml($tStore('testes.functional.item1.action')), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item5.action')), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -472,11 +468,11 @@
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA', how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.11', how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: 'AA', how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '1.3.1', how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '2.1.1', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.11', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: 'AA', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '1.3.1', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '2.1.1', how: '—' },
       ],
     }}
     visual={{

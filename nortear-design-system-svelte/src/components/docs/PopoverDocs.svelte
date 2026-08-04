@@ -23,6 +23,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import popoverTranslations from '@shared/content/popover/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(popoverTranslations);
@@ -66,7 +67,6 @@
 
   // ─── Active section ──────────────────────────────────────────────────────────
 
-
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
     const tContent = $tStore;
@@ -104,10 +104,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -748,14 +744,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),        trigger: $tStore('states.closed.trigger'),        behavior: stripHtml($tStore('states.closed.behavior')) },
-      { label: $tStore('states.open.label'),          trigger: $tStore('states.open.trigger'),          behavior: stripHtml($tStore('states.open.behavior')) },
-      { label: $tStore('states.transitioning.label'), trigger: $tStore('states.transitioning.trigger'), behavior: stripHtml($tStore('states.transitioning.behavior')) },
-      { label: $tStore('states.focused.label'),       trigger: $tStore('states.focused.trigger'),       behavior: stripHtml($tStore('states.focused.behavior')) },
+      { label: $tStore('states.closed.label'),        trigger: toPlainText($tStore('states.closed.trigger')),        behavior: toPlainText($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),          trigger: toPlainText($tStore('states.open.trigger')),          behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.transitioning.label'), trigger: toPlainText($tStore('states.transitioning.trigger')), behavior: toPlainText($tStore('states.transitioning.behavior')) },
+      { label: $tStore('states.focused.label'),       trigger: toPlainText($tStore('states.focused.trigger')),       behavior: toPlainText($tStore('states.focused.behavior')) },
     ]}
   />
 
@@ -766,13 +762,13 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       {
         cols: propsTableCols,
         items: [
-          { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: stripHtml($tStore('props.table.open.description'))         },
-          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: stripHtml($tStore('props.table.defaultOpen.description'))  },
-          { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: stripHtml($tStore('props.table.onOpenChange.description')) },
-          { name: 'modal',        type: $tStore('props.table.modal.type'),        defaultValue: $tStore('props.table.modal.default'),        required: $tStore('props.table.modal.required'),        description: stripHtml($tStore('props.table.modal.description'))        },
-          { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: stripHtml($tStore('props.table.side.description'))         },
-          { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: stripHtml($tStore('props.table.align.description'))        },
-          { name: 'sideOffset',   type: $tStore('props.table.sideOffset.type'),   defaultValue: $tStore('props.table.sideOffset.default'),   required: $tStore('props.table.sideOffset.required'),   description: stripHtml($tStore('props.table.sideOffset.description'))   },
+          { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: toPlainText($tStore('props.table.open.description'))         },
+          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: toPlainText($tStore('props.table.defaultOpen.description'))  },
+          { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: toPlainText($tStore('props.table.onOpenChange.description')) },
+          { name: 'modal',        type: $tStore('props.table.modal.type'),        defaultValue: $tStore('props.table.modal.default'),        required: $tStore('props.table.modal.required'),        description: toPlainText($tStore('props.table.modal.description'))        },
+          { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: toPlainText($tStore('props.table.side.description'))         },
+          { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: toPlainText($tStore('props.table.align.description'))        },
+          { name: 'sideOffset',   type: $tStore('props.table.sideOffset.type'),   defaultValue: $tStore('props.table.sideOffset.default'),   required: $tStore('props.table.sideOffset.required'),   description: toPlainText($tStore('props.table.sideOffset.description'))   },
         ],
       },
     ]}
@@ -817,11 +813,11 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: 'Tab',       description: stripHtml($tStore('accessibility.keyboard.tab'))      },
-      { key: 'Shift+Tab', description: stripHtml($tStore('accessibility.keyboard.shiftTab')) },
-      { key: 'Escape',    description: stripHtml($tStore('accessibility.keyboard.escape'))   },
-      { key: 'Enter',     description: stripHtml($tStore('accessibility.keyboard.enter'))    },
-      { key: 'Space',     description: stripHtml($tStore('accessibility.keyboard.space'))    },
+      { key: 'Tab',       description: toPlainText($tStore('accessibility.keyboard.tab'))      },
+      { key: 'Shift+Tab', description: toPlainText($tStore('accessibility.keyboard.shiftTab')) },
+      { key: 'Escape',    description: toPlainText($tStore('accessibility.keyboard.escape'))   },
+      { key: 'Enter',     description: toPlainText($tStore('accessibility.keyboard.enter'))    },
+      { key: 'Space',     description: toPlainText($tStore('accessibility.keyboard.space'))    },
     ]}
   />
 
@@ -852,12 +848,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'popover_open',  trigger: $tStore('analytics.table.popover_open.trigger'),  payload: $tStore('analytics.table.popover_open.payload')  },
-      { event: 'popover_close', trigger: $tStore('analytics.table.popover_close.trigger'), payload: $tStore('analytics.table.popover_close.payload') },
+      { event: 'popover_open',  trigger: toPlainText($tStore('analytics.table.popover_open.trigger')),  payload: $tStore('analytics.table.popover_open.payload')  },
+      { event: 'popover_close', trigger: toPlainText($tStore('analytics.table.popover_close.trigger')), payload: $tStore('analytics.table.popover_close.payload') },
     ]}
   />
 
@@ -872,8 +868,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -885,11 +881,11 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'         },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.3',  how: 'Contrast checker' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '2.4.7',  how: 'Keyboard test'    },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '4.1.2',  how: 'DevTools a11y'    },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools a11y'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'         },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.3',  how: 'Contrast checker' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '2.4.7',  how: 'Keyboard test'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2',  how: 'DevTools a11y'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools a11y'    },
       ],
     }}
     visual={{
