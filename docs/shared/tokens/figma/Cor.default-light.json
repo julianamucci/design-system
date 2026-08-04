@@ -2,27 +2,27 @@
   "superficie": {
     "background": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "foreground": {
       "$type": "color",
-      "$value": "#0A0A0A"
+      "$value": "#0a0a0a"
     },
     "card": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "card-foreground": {
       "$type": "color",
-      "$value": "#0A0A0A"
+      "$value": "#0a0a0a"
     },
     "popover": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "popover-foreground": {
       "$type": "color",
-      "$value": "#0A0A0A"
+      "$value": "#0a0a0a"
     }
   },
   "marca": {
@@ -32,19 +32,19 @@
     },
     "primary-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "secondary": {
       "$type": "color",
-      "$value": "#F5F5F5"
+      "$value": "#f5f5f5"
     },
     "secondary-foreground": {
       "$type": "color",
-      "$value": "#0A0A0A"
+      "$value": "#0a0a0a"
     },
     "muted": {
       "$type": "color",
-      "$value": "#F5F5F5"
+      "$value": "#f5f5f5"
     },
     "muted-foreground": {
       "$type": "color",
@@ -52,7 +52,7 @@
     },
     "accent": {
       "$type": "color",
-      "$value": "#F5F5F5"
+      "$value": "#f5f5f5"
     },
     "accent-foreground": {
       "$type": "color",
@@ -62,49 +62,49 @@
   "feedback": {
     "destructive": {
       "$type": "color",
-      "$value": "#BA1C1C"
+      "$value": "#ba1c1c"
     },
     "destructive-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "success": {
       "$type": "color",
-      "$value": "#08682B"
+      "$value": "#08682b"
     },
     "success-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "warning": {
       "$type": "color",
-      "$value": "#B38705"
+      "$value": "#b38705"
     },
     "warning-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "info": {
       "$type": "color",
-      "$value": "#134CC9"
+      "$value": "#134cc9"
     },
     "info-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     }
   },
   "estrutura": {
     "border": {
       "$type": "color",
-      "$value": "#E6E6E6"
+      "$value": "#e6e6e6"
     },
     "input": {
       "$type": "color",
-      "$value": "#E6E6E6"
+      "$value": "#e6e6e6"
     },
     "input-background": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "ring": {
       "$type": "color",
@@ -112,39 +112,39 @@
     },
     "ring-offset-color": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     }
   },
   "grafico": {
     "chart-1": {
       "$type": "color",
-      "$value": "#56C3F5"
+      "$value": "#56c3f5"
     },
     "chart-2": {
       "$type": "color",
-      "$value": "#00AAFF"
+      "$value": "#00aaff"
     },
     "chart-3": {
       "$type": "color",
-      "$value": "#029EF2"
+      "$value": "#029ef2"
     },
     "chart-4": {
       "$type": "color",
-      "$value": "#0D8BCE"
+      "$value": "#0d8bce"
     },
     "chart-5": {
       "$type": "color",
-      "$value": "#113B64"
+      "$value": "#113b64"
     }
   },
   "sidebar": {
     "sidebar": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "sidebar-foreground": {
       "$type": "color",
-      "$value": "#0A0A0A"
+      "$value": "#0a0a0a"
     },
     "sidebar-primary": {
       "$type": "color",
@@ -152,11 +152,11 @@
     },
     "sidebar-primary-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "sidebar-accent": {
       "$type": "color",
-      "$value": "#F5F5F5"
+      "$value": "#f5f5f5"
     },
     "sidebar-accent-foreground": {
       "$type": "color",
@@ -164,7 +164,7 @@
     },
     "sidebar-border": {
       "$type": "color",
-      "$value": "#D4D4D4"
+      "$value": "#d4d4d4"
     },
     "sidebar-ring": {
       "$type": "color",

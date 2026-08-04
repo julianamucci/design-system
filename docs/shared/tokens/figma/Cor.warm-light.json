@@ -2,7 +2,7 @@
   "superficie": {
     "background": {
       "$type": "color",
-      "$value": "#FDFCFC"
+      "$value": "#fdfcfc"
     },
     "foreground": {
       "$type": "color",
@@ -10,7 +10,7 @@
     },
     "card": {
       "$type": "color",
-      "$value": "#FDFCFC"
+      "$value": "#fdfcfc"
     },
     "card-foreground": {
       "$type": "color",
@@ -18,7 +18,7 @@
     },
     "popover": {
       "$type": "color",
-      "$value": "#FDFCFC"
+      "$value": "#fdfcfc"
     },
     "popover-foreground": {
       "$type": "color",
@@ -28,119 +28,119 @@
   "marca": {
     "primary": {
       "$type": "color",
-      "$value": "#9C3E16"
+      "$value": "#9c3e16"
     },
     "primary-foreground": {
       "$type": "color",
-      "$value": "#FBFAF8"
+      "$value": "#fbfaf8"
     },
     "secondary": {
       "$type": "color",
-      "$value": "#F6ECDF"
+      "$value": "#f6ecdf"
     },
     "secondary-foreground": {
       "$type": "color",
-      "$value": "#5A2B16"
+      "$value": "#5a2b16"
     },
     "muted": {
       "$type": "color",
-      "$value": "#F5F2F0"
+      "$value": "#f5f2f0"
     },
     "muted-foreground": {
       "$type": "color",
-      "$value": "#78695E"
+      "$value": "#78695e"
     },
     "accent": {
       "$type": "color",
-      "$value": "#F6ECDF"
+      "$value": "#f6ecdf"
     },
     "accent-foreground": {
       "$type": "color",
-      "$value": "#5A2B16"
+      "$value": "#5a2b16"
     }
   },
   "feedback": {
     "destructive": {
       "$type": "color",
-      "$value": "#BA1C1C"
+      "$value": "#ba1c1c"
     },
     "destructive-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "success": {
       "$type": "color",
-      "$value": "#1D722B"
+      "$value": "#1d722b"
     },
     "success-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "warning": {
       "$type": "color",
-      "$value": "#BD5B05"
+      "$value": "#bd5b05"
     },
     "warning-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "info": {
       "$type": "color",
-      "$value": "#D45F11"
+      "$value": "#d45f11"
     },
     "info-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     }
   },
   "estrutura": {
     "border": {
       "$type": "color",
-      "$value": "#E5E0DC"
+      "$value": "#e5e0dc"
     },
     "input": {
       "$type": "color",
-      "$value": "#E5E0DC"
+      "$value": "#e5e0dc"
     },
     "input-background": {
       "$type": "color",
-      "$value": "#FDFCFC"
+      "$value": "#fdfcfc"
     },
     "ring": {
       "$type": "color",
-      "$value": "#C9501D"
+      "$value": "#c9501d"
     },
     "ring-offset-color": {
       "$type": "color",
-      "$value": "#FDFCFC"
+      "$value": "#fdfcfc"
     }
   },
   "grafico": {
     "chart-1": {
       "$type": "color",
-      "$value": "#FA9F38"
+      "$value": "#fa9f38"
     },
     "chart-2": {
       "$type": "color",
-      "$value": "#F2690D"
+      "$value": "#f2690d"
     },
     "chart-3": {
       "$type": "color",
-      "$value": "#D44C11"
+      "$value": "#d44c11"
     },
     "chart-4": {
       "$type": "color",
-      "$value": "#E29D36"
+      "$value": "#e29d36"
     },
     "chart-5": {
       "$type": "color",
-      "$value": "#AD401F"
+      "$value": "#ad401f"
     }
   },
   "sidebar": {
     "sidebar": {
       "$type": "color",
-      "$value": "#FBFAF9"
+      "$value": "#fbfaf9"
     },
     "sidebar-foreground": {
       "$type": "color",
@@ -148,27 +148,27 @@
     },
     "sidebar-primary": {
       "$type": "color",
-      "$value": "#9C3E16"
+      "$value": "#9c3e16"
     },
     "sidebar-primary-foreground": {
       "$type": "color",
-      "$value": "#FBFAF8"
+      "$value": "#fbfaf8"
     },
     "sidebar-accent": {
       "$type": "color",
-      "$value": "#F6ECDF"
+      "$value": "#f6ecdf"
     },
     "sidebar-accent-foreground": {
       "$type": "color",
-      "$value": "#5A2B16"
+      "$value": "#5a2b16"
     },
     "sidebar-border": {
       "$type": "color",
-      "$value": "#DED9D3"
+      "$value": "#ded9d3"
     },
     "sidebar-ring": {
       "$type": "color",
-      "$value": "#C9501D"
+      "$value": "#c9501d"
     }
   }
 }

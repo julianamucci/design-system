@@ -6,7 +6,7 @@
     },
     "foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "card": {
       "$type": "color",
@@ -14,7 +14,7 @@
     },
     "card-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "popover": {
       "$type": "color",
@@ -22,13 +22,13 @@
     },
     "popover-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     }
   },
   "marca": {
     "primary": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "primary-foreground": {
       "$type": "color",
@@ -40,7 +40,7 @@
     },
     "secondary-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "muted": {
       "$type": "color",
@@ -48,7 +48,7 @@
     },
     "muted-foreground": {
       "$type": "color",
-      "$value": "#B3B3B3"
+      "$value": "#b3b3b3"
     },
     "accent": {
       "$type": "color",
@@ -56,21 +56,21 @@
     },
     "accent-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     }
   },
   "feedback": {
     "destructive": {
       "$type": "color",
-      "$value": "#F47171"
+      "$value": "#f47171"
     },
     "destructive-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     },
     "success": {
       "$type": "color",
-      "$value": "#3BDE77"
+      "$value": "#3bde77"
     },
     "success-foreground": {
       "$type": "color",
@@ -78,7 +78,7 @@
     },
     "warning": {
       "$type": "color",
-      "$value": "#FAD338"
+      "$value": "#fad338"
     },
     "warning-foreground": {
       "$type": "color",
@@ -86,11 +86,11 @@
     },
     "info": {
       "$type": "color",
-      "$value": "#2463EB"
+      "$value": "#2463eb"
     },
     "info-foreground": {
       "$type": "color",
-      "$value": "#FFFFFF"
+      "$value": "#ffffff"
     }
   },
   "estrutura": {
@@ -118,23 +118,23 @@
   "grafico": {
     "chart-1": {
       "$type": "color",
-      "$value": "#56C3F5"
+      "$value": "#56c3f5"
     },
     "chart-2": {
       "$type": "color",
-      "$value": "#00AAFF"
+      "$value": "#00aaff"
     },
     "chart-3": {
       "$type": "color",
-      "$value": "#029EF2"
+      "$value": "#029ef2"
     },
     "chart-4": {
       "$type": "color",
-      "$value": "#0D8BCE"
+      "$value": "#0d8bce"
     },
     "chart-5": {
       "$type": "color",
-      "$value": "#113B64"
+      "$value": "#113b64"
     }
   },
   "sidebar": {
@@ -144,11 +144,11 @@
     },
     "sidebar-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "sidebar-primary": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "sidebar-primary-foreground": {
       "$type": "color",
@@ -160,7 +160,7 @@
     },
     "sidebar-accent-foreground": {
       "$type": "color",
-      "$value": "#FAFAFA"
+      "$value": "#fafafa"
     },
     "sidebar-border": {
       "$type": "color",

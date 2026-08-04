@@ -99,7 +99,12 @@ function hslToHex(triplet) {
     b = hue(p, q, h - 1 / 3);
   }
   const hex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
-  return `#${hex(r)}${hex(g)}${hex(b)}`.toUpperCase();
+  // MINÚSCULA de propósito. Vários `parseColor` de importador testam
+  // /^#([a-f0-9]{6})$/ SEM a flag `i` — com hex maiúsculo eles lançam "invalid
+  // color format" e a importação reprova só as cores, deixando number e string
+  // passarem. Foi o que aconteceu: "Encountered errors importing 40 tokens",
+  // exatamente as 40 cores de um modo.
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
 }
 
 /** Resolve dimensão para px. Aceita rem, px, 0, var() e o calc() usado nos tokens. */
@@ -354,7 +359,8 @@ if (process.argv.includes('--split')) {
  */
 if (process.argv.includes('--validate')) {
   const TIPO = { color: 'COLOR', number: 'FLOAT', string: 'STRING', boolean: 'BOOLEAN' };
-  const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+  // Sem a flag `i`: o gerador tem que emitir minúscula, pelo motivo em hslToHex.
+  const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/;
   const problemas = [];
   const colecoes = new Map();
 
