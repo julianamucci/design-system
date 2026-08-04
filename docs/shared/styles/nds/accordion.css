@@ -59,7 +59,13 @@
   border-radius: var(--radius);
   text-align: left;
   font-family: inherit;
-  font-size: 0.875rem;                     /* 14px */
+  /* Corpo de texto, não label: o gatilho é a pergunta, e ela se lê como texto
+     corrido. Era `0.875rem` literal — fora da escala, e o token mais próximo
+     (--text-label, 13.3px em minor-third) seria menor ainda.
+     A entrelinha vai explícita porque herdada ela variava com o contexto: no
+     Figma o rótulo assentava em 19px (automático) contra os 24px do token. */
+  font-size: var(--text-p);
+  line-height: var(--line-height-normal);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--foreground));
   cursor: pointer;
@@ -119,7 +125,7 @@
  */
 .nds-accordion-content {
   overflow: hidden;
-  font-size: 0.875rem;                     /* 14px */
+  font-size: var(--text-p);                /* mesmo corpo de texto do gatilho */
   color: hsl(var(--foreground));
   display: grid;
   grid-template-rows: 1fr;
@@ -183,8 +189,10 @@
  * desmontava o conteúdo — um salto seco de 16px. Era essa a sensação de
  * "degrau" e de "parar em duas etapas".
  *
- * Com o padding indo a zero, a altura chega a 0 de fato (medido: 0.1px aos
- * 284ms) e o movimento ocupa a duração inteira.
+ * Com o padding indo a zero, a altura chega a 0 de fato e o movimento ocupa a
+ * duração inteira. Remedido depois da tipografia ir para --text-p (16px/1.5),
+ * que deixou o painel mais alto: 88 → 65.8 → 25.8 → 7.9 → 1.2 → 0.0 ao longo
+ * dos 300ms. Curva contínua, sem o platô de 16px do bug antigo.
  */
 @keyframes nds-accordion-body-expand {
   from { padding-bottom: 0; }
@@ -230,7 +238,7 @@
   min-height: 0;
   padding-top: 0;
   padding-bottom: var(--spacing-4);        /* 16px */
-  line-height: 1.5;
+  line-height: var(--line-height-normal);  /* era 1.5 literal */
 }
 
 
