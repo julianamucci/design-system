@@ -201,8 +201,8 @@
    mesmo valor e saiu como redundância. */
 
 /* ── Glow na borda ────────────────────────────────────────────────────────────
- * Um ponto de luz percorre a borda que já existe, dá DUAS voltas em velocidade
- * constante e desacelera até parar no fim da segunda.
+ * Um traço de luz corre POR DENTRO da borda que já existe, dá DUAS voltas em
+ * velocidade constante e desacelera até parar no fim da segunda.
  *
  * Não entra na anatomia: é um ::after absoluto, fora do fluxo do grid e sem
  * ponteiro. Nenhum elemento novo no DOM e nenhuma classe nova para as stacks
@@ -244,20 +244,30 @@
 .nds-alert::after {
   content: "";
   position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--alert-glow);
-  /* Dois raios: o curto dá o núcleo aceso, o largo o bloom — é o que separa
-     "luz" de "bolinha colorida". */
-  filter: drop-shadow(0 0 3px var(--alert-glow))
+
+  /* Traço, não ponto: barra fina com rastro que apaga para trás.
+     O comprimento é o único ajuste com custo: a barra é reta e a quina é um
+     arco, então ao dobrar ela sai um pouco para fora. Medido nesta caixa
+     (400x80, raio 10), transbordo máximo do bbox por comprimento —
+       8px → 2,6   10px → 3,9   12px → 5,3   14px → 6,8   18px → 10,1
+     — e acontece num único instante por quina, na ponta do rastro, que já é
+     transparente e passa por blur. 12px é onde ainda lê como traço sem a barra
+     "voar" na curva. */
+  width: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, transparent, var(--alert-glow));
+  /* blur amassa as pontas do traço; os dois drop-shadows fazem o halo. */
+  filter: blur(1px)
+          drop-shadow(0 0 3px var(--alert-glow))
           drop-shadow(0 0 8px var(--alert-glow));
 
-  /* `border-box` é o caminho do próprio alert, cantos arredondados inclusive —
-     acompanha qualquer largura e qualquer --radius-alert sem recalcular nada. */
-  offset-path: border-box;
-  offset-anchor: center;                        /* anda centrado no caminho */
-  offset-rotate: 0deg;                          /* círculo não precisa girar */
+  /* `padding-box` é o caminho logo DENTRO da borda de 1px — acompanha qualquer
+     largura e qualquer --radius-alert sem recalcular nada. Com `border-box` o
+     traço corria em cima da borda e metade dele sobrava para fora do alert. */
+  offset-path: padding-box;
+  offset-rotate: auto;                          /* alinha com a tangente */
+  offset-anchor: 100% 50%;                      /* a PONTA vai no caminho, o rastro atrás */
   offset-distance: 0%;
 
   pointer-events: none;
@@ -265,10 +275,10 @@
   /* 2 voltas em 6,4s — ~3,2s por volta, ritmo de deslize e não de giro.
      Duração derivada de token: sob prefers-reduced-motion as durações vão a 0ms
      e o efeito se anula sozinho; a regra abaixo é a garantia explícita.
-     Delay de 5s é valor de produto — nenhuma duração da escala chega perto. */
+     Delay de 3s é valor de produto — nenhuma duração da escala chega perto. */
   animation:
-    nds-alert-glow-percurso calc(var(--duration-stately) * 8) linear 5s forwards,
-    nds-alert-glow-brilho   calc(var(--duration-stately) * 8) linear 5s forwards;
+    nds-alert-glow-percurso calc(var(--duration-stately) * 8) linear 3s forwards,
+    nds-alert-glow-brilho   calc(var(--duration-stately) * 8) linear 3s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
