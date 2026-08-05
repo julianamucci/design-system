@@ -236,10 +236,11 @@
         "radius": "Border radius do container",
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
-        "alertBorder": "Borda — var interna"
+        "alertBorder": "Borda — var interna",
+        "alertGlow": "Cor do brilho que percorre a borda — var interna, cheia (a borda é translúcida)"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* brilho da borda — sem alfa */\n}"
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -651,10 +652,11 @@
         "radius": "Container border radius",
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
-        "alertBorder": "Border — internal var"
+        "alertBorder": "Border — internal var",
+        "alertGlow": "Colour of the glow that travels the border — internal var, full opacity (the border is translucent)"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* border glow — no alpha */\n}"
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1066,10 +1068,11 @@
         "radius": "Border radius del contenedor",
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",
-        "alertBorder": "Borde — var interna"
+        "alertBorder": "Borde — var interna",
+        "alertGlow": "Color del brillo que recorre el borde — var interna, opacidad plena (el borde es translúcido)"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* brillo del borde — sin alfa */\n}"
     },
     "accessibility": {
       "title": "Accesibilidad",
