@@ -201,77 +201,74 @@
    mesmo valor e saiu como redundância. */
 
 /* ── Glow na borda ────────────────────────────────────────────────────────────
- * Um segmento de brilho percorre a borda que já existe, dá DUAS voltas e
- * desacelera até parar, apagando no fim.
+ * Um ponto de luz percorre a borda que já existe, dá DUAS voltas em velocidade
+ * constante e desacelera até parar no fim da segunda.
  *
- * Não entra na anatomia: é um ::after absoluto, fora do fluxo do grid, sem
- * ponteiro e mascarado para um anel de 1px — a mesma espessura da borda, no
- * mesmo lugar. Nenhum elemento novo no DOM e nenhuma classe nova para as
- * stacks aplicarem.
+ * Não entra na anatomia: é um ::after absoluto, fora do fluxo do grid e sem
+ * ponteiro. Nenhum elemento novo no DOM e nenhuma classe nova para as stacks
+ * aplicarem.
+ *
+ * O percurso é `offset-path`, não gradiente cônico. Um conic-gradient gira a
+ * velocidade ANGULAR constante e, num retângulo, a distância do centro até a
+ * borda muda o tempo todo — o ponto acelerava nos cantos e freava no meio de
+ * cada lado, quatro vezes por volta. `offset-distance` anda em PERÍMETRO, então
+ * a velocidade é constante de verdade.
  */
 
-/* O ângulo precisa ser propriedade REGISTRADA: custom property comum é string
-   para o motor de animação e não interpola — o gradiente ficaria parado. */
-@property --nds-alert-glow-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
+@keyframes nds-alert-glow-percurso {
+  from { offset-distance: 0%;   animation-timing-function: linear; }
+  /* Velocidade constante até 1,5 volta; daí em diante a freada.
+     A curva começa com inclinação 1,69 (= 0.54/0.32), que é a razão entre a
+     velocidade do trecho linear (150%/64%) e a média deste (50%/36%) — é o que
+     faz a junção não ter degrau (medido: passo de 11,7% para 12,1%, 3%).
+     Termina em inclinação 0, que é a parada.
+     A freada precisa desse tanto de pista: cabendo só nos últimos 15% do tempo,
+     nenhuma curva cobre a distância que sobra sem primeiro ACELERAR — foi o que
+     a medição mostrou na primeira tentativa (passo saltava de 20,6 para 30,1).
+     Na prática o olho só percebe a desaceleração a partir de 1,75 volta: até
+     176% o passo ainda é o de cruzeiro. */
+  64%  { offset-distance: 150%; animation-timing-function: cubic-bezier(0.32, 0.54, 0.5, 1); }
+  to   { offset-distance: 200%; }
 }
 
-@keyframes nds-alert-glow {
-  /* O ponto acende e apaga em rampa, nunca com corte seco: aparecer do nada em
-     opacidade cheia entrega que é um elemento, não uma luz. */
-  from { --nds-alert-glow-angle: 0deg; opacity: 0; }
-  6%   { opacity: 1; }
-  /* Percurso em velocidade constante (`--ease-linear`); quem faz parar é o
-     apagar gradual do fim, não uma freada. Freando, o ponto fica parado e aceso
-     na borda antes de sumir. O fade só entra depois de 1,6 volta: começando
-     antes, metade da segunda volta já sai fantasma. */
-  80%  { opacity: 1; }
-  to   { --nds-alert-glow-angle: 720deg; opacity: 0; }
+/* Separado do percurso porque cada um tem seu perfil de tempo: o ponto acende e
+   apaga em rampa (aparecer e sumir em opacidade cheia entrega que é um
+   elemento, não uma luz) enquanto o percurso segue linear. */
+@keyframes nds-alert-glow-brilho {
+  from { opacity: 0; }
+  3%   { opacity: 1; }
+  86%  { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 .nds-alert::after {
   content: "";
   position: absolute;
-  inset: 0;                                     /* mesma caixa da borda */
-  border-radius: inherit;
-  padding: 1px;                                 /* espessura = a da borda */
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--alert-glow);
+  /* Dois raios: o curto dá o núcleo aceso, o largo o bloom — é o que separa
+     "luz" de "bolinha colorida". */
+  filter: drop-shadow(0 0 3px var(--alert-glow))
+          drop-shadow(0 0 8px var(--alert-glow));
 
-  /* Trecho aceso curto — 5,4° de pico e ~25° de rastro. É o que faz ler como
-     PONTO de luz percorrendo a borda; com o arco largo de antes parecia um
-     gradiente girando. */
-  background: conic-gradient(
-    from var(--nds-alert-glow-angle),
-    transparent 0turn,
-    var(--alert-glow) 0.015turn,
-    transparent 0.07turn
-  );
-  /* Recorta o miolo: pinta padding-box MENOS content-box, sobrando só o anel.
-     Sem isso o gradiente cobriria o alert inteiro. */
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  /* Os drop-shadows são aplicados DEPOIS da máscara, então acompanham o anel
-     visível e viram o halo — é o que separa "brilho" de "traço colorido". Dois
-     raios: o curto dá o núcleo aceso, o largo o bloom ao redor. */
-  filter: drop-shadow(0 0 2px var(--alert-glow))
-          drop-shadow(0 0 6px var(--alert-glow));
+  /* `border-box` é o caminho do próprio alert, cantos arredondados inclusive —
+     acompanha qualquer largura e qualquer --radius-alert sem recalcular nada. */
+  offset-path: border-box;
+  offset-anchor: center;                        /* anda centrado no caminho */
+  offset-rotate: 0deg;                          /* círculo não precisa girar */
+  offset-distance: 0%;
 
   pointer-events: none;
   opacity: 0;                                   /* estado de repouso */
   /* 2 voltas em 6,4s — ~3,2s por volta, ritmo de deslize e não de giro.
-     `--ease-linear` porque o olho acompanha o ponto no percurso inteiro:
-     qualquer curva de saída faz a segunda volta arrastar (medido: 80% do giro
-     na metade do tempo com --ease-size, 88% com --ease-standard, 89% com
-     --ease-entrance). Quem faz parar suavemente é o fade, não uma freada.
-     Duração derivada de token: sob prefers-reduced-motion as durações vão a
-     0ms e o efeito se anula sozinho; a regra abaixo é a garantia explícita. */
-  animation: nds-alert-glow calc(var(--duration-stately) * 8) var(--ease-linear) forwards;
-  /* Espera o componente assentar antes de chamar atenção. Valor de produto, não
-     derivado de token — nenhuma duração da escala chega perto de 5s. */
-  animation-delay: 5s;
+     Duração derivada de token: sob prefers-reduced-motion as durações vão a 0ms
+     e o efeito se anula sozinho; a regra abaixo é a garantia explícita.
+     Delay de 5s é valor de produto — nenhuma duração da escala chega perto. */
+  animation:
+    nds-alert-glow-percurso calc(var(--duration-stately) * 8) linear 5s forwards,
+    nds-alert-glow-brilho   calc(var(--duration-stately) * 8) linear 5s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
