@@ -1288,7 +1288,22 @@ para todas as regras que usam essa função — o que atinge sobretudo Svelte e 
 que organizam por pasta. Corrigido normalizando a barra; o audit foi de 1070
 para 1295, dos quais 214 são a regra nova e **11 estavam escondidos por isso**.
 
-### Não criei regra para classe morta
+### `dead_class_in_component` (low) — 21 achados em 5 componentes
 
-`legacy_class_in_story` já existe e já dispara **421 vezes** — ela detecta; o que
-falta é triagem, não detecção. Uma regra nova só somaria ruído.
+Eu tinha decidido não criar esta regra, com a justificativa de que
+`legacy_class_in_story` já dispara 421 vezes e o que falta é triagem. Medi: os
+três componentes que passaram pelo `/quality` estão em **zero**, e os 421 são os
+45 componentes que nunca rodaram a skill. A fila é backlog, não desinteresse — a
+justificativa estava errada.
+
+O buraco real era outro: a regra existente varre stories e wrappers
+`*Story.svelte`, e deixava de fora os arquivos de componente sem `Story` no nome
+— sobretudo as fixtures do Svelte (`TableVarianteBasica.svelte` e irmãs) e os
+primitivos. Medindo só literais (`class="…"`, sem expressão), são 21 achados.
+
+Não é cosmético: `sr-only` estava entre eles, o que deixava **visível** uma
+caption que só deveria existir para o leitor de tela — e o teste assertava
+`toHaveClass('sr-only')`, passando justamente por causa do defeito. Ambos
+corrigidos.
+
+Restam: table 15, sonner 2, calendar 1, chart 1, select 1.

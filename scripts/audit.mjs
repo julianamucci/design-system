@@ -763,6 +763,7 @@ function auditStoryQuality(slug) {
 
   violations.push(...auditTextSurfaces(slug));
   violations.push(...auditNonexistentLibProps(slug));
+  violations.push(...auditDeadClassInComponent(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
@@ -1155,6 +1156,52 @@ function contractStatus() {
       return { slug, total: ids.length, porStack };
     })
     .filter((r) => r.total > 0);
+}
+
+/**
+ * Classe morta fora das stories.
+ *
+ * `legacy_class_in_story` varre stories e wrappers `*Story.svelte` — e funciona:
+ * os componentes que passaram pelo `/quality` estão zerados. O que escapava eram
+ * os arquivos de componente que não têm `Story` no nome, sobretudo as fixtures
+ * do Svelte (`TableVarianteBasica.svelte` e irmãs) e os primitivos.
+ *
+ * Não é cosmético: `sr-only` está entre as classes mortas encontradas assim, o
+ * que deixa VISÍVEL uma caption que deveria ser só para leitor de tela.
+ *
+ * Aqui só entra `class="literal"`. Valor com `(`, `{` ou interpolação é
+ * expressão (`cn(...)`, `toggleVariants({...})`) e o parse por regex devolveria
+ * pedaços de código como se fossem classes.
+ */
+function auditDeadClassInComponent(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      const nome = basename(file).toLowerCase();
+      if (/\.stories\./.test(nome) || nome.endsWith('story.svelte')) continue;
+
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      const vistas = new Set();
+      for (const m of content.matchAll(/class(?:Name)?=["']([^"']+)["']/g)) {
+        const valor = m[1];
+        if (/[${(}]/.test(valor)) continue;
+        for (const cls of valor.split(/\s+/)) {
+          if (!cls || ALLOWED_CLASS_RX.test(cls) || vistas.has(cls)) continue;
+          vistas.add(cls);
+          violations.push({
+            category: 'quality', severity: 'low', slug, stack,
+            file: rel, rule: 'dead_class_in_component',
+            message: `classe "${cls}" não existe no CSS nds-* — inerte em runtime`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
 }
 
 /**

@@ -62,10 +62,16 @@ export const CaptionSrOnly: Story = {
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
-    await step('caption presente no DOM com classe sr-only', async () => {
-      const caption = canvasElement.querySelector('caption');
+    await step('caption fica no leitor de tela mas fora da tela', async () => {
+      const caption = canvasElement.querySelector('caption')!;
       await expect(caption).toBeInTheDocument();
-      await expect(caption).toHaveClass('sr-only');
+      // Antes assertava toHaveClass('sr-only') — classe que nao existe no CSS.
+      // A assercao passava enquanto a caption estava VISIVEL, guardando o bug.
+      // Agora verifica o efeito: continua no DOM (logo, anunciada) e ocupa area
+      // desprezivel na tela.
+      const r = caption.getBoundingClientRect();
+      await expect(caption).toHaveTextContent(/Lista de faturas/);
+      await expect(Math.max(r.width, r.height)).toBeLessThanOrEqual(2);
     });
   },
 };

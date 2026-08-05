@@ -20,7 +20,7 @@
   <h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes</h3>
   <Table>
     <!-- Caption visualmente oculto — título já está acima -->
-    <TableCaption class="sr-only">Lista de faturas recentes</TableCaption>
+    <TableCaption class="nds-sr-only">Lista de faturas recentes</TableCaption>
     <TableHeader>
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
