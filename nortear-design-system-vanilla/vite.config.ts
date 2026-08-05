@@ -20,6 +20,23 @@ export default defineConfig({
     },
   },
   test: {
+    // Mesma configuração de cobertura do React — os thresholds valem para o
+    // design system inteiro, não por stack.
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json', 'json-summary'],
+      include: ['src/components/ui/**/*.ts'],
+      exclude: [
+        'src/components/ui/**/*.stories.{ts,tsx}',
+        'src/components/ui/**/index.ts',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 80,
+        functions: 90,
+        lines: 90,
+      },
+    },
     projects: [
       {
         extends: true,

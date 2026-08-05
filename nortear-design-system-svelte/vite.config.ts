@@ -23,6 +23,26 @@ export default defineConfig({
     },
   },
   test: {
+    // Mesma configuração de cobertura do React — os thresholds valem para o
+    // design system inteiro, não por stack.
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json', 'json-summary'],
+      include: ['src/components/ui/**/*.{ts,svelte}'],
+      exclude: [
+        'src/components/ui/**/*.stories.{ts,tsx}',
+        'src/components/ui/**/index.ts',
+        // Wrappers que só existem para as stories montarem o componente
+        // (84 arquivos): são fixture de teste, não superfície do design system.
+        'src/components/ui/**/*Story.svelte',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 80,
+        functions: 90,
+        lines: 90,
+      },
+    },
     projects: [
       {
         extends: true,

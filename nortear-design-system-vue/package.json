@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "postinstall": "patch-package",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vue.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
