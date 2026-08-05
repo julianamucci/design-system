@@ -284,8 +284,8 @@ import { Plus } from "lucide-react";`;
                 {
                   element: tContent("usage.uxWriting.table.iconOnly.name"),
                   rules: tContent("usage.uxWriting.table.iconOnly.format"),
-                  do: tContent("usage.uxWriting.table.iconOnly.good"),
-                  dont: tContent("usage.uxWriting.table.iconOnly.bad"),
+                  do: toPlainText(tContent("usage.uxWriting.table.iconOnly.good")),
+                  dont: toPlainText(tContent("usage.uxWriting.table.iconOnly.bad")),
                 },
                 {
                   element: tContent("usage.uxWriting.table.loading.name"),
@@ -708,7 +708,7 @@ import { Plus } from "lucide-react";`;
             items={[
               {
                 name: "Toggle",
-                description: stripHtml(tContent("related.toggle")),
+                description: toPlainText(tContent("related.toggle")),
                 path: "?path=/docs/ui-toggle--docs",
               },
               {
@@ -760,7 +760,7 @@ import { Plus } from "lucide-react";`;
             items={[
               {
                 event: tContent("analytics.table.click"),
-                trigger: stripHtml(tContent("analytics.table.clickTrigger")),
+                trigger: toPlainText(tContent("analytics.table.clickTrigger")),
                 payload: tContent("analytics.table.clickPayload"),
               },
               {

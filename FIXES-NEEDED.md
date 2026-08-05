@@ -1105,9 +1105,8 @@ o destino precisa ser conferido caso a caso antes de converter.
 - [ ] Verificar container por container antes de aplicar `toPlainText`.
   Converter por prefixo sem conferir foi o que transformou `&lt;img&gt;` num
   `<img>` sem alt no Avatar e no Card.
-- [ ] Regra no `audit.mjs`: string com `<tag>` ou `&lt;` chegando a prop de
-  container que escreve textNode. É o único jeito de isso parar de reaparecer —
-  nem teste nem axe pegam, só olhar a página.
+- [x] Regra  criada — ver secao abaixo.
+
 
 ### Cobertura de código: a suíte inteira não mede
 
@@ -1262,3 +1261,34 @@ dialog 1 · data-table 1 · aspect-ratio 1
 - [ ] **drawer (1)** — foco não entra no drawer ao abrir; medido, defeito real.
 - [ ] **popover (1)** — passa isolado, falha na suíte: portal vazando.
 - [ ] sidebar, dialog, data-table, aspect-ratio: 1 cada, não diagnosticadas.
+
+## Regras de audit novas — 2026-08-05
+
+### `markup_in_text_surface` (medium) — 214 achados em 25 componentes
+
+Chave do `translations.json` com `<tag>` ou `&lt;` chegando a container que
+escreve textNode, sem passar por `toPlainText()`. Nada mais pega isso: nem
+teste, nem axe — só olhando a página, que foi como apareceu duas vezes.
+
+O button foi zerado (12 achados, incluindo dois que a varredura manual anterior
+tinha deixado passar: um com `stripHtml`, que resolve tags mas não entidades, e
+um cru). Os outros 24 componentes seguem abertos.
+
+### `nonexistent_lib_prop` (high) — 0 achados
+
+`defaultOpen`/`defaultValue` indo para componente da lib no Svelte. Prop que não
+existe é aceita e ignorada em silêncio; foi o que deixou overlays e menus
+fechados em 40+ testes. Provada reintroduzindo o defeito e revertendo.
+
+### Bug do próprio auditor: caminho no Windows
+
+`filesForSlug` testava `caminho.includes('/slug/')`, mas no Windows os caminhos
+vêm com `\`. **Todo arquivo aninhado na pasta do componente ficava invisível**
+para todas as regras que usam essa função — o que atinge sobretudo Svelte e Vue,
+que organizam por pasta. Corrigido normalizando a barra; o audit foi de 1070
+para 1295, dos quais 214 são a regra nova e **11 estavam escondidos por isso**.
+
+### Não criei regra para classe morta
+
+`legacy_class_in_story` já existe e já dispara **421 vezes** — ela detecta; o que
+falta é triagem, não detecção. Uma regra nova só somaria ruído.

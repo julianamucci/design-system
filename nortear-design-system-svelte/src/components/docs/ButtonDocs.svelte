@@ -281,8 +281,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           {
             doLabel: $tNavStore('common.do'),
             dontLabel: $tNavStore('common.dont'),
-            doCaption: stripHtml($tStore('doDont.pair2.do')),
-            dontCaption: $tStore('doDont.pair2.dont'),
+            doCaption: toPlainText($tStore('doDont.pair2.do')),
+            dontCaption: toPlainText($tStore('doDont.pair2.dont')),
             doPreview: doPair2,
             dontPreview: dontPair2,
           },
@@ -569,10 +569,10 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Toggle',      description: stripHtml($tStore('related.toggle')),     path: '?path=/docs/ui-toggle--docs' },
+          { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/ui-toggle--docs' },
           { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/ui-switch--docs' },
           { name: 'Link',        description: $tStore('related.link'),                  path: '?path=/docs/ui-link--docs' },
-          { name: 'Form',        description: $tStore('related.form'),                  path: '?path=/docs/ui-form--docs' },
+          { name: 'Form',        description: toPlainText($tStore('related.form')),                  path: '?path=/docs/ui-form--docs' },
           { name: 'Dialog',      description: $tStore('related.dialog'),                path: '?path=/docs/ui-dialog--docs' },
           { name: 'AlertDialog', description: $tStore('related.alertDialog'),           path: '?path=/docs/ui-alertdialog--docs' },
         ]}
@@ -597,7 +597,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.click'),         trigger: stripHtml($tStore('analytics.table.clickTrigger')),    payload: $tStore('analytics.table.clickPayload') },
+          { event: $tStore('analytics.table.click'),         trigger: toPlainText($tStore('analytics.table.clickTrigger')),    payload: $tStore('analytics.table.clickPayload') },
           { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),            payload: $tStore('analytics.table.pageViewPayload') },
           { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),       payload: $tStore('analytics.table.sectionViewedPayload') },
           { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),          payload: $tStore('analytics.table.langSwitchPayload') },
@@ -620,7 +620,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
             { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
             { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item6.action'),            result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item6.action')),            result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
           ],
         }}
         accessibility={{

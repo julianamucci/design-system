@@ -117,7 +117,13 @@ function filesForSlug(slug, stack) {
 
   const uiFiles = globStack(stack, 'components/ui', ext).filter(f => {
     const n = basename(f).toLowerCase();
-    return SUFFIX_RX.test(n) || f.toLowerCase().includes(`/${s}/`);
+    // Normaliza a barra antes de comparar: no Windows o caminho vem com `\`, e
+    // o teste por `/slug/` nunca casava. Efeito colateral silencioso e grande —
+    // Svelte e Vue organizam por pasta, então TODO arquivo do componente que não
+    // fosse `<slug>.<ext>` (wrappers, sub-componentes) ficava fora do audit
+    // nessas duas stacks, para todas as regras que usam esta função.
+    const caminho = f.toLowerCase().replace(/\\/g, '/');
+    return SUFFIX_RX.test(n) || caminho.includes(`/${s}/`);
   });
   // Case-insensitive: o slug `input-otp` deriva `InputOtpDocs`, mas o arquivo
   // real é `InputOTPDocs` — sigla em caixa alta. Com match sensível a caixa, a
@@ -755,6 +761,9 @@ function auditStoryQuality(slug) {
     }
   }
 
+  violations.push(...auditTextSurfaces(slug));
+  violations.push(...auditNonexistentLibProps(slug));
+
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
   const idsContrato = contractIds(slug);
@@ -1146,6 +1155,134 @@ function contractStatus() {
       return { slug, total: ids.length, porStack };
     })
     .filter((r) => r.total > 0);
+}
+
+/**
+ * Prefixos de chave cujo container escreve textNode. Derivado contando
+ * `dangerouslySetInnerHTML` em cada seção compartilhada — DocsTestes,
+ * DocsTokens, DocsStates, DocsRelated, DocsDoDont, DocsAnalytics e as tabelas
+ * do DocsProps e do DocsWhenToUse não renderizam HTML.
+ */
+const TEXT_SURFACE_PREFIXES = [
+  'testes.', 'props.table.', 'tokens.table.', 'accessibility.keyboard.',
+  'usage.scenarios.', 'usage.uxWriting.', 'states.', 'analytics.table.',
+  'doDont.', 'related.',
+];
+
+/**
+ * Markup literal em superfície de texto.
+ *
+ * O `translations.json` é compartilhado entre containers que renderizam HTML e
+ * containers que escrevem textNode, então guarda `<button>` escapado como
+ * `&lt;button&gt;`. No segundo grupo isso chega cru à tela — "Elemento
+ * &lt;button&gt; nativo presente" — e nada mais pega: nem teste, nem axe. Só
+ * olhando a página, que foi como apareceu duas vezes.
+ *
+ * O par correto é `toPlainText()` (tira tags E decodifica entidades) para texto
+ * e `stripHtml()` para destino que renderiza HTML — decodificar antes de HTML
+ * transforma o texto em markup vivo.
+ */
+function auditTextSurfaces(slug) {
+  const violations = [];
+  const tPath = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(tPath)) return violations;
+
+  let json;
+  try { json = JSON.parse(readFile(tPath) || '{}'); } catch { return violations; }
+
+  // chave -> tem markup em algum idioma
+  const comMarkup = new Set();
+  for (const locale of Object.keys(json)) {
+    (function varre(node, caminho) {
+      if (typeof node === 'string') {
+        if (/<[a-z][^>]*>|&lt;|&gt;/.test(node)) comMarkup.add(caminho.replace(/^\./, ''));
+        return;
+      }
+      if (node && typeof node === 'object') {
+        for (const [k, v] of Object.entries(node)) varre(v, `${caminho}.${k}`);
+      }
+    })(json[locale], '');
+  }
+  if (!comMarkup.size) return violations;
+
+  const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      for (const chave of comMarkup) {
+        if (!TEXT_SURFACE_PREFIXES.some((p) => chave.startsWith(p))) continue;
+        // a mesma chave pode aparecer literal ou com índice interpolado; sem o
+        // Set a chave sem `itemN` casaria as duas formas e reportaria dobrado
+        const alvos = new Set([chave, chave.replace(/item\d+/, 'item${i}')]);
+        for (const alvo of alvos) {
+          const re = new RegExp(
+            `(toPlainText\\()?\\s*(?:tContent|\\$?tStore|\\bt)\\(['\`"]${escapar(alvo)}['\`"]\\)`,
+            'g',
+          );
+          for (const m of content.matchAll(re)) {
+            if (m[1]) continue;                       // já envolvido
+            violations.push({
+              category: 'quality', severity: 'medium', slug, stack,
+              file: rel, rule: 'markup_in_text_surface',
+              message: `"${chave}" tem markup e cai em container que escreve textNode — envolva em toPlainText(), senão a tag aparece literal na tela`,
+            });
+          }
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * Prop que a lib não tem.
+ *
+ * Não gera erro de tipo nem aviso: o componente monta e a prop é descartada.
+ * `defaultOpen` e `defaultValue` não existem no bits-ui nem no vaul-svelte — a
+ * API é o estado bindável (`open`, `value`) — e deixaram overlays e menus
+ * fechados em mais de 40 testes, cada um parecendo um bug diferente.
+ *
+ * Só acusa quando a prop vai para um COMPONENTE (maiúscula inicial). Usá-la
+ * como prop do próprio wrapper, para inicializar o bindable, é o padrão certo.
+ */
+const PROPS_INEXISTENTES = {
+  svelte: ['defaultOpen', 'defaultValue'],
+};
+
+function auditNonexistentLibProps(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const proibidas = PROPS_INEXISTENTES[stack];
+    if (!proibidas) continue;
+
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      for (const prop of proibidas) {
+        // `<Componente … {defaultOpen}` ou `defaultOpen={…}` — só em tag de
+        // componente, que no Svelte começa com maiúscula.
+        // Sem `\b` antes de `{`: entre espaço e chave não há fronteira de
+        // palavra, e a regra silenciava justamente na forma abreviada
+        // `<Drawer {defaultOpen}>`, que é a mais usada.
+        const re = new RegExp(`<[A-Z][\\w.]*[^>]*?(?:\\{\\s*${prop}\\s*\\}|\\b${prop}=)`, 'gs');
+        if (!re.test(content)) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file: rel, rule: 'nonexistent_lib_prop',
+          message: `"${prop}" não existe na lib desta stack — é aceita e ignorada em silêncio. Use o estado bindável (open/value) inicializado com ela`,
+        });
+      }
+    }
+  }
+  return violations;
 }
 
 function auditTaxonomy(slug) {

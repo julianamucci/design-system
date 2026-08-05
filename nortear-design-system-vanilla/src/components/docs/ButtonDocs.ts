@@ -670,7 +670,7 @@ export interface ButtonOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Toggle',      description: stripHtml(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs' },
+            { name: 'Toggle',      description: toPlainText(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs' },
             { name: 'Switch',      description: toPlainText(t('related.switch')),                 path: '?path=/docs/ui-switch--docs' },
             { name: 'Link',        description: toPlainText(t('related.link')),                   path: '?path=/docs/foundations-typography--docs' },
             { name: 'Dialog',      description: toPlainText(t('related.dialog')),                 path: '?path=/docs/ui-dialog--docs' },
@@ -697,7 +697,7 @@ export interface ButtonOptions {
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.click'),         trigger: stripHtml(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload') },
+            { event: t('analytics.table.click'),         trigger: toPlainText(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload') },
             { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),                 payload: t('analytics.table.pageViewPayload') },
             { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),            payload: t('analytics.table.sectionViewedPayload') },
             { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),               payload: t('analytics.table.langSwitchPayload') },
