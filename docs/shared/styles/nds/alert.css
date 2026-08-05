@@ -219,10 +219,15 @@
 }
 
 @keyframes nds-alert-glow {
-  from { --nds-alert-glow-angle: 0deg; opacity: 1; }
-  /* O fade começa só no trecho final: a desaceleração sozinha pararia o brilho
-     aceso, parado na borda. Apagar junto é o que faz "parar suavemente". */
-  75%  { opacity: 1; }
+  /* O ponto acende e apaga em rampa, nunca com corte seco: aparecer do nada em
+     opacidade cheia entrega que é um elemento, não uma luz. */
+  from { --nds-alert-glow-angle: 0deg; opacity: 0; }
+  6%   { opacity: 1; }
+  /* Percurso em velocidade constante (`--ease-linear`); quem faz parar é o
+     apagar gradual do fim, não uma freada. Freando, o ponto fica parado e aceso
+     na borda antes de sumir. O fade só entra depois de 1,6 volta: começando
+     antes, metade da segunda volta já sai fantasma. */
+  80%  { opacity: 1; }
   to   { --nds-alert-glow-angle: 720deg; opacity: 0; }
 }
 
@@ -233,11 +238,14 @@
   border-radius: inherit;
   padding: 1px;                                 /* espessura = a da borda */
 
+  /* Trecho aceso curto — 5,4° de pico e ~25° de rastro. É o que faz ler como
+     PONTO de luz percorrendo a borda; com o arco largo de antes parecia um
+     gradiente girando. */
   background: conic-gradient(
     from var(--nds-alert-glow-angle),
     transparent 0turn,
-    var(--alert-glow) 0.06turn,
-    transparent 0.2turn
+    var(--alert-glow) 0.015turn,
+    transparent 0.07turn
   );
   /* Recorta o miolo: pinta padding-box MENOS content-box, sobrando só o anel.
      Sem isso o gradiente cobriria o alert inteiro. */
@@ -245,18 +253,25 @@
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  /* O drop-shadow é aplicado DEPOIS da máscara, então acompanha o anel visível
-     e vira o halo — é o que separa "brilho" de "traço colorido". */
-  filter: drop-shadow(0 0 3px var(--alert-glow));
+  /* Os drop-shadows são aplicados DEPOIS da máscara, então acompanham o anel
+     visível e viram o halo — é o que separa "brilho" de "traço colorido". Dois
+     raios: o curto dá o núcleo aceso, o largo o bloom ao redor. */
+  filter: drop-shadow(0 0 2px var(--alert-glow))
+          drop-shadow(0 0 6px var(--alert-glow));
 
   pointer-events: none;
   opacity: 0;                                   /* estado de repouso */
-  /* 2 voltas em 2.4s. `--ease-size` é a curva de percurso acompanhado inteiro:
-     medido, faz 80% do giro na metade do tempo, contra 88% (--ease-standard) e
-     89% (--ease-entrance) — as duas arrastam o fecho da segunda volta.
+  /* 2 voltas em 6,4s — ~3,2s por volta, ritmo de deslize e não de giro.
+     `--ease-linear` porque o olho acompanha o ponto no percurso inteiro:
+     qualquer curva de saída faz a segunda volta arrastar (medido: 80% do giro
+     na metade do tempo com --ease-size, 88% com --ease-standard, 89% com
+     --ease-entrance). Quem faz parar suavemente é o fade, não uma freada.
      Duração derivada de token: sob prefers-reduced-motion as durações vão a
      0ms e o efeito se anula sozinho; a regra abaixo é a garantia explícita. */
-  animation: nds-alert-glow calc(var(--duration-stately) * 3) var(--ease-size) forwards;
+  animation: nds-alert-glow calc(var(--duration-stately) * 8) var(--ease-linear) forwards;
+  /* Espera o componente assentar antes de chamar atenção. Valor de produto, não
+     derivado de token — nenhuma duração da escala chega perto de 5s. */
+  animation-delay: 5s;
 }
 
 @media (prefers-reduced-motion: reduce) {
