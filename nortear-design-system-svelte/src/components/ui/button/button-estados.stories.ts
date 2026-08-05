@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import type { ComponentProps } from 'svelte';
 
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -14,11 +15,11 @@ const meta = {
   tags: ['form'],
   args: {
     onclick: fn(),
-  } as never,
-} satisfies Meta<typeof Button>;
+  },
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Disabled: Story = {
   render: (args) => ({

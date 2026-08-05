@@ -1060,24 +1060,6 @@ implementados e documentados, rótulo do link saindo do `translations.json`,
 rótulos dos snippets alinhados aos das stories e spy do Vanilla movido para o
 `meta`. Ficou um achado novo, de outra natureza:
 
-### Stories do Svelte: `Meta<typeof Button>` contra `ButtonStory`
-
-O `meta` declara `component: Button`, então o Storybook tipa os args com
-`ButtonProps`; o `render` devolve `{ Component: ButtonStory }`, cujas props são
-outro tipo. Toda story desses arquivos falha no svelte-check com a mesma
-mensagem (`disabled: boolean | null` contra `boolean`) — 25 erros só nos
-arquivos do button, e o padrão se repete em badge e provavelmente nos demais
-wrappers `*Story.svelte`.
-
-O efeito prático é que **cada story nova soma um erro ao baseline**: as duas de
-`xs` levaram o svelte-check de 351 para 353 sem terem defeito próprio. Enquanto
-isso não for resolvido, o número não mede qualidade — mede quantas stories
-existem.
-
-- [ ] Decidir uma vez: `Meta<typeof ButtonStory>` nos arquivos que renderizam
-  pelo wrapper, ou alargar as props do wrapper para aceitar as formas nulas dos
-  atributos DOM. Aplicar em todos os `*Story.svelte`.
-
 ### Escape de entidades em superfície de texto — RESOLVIDO
 
 `stripHtml` virou helper compartilhado (`src/lib/strip-html.ts` por stack) e as
@@ -1151,3 +1133,39 @@ Inventário do que tem `c8 ignore` com motivo, para revisitar se a API mudar:
 - `svelte/button.svelte` — lados verdadeiros de
   `url.startsWith('#') || url.startsWith('/')` no `catch`: exigiriam uma string
   que estoure o `new URL` E comece com `#` ou `/`. Nenhum `#…` estoura.
+### Args genéricos nas stories do Svelte — resíduo do fix de `Meta`
+
+`Meta<typeof Componente>` fixava o renderer no primitivo e obrigava o `render` a
+devolver `Component<PropsDoPrimitivo>` (455 props de HTML). Como essas stories
+devolvem wrappers `*Story.svelte` de 10–15 props, toda story do arquivo errava:
+178 erros, metade do baseline do svelte-check. Resolvido — a forma agora é
+`const meta: Meta` + `type Story = StoryObj`, mantendo `component:`.
+
+Custo assumido: nos ~25 arquivos que usam `args`, eles ficam com o tipo genérico
+`Args` em vez das props do wrapper. Tentei três formas de preservar a tipagem e
+nenhuma funciona com o `component:` no lugar:
+
+- `satisfies Meta<Args>` — o `typeof meta` continua carregando `component`, e é
+  dele que o `StoryObj` deriva os args; o parâmetro é ignorado.
+- `const meta: Meta<Args> = …` — o `typeof meta` vira o próprio
+  `ComponentAnnotations` e o `StoryObj` passa a tratá-lo como tipo de args.
+- `satisfies` sem `component` — piora: os args passam a ser inferidos do
+  literal de `meta.args`.
+
+- [ ] Investigar se uma versão mais nova do `@storybook/svelte` separa
+  `component` do tipo de args. Enquanto isso, `args` nesses arquivos não é
+  verificado — e antes o arquivo inteiro não era.
+
+Exceção correta: `code-block.stories.ts` renderiza o componente direto, sem
+wrapper. Ali `Meta<typeof CodeBlock>` é o tipo certo e foi mantido.
+
+### Suíte do Svelte: 101 falhas em famílias de portal
+
+Medido depois do fix de tipos (que é só de tipo — 3 linhas por arquivo, e as
+falhas são "portal nunca abriu", não erro de compilação ou indexação):
+tooltip 13, popover 10, pagination 10, hover-card 10, drawer 10, menubar 9,
+dropdown-menu 9, select 6, scroll-area 5, e cauda. Nenhuma em button, accordion
+ou badge.
+
+- [ ] É o mesmo backlog já registrado, agora com número atual e por família.
+  Enquanto ele existir, `npm run test:coverage` não emite cobertura no Svelte.

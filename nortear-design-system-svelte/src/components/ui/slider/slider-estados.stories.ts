@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Slider/Estados',
   component: SliderStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SliderStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   args: {

@@ -6,7 +6,7 @@ import DropdownMenuStory from './DropdownMenuStory.svelte';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/DropdownMenu',
   component: DropdownMenuStory,
   tags: ['autodocs', 'overlay'],
@@ -66,10 +66,10 @@ const meta = {
     triggerLabel: 'Mais ações',
     variant: 'default',
   },
-} satisfies Meta<typeof DropdownMenuStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

@@ -5,7 +5,7 @@ import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonPairStory from './ButtonPairStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -13,10 +13,10 @@ const meta = {
   title: 'UI/Button/Composicoes',
   component: Button,
   tags: ['form'],
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComIconeAEsquerda: Story = {
   render: () => ({

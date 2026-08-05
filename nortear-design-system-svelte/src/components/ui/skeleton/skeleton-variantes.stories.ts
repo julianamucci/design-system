@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import SkeletonStory from './SkeletonStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Skeleton/Variantes',
   component: SkeletonStory,
   tags: ['feedback'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SkeletonStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Retangulo: Story = {
   args: { class: 'h-20 w-64' },

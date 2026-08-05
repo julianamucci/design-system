@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/RadioGroup/Variantes',
   component: RadioGroup,
   tags: ['form'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof RadioGroup>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Vertical: Story = {
   render: () => ({

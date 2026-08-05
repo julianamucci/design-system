@@ -6,7 +6,7 @@ import SheetStory from './SheetStory.svelte';
 import SheetDocs from '@/components/docs/SheetDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sheet',
   component: SheetStory,
   tags: ['autodocs', 'disclosure'],
@@ -42,10 +42,10 @@ const meta = {
     onAction: fn(),
     onCancel: fn(),
   },
-} satisfies Meta<typeof SheetStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

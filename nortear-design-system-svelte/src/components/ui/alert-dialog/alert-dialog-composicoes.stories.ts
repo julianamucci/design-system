@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AlertDialog/Composicoes',
   component: AlertDialog,
   tags: ['overlay'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof AlertDialog>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Destrutiva: Story = {
   parameters: {

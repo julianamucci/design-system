@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Resizable/Estados',
   component: ResizableStory,
   tags: ['layout'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ResizableStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Idle: Story = {
   render: () => ({

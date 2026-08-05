@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Breadcrumb/Composicoes',
   component: Breadcrumb,
   tags: ['navigation'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Breadcrumb>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => ({

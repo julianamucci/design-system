@@ -6,7 +6,7 @@ import ProgressStory from './ProgressStory.svelte';
 import ProgressDocs from '@/components/docs/ProgressDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Progress',
   component: Progress,
   tags: ['autodocs', 'feedback'],
@@ -38,10 +38,10 @@ const meta = {
     value: 42,
     max: 100,
   },
-} satisfies Meta<typeof Progress>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

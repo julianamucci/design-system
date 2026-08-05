@@ -6,7 +6,7 @@ import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import DialogProfileEditStory from './DialogProfileEditStory.svelte';
 import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Dialog/Composicoes',
   parameters: {
     layout: 'centered',
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ConfirmEmail: Story = {
   parameters: {

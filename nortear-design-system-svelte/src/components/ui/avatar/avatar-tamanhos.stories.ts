@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Avatar/Tamanhos',
   component: Avatar,
   tags: ['display'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Avatar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const baseProps = {
   variant: 'image' as const,

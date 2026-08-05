@@ -17,7 +17,7 @@ import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
  * está disabled, ou via `group-data-[disabled=true]:opacity-50` em um container
  * com `data-disabled="true"`.
  */
-const meta = {
+const meta: Meta = {
   title: 'UI/Label/Estados',
   component: LabelStory,
   tags: ['form'],
@@ -31,10 +31,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof LabelStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => ({

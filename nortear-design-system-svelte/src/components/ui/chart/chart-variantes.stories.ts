@@ -16,14 +16,14 @@ const pieData = [
   { label: 'Tablet',  value: 180 },
 ];
 
-const meta = {
+const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Variantes',
   component: ChartContainer,
   tags: ['display'],
-} satisfies Meta<typeof ChartContainer>;
+};
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 async function expectRendered(el: HTMLElement) {
   await waitFor(() => {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import SidebarStory from './SidebarStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sidebar/Variantes',
   component: SidebarStory,
   tags: ['layout'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SidebarStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const VarianteSidebar: Story = {
   name: 'sidebar (padrão)',

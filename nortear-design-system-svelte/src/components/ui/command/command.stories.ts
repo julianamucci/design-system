@@ -6,7 +6,7 @@ import CommandDocs from '@/components/docs/CommandDocs.svelte';
 import { Root as Command } from '@/components/ui/command';
 import CommandStory from './CommandStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Command',
   component: Command,
   tags: ['autodocs', 'overlay'],
@@ -34,10 +34,10 @@ const meta = {
     loop: false,
     shouldFilter: true,
   },
-} satisfies Meta<typeof Command>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

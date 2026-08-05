@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ScrollArea/Estados',
   component: ScrollAreaStory,
   tags: ['layout'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ScrollAreaStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Idle: Story = {
   render: () => ({

@@ -10,7 +10,7 @@ const chartData = [
   { label: 'May', value: 209 }, { label: 'Jun', value: 214 },
 ];
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Chart',
   component: ChartContainer,
   tags: ['autodocs', 'display'],
@@ -27,10 +27,10 @@ const meta = {
     renderer: 'svg' as const,
     option: buildBarOption({ data: chartData, title: 'Acessos mensais' }),
   },
-} satisfies Meta<typeof ChartContainer>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

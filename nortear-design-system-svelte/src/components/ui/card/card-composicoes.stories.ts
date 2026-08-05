@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Card/Composicoes',
   component: Card,
   tags: ['layout'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Card>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const WithFooter: Story = {
   render: () => ({

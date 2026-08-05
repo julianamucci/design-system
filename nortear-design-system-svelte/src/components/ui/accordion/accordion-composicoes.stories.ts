@@ -8,7 +8,7 @@ import AccordionBadgeStory from './AccordionBadgeStory.svelte';
 import AccordionRichStory from './AccordionRichStory.svelte';
 import AccordionFAQStory from './AccordionFAQStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
@@ -17,10 +17,10 @@ const meta = {
   title: 'UI/Accordion/Composicoes',
   component: Accordion,
   tags: ['disclosure'],
-} satisfies Meta<typeof Accordion>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComIconeNoTrigger: Story = {
   render: () => ({ Component: AccordionIconStory }),

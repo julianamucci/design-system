@@ -5,7 +5,7 @@ import { Collapsible } from './index';
 import CollapsibleComButtonStory from './CollapsibleComButtonStory.svelte';
 import CollapsibleComIconeStory from './CollapsibleComIconeStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Collapsible/Composicoes',
   component: Collapsible,
   tags: ['disclosure'],
@@ -20,12 +20,13 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Collapsible>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
-export const ComButton: Story = {
+// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
+export const ComButton: StoryObj<Record<string, never>> = {
   render: () => ({
     Component: CollapsibleComButtonStory,
     props: {},
@@ -45,7 +46,8 @@ export const ComButton: Story = {
   },
 };
 
-export const ComIconeRotativo: Story = {
+// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
+export const ComIconeRotativo: StoryObj<Record<string, never>> = {
   name: 'Com Ícone Rotativo',
   render: () => ({
     Component: CollapsibleComIconeStory,

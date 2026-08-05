@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     design: figmaDesign('accordionItem'),
     controls: { disable: true },
@@ -14,10 +14,10 @@ const meta = {
   title: 'UI/Accordion/Estados',
   component: Accordion,
   tags: ['disclosure'],
-} satisfies Meta<typeof Accordion>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const SINGLE_ITEM = [
   { value: 'item-1', q: 'Item fechado (estado padrão)', a: 'Conteúdo oculto.' },

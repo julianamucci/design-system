@@ -7,7 +7,7 @@ import DialogStory from './DialogStory.svelte';
 import DialogDocs from '@/components/docs/DialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
@@ -23,10 +23,10 @@ const meta = {
   args: {
     open: false,
   },
-} satisfies Meta<typeof Dialog>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

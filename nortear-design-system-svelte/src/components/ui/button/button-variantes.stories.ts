@@ -4,7 +4,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -12,10 +12,10 @@ const meta = {
   title: 'UI/Button/Variantes',
   component: Button,
   tags: ['form'],
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => ({ Component: ButtonStory, props: { variant: 'default', label: 'Salvar' } }),

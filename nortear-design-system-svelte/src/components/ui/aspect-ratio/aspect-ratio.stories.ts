@@ -6,7 +6,7 @@ import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AspectRatio',
   component: AspectRatio,
   tags: ['autodocs', 'layout'],
@@ -29,10 +29,10 @@ const meta = {
   args: {
     ratio: 16 / 9,
   },
-} satisfies Meta<typeof AspectRatio>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

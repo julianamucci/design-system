@@ -6,7 +6,7 @@ import SonnerPlaygroundStory from './SonnerPlaygroundStory.svelte';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sonner',
   component: SonnerStory,
   tags: ['autodocs', 'feedback'],
@@ -39,10 +39,10 @@ const meta = {
     expand: false,
     duration: 4000,
   },
-} satisfies Meta<typeof SonnerStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

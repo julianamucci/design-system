@@ -6,7 +6,7 @@ import CardStory from './CardStory.svelte';
 import CardDocs from '@/components/docs/CardDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Card',
   component: Card,
   tags: ['autodocs', 'layout'],
@@ -29,10 +29,10 @@ const meta = {
   args: {
     size: 'default',
   },
-} satisfies Meta<typeof Card>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

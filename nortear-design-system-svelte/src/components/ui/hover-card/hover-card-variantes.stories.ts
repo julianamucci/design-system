@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/HoverCard/Variantes',
   component: HoverCardStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof HoverCardStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const waitForOpen = async (_root: HTMLElement) => {
   await waitFor(

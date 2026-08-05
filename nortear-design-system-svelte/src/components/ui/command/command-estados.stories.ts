@@ -6,7 +6,7 @@ import CommandEstadoEmptyStory from './CommandEstadoEmptyStory.svelte';
 import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
 import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Command/Estados',
   component: Command.Root,
   tags: ['overlay'],
@@ -21,10 +21,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Command.Root>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const EstadoVazio: Story = {
   name: 'Empty State',

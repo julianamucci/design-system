@@ -6,7 +6,7 @@ import AvatarStory from './AvatarStory.svelte';
 import AvatarDocs from '@/components/docs/AvatarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Avatar',
   component: Avatar,
   tags: ['autodocs', 'display'],
@@ -24,10 +24,10 @@ const meta = {
   args: {
     class: '',
   },
-} satisfies Meta<typeof Avatar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

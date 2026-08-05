@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Progress/Variantes',
   component: ProgressStory,
   tags: ['feedback'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ProgressStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Determinate: Story = {
   args: {

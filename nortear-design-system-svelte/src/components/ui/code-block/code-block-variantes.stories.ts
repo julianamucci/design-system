@@ -16,7 +16,7 @@ const LANG_DATA = `{ "port": 6006, "open": true }`;
 const LANG_SHELL = `npm run build -- --mode production`;
 const LANG_TEXT = `Sem classificação: monoespaçado e sem cor.`;
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -31,10 +31,10 @@ const meta = {
   title: 'UI/CodeBlock/Variantes',
   component: CodeBlock,
   tags: ['display'],
-} satisfies Meta<typeof CodeBlock>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Script: Story = {
   args: { code: LANG_SCRIPT, language: 'tsx', showLineNumbers: false },

@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Popover/Variantes',
   component: PopoverStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof PopoverStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const waitOpen = async () => {
   const dialog = await waitForPortal('dialog', { timeout: 2000 });

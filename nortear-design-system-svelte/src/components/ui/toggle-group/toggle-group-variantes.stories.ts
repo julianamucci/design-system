@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ToggleGroup/Variantes',
   component: ToggleGroupStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ToggleGroupStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Single: Story = {
   args: {

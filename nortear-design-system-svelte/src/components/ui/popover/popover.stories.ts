@@ -6,7 +6,7 @@ import PopoverStory from './PopoverStory.svelte';
 import PopoverDocs from '@/components/docs/PopoverDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Popover',
   component: PopoverStory,
   tags: ['autodocs', 'overlay'],
@@ -68,10 +68,10 @@ const meta = {
     onAction: fn(),
     onCancel: fn(),
   },
-} satisfies Meta<typeof PopoverStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

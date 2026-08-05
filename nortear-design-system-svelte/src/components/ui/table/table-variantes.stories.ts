@@ -7,17 +7,17 @@ import TableVarianteComRodape from './TableVarianteComRodape.svelte';
 import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Table/Variantes',
   component: Table,
   tags: ['tables'],
   parameters: {
     controls: { disable: true },
   },
-} satisfies Meta<typeof Table>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Basica: Story = {
   render: () => ({

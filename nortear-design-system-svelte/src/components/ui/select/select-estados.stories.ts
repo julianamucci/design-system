@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Select/Estados',
   component: Select,
   tags: ['form'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Select>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => ({

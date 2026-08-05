@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/NavigationMenu/Composicoes',
   component: NavigationMenuStory,
   tags: ['navigation'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof NavigationMenuStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const LinkSimples: Story = {
   args: {

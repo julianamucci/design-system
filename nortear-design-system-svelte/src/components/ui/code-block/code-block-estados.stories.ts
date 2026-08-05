@@ -14,7 +14,7 @@ const LONG_CODE = Array.from({ length: 40 }, (_, i) => {
   return `const registro${i} = await repositorio.buscarPorIdentificadorCompletoComRelacionamentos(${i}, { ${campos} });`;
 }).join('\n');
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -29,10 +29,10 @@ const meta = {
   title: 'UI/CodeBlock/Estados',
   component: CodeBlock,
   tags: ['display'],
-} satisfies Meta<typeof CodeBlock>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComNumeracao: Story = {
   args: { code: BASE_CODE, language: 'ts', showLineNumbers: true },

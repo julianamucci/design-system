@@ -6,7 +6,7 @@ import BreadcrumbStory from './BreadcrumbStory.svelte';
 import BreadcrumbDocs from '@/components/docs/BreadcrumbDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs', 'navigation'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Breadcrumb>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: () => ({

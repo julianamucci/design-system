@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/InputOTP/Composicoes',
   component: InputOTPStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof InputOTPStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComLabel: Story = {
   args: {

@@ -6,7 +6,7 @@ import TooltipStory from './TooltipStory.svelte';
 import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Tooltip',
   component: TooltipStory,
   tags: ['autodocs', 'overlay'],
@@ -63,10 +63,10 @@ const meta = {
     ariaLabel: 'Salvar',
     contentText: 'Salvar (Ctrl+S)',
   },
-} satisfies Meta<typeof TooltipStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

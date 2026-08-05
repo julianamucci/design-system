@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sheet/Estados',
   component: SheetStory,
   tags: ['disclosure'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SheetStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Closed: Story = {
   args: {

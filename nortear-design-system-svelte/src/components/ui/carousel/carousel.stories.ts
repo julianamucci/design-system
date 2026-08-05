@@ -6,7 +6,7 @@ import CarouselStory from './CarouselStory.svelte';
 import CarouselDocs from '@/components/docs/CarouselDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Carousel',
   component: Carousel,
   tags: ['autodocs', 'display'],
@@ -24,10 +24,10 @@ const meta = {
   args: {
     orientation: 'horizontal',
   },
-} satisfies Meta<typeof Carousel>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

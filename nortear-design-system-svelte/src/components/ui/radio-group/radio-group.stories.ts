@@ -6,7 +6,7 @@ import RadioGroupStory from './RadioGroupStory.svelte';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs', 'form'],
@@ -39,10 +39,10 @@ const meta = {
     orientation: 'vertical',
     onValueChange: fn(),
   },
-} satisfies Meta<typeof RadioGroup>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

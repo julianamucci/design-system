@@ -5,7 +5,7 @@ import InputOTPStory from './InputOTPStory.svelte';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/InputOTP',
   component: InputOTPStory,
   tags: ['autodocs', 'form'],
@@ -56,10 +56,10 @@ const meta = {
     label: 'Código de verificação',
     variant: 'default',
   },
-} satisfies Meta<typeof InputOTPStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   const input = canvasElement.querySelector(

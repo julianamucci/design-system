@@ -3,15 +3,15 @@ import DataTable from './data-table.svelte';
 import type { DataTableColumn } from './index';
 import { invoices, baseColumns, currency, statusVariant, type Invoice } from './data-table.fixtures';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/DataTable/Composicoes',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
-} satisfies Meta<typeof DataTable>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const filterableColumns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura', meta: { filter: { type: 'text' } } },

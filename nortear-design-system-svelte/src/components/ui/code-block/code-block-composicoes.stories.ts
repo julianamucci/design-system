@@ -8,7 +8,7 @@ const BASE_CODE = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -23,10 +23,10 @@ const meta = {
   title: 'UI/CodeBlock/Composicoes',
   component: CodeBlock,
   tags: ['display'],
-} satisfies Meta<typeof CodeBlock>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComRotulo: Story = {
   args: { code: BASE_CODE, language: 'ts', title: 'lista.ts' },

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import InputStory from './InputStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Input/Tipos',
   component: InputStory,
   tags: ['form'],
@@ -16,10 +16,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof InputStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Text: Story = {
   render: () => ({

@@ -4,7 +4,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AlertDialog/Estados',
   component: AlertDialog,
   tags: ['overlay'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof AlertDialog>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 // Enquanto o diálogo está aberto o bits-ui neutraliza o resto da página com
 // `pointer-events: none`, e só devolve a interação depois da saída. Reabrir o

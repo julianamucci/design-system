@@ -6,7 +6,7 @@ import TabsStory from './TabsStory.svelte';
 import TabsDocs from '@/components/docs/TabsDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Tabs',
   component: Tabs,
   tags: ['autodocs', 'navigation'],
@@ -29,10 +29,10 @@ const meta = {
     orientation: 'horizontal',
     activationMode: 'automatic',
   },
-} satisfies Meta<typeof Tabs>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

@@ -6,7 +6,7 @@ import BadgeStory from './BadgeStory.svelte';
 import BadgeDocs from '@/components/docs/BadgeDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Badge',
   component: Badge,
   tags: ['autodocs', 'feedback'],
@@ -24,10 +24,10 @@ const meta = {
   args: {
     variant: 'default',
   },
-} satisfies Meta<typeof Badge>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

@@ -6,7 +6,7 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogDocs from '@/components/docs/AlertDialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AlertDialog',
   component: AlertDialog,
   tags: ['autodocs', 'overlay'],
@@ -44,10 +44,10 @@ const meta = {
     // Actions e permite asseverar a notificação de mudança no play.
     onOpenChange: fn(),
   },
-} satisfies Meta<typeof AlertDialog>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 // Handlers do wrapper (não são props da raiz, logo ficam fora de `args`/`argTypes`
 // para não poluir a aba API Reference). No escopo do módulo para não recriar

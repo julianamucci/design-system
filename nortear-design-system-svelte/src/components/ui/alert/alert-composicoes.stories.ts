@@ -5,7 +5,7 @@ import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertAcaoStory from './AlertAcaoStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -13,10 +13,10 @@ const meta = {
   title: 'UI/Alert/Composicoes',
   component: Alert,
   tags: ['feedback'],
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComIcone: Story = {
   render: () => ({

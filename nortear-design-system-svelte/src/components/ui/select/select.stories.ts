@@ -7,7 +7,7 @@ import SelectStory from './SelectStory.svelte';
 import SelectDocs from '@/components/docs/SelectDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Select',
   component: Select,
   tags: ['autodocs', 'form'],
@@ -40,10 +40,10 @@ const meta = {
     disabled: false,
     onValueChange: fn(),
   },
-} satisfies Meta<typeof Select>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

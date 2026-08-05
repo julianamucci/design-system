@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Popover/Estados',
   component: PopoverStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof PopoverStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Closed: Story = {
   name: 'Fechado',

@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Root as ContextMenu } from './index';
 import ContextMenuEstadoStory from './ContextMenuEstadoStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ContextMenu/Estados',
   component: ContextMenu,
   tags: ['overlay'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ContextMenu>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 // ── Item Disabled ─────────────────────────────────────────────────────────────
 

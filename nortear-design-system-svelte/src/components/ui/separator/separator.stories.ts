@@ -5,7 +5,7 @@ import SeparatorStory from './SeparatorStory.svelte';
 import SeparatorDocs from '@/components/docs/SeparatorDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Separator',
   component: SeparatorStory,
   tags: ['autodocs', 'layout'],
@@ -35,10 +35,10 @@ const meta = {
     orientation: 'horizontal',
     decorative: true,
   },
-} satisfies Meta<typeof SeparatorStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {

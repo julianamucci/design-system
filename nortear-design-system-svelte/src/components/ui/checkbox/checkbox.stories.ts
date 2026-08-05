@@ -6,7 +6,7 @@ import CheckboxStory from './CheckboxStory.svelte';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Checkbox',
   component: Checkbox,
   tags: ['autodocs', 'form'],
@@ -53,10 +53,10 @@ const meta = {
     withDescription: false,
     labelText: 'Aceito os termos e condições',
   },
-} satisfies Meta<typeof Checkbox>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

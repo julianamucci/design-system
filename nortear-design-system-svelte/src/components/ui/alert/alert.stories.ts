@@ -6,7 +6,7 @@ import AlertStory from './AlertStory.svelte';
 import AlertDocs from '@/components/docs/AlertDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Alert',
   component: Alert,
   tags: ['autodocs', 'feedback'],
@@ -61,10 +61,10 @@ const meta = {
     dismissible: false,
     onDismiss: fn(),
   },
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   // Sem docgen, o gerador de source monta a tag a partir do nome interno da

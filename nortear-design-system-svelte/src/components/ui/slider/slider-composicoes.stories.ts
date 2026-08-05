@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Slider/Composicoes',
   component: SliderStory,
   tags: ['form'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SliderStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const VolumeComValor: Story = {
   args: {

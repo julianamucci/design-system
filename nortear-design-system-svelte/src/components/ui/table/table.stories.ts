@@ -6,7 +6,7 @@ import TableStory from './TableStory.svelte';
 import TableDocs from '@/components/docs/TableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Table',
   component: Table,
   tags: ['autodocs', 'tables'],
@@ -27,10 +27,10 @@ const meta = {
     caption: 'Lista de faturas recentes',
     showFooter: false,
   },
-} satisfies Meta<typeof Table>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

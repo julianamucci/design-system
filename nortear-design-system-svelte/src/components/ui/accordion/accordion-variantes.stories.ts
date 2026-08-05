@@ -6,7 +6,7 @@ import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionControlledStory from './AccordionControlledStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
     design: figmaDesign('accordion'),
     controls: { disable: true },
@@ -15,10 +15,10 @@ const meta = {
   title: 'UI/Accordion/Variantes',
   component: Accordion,
   tags: ['disclosure'],
-} satisfies Meta<typeof Accordion>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const FAQ_ITEMS = [
   { value: 'item-1', q: 'Como faço para redefinir minha senha?', a: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
@@ -124,7 +124,8 @@ export const Multiple: Story = {
   },
 };
 
-export const Controlled: Story = {
+// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
+export const Controlled: StoryObj<Record<string, never>> = {
   render: () => ({ Component: AccordionControlledStory }),
   parameters: {
     covers: ['functional.item6'],

@@ -6,7 +6,7 @@ import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleDocs from '@/components/docs/CollapsibleDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Collapsible',
   component: Collapsible,
   tags: ['autodocs', 'disclosure'],
@@ -28,10 +28,10 @@ const meta = {
     open: false,
     disabled: false,
   },
-} satisfies Meta<typeof Collapsible>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

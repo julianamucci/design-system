@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Tooltip/Composicoes',
   component: TooltipStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof TooltipStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const baseArgs = {
   defaultOpen: true,

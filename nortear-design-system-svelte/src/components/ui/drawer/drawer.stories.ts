@@ -6,7 +6,7 @@ import DrawerStory from './DrawerStory.svelte';
 import DrawerDocs from '@/components/docs/DrawerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Drawer',
   component: DrawerStory,
   tags: ['autodocs', 'disclosure'],
@@ -47,10 +47,10 @@ const meta = {
     onAction: fn(),
     onCancel: fn(),
   },
-} satisfies Meta<typeof DrawerStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

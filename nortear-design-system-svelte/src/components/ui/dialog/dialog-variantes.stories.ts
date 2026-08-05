@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect, waitFor } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Dialog/Variantes',
   component: DialogStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof DialogStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   parameters: {

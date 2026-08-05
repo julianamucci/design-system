@@ -13,7 +13,7 @@ type AccordionArgs = {
   loop: boolean;
 };
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Accordion',
   component: Accordion,
   tags: ['autodocs', 'disclosure'],
@@ -72,10 +72,10 @@ const meta = {
     loop: true,
     onValueChange: fn(),
   },
-} satisfies Meta<typeof Accordion>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   // O gerador de source do @storybook/svelte monta a tag a partir de
