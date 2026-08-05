@@ -201,16 +201,28 @@
    mesmo valor e saiu como redundância. */
 
 /* ── Glow na borda ────────────────────────────────────────────────────────────
- * Um traço de luz corre POR DENTRO da borda que já existe, dá DUAS voltas em
- * velocidade constante e desacelera até parar no fim da segunda.
+ * Um traço de luz corre por dentro da borda, dá DUAS voltas em velocidade
+ * constante e desacelera até parar no fim da segunda.
  *
- * Não entra na anatomia: é um ::after absoluto, fora do fluxo do grid e sem
- * ponteiro. Nenhum elemento novo no DOM e nenhuma classe nova para as stacks
- * aplicarem.
+ * Não entra na anatomia: um ::after absoluto, fora do fluxo do grid e sem
+ * ponteiro. Nenhum elemento novo no DOM, nenhuma classe nova para as stacks.
+ *
+ * A luz é uma MANCHA difusa, não uma barra. Foi o que resolveu as quinas: barra
+ * reta é tangente ao caminho e, ao dobrar um arco de 10px, a ponta de trás saía
+ * até 5px para fora com contorno visível, denunciando a rotação. Gradiente
+ * radial não tem contorno: o que sobra da curva vira borrão, não aresta.
+ *
+ * A referência (jh3y, "Border Trails with offset-path") esconde o excedente com
+ * uma janela na faixa da borda, apoiada num fundo OPACO por cima. Aqui não dá:
+ * as variantes usam fundo translúcido (/0.1) e o rastro apareceria no miolo
+ * inteiro. Recortar a raiz também não serve — o rastro é mais comprido que a
+ * altura do alert, então nas laterais ele passa da quina e o recorte cortaria o
+ * gradiente em linha reta, que é pior que o borrão. Fica sem recorte: o fim do
+ * rastro já é transparente.
  *
  * O percurso é `offset-path`, não gradiente cônico. Um conic-gradient gira a
  * velocidade ANGULAR constante e, num retângulo, a distância do centro até a
- * borda muda o tempo todo — o ponto acelerava nos cantos e freava no meio de
+ * borda muda o tempo todo — o traço acelerava nos cantos e freava no meio de
  * cada lado, quatro vezes por volta. `offset-distance` anda em PERÍMETRO, então
  * a velocidade é constante de verdade.
  */
@@ -245,26 +257,19 @@
   content: "";
   position: absolute;
 
-  /* Traço, não ponto: barra fina com rastro que apaga para trás.
-     O comprimento é o único ajuste com custo: a barra é reta e a quina é um
-     arco, então ao dobrar ela sai um pouco para fora. Medido nesta caixa
-     (400x80, raio 10), transbordo máximo do bbox por comprimento —
-       8px → 2,6   10px → 3,9   12px → 5,3   14px → 6,8   18px → 10,1
-     — e acontece num único instante por quina, na ponta do rastro, que já é
-     transparente e passa por blur. 12px é onde ainda lê como traço sem a barra
-     "voar" na curva. */
-  width: 12px;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(to right, transparent, var(--alert-glow));
-  /* blur amassa as pontas do traço; os dois drop-shadows fazem o halo. */
-  filter: blur(1px)
-          drop-shadow(0 0 3px var(--alert-glow))
-          drop-shadow(0 0 8px var(--alert-glow));
+  /* Mancha difusa: o gradiente radial nasce na PONTA (à direita, que com
+     `offset-rotate: auto` é a frente) e apaga para trás.
+     72x8 dá ~36px de rastro aceso ao longo da borda e ±4px de espalhamento
+     lateral. Os 4px para dentro caem no padding do alert, antes do texto (o
+     padding-block é 8px). O comprimento é limitado pela ALTURA do alert, não
+     pela largura: nas laterais o rastro se estende reto e, passando da altura,
+     escapa da quina — 72px já é longo para um alert de uma linha (~33px). */
+  width: 72px;
+  aspect-ratio: 9 / 1;
+  background: radial-gradient(100% 100% at right, var(--alert-glow), transparent 50%);
 
-  /* `padding-box` é o caminho logo DENTRO da borda de 1px — acompanha qualquer
-     largura e qualquer --radius-alert sem recalcular nada. Com `border-box` o
-     traço corria em cima da borda e metade dele sobrava para fora do alert. */
+  /* `padding-box` corre logo por dentro da borda; o espalhamento de 4px cobre a
+     faixa de 1px da borda por cima. */
   offset-path: padding-box;
   offset-rotate: auto;                          /* alinha com a tangente */
   offset-anchor: 100% 50%;                      /* a PONTA vai no caminho, o rastro atrás */
