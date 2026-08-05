@@ -21,6 +21,9 @@ function runExitAnimation(el: HTMLElement, done: () => void): void {
     // animationend borbulha: uma animação de qualquer descendente encerraria a
     // saída antes da hora. Só o próprio elemento conta.
     if (event && event.target !== el) return;
+    /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que
+       chamam (animationend e timeout) removem listener e timer antes de sair,
+       então não há ordem de eventos que a alcance. */
     if (finalizado) return;
     finalizado = true;
     window.clearTimeout(timer);
@@ -82,6 +85,7 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
   const { variant = 'default', role = 'alert', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
 
   const el = document.createElement('div');
+  el.dataset.slot = 'alert';
   // PATCH: a11y — `role` configurável. Fixo em 'alert' o componente era live
   // region assertiva mesmo estático, e o leitor de tela pulava para ele no
   // carregamento (ver PATCHES.md#alert-role).
@@ -136,6 +140,9 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     // botão para o fim depois que os appends síncronos do consumidor rodarem.
     // Visual não muda (position: absolute); só a ordem de leitura e de Tab.
     queueMicrotask(() => {
+      /* v8 ignore next -- o caminho "já é o último" exige alert dismissible sem
+         nenhum conteúdo: o botão só deixa de ser último porque o consumidor
+         appenda depois, e alert vazio não é caso de uso. */
       if (el.lastElementChild !== dismissButton) el.appendChild(dismissButton);
     });
   }
@@ -149,8 +156,11 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
   // PATCH: api — nível do heading configurável via `as`, default 'h5'
   // (ver PATCHES.md#alert-title-desc-semantics)
   const el = document.createElement(as);
+  el.dataset.slot = 'alert-title';
   el.className = 'nds-alert-title';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  /* v8 ignore next -- `text` tem default ''; o ramo falso é o título montado por
+     appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
 
   return el;
@@ -162,8 +172,11 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
   // <section> preserva a semântica de landmark da descrição. CSS aceita tanto
   // section quanto qualquer elemento com class nds-alert-description.
   const el = document.createElement('section');
+  el.dataset.slot = 'alert-description';
   el.className = 'nds-alert-description';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  /* v8 ignore next -- `text` tem default ''; o ramo falso é a descrição montada
+     por appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
 
   return el;

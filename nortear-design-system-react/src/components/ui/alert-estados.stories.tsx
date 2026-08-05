@@ -85,7 +85,8 @@ export const SemIcone: Story = {
 };
 
 export const SemAnuncio: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    covers: ["functional.item4", "visual.item3"], controls: { disable: true } },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       {/* Estático: não deve virar live region. */}
@@ -123,6 +124,7 @@ export const SemAnuncio: Story = {
 };
 
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ["functional.item6"] },
   render: () => (
     <div aria-live="polite">
       <Alert>

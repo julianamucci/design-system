@@ -44,6 +44,7 @@ export const Completo: Story = {
 };
 
 export const SemTitulo: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -119,6 +120,7 @@ export const SemAnuncio: Story = {
 };
 
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ['functional.item6'] },
   render: () => ({
     Component: AlertStory,
     props: {

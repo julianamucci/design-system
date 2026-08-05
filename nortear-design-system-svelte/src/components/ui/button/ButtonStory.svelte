@@ -69,10 +69,10 @@
   aria-invalid={ariaInvalid ? 'true' : undefined}
   {onclick}
 >
-  <!-- `nds-icon` não existe no CSS: os ícones vinham dimensionados só por
-       `.nds-button > svg`. A classe real é `nds-button-icon-svg`, a mesma que a
-       factory aplica. E o spin usa `.nds-spin` (button.css), que tem guarda de
-       prefers-reduced-motion — `.nds-animate-spin` (utilities.css) não tem. -->
+  <!-- `nds-button-icon-svg` e não `nds-icon`: as duas existem e dão 16px, mas
+       só esta acompanha o tamanho do botão pelos modificadores `-sm`/`-lg`, e é
+       a que a factory Vanilla aplica. O spin usa `.nds-spin` (button.css), que
+       tem guarda de prefers-reduced-motion — `.nds-animate-spin` não tem. -->
   {#if OnlyIcon}
     <OnlyIcon class={spinIcon ? 'nds-button-icon-svg nds-spin' : 'nds-button-icon-svg'} aria-hidden="true" />
   {:else}

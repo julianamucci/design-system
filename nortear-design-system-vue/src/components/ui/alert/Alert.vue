@@ -66,13 +66,25 @@ let saidaTimer = 0
 let dismissed = false
 let saidaFinalizada = false
 
-function limparEntrada() {
+// `animationend` borbulha: a animação de qualquer descendente (o botão de
+// fechar, um ícone) chegaria aqui e encerraria entrada ou saída antes da hora.
+// Só o próprio elemento conta. Chamada direta (sem evento) sempre passa.
+function ehDoProprioElemento(event?: Event) {
+  return !event || event.target === root.value
+}
+
+function limparEntrada(event?: Event) {
+  if (!ehDoProprioElemento(event)) return
   window.clearTimeout(entradaTimer)
   root.value?.removeEventListener('animationend', limparEntrada)
   if (animationClass.value === 'nds-animate-in') animationClass.value = null
 }
 
-function finalizarSaida() {
+function finalizarSaida(event?: Event) {
+  if (!ehDoProprioElemento(event)) return
+  /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que chamam
+     (animationend e timeout) removem listener e timer antes de sair, então não
+     há ordem de eventos que a alcance. Fica como rede se um deles mudar. */
   if (saidaFinalizada) return
   saidaFinalizada = true
   window.clearTimeout(saidaTimer)
@@ -101,6 +113,8 @@ function handleDismiss() {
   animationClass.value = 'nds-animate-out'
 
   const el = root.value
+  /* v8 ignore next 4 -- o handler só existe dentro do `v-if="visible"`, onde a
+     ref já está preenchida; o ramo existe porque o tipo da ref é nullable. */
   if (!el) {
     finalizarSaida()
     return

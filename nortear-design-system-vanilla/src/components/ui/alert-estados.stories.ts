@@ -37,6 +37,7 @@ export const Completo: Story = {
 };
 
 export const SemTitulo: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
@@ -124,6 +125,7 @@ export const SemAnuncio: Story = {
 };
 
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ['functional.item6'] },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.setAttribute('aria-live', 'polite');

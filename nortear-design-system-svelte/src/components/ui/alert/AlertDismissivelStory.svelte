@@ -17,7 +17,12 @@
 
   function handleDismiss() {
     onDismiss?.();
-    instancia += 1;
+    // Remonta só no microtask seguinte. Remontando no mesmo tick, o `{#key}`
+    // destrói a instância antes de o Alert chegar a re-renderizar sem o nó — a
+    // remoção que a story prova seria a do wrapper, não a do componente.
+    queueMicrotask(() => {
+      instancia += 1;
+    });
   }
 </script>
 

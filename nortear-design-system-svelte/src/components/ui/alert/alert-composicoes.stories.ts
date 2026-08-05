@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertAcaoStory from './AlertAcaoStory.svelte';
+import AlertClasseAdicionalStory from './AlertClasseAdicionalStory.svelte';
 
 const meta: Meta = {
   parameters: {
@@ -19,6 +20,7 @@ export default meta;
 type Story = StoryObj;
 
 export const ComIcone: Story = {
+  parameters: { covers: ['functional.item3', 'accessibility.item2'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -52,10 +54,46 @@ export const ComAcao: Story = {
       const action = canvasElement.querySelector('[data-slot="alert-action"]');
       await expect(action).toHaveClass('nds-alert-action');
     });
+
+    // `accessibility.keyboard` documenta Tab e Enter. O alert em si não é
+    // focável — o Tab tem que chegar direto ao botão interno.
+    await step('Tab leva o foco ao botão interno', async () => {
+      const alert = await canvas.findByRole('alert');
+      await expect(alert).not.toHaveAttribute('tabindex');
+      await userEvent.tab();
+      await expect(within(alert).getByRole('button', { name: 'Atualizar' })).toHaveFocus();
+    });
+  },
+};
+
+/**
+ * Extensibilidade documentada: todos os subcomponentes aceitam classe do
+ * consumidor, e ela SOMA às do design system — não substitui.
+ */
+export const ClasseAdicional: Story = {
+  render: () => ({ Component: AlertClasseAdicionalStory }),
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A classe do consumidor soma à do design system', async () => {
+      const alert = await canvas.findByRole('alert');
+      await expect(alert).toHaveClass('nds-alert', 'nds-w-full');
+
+      const slots = [
+        ['alert-title', 'nds-alert-title', 'nds-w-full'],
+        ['alert-description', 'nds-alert-description', 'nds-w-full'],
+        ['alert-action', 'nds-alert-action', 'nds-w-auto'],
+      ] as const;
+      for (const [slot, base, extra] of slots) {
+        await expect(alert.querySelector(`[data-slot="${slot}"]`)).toHaveClass(base, extra);
+      }
+    });
   },
 };
 
 export const SemIcone: Story = {
+  parameters: { covers: ['visual.item4'] },
   render: () => ({
     Component: AlertStory,
     props: {

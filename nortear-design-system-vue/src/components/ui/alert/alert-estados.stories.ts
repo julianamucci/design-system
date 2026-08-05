@@ -43,6 +43,7 @@ export const Completo: Story = {
 };
 
 export const SemTitulo: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     components: { Alert, AlertDescription, Info },
     setup() { return {}; },
@@ -140,6 +141,7 @@ export const SemAnuncio: Story = {
 };
 
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ['functional.item6'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },

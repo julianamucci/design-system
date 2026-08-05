@@ -87,10 +87,14 @@
 		const el = ref;
 		if (!dismissible || !el) return;
 
-		const limparEntrada = () => {
+		// `animationend` borbulha: a animação de qualquer descendente (o botão de
+		// fechar, um ícone) chegaria aqui e limparia a entrada antes da hora — e
+		// com `once` ainda consumiria o listener. Só o próprio elemento conta.
+		const limparEntrada = (event?: Event) => {
+			if (event && event.target !== el) return;
 			if (classeAnimacao === "nds-animate-in") classeAnimacao = undefined;
 		};
-		el.addEventListener("animationend", limparEntrada, { once: true });
+		el.addEventListener("animationend", limparEntrada);
 		const timer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
 
 		return () => {
@@ -106,7 +110,12 @@
 		const el = ref;
 		let finalizado = false;
 		let timer = 0;
-		const finalizar = () => {
+		// Mesma guarda da entrada: animação de descendente não encerra a saída.
+		const finalizar = (event?: Event) => {
+			if (event && event.target !== el) return;
+			/* v8 ignore next -- guarda de dupla finalização: os dois caminhos que
+			   chamam (animationend e timeout) removem listener e timer antes de
+			   sair, então não há ordem de eventos que a alcance. */
 			if (finalizado) return;
 			finalizado = true;
 			window.clearTimeout(timer);

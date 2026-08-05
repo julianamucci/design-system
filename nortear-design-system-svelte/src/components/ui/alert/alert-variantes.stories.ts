@@ -19,6 +19,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  parameters: { covers: ['functional.item1', 'accessibility.item3', 'visual.item2'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -39,6 +40,7 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -58,6 +60,7 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -118,6 +121,7 @@ export const Info: Story = {
 // remonta um novo em seguida, então o canvas nunca fica vazio (Chromatic
 // fotografava a story vazia). A prova da remoção mede o nó ORIGINAL.
 export const Dismissible: Story = {
+  parameters: { covers: ['functional.item7', 'visual.item5'] },
   args: {
     dismissible: true,
     onDismiss: fn(),
@@ -132,6 +136,26 @@ export const Dismissible: Story = {
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
 
+    // Primeiro step de propósito: só vale enquanto a entrada ainda roda.
+    await step('Animação de descendente não encerra a entrada antes da hora', async () => {
+      const alert = await canvas.findByRole('alert');
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a fase de
+      // entrada do alert.
+      const dismiss = canvas.getByRole('button', { name: 'Fechar alerta' });
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar.
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).not.toHaveClass('nds-animate-in');
+    });
+
     await step('Botão de fechar visível e acessível por rótulo', async () => {
       // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
       // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
@@ -143,10 +167,25 @@ export const Dismissible: Story = {
       });
     });
 
+
+    await step('X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes', async () => {
+      // Mesma verificação do Vanilla e do React: a ordem de leitura é contrato,
+      // não detalhe visual. Botão antes do conteúdo faria o leitor anunciar
+      // "fechar" antes de dizer o que seria fechado.
+      const alert = canvas.getByRole('alert');
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
+    });
     await step('Clique no X remove o alert e dispara o callback uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(dismissButton);
+      // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
+      // fechamento em andamento. Sem ela o `toHaveBeenCalledTimes(1)` abaixo é
+      // verdade trivial — nunca houve chance de disparar duas vezes.
+      dismissButton.click();
+      // E a animação de um descendente também não pode encerrar a saída.
+      dismissButton.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alertOriginal).toBeInTheDocument();
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());

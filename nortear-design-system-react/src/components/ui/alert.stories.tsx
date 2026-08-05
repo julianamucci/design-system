@@ -67,9 +67,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ["accessibility.item1", "accessibility.item4", "visual.item1"] },
   render: (args) => (
     <Alert {...args}>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.

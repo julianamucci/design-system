@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
-import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-vue-next';
+// `Info as InfoIcon`: a story exportada se chama `Info` nas 4 stacks; sem o
+// alias o ícone e o export colidem no mesmo escopo de módulo.
+import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Alert/Variantes',
@@ -18,12 +20,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: { covers: ['functional.item1', 'accessibility.item3', 'visual.item2'] },
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, Info },
+    components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="nds-icon" aria-hidden="true" />
+        <InfoIcon class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
@@ -38,6 +41,7 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, AlertCircle },
     setup() { return {}; },
@@ -57,6 +61,7 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() { return {}; },
@@ -94,14 +99,14 @@ export const Warning: Story = {
   },
 };
 
-export const InfoVariant: Story = {
+export const Info: Story = {
   name: 'Info',
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, Info },
+    components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() { return {}; },
     template: `
       <Alert variant="info">
-        <Info class="nds-icon" aria-hidden="true" />
+        <InfoIcon class="nds-icon" aria-hidden="true" />
         <AlertTitle>Dica</AlertTitle>
         <AlertDescription>Você pode personalizar os atalhos de teclado nas configurações.</AlertDescription>
       </Alert>
@@ -121,6 +126,7 @@ const dismissSpy = fn();
 // remonta um alert NOVO via :key após o dismiss. A play mede o nó ORIGINAL, então
 // a prova da remoção continua válida.
 export const Dismissible: Story = {
+  parameters: { covers: ['functional.item7', 'visual.item5'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() {
@@ -143,6 +149,26 @@ export const Dismissible: Story = {
     dismissSpy.mockClear();
     const canvas = within(canvasElement);
 
+    // Primeiro step de propósito: só vale enquanto a entrada ainda roda.
+    await step('Animação de descendente não encerra a entrada antes da hora', async () => {
+      const alert = canvas.getByRole('alert');
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a fase de
+      // entrada do alert.
+      const dismiss = canvas.getByRole('button', { name: 'Fechar alerta' });
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar.
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).not.toHaveClass('nds-animate-in');
+    });
+
     await step('Botão de fechar é visível e acessível por rótulo', async () => {
       // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
       // 0 → 1). Asserção de visibilidade no primeiro quadro é racy em qualquer
@@ -153,9 +179,25 @@ export const Dismissible: Story = {
       );
     });
 
+
+    await step('X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes', async () => {
+      // Mesma verificação do Vanilla e do React: a ordem de leitura é contrato,
+      // não detalhe visual. Botão antes do conteúdo faria o leitor anunciar
+      // "fechar" antes de dizer o que seria fechado.
+      const alert = canvas.getByRole('alert');
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
+    });
     await step('Clique remove o alert original e dispara o emit uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
-      await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+      const dismiss = canvas.getByRole('button', { name: 'Fechar alerta' });
+      await userEvent.click(dismiss);
+      // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
+      // fechamento em andamento. Sem ela o `toHaveBeenCalledTimes(1)` abaixo é
+      // verdade trivial — nunca houve chance de disparar duas vezes.
+      dismiss.click();
+      // E a animação de um descendente também não pode encerrar a saída.
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alertOriginal).toBeInTheDocument();
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());
@@ -173,7 +215,7 @@ const dismissKeyboardSpy = fn();
 export const DismissibleTeclado: Story = {
   name: 'Dismissible (teclado)',
   render: () => ({
-    components: { Alert, AlertTitle, AlertDescription, Info },
+    components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() {
       const instanceKey = ref(0);
       function onDismiss() {
@@ -184,7 +226,7 @@ export const DismissibleTeclado: Story = {
     },
     template: `
       <Alert :key="instanceKey" dismissible dismiss-label="Fechar alerta" @dismiss="onDismiss">
-        <Info class="nds-icon" aria-hidden="true" />
+        <InfoIcon class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>

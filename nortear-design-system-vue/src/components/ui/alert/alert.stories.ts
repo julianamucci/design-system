@@ -66,12 +66,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'] },
   render: (args) => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return { args }; },
     template: `
       <Alert v-bind="args">
-        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <Info class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>

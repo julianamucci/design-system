@@ -71,6 +71,7 @@ export const Playground: Story = {
   // função compilada (`<wrapper …/>`). O snippet vai explícito, montado a
   // partir dos args para acompanhar os controls.
   parameters: {
+    covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: { variant?: string; role?: string; dismissible?: boolean } }) => {

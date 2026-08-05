@@ -106,6 +106,7 @@ export const Playground: Story = {
   // e não o que o consumidor escreve. Aqui vai a chamada real da factory,
   // montada a partir dos args para acompanhar os controls.
   parameters: {
+    covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AlertArgs> }) => {
