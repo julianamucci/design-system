@@ -29,10 +29,15 @@
     onCancel?: () => void;
   }
 
+  // `defaultOpen` não existe no vaul-svelte nem no bits-ui: a prop era passada,
+  // ignorada, e o overlay nunca abria — as stories que dependiam dela falhavam
+  // todas. A API real é `open` (bindable). Inicializar `open` com `defaultOpen`
+  // cobre os dois usos e apaga o ramo duplicado que existia só para o caso não
+  // controlado (os dois ramos eram idênticos fora do `open`).
   let {
     direction = 'bottom',
     defaultOpen = false,
-    open = $bindable(undefined),
+    open = $bindable(defaultOpen),
     dismissible = true,
     triggerLabel = 'Abrir drawer',
     title = 'Editar perfil',
@@ -47,7 +52,6 @@
 
 <div style="contain: layout">
   {#key `${direction}-${defaultOpen}-${dismissible}-${variant}`}
-    {#if open !== undefined}
       <Drawer bind:open {direction} {dismissible}>
         <DrawerTrigger>
           {#snippet child({ props })}
@@ -84,7 +88,18 @@
               <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita posteriormente.</p>
             </div>
           {:else if variant === 'withScroll'}
-            <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
+            <!-- tabindex="0" + role/label: região rolável precisa ser alcançável
+                 por teclado (axe scrollable-region-focusable). O defeito existia
+                 desde sempre, escondido porque `max-h-[50vh]` era classe morta —
+                 sem altura máxima nada rolava e a regra não se aplicava. -->
+            <div
+              class="nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground"
+              data-spacing="sm"
+              style="max-block-size: 50vh"
+              tabindex="0"
+              role="region"
+              aria-label={title}
+            >
               {#each Array.from({ length: 12 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
               {/each}
@@ -101,60 +116,5 @@
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    {:else}
-      <Drawer {direction} {defaultOpen} {dismissible}>
-        <DrawerTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{triggerLabel}</Button>
-          {/snippet}
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>{title}</DrawerTitle>
-            <DrawerDescription>{description}</DrawerDescription>
-          </DrawerHeader>
-
-          {#if variant === 'withForm'}
-            <form class="nds-grid nds-px-4" data-spacing="sm">
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Nome</span>
-                <input
-                  type="text"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  defaultValue="Maria Silva"
-                />
-              </label>
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Email</span>
-                <input
-                  type="email"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  defaultValue="maria@exemplo.com"
-                />
-              </label>
-            </form>
-          {:else if variant === 'withConfirmation'}
-            <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
-              <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita posteriormente.</p>
-            </div>
-          {:else if variant === 'withScroll'}
-            <div class="max-h-[50vh] nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground" data-spacing="sm">
-              {#each Array.from({ length: 12 }) as _, i (i)}
-                <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
-              {/each}
-            </div>
-          {/if}
-
-          <DrawerFooter>
-            <Button onclick={onAction}>{actionLabel}</Button>
-            <DrawerClose>
-              {#snippet child({ props })}
-                <Button variant="outline" {...props} onclick={onCancel}>{cancelLabel}</Button>
-              {/snippet}
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    {/if}
   {/key}
 </div>

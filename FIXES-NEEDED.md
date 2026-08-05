@@ -1169,3 +1169,54 @@ ou badge.
 
 - [ ] É o mesmo backlog já registrado, agora com número atual e por família.
   Enquanto ele existir, `npm run test:coverage` não emite cobertura no Svelte.
+
+## Backlog de portais no Svelte — 2026-08-05
+
+Três causas raiz encontradas e corrigidas. A suíte foi de **101 para 74 falhas**.
+
+### 1. `defaultOpen` não existe (drawer, dropdown-menu, hover-card, popover)
+
+Os wrappers `*Story.svelte` tinham `{#if open !== undefined} <X bind:open>
+{:else} <X {defaultOpen}>`, com os **dois ramos idênticos** fora do `open`. Só
+que `defaultOpen` não é prop nem do bits-ui nem do vaul-svelte: era passada,
+ignorada, e o overlay nunca abria. Toda story que dependia dela falhava.
+
+Corrigido colapsando para um ramo só, com `open = $bindable(defaultOpen)`.
+Drawer 10 → 1, dropdown-menu 9 → 0.
+
+### 2. Popover sem `role` e sem nome acessível
+
+O bits-ui não emite role no conteúdo, mas põe `aria-haspopup="dialog"` no
+trigger — o leitor anunciava "abre diálogo" e o que abria não era diálogo. O
+Vanilla, que é a referência cross-stack, já definia `role="dialog"`.
+
+Ao corrigir, o axe cobrou o passo seguinte: `role="dialog"` exige nome
+acessível. Replicado o critério do Vanilla (heading interno vira
+`aria-labelledby`, senão o texto do trigger vira `aria-label`), e o
+`PopoverTitle` — que era um `<div>` sem semântica — virou heading, como já é no
+React via `Popover.Title` do base-ui. Popover 10 → 0.
+
+### 3. Classe morta escondendo defeito real
+
+`max-h-[50vh]` no scroll do drawer é Tailwind, não existe: sem altura máxima
+nada rolava, e por isso o axe nunca aplicava `scrollable-region-focusable`. Com
+a altura de volta, a regra apareceu — a região rolável não tinha acesso por
+teclado. Corrigido com `tabindex`, `role` e rótulo.
+
+### O que continua aberto — 74 falhas
+
+```
+tooltip 13 · pagination 10 · hover-card 10 · menubar 9 · select 5
+scroll-area 5 · slider 4 · navigation-menu 4 · command 4 · e cauda
+```
+
+- [ ] **Vue tem o mesmo gap do `PopoverTitle`** — `<div>` sem semântica de
+  heading. Só o React acerta, por usar o primitivo do base-ui.
+- [ ] **Foco não entra no drawer** (`drawer.stories.ts` Playground). Medido: o
+  foco fica no trigger mesmo após 5s. É defeito de acessibilidade real, não
+  instabilidade de teste.
+- [ ] **Contaminação entre stories**: popover passa 11/11 isolado e acusa 1 na
+  suíte inteira — portal vazando entre stories.
+- [ ] Cada família restante precisa do mesmo tratamento: diagnosticar a raiz
+  antes de mexer no teste. Em todas as três acima o teste estava certo e o
+  componente errado.
