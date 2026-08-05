@@ -37,6 +37,13 @@ export const Disabled: Story = {
       await expect(button).toBeDisabled();
     });
 
+    await step("Tab pula o botão desabilitado", async () => {
+      // accessibility.keyboard.disabled afirma isso e nada verificava.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(button).not.toHaveFocus();
+    });
+
     await step("Clique não dispara onClick quando disabled", async () => {
       await userEvent.click(button, { pointerEventsCheck: 0 });
       await expect(args.onClick).not.toHaveBeenCalled();

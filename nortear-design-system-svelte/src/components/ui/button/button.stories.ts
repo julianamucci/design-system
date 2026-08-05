@@ -28,6 +28,23 @@ const meta = {
       control: 'boolean',
       description: 'Desabilita interação com o botão',
     },
+    // A aba "API Reference" documenta a API real; o Playground não encaminha
+    // estas três, então control ativo aqui seria controle morto.
+    href: {
+      control: false,
+      description: 'Quando fornecido, renderiza como <a> mantendo estilos e semântica de link.',
+      table: { type: { summary: 'string' } },
+    },
+    type: {
+      control: false,
+      description: 'Tipo HTML do botão. Use "submit" dentro de forms.',
+      table: { type: { summary: '"button" | "submit" | "reset"' }, defaultValue: { summary: '"button"' } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais, mescladas com as da variante.',
+      table: { type: { summary: 'string' } },
+    },
     onclick: {
       control: false,
       description: 'Callback disparado ao clique. Não dispara quando desabilitado.',
@@ -83,8 +100,13 @@ export const Playground: Story = {
       await expect((args as { onclick: ReturnType<typeof fn> }).onclick).toHaveBeenCalledTimes(1);
     });
 
-    await step('Focus via teclado', async () => {
-      (button as HTMLElement).focus();
+    await step('Tab leva o foco ao botão', async () => {
+      // userEvent.tab() e não .focus(): o documentado é "recebe foco na ordem
+      // natural do DOM". Forçar o foco passaria até com tabindex="-1".
+      // O clique do passo anterior deixou o foco no botão; sem zerar, o Tab
+      // sairia dele e a asserção mediria o contrário do que promete.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(button).toHaveFocus();
     });
 
