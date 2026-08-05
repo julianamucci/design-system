@@ -35,6 +35,10 @@
 
   let {
     defaultValue = undefined,
+    // `defaultValue` nao existe no bits-ui: a prop era ignorada e nenhum menu
+    // abria. A API e `value` (bindable). Inicializar com `defaultValue`
+    // preserva o uso das stories e mantem a interatividade.
+    value = $bindable(defaultValue),
     loop = true,
     variant = 'default',
     demonstration = 'default',
@@ -49,7 +53,7 @@
 
 <div style="contain: layout">
   {#key `${defaultValue}-${loop}-${variant}-${demonstration}`}
-    <Menubar {defaultValue} {loop}>
+    <Menubar bind:value {loop}>
       {#if demonstration === 'shortcuts'}
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>

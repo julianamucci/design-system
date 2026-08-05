@@ -1203,20 +1203,43 @@ nada rolava, e por isso o axe nunca aplicava `scrollable-region-focusable`. Com
 a altura de volta, a regra apareceu — a região rolável não tinha acesso por
 teclado. Corrigido com `tabindex`, `role` e rótulo.
 
-### O que continua aberto — 74 falhas
+### Segunda rodada — 74 para 29 falhas
+
+Mais causas raiz, todas do mesmo tipo: o teste estava certo e o componente
+incompleto.
+
+- **tooltip 13 → 0** — o bits-ui não emite `role="tooltip"` no conteúdo. O
+  Vanilla já define. Sem ele o painel é um `<div>` qualquer, e o
+  `aria-describedby` do trigger aponta para algo sem papel.
+- **hover-card 10 → 0** — mesmo caso do popover (`role="dialog"` + nome
+  acessível derivado). E o bits-ui força `role="button"` num trigger que é um
+  `<a>` que navega; o Vanilla não mexe no role do trigger, então o `role="link"`
+  foi restaurado depois do spread.
+- **pagination 10 → 0** — o bits-ui **fixa** `aria-label="Page N"`, em inglês, e
+  vence o que o consumidor passa. A paginação inteira era anunciada em inglês e
+  a página atual não se distinguia. Resolvido pelo snippet `child`, única forma
+  de escrever depois do merge da lib.
+- **menubar 9 → 0** — `defaultValue` não existe no bits-ui (a API é `value`
+  bindable). Mesma família do `defaultOpen`: prop ignorada, nenhum menu abria.
+- **sheet 3 → 0** — o mesmo `max-h-[…]` morto do drawer, e o `waitForClose`
+  liberava em `data-state="closed"` enquanto o overlay ainda segurava
+  `pointer-events`. A espera passou a ser pela interação devolvida.
+
+### O que continua aberto — 29 falhas
 
 ```
-tooltip 13 · pagination 10 · hover-card 10 · menubar 9 · select 5
-scroll-area 5 · slider 4 · navigation-menu 4 · command 4 · e cauda
+select 5 · scroll-area 5 · slider 4 · navigation-menu 4 · command 4
+skeleton 2 · sidebar/popover/drawer/dialog/data-table/aspect-ratio 1 cada
 ```
 
-- [ ] **Vue tem o mesmo gap do `PopoverTitle`** — `<div>` sem semântica de
-  heading. Só o React acerta, por usar o primitivo do base-ui.
-- [ ] **Foco não entra no drawer** (`drawer.stories.ts` Playground). Medido: o
-  foco fica no trigger mesmo após 5s. É defeito de acessibilidade real, não
-  instabilidade de teste.
-- [ ] **Contaminação entre stories**: popover passa 11/11 isolado e acusa 1 na
-  suíte inteira — portal vazando entre stories.
-- [ ] Cada família restante precisa do mesmo tratamento: diagnosticar a raiz
-  antes de mexer no teste. Em todas as três acima o teste estava certo e o
-  componente errado.
+- [ ] **select (5)** — `role="combobox"` é o contrato (o base-ui emite no React
+  e as stories das 4 stacks consultam por ele), mas o bits-ui não emite, e o
+  role escrito à mão fica pela metade: falta `aria-controls` apontando para o
+  listbox. Tentei ligar por MutationObserver e não funcionou — o painel não
+  expõe id alcançável a partir do trigger. Provavelmente precisa de contexto
+  compartilhado, como o `ACCORDION_ITEM_IDS` do accordion. O `aria-label` do
+  listbox já foi corrigido nesta rodada (era violação de `aria-input-field-name`).
+- [ ] **Foco não entra no drawer** — segue aberto, é defeito real.
+- [ ] **popover 1** — passa 11/11 isolado, falha na suíte inteira: portal
+  vazando entre stories.
+- [ ] As demais famílias não foram diagnosticadas ainda.

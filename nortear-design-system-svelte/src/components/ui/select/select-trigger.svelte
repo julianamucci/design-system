@@ -12,6 +12,13 @@
 	}: WithoutChild<SelectPrimitive.TriggerProps> & {
 		size?: "sm" | "default";
 	} = $props();
+
+	// NOTA: falta `aria-controls` apontando para o listbox — o axe reprova
+	// por atributo ARIA obrigatorio ausente (aria-required-attr). O bits-ui nao
+	// emite nem o role nem o id do painel, e tentar ligar por observador nao
+	// funcionou: o painel nao expoe id alcancavel a partir do trigger. Registrado
+	// no FIXES-NEEDED; provavelmente precisa de contexto compartilhado, como o
+	// ACCORDION_ITEM_IDS do accordion.
 </script>
 
 <SelectPrimitive.Trigger

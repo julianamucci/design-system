@@ -50,7 +50,10 @@
       <HoverCard bind:open {openDelay} {closeDelay}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#user-joana" class="nds-text-primary underline-offset-4 nds-hover-underline" {...props}
+            <!-- role="link" DEPOIS do spread: o bits-ui impoe role="button" no trigger,
+                 mas aqui o elemento e um <a> que navega. O Vanilla nao mexe no role do
+                 trigger — quem escolhe o elemento e o consumidor. -->
+            <a href="#user-joana" class="nds-text-primary nds-hover-underline" {...props} role="link"
               >{triggerLabel}</a
             >
           {/snippet}

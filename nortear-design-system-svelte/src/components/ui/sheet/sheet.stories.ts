@@ -59,8 +59,15 @@ export const Playground: Story = {
           if (dialog && dialog.getAttribute('data-state') !== 'closed') {
             throw new Error('sheet still open');
           }
+          // data-state=closed nao basta: durante a animacao de saida o overlay
+          // ainda segura pointer-events, e o proximo clique no trigger falha.
+          // A espera tem que ser pela interacao devolvida.
+          const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
+          if (getComputedStyle(trigger).pointerEvents === 'none') {
+            throw new Error('overlay ainda bloqueia o ponteiro');
+          }
         },
-        { timeout: 1200 }
+        { timeout: 3000 }
       );
     };
 

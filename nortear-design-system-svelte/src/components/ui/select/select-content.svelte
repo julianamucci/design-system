@@ -18,14 +18,24 @@
 	}: WithoutChild<SelectPrimitive.ContentProps> & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SelectPortal>>;
 	} = $props();
+
+	// Id próprio e estável: o trigger precisa apontar `aria-controls` para cá, e
+	// depender do id gerado pelo bits-ui não funciona — nem sempre existe.
+	const contentId = `nds-select-content-${crypto.randomUUID().slice(0, 8)}`;
 </script>
 
 <SelectPortal {...portalProps}>
+	<!-- aria-label: o conteúdo do select é um listbox, e listbox sem nome
+	     acessível é violação de axe (aria-input-field-name). O React já nomeia
+	     a lista com "Opções"; aqui não havia nome nenhum. Consumidor que passar
+	     o seu continua vencendo, porque restProps vem depois. -->
 	<SelectPrimitive.Content
 		bind:ref
 		{sideOffset}
 		{preventScroll}
 		data-slot="select-content"
+		id={contentId}
+		aria-label="Opções"
 		class={cn(
 			"nds-select-content",
 			className

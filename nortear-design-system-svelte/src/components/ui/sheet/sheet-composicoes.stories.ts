@@ -103,7 +103,7 @@ export const TermsWithScroll: Story = {
   },
   play: async () => {
     const dialog = await expectOpen();
-    const scrollArea = dialog.querySelector('.overflow-y-auto');
+    const scrollArea = dialog.querySelector('.nds-overflow-y');
     await expect(scrollArea).not.toBeNull();
   },
 };
