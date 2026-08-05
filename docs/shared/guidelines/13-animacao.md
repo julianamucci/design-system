@@ -34,8 +34,10 @@ Definidos em [docs/shared/tokens/motion.css](../tokens/motion.css). Resumo:
 **Durações** (`--duration-{instant|fast|base|moderate|slow|stately}`):
 - `instant` 0ms · `fast` 120ms · `base` 200ms · `moderate` 320ms · `slow` 500ms · `stately` 800ms.
 
-**Easings** (`--ease-{linear|standard|emphasis|entrance|exit}`):
+**Easings** (`--ease-{linear|standard|size|spring|emphasis|entrance|exit}`):
 - `standard` — default.
+- `size` — mudança de dimensão.
+- `spring` — passa do alvo e volta; para escala e gesto. Anda em par com `--duration-spring` (ou `--duration-base`); com `--duration-fast` o overshoot não acontece.
 - `emphasis` — mais dramático na chegada.
 - `entrance` — só ease-out, para entrar.
 - `exit` — só ease-in, para sair.
@@ -50,12 +52,19 @@ Definidos em [docs/shared/tokens/motion.css](../tokens/motion.css). Resumo:
 ```css
 .nds-button {
   transition: background-color var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-standard);
+              transform var(--duration-base) var(--ease-spring);
 }
-.nds-button:active {
-  transform: scale(0.97);
-}
+.nds-button:hover  { transform: scale(1.05); }
+.nds-button:active { transform: scale(0.95); }   /* depois do :hover — ver abaixo */
 ```
+
+Duas regras que o exemplo carrega:
+
+- **Propriedade com física ganha duração e easing próprios.** Cor e sombra
+  chegam e param (`--ease-standard`, `--duration-fast`); escala tem mola
+  (`--ease-spring`, que passa de 1 e volta). Em 120ms o overshoot não cabe.
+- **Ordem entre `:hover` e `:active`.** Durante o clique o elemento casa com as
+  duas, mesma especificidade — a última declarada vence. `:active` depois.
 
 ### Em JS (via lib/motion.ts)
 

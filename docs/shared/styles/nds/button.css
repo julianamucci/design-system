@@ -44,7 +44,16 @@
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  transition: background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast), opacity var(--duration-fast), transform var(--duration-fast);
+  /* `transform` sai do lote: cor e sombra querem chegar rápido e parar
+   * (`--ease-standard`), a escala quer mola. `--ease-spring` passa de 1 e volta,
+   * que é o que dá a sensação de física do gesto — com 120ms o overshoot não
+   * tem espaço para acontecer, daí `--duration-base`. */
+  transition: background-color var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard),
+              box-shadow var(--duration-fast) var(--ease-standard),
+              opacity var(--duration-fast) var(--ease-standard),
+              transform var(--duration-base) var(--ease-spring);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -256,13 +265,24 @@
   animation: nds-spin 1s linear infinite;
 }
 
-/* ── Animação reduzida ─────────────────────────────────────────────────────── */
-/* Press feedback — resposta tátil ao clique (estado não depende só disso) */
+/* ── Feedback de ponteiro ───────────────────────────────────────────────────
+ * Escala em hover e em press — o gesto responde antes de o estado mudar.
+ * Nenhum estado depende só disso: hover também muda cor, e o press é
+ * confirmado pelo próprio clique.
+ *
+ * `:active` vem DEPOIS de `:hover` de propósito: durante o clique o elemento
+ * casa com as duas regras, mesma especificidade, e a última é a que vale.
+ */
+.nds-button:hover:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+  transform: scale(1.05);
+}
 .nds-button:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
+/* ── Animação reduzida ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .nds-button:hover:not(:disabled):not([data-disabled]):not([aria-disabled="true"]),
   .nds-button:active:not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
     transform: none;
   }
