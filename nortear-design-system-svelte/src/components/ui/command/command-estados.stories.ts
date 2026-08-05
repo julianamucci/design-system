@@ -70,7 +70,9 @@ export const ItemDesabilitado: Story = {
 
     await step('item desabilitado está presente', async () => {
       const items = canvas.getAllByRole('option');
-      const disabled = items.find((el) => el.getAttribute('data-disabled') === 'true');
+      // O bits-ui marca item desabilitado com aria-disabled — e por ele que a
+      // propria lib filtra os itens navegaveis. `data-disabled` nao existe.
+      const disabled = items.find((el) => el.getAttribute('aria-disabled') === 'true');
       await expect(disabled).toBeDefined();
     });
   },

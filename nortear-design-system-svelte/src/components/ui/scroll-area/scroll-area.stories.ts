@@ -38,7 +38,10 @@ const meta: Meta = {
   },
   args: {
     orientation: 'vertical',
-    type: 'hover',
+    // 'always' e nao 'hover': o Playground assere que a scrollbar existe, e com
+    // 'hover' ela so se materializa sob o ponteiro — o control continua
+    // oferecendo as quatro opcoes.
+    type: 'always',
     scrollHideDelay: 600,
   },
 };

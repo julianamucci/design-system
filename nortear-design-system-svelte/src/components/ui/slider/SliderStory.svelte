@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { Slider } from './index';
   import { Label } from '@/components/ui/label';
 
@@ -38,7 +39,24 @@
     onValueCommit,
   }: Props = $props();
 
-  let current = $derived([...initialValue]);
+  // `$derived` aqui impedia o slider de mudar de valor: derivado é somente
+  // leitura e se recalcula, então o `bind:value` nunca segurava a alteração —
+  // ArrowRight não movia nada. Precisa ser estado.
+  //
+  // A ressincronização compara o CONTEÚDO, não a identidade do array: os args
+  // do Storybook chegam como literal novo a cada render, e comparar por
+  // referência reverteria a interação do usuário a cada ciclo.
+  // untrack: a leitura no inicializador e proposital — captura so o valor
+  // inicial. Sem ele o Svelte avisa que a referencia nao e reativa.
+  let current = $state(untrack(() => [...initialValue]));
+  let ultimoRecebido = $state(untrack(() => initialValue.join(',')));
+  $effect(() => {
+    const assinatura = initialValue.join(',');
+    if (assinatura !== ultimoRecebido) {
+      ultimoRecebido = assinatura;
+      current = [...initialValue];
+    }
+  });
 </script>
 
 {#if orientation === 'vertical'}

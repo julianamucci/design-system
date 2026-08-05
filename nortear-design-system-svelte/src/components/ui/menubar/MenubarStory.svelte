@@ -28,6 +28,8 @@
 
   interface Props {
     defaultValue?: string;
+    /** Estado controlado; inicia com `defaultValue`. */
+    value?: string;
     loop?: boolean;
     variant?: Variant;
     demonstration?: Demonstration;

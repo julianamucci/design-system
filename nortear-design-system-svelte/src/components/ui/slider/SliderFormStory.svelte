@@ -35,7 +35,7 @@
 
   <button
     type="submit"
-    class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 nds-transition-colors" style="height: var(--height-default)"
+    class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 nds-transition-colors" style="height: var(--height-default)"
   >
     Salvar preset
   </button>

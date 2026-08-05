@@ -18,6 +18,8 @@
 
   interface Props {
     defaultValue?: string;
+    /** Estado controlado; inicia com `defaultValue`. */
+    value?: string;
     delayDuration?: number;
     orientation?: Orientation;
     ariaLabel?: string;
@@ -27,6 +29,9 @@
 
   let {
     defaultValue = undefined,
+    // `defaultValue` nao existe no bits-ui: a prop era ignorada e o dropdown
+    // nunca abria. A API e `value` (bindable) — mesma familia do defaultOpen.
+    value = $bindable(defaultValue),
     delayDuration = 80,
     orientation = 'horizontal',
     ariaLabel = 'Navegação principal',
@@ -38,7 +43,7 @@
 <div style="contain: layout">
   {#key `${defaultValue}-${delayDuration}-${orientation}-${ariaLabel}-${demonstration}-${activeHref}`}
     <NavigationMenuRoot
-      {defaultValue}
+      bind:value
       {delayDuration}
       {orientation}
       aria-label={ariaLabel}

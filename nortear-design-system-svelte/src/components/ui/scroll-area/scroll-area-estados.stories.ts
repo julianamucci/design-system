@@ -27,6 +27,10 @@ export const Idle: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'vertical',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       type: 'hover',
       height: '240px',
       width: '320px',
@@ -46,6 +50,10 @@ export const Always: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'vertical',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       type: 'always',
       height: '240px',
       width: '320px',
@@ -67,6 +75,10 @@ export const ScrollOnly: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'vertical',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       type: 'scroll',
       scrollHideDelay: 1000,
       height: '240px',
@@ -85,6 +97,10 @@ export const Focus: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'vertical',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       type: 'always',
       height: '240px',
       width: '320px',

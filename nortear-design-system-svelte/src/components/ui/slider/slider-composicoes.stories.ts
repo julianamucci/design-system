@@ -52,9 +52,13 @@ export const VolumeComValor: Story = {
     });
 
     await step('Após ArrowRight, aria-valuenow reflete mudança', async () => {
-      (thumb as HTMLElement).focus();
+      // Re-consulta antes de focar: o thumb capturado no inicio do play pode
+      // ter sido substituido pela renderizacao, e focar no no destacado nao faz
+      // nada — o foco ficava no BODY e a tecla nao chegava no slider.
+      const alvo = canvas.getByRole('slider') as HTMLElement;
+      alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '51');
+      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-valuenow', '51');
     });
   },
 };
@@ -157,9 +161,11 @@ export const StepGrosso: Story = {
     });
 
     await step('ArrowRight com step=1 incrementa para 4', async () => {
-      (thumb as HTMLElement).focus();
+      // Re-consulta antes de focar, como na story de volume.
+      const alvo = canvas.getByRole('slider') as HTMLElement;
+      alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '4');
+      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-valuenow', '4');
     });
   },
 };

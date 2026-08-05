@@ -27,11 +27,13 @@
 </script>
 
 <div class="nds-stack" data-align="center" data-spacing="md">
+  <!-- Sem aria-label: o texto visivel e "Buscar...", e um aria-label diferente
+       troca o nome acessivel — quem usa comando de voz fala o que ve e nao
+       aciona nada (WCAG 2.5.3, Label in Name). O nome vem do texto. -->
   <Button
     variant="outline"
     class="nds-text-muted-foreground" data-justify="between" style="width: 280px"
     onclick={() => { open = true; }}
-    aria-label="Abrir command palette"
   >
     <span class="nds-cluster" data-spacing="sm">
       <Search class="nds-size-4" aria-hidden="true" />

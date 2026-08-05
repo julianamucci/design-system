@@ -74,7 +74,7 @@ export const ListaComAvatar: Story = {
     await step('motion-reduce aplicado em todos', async () => {
       const skeletons = canvasElement.querySelectorAll('[data-slot="skeleton"]');
       skeletons.forEach((sk) => {
-        expect((sk as HTMLElement).className).toMatch(/motion-reduce:animate-none/);
+        expect((sk as HTMLElement).className).toMatch(/nds-motion-reduce-none/);
       });
     });
   },

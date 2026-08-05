@@ -82,6 +82,7 @@
             <!-- max-h-[60vh] era Tailwind morto: sem altura maxima nada rolava, e por
                  isso o axe nunca aplicava scrollable-region-focusable. Com a altura de
                  volta, a regiao rolavel precisa de acesso por teclado. -->
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
             <div
               class="nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground"
               data-spacing="sm"

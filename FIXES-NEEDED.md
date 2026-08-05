@@ -1225,21 +1225,43 @@ incompleto.
   liberava em `data-state="closed"` enquanto o overlay ainda segurava
   `pointer-events`. A espera passou a ser pela interação devolvida.
 
-### O que continua aberto — 29 falhas
+### Terceira rodada — 29 para 12 falhas
+
+- **scroll-area 5 → 0** — as demos usavam `type="hover"`, em que a scrollbar só
+  se materializa sob o ponteiro: a story existia para MOSTRAR a barra e não
+  mostrava nada, nem no Chromatic. E a faixa horizontal usava `nds-cluster`
+  (`flex-wrap: wrap`), então os itens quebravam linha em vez de transbordar —
+  sem transbordo não há scrollbar. Passou a `nds-row`.
+- **command 4 → 0** — três defeitos distintos: `aria-label="Abrir command
+  palette"` num botão cujo texto visível é "Buscar..." (WCAG 2.5.3, Label in
+  Name — quem usa voz fala o que vê e não aciona); `role="progressbar"` do
+  Loading dentro de um `role="listbox"`, que não é filho permitido; e o estado
+  vazio deixando o listbox sem nenhuma `option`.
+- **navigation-menu 4 → 0** e **menubar** — `defaultValue` não existe no
+  bits-ui (a API é `value` bindable). Mesma família do `defaultOpen`.
+- **skeleton 2 → 0** — asserções contra `motion-reduce:animate-none` e `h-full`,
+  ambas Tailwind morto; e o próprio componente usava `inset-0` inerte.
+- **slider 4 → 1** — `let current = $derived(...)`: derivado é somente leitura e
+  se recalcula, então `bind:value` nunca segurava a mudança e o slider não podia
+  mudar de valor. Também um `text-primary-foreground` sem prefixo `nds-`, que
+  dava contraste **1.1:1** no botão de submit.
+
+### O que continua aberto — 12 falhas
 
 ```
-select 5 · scroll-area 5 · slider 4 · navigation-menu 4 · command 4
-skeleton 2 · sidebar/popover/drawer/dialog/data-table/aspect-ratio 1 cada
+select 5 · slider 1 · sidebar 1 · popover 1 · drawer 1
+dialog 1 · data-table 1 · aspect-ratio 1
 ```
 
-- [ ] **select (5)** — `role="combobox"` é o contrato (o base-ui emite no React
-  e as stories das 4 stacks consultam por ele), mas o bits-ui não emite, e o
-  role escrito à mão fica pela metade: falta `aria-controls` apontando para o
-  listbox. Tentei ligar por MutationObserver e não funcionou — o painel não
-  expõe id alcançável a partir do trigger. Provavelmente precisa de contexto
-  compartilhado, como o `ACCORDION_ITEM_IDS` do accordion. O `aria-label` do
-  listbox já foi corrigido nesta rodada (era violação de `aria-input-field-name`).
-- [ ] **Foco não entra no drawer** — segue aberto, é defeito real.
-- [ ] **popover 1** — passa 11/11 isolado, falha na suíte inteira: portal
-  vazando entre stories.
-- [ ] As demais famílias não foram diagnosticadas ainda.
+- [ ] **select (5)** — falta `aria-controls` no trigger `role="combobox"`.
+  Diagnóstico completo na rodada anterior; precisa de contexto compartilhado
+  entre trigger e conteúdo.
+- [ ] **slider (1)** — o thumb tem 16×16 e o axe cobra 24×24 (WCAG 2.5.8). O
+  CSS compartilhado tenta resolver com um `::after` de hit-area, mas o axe mede
+  a caixa do elemento, não o pseudo. O arranjo atual presume um
+  `<input type="range">` por baixo (modelo do Vanilla); no bits-ui o thumb **é**
+  o alvo. Corrigir mexe em CSS compartilhado pelas 4 stacks e desloca o thumb —
+  precisa de verificação visual no Chromatic, não de um ajuste às cegas.
+- [ ] **drawer (1)** — foco não entra no drawer ao abrir; medido, defeito real.
+- [ ] **popover (1)** — passa isolado, falha na suíte: portal vazando.
+- [ ] sidebar, dialog, data-table, aspect-ratio: 1 cada, não diagnosticadas.

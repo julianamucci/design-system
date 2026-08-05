@@ -92,6 +92,7 @@
                  por teclado (axe scrollable-region-focusable). O defeito existia
                  desde sempre, escondido porque `max-h-[50vh]` era classe morta —
                  sem altura máxima nada rolava e a regra não se aplicava. -->
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
             <div
               class="nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground"
               data-spacing="sm"
