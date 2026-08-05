@@ -698,22 +698,22 @@ interface ScrollBarProps {
         items={[
           {
             name: tContent("related.items.resizable.name"),
-            description: tContent("related.items.resizable.description"),
+            description: toPlainText(tContent("related.items.resizable.description")),
             path: "?path=/docs/ui-resizable--docs",
           },
           {
             name: tContent("related.items.sheet.name"),
-            description: tContent("related.items.sheet.description"),
+            description: toPlainText(tContent("related.items.sheet.description")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: tContent("related.items.dialog.name"),
-            description: tContent("related.items.dialog.description"),
+            description: toPlainText(tContent("related.items.dialog.description")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: tContent("related.items.command.name"),
-            description: tContent("related.items.command.description"),
+            description: toPlainText(tContent("related.items.command.description")),
             path: "?path=/docs/ui-command--docs",
           },
         ]}

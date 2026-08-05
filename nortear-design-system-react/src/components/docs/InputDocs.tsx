@@ -445,8 +445,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input id="dodont-1-dont" type="email" placeholder="Digite seu email" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -463,8 +463,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input id="dodont-2-dont" type="text" placeholder="ex: joao@empresa.com" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -482,8 +482,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input type="text" placeholder={tContent("demonstration.labels.defaultLabel")} />
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -861,27 +861,27 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         items={[
           {
             name: "Textarea",
-            description: tContent("related.textarea"),
+            description: toPlainText(tContent("related.textarea")),
             path: "?path=/docs/ui-textarea--docs",
           },
           {
             name: "InputOTP",
-            description: tContent("related.inputOTP"),
+            description: toPlainText(tContent("related.inputOTP")),
             path: "?path=/docs/ui-inputotp--docs",
           },
           {
             name: "Select",
-            description: tContent("related.select"),
+            description: toPlainText(tContent("related.select")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: "Form",
-            description: tContent("related.form"),
+            description: toPlainText(tContent("related.form")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: "Label",
-            description: tContent("related.label"),
+            description: toPlainText(tContent("related.label")),
             path: "?path=/docs/ui-label--docs",
           },
         ]}

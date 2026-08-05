@@ -406,8 +406,8 @@ interface TabsContentProps {
                 <TabsContent value="aba-3">Conteúdo da aba 3.</TabsContent>
               </Tabs>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -462,8 +462,8 @@ interface TabsContentProps {
                 </TabsContent>
               </Tabs>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -892,22 +892,22 @@ interface TabsContentProps {
         items={[
           {
             name: tContent("related.items.stepper.name"),
-            description: tContent("related.items.stepper.description"),
+            description: toPlainText(tContent("related.items.stepper.description")),
             path: "?path=/docs/ui-stepper--docs",
           },
           {
             name: tContent("related.items.accordion.name"),
-            description: tContent("related.items.accordion.description"),
+            description: toPlainText(tContent("related.items.accordion.description")),
             path: "?path=/docs/ui-accordion--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
           {
             name: tContent("related.items.toggleGroup.name"),
-            description: tContent("related.items.toggleGroup.description"),
+            description: toPlainText(tContent("related.items.toggleGroup.description")),
             path: "?path=/docs/ui-togglegroup--docs",
           },
         ]}

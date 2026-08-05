@@ -267,8 +267,8 @@ export function createMenubarDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -301,8 +301,8 @@ export function createMenubarDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -747,10 +747,10 @@ export function createMenubar(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.navigationMenu.name'), description: t('related.items.navigationMenu.description'), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: t('related.items.dropdownMenu.name'),   description: t('related.items.dropdownMenu.description'),   path: '?path=/docs/ui-dropdownmenu--docs'   },
-            { name: t('related.items.sidebar.name'),        description: t('related.items.sidebar.description'),        path: '?path=/docs/ui-sidebar--docs'        },
-            { name: t('related.items.command.name'),        description: t('related.items.command.description'),        path: '?path=/docs/ui-command--docs'        },
+            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/ui-dropdownmenu--docs'   },
+            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/ui-sidebar--docs'        },
+            { name: t('related.items.command.name'),        description: toPlainText(t('related.items.command.description')),        path: '?path=/docs/ui-command--docs'        },
           ],
         });
 

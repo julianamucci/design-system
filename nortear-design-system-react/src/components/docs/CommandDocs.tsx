@@ -741,8 +741,8 @@ interface CommandDialogProps
                 </Command>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -768,8 +768,8 @@ interface CommandDialogProps
                 <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>⌘K</p>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -1171,27 +1171,27 @@ interface CommandDialogProps
         items={[
           {
             name: "Select",
-            description: tContent("related.select"),
+            description: toPlainText(tContent("related.select")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: "Popover",
-            description: tContent("related.popover"),
+            description: toPlainText(tContent("related.popover")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Dialog",
-            description: tContent("related.dialog"),
+            description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: "InputGroup",
-            description: tContent("related.inputGroup"),
+            description: toPlainText(tContent("related.inputGroup")),
             path: "?path=/docs/ui-inputgroup--docs",
           },
         ]}

@@ -360,8 +360,8 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
@@ -383,8 +383,8 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
                 class: 'nds-w-full nds-rounded-md nds-border-default',

@@ -523,8 +523,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 </Table>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -566,8 +566,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 </Table>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -1229,22 +1229,22 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         items={[
           {
             name: "Skeleton",
-            description: tContent("related.skeleton"),
+            description: toPlainText(tContent("related.skeleton")),
             path: "?path=/docs/ui-skeleton--docs",
           },
           {
             name: "Badge",
-            description: tContent("related.badge"),
+            description: toPlainText(tContent("related.badge")),
             path: "?path=/docs/ui-badge--docs",
           },
           {
             name: "Pagination",
-            description: tContent("related.pagination"),
+            description: toPlainText(tContent("related.pagination")),
             path: "?path=/docs/ui-pagination--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
         ]}

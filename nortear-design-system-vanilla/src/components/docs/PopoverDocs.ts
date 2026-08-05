@@ -355,8 +355,8 @@ export function createPopoverDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-text-body';
@@ -383,8 +383,8 @@ export function createPopoverDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
                 code.className = 'nds-text-body nds-font-mono';
@@ -896,10 +896,10 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.tooltip.name'),      description: t('related.items.tooltip.description'),      path: '?path=/docs/ui-tooltip--docs'      },
-            { name: t('related.items.dropdownMenu.name'), description: t('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs' },
-            { name: t('related.items.dialog.name'),       description: t('related.items.dialog.description'),       path: '?path=/docs/ui-dialog--docs'       },
-            { name: t('related.items.hoverCard.name'),    description: t('related.items.hoverCard.description'),    path: '?path=/docs/ui-hovercard--docs'    },
+            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/ui-tooltip--docs'      },
+            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs' },
+            { name: t('related.items.dialog.name'),       description: toPlainText(t('related.items.dialog.description')),       path: '?path=/docs/ui-dialog--docs'       },
+            { name: t('related.items.hoverCard.name'),    description: toPlainText(t('related.items.hoverCard.description')),    path: '?path=/docs/ui-hovercard--docs'    },
           ],
         });
 

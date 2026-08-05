@@ -268,8 +268,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createFormField({
                 label: 'Senha',
                 input: createInput({ type: 'password', placeholder: '••••••••' }),
@@ -280,8 +280,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const inp = createInput({ type: 'password', placeholder: '••••••••' });
                 inp.setAttribute('aria-invalid', 'true');
@@ -304,8 +304,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair3.do'),
-              dontCaption: t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => createFieldset({
                 legend: 'Endereço',
                 children: [
@@ -557,11 +557,11 @@ export type FieldsetOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Input',    description: t('related.input'),    path: '?path=/docs/ui-input--docs' },
-            { name: 'Textarea', description: t('related.textarea'), path: '?path=/docs/ui-textarea--docs' },
-            { name: 'Select',   description: t('related.select'),   path: '?path=/docs/ui-select--docs' },
-            { name: 'Checkbox', description: t('related.checkbox'), path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'Label',    description: t('related.label'),    path: '?path=/docs/ui-label--docs' },
+            { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/ui-input--docs' },
+            { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/ui-textarea--docs' },
+            { name: 'Select',   description: toPlainText(t('related.select')),   path: '?path=/docs/ui-select--docs' },
+            { name: 'Checkbox', description: toPlainText(t('related.checkbox')), path: '?path=/docs/ui-checkbox--docs' },
+            { name: 'Label',    description: toPlainText(t('related.label')),    path: '?path=/docs/ui-label--docs' },
           ],
         });
 

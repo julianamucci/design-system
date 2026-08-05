@@ -360,10 +360,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.popover.name'),   description: tContent('related.items.popover.description'),   path: '?path=/docs/ui-popover--docs'    },
-  { name: tContent('related.items.hoverCard.name'), description: tContent('related.items.hoverCard.description'), path: '?path=/docs/ui-hovercard--docs'  },
-  { name: tContent('related.items.button.name'),    description: tContent('related.items.button.description'),    path: '?path=/docs/ui-button--docs'     },
-  { name: tContent('related.items.kbd.name'),       description: tContent('related.items.kbd.description'),       path: '?path=/docs/ui-kbd--docs'        },
+  { name: tContent('related.items.popover.name'),   description: toPlainText(tContent('related.items.popover.description')),   path: '?path=/docs/ui-popover--docs'    },
+  { name: tContent('related.items.hoverCard.name'), description: toPlainText(tContent('related.items.hoverCard.description')), path: '?path=/docs/ui-hovercard--docs'  },
+  { name: tContent('related.items.button.name'),    description: toPlainText(tContent('related.items.button.description')),    path: '?path=/docs/ui-button--docs'     },
+  { name: tContent('related.items.kbd.name'),       description: toPlainText(tContent('related.items.kbd.description')),       path: '?path=/docs/ui-kbd--docs'        },
 ]);
 
 const noteItems = computed(() => [
@@ -548,8 +548,8 @@ const a11yCritCols = computed(() => ({
       <DocsDoDont
         :title="tContent('doDont.title')"
         :pairs="[
-          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+          { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
         ]"
       >
         <template #do-preview-0>

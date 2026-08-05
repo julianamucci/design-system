@@ -356,8 +356,8 @@ export function createCollapsibleDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir filtros avançados',
                 content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
@@ -372,8 +372,8 @@ export function createCollapsibleDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir detalhes adicionais',
                 content: makeContent(['Detalhe 1', 'Detalhe 2']),
@@ -701,10 +701,10 @@ export function createCollapsibleDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Accordion',  description: t('related.accordion'), path: '?path=/docs/ui-accordion--docs'  },
-            { name: 'Sheet',      description: t('related.sheet'),     path: '?path=/docs/ui-sheet--docs'      },
-            { name: 'Button',     description: t('related.button'),    path: '?path=/docs/ui-button--docs'     },
-            { name: 'Tabs',       description: t('related.tabs'),      path: '?path=/docs/ui-tabs--docs'       },
+            { name: 'Accordion',  description: toPlainText(t('related.accordion')), path: '?path=/docs/ui-accordion--docs'  },
+            { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/ui-sheet--docs'      },
+            { name: 'Button',     description: toPlainText(t('related.button')),    path: '?path=/docs/ui-button--docs'     },
+            { name: 'Tabs',       description: toPlainText(t('related.tabs')),      path: '?path=/docs/ui-tabs--docs'       },
           ],
         });
 

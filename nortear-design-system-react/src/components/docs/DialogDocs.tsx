@@ -920,10 +920,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         title={tContent("related.title")}
         items={[
           { name: "AlertDialog", description: stripHtml(tContent("related.alertDialog")), path: "?path=/docs/ui-alertdialog--docs" },
-          { name: "Sheet",       description: tContent("related.sheet"),                  path: "?path=/docs/ui-sheet--docs" },
-          { name: "Popover",     description: tContent("related.popover"),                path: "?path=/docs/ui-popover--docs" },
-          { name: "Form",        description: tContent("related.form"),                   path: "?path=/docs/ui-form--docs" },
-          { name: "Drawer",      description: tContent("related.drawer"),                 path: "?path=/docs/ui-drawer--docs" },
+          { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/ui-sheet--docs" },
+          { name: "Popover",     description: toPlainText(tContent("related.popover")),                path: "?path=/docs/ui-popover--docs" },
+          { name: "Form",        description: toPlainText(tContent("related.form")),                   path: "?path=/docs/ui-form--docs" },
+          { name: "Drawer",      description: toPlainText(tContent("related.drawer")),                 path: "?path=/docs/ui-drawer--docs" },
         ]}
       />
 

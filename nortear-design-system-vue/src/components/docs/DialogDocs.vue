@@ -393,10 +393,10 @@ const keyboardItems = computed(() => [
 
 const relatedItems = computed(() => [
   { name: 'AlertDialog', description: stripHtml(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
-  { name: 'Sheet',       description: tContent('related.sheet'),                  path: '?path=/docs/ui-sheet--docs'       },
-  { name: 'Popover',     description: tContent('related.popover'),                path: '?path=/docs/ui-popover--docs'     },
-  { name: 'Form',        description: tContent('related.form'),                   path: '?path=/docs/ui-form--docs'        },
-  { name: 'Drawer',      description: tContent('related.drawer'),                 path: '?path=/docs/ui-drawer--docs'      },
+  { name: 'Sheet',       description: toPlainText(tContent('related.sheet')),                  path: '?path=/docs/ui-sheet--docs'       },
+  { name: 'Popover',     description: toPlainText(tContent('related.popover')),                path: '?path=/docs/ui-popover--docs'     },
+  { name: 'Form',        description: toPlainText(tContent('related.form')),                   path: '?path=/docs/ui-form--docs'        },
+  { name: 'Drawer',      description: toPlainText(tContent('related.drawer')),                 path: '?path=/docs/ui-drawer--docs'      },
 ]);
 
 const noteItems = computed(() => [
@@ -563,7 +563,7 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: stripHtml(tContent('doDont.pair2.do')), dontCaption: stripHtml(tContent('doDont.pair2.dont')) },
       ]"
     >

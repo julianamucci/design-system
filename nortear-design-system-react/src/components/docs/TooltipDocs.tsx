@@ -890,22 +890,22 @@ interface TooltipContentProps {
           items={[
             {
               name: tContent("related.items.popover.name"),
-              description: tContent("related.items.popover.description"),
+              description: toPlainText(tContent("related.items.popover.description")),
               path: "?path=/docs/ui-popover--docs",
             },
             {
               name: tContent("related.items.hoverCard.name"),
-              description: tContent("related.items.hoverCard.description"),
+              description: toPlainText(tContent("related.items.hoverCard.description")),
               path: "?path=/docs/ui-hovercard--docs",
             },
             {
               name: tContent("related.items.button.name"),
-              description: tContent("related.items.button.description"),
+              description: toPlainText(tContent("related.items.button.description")),
               path: "?path=/docs/ui-button--docs",
             },
             {
               name: tContent("related.items.kbd.name"),
-              description: tContent("related.items.kbd.description"),
+              description: toPlainText(tContent("related.items.kbd.description")),
               path: "?path=/docs/ui-kbd--docs",
             },
           ]}

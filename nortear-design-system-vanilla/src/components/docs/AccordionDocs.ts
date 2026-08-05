@@ -276,8 +276,8 @@ export function createAccordionDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createAccordion({
                 type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha".' }],
@@ -290,8 +290,8 @@ export function createAccordionDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createAccordion({
                 type: 'multiple', class: 'nds-max-w-xs nds-text-body',
                 items: [
@@ -708,9 +708,9 @@ export function createAccordionDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.collapsible.name'), description: t('related.collapsible.description'), path: `?path=/docs/${t('related.collapsible.href')}` },
-            { name: t('related.tabs.name'),        description: t('related.tabs.description'),        path: `?path=/docs/${t('related.tabs.href')}`        },
-            { name: t('related.sidebar.name'),     description: t('related.sidebar.description'),     path: `?path=/docs/${t('related.sidebar.href')}`     },
+            { name: t('related.collapsible.name'), description: toPlainText(t('related.collapsible.description')), path: `?path=/docs/${t('related.collapsible.href')}` },
+            { name: t('related.tabs.name'),        description: toPlainText(t('related.tabs.description')),        path: `?path=/docs/${t('related.tabs.href')}`        },
+            { name: t('related.sidebar.name'),     description: toPlainText(t('related.sidebar.description')),     path: `?path=/docs/${t('related.sidebar.href')}`     },
           ],
         });
 

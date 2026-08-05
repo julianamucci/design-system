@@ -411,8 +411,8 @@ export function CodeBlockDocs() {
                 data-track-id="code-block:do-dont:dont-1"
               />
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -443,8 +443,8 @@ export function CodeBlockDocs() {
                 data-track-id="code-block:do-dont:dont-2"
               />
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -766,10 +766,10 @@ export function CodeBlockDocs() {
         title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
-          { name: "Table", description: tContent("related.table"), path: "?path=/docs/ui-table--docs" },
-          { name: "Alert", description: tContent("related.alert"), path: "?path=/docs/ui-alert--docs" },
-          { name: "Tabs",  description: tContent("related.tabs"),  path: "?path=/docs/ui-tabs--docs" },
-          { name: "Card",  description: tContent("related.card"),  path: "?path=/docs/ui-card--docs" },
+          { name: "Table", description: toPlainText(tContent("related.table")), path: "?path=/docs/ui-table--docs" },
+          { name: "Alert", description: toPlainText(tContent("related.alert")), path: "?path=/docs/ui-alert--docs" },
+          { name: "Tabs",  description: toPlainText(tContent("related.tabs")),  path: "?path=/docs/ui-tabs--docs" },
+          { name: "Card",  description: toPlainText(tContent("related.card")),  path: "?path=/docs/ui-card--docs" },
         ]}
       />
 

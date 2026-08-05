@@ -394,8 +394,8 @@ import { Bold } from "lucide-react";`;
                 <Bold aria-hidden="true" />
               </Toggle>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -426,8 +426,8 @@ import { Bold } from "lucide-react";`;
                 </Toggle>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -740,22 +740,22 @@ import { Bold } from "lucide-react";`;
         items={[
           {
             name: tContent("related.items.toggleGroup.name"),
-            description: tContent("related.items.toggleGroup.description"),
+            description: toPlainText(tContent("related.items.toggleGroup.description")),
             path: "?path=/docs/ui-togglegroup--docs",
           },
           {
             name: tContent("related.items.switch.name"),
-            description: tContent("related.items.switch.description"),
+            description: toPlainText(tContent("related.items.switch.description")),
             path: "?path=/docs/ui-switch--docs",
           },
           {
             name: tContent("related.items.checkbox.name"),
-            description: tContent("related.items.checkbox.description"),
+            description: toPlainText(tContent("related.items.checkbox.description")),
             path: "?path=/docs/ui-checkbox--docs",
           },
           {
             name: tContent("related.items.button.name"),
-            description: tContent("related.items.button.description"),
+            description: toPlainText(tContent("related.items.button.description")),
             path: "?path=/docs/ui-button--docs",
           },
         ]}

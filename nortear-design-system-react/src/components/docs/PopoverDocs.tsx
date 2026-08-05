@@ -1075,22 +1075,22 @@ interface PopoverContentProps {
         items={[
           {
             name: tContent("related.items.tooltip.name"),
-            description: tContent("related.items.tooltip.description"),
+            description: toPlainText(tContent("related.items.tooltip.description")),
             path: "?path=/docs/ui-tooltip--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
-            description: tContent("related.items.dropdownMenu.description"),
+            description: toPlainText(tContent("related.items.dropdownMenu.description")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.dialog.name"),
-            description: tContent("related.items.dialog.description"),
+            description: toPlainText(tContent("related.items.dialog.description")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: tContent("related.items.hoverCard.name"),
-            description: tContent("related.items.hoverCard.description"),
+            description: toPlainText(tContent("related.items.hoverCard.description")),
             path: "?path=/docs/ui-hovercard--docs",
           },
         ]}

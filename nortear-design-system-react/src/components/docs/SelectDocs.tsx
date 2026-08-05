@@ -864,22 +864,22 @@ interface SelectContentProps {
         items={[
           {
             name: tContent("related.items.combobox.name"),
-            description: tContent("related.items.combobox.description"),
+            description: toPlainText(tContent("related.items.combobox.description")),
             path: "?path=/docs/ui-combobox--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
-            description: tContent("related.items.radioGroup.description"),
+            description: toPlainText(tContent("related.items.radioGroup.description")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
-            description: tContent("related.items.dropdownMenu.description"),
+            description: toPlainText(tContent("related.items.dropdownMenu.description")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
         ]}

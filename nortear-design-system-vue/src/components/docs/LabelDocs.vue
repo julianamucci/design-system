@@ -224,11 +224,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Input',      description: tContent('related.input'),      path: '?path=/docs/ui-input--docs'      },
-  { name: 'FormLabel',  description: tContent('related.formLabel'),  path: '?path=/docs/ui-formlabel--docs'  },
-  { name: 'FormField',  description: tContent('related.formField'),  path: '?path=/docs/ui-formfield--docs'  },
-  { name: 'Checkbox',   description: tContent('related.checkbox'),   path: '?path=/docs/ui-checkbox--docs'   },
-  { name: 'RadioGroup', description: tContent('related.radioGroup'), path: '?path=/docs/ui-radiogroup--docs' },
+  { name: 'Input',      description: toPlainText(tContent('related.input')),      path: '?path=/docs/ui-input--docs'      },
+  { name: 'FormLabel',  description: toPlainText(tContent('related.formLabel')),  path: '?path=/docs/ui-formlabel--docs'  },
+  { name: 'FormField',  description: toPlainText(tContent('related.formField')),  path: '?path=/docs/ui-formfield--docs'  },
+  { name: 'Checkbox',   description: toPlainText(tContent('related.checkbox')),   path: '?path=/docs/ui-checkbox--docs'   },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -390,8 +390,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <!-- Par 1 — com htmlFor vs. sem htmlFor -->

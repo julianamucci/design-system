@@ -374,8 +374,8 @@ export function createSkeletonDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = loadingWrap('Carregando card de perfil', 'nds-max-w-sm');
                 const row = document.createElement('div');
@@ -401,8 +401,8 @@ export function createSkeletonDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
                 wrap.appendChild(sizedSkeleton({ height: '4rem', width: '100%' }));
@@ -559,10 +559,10 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.progress.name'),    description: t('related.items.progress.description'),    path: '?path=/docs/ui-progress--docs' },
-            { name: t('related.items.spinner.name'),     description: t('related.items.spinner.description'),     path: '?path=/docs/ui-spinner--docs' },
-            { name: t('related.items.aspectRatio.name'), description: t('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
-            { name: t('related.items.card.name'),        description: t('related.items.card.description'),        path: '?path=/docs/ui-card--docs' },
+            { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/ui-progress--docs' },
+            { name: t('related.items.spinner.name'),     description: toPlainText(t('related.items.spinner.description')),     path: '?path=/docs/ui-spinner--docs' },
+            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
+            { name: t('related.items.card.name'),        description: toPlainText(t('related.items.card.description')),        path: '?path=/docs/ui-card--docs' },
           ],
         });
 

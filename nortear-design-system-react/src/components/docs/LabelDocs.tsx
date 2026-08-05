@@ -258,8 +258,8 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
                 <Input type="email" placeholder="ex: joao@empresa.com" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -276,8 +276,8 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
                 <Input id="dodont-dont-2" placeholder="ex: João da Silva" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -423,22 +423,22 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
         items={[
           {
             name: "Input",
-            description: tContent("related.input"),
+            description: toPlainText(tContent("related.input")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: "FormLabel",
-            description: tContent("related.formLabel"),
+            description: toPlainText(tContent("related.formLabel")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: "Checkbox",
-            description: tContent("related.checkbox"),
+            description: toPlainText(tContent("related.checkbox")),
             path: "?path=/docs/ui-checkbox--docs",
           },
           {
             name: "RadioGroup",
-            description: tContent("related.radioGroup"),
+            description: toPlainText(tContent("related.radioGroup")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
         ]}

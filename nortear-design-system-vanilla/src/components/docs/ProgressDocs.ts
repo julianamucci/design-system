@@ -378,8 +378,8 @@ export function createProgressDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
                 buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
               dontPreviewFactory: () => {
@@ -391,8 +391,8 @@ export function createProgressDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
                 buildLabeled({ value: 50, labelText: 'Enviando arquivo', ariaLabel: 'Progresso do upload' }),
               dontPreviewFactory: () =>
@@ -566,10 +566,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.skeleton.name'), description: t('related.items.skeleton.description'), path: '?path=/docs/ui-skeleton--docs' },
-            { name: t('related.items.spinner.name'),  description: t('related.items.spinner.description'),  path: '?path=/docs/ui-spinner--docs' },
-            { name: t('related.items.alert.name'),    description: t('related.items.alert.description'),    path: '?path=/docs/ui-alert--docs' },
-            { name: t('related.items.sonner.name'),   description: t('related.items.sonner.description'),   path: '?path=/docs/ui-sonner--docs' },
+            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+            { name: t('related.items.spinner.name'),  description: toPlainText(t('related.items.spinner.description')),  path: '?path=/docs/ui-spinner--docs' },
+            { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/ui-alert--docs' },
+            { name: t('related.items.sonner.name'),   description: toPlainText(t('related.items.sonner.description')),   path: '?path=/docs/ui-sonner--docs' },
           ],
         });
 

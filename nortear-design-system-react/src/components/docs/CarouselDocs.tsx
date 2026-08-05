@@ -525,8 +525,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 </CarouselContent>
               </Carousel>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -557,8 +557,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 <CarouselNext aria-label={nextLabel} />
               </Carousel>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -1060,22 +1060,22 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         items={[
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "ScrollArea",
-            description: tContent("related.scrollArea"),
+            description: toPlainText(tContent("related.scrollArea")),
             path: "?path=/docs/ui-scrollarea--docs",
           },
           {
             name: "Card",
-            description: tContent("related.card"),
+            description: toPlainText(tContent("related.card")),
             path: "?path=/docs/ui-card--docs",
           },
           {
             name: "Pagination",
-            description: tContent("related.pagination"),
+            description: toPlainText(tContent("related.pagination")),
             path: "?path=/docs/ui-pagination--docs",
           },
         ]}

@@ -601,12 +601,12 @@ export function createDataTableDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Table',        description: t('related.table'),        path: '?path=/docs/ui-table--docs' },
-            { name: 'Chart',        description: t('related.chart'),        path: '?path=/docs/ui-chart--docs' },
-            { name: 'Pagination',   description: t('related.pagination'),   path: '?path=/docs/ui-pagination--docs' },
-            { name: 'Checkbox',     description: t('related.checkbox'),     path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'Input',        description: t('related.input'),        path: '?path=/docs/ui-input--docs' },
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
+            { name: 'Table',        description: toPlainText(t('related.table')),        path: '?path=/docs/ui-table--docs' },
+            { name: 'Chart',        description: toPlainText(t('related.chart')),        path: '?path=/docs/ui-chart--docs' },
+            { name: 'Pagination',   description: toPlainText(t('related.pagination')),   path: '?path=/docs/ui-pagination--docs' },
+            { name: 'Checkbox',     description: toPlainText(t('related.checkbox')),     path: '?path=/docs/ui-checkbox--docs' },
+            { name: 'Input',        description: toPlainText(t('related.input')),        path: '?path=/docs/ui-input--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
           ],
         });
 

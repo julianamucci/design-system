@@ -223,10 +223,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Alert',   description: tContent('related.alert'),  path: '?path=/docs/ui-alert--docs'   },
-  { name: 'Button',  description: tContent('related.button'), path: '?path=/docs/ui-button--docs'  },
-  { name: 'Chip',    description: tContent('related.chip'),   path: '?path=/docs/ui-chip--docs'    },
-  { name: 'Tag',     description: tContent('related.tag'),    path: '?path=/docs/ui-tag--docs'     },
+  { name: 'Alert',   description: toPlainText(tContent('related.alert')),  path: '?path=/docs/ui-alert--docs'   },
+  { name: 'Button',  description: toPlainText(tContent('related.button')), path: '?path=/docs/ui-button--docs'  },
+  { name: 'Chip',    description: toPlainText(tContent('related.chip')),   path: '?path=/docs/ui-chip--docs'    },
+  { name: 'Tag',     description: toPlainText(tContent('related.tag')),    path: '?path=/docs/ui-tag--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -388,8 +388,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

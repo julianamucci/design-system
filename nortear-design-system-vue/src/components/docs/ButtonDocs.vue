@@ -292,12 +292,12 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Toggle',      description: tContent('related.toggle'),      path: '?path=/docs/ui-toggle--docs'      },
-  { name: 'Switch',      description: tContent('related.switch'),      path: '?path=/docs/ui-switch--docs'      },
-  { name: 'Link',        description: tContent('related.link'),        path: '?path=/docs/foundations-link--docs' },
-  { name: 'Form',        description: tContent('related.form'),        path: '?path=/docs/ui-form--docs'        },
-  { name: 'Dialog',      description: tContent('related.dialog'),      path: '?path=/docs/ui-dialog--docs'      },
-  { name: 'AlertDialog', description: tContent('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: 'Toggle',      description: toPlainText(tContent('related.toggle')),      path: '?path=/docs/ui-toggle--docs'      },
+  { name: 'Switch',      description: toPlainText(tContent('related.switch')),      path: '?path=/docs/ui-switch--docs'      },
+  { name: 'Link',        description: toPlainText(tContent('related.link')),        path: '?path=/docs/foundations-link--docs' },
+  { name: 'Form',        description: toPlainText(tContent('related.form')),        path: '?path=/docs/ui-form--docs'        },
+  { name: 'Dialog',      description: toPlainText(tContent('related.dialog')),      path: '?path=/docs/ui-dialog--docs'      },
+  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -464,8 +464,8 @@ function handleDemoClick(variant: string) {
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

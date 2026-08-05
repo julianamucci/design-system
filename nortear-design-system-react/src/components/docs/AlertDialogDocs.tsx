@@ -482,8 +482,8 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
                 </AlertDialogContent>
               </AlertDialog>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -516,8 +516,8 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
                 </AlertDialogContent>
               </AlertDialog>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -711,10 +711,10 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Dialog",  description: tContent("related.dialog"),  path: "?path=/docs/ui-dialog--docs" },
-          { name: "Sonner",  description: tContent("related.sonner"),  path: "?path=/docs/ui-sonner--docs" },
-          { name: "Alert",   description: tContent("related.alert"),   path: "?path=/docs/ui-alert--docs" },
-          { name: "Button",  description: tContent("related.button"),  path: "?path=/docs/ui-button--docs" },
+          { name: "Dialog",  description: toPlainText(tContent("related.dialog")),  path: "?path=/docs/ui-dialog--docs" },
+          { name: "Sonner",  description: toPlainText(tContent("related.sonner")),  path: "?path=/docs/ui-sonner--docs" },
+          { name: "Alert",   description: toPlainText(tContent("related.alert")),   path: "?path=/docs/ui-alert--docs" },
+          { name: "Button",  description: toPlainText(tContent("related.button")),  path: "?path=/docs/ui-button--docs" },
         ]}
       />
 

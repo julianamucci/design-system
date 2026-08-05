@@ -389,8 +389,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                   </Accordion>
                 ),
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -415,8 +415,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                   </Accordion>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -893,12 +893,12 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
               },
               {
                 name: "Tabs",
-                description: tContent("related.tabs.description"),
+                description: toPlainText(tContent("related.tabs.description")),
                 path: "?path=/docs/ui-tabs--docs",
               },
               {
                 name: "Sidebar",
-                description: tContent("related.sidebar.description"),
+                description: toPlainText(tContent("related.sidebar.description")),
                 path: "?path=/docs/ui-sidebar--docs",
               },
             ]}

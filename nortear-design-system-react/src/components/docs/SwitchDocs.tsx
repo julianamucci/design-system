@@ -401,8 +401,8 @@ import { Label } from "@/components/ui/label";`;
                 <Label htmlFor="dodont-1-dont">Notificações</Label>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -422,8 +422,8 @@ import { Label } from "@/components/ui/label";`;
                 <span className="nds-text-body nds-font-medium nds-leading-none">Modo escuro</span>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -725,22 +725,22 @@ import { Label } from "@/components/ui/label";`;
         items={[
           {
             name: tContent("related.items.checkbox.name"),
-            description: tContent("related.items.checkbox.description"),
+            description: toPlainText(tContent("related.items.checkbox.description")),
             path: "?path=/docs/ui-checkbox--docs",
           },
           {
             name: tContent("related.items.toggle.name"),
-            description: tContent("related.items.toggle.description"),
+            description: toPlainText(tContent("related.items.toggle.description")),
             path: "?path=/docs/ui-toggle--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
-            description: tContent("related.items.radioGroup.description"),
+            description: toPlainText(tContent("related.items.radioGroup.description")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
         ]}

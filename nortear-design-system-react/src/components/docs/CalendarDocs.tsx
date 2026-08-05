@@ -707,22 +707,22 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         items={[
           {
             name: "DatePicker",
-            description: tContent("related.datePicker"),
+            description: toPlainText(tContent("related.datePicker")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Popover",
-            description: tContent("related.popover"),
+            description: toPlainText(tContent("related.popover")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Form",
-            description: tContent("related.form"),
+            description: toPlainText(tContent("related.form")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: "Input",
-            description: tContent("related.input"),
+            description: toPlainText(tContent("related.input")),
             path: "?path=/docs/ui-input--docs",
           },
         ]}

@@ -460,8 +460,8 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 </button>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -493,8 +493,8 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 </ToggleGroupItem>
               </ToggleGroup>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -816,22 +816,22 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         items={[
           {
             name: tContent("related.items.toggle.name"),
-            description: tContent("related.items.toggle.description"),
+            description: toPlainText(tContent("related.items.toggle.description")),
             path: "?path=/docs/ui-toggle--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
-            description: tContent("related.items.tabs.description"),
+            description: toPlainText(tContent("related.items.tabs.description")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
-            description: tContent("related.items.radioGroup.description"),
+            description: toPlainText(tContent("related.items.radioGroup.description")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
           {
             name: tContent("related.items.checkbox.name"),
-            description: tContent("related.items.checkbox.description"),
+            description: toPlainText(tContent("related.items.checkbox.description")),
             path: "?path=/docs/ui-checkbox--docs",
           },
         ]}

@@ -298,8 +298,8 @@ export function createTableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const { wrapper, table } = createTable();
                 table.appendChild(createTableCaption('Lista de faturas recentes'));
@@ -342,8 +342,8 @@ export function createTableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const { wrapper, table } = createTable();
                 table.appendChild(createTableCaption('Faturas'));
@@ -925,11 +925,11 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Badge',        description: t('related.badge'),        path: '?path=/docs/ui-badge--docs' },
-            { name: 'Skeleton',     description: t('related.skeleton'),     path: '?path=/docs/ui-skeleton--docs' },
-            { name: 'Pagination',   description: t('related.pagination'),   path: '?path=/docs/ui-pagination--docs' },
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdown-menu--docs' },
-            { name: 'Avatar',       description: t('related.avatar'),       path: '?path=/docs/ui-avatar--docs' },
+            { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/ui-badge--docs' },
+            { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/ui-skeleton--docs' },
+            { name: 'Pagination',   description: toPlainText(t('related.pagination')),   path: '?path=/docs/ui-pagination--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdown-menu--docs' },
+            { name: 'Avatar',       description: toPlainText(t('related.avatar')),       path: '?path=/docs/ui-avatar--docs' },
           ],
         });
 

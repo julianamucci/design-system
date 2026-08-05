@@ -396,8 +396,8 @@ export function CheckboxDocs() {
                     </label>
                   </div>
                 ),
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -427,8 +427,8 @@ export function CheckboxDocs() {
                     ))}
                   </div>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -793,7 +793,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
               },
               {
                 name: "Form",
-                description: tContent("related.form"),
+                description: toPlainText(tContent("related.form")),
                 path: "?path=/docs/ui-form--docs",
               },
               {

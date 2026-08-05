@@ -237,8 +237,8 @@ export function createDropdownMenuDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const trigger = createButton({ variant: 'outline', label: 'Conta' });
                 return createDropdownMenu({
@@ -266,8 +266,8 @@ export function createDropdownMenuDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const li = document.createElement('li');
                 li.setAttribute('role', 'menuitem');
@@ -660,11 +660,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.contextMenu.name'), description: t('related.items.contextMenu.description'), path: '?path=/docs/ui-contextmenu--docs' },
-            { name: t('related.items.menubar.name'),     description: t('related.items.menubar.description'),     path: '?path=/docs/ui-menubar--docs'     },
-            { name: t('related.items.command.name'),     description: t('related.items.command.description'),     path: '?path=/docs/ui-command--docs'     },
-            { name: t('related.items.popover.name'),     description: t('related.items.popover.description'),     path: '?path=/docs/ui-popover--docs'     },
-            { name: t('related.items.select.name'),      description: t('related.items.select.description'),      path: '?path=/docs/ui-select--docs'      },
+            { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/ui-contextmenu--docs' },
+            { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/ui-menubar--docs'     },
+            { name: t('related.items.command.name'),     description: toPlainText(t('related.items.command.description')),     path: '?path=/docs/ui-command--docs'     },
+            { name: t('related.items.popover.name'),     description: toPlainText(t('related.items.popover.description')),     path: '?path=/docs/ui-popover--docs'     },
+            { name: t('related.items.select.name'),      description: toPlainText(t('related.items.select.description')),      path: '?path=/docs/ui-select--docs'      },
           ],
         });
 

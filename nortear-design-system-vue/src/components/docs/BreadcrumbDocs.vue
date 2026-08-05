@@ -356,10 +356,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'NavigationMenu', description: tContent('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
-  { name: 'Stepper',        description: tContent('related.stepper'),        path: '?path=/docs/ui-stepper--docs'        },
-  { name: 'Tabs',           description: tContent('related.tabs'),           path: '?path=/docs/ui-tabs--docs'           },
-  { name: 'DropdownMenu',   description: tContent('related.dropdownMenu'),   path: '?path=/docs/ui-dropdownmenu--docs'   },
+  { name: 'NavigationMenu', description: toPlainText(tContent('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
+  { name: 'Stepper',        description: toPlainText(tContent('related.stepper')),        path: '?path=/docs/ui-stepper--docs'        },
+  { name: 'Tabs',           description: toPlainText(tContent('related.tabs')),           path: '?path=/docs/ui-tabs--docs'           },
+  { name: 'DropdownMenu',   description: toPlainText(tContent('related.dropdownMenu')),   path: '?path=/docs/ui-dropdownmenu--docs'   },
 ]);
 
 const noteItems = computed(() => [
@@ -538,8 +538,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

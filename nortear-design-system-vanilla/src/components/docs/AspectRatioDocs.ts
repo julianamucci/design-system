@@ -292,8 +292,8 @@ export function createAspectRatioDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.landscape;
@@ -320,8 +320,8 @@ export function createAspectRatioDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.product;
@@ -521,9 +521,9 @@ export interface AspectRatioOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Card',       description: t('related.card'),       path: '?path=/docs/ui-card--docs' },
-            { name: 'Avatar',     description: t('related.avatar'),     path: '?path=/docs/ui-avatar--docs' },
-            { name: 'Skeleton',   description: t('related.skeleton'),   path: '?path=/docs/ui-skeleton--docs' },
+            { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/ui-card--docs' },
+            { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/ui-avatar--docs' },
+            { name: 'Skeleton',   description: toPlainText(t('related.skeleton')),   path: '?path=/docs/ui-skeleton--docs' },
           ],
         });
 

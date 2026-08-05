@@ -312,10 +312,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Switch',     description: tContent('related.switch'),     path: '?path=/docs/ui-switch--docs'      },
-  { name: 'RadioGroup', description: tContent('related.radioGroup'), path: '?path=/docs/ui-radiogroup--docs'  },
-  { name: 'Form',       description: tContent('related.form'),       path: '?path=/docs/ui-form--docs'        },
-  { name: 'Select',     description: tContent('related.select'),     path: '?path=/docs/ui-select--docs'      },
+  { name: 'Switch',     description: toPlainText(tContent('related.switch')),     path: '?path=/docs/ui-switch--docs'      },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs'  },
+  { name: 'Form',       description: toPlainText(tContent('related.form')),       path: '?path=/docs/ui-form--docs'        },
+  { name: 'Select',     description: toPlainText(tContent('related.select')),     path: '?path=/docs/ui-select--docs'      },
 ]);
 
 const noteItems = computed(() => [
@@ -522,14 +522,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >

@@ -251,8 +251,8 @@ export function createCommandDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
@@ -291,8 +291,8 @@ export function createCommandDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const outer = document.createElement('div');
                 outer.className = 'nds-stack nds-p-2';
@@ -628,10 +628,10 @@ export type CommandItem = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Select',       description: t('related.select'),       path: '?path=/docs/ui-select--docs'        },
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs'  },
-            { name: 'Popover',      description: t('related.popover'),      path: '?path=/docs/ui-popover--docs'       },
-            { name: 'Dialog',       description: t('related.dialog'),       path: '?path=/docs/ui-dialog--docs'        },
+            { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/ui-select--docs'        },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs'  },
+            { name: 'Popover',      description: toPlainText(t('related.popover')),      path: '?path=/docs/ui-popover--docs'       },
+            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/ui-dialog--docs'        },
           ],
         });
 

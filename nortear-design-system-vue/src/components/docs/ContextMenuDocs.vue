@@ -410,11 +410,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'DropdownMenu', description: tContent('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
-  { name: 'Menubar',      description: tContent('related.menubar'),      path: '?path=/docs/ui-menubar--docs'      },
-  { name: 'Dialog',       description: tContent('related.dialog'),       path: '?path=/docs/ui-dialog--docs'       },
-  { name: 'AlertDialog',  description: tContent('related.alertDialog'),  path: '?path=/docs/ui-alertdialog--docs'  },
-  { name: 'Tooltip',      description: tContent('related.tooltip'),      path: '?path=/docs/ui-tooltip--docs'      },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
+  { name: 'Menubar',      description: toPlainText(tContent('related.menubar')),      path: '?path=/docs/ui-menubar--docs'      },
+  { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/ui-dialog--docs'       },
+  { name: 'AlertDialog',  description: toPlainText(tContent('related.alertDialog')),  path: '?path=/docs/ui-alertdialog--docs'  },
+  { name: 'Tooltip',      description: toPlainText(tContent('related.tooltip')),      path: '?path=/docs/ui-tooltip--docs'      },
 ]);
 
 const noteItems = computed(() => [
@@ -656,9 +656,9 @@ const codeCompositionShortcuts = `<ContextMenu>
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair3.do'), dontCaption: tContent('doDont.pair3.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair3.do')), dontCaption: toPlainText(tContent('doDont.pair3.dont')) },
       ]"
     >
       <!-- Par 1: alternativa explícita -->

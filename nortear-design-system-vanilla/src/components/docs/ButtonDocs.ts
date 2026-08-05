@@ -283,16 +283,16 @@ export function createButtonDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createButton({ variant: 'default', label: 'Salvar' }),
               dontPreviewFactory: () => createButton({ variant: 'default', label: 'Clique aqui' }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster';
@@ -671,10 +671,10 @@ export interface ButtonOptions {
           title: t('related.title'),
           items: [
             { name: 'Toggle',      description: stripHtml(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs' },
-            { name: 'Switch',      description: t('related.switch'),                 path: '?path=/docs/ui-switch--docs' },
-            { name: 'Link',        description: t('related.link'),                   path: '?path=/docs/foundations-typography--docs' },
-            { name: 'Dialog',      description: t('related.dialog'),                 path: '?path=/docs/ui-dialog--docs' },
-            { name: 'AlertDialog', description: t('related.alertDialog'),            path: '?path=/docs/ui-alertdialog--docs' },
+            { name: 'Switch',      description: toPlainText(t('related.switch')),                 path: '?path=/docs/ui-switch--docs' },
+            { name: 'Link',        description: toPlainText(t('related.link')),                   path: '?path=/docs/foundations-typography--docs' },
+            { name: 'Dialog',      description: toPlainText(t('related.dialog')),                 path: '?path=/docs/ui-dialog--docs' },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')),            path: '?path=/docs/ui-alertdialog--docs' },
           ],
         });
 

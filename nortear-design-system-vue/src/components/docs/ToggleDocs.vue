@@ -310,10 +310,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'ToggleGroup', description: tContent('related.items.toggleGroup.description'), path: '?path=/docs/ui-togglegroup--docs' },
-  { name: 'Switch',      description: tContent('related.items.switch.description'),      path: '?path=/docs/ui-switch--docs'      },
-  { name: 'Checkbox',    description: tContent('related.items.checkbox.description'),    path: '?path=/docs/ui-checkbox--docs'    },
-  { name: 'Button',      description: tContent('related.items.button.description'),      path: '?path=/docs/ui-button--docs'      },
+  { name: 'ToggleGroup', description: toPlainText(tContent('related.items.toggleGroup.description')), path: '?path=/docs/ui-togglegroup--docs' },
+  { name: 'Switch',      description: toPlainText(tContent('related.items.switch.description')),      path: '?path=/docs/ui-switch--docs'      },
+  { name: 'Checkbox',    description: toPlainText(tContent('related.items.checkbox.description')),    path: '?path=/docs/ui-checkbox--docs'    },
+  { name: 'Button',      description: toPlainText(tContent('related.items.button.description')),      path: '?path=/docs/ui-button--docs'      },
 ]);
 
 const noteItems = computed(() => [
@@ -521,14 +521,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >

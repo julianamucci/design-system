@@ -453,8 +453,8 @@ interface ContextMenuCheckboxItemProps
                 </ContextMenuContent>
               </ContextMenu>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -491,8 +491,8 @@ interface ContextMenuCheckboxItemProps
                 </ContextMenuContent>
               </ContextMenu>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -520,8 +520,8 @@ interface ContextMenuCheckboxItemProps
                 <span style={{ textAlign: "center" }}>Área sem dica visual de right-click</span>
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -996,27 +996,27 @@ const [showRulers, setShowRulers] = useState(false);
         items={[
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: "Menubar",
-            description: tContent("related.menubar"),
+            description: toPlainText(tContent("related.menubar")),
             path: "?path=/docs/ui-menubar--docs",
           },
           {
             name: "Dialog",
-            description: tContent("related.dialog"),
+            description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: "AlertDialog",
-            description: tContent("related.alertDialog"),
+            description: toPlainText(tContent("related.alertDialog")),
             path: "?path=/docs/ui-alertdialog--docs",
           },
           {
             name: "Tooltip",
-            description: tContent("related.tooltip"),
+            description: toPlainText(tContent("related.tooltip")),
             path: "?path=/docs/ui-tooltip--docs",
           },
         ]}

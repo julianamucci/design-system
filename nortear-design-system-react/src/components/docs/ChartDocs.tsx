@@ -381,8 +381,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 aria-label="Gráfico multi-séries sem legenda"
               />
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -400,8 +400,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 className="nds-w-full" style={{ height: "200px" }}
               />
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -734,17 +734,17 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         items={[
           {
             name: "Table",
-            description: tContent("related.table"),
+            description: toPlainText(tContent("related.table")),
             path: "?path=/docs/ui-table--docs",
           },
           {
             name: "Card",
-            description: tContent("related.card"),
+            description: toPlainText(tContent("related.card")),
             path: "?path=/docs/ui-card--docs",
           },
           {
             name: "DataTable",
-            description: tContent("related.dataTable"),
+            description: toPlainText(tContent("related.dataTable")),
             path: "?path=/docs/ui-data-table--docs",
           },
         ]}

@@ -258,10 +258,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Badge',       description: tContent('related.badge'),       path: '?path=/docs/ui-badge--docs'       },
-  { name: 'AspectRatio', description: tContent('related.aspectRatio'), path: '?path=/docs/ui-aspectratio--docs' },
-  { name: 'Tooltip',     description: tContent('related.tooltip'),     path: '?path=/docs/ui-tooltip--docs'     },
-  { name: 'Card',        description: tContent('related.card'),        path: '?path=/docs/ui-card--docs'        },
+  { name: 'Badge',       description: toPlainText(tContent('related.badge')),       path: '?path=/docs/ui-badge--docs'       },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/ui-aspectratio--docs' },
+  { name: 'Tooltip',     description: toPlainText(tContent('related.tooltip')),     path: '?path=/docs/ui-tooltip--docs'     },
+  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/ui-card--docs'        },
 ]);
 
 const noteItems = computed(() => [
@@ -346,8 +346,8 @@ const whenToUseDont = computed(() => ({
 }));
 
 const doDontPairs = computed(() => [
-  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
 ]);
 
 const statesCols = computed(() => ({

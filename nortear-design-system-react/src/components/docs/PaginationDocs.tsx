@@ -1007,17 +1007,17 @@ const total = 8;
         items={[
           {
             name: tContent("related.items.breadcrumb.name"),
-            description: tContent("related.items.breadcrumb.description"),
+            description: toPlainText(tContent("related.items.breadcrumb.description")),
             path: "?path=/docs/ui-breadcrumb--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
-            description: tContent("related.items.tabs.description"),
+            description: toPlainText(tContent("related.items.tabs.description")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: tContent("related.items.button.name"),
-            description: tContent("related.items.button.description"),
+            description: toPlainText(tContent("related.items.button.description")),
             path: "?path=/docs/ui-button--docs",
           },
         ]}

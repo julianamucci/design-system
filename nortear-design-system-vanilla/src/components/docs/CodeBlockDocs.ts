@@ -464,8 +464,8 @@ export function createCodeBlockDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => block('do-dont', 'do-1', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
@@ -480,8 +480,8 @@ export function createCodeBlockDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => block('do-dont', 'do-2', {
                 code: 'npm run build -- --mode production',
                 language: 'bash',
@@ -680,10 +680,10 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('related.title'),
           componentSlug: 'code-block',
           items: [
-            { name: 'Table', description: t('related.table'), path: '?path=/docs/ui-table--docs' },
-            { name: 'Alert', description: t('related.alert'), path: '?path=/docs/ui-alert--docs' },
-            { name: 'Tabs',  description: t('related.tabs'),  path: '?path=/docs/ui-tabs--docs' },
-            { name: 'Card',  description: t('related.card'),  path: '?path=/docs/ui-card--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/ui-table--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
+            { name: 'Tabs',  description: toPlainText(t('related.tabs')),  path: '?path=/docs/ui-tabs--docs' },
+            { name: 'Card',  description: toPlainText(t('related.card')),  path: '?path=/docs/ui-card--docs' },
           ],
         });
 

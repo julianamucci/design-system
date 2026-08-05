@@ -312,10 +312,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'ScrollArea',  description: tContent('related.items.scrollArea.description'),  path: '?path=/docs/ui-scrollarea--docs'  },
-  { name: 'Sheet',       description: tContent('related.items.sheet.description'),       path: '?path=/docs/ui-sheet--docs'       },
-  { name: 'Separator',   description: tContent('related.items.separator.description'),   path: '?path=/docs/ui-separator--docs'   },
-  { name: 'AspectRatio', description: tContent('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
+  { name: 'ScrollArea',  description: toPlainText(tContent('related.items.scrollArea.description')),  path: '?path=/docs/ui-scrollarea--docs'  },
+  { name: 'Sheet',       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
+  { name: 'Separator',   description: toPlainText(tContent('related.items.separator.description')),   path: '?path=/docs/ui-separator--docs'   },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -614,8 +614,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

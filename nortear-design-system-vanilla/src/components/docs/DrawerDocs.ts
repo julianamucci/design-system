@@ -288,8 +288,8 @@ export function createDrawerDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
@@ -309,8 +309,8 @@ export function createDrawerDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Abrir mobile',
                 title: 'Filtros',
@@ -707,10 +707,10 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.sheet.name'),       description: t('related.items.sheet.description'),       path: '?path=/docs/ui-sheet--docs'       },
-            { name: t('related.items.dialog.name'),      description: t('related.items.dialog.description'),      path: '?path=/docs/ui-dialog--docs'      },
-            { name: t('related.items.alertDialog.name'), description: t('related.items.alertDialog.description'), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: t('related.items.sidebar.name'),     description: t('related.items.sidebar.description'),     path: '?path=/docs/ui-sidebar--docs'     },
+            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
+            { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/ui-dialog--docs'      },
+            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/ui-alertdialog--docs' },
+            { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/ui-sidebar--docs'     },
           ],
         });
 

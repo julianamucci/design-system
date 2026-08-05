@@ -840,9 +840,9 @@ interface CardProps extends React.ComponentProps<"div"> {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Separator", description: tContent("related.separator"),            path: "?path=/docs/ui-separator--docs" },
-          { name: "Accordion", description: tContent("related.accordion"),            path: "?path=/docs/ui-accordion--docs" },
-          { name: "Alert",     description: tContent("related.alert"),                path: "?path=/docs/ui-alert--docs" },
+          { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/ui-separator--docs" },
+          { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/ui-accordion--docs" },
+          { name: "Alert",     description: toPlainText(tContent("related.alert")),                path: "?path=/docs/ui-alert--docs" },
           { name: "Button",    description: stripHtml(tContent("related.button")),    path: "?path=/docs/ui-button--docs" },
           { name: "Badge",     description: stripHtml(tContent("related.badge")),     path: "?path=/docs/ui-badge--docs" },
           { name: "Avatar",    description: stripHtml(tContent("related.avatar")),    path: "?path=/docs/ui-avatar--docs" },

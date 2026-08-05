@@ -1093,6 +1093,36 @@ quebra em direções opostas:
   ali transforma texto em markup vivo: `&lt;img&gt;` virou um `<img>` real sem
   `alt` e o axe reprovou Avatar e Card. Foi assim que o erro apareceu.
 
-Fica um resíduo conhecido: `stripHtml` continua aplicado em destinos de HTML
-(anatomia, variantes, do/dont), onde ele descarta a formatação `<code>` que o
-conteúdo pede. É decisão visual, não bug — vale revisitar com o design.
+### Markup literal em superfície de texto — 264 chaves ainda
+
+A correção do `stripHtml` cobriu os containers que eu tinha verificado. Depois o
+`DocsDoDont` apareceu na tela com `<code>default</code>` cru — e ele não estava
+na minha lista, porque eu tinha classificado o bloco do/dont do `DocsWhenToUse`
+(que renderiza HTML) e assumido que era o mesmo container. Não é.
+
+Rodei então a classificação por container de verdade (contando
+`dangerouslySetInnerHTML` em cada seção compartilhada):
+
+| renderiza HTML | escreve textNode |
+|---|---|
+| DocsAccessibility (summary, items, contrast, screenReader), DocsWhenToUse (guidelines/do/dont), DocsVariants, DocsCompositions, DocsNotes, DocsProps (extensibilidade), DocsAnatomy | DocsTestes, DocsTokens, DocsStates, DocsRelated, DocsDoDont, DocsAnalytics, DocsImport, DocsHeader, DocsDemonstration, e as tabelas do DocsProps e do DocsWhenToUse |
+
+`doDont.*` e `related.*` foram corrigidos. Sobram **264 chaves** com tag ou
+entidade caindo em superfície de texto nas docs pages de componente:
+
+```
+188  accessibility.aria      19  props.items         14  analytics.description
+  8  tokens.items             5  props.menuButton     3  props.sidebar
+ 26  cauda longa (aria.*, keyboard.*, screenReader.*, brand/axes, …)
+```
+
+`accessibility.aria` é o grosso e **não passa pelo `DocsAccessibility`** — o
+container não tem prop `aria`. Cada docs page monta essa tabela por conta, então
+o destino precisa ser conferido caso a caso antes de converter.
+
+- [ ] Verificar container por container antes de aplicar `toPlainText`.
+  Converter por prefixo sem conferir foi o que transformou `&lt;img&gt;` num
+  `<img>` sem alt no Avatar e no Card.
+- [ ] Regra no `audit.mjs`: string com `<tag>` ou `&lt;` chegando a prop de
+  container que escreve textNode. É o único jeito de isso parar de reaparecer —
+  nem teste nem axe pegam, só olhar a página.

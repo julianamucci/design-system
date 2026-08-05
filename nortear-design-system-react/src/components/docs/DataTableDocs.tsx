@@ -802,12 +802,12 @@ declare module "@tanstack/react-table" {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Table",         description: tContent("related.table"),         path: "?path=/docs/ui-table--docs" },
-          { name: "Chart",         description: tContent("related.chart"),         path: "?path=/docs/ui-chart--docs" },
-          { name: "Pagination",    description: tContent("related.pagination"),    path: "?path=/docs/ui-pagination--docs" },
-          { name: "Checkbox",      description: tContent("related.checkbox"),      path: "?path=/docs/ui-checkbox--docs" },
-          { name: "Input",         description: tContent("related.input"),         path: "?path=/docs/ui-input--docs" },
-          { name: "DropdownMenu",  description: tContent("related.dropdownMenu"),  path: "?path=/docs/ui-dropdownmenu--docs" },
+          { name: "Table",         description: toPlainText(tContent("related.table")),         path: "?path=/docs/ui-table--docs" },
+          { name: "Chart",         description: toPlainText(tContent("related.chart")),         path: "?path=/docs/ui-chart--docs" },
+          { name: "Pagination",    description: toPlainText(tContent("related.pagination")),    path: "?path=/docs/ui-pagination--docs" },
+          { name: "Checkbox",      description: toPlainText(tContent("related.checkbox")),      path: "?path=/docs/ui-checkbox--docs" },
+          { name: "Input",         description: toPlainText(tContent("related.input")),         path: "?path=/docs/ui-input--docs" },
+          { name: "DropdownMenu",  description: toPlainText(tContent("related.dropdownMenu")),  path: "?path=/docs/ui-dropdownmenu--docs" },
         ]}
       />
 

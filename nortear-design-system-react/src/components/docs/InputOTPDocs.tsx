@@ -879,22 +879,22 @@ interface InputOTPProps {
         items={[
           {
             name: tContent("related.items.input.name"),
-            description: tContent("related.items.input.description"),
+            description: toPlainText(tContent("related.items.input.description")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: tContent("related.items.label.name"),
-            description: tContent("related.items.label.description"),
+            description: toPlainText(tContent("related.items.label.description")),
             path: "?path=/docs/ui-label--docs",
           },
           {
             name: tContent("related.items.button.name"),
-            description: tContent("related.items.button.description"),
+            description: toPlainText(tContent("related.items.button.description")),
             path: "?path=/docs/ui-button--docs",
           },
         ]}

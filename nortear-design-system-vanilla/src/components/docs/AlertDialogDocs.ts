@@ -334,8 +334,8 @@ export function createAlertDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 triggerVariant: 'destructive',
@@ -358,8 +358,8 @@ export function createAlertDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 triggerVariant: 'destructive',
@@ -607,10 +607,10 @@ export interface AlertDialogOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Dialog', description: t('related.dialog'), path: '?path=/docs/ui-dialog--docs' },
-            { name: 'Sonner', description: t('related.sonner'), path: '?path=/docs/ui-sonner--docs' },
-            { name: 'Alert',  description: t('related.alert'),  path: '?path=/docs/ui-alert--docs'  },
-            { name: 'Button', description: t('related.button'), path: '?path=/docs/ui-button--docs' },
+            { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/ui-dialog--docs' },
+            { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/ui-sonner--docs' },
+            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/ui-alert--docs'  },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/ui-button--docs' },
           ],
         });
 

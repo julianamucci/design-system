@@ -280,16 +280,16 @@ const badgeVariants = cva(
                 Este item acabou de ser adicionado ao catálogo
               </Badge>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: <Badge variant="destructive">Expirado</Badge>,
             dontPreview: <Badge variant="destructive">Em breve</Badge>,
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -525,17 +525,17 @@ const badgeVariants = cva(
         items={[
           {
             name: "Alert",
-            description: tContent("related.alert"),
+            description: toPlainText(tContent("related.alert")),
             path: "?path=/docs/ui-alert--docs",
           },
           {
             name: "Button",
-            description: tContent("related.button"),
+            description: toPlainText(tContent("related.button")),
             path: "?path=/docs/ui-button--docs",
           },
           {
             name: "Avatar",
-            description: tContent("related.chip"),
+            description: toPlainText(tContent("related.chip")),
             path: "?path=/docs/ui-avatar--docs",
           },
         ]}

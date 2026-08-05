@@ -373,8 +373,8 @@ export function createBreadcrumbDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDefaultBreadcrumb(stripHtml(t('doDont.pair1.do'))),
               dontPreviewFactory: () =>
                 buildBreadcrumb(
@@ -390,8 +390,8 @@ export function createBreadcrumbDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildWithEllipsisBreadcrumb(stripHtml(t('doDont.pair2.do'))),
               dontPreviewFactory: () =>
                 buildBreadcrumb(
@@ -685,10 +685,10 @@ export interface BreadcrumbEllipsisOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'NavigationMenu', description: t('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: 'Stepper', description: t('related.stepper'), path: '?path=/docs/ui-stepper--docs' },
-            { name: 'Tabs', description: t('related.tabs'), path: '?path=/docs/ui-tabs--docs' },
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
+            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/ui-stepper--docs' },
+            { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/ui-tabs--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
           ],
         });
 

@@ -495,11 +495,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Badge',        description: tContent('related.badge'),        path: '?path=/docs/ui-badge--docs'         },
-  { name: 'Skeleton',     description: tContent('related.skeleton'),     path: '?path=/docs/ui-skeleton--docs'      },
-  { name: 'Pagination',   description: tContent('related.pagination'),   path: '?path=/docs/ui-pagination--docs'    },
-  { name: 'Avatar',       description: tContent('related.avatar'),       path: '?path=/docs/ui-avatar--docs'        },
-  { name: 'DropdownMenu', description: tContent('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs'  },
+  { name: 'Badge',        description: toPlainText(tContent('related.badge')),        path: '?path=/docs/ui-badge--docs'         },
+  { name: 'Skeleton',     description: toPlainText(tContent('related.skeleton')),     path: '?path=/docs/ui-skeleton--docs'      },
+  { name: 'Pagination',   description: toPlainText(tContent('related.pagination')),   path: '?path=/docs/ui-pagination--docs'    },
+  { name: 'Avatar',       description: toPlainText(tContent('related.avatar')),       path: '?path=/docs/ui-avatar--docs'        },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs'  },
 ]);
 
 const noteItems = computed(() => [
@@ -710,8 +710,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

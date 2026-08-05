@@ -783,8 +783,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 </p>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -799,8 +799,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 <code className="nds-whitespace-pre">{`// Ícone sem tooltip no modo icon\n<SidebarMenuButton>\n  <Icon />\n</SidebarMenuButton>`}</code>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -815,8 +815,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 <code className="nds-whitespace-pre">{`// Trigger visível em desktop\n<SidebarTrigger />\n{/* ocupa espaço do conteúdo */}`}</code>
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -1259,37 +1259,37 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         items={[
           {
             name: "NavigationMenu",
-            description: tContent("related.navigationMenu"),
+            description: toPlainText(tContent("related.navigationMenu")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "Sheet",
-            description: tContent("related.sheet"),
+            description: toPlainText(tContent("related.sheet")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: "Accordion",
-            description: tContent("related.accordion"),
+            description: toPlainText(tContent("related.accordion")),
             path: "?path=/docs/ui-accordion--docs",
           },
           {
             name: "Tooltip",
-            description: tContent("related.tooltip"),
+            description: toPlainText(tContent("related.tooltip")),
             path: "?path=/docs/ui-tooltip--docs",
           },
           {
             name: "Separator",
-            description: tContent("related.separator"),
+            description: toPlainText(tContent("related.separator")),
             path: "?path=/docs/ui-separator--docs",
           },
           {
             name: "Skeleton",
-            description: tContent("related.skeleton"),
+            description: toPlainText(tContent("related.skeleton")),
             path: "?path=/docs/ui-skeleton--docs",
           },
         ]}

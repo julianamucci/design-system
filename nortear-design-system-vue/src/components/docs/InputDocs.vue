@@ -301,11 +301,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Textarea',  description: tContent('related.textarea'),  path: '?path=/docs/ui-textarea--docs'  },
-  { name: 'InputOTP',  description: tContent('related.inputOTP'),  path: '?path=/docs/ui-inputotp--docs'  },
-  { name: 'Select',    description: tContent('related.select'),    path: '?path=/docs/ui-select--docs'    },
-  { name: 'Form',      description: tContent('related.form'),      path: '?path=/docs/ui-form--docs'      },
-  { name: 'Label',     description: tContent('related.label'),     path: '?path=/docs/ui-label--docs'     },
+  { name: 'Textarea',  description: toPlainText(tContent('related.textarea')),  path: '?path=/docs/ui-textarea--docs'  },
+  { name: 'InputOTP',  description: toPlainText(tContent('related.inputOTP')),  path: '?path=/docs/ui-inputotp--docs'  },
+  { name: 'Select',    description: toPlainText(tContent('related.select')),    path: '?path=/docs/ui-select--docs'    },
+  { name: 'Form',      description: toPlainText(tContent('related.form')),      path: '?path=/docs/ui-form--docs'      },
+  { name: 'Label',     description: toPlainText(tContent('related.label')),     path: '?path=/docs/ui-label--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -495,9 +495,9 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair3.do'), dontCaption: tContent('doDont.pair3.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair3.do')), dontCaption: toPlainText(tContent('doDont.pair3.dont')) },
       ]"
     >
       <!-- Par 1: placeholder como exemplo vs instrução -->

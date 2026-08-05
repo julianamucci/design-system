@@ -603,7 +603,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               </Breadcrumb>
             ),
             doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: tContent("doDont.pair2.dont"),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -827,22 +827,22 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         items={[
           {
             name: "NavigationMenu",
-            description: tContent("related.navigationMenu"),
+            description: toPlainText(tContent("related.navigationMenu")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: "Stepper",
-            description: tContent("related.stepper"),
+            description: toPlainText(tContent("related.stepper")),
             path: "?path=/docs/ui-stepper--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
         ]}

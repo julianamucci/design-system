@@ -643,9 +643,9 @@ export type ChartOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Table', description: t('related.table'), path: '?path=/docs/ui-table--docs' },
-            { name: 'Card', description: t('related.card'), path: '?path=/docs/ui-card--docs' },
-            { name: 'DataTable', description: t('related.dataTable'), path: '?path=/docs/ui-datatable--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/ui-table--docs' },
+            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/ui-card--docs' },
+            { name: 'DataTable', description: toPlainText(t('related.dataTable')), path: '?path=/docs/ui-datatable--docs' },
           ],
         });
 

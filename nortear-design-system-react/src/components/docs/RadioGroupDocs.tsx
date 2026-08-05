@@ -851,22 +851,22 @@ interface RadioGroupItemProps {
         items={[
           {
             name: tContent("related.items.checkbox.name"),
-            description: tContent("related.items.checkbox.description"),
+            description: toPlainText(tContent("related.items.checkbox.description")),
             path: "?path=/docs/ui-checkbox--docs",
           },
           {
             name: tContent("related.items.switch.name"),
-            description: tContent("related.items.switch.description"),
+            description: toPlainText(tContent("related.items.switch.description")),
             path: "?path=/docs/ui-switch--docs",
           },
           {
             name: tContent("related.items.select.name"),
-            description: tContent("related.items.select.description"),
+            description: toPlainText(tContent("related.items.select.description")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
         ]}

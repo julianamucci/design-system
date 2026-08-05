@@ -394,10 +394,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.input.name'),      description: tContent('related.items.input.description'),      path: '?path=/docs/ui-input--docs'       },
-  { name: tContent('related.items.switch.name'),     description: tContent('related.items.switch.description'),     path: '?path=/docs/ui-switch--docs'      },
-  { name: tContent('related.items.progress.name'),   description: tContent('related.items.progress.description'),   path: '?path=/docs/ui-progress--docs'    },
-  { name: tContent('related.items.radioGroup.name'), description: tContent('related.items.radioGroup.description'), path: '?path=/docs/ui-radiogroup--docs' },
+  { name: tContent('related.items.input.name'),      description: toPlainText(tContent('related.items.input.description')),      path: '?path=/docs/ui-input--docs'       },
+  { name: tContent('related.items.switch.name'),     description: toPlainText(tContent('related.items.switch.description')),     path: '?path=/docs/ui-switch--docs'      },
+  { name: tContent('related.items.progress.name'),   description: toPlainText(tContent('related.items.progress.description')),   path: '?path=/docs/ui-progress--docs'    },
+  { name: tContent('related.items.radioGroup.name'), description: toPlainText(tContent('related.items.radioGroup.description')), path: '?path=/docs/ui-radiogroup--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -632,14 +632,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >

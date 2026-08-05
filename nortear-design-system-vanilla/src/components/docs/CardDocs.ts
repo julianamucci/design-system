@@ -734,9 +734,9 @@ export interface CardFooterOptions      { className?: string; }`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Separator', description: t('related.separator'), path: '?path=/docs/ui-separator--docs' },
-            { name: 'Accordion', description: t('related.accordion'), path: '?path=/docs/ui-accordion--docs' },
-            { name: 'Alert', description: t('related.alert'), path: '?path=/docs/ui-alert--docs' },
+            { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/ui-separator--docs' },
+            { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/ui-accordion--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
             { name: 'Button', description: stripHtml(t('related.button')), path: '?path=/docs/ui-button--docs' },
             { name: 'Badge', description: stripHtml(t('related.badge')), path: '?path=/docs/ui-badge--docs' },
             { name: 'Avatar', description: stripHtml(t('related.avatar')), path: '?path=/docs/ui-avatar--docs' },

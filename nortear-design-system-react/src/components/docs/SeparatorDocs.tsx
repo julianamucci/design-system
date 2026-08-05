@@ -508,22 +508,22 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
         items={[
           {
             name: tContent("related.items.card.name"),
-            description: tContent("related.items.card.description"),
+            description: toPlainText(tContent("related.items.card.description")),
             path: "?path=/docs/ui-card--docs",
           },
           {
             name: tContent("related.items.sheet.name"),
-            description: tContent("related.items.sheet.description"),
+            description: toPlainText(tContent("related.items.sheet.description")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
           {
             name: tContent("related.items.navigationMenu.name"),
-            description: tContent("related.items.navigationMenu.description"),
+            description: toPlainText(tContent("related.items.navigationMenu.description")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
         ]}

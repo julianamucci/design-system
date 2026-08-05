@@ -389,8 +389,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <AlertDescription>Salvo!</AlertDescription>
                   </Alert>
                 ),
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -408,8 +408,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <AlertDescription>Verifique sua conexão.</AlertDescription>
                   </Alert>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -788,22 +788,22 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             items={[
               {
                 name: "Sonner",
-                description: tContent("related.sonner"),
+                description: toPlainText(tContent("related.sonner")),
                 path: "?path=/docs/ui-sonner--docs",
               },
               {
                 name: "AlertDialog",
-                description: tContent("related.alertDialog"),
+                description: toPlainText(tContent("related.alertDialog")),
                 path: "?path=/docs/ui-alertdialog--docs",
               },
               {
                 name: "Badge",
-                description: tContent("related.badge"),
+                description: toPlainText(tContent("related.badge")),
                 path: "?path=/docs/ui-badge--docs",
               },
               {
                 name: "Progress",
-                description: tContent("related.progress"),
+                description: toPlainText(tContent("related.progress")),
                 path: "?path=/docs/ui-progress--docs",
               },
             ]}

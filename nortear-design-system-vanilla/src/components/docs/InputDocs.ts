@@ -315,8 +315,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'email',
                 labelText: 'Email',
@@ -331,8 +331,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'email',
                 labelText: 'Email',
@@ -347,8 +347,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair3.do'),
-              dontCaption: t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'text',
                 labelText: 'Nome completo',
@@ -714,11 +714,11 @@ export type InputOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Textarea',  description: t('related.textarea'),  path: '?path=/docs/ui-textarea--docs' },
-            { name: 'InputOTP',  description: t('related.inputOTP'),  path: '?path=/docs/ui-inputotp--docs' },
-            { name: 'Select',    description: t('related.select'),    path: '?path=/docs/ui-select--docs' },
-            { name: 'Form',      description: t('related.form'),      path: '?path=/docs/ui-form--docs' },
-            { name: 'Label',     description: t('related.label'),     path: '?path=/docs/ui-label--docs' },
+            { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/ui-textarea--docs' },
+            { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/ui-inputotp--docs' },
+            { name: 'Select',    description: toPlainText(t('related.select')),    path: '?path=/docs/ui-select--docs' },
+            { name: 'Form',      description: toPlainText(t('related.form')),      path: '?path=/docs/ui-form--docs' },
+            { name: 'Label',     description: toPlainText(t('related.label')),     path: '?path=/docs/ui-label--docs' },
           ],
         });
 

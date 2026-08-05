@@ -324,8 +324,8 @@ import { Plus } from "lucide-react";`;
                 dontLabel: tNav("common.dont"),
                 doPreview: <Button>Salvar</Button>,
                 dontPreview: <Button>Clique aqui</Button>,
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -342,8 +342,8 @@ import { Plus } from "lucide-react";`;
                     <Button>Enviar</Button>
                   </div>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -713,27 +713,27 @@ import { Plus } from "lucide-react";`;
               },
               {
                 name: "Switch",
-                description: tContent("related.switch"),
+                description: toPlainText(tContent("related.switch")),
                 path: "?path=/docs/ui-switch--docs",
               },
               {
                 name: "Link",
-                description: tContent("related.link"),
+                description: toPlainText(tContent("related.link")),
                 path: "?path=/docs/ui-link--docs",
               },
               {
                 name: "Form",
-                description: tContent("related.form"),
+                description: toPlainText(tContent("related.form")),
                 path: "?path=/docs/ui-form--docs",
               },
               {
                 name: "Dialog",
-                description: tContent("related.dialog"),
+                description: toPlainText(tContent("related.dialog")),
                 path: "?path=/docs/ui-dialog--docs",
               },
               {
                 name: "AlertDialog",
-                description: tContent("related.alertDialog"),
+                description: toPlainText(tContent("related.alertDialog")),
                 path: "?path=/docs/ui-alertdialog--docs",
               },
             ]}

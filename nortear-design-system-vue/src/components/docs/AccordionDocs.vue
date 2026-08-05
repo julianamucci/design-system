@@ -337,9 +337,9 @@ const accessibilityItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.collapsible.name'), description: tContent('related.collapsible.description'), path: `?path=/docs/${tContent('related.collapsible.href')}` },
-  { name: tContent('related.tabs.name'),        description: tContent('related.tabs.description'),        path: `?path=/docs/${tContent('related.tabs.href')}`        },
-  { name: tContent('related.sidebar.name'),     description: tContent('related.sidebar.description'),     path: `?path=/docs/${tContent('related.sidebar.href')}`     },
+  { name: tContent('related.collapsible.name'), description: toPlainText(tContent('related.collapsible.description')), path: `?path=/docs/${tContent('related.collapsible.href')}` },
+  { name: tContent('related.tabs.name'),        description: toPlainText(tContent('related.tabs.description')),        path: `?path=/docs/${tContent('related.tabs.href')}`        },
+  { name: tContent('related.sidebar.name'),     description: toPlainText(tContent('related.sidebar.description')),     path: `?path=/docs/${tContent('related.sidebar.href')}`     },
 ]);
 
 const noteItems = computed(() => [
@@ -492,8 +492,8 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

@@ -811,22 +811,22 @@ interface PanelResizeHandleProps {
         items={[
           {
             name: tContent("related.items.scrollArea.name"),
-            description: tContent("related.items.scrollArea.description"),
+            description: toPlainText(tContent("related.items.scrollArea.description")),
             path: "?path=/docs/ui-scrollarea--docs",
           },
           {
             name: tContent("related.items.sheet.name"),
-            description: tContent("related.items.sheet.description"),
+            description: toPlainText(tContent("related.items.sheet.description")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: tContent("related.items.separator.name"),
-            description: tContent("related.items.separator.description"),
+            description: toPlainText(tContent("related.items.separator.description")),
             path: "?path=/docs/ui-separator--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
-            description: tContent("related.items.aspectRatio.description"),
+            description: toPlainText(tContent("related.items.aspectRatio.description")),
             path: "?path=/docs/ui-aspectratio--docs",
           },
         ]}

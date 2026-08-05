@@ -812,22 +812,22 @@ interface DrawerProps {
         items={[
           {
             name: tContent("related.items.sheet.name"),
-            description: tContent("related.items.sheet.description"),
+            description: toPlainText(tContent("related.items.sheet.description")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: tContent("related.items.dialog.name"),
-            description: tContent("related.items.dialog.description"),
+            description: toPlainText(tContent("related.items.dialog.description")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: tContent("related.items.alertDialog.name"),
-            description: tContent("related.items.alertDialog.description"),
+            description: toPlainText(tContent("related.items.alertDialog.description")),
             path: "?path=/docs/ui-alertdialog--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
         ]}

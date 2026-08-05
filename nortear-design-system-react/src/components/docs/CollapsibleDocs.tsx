@@ -434,8 +434,8 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 </CollapsibleContent>
               </Collapsible>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -473,8 +473,8 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 ))}
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -921,22 +921,22 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         items={[
           {
             name: "Accordion",
-            description: tContent("related.accordion"),
+            description: toPlainText(tContent("related.accordion")),
             path: "?path=/docs/ui-accordion--docs",
           },
           {
             name: "Sheet",
-            description: tContent("related.sheet"),
+            description: toPlainText(tContent("related.sheet")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: "Button",
-            description: tContent("related.button"),
+            description: toPlainText(tContent("related.button")),
             path: "?path=/docs/ui-button--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
         ]}

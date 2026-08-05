@@ -500,8 +500,8 @@ interface SliderProps {
                 <Slider defaultValue={[75]} min={0} max={100} aria-label="Volume" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -516,8 +516,8 @@ interface SliderProps {
                 <Slider defaultValue={[50]} min={0} max={100} aria-label="Slider" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -856,22 +856,22 @@ interface SliderProps {
         items={[
           {
             name: tContent("related.items.input.name"),
-            description: tContent("related.items.input.description"),
+            description: toPlainText(tContent("related.items.input.description")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: tContent("related.items.switch.name"),
-            description: tContent("related.items.switch.description"),
+            description: toPlainText(tContent("related.items.switch.description")),
             path: "?path=/docs/ui-switch--docs",
           },
           {
             name: tContent("related.items.progress.name"),
-            description: tContent("related.items.progress.description"),
+            description: toPlainText(tContent("related.items.progress.description")),
             path: "?path=/docs/ui-progress--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
-            description: tContent("related.items.radioGroup.description"),
+            description: toPlainText(tContent("related.items.radioGroup.description")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
         ]}

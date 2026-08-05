@@ -801,10 +801,10 @@ export type CarouselOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Tabs', description: t('related.tabs'), path: '?path=/docs/ui-tabs--docs' },
-            { name: 'ScrollArea', description: t('related.scrollArea'), path: '?path=/docs/ui-scrollarea--docs' },
-            { name: 'Card', description: t('related.card'), path: '?path=/docs/ui-card--docs' },
-            { name: 'Pagination', description: t('related.pagination'), path: '?path=/docs/ui-pagination--docs' },
+            { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/ui-tabs--docs' },
+            { name: 'ScrollArea', description: toPlainText(t('related.scrollArea')), path: '?path=/docs/ui-scrollarea--docs' },
+            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/ui-card--docs' },
+            { name: 'Pagination', description: toPlainText(t('related.pagination')), path: '?path=/docs/ui-pagination--docs' },
           ],
         });
 

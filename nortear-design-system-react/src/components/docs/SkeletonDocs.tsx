@@ -602,22 +602,22 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         items={[
           {
             name: tContent("related.items.progress.name"),
-            description: tContent("related.items.progress.description"),
+            description: toPlainText(tContent("related.items.progress.description")),
             path: "?path=/docs/ui-progress--docs",
           },
           {
             name: tContent("related.items.spinner.name"),
-            description: tContent("related.items.spinner.description"),
+            description: toPlainText(tContent("related.items.spinner.description")),
             path: "?path=/docs/ui-spinner--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
-            description: tContent("related.items.aspectRatio.description"),
+            description: toPlainText(tContent("related.items.aspectRatio.description")),
             path: "?path=/docs/ui-aspectratio--docs",
           },
           {
             name: tContent("related.items.card.name"),
-            description: tContent("related.items.card.description"),
+            description: toPlainText(tContent("related.items.card.description")),
             path: "?path=/docs/ui-card--docs",
           },
         ]}

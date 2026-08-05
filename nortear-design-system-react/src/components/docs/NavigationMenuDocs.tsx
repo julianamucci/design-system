@@ -947,22 +947,22 @@ interface NavigationMenuLinkProps
         items={[
           {
             name: tContent("related.items.menubar.name"),
-            description: tContent("related.items.menubar.description"),
+            description: toPlainText(tContent("related.items.menubar.description")),
             path: "?path=/docs/ui-menubar--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
           {
             name: tContent("related.items.breadcrumb.name"),
-            description: tContent("related.items.breadcrumb.description"),
+            description: toPlainText(tContent("related.items.breadcrumb.description")),
             path: "?path=/docs/ui-breadcrumb--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
-            description: tContent("related.items.tabs.description"),
+            description: toPlainText(tContent("related.items.tabs.description")),
             path: "?path=/docs/ui-tabs--docs",
           },
         ]}

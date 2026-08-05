@@ -397,8 +397,8 @@ interface ProgressProps extends Progress.Root.Props {
                 <Progress value={42} aria-label="Barra" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -419,8 +419,8 @@ interface ProgressProps extends Progress.Root.Props {
                 <Progress value={51} aria-label="Progresso do upload" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -634,22 +634,22 @@ interface ProgressProps extends Progress.Root.Props {
         items={[
           {
             name: tContent("related.items.skeleton.name"),
-            description: tContent("related.items.skeleton.description"),
+            description: toPlainText(tContent("related.items.skeleton.description")),
             path: "?path=/docs/ui-skeleton--docs",
           },
           {
             name: tContent("related.items.spinner.name"),
-            description: tContent("related.items.spinner.description"),
+            description: toPlainText(tContent("related.items.spinner.description")),
             path: "?path=/docs/ui-spinner--docs",
           },
           {
             name: tContent("related.items.alert.name"),
-            description: tContent("related.items.alert.description"),
+            description: toPlainText(tContent("related.items.alert.description")),
             path: "?path=/docs/ui-alert--docs",
           },
           {
             name: tContent("related.items.sonner.name"),
-            description: tContent("related.items.sonner.description"),
+            description: toPlainText(tContent("related.items.sonner.description")),
             path: "?path=/docs/ui-sonner--docs",
           },
         ]}

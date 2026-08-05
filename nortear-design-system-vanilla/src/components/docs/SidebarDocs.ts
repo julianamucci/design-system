@@ -375,8 +375,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair1.do'),
-              dontCaption:   t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-p-2';
@@ -410,8 +410,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair2.do'),
-              dontCaption:   t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const item = createSidebarMenuItem({
                   label: t('demonstration.labels.dashboard'),
@@ -446,8 +446,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair3.do'),
-              dontCaption:   t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground';
@@ -1136,12 +1136,12 @@ export function createSidebarDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'NavigationMenu', description: t('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: 'Tabs',           description: t('related.tabs'),           path: '?path=/docs/ui-tabs--docs'           },
-            { name: 'Sheet',          description: t('related.sheet'),          path: '?path=/docs/ui-sheet--docs'          },
-            { name: 'Accordion',      description: t('related.accordion'),      path: '?path=/docs/ui-accordion--docs'      },
-            { name: 'Tooltip',        description: t('related.tooltip'),        path: '?path=/docs/ui-tooltip--docs'        },
-            { name: 'Separator',      description: t('related.separator'),      path: '?path=/docs/ui-separator--docs'      },
+            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/ui-tabs--docs'           },
+            { name: 'Sheet',          description: toPlainText(t('related.sheet')),          path: '?path=/docs/ui-sheet--docs'          },
+            { name: 'Accordion',      description: toPlainText(t('related.accordion')),      path: '?path=/docs/ui-accordion--docs'      },
+            { name: 'Tooltip',        description: toPlainText(t('related.tooltip')),        path: '?path=/docs/ui-tooltip--docs'        },
+            { name: 'Separator',      description: toPlainText(t('related.separator')),      path: '?path=/docs/ui-separator--docs'      },
           ],
         });
 

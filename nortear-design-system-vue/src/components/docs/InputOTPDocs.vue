@@ -340,10 +340,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.input.name'),  description: tContent('related.items.input.description'),  path: '?path=/docs/ui-input--docs'  },
-  { name: tContent('related.items.form.name'),   description: tContent('related.items.form.description'),   path: '?path=/docs/ui-form--docs'   },
-  { name: tContent('related.items.label.name'),  description: tContent('related.items.label.description'),  path: '?path=/docs/ui-label--docs'  },
-  { name: tContent('related.items.button.name'), description: tContent('related.items.button.description'), path: '?path=/docs/ui-button--docs' },
+  { name: tContent('related.items.input.name'),  description: toPlainText(tContent('related.items.input.description')),  path: '?path=/docs/ui-input--docs'  },
+  { name: tContent('related.items.form.name'),   description: toPlainText(tContent('related.items.form.description')),   path: '?path=/docs/ui-form--docs'   },
+  { name: tContent('related.items.label.name'),  description: toPlainText(tContent('related.items.label.description')),  path: '?path=/docs/ui-label--docs'  },
+  { name: tContent('related.items.button.name'), description: toPlainText(tContent('related.items.button.description')), path: '?path=/docs/ui-button--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -586,8 +586,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

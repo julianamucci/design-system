@@ -898,22 +898,22 @@ interface MenubarItemProps {
         items={[
           {
             name: tContent("related.items.navigationMenu.name"),
-            description: tContent("related.items.navigationMenu.description"),
+            description: toPlainText(tContent("related.items.navigationMenu.description")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
-            description: tContent("related.items.dropdownMenu.description"),
+            description: toPlainText(tContent("related.items.dropdownMenu.description")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
           {
             name: tContent("related.items.command.name"),
-            description: tContent("related.items.command.description"),
+            description: toPlainText(tContent("related.items.command.description")),
             path: "?path=/docs/ui-command--docs",
           },
         ]}

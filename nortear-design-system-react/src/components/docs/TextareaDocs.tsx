@@ -462,8 +462,8 @@ function Textarea({
                 />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -488,8 +488,8 @@ function Textarea({
                 />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -833,22 +833,22 @@ function Textarea({
         items={[
           {
             name: tContent("related.items.input.name"),
-            description: tContent("related.items.input.description"),
+            description: toPlainText(tContent("related.items.input.description")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: tContent("related.items.label.name"),
-            description: tContent("related.items.label.description"),
+            description: toPlainText(tContent("related.items.label.description")),
             path: "?path=/docs/ui-label--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: tContent("related.items.inputOTP.name"),
-            description: tContent("related.items.inputOTP.description"),
+            description: toPlainText(tContent("related.items.inputOTP.description")),
             path: "?path=/docs/ui-inputotp--docs",
           },
         ]}

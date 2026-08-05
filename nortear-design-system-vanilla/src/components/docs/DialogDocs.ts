@@ -287,7 +287,7 @@ export function createDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDialogDemo({
                 triggerLabel: 'Editar perfil',
@@ -687,10 +687,10 @@ export interface DialogOptions {
           title: t('related.title'),
           items: [
             { name: 'AlertDialog', description: stripHtml(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: 'Sheet',       description: t('related.sheet'),                  path: '?path=/docs/ui-sheet--docs'       },
-            { name: 'Popover',     description: t('related.popover'),                path: '?path=/docs/ui-popover--docs'     },
-            { name: 'Form',        description: t('related.form'),                   path: '?path=/docs/ui-form--docs'        },
-            { name: 'Drawer',      description: t('related.drawer'),                 path: '?path=/docs/ui-drawer--docs'      },
+            { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/ui-sheet--docs'       },
+            { name: 'Popover',     description: toPlainText(t('related.popover')),                path: '?path=/docs/ui-popover--docs'     },
+            { name: 'Form',        description: toPlainText(t('related.form')),                   path: '?path=/docs/ui-form--docs'        },
+            { name: 'Drawer',      description: toPlainText(t('related.drawer')),                 path: '?path=/docs/ui-drawer--docs'      },
           ],
         });
 
