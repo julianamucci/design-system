@@ -82,6 +82,12 @@ export const Playground: Story = {
       await userEvent.click(option);
       await waitFor(async () => {
         await expect(body.queryByRole('listbox')).not.toBeInTheDocument();
+        // Listbox fora do DOM não basta: durante a saída o overlay ainda segura
+        // pointer-events, e o clique do próximo passo no trigger falha.
+        const t = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+        if (getComputedStyle(t).pointerEvents === 'none') {
+          throw new Error('overlay ainda bloqueia o ponteiro');
+        }
       });
       await expect(canvas.getByText('Rio de Janeiro')).toBeInTheDocument();
     });

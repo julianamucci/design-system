@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Select as SelectPrimitive } from "bits-ui";
+	import { getContext } from "svelte";
+	import { SELECT_LISTBOX_ID } from "./select-a11y.js";
 	import SelectPortal from "./select-portal.svelte";
 	import SelectScrollUpButton from "./select-scroll-up-button.svelte";
 	import SelectScrollDownButton from "./select-scroll-down-button.svelte";
@@ -19,9 +21,9 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SelectPortal>>;
 	} = $props();
 
-	// Id próprio e estável: o trigger precisa apontar `aria-controls` para cá, e
-	// depender do id gerado pelo bits-ui não funciona — nem sempre existe.
-	const contentId = `nds-select-content-${crypto.randomUUID().slice(0, 8)}`;
+	// Id vindo da raiz por contexto — o trigger aponta para ele em aria-controls.
+	// Descobrir o painel pelo DOM não serve: ele é portalado e só existe aberto.
+	const contentId = getContext<string | undefined>(SELECT_LISTBOX_ID);
 </script>
 
 <SelectPortal {...portalProps}>

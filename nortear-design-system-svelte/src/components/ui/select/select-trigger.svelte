@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Select as SelectPrimitive } from "bits-ui";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
+	import { getContext } from "svelte";
+	import { SELECT_LISTBOX_ID } from "./select-a11y.js";
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 
 	let {
@@ -13,12 +15,10 @@
 		size?: "sm" | "default";
 	} = $props();
 
-	// NOTA: falta `aria-controls` apontando para o listbox — o axe reprova
-	// por atributo ARIA obrigatorio ausente (aria-required-attr). O bits-ui nao
-	// emite nem o role nem o id do painel, e tentar ligar por observador nao
-	// funcionou: o painel nao expoe id alcancavel a partir do trigger. Registrado
-	// no FIXES-NEEDED; provavelmente precisa de contexto compartilhado, como o
-	// ACCORDION_ITEM_IDS do accordion.
+	// `role="combobox"` exige `aria-controls` (axe aria-required-attr). O id vem
+	// da raiz por contexto — descobrir o painel pelo DOM não funciona, ele é
+	// portalado e só existe enquanto aberto. Ver `select-a11y.ts`.
+	const listboxId = getContext<string | undefined>(SELECT_LISTBOX_ID);
 </script>
 
 <SelectPrimitive.Trigger
@@ -26,6 +26,7 @@
 	data-slot="select-trigger"
 	data-size={size}
 	role="combobox"
+	aria-controls={listboxId}
 	class={cn(
 		"nds-select-trigger",
 		className

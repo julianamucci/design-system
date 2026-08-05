@@ -1253,9 +1253,6 @@ select 5 · slider 1 · sidebar 1 · popover 1 · drawer 1
 dialog 1 · data-table 1 · aspect-ratio 1
 ```
 
-- [ ] **select (5)** — falta `aria-controls` no trigger `role="combobox"`.
-  Diagnóstico completo na rodada anterior; precisa de contexto compartilhado
-  entre trigger e conteúdo.
 - [ ] **slider (1)** — o thumb tem 16×16 e o axe cobra 24×24 (WCAG 2.5.8). O
   CSS compartilhado tenta resolver com um `::after` de hit-area, mas o axe mede
   a caixa do elemento, não o pseudo. O arranjo atual presume um
