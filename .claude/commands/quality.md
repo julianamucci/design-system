@@ -170,6 +170,23 @@ Cuidado ao concluir "passou": `toBeVisible()` do jest-dom só reprova em
 opacidade **exatamente** 0 — asserção racy costuma passar no vitest e falhar no
 painel Interactions.
 
+**2e5. Teste vermelho: o componente é o suspeito, não a asserção.** Nesta
+revisão, em toda família de overlay do Svelte o teste estava certo e o
+componente incompleto — role ausente, prop inexistente sendo ignorada, classe
+morta. Antes de mexer na asserção:
+
+1. Confira a API real da lib em `node_modules/<lib>/**/types.d.ts`. Prop que não
+   existe é aceita e ignorada em silêncio.
+2. Compare o DOM renderizado com o do **Vanilla** (referência cross-stack).
+3. Só então conclua que a asserção estava errada — e diga por quê no comentário.
+
+Afrouxar a asserção "resolve" o vermelho e mantém o defeito: foi o que teria
+acontecido com um contraste de 1.1:1, um `aria-label` em inglês e três overlays
+sem `role`.
+
+**Nunca asserte classe morta** (sem prefixo `nds-`): a asserção não protege nada
+e desaparece junto com o bug. Asserte comportamento.
+
 **2f0. Cobertura por CONTRATO (é a garantia real)**:
 
 Contagem de asserção é proxy ruim — 12 numa stack e 21 em outra passaram

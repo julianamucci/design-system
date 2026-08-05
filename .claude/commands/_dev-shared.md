@@ -218,6 +218,25 @@ play: async ({ canvasElement, step, args }) => {
 
 **Sub-stories (variantes/estados/composicoes) também precisam de play function** (mesmo simples — verifica role, classes, atributos). Sem play em sub-story = violação `substory_no_play` no audit.
 
+### Esperar overlay, foco e nó
+
+- **`data-state="closed"` não significa overlay liberado.** Durante a animação
+  de saída ele ainda segura `pointer-events`, e o clique seguinte falha. Espere
+  pela condição que o próximo passo precisa: `getComputedStyle(x).pointerEvents
+  !== 'none'`.
+- **Re-consulte o nó antes de focar ou ler atributo.** A renderização substitui
+  o elemento; focar um nó destacado não faz nada — o foco fica no `body` e a
+  tecla não chega. Ler o atributo do nó antigo devolve o valor de antes.
+- **Demo que existe para mostrar algo precisa mostrar** — scrollbar com
+  `type="hover"` só aparece sob o ponteiro: a story não prova nada e o Chromatic
+  fotografa vazio.
+
+### Wrapper de story: um caminho só
+
+Ramo "controlado" e "não controlado" com o mesmo markup é duplicação, e a
+metade menos exercitada apodrece sem ninguém notar. Um caminho, com o estado
+inicial vindo do bindable.
+
 ---
 
 ## Regras Críticas de Renderização
@@ -331,6 +350,14 @@ Código de exemplo renderizado como HTML (`innerHTML`, `dangerouslySetInnerHTML`
 
 ## CSS que não aplica
 
+- **Classe sem prefixo `nds-` não existe** — `max-h-[50vh]`, `inset-0`,
+  `h-full`, `text-primary-foreground`, `w-56`, `overflow-y-auto`. São inertes, e
+  o efeito não é cosmético: sem altura máxima o scroll nunca acontece (e a regra
+  de acessibilidade da região rolável nunca é avaliada), e um `text-*` morto
+  deixou um botão com contraste **1.1:1**. Classe morta esconde defeito real.
+- **Nunca asserte classe morta na story.** A asserção passa a existir sem
+  proteger nada, e some junto com o bug. Asserte o comportamento — transbordo,
+  contraste, atributo ARIA — não o nome da classe.
 - **Token de cor exige `hsl()`**: os tokens são triplets. `color: var(--x)` é
   declaração inválida e cai silenciosamente.
 - **Classe utilitária não vence classe de componente**: mesma especificidade, e

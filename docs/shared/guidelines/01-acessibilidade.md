@@ -378,6 +378,36 @@ const navigateTo = (page: string, pageTitle: string) => {
 
 ---
 
+## Role não vem sozinho
+
+Declarar um `role` cria obrigações. Role pela metade é pior que role nenhum: o
+leitor de tela anuncia um contrato que o componente não cumpre, e o axe reprova.
+
+| Role | Exige |
+|------|-------|
+| `dialog` | nome acessível — `aria-labelledby` para o título interno, ou `aria-label` |
+| `combobox` | `aria-controls` apontando para o listbox, além de `aria-expanded` |
+| `listbox` | filhos `option`/`group` e nome acessível. Estado vazio precisa de uma `option` desabilitada com o motivo — listbox sem filho é inválido |
+| `tooltip`/`menu` | existir de fato no painel: se o trigger diz `aria-haspopup`, o painel tem que ter o role correspondente |
+
+Nada de `role="progressbar"` dentro de `listbox` — não é filho permitido. Estado
+de carregamento fica fora da lista.
+
+## Nome acessível não pode divergir do texto visível
+
+WCAG 2.5.3 (Label in Name). Um botão que mostra "Buscar..." e tem
+`aria-label="Abrir command palette"` não é acionável por comando de voz: a
+pessoa fala o que vê. Se há texto visível, ele é o nome — `aria-label` só entra
+quando não há texto, ou contendo o texto visível.
+
+## Alvo e região rolável
+
+- **Alvo mínimo 24×24** (WCAG 2.5.8). Expandir com pseudo-elemento **não
+  resolve**: a verificação mede a caixa do elemento, não o `::after`. O elemento
+  interativo é que precisa ter o tamanho; o visual menor sai de um filho.
+- **Região rolável precisa de `tabindex="0"`** mais `role` e rótulo — sem isso
+  quem navega por teclado não alcança o conteúdo.
+
 ## Estados ARIA dinâmicos
 
 Mudanças de estado que devem ser anunciadas por leitores de tela:
