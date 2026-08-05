@@ -119,3 +119,71 @@ export const AsLink: Story = {
     });
   },
 };
+
+// As duas stories abaixo fechavam os ramos descobertos de button.svelte
+// (7/14 antes). Sem par nas outras stacks de propósito: `href` é a API de
+// composição só desta — React usa `render`, Vue `as`, Vanilla aplica as classes
+// num <a>. Nenhuma das outras valida protocolo, porque nenhuma recebe href.
+
+export const LinkDesabilitado: Story = {
+  render: () => ({
+    Component: ButtonStory,
+    props: { variant: 'link', label: 'Ver documentação', href: '#docs', disabled: true },
+  }),
+  parameters: {
+    docs: { description: { story: 'Link desabilitado: perde o href para não navegar, e ganha role e tabindex que o tiram da ordem de foco — um <a> sem href deixaria de ser link para o leitor de tela.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    const link = within(canvasElement).getByRole('link', { name: 'Ver documentação' });
+
+    await step('Não navega', async () => {
+      await expect(link).not.toHaveAttribute('href');
+    });
+
+    await step('Continua sendo link para o leitor de tela, mas fora da ordem de foco', async () => {
+      await expect(link).toHaveAttribute('aria-disabled', 'true');
+      await expect(link).toHaveAttribute('tabindex', '-1');
+    });
+  },
+};
+
+export const HrefComProtocoloInseguro: Story = {
+  render: () => ({
+    Component: ButtonStory,
+    // eslint-disable-next-line no-script-url -- é o vetor que a guarda existe para barrar
+    props: { variant: 'link', label: 'Ver documentação', href: 'javascript:window.__xss = true' },
+  }),
+  parameters: {
+    docs: { description: { story: 'Protocolo fora da lista permitida (http, https, mailto, tel, âncora e caminho relativo) é descartado: o elemento renderiza sem href em vez de virar um vetor de execução.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    // Sem href o <a> perde o role de link — por isso a busca é pelo texto, não
+    // por getByRole('link'). É o comportamento correto: nada navegável sobra.
+    const el = canvasElement.querySelector('[data-slot="button"]');
+
+    await step('O href inseguro não chega ao DOM', async () => {
+      await expect(el).not.toHaveAttribute('href');
+      await expect(el?.outerHTML).not.toContain('javascript:');
+    });
+
+    await step('Nada foi executado', async () => {
+      await expect((window as unknown as { __xss?: boolean }).__xss).toBeUndefined();
+    });
+  },
+};
+
+export const HrefMalformado: Story = {
+  render: () => ({
+    Component: ButtonStory,
+    // `new URL('http://[', base)` estoura — IPv6 inválido. É o caminho do
+    // `catch` da validação, que era o último ramo sem teste.
+    props: { variant: 'link', label: 'Ver documentação', href: 'http://[' },
+  }),
+  parameters: {
+    docs: { description: { story: 'URL malformada não vira href: quando a validação não consegue nem interpretar o valor, ele é descartado em vez de ir para o DOM na dúvida.' } },
+  },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-slot="button"]');
+    await expect(el).not.toHaveAttribute('href');
+  },
+};

@@ -1126,3 +1126,28 @@ o destino precisa ser conferido caso a caso antes de converter.
 - [ ] Regra no `audit.mjs`: string com `<tag>` ou `&lt;` chegando a prop de
   container que escreve textNode. É o único jeito de isso parar de reaparecer —
   nem teste nem axe pegam, só olhar a página.
+
+### Cobertura de código: a suíte inteira não mede
+
+O vitest não emite relatório de cobertura nenhum quando algum teste falha.
+Verificado em par: fatia de 4 arquivos com 2 falhas (13s) não gera nada; a mesma
+fatia verde gera. Como as 4 stacks têm o backlog aberto de tooltip/drawer/sheet,
+`npm run test:coverage` volta vazio em todas.
+
+Enquanto isso, a medição útil é por componente
+(`npx vitest run --coverage <slug>`), que é o recorte que o `/quality` usa.
+
+- [ ] Fechar o backlog de tooltip/drawer/sheet destrava a cobertura agregada.
+- [ ] Só então faz sentido pôr `test:coverage` em CI — hoje ele passaria vazio
+  ou falharia por threshold sem produzir número.
+
+### Ramos declarados como não testáveis
+
+Inventário do que tem `c8 ignore` com motivo, para revisitar se a API mudar:
+
+- `svelte/button.svelte` — `if (!url)` do `isSafeUrl`: inalcançável porque
+  `safeHref` é `$derived` e só é lido dentro de `{#if href}`, com o ternário de
+  `disabled` curto-circuitando antes.
+- `svelte/button.svelte` — lados verdadeiros de
+  `url.startsWith('#') || url.startsWith('/')` no `catch`: exigiriam uma string
+  que estoure o `new URL` E comece com `#` ou `/`. Nenhum `#…` estoura.

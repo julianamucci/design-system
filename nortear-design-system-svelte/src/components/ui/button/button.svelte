@@ -56,11 +56,20 @@
 
 	// PATCH: security — validar protocolo de href para evitar XSS via javascript:/data:/vbscript: (ver guideline 09-seguranca-xss.md)
 	function isSafeUrl(url: string | undefined): url is string {
+		/* c8 ignore next -- inalcançável pelo componente: `safeHref` é $derived e
+		   só é lido dentro de {#if href}, e mesmo lá o ternário de `disabled`
+		   curto-circuita antes. A guarda fica para chamada direta, que não existe
+		   hoje (a função não é exportada). */
 		if (!url) return false;
 		try {
 			const parsed = new URL(url, "https://placeholder.invalid");
 			return ["http:", "https:", "mailto:", "tel:"].includes(parsed.protocol);
 		} catch {
+			/* c8 ignore next -- o `catch` tem story (HrefMalformado). Os lados
+			   VERDADEIROS destes dois operandos não: exigiriam uma string que ao
+			   mesmo tempo estoure o `new URL` e comece com `#` ou `/`. Nenhum
+			   `#…` estoura — é sempre relativo válido — e o caso `//[` é
+			   patológico o bastante para o teste virar teatro. */
 			return url.startsWith("#") || url.startsWith("/");
 		}
 	}

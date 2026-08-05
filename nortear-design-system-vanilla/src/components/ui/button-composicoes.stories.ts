@@ -139,3 +139,58 @@ export const AsLink: Story = {
     });
   },
 };
+
+// `children` aceita string e passa por DOMPurify antes do innerHTML. Era o
+// único ramo descoberto de button.ts (linhas 66-72) — e é justamente o patch de
+// segurança da guideline 09, que não tinha teste nenhum.
+//
+// Sem par nas outras stacks de propósito: só a factory recebe HTML como string.
+// Nas demais o conteúdo entra como elemento/slot e nunca passa por innerHTML.
+export const ConteudoHtmlSanitizado: Story = {
+  render: () =>
+    createButton({
+      variant: 'default',
+      // `alt=""` de propósito: o sanitizador preserva o <img> (certo) e o axe
+      // roda em cima desta story — sem alt, o teste do vetor criaria uma
+      // violação de acessibilidade própria. O que está sob teste é o onerror.
+      children: '<strong>Salvar</strong><img src="x" alt="" onerror="window.__xss = true">',
+    }),
+  parameters: {
+    docs: { description: { story: 'Conteúdo em HTML passa por sanitização antes de ir para o DOM: a marcação segura é preservada e vetores de execução são removidos.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole('button');
+
+    await step('Marcação segura sobrevive', async () => {
+      await expect(btn.querySelector('strong')).toHaveTextContent('Salvar');
+    });
+
+    await step('Vetor de execução é removido', async () => {
+      // O <img> pode ficar; o handler inline não pode. Asserir os dois separa
+      // "sanitizou" de "apagou tudo" — apagar tudo também passaria num teste
+      // que só olhasse o onerror.
+      const img = btn.querySelector('img');
+      if (img) await expect(img).not.toHaveAttribute('onerror');
+      await expect(btn.innerHTML).not.toContain('onerror');
+      await expect((window as unknown as { __xss?: boolean }).__xss).toBeUndefined();
+    });
+  },
+};
+
+// Ramo irmão do anterior: `children` como elemento vai direto no appendChild,
+// sem sanitizar (não há string para sanitizar).
+export const ConteudoComoElemento: Story = {
+  render: () => {
+    const span = document.createElement('span');
+    span.textContent = 'Salvar';
+    return createButton({ variant: 'default', children: span });
+  },
+  parameters: {
+    docs: { description: { story: 'Conteúdo como elemento é anexado direto, sem passar por sanitização — não há string para sanitizar.' } },
+  },
+  play: async ({ canvasElement }) => {
+    const btn = within(canvasElement).getByRole('button', { name: 'Salvar' });
+    await expect(btn.firstElementChild?.tagName).toBe('SPAN');
+  },
+};

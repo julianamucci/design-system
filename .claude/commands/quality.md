@@ -203,6 +203,55 @@ Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack tes
 
 Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 4 — a verificação também deve ser.
 
+**2f2. Cobertura de código — mede o que o contrato não mede**:
+
+Contrato e cobertura respondem perguntas diferentes. O contrato responde "o que
+está documentado tem alguém verificando?"; a cobertura responde "quantos
+caminhos do código as stories realmente percorrem?". Um componente pode estar
+16/16 no contrato e a 50% de ramos — foi o caso do button no Svelte, com 95% de
+linhas e 100% de funções.
+
+Rode por componente, nas 4 stacks:
+
+```bash
+# de dentro de cada nortear-design-system-<stack>
+npx vitest run --coverage <slug>
+# → coverage/coverage-summary.json  (totais por arquivo)
+```
+
+**A suíte inteira não serve.** O vitest não emite relatório nenhum quando
+qualquer teste falha — verificado com uma fatia de 4 arquivos e 2 falhas, que
+não gerou nada, contra a mesma fatia verde, que gerou. Enquanto houver backlog
+aberto (tooltip/drawer/sheet), `npm run test:coverage` volta vazio. Por
+componente contorna e ainda é o recorte que interessa aqui.
+
+Do `coverage-summary.json`, some só os arquivos DO componente: a rodada mede a
+stack toda e os demais saem 0% apenas porque as stories deles não rodaram.
+
+Thresholds do projeto: **linhas 90 · funções 90 · ramos 80**.
+
+**Feche os ramos que faltam.** Linha e função descoberta quase sempre é código
+morto ou story ausente; **ramo** descoberto é caminho condicional que ninguém
+exercita — `v-if` testado num sentido só, prop opcional nunca passada, early
+return nunca disparado. Para cada ramo descoberto:
+
+1. Abra `coverage/<arquivo>.html` (ou o `coverage-final.json`) e identifique a
+   condição.
+2. Se o caminho é alcançável pela API pública, **escreva a story ou o step que
+   o exercita** — nas 4 stacks, senão vira `coverage_divergence`.
+3. Se não é alcançável (guarda defensiva, branch de tipo que o TS já garante,
+   ramo exclusivo de SSR), **declare o motivo** num comentário na linha, no
+   mesmo espírito do `coversNotApplicable`:
+
+```ts
+/* c8 ignore next 3 -- guarda de protocolo: só alcançável com href externo
+   inválido, que o tipo já impede no call site */
+```
+
+A meta é **100% do que pode ser testado**, com o resto declarado. Ramo
+descoberto e silencioso é o mesmo defeito da asserção vazia: parece coberto e
+não é. Nunca baixe o threshold para o número passar.
+
 **2g. a11y.disable**: nenhuma story sem comentário de justificativa.
 
 ---
@@ -349,6 +398,18 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | testes.visual.item* → story existe | ✅ N/N | ✅ N/N | ✅ N/N | ✅ N/N |
 
 > Use ratio `cobertos/total documentados` para mostrar progresso.
+
+### Cobertura de Código (`vitest run --coverage <slug>`)
+| Métrica | React | Vue | Svelte | Vanilla |
+|---|---|---|---|---|
+| Linhas (≥90) | N% | N% | N% | N% |
+| Funções (≥90) | N% | N% | N% | N% |
+| Ramos (≥80) | N% | N% | N% | N% |
+| Ramos descobertos ainda abertos | 0 | 0 | 0 | 0 |
+
+> Última linha é o que importa: 0 significa "todo caminho alcançável tem teste,
+> o resto está declarado com `c8 ignore` e motivo". Diferente de 0 → liste cada
+> um em Gaps com o arquivo:linha e por que não foi fechado.
 
 ### Docs Page
 | Check | React | Vue | Svelte | Vanilla |
