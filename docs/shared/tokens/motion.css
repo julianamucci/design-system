@@ -42,12 +42,14 @@
    */
   --ease-linear:   linear;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);     /* default — chega rápido, suaviza */
-  /* Para mudanças de TAMANHO (altura de painel, largura de coluna). É o `ease`
-     padrão do CSS escrito por extenso: as curvas do sistema são todas fortes
-     de um lado só — as aceleradoras fazem o fim bater, as desaceleradoras
-     fazem os últimos pixels arrastarem. Nenhuma das duas serve para altura,
-     onde o olho acompanha o percurso inteiro. Valor validado contra a
-     referência de animação adotada para o accordion. */
+  /* Para percurso que o olho acompanha INTEIRO — mudança de tamanho (altura de
+     painel, largura de coluna) e movimento contínuo (o glow que dá a volta na
+     borda do alert). É o `ease` padrão do CSS escrito por extenso: as curvas do
+     sistema são todas fortes de um lado só — as aceleradoras fazem o fim bater,
+     as desaceleradoras fazem os últimos pixels arrastarem. Nenhuma das duas
+     serve quando não há só um ponto de chegada a observar. Valor validado
+     contra a referência de animação adotada para o accordion; medido de novo no
+     glow (80% do giro na metade do tempo, contra 88% e 89% das outras). */
   --ease-size:     cubic-bezier(0.25, 0.1, 0.25, 1);
   /* Entrada com leve overshoot, para conteúdo que APARECE (alert, popover,
      toast). Não é um preset escolhido a olho: é o ajuste numérico de

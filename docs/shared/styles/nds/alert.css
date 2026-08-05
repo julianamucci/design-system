@@ -21,6 +21,11 @@
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
+  /* Cor do brilho que percorre a borda. No default a borda é neutra, então o
+     brilho usa --ring (a cor de destaque do tema); as variantes semânticas
+     sobrescrevem com a própria cor, em opacidade cheia — a borda é /0.3 e um
+     brilho na mesma opacidade não apareceria. */
+  --alert-glow: hsl(var(--ring));
 
   position: relative;
   display: grid;
@@ -111,6 +116,7 @@
   --alert-bg: hsl(var(--destructive) / 0.1);
   --alert-fg: hsl(var(--destructive));
   --alert-border: hsl(var(--destructive) / 0.3);
+  --alert-glow: hsl(var(--destructive));
 }
 
 /* success — verde com bg soft */
@@ -118,6 +124,7 @@
   --alert-bg: hsl(var(--success) / 0.1);
   --alert-fg: hsl(var(--success));
   --alert-border: hsl(var(--success) / 0.3);
+  --alert-glow: hsl(var(--success));
 }
 
 /* warning — âmbar com bg soft */
@@ -125,6 +132,7 @@
   --alert-bg: hsl(var(--warning) / 0.1);
   --alert-fg: hsl(var(--warning));
   --alert-border: hsl(var(--warning) / 0.3);
+  --alert-glow: hsl(var(--warning));
 }
 /* Em warning, a cor âmbar não atinge 4.5:1 sobre bg-soft.
    Título usa --foreground; o ícone (curto, 3:1) mantém --alert-fg. */
@@ -143,6 +151,7 @@
   --alert-bg: hsl(var(--info) / 0.1);
   --alert-fg: hsl(var(--info));
   --alert-border: hsl(var(--info) / 0.3);
+  --alert-glow: hsl(var(--info));
 }
 
 /* ── Action (botão no canto superior direito) ─────────────────────────────── */
@@ -190,3 +199,68 @@
 /* A regra "descrição sempre foreground" vale para TODAS as variantes e vive na
    regra base da descrição — o bloco por-variante que existia aqui forçava o
    mesmo valor e saiu como redundância. */
+
+/* ── Glow na borda ────────────────────────────────────────────────────────────
+ * Um segmento de brilho percorre a borda que já existe, dá DUAS voltas e
+ * desacelera até parar, apagando no fim.
+ *
+ * Não entra na anatomia: é um ::after absoluto, fora do fluxo do grid, sem
+ * ponteiro e mascarado para um anel de 1px — a mesma espessura da borda, no
+ * mesmo lugar. Nenhum elemento novo no DOM e nenhuma classe nova para as
+ * stacks aplicarem.
+ */
+
+/* O ângulo precisa ser propriedade REGISTRADA: custom property comum é string
+   para o motor de animação e não interpola — o gradiente ficaria parado. */
+@property --nds-alert-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes nds-alert-glow {
+  from { --nds-alert-glow-angle: 0deg; opacity: 1; }
+  /* O fade começa só no trecho final: a desaceleração sozinha pararia o brilho
+     aceso, parado na borda. Apagar junto é o que faz "parar suavemente". */
+  75%  { opacity: 1; }
+  to   { --nds-alert-glow-angle: 720deg; opacity: 0; }
+}
+
+.nds-alert::after {
+  content: "";
+  position: absolute;
+  inset: 0;                                     /* mesma caixa da borda */
+  border-radius: inherit;
+  padding: 1px;                                 /* espessura = a da borda */
+
+  background: conic-gradient(
+    from var(--nds-alert-glow-angle),
+    transparent 0turn,
+    var(--alert-glow) 0.06turn,
+    transparent 0.2turn
+  );
+  /* Recorta o miolo: pinta padding-box MENOS content-box, sobrando só o anel.
+     Sem isso o gradiente cobriria o alert inteiro. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* O drop-shadow é aplicado DEPOIS da máscara, então acompanha o anel visível
+     e vira o halo — é o que separa "brilho" de "traço colorido". */
+  filter: drop-shadow(0 0 3px var(--alert-glow));
+
+  pointer-events: none;
+  opacity: 0;                                   /* estado de repouso */
+  /* 2 voltas em 2.4s. `--ease-size` é a curva de percurso acompanhado inteiro:
+     medido, faz 80% do giro na metade do tempo, contra 88% (--ease-standard) e
+     89% (--ease-entrance) — as duas arrastam o fecho da segunda volta.
+     Duração derivada de token: sob prefers-reduced-motion as durações vão a
+     0ms e o efeito se anula sozinho; a regra abaixo é a garantia explícita. */
+  animation: nds-alert-glow calc(var(--duration-stately) * 3) var(--ease-size) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-alert::after {
+    animation: none;
+  }
+}
