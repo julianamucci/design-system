@@ -1,197 +1,188 @@
-# Token Mapping — Tailwind CSS → Vue Tokens (Figma Variables)
+# Token Mapping — custom properties CSS → variáveis do Figma
 
-<!-- audit-ignore: dead-lib — mapeamento Tailwind → variáveis do Figma. A skill
-     inteira precede a migração para .nds-* (fala de "Vue Tokens" e de um arquivo
-     "Vue-components", de quando o projeto era só Vue) e precisa de revisão junto
-     com quem mantém o lado do Figma. Ignorado aqui para o exit code do audit não
-     ficar permanentemente vermelho por causa de dívida já mapeada. -->
+Referência do comando `/figma-sync-component`. Converte as `var(--*)` do CSS
+compartilhado (`docs/shared/styles/nds/*.css`) nos caminhos exatos das variáveis.
 
-Referência para o comando `/figma-sync-component`.  
-Converta as classes do `cva` nos nomes exatos das variáveis da coleção **Vue library** da biblioteca **Vue Tokens**.
+Os caminhos abaixo saem do export em `docs/shared/tokens/figma/<Colecao>/<modo>.json` —
+é o mesmo material que alimenta as coleções do Figma. Ao mudar um token no
+projeto, este mapa acompanha o export, não o contrário.
 
 ---
 
-## Arquivo Figma de destino
+## Arquivo destino
 
-| Arquivo              | File Key                  |
-|----------------------|---------------------------|
-| Vue-components       | `4LdwZd2uksGto7PIiGsz0A`  |
-| Vue Tokens (library) | `wbsQJnV1k3XjfVZTv8xjQZ`  |
+| Arquivo | File key |
+|---|---|
+| Nortear-DS | `XXAmIFVBKHClzx7YdUSkEb` |
 
-Nome da biblioteca no teamLibrary: **`"Vue Tokens"`**  
-Nome da coleção: **`"Vue library"`** (key: `5c05b731cd13f38cb88a856c02480c4713065269`)
+A key da **biblioteca de tokens** não está registrada aqui: descubra-a pelas
+coleções (ver Etapa 2 da skill) e anote nesta tabela na primeira execução
+bem-sucedida.
 
----
+## Coleções e modos
 
-## Mapeamento de cores (light mode)
+| Coleção | Modos | Export |
+|---|---|---|
+| `Cor` | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` | `figma/Cor/` |
+| `Dimensao` | `default`, `confortavel`, `condensado` | `figma/Dimensao/` |
+| `Raio` | `default` | `figma/Raio/` |
+| `Tipografia` | `major-third`, `golden`, `perfect-fifth`, … | `figma/Tipografia/` |
+| `Movimento` | `default` | `figma/Movimento/` |
+| `Fonte` | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` | `figma/Fonte/` |
+| `Elevacao` | `light`, `dark` | `figma/Elevacao/` |
+| `Camada` | `default` | `figma/Camada/` |
 
-| Classe Tailwind                    | Variável Figma                          | Hex fallback |
-|------------------------------------|-----------------------------------------|--------------|
-| `bg-primary`                       | `light/color/primary`                   | `#272729`    |
-| `text-primary-foreground`          | `light/color/primaryForeground`         | `#FAFAFA`    |
-| `bg-secondary`                     | `light/color/secondary`                 | `#F5F5F5`    |
-| `text-secondary-foreground`        | `light/color/secondaryForeground`       | `#272729`    |
-| `bg-destructive`                   | `light/color/destructive`               | `#EF4444`    |
-| `text-destructive-foreground`      | `light/color/destructiveForeground`     | `#FAFAFA`    |
-| `bg-background`                    | `light/color/background`                | `#FFFFFF`    |
-| `text-foreground`                  | `light/color/foreground`                | `#171717`    |
-| `bg-muted`                         | `light/color/muted`                     | `#F5F5F5`    |
-| `text-muted-foreground`            | `light/color/mutedForeground`           | `#737373`    |
-| `bg-accent`                        | `light/color/accent`                    | `#F5F5F5`    |
-| `text-accent-foreground`           | `light/color/accentForeground`          | `#272729`    |
-| `bg-success` / `text-success`      | `light/color/success`                   | `#22C55E`    |
-| `text-success-foreground`          | `light/color/successForeground`         | `#FFFFFF`    |
-| `bg-warning` / `text-warning`      | `light/color/warning`                   | `#FACCF3`    |
-| `text-warning-foreground`          | `light/color/warningForeground`         | `#0A0A0A`    |
-| `bg-info` / `text-info`            | `light/color/info`                      | `#3B82F6`    |
-| `text-info-foreground`             | `light/color/infoForeground`            | `#FFFFFF`    |
-| `border` / `border-border`         | `light/color/border`                    | `#E5E5E5`    |
-| `border-input`                     | `light/color/input`                     | `#E5E5E5`    |
-| `bg-input`                         | `light/color/inputBackground`           | `#FFFFFF`    |
-| `ring` / `border-ring`             | `light/color/ring`                      | `#A3A3A3`    |
-| `text-primary` (link)              | `light/color/primary`                   | `#272729`    |
-| `text-white`                       | *(sem variável)* — hex direto           | `#FFFFFF`    |
-
-### Sidebar
-| Classe                             | Variável Figma                          | Hex       |
-|------------------------------------|----------------------------------------|-----------|
-| `bg-sidebar`                       | `light/color/sidebar/background`        | `#FAFAFA` |
-| `text-sidebar-foreground`          | `light/color/sidebar/foreground`        | `#171717` |
-| `bg-sidebar-primary`               | `light/color/sidebar/primary`           | `#272729` |
-| `text-sidebar-primary-foreground`  | `light/color/sidebar/primaryForeground` | `#FAFAFA` |
-| `bg-sidebar-accent`                | `light/color/sidebar/accent`            | `#F5F5F5` |
-| `text-sidebar-accent-foreground`   | `light/color/sidebar/accentForeground`  | `#272729` |
-| `border-sidebar-border`            | `light/color/sidebar/border`            | `#E5E5E5` |
+As regras `.dark .nds-*` do CSS **não viram variante**: são o modo escuro da
+coleção `Cor`. Vincular a variável já cobre os dois.
 
 ---
 
-## Mapeamento de espaçamento — Tailwind → px (base 4px)
+## Cor — `Cor`
 
-| Classe          | px   | Classe          | px   |
-|-----------------|------|-----------------|------|
-| `p-0` / `gap-0` | 0    | `p-4` / `gap-4` | 16   |
-| `p-0.5`         | 2    | `p-5`           | 20   |
-| `p-1`           | 4    | `p-6`           | 24   |
-| `p-1.5`         | 6    | `p-8`           | 32   |
-| `p-2`           | 8    | `p-10`          | 40   |
-| `p-2.5`         | 10   | `p-12`          | 48   |
-| `p-3`           | 12   | `gap-1.5`       | 6    |
-| `p-3.5`         | 14   | `gap-2`         | 8    |
-| `px-N` / `py-N` | N×4  | `gap-N`         | N×4  |
+| CSS | Variável |
+|---|---|
+| `--background` · `--foreground` | `superficie/background` · `superficie/foreground` |
+| `--card` · `--card-foreground` | `superficie/card` · `superficie/card-foreground` |
+| `--popover` · `--popover-foreground` | `superficie/popover` · `superficie/popover-foreground` |
+| `--primary` · `--primary-foreground` | `marca/primary` · `marca/primary-foreground` |
+| `--secondary` · `--secondary-foreground` | `marca/secondary` · `marca/secondary-foreground` |
+| `--muted` · `--muted-foreground` | `marca/muted` · `marca/muted-foreground` |
+| `--accent` · `--accent-foreground` | `marca/accent` · `marca/accent-foreground` |
+| `--destructive` · `--destructive-foreground` | `feedback/destructive` · `feedback/destructive-foreground` |
+| `--success` · `--warning` · `--info` | `feedback/success` · `feedback/warning` · `feedback/info` |
+| `--border` · `--input` · `--input-background` | `estrutura/border` · `estrutura/input` · `estrutura/input-background` |
+| `--ring` · `--ring-offset-color` | `estrutura/ring` · `estrutura/ring-offset-color` |
+| `--chart-1`…`--chart-5` | `grafico/chart-1`…`chart-5` |
+| `--sidebar*` | `sidebar/sidebar*` |
+| `--code-token-*` | `codigo/code-token-*` |
+
+**Alfa.** `hsl(var(--primary) / 0.9)` é uma cor com opacidade, não outro token.
+Vincule `marca/primary` e ponha `0.9` no `opacity` do paint — variável do Figma
+não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`), para os
+fundos soft das variantes semânticas (`/0.1`, `/0.15`) e para as bordas (`/0.3`).
+
+## Espaçamento e dimensão — `Dimensao`
+
+| CSS | Variável |
+|---|---|
+| `--spacing-0` … `--spacing-24` | `espacamento/spacing-<n>` |
+| `--spacing-px` · `--spacing-0-5` | `espacamento/spacing-px` · `espacamento/spacing-0-5` |
+| `--spacing-btn-x` · `-sm` · `-lg` | `espacamento/spacing-btn-x*` |
+| `--height-xs` … `--height-xl` | `altura/height-*` |
+| `--size-xs` … | `tamanho/size-*` |
+
+**Altura fixa só onde o CSS declara.** Componente com texto não tem `height` — a
+altura é padding-block + line-height (WCAG 1.4.4, Resize Text 200%). Só os
+icon-only declaram width/height, e em `rem`: 1.5 (24px), 2 (32px), 2.25 (36px),
+2.5 (40px).
+
+## Raio — `Raio`
+
+| CSS | Variável |
+|---|---|
+| `--radius-button` · `--radius-input` · `--radius-alert` · `--radius-card` · `--radius-badge` | `radius-button` · `radius-input` · `radius-alert` · `radius-card` · `radius-badge` |
+| `--radius-xs` … `--radius-xl` · `--radius-full` | `radius-xs` … `radius-xl` · `radius-full` |
+
+Use sempre o alias do componente (`radius-button`), não o valor da escala que ele
+aponta — é o alias que muda quando o tema muda.
+
+## Movimento — `Movimento`
+
+| CSS | Variável |
+|---|---|
+| `--duration-instant` … `--duration-stately` | `duracao/duration-*` |
+| `--ease-linear` · `--ease-standard` · `--ease-size` · `--ease-spring` · `--ease-emphasis` · `--ease-entrance` · `--ease-exit` | `curva/ease-*` |
+| `--motion-offset-xs` … `-lg` | `deslocamento/motion-offset-*` |
+
+As curvas são **string** (`cubic-bezier(...)`): colar no custom easing da
+interação de protótipo. As durações são número em ms.
+
+## Tipografia — `Tipografia` e `Fonte`
+
+| CSS | Variável |
+|---|---|
+| `--font-weight-regular` … `--font-weight-extra-bold` | `peso/font-weight-*` |
+| `--line-height-tight` … `--line-height-loose` | `entrelinha/line-height-*` |
+| `--letter-spacing-tight` · `-normal` · `-wide` | `espacamento-letra/letter-spacing-*` |
+| `--text-label` · `--text-p` · `--text-h1`…`h4` | `tamanho/text-*` |
+| `--font-family` | `Fonte · font-family-active` |
+
+**Font-size de componente costuma ser literal.** O button, por exemplo, declara
+`0.75rem` / `0.875rem` / `1rem` direto — a escala `Tipografia` governa texto de
+conteúdo, não o corpo dos controles. Não force um token onde o CSS não usa um:
+transcreva o rem em px (1rem = 16px).
+
+## Elevação e camada
+
+| CSS | Variável |
+|---|---|
+| `--elevation-sm` … `--elevation-xl` | `Elevacao · elevation-*` |
+| `--z-dropdown` … `--z-tooltip` | `Camada · z-*` |
+
+Sombra escrita direto no CSS (ex.: `box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05)`)
+não tem token — reproduza os valores como effect e registre na `description` que
+é literal.
 
 ---
 
-## Mapeamento de tamanho — altura fixa (h-N)
+## Nomes de camada
 
-| Classe | px | Uso típico           |
-|--------|-----|----------------------|
-| `h-8`  | 32  | size=sm, icon-sm     |
-| `h-9`  | 36  | size=default, icon   |
-| `h-10` | 40  | size=lg, icon-lg     |
-| `h-5`  | 20  | tamanho menor (badge)|
-| `h-4`  | 16  | ícone SVG inline     |
+Sempre o `data-slot` do Vanilla, sem exceção:
 
----
+| `data-slot` | Camada |
+|---|---|
+| `button` · `alert` · `card` · `input` | `button` · `alert` · `card` · `input` |
+| `alert-title` · `alert-description` · `alert-action` · `alert-dismiss` | mesmo nome |
+| `card-header` · `card-content` · `card-footer` | mesmo nome |
 
-## Mapeamento de border-radius
-
-| Classe           | px / valor Figma |
-|------------------|-----------------|
-| `rounded-sm`     | 4               |
-| `rounded-md`     | 6               |
-| `rounded-lg`     | 8               |
-| `rounded-xl`     | 12              |
-| `rounded-2xl`    | 16              |
-| `rounded-full`   | 9999 (pill)     |
+Sem `data-slot` correspondente: `label` para o texto, `icon` para o SVG,
+`indicator` para bolinha de estado, `thumb` para switch/slider.
 
 ---
 
-## Mapeamento de tipografia
-
-| Classe        | Figma            | valor    |
-|---------------|------------------|---------|
-| `text-xs`     | fontSize         | 12      |
-| `text-sm`     | fontSize         | 14      |
-| `text-base`   | fontSize         | 16      |
-| `text-lg`     | fontSize         | 18      |
-| `font-medium` | fontName.style   | Medium  |
-| `font-semibold`| fontName.style  | Semi Bold |
-| `font-bold`   | fontName.style   | Bold    |
-| `leading-none`| lineHeight       | { unit: 'PIXELS', value: fontSize } |
-| `leading-tight`| lineHeight      | { unit: 'PERCENT', value: 120 } |
-| `tracking-wide`| letterSpacing   | { unit: 'PERCENT', value: 5 } |
-
----
-
-## Convenções de nomes de camadas
-
-Os nomes de camadas Figma devem ser **idênticos** ao atributo `data-slot` ou ao nome do elemento no template Vue:
-
-| Template Vue                        | Nome da camada Figma  |
-|-------------------------------------|-----------------------|
-| `data-slot="button"`                | `button`              |
-| `data-slot="badge"`                 | `badge`               |
-| `data-slot="input"`                 | `input`               |
-| `data-slot="label"`                 | `label`               |
-| `data-slot="card"`                  | `card`                |
-| `data-slot="card-header"`           | `card-header`         |
-| `data-slot="card-content"`          | `card-content`        |
-| `data-slot="card-footer"`           | `card-footer`         |
-| `data-slot="alert"`                 | `alert`               |
-| `data-slot="avatar"`                | `avatar`              |
-| `data-slot="avatar-image"`          | `avatar-image`        |
-| `data-slot="avatar-fallback"`       | `avatar-fallback`     |
-| Texto interno (`<slot />`)          | `label`               |
-| Ícone SVG interno                   | `icon`                |
-| Indicador / bolinha de estado       | `indicator`           |
-| Thumb (switch, slider)              | `thumb`               |
-
----
-
-## Estrutura do component set — boas práticas
+## Estrutura do component set
 
 ```
-ComponentName (COMPONENT_SET)
-├── variant=default, size=sm
-│   └── [data-slot] (frame/component raiz)
-│       ├── icon (frame 16×16)
+Button (COMPONENT_SET)
+├── variant=default, size=default, state=default
+│   └── button
+│       ├── icon (16×16)
 │       └── label (text)
-├── variant=default, size=default
-│   └── ...
-└── variant=outline, size=lg, disabled=true
-    └── ...
+├── variant=default, size=default, state=hover
+└── variant=outline, size=lg, state=default, disabled=true
 ```
 
-- **Nome do component set**: PascalCase (`Button`, `Badge`, `Input`, `Card`)
-- **Nome das variantes**: sempre `prop=valor` lowercase com vírgula+espaço
-- **Ordem das props** na variante: `variant=X, size=Y, state=Z`
-- **Booleanos**: `disabled=false` / `disabled=true`
-- **Estado hover**: não modelar como variante — usar Change to no Figma manualmente
+- Nome do set em PascalCase; nome de variante em `prop=valor` lowercase.
+- Ordem das props: `variant`, `size`, `state`, depois os booleanos.
+- Booleanos: `disabled`, `pressed`, `invalid` — um por atributo ARIA do CSS.
 
 ---
 
-## Código auxiliar — importar variáveis (copiar em qualquer script)
+## Código auxiliar
 
 ```js
-async function importTokens() {
-  const libVarMap = {};
-  try {
-    const collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
-    const coll = collections.find(c => c.libraryName === "Vue Tokens");
-    if (!coll) { console.warn("Biblioteca Vue Tokens não encontrada"); return libVarMap; }
-    const libVars = await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key);
-    for (const lv of libVars) {
-      try { libVarMap[lv.name] = await figma.variables.importVariableByKeyAsync(lv.key); }
+async function importarTokens() {
+  const alvo = new Set(['Cor','Dimensao','Raio','Tipografia','Movimento','Fonte','Elevacao','Camada']);
+  const varMap = {};
+  const collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
+  for (const coll of collections.filter(c => alvo.has(c.name))) {
+    for (const lv of await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key)) {
+      try { varMap[`${coll.name}/${lv.name}`] = await figma.variables.importVariableByKeyAsync(lv.key); }
       catch (_) {}
     }
-  } catch (_) {}
-  return libVarMap;
+  }
+  return varMap;
 }
 
-function tokenPaint(varMap, varName, fallbackHex) {
-  const n = parseInt(fallbackHex.replace('#',''), 16);
-  const base = { type:'SOLID', color:{ r:((n>>16)&255)/255, g:((n>>8)&255)/255, b:(n&255)/255 } };
-  const v = varMap[varName];
-  return v ? figma.variables.setBoundVariableForPaint(base, 'color', v) : base;
+// alfa é do paint, não da variável
+function paintDeToken(varMap, caminho, alfa = 1) {
+  const v = varMap[caminho];
+  if (!v) throw new Error(`variável ausente: ${caminho}`);
+  const base = { type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: alfa };
+  return figma.variables.setBoundVariableForPaint(base, 'color', v);
 }
 ```
+
+`paintDeToken` lança quando a variável não existe — de propósito. Cair para hex
+solto produziria um component set que não acompanha a troca de tema, e o defeito
+só apareceria quando alguém trocasse o modo.
