@@ -237,7 +237,7 @@
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
         "alertBorder": "Borda — var interna",
-        "alertGlow": "Tom base do gradiente animado da borda — var interna; as 4 variações saem daí"
+        "alertGlow": "Tom base do gradiente animado da borda — var interna, igual nas 5 variantes; as 4 variações saem daí"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
@@ -653,7 +653,7 @@
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
         "alertBorder": "Border — internal var",
-        "alertGlow": "Base tone of the animated border gradient — internal var; the 4 variations derive from it"
+        "alertGlow": "Base tone of the animated border gradient — internal var, the same across all 5 variants; the 4 variations derive from it"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
@@ -1069,7 +1069,7 @@
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",
         "alertBorder": "Borde — var interna",
-        "alertGlow": "Tono base del degradado animado del borde — var interna; las 4 variaciones salen de ahí"
+        "alertGlow": "Tono base del degradado animado del borde — var interna, igual en las 5 variantes; las 4 variaciones salen de ahí"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"

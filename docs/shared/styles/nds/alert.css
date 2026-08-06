@@ -21,9 +21,11 @@
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
-  /* Tom base do gradiente animado da borda — as 4 variações saem daí por
-     color-mix. É a MESMA cor da borda, mas em opacidade cheia: a borda é /0.3
-     nas variantes e um gradiente na mesma opacidade não apareceria. */
+  /* Tom base do gradiente animado da borda — as 4 variações saem daí.
+     É o mesmo em TODAS as variantes, de propósito: o gradiente é acabamento, e
+     acompanhar a cor semântica fazia o destructive girar vermelho e o success
+     verde, competindo com o significado que o ícone e o título já carregam.
+     Neutro, ele decora sem disputar leitura. */
   --alert-glow: hsl(var(--border));
 
   position: relative;
@@ -115,7 +117,6 @@
   --alert-bg: hsl(var(--destructive) / 0.1);
   --alert-fg: hsl(var(--destructive));
   --alert-border: hsl(var(--destructive) / 0.3);
-  --alert-glow: hsl(var(--destructive));
 }
 
 /* success — verde com bg soft */
@@ -123,7 +124,6 @@
   --alert-bg: hsl(var(--success) / 0.1);
   --alert-fg: hsl(var(--success));
   --alert-border: hsl(var(--success) / 0.3);
-  --alert-glow: hsl(var(--success));
 }
 
 /* warning — âmbar com bg soft */
@@ -131,7 +131,6 @@
   --alert-bg: hsl(var(--warning) / 0.1);
   --alert-fg: hsl(var(--warning));
   --alert-border: hsl(var(--warning) / 0.3);
-  --alert-glow: hsl(var(--warning));
 }
 /* Em warning, a cor âmbar não atinge 4.5:1 sobre bg-soft.
    Título usa --foreground; o ícone (curto, 3:1) mantém --alert-fg. */
@@ -150,7 +149,6 @@
   --alert-bg: hsl(var(--info) / 0.1);
   --alert-fg: hsl(var(--info));
   --alert-border: hsl(var(--info) / 0.3);
-  --alert-glow: hsl(var(--info));
 }
 
 /* ── Action (botão no canto superior direito) ─────────────────────────────── */
@@ -200,8 +198,9 @@
    mesmo valor e saiu como redundância. */
 
 /* ── Gradiente animado na borda ───────────────────────────────────────────────
- * Um gradiente de 4 tons da PRÓPRIA cor da borda (dois mais claros, dois mais
- * escuros) gira ao redor do alert, dá duas voltas e desacelera até parar.
+ * Um gradiente de 4 tons neutros (dois mais claros, dois mais escuros, todos
+ * derivados da cor de borda do tema) gira ao redor do alert, dá duas voltas e
+ * desacelera até parar. É o MESMO gradiente em todas as variantes.
  *
  * Não entra na anatomia: um ::after absoluto, fora do fluxo do grid e sem
  * ponteiro. Nenhum elemento novo no DOM, nenhuma classe nova para as stacks.
@@ -213,8 +212,8 @@
  * caminho da borda e ele saía reto nas curvas.
  *
  * A referência usa `in hsl longer hue` para varrer o círculo de matiz inteiro
- * (arco-íris). Aqui os 4 tons saem de `--alert-glow` por `color-mix`, então o
- * gradiente é sempre monocromático e segue a variante.
+ * (arco-íris). Aqui os 4 tons saem todos de `--alert-glow`, deslocando só a
+ * lightness: o gradiente é monocromático e igual nas 5 variantes.
  */
 
 /* O ângulo precisa ser propriedade REGISTRADA: custom property comum é string
