@@ -17,11 +17,34 @@ export type AlertDialogOptions = {
   trigger: HTMLElement;
   title: string;
   description?: string;
+  /**
+   * Bloco de ícone no topo do header (`.nds-alert-dialog-media`). Opcional —
+   * quando presente, o CSS centraliza header e texto no mobile e no tamanho sm.
+   * Use `createAlertDialogMedia()` para montá-lo.
+   */
+  media?: HTMLElement;
   cancelButton: HTMLElement;
   actionButton: HTMLElement;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
+
+export interface AlertDialogMediaOptions {
+  className?: string;
+}
+
+/**
+ * Container do ícone destacado do header. Recebe o svg por appendChild — o CSS
+ * dimensiona qualquer `svg` filho em 24px (`--spacing-6`).
+ */
+export function createAlertDialogMedia(options: AlertDialogMediaOptions = {}): HTMLElement {
+  const { className } = options;
+  const el = document.createElement('div');
+  el.dataset.slot = 'alert-dialog-media';
+  el.className = 'nds-alert-dialog-media';
+  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  return el;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -38,7 +61,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 // ─── createAlertDialog ───────────────────────────────────────────────────────
 
 export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
-  const { trigger, title, description, cancelButton, actionButton, onOpenChange } = options;
+  const { trigger, title, description, media, cancelButton, actionButton, onOpenChange } = options;
 
   const id = ++_alertDialogCounter;
   const titleId = `alert-dialog-title-${id}`;
@@ -86,6 +109,10 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     const headerEl = document.createElement('div');
     headerEl.className = 'nds-alert-dialog-header';
     headerEl.dataset.slot = 'alert-dialog-header';
+
+    // A mídia vem ANTES do título: o seletor `:has(.nds-alert-dialog-media)`
+    // centraliza o header, e a ordem de leitura é ícone → título → descrição.
+    if (media) headerEl.appendChild(media);
 
     const titleEl = document.createElement('h2');
     titleEl.id = titleId;

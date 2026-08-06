@@ -8,10 +8,12 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { TriangleAlert } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/AlertDialog/Composicoes',
@@ -41,9 +43,62 @@ const sharedComponents = {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  TriangleAlert,
+};
+
+export const ComIcone: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      description: {
+        story:
+          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">Excluir conta</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia>
+              <TriangleAlert aria-hidden="true" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+            <AlertDialogDescription>
+              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    `,
+  }),
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+  },
 };
 
 export const Destrutiva: Story = {

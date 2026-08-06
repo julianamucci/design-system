@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { createAlertDialog } from './alert-dialog';
+import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { createAlertIcon } from './alert';
 import { createButton } from './button';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -89,6 +90,53 @@ export const Destrutiva: Story = {
     // Trigger e action têm o mesmo rótulo — o action fica dentro do dialog.
     const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
     await expect(action).toHaveClass('nds-button-destructive');
+  },
+};
+
+export const ComIcone: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      description: {
+        story:
+          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
+    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
+    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
+
+    // createAlertIcon já devolve o svg com aria-hidden; o CSS do media
+    // dimensiona qualquer svg filho em 24px.
+    const media = createAlertDialogMedia();
+    media.appendChild(createAlertIcon('warning'));
+
+    const dialog = createAlertDialog({
+      trigger,
+      title: 'Excluir conta',
+      description:
+        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      media,
+      cancelButton,
+      actionButton,
+    });
+    queueMicrotask(() => trigger.click());
+    return dialog;
+  },
+  play: async () => {
+    const dialog = await waitForPortal('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 

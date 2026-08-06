@@ -9,10 +9,12 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./alert-dialog";
 import { Button } from "./button";
+import { TriangleAlert } from "lucide-react";
 
 const meta = {
   title: "UI/AlertDialog/Composicoes",
@@ -33,6 +35,53 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const ComIcone: Story = {
+  parameters: {
+    covers: ["visual.item6"],
+    docs: {
+      description: {
+        story:
+          "Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.",
+      },
+    },
+  },
+  render: () => (
+    <AlertDialog defaultOpen>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Excluir conta</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogMedia>
+            <TriangleAlert aria-hidden="true" />
+          </AlertDialogMedia>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+          <AlertDialogDescription>
+            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
+  play: async () => {
+    const dialog = await waitForPortal("alertdialog");
+    await expect(dialog).toBeVisible();
+
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass("nds-alert-dialog-media");
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  },
+};
 
 // Mesmo exemplo da seção Variantes / destructive da docs page.
 export const Destrutiva: Story = {

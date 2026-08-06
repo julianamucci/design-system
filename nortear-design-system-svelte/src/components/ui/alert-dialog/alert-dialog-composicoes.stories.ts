@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
+import AlertDialogMidiaStory from './AlertDialogMidiaStory.svelte';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Composicoes',
@@ -23,6 +24,33 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+export const ComIcone: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      description: {
+        story:
+          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
+      },
+    },
+  },
+  render: () => ({ Component: AlertDialogMidiaStory, props: { open: true } }),
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+  },
+};
 
 export const Destrutiva: Story = {
   parameters: {
