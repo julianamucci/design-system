@@ -116,6 +116,11 @@ eixos, ela leva a opacidade de nó, e o componente fica sem fill.
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
 que nascem desligados, sem erro. Ligue, pinte, desligue de volta.
 
+**Não conte `children` de página que não está ativa.** Páginas carregam sob
+demanda: `figma.root.children[i].children.length` numa página que nunca recebeu
+`setCurrentPageAsync` devolve um número menor que o real, sem erro. Parece nó
+apagado. Ative a página antes de contar.
+
 **Retângulos sobrepostos viram um VECTOR.** Dois retângulos dentro de um
 componente saem fundidos num único nó `Vector`. Contar filhos para inferir o que
 existe leva a "reparar" o que não estava quebrado.
