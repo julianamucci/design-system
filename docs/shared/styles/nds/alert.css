@@ -252,7 +252,9 @@
   position: absolute;
   inset: 0;                                     /* mesma caixa da borda */
   border-radius: inherit;
-  padding: 1px;                                 /* espessura = a da borda */
+  /* 2px cobrem a borda de 1px e avançam 1px para dentro, sobre o padding — o
+     anel fica mais visível sem que a caixa mude de tamanho nem o texto ande. */
+  padding: 2px;
 
   /* 4 variações do tom da borda: duas mais claras, duas mais escuras. Os passos
      são deslocamentos de LIGHTNESS em oklch, não mistura com branco/preto —
