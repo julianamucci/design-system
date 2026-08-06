@@ -17,9 +17,17 @@ projeto, este mapa acompanha o export, não o contrário.
 
 A key da **biblioteca de tokens** não está registrada aqui: descubra-a pelas
 coleções (ver Etapa 2 da skill) e anote nesta tabela na primeira execução
-bem-sucedida.
+bem-sucedida. As variáveis podem estar locais no próprio Nortear-DS em vez de
+publicadas — o código da Etapa 2 cobre os dois casos.
 
 ## Coleções e modos
+
+> **Não verificado contra o Figma.** Os nomes, modos e caminhos abaixo foram
+> derivados do export em `docs/shared/tokens/figma/` — as pastas viram coleção,
+> os arquivos viram modo e a hierarquia do JSON vira o caminho da variável. É a
+> convenção que a exportação usa, mas ninguém conferiu do lado do Figma. Na
+> primeira execução, liste as coleções reais e corrija esta seção **antes** de
+> desenhar qualquer component set.
 
 | Coleção | Modos | Export |
 |---|---|---|
@@ -161,14 +169,27 @@ Button (COMPONENT_SET)
 ## Código auxiliar
 
 ```js
+// Cobre os dois casos: coleção local no arquivo destino e biblioteca publicada.
+// Local primeiro — coleção criada no arquivo e ainda não publicada não aparece
+// em teamLibrary, e a busca falharia sem motivo.
 async function importarTokens() {
   const alvo = new Set(['Cor','Dimensao','Raio','Tipografia','Movimento','Fonte','Elevacao','Camada']);
   const varMap = {};
-  const collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
-  for (const coll of collections.filter(c => alvo.has(c.name))) {
+
+  for (const coll of await figma.variables.getLocalVariableCollectionsAsync()) {
+    if (!alvo.has(coll.name)) continue;
+    for (const id of coll.variableIds) {
+      const v = await figma.variables.getVariableByIdAsync(id);
+      if (v) varMap[`${coll.name}/${v.name}`] = v;
+    }
+  }
+
+  for (const coll of await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync()) {
+    if (!alvo.has(coll.name)) continue;
     for (const lv of await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key)) {
-      try { varMap[`${coll.name}/${lv.name}`] = await figma.variables.importVariableByKeyAsync(lv.key); }
-      catch (_) {}
+      const chave = `${coll.name}/${lv.name}`;
+      if (varMap[chave]) continue;
+      try { varMap[chave] = await figma.variables.importVariableByKeyAsync(lv.key); } catch (_) {}
     }
   }
   return varMap;

@@ -56,19 +56,41 @@ As coleções do Figma são **`Cor`**, **`Dimensao`**, **`Raio`**, **`Tipografia
 **`Movimento`**, **`Fonte`**, **`Elevacao`** e **`Camada`** — os nomes e os
 caminhos das variáveis estão em [token-mapping.md](./figma-sync-component/token-mapping.md).
 
-Descubra a biblioteca pelas coleções, não pelo nome dela:
+As variáveis podem estar em dois lugares, e o código precisa cobrir os dois:
+**locais** no próprio arquivo destino, ou **publicadas** como biblioteca de
+equipe. Procure primeiro no arquivo — se as coleções foram criadas ali e ainda
+não publicadas, `teamLibrary` não devolve nada e a busca falharia sem motivo.
+
+Descubra pelas coleções, nunca pelo nome da biblioteca:
 
 ```js
-const collections = await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync();
 const alvo = new Set(['Cor','Dimensao','Raio','Tipografia','Movimento','Fonte','Elevacao','Camada']);
 const varMap = {};
-for (const coll of collections.filter(c => alvo.has(c.name))) {
+
+// 1. locais do arquivo destino
+for (const coll of await figma.variables.getLocalVariableCollectionsAsync()) {
+  if (!alvo.has(coll.name)) continue;
+  for (const id of coll.variableIds) {
+    const v = await figma.variables.getVariableByIdAsync(id);
+    if (v) varMap[`${coll.name}/${v.name}`] = v;
+  }
+}
+
+// 2. biblioteca publicada, só para o que faltou
+for (const coll of await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync()) {
+  if (!alvo.has(coll.name)) continue;
   for (const lv of await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key)) {
-    try { varMap[`${coll.name}/${lv.name}`] = await figma.variables.importVariableByKeyAsync(lv.key); }
-    catch (_) {}
+    const chave = `${coll.name}/${lv.name}`;
+    if (varMap[chave]) continue;
+    try { varMap[chave] = await figma.variables.importVariableByKeyAsync(lv.key); } catch (_) {}
   }
 }
 ```
+
+Antes de construir qualquer coisa, **reporte o que achou**: nomes de coleção,
+modos de cada uma e a contagem de variáveis. Se algum nome divergir do mapa,
+pare — corrigir [token-mapping.md](./figma-sync-component/token-mapping.md) vem
+antes de desenhar, senão o component set nasce vinculado a nada.
 
 Se nenhuma coleção casar, **pare e reporte** — não caia para hex solto: o
 component set ficaria sem vínculo com o tema e não seguiria a troca de modo.
