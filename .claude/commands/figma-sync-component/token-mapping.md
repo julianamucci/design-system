@@ -116,6 +116,12 @@ eixos, ela leva a opacidade de nó, e o componente fica sem fill.
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
 que nascem desligados, sem erro. Ligue, pinte, desligue de volta.
 
+**Keyframe não entra em sublayer de instância.** `applyManualKeyframeTrack` num
+filho de instância lança `Cannot write animations to instance sublayers via the
+plugin API`. Frame de timeline que precise animar partes separadas (cortina e
+painel de um diálogo, por exemplo) tem que usar nós próprios — ou expor a parte
+como propriedade booleana e montar o palco com nós de topo.
+
 **Não conte `children` de página que não está ativa.** Páginas carregam sob
 demanda: `figma.root.children[i].children.length` numa página que nunca recebeu
 `setCurrentPageAsync` devolve um número menor que o real, sem erro. Parece nó
