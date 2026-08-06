@@ -92,6 +92,24 @@ os fundos soft das variantes semânticas (`/0.1`, `/0.15`) e as bordas (`/0.3`).
 errada. Clone por spread (`fills.map(f => ({ ...f, opacity }))`), que preserva o
 vínculo.
 
+**Alfa não sobrevive à criação do componente.** Opacidade definida no paint no
+mesmo script que cria o `figma.createComponent()` volta como `1` na leitura
+seguinte — reproduzido duas vezes, em levas independentes. Ajuste o alfa numa
+passada posterior, depois de todos os nós existirem, e confira lendo de volta:
+
+```js
+const comAlfa = (paints, op) => paints.map(p => Object.assign({}, p, { opacity: op }));
+no.fills = comAlfa(no.fills, 0.1);
+```
+
+**Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
+enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
+que nascem desligados, sem erro. Ligue, pinte, desligue de volta.
+
+**Retângulos sobrepostos viram um VECTOR.** Dois retângulos dentro de um
+componente saem fundidos num único nó `Vector`. Contar filhos para inferir o que
+existe leva a "reparar" o que não estava quebrado.
+
 **Ao revincular, passe a cor resolvida junto.** `setBoundVariableForPaint` anexa o
 vínculo mas mantém a cor concreta que você mandou; se ela for preta, o nó fica
 preto mesmo com o vínculo certo — e a leitura de `boundVariables` confirma o
