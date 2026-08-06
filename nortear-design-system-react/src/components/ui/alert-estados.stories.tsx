@@ -1,9 +1,13 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {
+  parameters: {
+    design: figmaDesign("alert"),
+  },
   title: "UI/Alert/Estados",
   tags: ["feedback"],
   component: Alert,

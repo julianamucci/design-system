@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant, type AlertRole } from './alert';
@@ -23,6 +24,7 @@ const meta: Meta<AlertArgs> = {
   title: 'UI/Alert',
   tags: ['autodocs', 'feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     docs: { page: withAutoDocsTab(createAlertDocs) },
   },
   // Esta stack não tem docgen (não há componente de framework para

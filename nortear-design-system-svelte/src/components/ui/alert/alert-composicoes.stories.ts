@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect, userEvent } from 'storybook/test';
@@ -8,6 +9,7 @@ import AlertClasseAdicionalStory from './AlertClasseAdicionalStory.svelte';
 
 const meta: Meta = {
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },

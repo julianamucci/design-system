@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, userEvent, waitFor } from "storybook/test";
@@ -11,6 +12,7 @@ const meta = {
   tags: ["feedback"],
   component: Alert,
   parameters: {
+    design: figmaDesign("alert"),
     controls: { disable: true },
     actions: { disable: true },
   },

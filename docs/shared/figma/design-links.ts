@@ -44,6 +44,16 @@ export const figmaNodes = {
   /** Frame de spec do movimento (hover 1.05 / press 0.95). */
   buttonTimeline: '168-26',
 
+  /**
+   * Variant set do alert: eixo variant (5). Conteúdo e composição são
+   * propriedades, e o ícone acompanha a variante — não há nó por estado.
+   */
+  alert: '194-16',
+  /** Página de documentação do componente. */
+  alertDocs: '196-85',
+  /** Frame de spec do glow que percorre a borda. */
+  alertGlow: '197-85',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

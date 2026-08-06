@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
@@ -11,6 +12,7 @@ const meta = {
   component: Alert,
   tags: ['feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },

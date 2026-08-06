@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect, fn, waitFor } from 'storybook/test';
@@ -11,6 +12,7 @@ const meta: Meta = {
   component: Alert,
   tags: ['autodocs', 'feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba

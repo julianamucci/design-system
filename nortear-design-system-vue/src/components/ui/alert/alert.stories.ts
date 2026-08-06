@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
@@ -10,6 +11,7 @@ const meta = {
   component: Alert,
   tags: ['autodocs', 'feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. O slot default

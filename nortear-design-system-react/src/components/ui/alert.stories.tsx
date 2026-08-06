@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, waitFor } from "storybook/test";
 import { Info } from "lucide-react";
@@ -10,6 +11,7 @@ const meta = {
   component: Alert,
   tags: ["autodocs", "feedback"],
   parameters: {
+    design: figmaDesign("alert"),
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. children fica sem

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
@@ -5,6 +6,7 @@ import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription 
 const meta: Meta = {
   tags: ['feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },
