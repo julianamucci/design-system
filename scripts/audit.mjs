@@ -764,6 +764,7 @@ function auditStoryQuality(slug) {
   violations.push(...auditTextSurfaces(slug));
   violations.push(...auditNonexistentLibProps(slug));
   violations.push(...auditDeadClassInComponent(slug));
+  violations.push(...auditExportSemStory(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
@@ -1173,6 +1174,100 @@ function contractStatus() {
  * expressão (`cn(...)`, `toggleVariants({...})`) e o parse por regex devolveria
  * pedaços de código como se fossem classes.
  */
+/**
+ * Peça exportada que nenhuma story renderiza.
+ *
+ * É a assinatura de "especificado e não entregue": o componente existe, o CSS
+ * existe, e nada no produto o exercita. Foi assim que o AlertDialogMedia passou
+ * — presente em três stacks, ausente no Vanilla, zero stories, zero
+ * documentação. O sinal aparecia como 0% de cobertura, mas cobertura só é
+ * calculada rodando a suíte; isto custa milissegundos.
+ *
+ * Só olha export de VALOR (componente/factory). Tipo não renderiza nada.
+ */
+function auditExportSemStory(slug) {
+  const violations = [];
+  const RAIZ_RX = new RegExp(`^${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}$`, 'i');
+
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    const arquivosDeStory = ui.filter(f => /\.stories\./.test(basename(f)));
+    if (!arquivosDeStory.length) continue;
+    const textoDasStories = arquivosDeStory.map(f => readFile(f) || '').join('\n');
+
+    const exportados = new Map();
+    const origensDeAlias = new Set();
+    for (const file of ui) {
+      const nome = basename(file);
+      if (/\.stories\./.test(nome) || /story\.svelte$/i.test(nome)) continue;
+      const content = readFile(file);
+      if (!content) continue;
+
+      // `export { A, B }` — o index.ts de vue/svelte e o rodapé do react
+      for (const m of content.matchAll(/export\s*\{([^}]+)\}/g)) {
+        for (const bruto of m[1].split(',')) {
+          const texto = bruto.trim();
+          const pedacos = texto.split(/\s+as\s+/);
+          // `Media as AlertDialogMedia`: os dois nomes são a MESMA peça. O
+          // Svelte exporta os dois, e cobrar o curto acusa alias como código
+          // morto — foi o maior falso positivo da primeira medição.
+          if (pedacos.length > 1) origensDeAlias.add(pedacos[0].trim());
+          const parte = pedacos.pop().trim();
+          if (/^type\b/.test(texto) || !/^[A-Za-z_]\w*$/.test(parte)) continue;
+          if (!exportados.has(parte)) exportados.set(parte, file);
+        }
+      }
+      // `export function X` / `export const X` — factories do vanilla
+      for (const m of content.matchAll(/export\s+(?:async\s+)?(?:function|const)\s+([A-Za-z_]\w*)/g)) {
+        if (!exportados.has(m[1])) exportados.set(m[1], file);
+      }
+    }
+
+    // Não renderizam nada: cva/estilo e helpers de hook/contexto são API para
+    // quem consome, e a ausência deles numa story não é lacuna de entrega.
+    const NAO_RENDERIZAVEL = /(Variants|Style)$|^(use|set|get)[A-Z]/;
+
+    // Consumidores possíveis: qualquer arquivo da stack que não seja o que
+    // define nem um barril de re-export. Sem isto a regra acusa alias do Svelte
+    // (`Root as Accordion`), cva compartilhada (`buttonVariants`) e
+    // sub-componente que só o próprio componente renderiza — 442 falsos
+    // positivos na primeira versão.
+    const consumidores = globStack(stack, 'components', ['.ts', '.tsx', '.vue', '.svelte'])
+      .filter(f => !/^index\.ts$/i.test(basename(f)));
+
+    for (const [simbolo, file] of exportados) {
+      if (RAIZ_RX.test(simbolo)) continue;                       // a raiz sempre aparece
+      if (origensDeAlias.has(simbolo)) continue;                 // é o nome curto de um alias
+      if (NAO_RENDERIZAVEL.test(simbolo)) continue;
+      const rx = new RegExp(`\\b${simbolo}\\b`);
+      if (rx.test(textoDasStories)) continue;
+
+      // No React o componente inteiro mora num arquivo só: `AlertDialogContent`
+      // renderiza `<AlertDialogPortal>` ali mesmo. Ignorar o arquivo de
+      // definição inteiro marcava esses como mortos. O que não conta é a
+      // declaração e a lista de export — o resto é uso.
+      const proprio = (readFile(file) || '')
+        .replace(/export\s*\{[^}]*\}/g, '')
+        .replace(new RegExp(`(?:function|const)\\s+${simbolo}\\b`, 'g'), '');
+      if (rx.test(proprio)) continue;
+
+      const usadoPorOutro = consumidores.some(f => {
+        if (f === file) return false;
+        const c = readFile(f);
+        return c && rx.test(c);
+      });
+      if (usadoPorOutro) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, file), rule: 'export_sem_story',
+        message: `${simbolo} é exportado e nada o renderiza — nem story, nem outro componente, nem docs page`,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditDeadClassInComponent(slug) {
   const violations = [];
   for (const stack of STACKS) {

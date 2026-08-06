@@ -61,6 +61,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
 | `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |
 | `static_source_code` | `docs.source.code` fixo — snippet não acompanha os controls |
@@ -187,6 +188,22 @@ sem `role`.
 **Nunca asserte classe morta** (sem prefixo `nds-`): a asserção não protege nada
 e desaparece junto com o bug. Asserte comportamento.
 
+**2e6. Prop que uma stack não expõe não é contrato — é sobra.** `export_sem_story`
+pega a peça que ninguém renderiza, mas não pega a PROP que ninguém passa: ela
+mora dentro de um arquivo que outras stories cobrem. Para cada prop pública do
+componente, pergunte duas coisas:
+
+1. **As quatro stacks expõem?** Ausente no Vanilla é o sinal mais forte — ele é a
+   referência, e o que ele não tem não é contrato do design system.
+2. **Alguma story passa?** Prop que nenhuma story exercita e nenhum
+   `translations.json` documenta está no mesmo estado da peça sem story.
+
+Foi assim que o `data-size="sm"` do alert-dialog sobreviveu: CSS completo, prop
+em React, Vue e Svelte, zero no Vanilla, zero stories, zero documentação. A saída
+é sempre uma das duas — **entregar** (implementar na stack que falta, criar a
+composição, documentar) ou **remover**. Deixar como está é manter promessa que o
+produto não cumpre.
+
 **2f0. Cobertura por CONTRATO (é a garantia real)**:
 
 Contagem de asserção é proxy ruim — 12 numa stack e 21 em outra passaram
@@ -244,6 +261,15 @@ componente contorna e ainda é o recorte que interessa aqui.
 
 Do `coverage-summary.json`, some só os arquivos DO componente: a rodada mede a
 stack toda e os demais saem 0% apenas porque as stories deles não rodaram.
+
+**0% num arquivo DO componente é achado, não estatística.** Depois do recorte
+acima, 0% de linhas significa que nenhuma story renderiza aquele arquivo — peça
+que existe no código e não existe no produto. Não agregue com o resto: reporte o
+arquivo pelo nome e vá conferir se ela é entregue nas outras stacks e se o
+`translations.json` a documenta. O `AlertDialogMedia` apareceu exatamente assim
+(`alertdialogmedia.vue 0%`, `alert-dialog-media.svelte 0%`) e passou batido por
+ter sido lido como média da stack. A regra `export_sem_story` pega o mesmo caso
+em milissegundos, sem rodar suíte; a cobertura é a confirmação.
 
 Thresholds do projeto: **linhas 90 · funções 90 · ramos 80**.
 
