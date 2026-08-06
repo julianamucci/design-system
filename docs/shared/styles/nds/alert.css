@@ -37,6 +37,12 @@
   width: 100%;
   border: 1px solid var(--alert-border);
   border-radius: var(--radius-alert);
+  /* Contém o rastro do glow ao dobrar as quinas (ver o fim do arquivo). Os 6px
+     para FORA não são folga arbitrária: o anel de foco do botão de fechar
+     encosta a 14,5px do centro do arco da quina, então o raio do recorte
+     precisa passar disso — com recorte na própria borda (raio 10) o anel seria
+     cortado. Nas retas o rastro se espalha ~3px, então lá nada é aparado. */
+  clip-path: inset(-6px round calc(var(--radius-alert) + 6px));
   padding-inline: var(--spacing-4);             /* 16px */
   padding-block: var(--spacing-2);              /* 8px */
 
@@ -215,10 +221,9 @@
  * A referência (jh3y, "Border Trails with offset-path") esconde o excedente com
  * uma janela na faixa da borda, apoiada num fundo OPACO por cima. Aqui não dá:
  * as variantes usam fundo translúcido (/0.1) e o rastro apareceria no miolo
- * inteiro. Recortar a raiz também não serve — o rastro é mais comprido que a
- * altura do alert, então nas laterais ele passa da quina e o recorte cortaria o
- * gradiente em linha reta, que é pior que o borrão. Fica sem recorte: o fim do
- * rastro já é transparente.
+ * inteiro. O que sobrou da ideia é o recorte: o `clip-path` da raiz apara o que
+ * escapa nas quinas, e como a linha do recorte é concêntrica à borda ela lê
+ * como o limite da própria caixa, não como um corte.
  *
  * O percurso é `offset-path`, não gradiente cônico. Um conic-gradient gira a
  * velocidade ANGULAR constante e, num retângulo, a distância do centro até a
@@ -259,13 +264,12 @@
 
   /* Mancha difusa: o gradiente radial nasce na PONTA (à direita, que com
      `offset-rotate: auto` é a frente) e apaga para trás.
-     72x8 dá ~36px de rastro aceso ao longo da borda e ±4px de espalhamento
+     144x8 dá ~72px de rastro aceso ao longo da borda e ±4px de espalhamento
      lateral. Os 4px para dentro caem no padding do alert, antes do texto (o
-     padding-block é 8px). O comprimento é limitado pela ALTURA do alert, não
-     pela largura: nas laterais o rastro se estende reto e, passando da altura,
-     escapa da quina — 72px já é longo para um alert de uma linha (~33px). */
-  width: 72px;
-  aspect-ratio: 9 / 1;
+     padding-block é 8px); o que passar para fora nas quinas é aparado pelo
+     recorte da raiz. */
+  width: 144px;
+  aspect-ratio: 18 / 1;
   background: radial-gradient(100% 100% at right, var(--alert-glow), transparent 50%);
 
   /* `padding-box` corre logo por dentro da borda; o espalhamento de 4px cobre a
@@ -277,13 +281,14 @@
 
   pointer-events: none;
   opacity: 0;                                   /* estado de repouso */
-  /* 2 voltas em 6,4s — ~3,2s por volta, ritmo de deslize e não de giro.
+  /* 2 voltas em 14,4s. O trecho de cruzeiro (1,5 volta em 64% do tempo) sai a
+     ~6,1s por volta, que é a cadência da referência; o resto é a freada.
      Duração derivada de token: sob prefers-reduced-motion as durações vão a 0ms
      e o efeito se anula sozinho; a regra abaixo é a garantia explícita.
      Delay de 3s é valor de produto — nenhuma duração da escala chega perto. */
   animation:
-    nds-alert-glow-percurso calc(var(--duration-stately) * 8) linear 3s forwards,
-    nds-alert-glow-brilho   calc(var(--duration-stately) * 8) linear 3s forwards;
+    nds-alert-glow-percurso calc(var(--duration-stately) * 18) linear 3s forwards,
+    nds-alert-glow-brilho   calc(var(--duration-stately) * 18) linear 3s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
