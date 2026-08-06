@@ -52,48 +52,33 @@ zera o padding; `.dark .nds-button-outline` muda fundo e borda).
 
 ## Etapa 2 — Importar as variáveis de token
 
-As coleções do Figma são **`Cor`**, **`Dimensao`**, **`Raio`**, **`Tipografia`**,
-**`Movimento`**, **`Fonte`**, **`Elevacao`** e **`Camada`** — os nomes e os
-caminhos das variáveis estão em [token-mapping.md](./figma-sync-component/token-mapping.md).
+As variáveis são **locais do arquivo destino** — não uma biblioteca publicada.
+São 8 coleções e 144 variáveis; a lista está em
+[token-mapping.md](./figma-sync-component/token-mapping.md).
 
-As variáveis podem estar em dois lugares, e o código precisa cobrir os dois:
-**locais** no próprio arquivo destino, ou **publicadas** como biblioteca de
-equipe. Procure primeiro no arquivo — se as coleções foram criadas ali e ainda
-não publicadas, `teamLibrary` não devolve nada e a busca falharia sem motivo.
-
-Descubra pelas coleções, nunca pelo nome da biblioteca:
+**Toda variável tem `codeSyntax.WEB` igual à custom property do CSS** — a
+tradução é uma busca, não uma tabela a decorar:
 
 ```js
-const alvo = new Set(['Cor','Dimensao','Raio','Tipografia','Movimento','Fonte','Elevacao','Camada']);
 const varMap = {};
-
-// 1. locais do arquivo destino
-for (const coll of await figma.variables.getLocalVariableCollectionsAsync()) {
-  if (!alvo.has(coll.name)) continue;
-  for (const id of coll.variableIds) {
+for (const c of await figma.variables.getLocalVariableCollectionsAsync()) {
+  for (const id of c.variableIds) {
     const v = await figma.variables.getVariableByIdAsync(id);
-    if (v) varMap[`${coll.name}/${v.name}`] = v;
+    if (!v) continue;
+    const web = v.codeSyntax && v.codeSyntax.WEB;   // "var(--primary)"
+    if (web) varMap[web] = v;
+    varMap[`${c.name}/${v.name}`] = v;              // caminho, como reserva
   }
 }
-
-// 2. biblioteca publicada, só para o que faltou
-for (const coll of await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync()) {
-  if (!alvo.has(coll.name)) continue;
-  for (const lv of await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key)) {
-    const chave = `${coll.name}/${lv.name}`;
-    if (varMap[chave]) continue;
-    try { varMap[chave] = await figma.variables.importVariableByKeyAsync(lv.key); } catch (_) {}
-  }
-}
+// uso direto com o que está no CSS: varMap['var(--spacing-4)']
 ```
 
-Antes de construir qualquer coisa, **reporte o que achou**: nomes de coleção,
-modos de cada uma e a contagem de variáveis. Se algum nome divergir do mapa,
-pare — corrigir [token-mapping.md](./figma-sync-component/token-mapping.md) vem
-antes de desenhar, senão o component set nasce vinculado a nada.
+Não filtre por nome de coleção. Os nomes no Figma (`Color`, `Spacing`, `Radius`,
+`Motion`, `Elevation`, `z-index`) não são os das pastas do export (`Cor`,
+`Dimensao`, `Raio`…), e filtrar por palpite descarta tudo em silêncio.
 
-Se nenhuma coleção casar, **pare e reporte** — não caia para hex solto: o
-component set ficaria sem vínculo com o tema e não seguiria a troca de modo.
+Se `varMap` vier vazio, **pare e reporte** — não caia para hex solto: o component
+set ficaria sem vínculo com o tema e não seguiria a troca de modo.
 
 ## Etapa 3 — Mapear tokens CSS → variáveis Figma
 
@@ -102,12 +87,17 @@ armadilhas que o mapa detalha:
 
 - **Cor com alfa** (`hsl(var(--primary) / 0.9)`) — vincule a variável de cor e
   aplique o alfa no `opacity` do paint. Variável não carrega alfa por uso.
-- **Modo claro/escuro** — as regras `.dark .nds-*` não viram variante: são o
-  outro modo da coleção `Cor`. Vincular a variável já resolve os dois.
+- **Modo claro/escuro** — as regras `.dark .nds-*` não viram variante: são o modo
+  `default-dark` da coleção `Color`. Vincular a variável já resolve os dois.
 
 ## Etapa 4 — Construir o component set
 
-Um único bloco JavaScript via `mcp__claude_ai_Figma__use_figma` que:
+O arquivo já tem um precedente: a página **Accordion**. Leia as convenções dela
+em [token-mapping.md](./figma-sync-component/token-mapping.md) e siga — uma
+página por componente, frame de documentação, eixo de variante único, movimento
+dentro dos componentes.
+
+Em blocos de no máximo 10 operações por chamada de `mcp__claude_ai_Figma__use_figma`:
 
 1. Carrega as fontes com `figma.loadFontAsync`.
 2. Remove o component set anterior de mesmo nome, se existir.
@@ -143,7 +133,7 @@ de protótipo.
 
 Para a animação, ligue as variantes com Smart Animate usando os valores que o
 CSS já declara — duração de `--duration-*` e curva de `--ease-*`, ambas
-disponíveis na coleção `Movimento` (a curva é string, colar no custom easing).
+disponíveis na coleção `Motion` (a curva é string, colar no custom easing).
 Transformações de `:hover` / `:active` (ex.: `scale`) entram como escala do frame
 na variante correspondente.
 

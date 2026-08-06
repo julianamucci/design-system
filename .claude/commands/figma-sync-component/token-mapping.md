@@ -1,11 +1,9 @@
 # Token Mapping — custom properties CSS → variáveis do Figma
 
-Referência do comando `/figma-sync-component`. Converte as `var(--*)` do CSS
-compartilhado (`docs/shared/styles/nds/*.css`) nos caminhos exatos das variáveis.
+Referência do comando `/figma-sync-component`.
 
-Os caminhos abaixo saem do export em `docs/shared/tokens/figma/<Colecao>/<modo>.json` —
-é o mesmo material que alimenta as coleções do Figma. Ao mudar um token no
-projeto, este mapa acompanha o export, não o contrário.
+**Verificado no arquivo em 2026-08-05** lendo as coleções locais via Plugin API.
+As 144 variáveis batem uma a uma com o export em `docs/shared/tokens/figma/`.
 
 ---
 
@@ -15,138 +13,131 @@ projeto, este mapa acompanha o export, não o contrário.
 |---|---|
 | Nortear-DS | `XXAmIFVBKHClzx7YdUSkEb` |
 
-A key da **biblioteca de tokens** não está registrada aqui: descubra-a pelas
-coleções (ver Etapa 2 da skill) e anote nesta tabela na primeira execução
-bem-sucedida. As variáveis podem estar locais no próprio Nortear-DS em vez de
-publicadas — o código da Etapa 2 cobre os dois casos.
+As variáveis são **locais deste arquivo**, não uma biblioteca publicada — só
+aparecem em `figma.variables.getLocalVariableCollectionsAsync()`. `get_libraries`
+lista apenas UI kits da comunidade (Material 3, Simple Design System, kits da
+Apple) e nenhum deles é fonte de token do projeto.
+
+## A regra que dispensa tabela de nomes
+
+**Toda variável tem `codeSyntax.WEB` igual à custom property do CSS.**
+`marca/primary` tem `var(--primary)`, `espacamento/spacing-4` tem
+`var(--spacing-4)`, e assim por diante — sem exceção nas 144.
+
+Então o mapa não é uma tabela a decorar: é uma busca. Indexe por `codeSyntax.WEB`
+e procure pela própria string que está no CSS.
+
+```js
+const varMap = {};
+for (const c of await figma.variables.getLocalVariableCollectionsAsync()) {
+  for (const id of c.variableIds) {
+    const v = await figma.variables.getVariableByIdAsync(id);
+    if (!v) continue;
+    const web = v.codeSyntax && v.codeSyntax.WEB;   // "var(--primary)"
+    if (web) varMap[web] = v;
+    varMap[`${c.name}/${v.name}`] = v;              // caminho, como reserva
+  }
+}
+// uso: varMap['var(--primary)']
+```
+
+Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servindo
+— por isso as duas chaves.
 
 ## Coleções e modos
 
-> **Não verificado contra o Figma.** Os nomes, modos e caminhos abaixo foram
-> derivados do export em `docs/shared/tokens/figma/` — as pastas viram coleção,
-> os arquivos viram modo e a hierarquia do JSON vira o caminho da variável. É a
-> convenção que a exportação usa, mas ninguém conferiu do lado do Figma. Na
-> primeira execução, liste as coleções reais e corrija esta seção **antes** de
-> desenhar qualquer component set.
-
-| Coleção | Modos | Export |
+| Coleção | Vars | Modos |
 |---|---|---|
-| `Cor` | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` | `figma/Cor/` |
-| `Dimensao` | `default`, `confortavel`, `condensado` | `figma/Dimensao/` |
-| `Raio` | `default` | `figma/Raio/` |
-| `Tipografia` | `major-third`, `golden`, `perfect-fifth`, … | `figma/Tipografia/` |
-| `Movimento` | `default` | `figma/Movimento/` |
-| `Fonte` | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` | `figma/Fonte/` |
-| `Elevacao` | `light`, `dark` | `figma/Elevacao/` |
-| `Camada` | `default` | `figma/Camada/` |
+| `Color` | 51 | `default-light`, `default-dark`, `cold-light`, `cold-dark`, `warm-light`, `warm-dark` |
+| `Spacing` | 30 | `default`, `condensado`, `confortavel` |
+| `Tipografia` | 19 | `minor-third`, `augmented-fourth`, `golden`, `major-second`, `major-third`, `minor-second`, `perfect-fifth`, `perfect-fourth` |
+| `Motion` | 19 | `default` |
+| `Radius` | 13 | `default` |
+| `z-index` | 7 | `default` |
+| `Elevation` | 4 | `light`, `dark` |
+| `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
 
-As regras `.dark .nds-*` do CSS **não viram variante**: são o modo escuro da
-coleção `Cor`. Vincular a variável já cobre os dois.
+Os nomes **não** seguem as pastas do export: lá são `Cor`, `Dimensao`, `Raio`,
+`Movimento`, `Elevacao`, `Camada`; aqui são `Color`, `Spacing`, `Radius`,
+`Motion`, `Elevation`, `z-index`. Só `Tipografia` e `Fonte` coincidem. Nunca
+derive nome de coleção do nome da pasta.
+
+`Tipografia` tem um modo a mais que o export: `perfect-fourth` existe no Figma e
+não tem arquivo em `figma/Tipografia/`.
+
+## Prefixos dentro de cada coleção
+
+| Coleção | Prefixos |
+|---|---|
+| `Color` | `superficie/`, `marca/`, `feedback/`, `estrutura/`, `grafico/`, `sidebar/`, `codigo/` |
+| `Spacing` | `espacamento/`, `altura/`, `tamanho/`, `traco/` |
+| `Tipografia` | `tamanho/`, `escala/`, `peso/`, `entrelinha/`, `espacamento-letra/` |
+| `Motion` | `duracao/`, `curva/`, `deslocamento/` |
+| `Radius`, `Elevation`, `z-index`, `Fonte` | sem prefixo |
+
+`Spacing` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
+`traco/border-width-default` moram lá.
 
 ---
 
-## Cor — `Cor`
+## Armadilhas
 
-| CSS | Variável |
-|---|---|
-| `--background` · `--foreground` | `superficie/background` · `superficie/foreground` |
-| `--card` · `--card-foreground` | `superficie/card` · `superficie/card-foreground` |
-| `--popover` · `--popover-foreground` | `superficie/popover` · `superficie/popover-foreground` |
-| `--primary` · `--primary-foreground` | `marca/primary` · `marca/primary-foreground` |
-| `--secondary` · `--secondary-foreground` | `marca/secondary` · `marca/secondary-foreground` |
-| `--muted` · `--muted-foreground` | `marca/muted` · `marca/muted-foreground` |
-| `--accent` · `--accent-foreground` | `marca/accent` · `marca/accent-foreground` |
-| `--destructive` · `--destructive-foreground` | `feedback/destructive` · `feedback/destructive-foreground` |
-| `--success` · `--warning` · `--info` | `feedback/success` · `feedback/warning` · `feedback/info` |
-| `--border` · `--input` · `--input-background` | `estrutura/border` · `estrutura/input` · `estrutura/input-background` |
-| `--ring` · `--ring-offset-color` | `estrutura/ring` · `estrutura/ring-offset-color` |
-| `--chart-1`…`--chart-5` | `grafico/chart-1`…`chart-5` |
-| `--sidebar*` | `sidebar/sidebar*` |
-| `--code-token-*` | `codigo/code-token-*` |
+**Cor com alfa.** `hsl(var(--primary) / 0.9)` é uma cor com opacidade, não outro
+token. Vincule `var(--primary)` e ponha `0.9` no `opacity` do paint — variável do
+Figma não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`),
+os fundos soft das variantes semânticas (`/0.1`, `/0.15`) e as bordas (`/0.3`).
 
-**Alfa.** `hsl(var(--primary) / 0.9)` é uma cor com opacidade, não outro token.
-Vincule `marca/primary` e ponha `0.9` no `opacity` do paint — variável do Figma
-não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`), para os
-fundos soft das variantes semânticas (`/0.1`, `/0.15`) e para as bordas (`/0.3`).
-
-## Espaçamento e dimensão — `Dimensao`
-
-| CSS | Variável |
-|---|---|
-| `--spacing-0` … `--spacing-24` | `espacamento/spacing-<n>` |
-| `--spacing-px` · `--spacing-0-5` | `espacamento/spacing-px` · `espacamento/spacing-0-5` |
-| `--spacing-btn-x` · `-sm` · `-lg` | `espacamento/spacing-btn-x*` |
-| `--height-xs` … `--height-xl` | `altura/height-*` |
-| `--size-xs` … | `tamanho/size-*` |
+**Modo claro/escuro não é variante.** As regras `.dark .nds-*` do CSS são o modo
+`default-dark` da coleção `Color`. Vincular a variável já cobre os dois.
 
 **Altura fixa só onde o CSS declara.** Componente com texto não tem `height` — a
 altura é padding-block + line-height (WCAG 1.4.4, Resize Text 200%). Só os
 icon-only declaram width/height, e em `rem`: 1.5 (24px), 2 (32px), 2.25 (36px),
 2.5 (40px).
 
-## Raio — `Raio`
+**Alias de componente antes da escala.** Use `var(--radius-button)`, não
+`var(--radius)` — é o alias que muda quando o tema muda.
 
-| CSS | Variável |
-|---|---|
-| `--radius-button` · `--radius-input` · `--radius-alert` · `--radius-card` · `--radius-badge` | `radius-button` · `radius-input` · `radius-alert` · `radius-card` · `radius-badge` |
-| `--radius-xs` … `--radius-xl` · `--radius-full` | `radius-xs` … `radius-xl` · `radius-full` |
+**Font-size de controle é literal.** O button declara `0.75rem` / `0.875rem` /
+`1rem` direto; a escala `Tipografia` governa texto de conteúdo. Não force token
+onde o CSS não usa um — transcreva o rem em px (1rem = 16px).
 
-Use sempre o alias do componente (`radius-button`), não o valor da escala que ele
-aponta — é o alias que muda quando o tema muda.
-
-## Movimento — `Movimento`
-
-| CSS | Variável |
-|---|---|
-| `--duration-instant` … `--duration-stately` | `duracao/duration-*` |
-| `--ease-linear` · `--ease-standard` · `--ease-size` · `--ease-spring` · `--ease-emphasis` · `--ease-entrance` · `--ease-exit` | `curva/ease-*` |
-| `--motion-offset-xs` … `-lg` | `deslocamento/motion-offset-*` |
-
-As curvas são **string** (`cubic-bezier(...)`): colar no custom easing da
-interação de protótipo. As durações são número em ms.
-
-## Tipografia — `Tipografia` e `Fonte`
-
-| CSS | Variável |
-|---|---|
-| `--font-weight-regular` … `--font-weight-extra-bold` | `peso/font-weight-*` |
-| `--line-height-tight` … `--line-height-loose` | `entrelinha/line-height-*` |
-| `--letter-spacing-tight` · `-normal` · `-wide` | `espacamento-letra/letter-spacing-*` |
-| `--text-label` · `--text-p` · `--text-h1`…`h4` | `tamanho/text-*` |
-| `--font-family` | `Fonte · font-family-active` |
-
-**Font-size de componente costuma ser literal.** O button, por exemplo, declara
-`0.75rem` / `0.875rem` / `1rem` direto — a escala `Tipografia` governa texto de
-conteúdo, não o corpo dos controles. Não force um token onde o CSS não usa um:
-transcreva o rem em px (1rem = 16px).
-
-## Elevação e camada
-
-| CSS | Variável |
-|---|---|
-| `--elevation-sm` … `--elevation-xl` | `Elevacao · elevation-*` |
-| `--z-dropdown` … `--z-tooltip` | `Camada · z-*` |
-
-Sombra escrita direto no CSS (ex.: `box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05)`)
-não tem token — reproduza os valores como effect e registre na `description` que
-é literal.
+**Sombra sem token.** `box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05)` está literal no
+CSS e não tem variável. Reproduza como effect e registre na `description` que é
+literal.
 
 ---
+
+## Convenções já estabelecidas no arquivo
+
+A página **Accordion** (`6:2`) é o precedente — siga o que está lá.
+
+- **Uma página por componente**, com o nome do componente.
+- Um frame `<Componente> / Documentação` com a spec em texto: estrutura, slots,
+  variantes, tipografia, medidas e movimento.
+- Componentes nomeados por caminho: `Accordion`, `Accordion/Item`,
+  `Accordion/Trigger`, `Accordion/Content`. Prefixo `.` marca componente privado
+  (`.Accordion/Conteúdo padrão`), ícones em `Icon/*`.
+- **Eixo de variante único** sempre que possível (`Estado` = Fechado, Aberto,
+  Focado, Desabilitado). O que é 1px vira booleano em vez de eixo: um eixo
+  inteiro para uma divisória dobra a matriz e produz duas colunas idênticas.
+- Slots por troca de instância e booleano, não por variante.
+- **Movimento vive nos componentes**, não num frame de spec — assim viaja com a
+  biblioteca. O frame de timeline é documentação visível, e a animação real não
+  depende dele.
+- **Keyframe em nó aninhado dentro de outra instância é descartado em silêncio.**
+  Coloque a animação no componente que possui o nó (a rotação do chevron mora no
+  Trigger, não no Item) — que é onde o CSS também a coloca.
+- PT Serif e LXGW WenKai TC não têm peso Medium; nesses modos de `Fonte` o rótulo
+  cai para Regular, igual ao navegador.
 
 ## Nomes de camada
 
-Sempre o `data-slot` do Vanilla, sem exceção:
-
-| `data-slot` | Camada |
-|---|---|
-| `button` · `alert` · `card` · `input` | `button` · `alert` · `card` · `input` |
-| `alert-title` · `alert-description` · `alert-action` · `alert-dismiss` | mesmo nome |
-| `card-header` · `card-content` · `card-footer` | mesmo nome |
-
-Sem `data-slot` correspondente: `label` para o texto, `icon` para o SVG,
-`indicator` para bolinha de estado, `thumb` para switch/slider.
-
----
+O `data-slot` do Vanilla, sem exceção: `button`, `alert`, `alert-title`,
+`alert-description`, `alert-action`, `alert-dismiss`, `card`, `card-header`,
+`card-content`, `card-footer`. Sem `data-slot` correspondente: `label` para o
+texto, `icon` para o SVG, `indicator` para bolinha de estado, `thumb` para
+switch/slider.
 
 ## Estrutura do component set
 
@@ -156,54 +147,9 @@ Button (COMPONENT_SET)
 │   └── button
 │       ├── icon (16×16)
 │       └── label (text)
-├── variant=default, size=default, state=hover
 └── variant=outline, size=lg, state=default, disabled=true
 ```
 
-- Nome do set em PascalCase; nome de variante em `prop=valor` lowercase.
-- Ordem das props: `variant`, `size`, `state`, depois os booleanos.
-- Booleanos: `disabled`, `pressed`, `invalid` — um por atributo ARIA do CSS.
-
----
-
-## Código auxiliar
-
-```js
-// Cobre os dois casos: coleção local no arquivo destino e biblioteca publicada.
-// Local primeiro — coleção criada no arquivo e ainda não publicada não aparece
-// em teamLibrary, e a busca falharia sem motivo.
-async function importarTokens() {
-  const alvo = new Set(['Cor','Dimensao','Raio','Tipografia','Movimento','Fonte','Elevacao','Camada']);
-  const varMap = {};
-
-  for (const coll of await figma.variables.getLocalVariableCollectionsAsync()) {
-    if (!alvo.has(coll.name)) continue;
-    for (const id of coll.variableIds) {
-      const v = await figma.variables.getVariableByIdAsync(id);
-      if (v) varMap[`${coll.name}/${v.name}`] = v;
-    }
-  }
-
-  for (const coll of await figma.teamLibrary.getAvailableLibraryVariableCollectionsAsync()) {
-    if (!alvo.has(coll.name)) continue;
-    for (const lv of await figma.teamLibrary.getVariablesInLibraryCollectionAsync(coll.key)) {
-      const chave = `${coll.name}/${lv.name}`;
-      if (varMap[chave]) continue;
-      try { varMap[chave] = await figma.variables.importVariableByKeyAsync(lv.key); } catch (_) {}
-    }
-  }
-  return varMap;
-}
-
-// alfa é do paint, não da variável
-function paintDeToken(varMap, caminho, alfa = 1) {
-  const v = varMap[caminho];
-  if (!v) throw new Error(`variável ausente: ${caminho}`);
-  const base = { type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: alfa };
-  return figma.variables.setBoundVariableForPaint(base, 'color', v);
-}
-```
-
-`paintDeToken` lança quando a variável não existe — de propósito. Cair para hex
-solto produziria um component set que não acompanha a troca de tema, e o defeito
-só apareceria quando alguém trocasse o modo.
+Nome do set em PascalCase; variante em `prop=valor` lowercase; ordem `variant`,
+`size`, `state`, depois os booleanos (`disabled`, `pressed`, `invalid` — um por
+atributo ARIA do CSS).
