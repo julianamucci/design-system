@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, fn, userEvent, expect } from 'storybook/test';
 import { Loader2 } from 'lucide-vue-next';
@@ -11,6 +12,7 @@ const meta: Meta<any> = {
     onClick: fn(),
   } as never,
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },

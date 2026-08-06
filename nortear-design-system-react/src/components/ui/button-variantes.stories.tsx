@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Button } from "./button";
@@ -7,6 +8,7 @@ const meta = {
   tags: ["form"],
   component: Button,
   parameters: {
+    design: figmaDesign("button"),
     controls: { disable: true },
     actions: { disable: true },
   },

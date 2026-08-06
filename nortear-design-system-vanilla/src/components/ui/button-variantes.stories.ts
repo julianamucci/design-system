@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createButton } from './button';
 import { within, expect } from 'storybook/test';
@@ -5,6 +6,7 @@ import { within, expect } from 'storybook/test';
 const meta: Meta = {
   tags: ['form'],
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },

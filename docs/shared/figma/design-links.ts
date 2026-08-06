@@ -31,6 +31,21 @@ export const figmaNodes = {
   accordionDocs: '14-90',
   /** Frame de spec do movimento. */
   accordionTimeline: '13-53',
+
+  /**
+   * Variant set do button: eixos variant (6) × size (8, incluindo os icon-*).
+   * Estados e ícones são propriedades booleanas, não variantes — por isso as
+   * cinco stories de button apontam todas para cá: não há nó separado por
+   * estado que uma story de estado pudesse referenciar.
+   */
+  button: '156-2',
+  /** Página de documentação do componente. */
+  buttonDocs: '159-2',
+  /** Frame de spec do movimento (hover 1.05 / press 0.95). */
+  buttonTimeline: '168-26',
+
+  /** Página com os 80 ícones lucide gerados do pacote do repo. */
+  icons: '171-2',
 } as const;
 
 export type FigmaNodeKey = keyof typeof figmaNodes;

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
 import { Plus } from 'lucide-vue-next';
@@ -8,6 +9,7 @@ const meta: Meta<any> = {
   component: Button,
   tags: ['form'],
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },

@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Loader2 } from "lucide-react";
@@ -7,6 +8,9 @@ const meta = {
   title: "UI/Button/Estados",
   tags: ["form"],
   component: Button,
+  parameters: {
+    design: figmaDesign("button"),
+  },
   args: {
     onClick: fn(),
   },

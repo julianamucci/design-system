@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, fn, userEvent, expect } from 'storybook/test';
 import { Button } from './index';
@@ -9,6 +10,7 @@ const meta: Meta<any> = {
   component: Button,
   tags: ['autodocs', 'form'],
   parameters: {
+    design: figmaDesign('button'),
     docs: { page: withAutoDocsTab(ButtonDocs) },
   },
   argTypes: {

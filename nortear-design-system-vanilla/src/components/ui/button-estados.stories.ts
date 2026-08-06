@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
@@ -7,6 +8,7 @@ type EstadosArgs = { onClick: (e: MouseEvent) => void };
 const meta: Meta<EstadosArgs> = {
   tags: ['form'],
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import type { ComponentProps } from 'svelte';
 
@@ -7,6 +8,7 @@ import ButtonStory from './ButtonStory.svelte';
 
 const meta: Meta = {
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },

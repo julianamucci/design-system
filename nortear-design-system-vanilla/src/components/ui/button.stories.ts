@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createButton, createButtonIcon, type ButtonVariant, type ButtonSize } from './button';
@@ -23,6 +24,7 @@ const meta: Meta<ButtonArgs> = {
   title: 'UI/Button',
   tags: ['autodocs', 'form'],
   parameters: {
+    design: figmaDesign('button'),
     docs: { page: withAutoDocsTab(createButtonDocs) },
   },
   argTypes: {
