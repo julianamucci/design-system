@@ -278,13 +278,13 @@
 
   pointer-events: none;
   opacity: 0;                                   /* estado de repouso */
-  /* 2 voltas em 14,4s — o trecho de cruzeiro sai a ~6,1s por volta.
+  /* 2 voltas em 7,2s — o trecho de cruzeiro sai a ~3,1s por volta.
      Duração derivada de token: sob prefers-reduced-motion as durações vão a 0ms
      e o efeito se anula sozinho; a regra abaixo é a garantia explícita.
      Delay de 3s é valor de produto — nenhuma duração da escala chega perto. */
   animation:
-    nds-alert-gradient-giro    calc(var(--duration-stately) * 18) linear 3s forwards,
-    nds-alert-gradient-brilho  calc(var(--duration-stately) * 18) linear 3s forwards;
+    nds-alert-gradient-giro    calc(var(--duration-stately) * 9) linear 3s forwards,
+    nds-alert-gradient-brilho  calc(var(--duration-stately) * 9) linear 3s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
