@@ -92,15 +92,25 @@ os fundos soft das variantes semânticas (`/0.1`, `/0.15`) e as bordas (`/0.3`).
 errada. Clone por spread (`fills.map(f => ({ ...f, opacity }))`), que preserva o
 vínculo.
 
-**Alfa não sobrevive à criação do componente.** Opacidade definida no paint no
-mesmo script que cria o `figma.createComponent()` volta como `1` na leitura
-seguinte — reproduzido duas vezes, em levas independentes. Ajuste o alfa numa
-passada posterior, depois de todos os nós existirem, e confira lendo de volta:
+**Alfa de paint não sobrevive à instanciação — use opacidade de NÓ.** Esta é a
+armadilha mais cara do lote. `fill.opacity` funciona no componente e é descartado
+na instância: o componente mostra `0.1`, a instância nasce com `1`. Sem erro, sem
+aviso, e a conferência no componente passa — o defeito só aparece ao arrastar uma
+instância para a tela.
 
 ```js
-const comAlfa = (paints, op) => paints.map(p => Object.assign({}, p, { opacity: op }));
-no.fills = comAlfa(no.fills, 0.1);
+// ERRADO — o componente fica certo e toda instância nasce opaca
+no.fills = [Object.assign({}, paint, { opacity: 0.1 })];
+
+// CERTO — alfa no nó, cor no fill
+no.fills = [paint];
+no.opacity = 0.1;
 ```
+
+Quando o alfa é do FUNDO de um componente que tem conteúdo (o `destructive` do
+button, `hsl(var(--destructive) / 0.1)`), opacidade de nó no componente apagaria
+o texto junto. Aí o fundo vira uma **camada** absoluta com `STRETCH` nos dois
+eixos, ela leva a opacidade de nó, e o componente fica sem fill.
 
 **Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os
