@@ -87,6 +87,25 @@ token. Vincule `var(--primary)` e ponha `0.9` no `opacity` do paint — variáve
 Figma não carrega alfa por uso. Vale para os hovers do button (`/0.9`, `/0.8`),
 os fundos soft das variantes semânticas (`/0.1`, `/0.15`) e as bordas (`/0.3`).
 
+**Nunca clone paint por JSON.** `JSON.parse(JSON.stringify(fills))` descarta o
+`boundVariables`, e o nó passa a render a cor literal — sem erro nenhum, só a cor
+errada. Clone por spread (`fills.map(f => ({ ...f, opacity }))`), que preserva o
+vínculo.
+
+**Ao revincular, passe a cor resolvida junto.** `setBoundVariableForPaint` anexa o
+vínculo mas mantém a cor concreta que você mandou; se ela for preta, o nó fica
+preto mesmo com o vínculo certo — e a leitura de `boundVariables` confirma o
+vínculo, então o bug não aparece na verificação. Leia
+`variavel.valuesByMode[modoId]` e monte o paint com essa cor:
+
+```js
+const col = await figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId);
+const modo = col.modes.find(m => m.name === 'default-light').modeId;
+const { r, g, b } = v.valuesByMode[modo];
+node.fills = [figma.variables.setBoundVariableForPaint(
+  { type: 'SOLID', color: { r, g, b }, opacity: 0.1 }, 'color', v)];
+```
+
 **Modo claro/escuro não é variante.** As regras `.dark .nds-*` do CSS são o modo
 `default-dark` da coleção `Color`. Vincular a variável já cobre os dois.
 
