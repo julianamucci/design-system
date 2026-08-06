@@ -276,9 +276,10 @@ export const DescricaoLonga: Story = {
 // Chromatic. A play verifica a ordem no DOM, que é o que produz o empilhamento
 // (Cancel primeiro no DOM, visualmente abaixo do Action em mobile).
 export const Responsivo: Story = {
+  globals: { viewport: { value: 'mobile1' } },
   parameters: {
     covers: ['visual.item5'],
-    chromatic: { viewports: [375, 1024] },
+    chromatic: { viewports: [375] },
     docs: {
       description: {
         story:
@@ -320,6 +321,11 @@ export const Responsivo: Story = {
       );
       await expect(footer).not.toBeNull();
       await expect(footer).toHaveClass('nds-alert-dialog-footer');
+
+    // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
+    // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
+    await expect(window.matchMedia('(min-width: 40rem)').matches).toBe(false);
+    await expect(getComputedStyle(footer!).flexDirection).toBe('column-reverse');
       const labels = Array.from(footer!.querySelectorAll('button')).map((b) =>
         b.textContent?.trim(),
       );
