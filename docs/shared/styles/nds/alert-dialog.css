@@ -100,9 +100,13 @@
 
 /*
  * ─── nds-alert-dialog composite ─────────────────────────────────────────────
- * Animação de entrada/saída para libs headless (data-open/data-closed,
- * reusa as keyframes de nds-dialog), variante de tamanho, bloco de mídia
- * (ícone), e footer em grid de 2 colunas no tamanho sm.
+ * Animação de entrada/saída para libs headless (data-open/data-closed, reusa as
+ * keyframes de nds-dialog) e bloco de mídia (ícone) no header.
+ *
+ * NÃO há eixo de tamanho: o painel tem uma largura só (max-width 32rem) e se
+ * adapta por viewport, não por prop. Existiu um `data-size="sm"` de 20rem com
+ * rodapé em 2 colunas — saiu porque o Vanilla nunca o implementou, nenhuma
+ * story o exercitava e nada o documentava.
  */
 
 /*
@@ -160,11 +164,6 @@
   }
 }
 
-/* Tamanho compacto */
-.nds-alert-dialog-content[data-size="sm"] {
-  max-width: 20rem;                               /* 320px — xs */
-}
-
 /* Links na descrição */
 .nds-alert-dialog-description a {
   text-decoration: underline;
@@ -200,14 +199,8 @@
 }
 
 @media (min-width: 40rem) {
-  .nds-alert-dialog-content[data-size="default"] .nds-alert-dialog-header:has(.nds-alert-dialog-media) {
+  .nds-alert-dialog-header:has(.nds-alert-dialog-media) {
     align-items: flex-start;
     text-align: left;
   }
-}
-
-/* Footer em 2 colunas no tamanho sm (botões lado a lado) */
-.nds-alert-dialog-content[data-size="sm"] .nds-alert-dialog-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }

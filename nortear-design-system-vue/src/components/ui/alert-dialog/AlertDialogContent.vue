@@ -14,18 +14,12 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = withDefaults(
-  defineProps<AlertDialogContentProps & {
-    class?: HTMLAttributes['class']
-    size?: 'default' | 'sm'
-  }>(),
-  {
-    size: 'default',
-  },
-)
+const props = defineProps<AlertDialogContentProps & {
+  class?: HTMLAttributes['class']
+}>()
 const emits = defineEmits<AlertDialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'size')
+const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -38,7 +32,6 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      :data-size="size"
       v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'AlertDialog', ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
