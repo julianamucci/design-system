@@ -54,13 +54,34 @@ export const figmaNodes = {
   /** Frame de spec do glow que percorre a borda. */
   alertGlow: '197-85',
 
+  /**
+   * Componente montado do alert-dialog: cortina + painel, com cabeçalho e
+   * rodapé como instâncias dos dois sets abaixo. Não há eixo de variante nem de
+   * tamanho — a severidade vem da variante do Button da ação.
+   */
+  alertDialog: '212-3',
+  /** Variant set do cabeçalho — eixo Layout (Esquerda | Centralizado). */
+  alertDialogHeader: '246-88',
+  /** Variant set do rodapé — eixo Layout (Linha | Empilhado). */
+  alertDialogFooter: '239-134',
+  /** Página de documentação do componente. */
+  alertDialogDocs: '215-60',
+  /** Frame de spec do movimento (entrada em spring, saída em exit). */
+  alertDialogTimeline: '214-34',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;
 
 export type FigmaNodeKey = keyof typeof figmaNodes;
 
-/** Parâmetro pronto para `parameters.design` do addon-designs. */
-export function figmaDesign(node: FigmaNodeKey) {
-  return { type: 'figma' as const, url: `${BASE}?node-id=${figmaNodes[node]}` };
+/**
+ * Parâmetro pronto para `parameters.design` do addon-designs.
+ *
+ * `name` rotula a aba — só faz sentido quando a story aponta para mais de um
+ * nó (`design: [figmaDesign('a', 'Cabeçalho'), figmaDesign('b', 'Rodapé')]`).
+ */
+export function figmaDesign(node: FigmaNodeKey, name?: string) {
+  const design = { type: 'figma' as const, url: `${BASE}?node-id=${figmaNodes[node]}` };
+  return name ? { ...design, name } : design;
 }

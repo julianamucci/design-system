@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
@@ -19,6 +20,7 @@ const meta = {
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('alertDialog'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

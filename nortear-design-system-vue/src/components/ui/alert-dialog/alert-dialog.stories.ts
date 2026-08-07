@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { computed } from 'vue';
 import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
@@ -45,6 +46,7 @@ const meta = {
   component: AlertDialog,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('alertDialog'),
     docs: { page: withAutoDocsTab(AlertDialogDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Props que o

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
@@ -9,6 +10,7 @@ const meta: Meta = {
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('alertDialog'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

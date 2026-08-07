@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
@@ -20,6 +21,7 @@ const meta = {
   tags: ["overlay"],
   component: AlertDialog,
   parameters: {
+    design: figmaDesign("alertDialog"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

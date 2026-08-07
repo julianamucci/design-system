@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
@@ -31,6 +32,7 @@ const meta: Meta<AlertDialogArgs> = {
   title: 'UI/AlertDialog',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('alertDialog'),
     docs: { page: withAutoDocsTab(createAlertDialogDocs) },
   },
   // Esta stack não tem docgen (não há componente de framework para

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
@@ -10,6 +11,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'UI/AlertDialog/Estados',
   parameters: {
+    design: figmaDesign('alertDialog'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

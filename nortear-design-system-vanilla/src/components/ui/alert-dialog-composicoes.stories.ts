@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
@@ -11,6 +12,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'UI/AlertDialog/Composicoes',
   parameters: {
+    design: figmaDesign('alertDialog'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
@@ -219,6 +221,12 @@ export const DescricaoLonga: Story = {
 export const Responsivo: Story = {
   globals: { viewport: { value: 'mobile1' } },
   parameters: {
+    // Os dois sub-componentes que o Figma usa para simular o mobile: o eixo
+    // Layout de cada um cobre o que aqui é media query.
+    design: [
+      figmaDesign('alertDialogHeader', 'Cabeçalho'),
+      figmaDesign('alertDialogFooter', 'Rodapé'),
+    ],
     covers: ['visual.item5'],
     chromatic: { viewports: [375] },
     docs: {
