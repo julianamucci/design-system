@@ -34,7 +34,11 @@ export interface BreadcrumbSeparatorOptions {
 }
 
 export interface BreadcrumbEllipsisOptions {
-  /** Accessible label for the ellipsis (default: "More"). */
+  /**
+   * Nome acessível do indicador de níveis ocultos. Com rótulo, as reticências
+   * são anunciadas; sem ele, ficam decorativas — que é o certo quando um
+   * gatilho as envolve e já carrega o próprio nome.
+   */
   label?: string;
   className?: string;
 }
@@ -91,9 +95,12 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-page';
-  span.setAttribute('role', 'link');
+  // A anatomia documentada é literal: "último item com aria-current='page'; nunca é
+  // link". O role="link" com aria-disabled fazia o leitor de tela anunciar
+  // justamente o contrário — "link, desabilitado" — para um texto que nunca foi
+  // navegável. Quem marca a página atual é o aria-current, e ele vale em
+  // qualquer elemento.
   span.setAttribute('aria-current', 'page');
-  span.setAttribute('aria-disabled', 'true');
   span.className = 'nds-breadcrumb-page';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
   if (text) span.textContent = text;
@@ -125,13 +132,20 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
  * o consumidor liga um click handler externo pra expandir.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
-  const { label = 'More', className } = options;
+  const { label, className } = options;
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-ellipsis';
-  span.setAttribute('role', 'presentation');
-  span.setAttribute('aria-hidden', 'true');
-  span.setAttribute('aria-label', label);
+  // O texto sr-only morava DENTRO de um aria-hidden: nenhum leitor de tela chegava
+  // nele, então o rótulo não existia na prática — e ainda estava em inglês num
+  // produto em português. As reticências são decorativas mesmo; quem nomeia o
+  // conjunto oculto é o gatilho que as envolve, como na composição com menu.
+  if (label) {
+    span.setAttribute('role', 'img');
+    span.setAttribute('aria-label', label);
+  } else {
+    span.setAttribute('aria-hidden', 'true');
+  }
   span.className = 'nds-breadcrumb-ellipsis';
   if (className) span.classList.add(...className.split(' ').filter(Boolean));
 
@@ -154,11 +168,6 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
     svg.appendChild(c);
   }
   span.appendChild(svg);
-
-  const srOnly = document.createElement('span');
-  srOnly.className = 'nds-sr-only';
-  srOnly.textContent = label;
-  span.appendChild(srOnly);
 
   return span;
 }

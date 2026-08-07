@@ -31,11 +31,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Espião de escopo de módulo: dentro do render, a play não o alcança. */
+const onNavigate = fn();
+
 export const Simple: Story = {
-  args: {
-    onNavigate: fn(),
-  } as never,
-  render: (args) => (
+  parameters: {
+    covers: ["functional.item3", "functional.item6", "accessibility.item5"],
+    docs: {
+      description: {
+        story: "Composição básica com 2 níveis — link inicial + BreadcrumbPage.",
+      },
+    },
+  },
+  render: () => (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
@@ -43,10 +51,7 @@ export const Simple: Story = {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              (args as { onNavigate?: (e: unknown) => void }).onNavigate?.({
-                event: "navigation_click",
-                label: "Início",
-              });
+              onNavigate({ event: "navigation_click", label: "Início" });
             }}
           >
             Início
@@ -59,40 +64,44 @@ export const Simple: Story = {
       </BreadcrumbList>
     </Breadcrumb>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Composição básica com 2 níveis — link inicial + BreadcrumbPage.",
-      },
-    },
-  },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const onNavigate = (args as { onNavigate: ReturnType<typeof fn> }).onNavigate;
     const link = canvas.getByRole("link", { name: "Início" });
 
-    await step("F3: clicar no BreadcrumbLink dispara navigation_click", async () => {
+    await step("Clicar no link dispara o evento de navegação", async () => {
+      // functional.item3 — cada passo estabelece a própria precondição: zerar o
+      // espião aqui é o que faz a contagem valer nesta rodada, inclusive no
+      // replay do painel, que roda no mesmo DOM.
+      onNavigate.mockClear();
       await userEvent.click(link);
-      await expect(onNavigate).toHaveBeenCalled();
+      await expect(onNavigate).toHaveBeenCalledTimes(1);
     });
 
-    await step("F6: Tab foca o link e Enter ativa o handler", async () => {
+    await step("Tab leva o foco ao link e Enter o ativa", async () => {
+      // functional.item6 e accessibility.item5 — o link é o único item focável
+      // da trilha, porque a página atual não é navegável.
       link.blur();
       onNavigate.mockClear();
       await userEvent.tab();
       await expect(link).toHaveFocus();
       await userEvent.keyboard("{Enter}");
-      await expect(onNavigate).toHaveBeenCalled();
-    });
-
-    await step("A5: focus ring visível — link aceita foco programático", async () => {
-      link.focus();
-      await expect(link).toHaveFocus();
+      await expect(onNavigate).toHaveBeenCalledTimes(1);
+      await userEvent.tab();
+      await expect(link).not.toHaveFocus();
     });
   },
 };
 
 export const WithEllipsis: Story = {
+  parameters: {
+    covers: ["functional.item5", "visual.item2"],
+    docs: {
+      description: {
+        story:
+          "Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.",
+      },
+    },
+  },
   render: () => (
     <Breadcrumb>
       <BreadcrumbList>
@@ -101,7 +110,7 @@ export const WithEllipsis: Story = {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbEllipsis />
+          <BreadcrumbEllipsis label="Mais páginas" />
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -114,43 +123,34 @@ export const WithEllipsis: Story = {
       </BreadcrumbList>
     </Breadcrumb>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Ellipsis colapsando níveis intermediários — inclui MoreHorizontalIcon e texto sr-only \"More\".",
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+
+    await step("O indicador de níveis ocultos é anunciado", async () => {
+      // functional.item5 — antes o rótulo morava num sr-only DENTRO de um
+      // aria-hidden: leitor de tela nenhum chegava nele. A busca por papel só
+      // encontra o que está na árvore de acessibilidade.
+      const reticencias = canvas.getByRole("img", { name: "Mais páginas" });
+      await expect(reticencias).toHaveAttribute(
+        "data-slot",
+        "breadcrumb-ellipsis",
+      );
+      await expect(reticencias.querySelector("svg")).not.toBeNull();
+    });
+
+    await step("O indicador não entra na ordem de tabulação", async () => {
+      // Ele informa, não navega: quem expande os níveis é o gatilho da
+      // composição responsiva.
+      const reticencias = canvas.getByRole("img", { name: "Mais páginas" });
+      await expect(reticencias.hasAttribute("tabindex")).toBe(false);
+      await expect(canvas.getAllByRole("link").length).toBe(2);
+    });
   },
 };
 
 export const CustomSeparator: Story = {
-  render: () => (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Início</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <Slash />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Componentes</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <Slash />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  ),
   parameters: {
+    covers: ["functional.item4", "visual.item3"],
     docs: {
       description: {
         story:
@@ -158,42 +158,79 @@ export const CustomSeparator: Story = {
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  render: () => (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Início</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>
+          <Slash data-icon="slash" />
+        </BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Componentes</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator>
+          <Slash data-icon="slash" />
+        </BreadcrumbSeparator>
+        <BreadcrumbItem>
+          <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  ),
+  play: async ({ canvasElement, step }) => {
+    await step("O conteúdo passado substitui o chevron padrão", async () => {
+      // functional.item4 — o marcador data-icon distingue o separador desta
+      // story do padrão, que renderiza sem ele.
+      const separadores = Array.from(
+        canvasElement.querySelectorAll('[data-slot="breadcrumb-separator"]'),
+      );
+      await expect(separadores.length).toBe(2);
+      for (const sep of separadores) {
+        await expect(sep.querySelector('[data-icon="slash"]')).not.toBeNull();
+        await expect(sep.children.length).toBe(1);
+      }
+    });
+
+    await step("Customizar o desenho não devolve o separador à leitura", async () => {
+      const separadores = canvasElement.querySelectorAll(
+        '[data-slot="breadcrumb-separator"]',
+      );
+      for (const sep of separadores) {
+        await expect(sep).toHaveAttribute("aria-hidden", "true");
+      }
+    });
   },
 };
 
 export const AsChildLink: Story = {
+  parameters: {
+    covers: ["functional.item3"],
+    docs: {
+      description: {
+        story:
+          "Link customizado via prop render (useRender do base-ui) — permite integração com routers como Next.js Link ou React Router Link.",
+      },
+    },
+  },
   render: () => (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink
-            render={(props) => (
-              <a
-                {...props}
-                data-router-link="true"
-                href="#"
-              >
-                Início
-              </a>
-            )}
-          />
+            render={(props) => <a {...props} data-router-link="true" href="#" />}
+          >
+            Início
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink
-            render={(props) => (
-              <a
-                {...props}
-                data-router-link="true"
-                href="#"
-              >
-                Componentes
-              </a>
-            )}
-          />
+            render={(props) => <a {...props} data-router-link="true" href="#" />}
+          >
+            Componentes
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -202,17 +239,19 @@ export const AsChildLink: Story = {
       </BreadcrumbList>
     </Breadcrumb>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Link customizado via prop render (useRender do base-ui) — permite integração com routers como Next.js Link ou React Router Link.",
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
-    await expect(canvas.getAllByRole("link").length).toBeGreaterThanOrEqual(2);
+
+    await step("O elemento do consumidor recebe o estilo do componente", async () => {
+      // O ponto da composição é este: o <a> do router mantém os atributos dele
+      // E ganha a classe do design system, em vez de virar um segundo elemento.
+      const links = canvas.getAllByRole("link");
+      await expect(links.length).toBe(2);
+      for (const link of links) {
+        await expect(link).toHaveAttribute("data-router-link", "true");
+        await expect(link).toHaveClass("nds-breadcrumb-link");
+        await expect(link.tagName).toBe("A");
+      }
+    });
   },
 };

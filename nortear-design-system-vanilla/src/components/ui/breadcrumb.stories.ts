@@ -52,38 +52,62 @@ function buildPlaygroundBreadcrumb(): HTMLElement {
 }
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'accessibility.item6',
+      'visual.item1',
+    ],
+  },
   render: () => buildPlaygroundBreadcrumb(),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Nav com aria-label="breadcrumb" presente', async () => {
+    await step('A trilha é um landmark de navegação nomeado', async () => {
+      // accessibility.item1 — sem o nome, o leitor de tela anuncia só
+      // "navegação" e a pessoa não sabe qual das navegações da página é esta.
       const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
-      await expect(nav).toBeInTheDocument();
+      await expect(nav).toHaveAttribute('data-slot', 'breadcrumb');
+      // functional.item1 — a hierarquia é uma lista ordenada, não um punhado
+      // de links soltos: é a ordem que dá o sentido do caminho.
+      const list = nav.querySelector('[data-slot="breadcrumb-list"]');
+      await expect(list?.tagName).toBe('OL');
+      await expect(list!.children.length).toBeGreaterThan(0);
     });
 
-    await step('Lista ordenada <ol> dentro do nav', async () => {
-      const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
-      const ol = nav.querySelector('ol');
-      await expect(ol).toBeInTheDocument();
+    await step('Só os níveis anteriores são links', async () => {
+      // functional.item2 — é a asserção que pega o defeito antigo: a página
+      // atual tinha role="link" e entrava nesta conta, então o leitor de tela
+      // anunciava três links num caminho que só tem dois navegáveis.
+      const links = canvas.getAllByRole('link');
+      await expect(links.length).toBe(2);
+      await expect(links.map((l) => l.textContent?.trim())).toEqual(['Início', 'Componentes']);
+      for (const link of links) await expect(link).toHaveAttribute('href', '#');
     });
 
-    await step('Links de níveis anteriores são navegáveis', async () => {
-      await expect(canvas.getByRole('link', { name: 'Início' })).toBeInTheDocument();
-      await expect(canvas.getByRole('link', { name: 'Componentes' })).toBeInTheDocument();
+    await step('A página atual é marcada, e não é navegável', async () => {
+      // accessibility.item2
+      const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]')!;
+      await expect(page).toHaveAttribute('aria-current', 'page');
+      await expect(page).toHaveTextContent('Breadcrumb');
+      await expect(page.hasAttribute('href')).toBe(false);
+      await expect(page.querySelector('a')).toBeNull();
     });
 
-    await step('Último item é BreadcrumbPage com aria-current="page"', async () => {
-      const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
-      const current = nav.querySelector('[aria-current="page"]');
-      await expect(current).toBeInTheDocument();
-      await expect(current).toHaveTextContent('Breadcrumb');
-    });
-
-    await step('BreadcrumbPage não é um <a>', async () => {
-      const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
-      const lastItem = nav.querySelectorAll('li')[nav.querySelectorAll('li').length - 1];
-      const anchor = lastItem.querySelector('a');
-      await expect(anchor).toBeNull();
+    await step('Separadores ficam fora da árvore de acessibilidade', async () => {
+      // accessibility.item3 — o chevron é desenho; lido em voz alta viraria
+      // ruído entre os níveis.
+      const separadores = canvasElement.querySelectorAll('[data-slot="breadcrumb-separator"]');
+      await expect(separadores.length).toBe(2);
+      for (const sep of separadores) {
+        await expect(sep).toHaveAttribute('aria-hidden', 'true');
+        await expect(sep).toHaveAttribute('role', 'presentation');
+      }
     });
   },
 };

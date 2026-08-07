@@ -8,10 +8,13 @@ const props = defineProps<{
 </script>
 
 <template>
+  <!-- A anatomia documentada é literal: "último item com aria-current='page'; nunca é
+   link". O role="link" com aria-disabled fazia o leitor de tela anunciar
+   justamente o contrário — "link, desabilitado" — para um texto que nunca foi
+   navegável. Quem marca a página atual é o aria-current, e ele vale em
+   qualquer elemento. -->
   <span
     data-slot="breadcrumb-page"
-    role="link"
-    aria-disabled="true"
     aria-current="page"
     :class="cn('nds-breadcrumb-page', props.class)"
   >

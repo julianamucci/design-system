@@ -30,7 +30,7 @@
       "item4": "<strong>BreadcrumbLink</strong> — link <code>&lt;a&gt;</code> navegável para níveis anteriores.",
       "item5": "<strong>BreadcrumbPage</strong> — último item com <code>aria-current=\"page\"</code>; nunca é link.",
       "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo com <code>aria-hidden=\"true\"</code>; padrão é <code>ChevronRight</code>.",
-      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de níveis ocultos quando a hierarquia é muito longa.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de níveis ocultos. Com rótulo, é anunciado; sem rótulo, fica decorativo — que é o certo quando um gatilho o envolve e já tem o próprio nome.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
@@ -301,7 +301,7 @@
         },
         "item5": {
           "action": "Renderizar com BreadcrumbEllipsis",
-          "result": "Exibe <code>MoreHorizontal</code> com texto <code>sr-only</code> \"More\"",
+          "result": "Reticências anunciadas quando recebem rótulo; decorativas quando não recebem",
           "priority": "medium"
         },
         "item6": {
@@ -417,7 +417,7 @@
       "item4": "<strong>BreadcrumbLink</strong> — <code>&lt;a&gt;</code> link navigable to previous levels.",
       "item5": "<strong>BreadcrumbPage</strong> — last item with <code>aria-current=\"page\"</code>; never a link.",
       "item6": "<strong>BreadcrumbSeparator</strong> — decorative separator with <code>aria-hidden=\"true\"</code>; default is <code>ChevronRight</code>.",
-      "item7": "<strong>BreadcrumbEllipsis</strong> — indicator for hidden levels when the hierarchy is too long.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicator for hidden levels. With a label it is announced; without one it stays decorative — which is right when a trigger wraps it and already carries its own name.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
@@ -688,7 +688,7 @@
         },
         "item5": {
           "action": "Render with BreadcrumbEllipsis",
-          "result": "Shows <code>MoreHorizontal</code> with <code>sr-only</code> text \"More\"",
+          "result": "Ellipsis is announced when given a label; decorative when not",
           "priority": "medium"
         },
         "item6": {
@@ -804,7 +804,7 @@
       "item4": "<strong>BreadcrumbLink</strong> — enlace <code>&lt;a&gt;</code> navegable a niveles anteriores.",
       "item5": "<strong>BreadcrumbPage</strong> — último ítem con <code>aria-current=\"page\"</code>; nunca es un enlace.",
       "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo con <code>aria-hidden=\"true\"</code>; predeterminado es <code>ChevronRight</code>.",
-      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de niveles ocultos cuando la jerarquía es muy larga.",
+      "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de niveles ocultos. Con etiqueta se anuncia; sin ella queda decorativo — que es lo correcto cuando un disparador lo envuelve y ya lleva su propio nombre.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
@@ -1075,7 +1075,7 @@
         },
         "item5": {
           "action": "Renderizar con BreadcrumbEllipsis",
-          "result": "Muestra <code>MoreHorizontal</code> con texto <code>sr-only</code> \"More\"",
+          "result": "Puntos suspensivos anunciados cuando reciben etiqueta; decorativos cuando no",
           "priority": "medium"
         },
         "item6": {

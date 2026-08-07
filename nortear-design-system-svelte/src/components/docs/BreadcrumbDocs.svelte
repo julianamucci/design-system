@@ -383,7 +383,7 @@ interface BreadcrumbEllipsisProps {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
         doCaption: stripHtml($tStore('doDont.pair1.do')),
-        dontCaption: stripHtml($tStore('doDont.pair1.dont')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
@@ -416,7 +416,7 @@ interface BreadcrumbEllipsisProps {
     </Breadcrumb>
   {/snippet}
   {#snippet dontPair1()}
-    <Breadcrumb aria-label={stripHtml($tStore('doDont.pair1.dont'))}>
+    <Breadcrumb aria-label={toPlainText($tStore('doDont.pair1.dont'))}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="#">{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -764,7 +764,7 @@ interface BreadcrumbEllipsisProps {
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
       { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/ui-stepper--docs'        },
       { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/ui-tabs--docs'           },
-      { name: 'DropdownMenu',   description: $tStore('related.dropdownMenu'),   path: '?path=/docs/ui-dropdownmenu--docs'   },
+      { name: 'DropdownMenu',   description: toPlainText($tStore('related.dropdownMenu')),   path: '?path=/docs/ui-dropdownmenu--docs'   },
     ]}
   />
 
@@ -788,8 +788,8 @@ interface BreadcrumbEllipsisProps {
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.navigationClick'), trigger: stripHtml($tStore('analytics.table.navigationClickTrigger')), payload: $tStore('analytics.table.navigationClickPayload') },
-      { event: $tStore('analytics.table.ellipsisOpen'),    trigger: stripHtml($tStore('analytics.table.ellipsisOpenTrigger')),    payload: $tStore('analytics.table.ellipsisOpenPayload')    },
+      { event: $tStore('analytics.table.navigationClick'), trigger: toPlainText($tStore('analytics.table.navigationClickTrigger')), payload: $tStore('analytics.table.navigationClickPayload') },
+      { event: $tStore('analytics.table.ellipsisOpen'),    trigger: toPlainText($tStore('analytics.table.ellipsisOpenTrigger')),    payload: $tStore('analytics.table.ellipsisOpenPayload')    },
       { event: $tStore('analytics.table.pageView'),        trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),                   payload: $tStore('analytics.table.pageViewPayload')        },
       { event: $tStore('analytics.table.sectionViewed'),   trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),              payload: $tStore('analytics.table.sectionViewedPayload')   },
       { event: $tStore('analytics.table.langSwitch'),      trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),                 payload: $tStore('analytics.table.langSwitchPayload')      },

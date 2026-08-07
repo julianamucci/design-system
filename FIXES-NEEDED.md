@@ -1451,3 +1451,28 @@ exercite. A prop é usada de verdade — o `DocsHeader` monta as duas etiquetas 
 cabeçalho com ela —, então remover não é opção; o que falta é uma story que
 demonstre customização por classe sem contrariar a orientação da própria página,
 que manda usar a variante e não a classe.
+
+## Vanilla — `className` das factories, agora medido em três componentes (médio)
+
+Terceira aparição do mesmo buraco: avatar (78,7% de ramos), badge (90,9%) e
+agora breadcrumb (**71,9%**, abaixo do limiar de 80). Toda factory do Vanilla
+aceita `className` e quase nenhuma story ou docs page passa — no breadcrumb são
+sete `if (className)` idênticos, um por peça, todos sem cobertura.
+
+Não fechei com story porque toda tentativa saía artificial: a orientação das
+próprias páginas é usar a variante e as classes `.nds-*` do componente, então uma
+story que passa classe numa peça interna demonstraria o que a documentação
+desaconselha. E a exceção que existiria — esconder níveis intermediários no
+mobile — depende de um par de breakpoints que o compat só oferece desencontrado
+(`nds-sm-block` em 640 e `nds-md-hidden` em 768).
+
+A decisão é de produto, e vale para as três (e para o resto do Vanilla):
+
+- **Manter e exercitar**: escrever a story de customização por classe que hoje
+  não existe em lugar nenhum, e alinhar a orientação das docs pages a ela.
+- **Enxugar**: manter `className` só onde há consumidor real — no breadcrumb,
+  isso é o root; nas outras peças, ninguém —, aceitando que `props.extensibility`
+  passe a valer para menos partes.
+
+Enquanto não se decide, o breadcrumb do Vanilla fica abaixo do limiar. Preferi
+reportar a inventar uso.

@@ -384,7 +384,7 @@ export function createBreadcrumbDocs(): HTMLElement {
                     { type: 'link', text: t('demonstration.labels.breadcrumb'), href: '#' },
                   ],
                   '›',
-                  stripHtml(t('doDont.pair1.dont')),
+                  toPlainText(t('doDont.pair1.dont')),
                 ),
             },
             {
@@ -714,12 +714,12 @@ export interface BreadcrumbEllipsisOptions {
           items: [
             {
               event: t('analytics.table.navigationClick'),
-              trigger: stripHtml(t('analytics.table.navigationClickTrigger')),
+              trigger: toPlainText(t('analytics.table.navigationClickTrigger')),
               payload: t('analytics.table.navigationClickPayload'),
             },
             {
               event: t('analytics.table.ellipsisOpen'),
-              trigger: stripHtml(t('analytics.table.ellipsisOpenTrigger')),
+              trigger: toPlainText(t('analytics.table.ellipsisOpenTrigger')),
               payload: t('analytics.table.ellipsisOpenPayload'),
             },
             {
@@ -766,7 +766,7 @@ export interface BreadcrumbEllipsisOptions {
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: t(`testes.accessibility.item${i}.how`),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {

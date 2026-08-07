@@ -370,8 +370,8 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.navigationClick'), trigger: stripHtml(tContent('analytics.table.navigationClickTrigger')), payload: tContent('analytics.table.navigationClickPayload') },
-  { event: tContent('analytics.table.ellipsisOpen'),    trigger: stripHtml(tContent('analytics.table.ellipsisOpenTrigger')),    payload: tContent('analytics.table.ellipsisOpenPayload')    },
+  { event: tContent('analytics.table.navigationClick'), trigger: toPlainText(tContent('analytics.table.navigationClickTrigger')), payload: tContent('analytics.table.navigationClickPayload') },
+  { event: tContent('analytics.table.ellipsisOpen'),    trigger: toPlainText(tContent('analytics.table.ellipsisOpenTrigger')),    payload: tContent('analytics.table.ellipsisOpenPayload')    },
   { event: tContent('analytics.table.pageView'),        trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),                   payload: tContent('analytics.table.pageViewPayload')        },
   { event: tContent('analytics.table.sectionViewed'),   trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),              payload: tContent('analytics.table.sectionViewedPayload')   },
   { event: tContent('analytics.table.langSwitch'),      trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),                 payload: tContent('analytics.table.langSwitchPayload')      },
@@ -564,7 +564,7 @@ const visualTestItems = computed(() => [
         </Breadcrumb>
       </template>
       <template #dont-preview-0>
-        <Breadcrumb :aria-label="stripHtml(tContent('doDont.pair1.dont'))">
+        <Breadcrumb :aria-label="toPlainText(tContent('doDont.pair1.dont'))">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">

@@ -61,10 +61,13 @@ function BreadcrumbLink({
 
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
+    // A anatomia documentada é literal: "último item com aria-current='page'; nunca é
+    // link". O role="link" com aria-disabled fazia o leitor de tela anunciar
+    // justamente o contrário — "link, desabilitado" — para um texto que nunca foi
+    // navegável. Quem marca a página atual é o aria-current, e ele vale em
+    // qualquer elemento.
     <span
       data-slot="breadcrumb-page"
-      role="link"
-      aria-disabled="true"
       aria-current="page"
       className={cn("nds-breadcrumb-page", className)}
       {...props}
@@ -94,22 +97,27 @@ function BreadcrumbSeparator({
 
 function BreadcrumbEllipsis({
   className,
+  label,
   ...props
-}: React.ComponentProps<"span">) {
+}: React.ComponentProps<"span"> & {
+  /**
+   * Nome acessível do indicador de níveis ocultos. Com rótulo, as reticências
+   * são anunciadas; sem ele, ficam decorativas — que é o certo quando um
+   * gatilho as envolve e já carrega o próprio nome.
+   */
+  label?: string
+}) {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
-      role="presentation"
-      aria-hidden="true"
+      {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
       className={cn(
         "nds-breadcrumb-ellipsis",
         className
       )}
       {...props}
     >
-      <MoreHorizontalIcon
-      />
-      <span className="nds-sr-only">More</span>
+      <MoreHorizontalIcon />
     </span>
   )
 }

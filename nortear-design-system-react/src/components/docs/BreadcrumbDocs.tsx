@@ -550,7 +550,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               </Breadcrumb>
             ),
             dontPreview: (
-              <Breadcrumb aria-label={stripHtml(tContent("doDont.pair1.dont"))}>
+              <Breadcrumb aria-label={toPlainText(tContent("doDont.pair1.dont"))}>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink href="#" onClick={trackBreadcrumbNav(home)}>{home}</BreadcrumbLink>
@@ -567,7 +567,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               </Breadcrumb>
             ),
             doCaption: stripHtml(tContent("doDont.pair1.do")),
-            dontCaption: stripHtml(tContent("doDont.pair1.dont")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -870,12 +870,12 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         items={[
           {
             event: tContent("analytics.table.navigationClick"),
-            trigger: stripHtml(tContent("analytics.table.navigationClickTrigger")),
+            trigger: toPlainText(tContent("analytics.table.navigationClickTrigger")),
             payload: tContent("analytics.table.navigationClickPayload"),
           },
           {
             event: tContent("analytics.table.ellipsisOpen"),
-            trigger: stripHtml(tContent("analytics.table.ellipsisOpenTrigger")),
+            trigger: toPlainText(tContent("analytics.table.ellipsisOpenTrigger")),
             payload: tContent("analytics.table.ellipsisOpenPayload"),
           },
           {
@@ -922,7 +922,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
             criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
             level: tContent(`testes.accessibility.item${i}.level`),
-            how: tContent(`testes.accessibility.item${i}.how`),
+            how: toPlainText(tContent(`testes.accessibility.item${i}.how`)),
           })),
         }}
         visual={{

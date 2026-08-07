@@ -11,13 +11,7 @@ const meta: Meta = {
   component: Breadcrumb,
   tags: ['autodocs', 'navigation'],
   parameters: {
-    docs: {
-      page: withAutoDocsTab(BreadcrumbDocs),
-      description: {
-        component:
-          'Breadcrumb exibe a hierarquia de navegação do site com <nav aria-label="breadcrumb"> + <ol>. Composto por 7 subcomponentes; o último item deve ser sempre BreadcrumbPage com aria-current="page".',
-      },
-    },
+    docs: { page: withAutoDocsTab(BreadcrumbDocs) },
   },
 };
 
@@ -25,48 +19,62 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  render: () => ({
-    Component: BreadcrumbStory,
-    props: { variant: 'default' },
-  }),
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item4',
+      'accessibility.item6',
+      'visual.item1',
+    ],
+  },
+  render: () => ({ Component: BreadcrumbStory, props: { variant: 'default' } }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('nav com aria-label="breadcrumb" está presente', async () => {
+    await step('A trilha é um landmark de navegação nomeado', async () => {
+      // accessibility.item1 — sem o nome, o leitor de tela anuncia só
+      // "navegação" e a pessoa não sabe qual das navegações da página é esta.
       const nav = canvas.getByRole('navigation', { name: 'breadcrumb' });
-      await expect(nav).toBeInTheDocument();
+      await expect(nav).toHaveAttribute('data-slot', 'breadcrumb');
+      // functional.item1 — a hierarquia é uma lista ordenada, não um punhado
+      // de links soltos: é a ordem que dá o sentido do caminho.
+      const list = nav.querySelector('[data-slot="breadcrumb-list"]');
+      await expect(list?.tagName).toBe('OL');
+      await expect(list!.children.length).toBeGreaterThan(0);
     });
 
-    await step('Lista ordenada renderiza como <ol>', async () => {
-      const list = canvasElement.querySelector('ol[data-slot="breadcrumb-list"]');
-      await expect(list).toBeInTheDocument();
+    await step('Só os níveis anteriores são links', async () => {
+      // functional.item2 — é a asserção que pega o defeito antigo: a página
+      // atual tinha role="link" e entrava nesta conta, então o leitor de tela
+      // anunciava três links num caminho que só tem dois navegáveis.
+      const links = canvas.getAllByRole('link');
+      await expect(links.length).toBe(2);
+      await expect(links.map((l) => l.textContent?.trim())).toEqual(['Início', 'Componentes']);
+      for (const link of links) await expect(link).toHaveAttribute('href', '#');
     });
 
-    await step('Links intermediários estão visíveis', async () => {
-      await expect(canvas.getByText('Início')).toBeVisible();
-      await expect(canvas.getByText('Componentes')).toBeVisible();
-    });
-
-    await step('Último item é BreadcrumbPage com aria-current="page"', async () => {
-      const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]');
-      await expect(page).toBeInTheDocument();
+    await step('A página atual é marcada, e não é navegável', async () => {
+      // accessibility.item2
+      const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]')!;
       await expect(page).toHaveAttribute('aria-current', 'page');
       await expect(page).toHaveTextContent('Breadcrumb');
+      await expect(page.hasAttribute('href')).toBe(false);
+      await expect(page.querySelector('a')).toBeNull();
     });
 
-    await step('BreadcrumbPage não contém link <a>', async () => {
-      const page = canvasElement.querySelector('[data-slot="breadcrumb-page"]');
-      const anchor = page?.querySelector('a');
-      await expect(anchor).toBeNull();
-    });
-
-    await step('Separadores têm aria-hidden="true" e role="presentation"', async () => {
-      const separators = canvasElement.querySelectorAll('[data-slot="breadcrumb-separator"]');
-      await expect(separators.length).toBe(2);
-      separators.forEach((sep) => {
-        expect(sep).toHaveAttribute('aria-hidden', 'true');
-        expect(sep).toHaveAttribute('role', 'presentation');
-      });
+    await step('Separadores ficam fora da árvore de acessibilidade', async () => {
+      // accessibility.item3 — o chevron é desenho; lido em voz alta viraria
+      // ruído entre os níveis.
+      const separadores = canvasElement.querySelectorAll('[data-slot="breadcrumb-separator"]');
+      await expect(separadores.length).toBe(2);
+      for (const sep of separadores) {
+        await expect(sep).toHaveAttribute('aria-hidden', 'true');
+        await expect(sep).toHaveAttribute('role', 'presentation');
+      }
     });
   },
 };
