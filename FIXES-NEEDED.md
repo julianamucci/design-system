@@ -7,6 +7,39 @@ decisão sua — não é trabalho parado por falta de tempo.
 
 ## Aberto — precisa de decisão
 
+- [ ] **O idioma nunca chega ao documento que o leitor de tela lê (2026-08-07).**
+  Medido nas 4 stacks. `useSeoEffect` resolve o alvo assim:
+
+  ```ts
+  const targetDoc = isIframe ? window.parent.document : document;
+  targetDoc.documentElement.lang = localeStr;
+  ```
+
+  Dentro do Storybook, `targetDoc` é o **manager**. O conteúdo das docs e das
+  foundations vive no `iframe.html`, que o Storybook serve como
+  `<html lang="en">` (conferido no `storybook-static`) e que nada nunca
+  atualiza. Resultado: toda a prosa em português é anunciada com regras de
+  pronúncia do inglês. É **WCAG 3.1.1, nível A**, no documento que importa.
+
+  A guideline `01-acessibilidade.md` §"Idioma do documento" já manda fazer
+  certo — quem diverge é a implementação, não a regra.
+
+  Correção: escrever o `lang` nos **dois** documentos (o do iframe é o que o
+  leitor usa; o do parent continua servindo ao SEO da página hospedeira) e
+  travar com teste. São ~10 linhas por stack.
+
+  Depois disso, e só depois, valem os dois passos seguintes para a pronúncia de
+  termos técnicos — decisão da dona, ainda não aprovada:
+  1. `lang="en"` **estrutural** nos containers compartilhados onde o conteúdo é
+     inglês por construção: blocos de código, colunas Propriedade/Tipo da tabela
+     de props, nomes de token. Poucas edições em `docs/shared/sections/*`,
+     ~300 ocorrências cobertas, zero mudança de conteúdo.
+  2. Glossário curado (~20 termos) marcado na prosa do `translations.json`.
+     **Não** marcar os 87 termos que a varredura acha: `menu`, `link`, `card` e
+     `mobile` já são lidos bem por voz em português, e forçar troca de idioma
+     neles deixa a fala picotada. Volume medido: 5.185 ocorrências no total,
+     1.179 em prosa contra 302 dentro de `<code>` no subconjunto que vale marcar.
+
 - [ ] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**
   A região de scroll do CodeBlock tem `tabindex="0"` de propósito: é o que
   permite rolar o bloco sem mouse (WCAG 2.1.1), e está documentado na própria

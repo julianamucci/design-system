@@ -456,6 +456,39 @@ Para trechos em outro idioma dentro da página:
 <span lang="en">Design System</span>
 ```
 
+**WCAG 3.1.2 — Nível AA.** É o único recurso que muda pronúncia de verdade:
+NVDA, JAWS e VoiceOver trocam a voz no fragmento quando o pacote do idioma está
+instalado. O `DOMPurify` aceita `span` e `lang` na allowlist padrão, então
+conteúdo vindo do `translations.json` pode marcar sem configuração extra.
+
+### Dentro do Storybook, escrever no documento certo
+
+`useSeoEffect` escreve meta tags no documento **pai** quando detecta iframe —
+correto para SEO, errado para o `lang`. Quem o leitor de tela lê é o
+`iframe.html`, que o Storybook serve como `<html lang="en">`. O idioma precisa
+ir para os **dois** documentos; medir só o do manager dá falso positivo.
+
+### O que marcar, e o que não marcar
+
+Marque por **estrutura** antes de marcar por palavra: bloco de código, coluna de
+nome de prop, nome de token — lugares onde o conteúdo é inglês por construção.
+Cobre mais com menos edição e não toca conteúdo.
+
+Na prosa, marque só o termo que a voz em português realmente erra
+(`tooltip`, `hover`, `placeholder`, `skeleton`, `breadcrumb`). Empréstimo já
+absorvido — `menu`, `link`, `card`, `mobile`, `design` — **não** se marca:
+forçar troca de idioma neles deixa a fala picotada e piora o resultado.
+
+### O que não funciona (não gastar tempo)
+
+| Recurso | Por que não |
+|---|---|
+| `aria-label` com grafia fonética | quebra braille, controle por voz e o nome acessível copiado; muda o nome para todo mundo |
+| CSS Speech (`speak-as`) | nenhum navegador implementa |
+| `data-ssml` / SSML em HTML | rascunho do W3C, sem implementação |
+| `<abbr title>` | ajuda compreensão, não pronúncia; poucos leitores anunciam por padrão |
+| Dicionário de pronúncia | existe, mas é configuração do usuário (NVDA), não do autor |
+
 ---
 
 ## Preferências do sistema
