@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
@@ -11,6 +12,7 @@ const meta: Meta = {
   component: AspectRatio,
   tags: ['autodocs', 'layout'],
   parameters: {
+    design: figmaDesign('aspectRatio'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(AspectRatioDocs),

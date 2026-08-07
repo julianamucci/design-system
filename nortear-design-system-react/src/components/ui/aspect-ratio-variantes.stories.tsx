@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
@@ -17,6 +18,7 @@ const meta = {
   tags: ["layout"],
   component: AspectRatio,
   parameters: {
+    design: figmaDesign("aspectRatio"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

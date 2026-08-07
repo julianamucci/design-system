@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
 import { expect } from 'storybook/test';
@@ -6,6 +7,7 @@ const meta: Meta = {
   tags: ['layout'],
   title: 'UI/AspectRatio/Variantes',
   parameters: {
+    design: figmaDesign('aspectRatio'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'padded',

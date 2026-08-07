@@ -69,6 +69,15 @@ export const figmaNodes = {
   /** Frame de spec do movimento (entrada em spring, saída em exit). */
   alertDialogTimeline: '214-34',
 
+  /**
+   * Variant set do aspect-ratio: eixo único `ratio` (16/9, 4/3, 1, 3/4, 21/9).
+   * Sem eixo de estado nem de tamanho — o CSS não declara nenhum dos dois, e a
+   * largura é do contexto. O conteúdo é troca de instância.
+   */
+  aspectRatio: '307-25',
+  /** Página de documentação do componente. */
+  aspectRatioDocs: '308-7',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

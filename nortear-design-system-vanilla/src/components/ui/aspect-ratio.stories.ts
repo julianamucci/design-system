@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAspectRatio } from './aspect-ratio';
@@ -16,6 +17,7 @@ const meta: Meta<AspectRatioArgs> = {
   title: 'UI/AspectRatio',
   tags: ['autodocs', 'layout'],
   parameters: {
+    design: figmaDesign('aspectRatio'),
     layout: 'padded',
     docs: { page: withAutoDocsTab(createAspectRatioDocs) },
   },
