@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Badge } from './index';
@@ -8,6 +9,7 @@ const meta = {
   component: Badge,
   tags: ['feedback'],
   parameters: {
+    design: figmaDesign('badge'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

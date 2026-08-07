@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Badge } from "./badge";
@@ -7,6 +8,7 @@ const meta = {
   tags: ["feedback"],
   component: Badge,
   parameters: {
+    design: figmaDesign("badge"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

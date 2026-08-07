@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { Check, Bell } from 'lucide';
@@ -7,6 +8,7 @@ const meta: Meta = {
   tags: ['feedback'],
   title: 'UI/Badge/Composicoes',
   parameters: {
+    design: figmaDesign('badge'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

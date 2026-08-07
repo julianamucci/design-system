@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createBadge } from './badge';
@@ -6,6 +7,7 @@ const meta: Meta = {
   tags: ['feedback'],
   title: 'UI/Badge/Variantes',
   parameters: {
+    design: figmaDesign('badge'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

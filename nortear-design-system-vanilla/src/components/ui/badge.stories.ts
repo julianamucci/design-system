@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createBadge, type BadgeVariant } from './badge';
@@ -15,6 +16,7 @@ const meta: Meta<BadgeArgs> = {
   title: 'UI/Badge',
   tags: ['autodocs', 'feedback'],
   parameters: {
+    design: figmaDesign('badge'),
     docs: { page: withAutoDocsTab(createBadgeDocs) },
   },
   argTypes: {

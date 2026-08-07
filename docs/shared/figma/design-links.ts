@@ -89,6 +89,15 @@ export const figmaNodes = {
   /** Página de documentação do componente. */
   avatarDocs: '323-17',
 
+  /**
+   * Variant set do badge: eixo único `variant` (default, secondary,
+   * destructive, outline). Rótulo e ícone são propriedades. Sem eixo de estado:
+   * o foco é do <button> ou do <a> que envolve o badge, nunca dele.
+   */
+  badge: '333-17',
+  /** Página de documentação do componente. */
+  badgeDocs: '334-24',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

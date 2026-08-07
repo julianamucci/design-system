@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Badge } from "./badge";
@@ -9,6 +10,7 @@ const meta = {
   component: Badge,
   tags: ["autodocs", "feedback"],
   parameters: {
+    design: figmaDesign("badge"),
     docs: { page: withAutoDocsTab(BadgeDocs) },
   },
   argTypes: {
