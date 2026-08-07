@@ -35,6 +35,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: ['functional.item1', 'functional.item3', 'accessibility.item1'],
+  },
   render: (args) => ({
     Component: AspectRatioStory,
     props: {
@@ -44,12 +47,17 @@ export const Playground: Story = {
       alt: 'Paisagem ao entardecer',
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step('Wrapper com data-slot aspect-ratio está presente', async () => {
-      const wrapper = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-      await expect(wrapper).toBeInTheDocument();
+    await step('Caixa respeita a proporção do control', async () => {
+      // functional.item1 — medir contra args.ratio prova que o control chega ao
+      // CSS; a presença do wrapper sozinha não prova proporção nenhuma.
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+      await expect(caixa).not.toBeNull();
+      const { width, height } = caixa!.getBoundingClientRect();
+      await expect(width).toBeGreaterThan(0);
+      await expect(Math.abs(width / height - (args.ratio as number))).toBeLessThan(0.02);
     });
 
     await step('Imagem filha renderiza com alt descritivo', async () => {
@@ -57,11 +65,15 @@ export const Playground: Story = {
       await expect(img).toHaveAttribute('alt', 'Paisagem ao entardecer');
     });
 
-    await step('Imagem preenche o container com object-cover', async () => {
+    await step('Imagem preenche a caixa sem distorcer', async () => {
+      // Comportamento, não classe: object-cover, w-full e h-full são vocabulário
+      // do Tailwind, que saiu do projeto — as três asserções eram inertes e a
+      // primeira reprovava. O que o contrato promete é o preenchimento.
       const img = await canvas.findByRole('img', { name: /Paisagem ao entardecer/i });
-      await expect(img).toHaveClass('object-cover');
-      await expect(img).toHaveClass('w-full');
-      await expect(img).toHaveClass('h-full');
+      const estilo = getComputedStyle(img);
+      await expect(estilo.objectFit).toBe('cover');
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      await expect(img.getBoundingClientRect().width).toBeCloseTo(caixa.getBoundingClientRect().width, 0);
     });
   },
 };

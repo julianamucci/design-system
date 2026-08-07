@@ -46,13 +46,21 @@ type Story = StoryObj<AspectRatioArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: ['functional.item1', 'functional.item3', 'accessibility.item1'],
+  },
   render: (args) => {
     const img = document.createElement('img');
     img.src = args.imageUrl;
     img.alt = args.alt;
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.className = 'object-cover w-full h-full nds-rounded-md';
+    // object-cover/w-full/h-full são vocabulário do Tailwind, que saiu do
+    // projeto: as três eram inertes e a imagem não preenchia a caixa. O resto
+    // das stories já monta assim (nds-* + estilo para o que não é utility).
+    img.className = 'nds-w-full nds-rounded-md';
+    img.style.objectFit = 'cover';
+    img.style.height = '100%';
 
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-w-full';
@@ -63,16 +71,33 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step('Wrapper aplica CSS custom property --ratio', async () => {
-      const ratioWrapper = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
-      await expect(ratioWrapper).toBeTruthy();
-      await expect(ratioWrapper!.style.getPropertyValue('--ratio')).toBe(String(args.ratio));
+    await step('Caixa respeita a proporção do control', async () => {
+      // functional.item1 — a custom property é o meio; a proporção medida é o
+      // fim. Verificar as duas separa "o valor chegou" de "o CSS o aplicou".
+      const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
+      await expect(caixa).not.toBeNull();
+      await expect(caixa!.style.getPropertyValue('--ratio')).toBe(String(args.ratio));
+      const { width, height } = caixa!.getBoundingClientRect();
+      await expect(width).toBeGreaterThan(0);
+      await expect(Math.abs(width / height - args.ratio)).toBeLessThan(0.02);
     });
 
     await step('Imagem filha tem alt e está visível no container', async () => {
+      // accessibility.item1
       const img = await canvas.findByRole('img', { name: args.alt });
       await expect(img).toHaveAttribute('alt', args.alt);
       await expect(img).toBeVisible();
+    });
+
+    await step('Imagem preenche a caixa sem distorcer', async () => {
+      // functional.item3 — comportamento, não classe.
+      const img = await canvas.findByRole('img', { name: args.alt });
+      await expect(getComputedStyle(img).objectFit).toBe('cover');
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      await expect(img.getBoundingClientRect().width).toBeCloseTo(
+        caixa.getBoundingClientRect().width,
+        0,
+      );
     });
   },
 };

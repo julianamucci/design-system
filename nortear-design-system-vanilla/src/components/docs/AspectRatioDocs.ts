@@ -262,7 +262,7 @@ export function createAspectRatioDocs(): HTMLElement {
             items: [1, 2, 3, 4, 5].map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
-              a: t(`usage.scenarios.item${i}.a`),
+              a: toPlainText(t(`usage.scenarios.item${i}.a`)),
             })),
           },
           do: {

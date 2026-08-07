@@ -32,6 +32,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: ["functional.item1", "functional.item3", "accessibility.item1"],
+  },
   render: (args) => (
     <div className="" style={{maxWidth: "100%", width: "480px" }} >
       <AspectRatio {...args}>
@@ -45,43 +48,35 @@ export const Playground: Story = {
       </AspectRatio>
     </div>
   ),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const img = await canvas.findByRole("img", {
+      name: /Paisagem ao entardecer/i,
+    });
 
-    await step("Imagem está presente no DOM", async () => {
-      const img = await canvas.findByRole("img", {
-        name: /Paisagem ao entardecer/i,
-      });
-      await expect(img).toBeInTheDocument();
+    await step("Caixa respeita a proporção do control", async () => {
+      // functional.item1 — medir contra args.ratio prova que o control chega ao
+      // CSS. O passo anterior verificava só que a imagem tinha um elemento pai.
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+      await expect(caixa).not.toBeNull();
+      const { width, height } = caixa!.getBoundingClientRect();
+      await expect(width).toBeGreaterThan(0);
+      await expect(Math.abs(width / height - args.ratio)).toBeLessThan(0.02);
     });
 
     await step("Imagem tem alt descritivo não vazio", async () => {
-      const img = await canvas.findByRole("img", {
-        name: /Paisagem ao entardecer/i,
-      });
+      // accessibility.item1
       await expect(img).toHaveAttribute("alt", "Paisagem ao entardecer");
     });
 
-    await step("Imagem preenche o container com object-cover", async () => {
-      const img = await canvas.findByRole("img", {
-        name: /Paisagem ao entardecer/i,
-      });
-      await expect(img).toHaveStyle({ objectFit: "cover" });
-      await expect(img).toHaveClass("nds-w-full");
-    });
-
-    await step("Container interno é posicionado absolutamente (Radix)", async () => {
-      const img = await canvas.findByRole("img", {
-        name: /Paisagem ao entardecer/i,
-      });
-      const inner = img.parentElement;
-      await expect(inner).toBeTruthy();
-    });
-
-    await step("Imagem é visível", async () => {
-      const img = await canvas.findByRole("img", {
-        name: /Paisagem ao entardecer/i,
-      });
+    await step("Imagem preenche a caixa sem distorcer", async () => {
+      // functional.item3 — comportamento, não classe.
+      await expect(getComputedStyle(img).objectFit).toBe("cover");
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      await expect(img.getBoundingClientRect().width).toBeCloseTo(
+        caixa.getBoundingClientRect().width,
+        0,
+      );
       await expect(img).toBeVisible();
     });
   },

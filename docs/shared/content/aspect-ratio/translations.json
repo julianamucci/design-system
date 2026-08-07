@@ -7,8 +7,8 @@
     "seo": {
       "title": "AspectRatio — Layout",
       "description": "Documentação do AspectRatio: container que preserva proporção fixa para imagens, vídeos e iframes, com 5 ratios canônicos e comportamento responsivo.",
-      "aiSummary": "Componente AspectRatio container passivo que preserva proporção largura/altura em imagens, vídeos e iframes via Radix UI, Reka UI e Bits UI; sem estado, sem eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
+      "aiSummary": "Componente AspectRatio: container passivo que preserva a proporção largura/altura de imagens, vídeos e iframes usando a propriedade CSS aspect-ratio; sem estado, sem eventos.",
+      "aiEntities": "AspectRatio, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -45,7 +45,7 @@
         "item1": {
           "s": "Vídeo embed ou thumbnail",
           "u": "AspectRatio 16/9",
-          "a": "Hardcode <code>aspect-video</code>"
+          "a": "Fixar altura em pixels"
         },
         "item2": {
           "s": "Avatar ou thumbnail quadrado",
@@ -227,7 +227,7 @@
       "item1": "Em implementações modernas o componente usa a propriedade CSS nativa <code>aspect-ratio</code>; o ratio é preservado antes do carregamento da mídia, sem reflow.",
       "item2": "Bits UI (Svelte) usa a mesma técnica com runes.",
       "item3": "Vanilla implementa manualmente via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
-      "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou composição com Radix/Reka/Bits."
+      "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou de compor com o restante do design system."
     },
     "analytics": {
       "title": "Analytics",
@@ -353,8 +353,8 @@
     "seo": {
       "title": "AspectRatio — Layout",
       "description": "Documentation for AspectRatio: container that preserves fixed ratio for images, videos, and iframes, with 5 canonical ratios and responsive behavior.",
-      "aiSummary": "AspectRatio component is a passive container that preserves width-to-height ratio for images, videos, and iframes via Radix UI, Reka UI, and Bits UI; no state, no events.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
+      "aiSummary": "AspectRatio component: a passive container that preserves the width-to-height ratio of images, videos, and iframes using the CSS aspect-ratio property; no state, no events.",
+      "aiEntities": "AspectRatio, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -391,7 +391,7 @@
         "item1": {
           "s": "Embedded video or thumbnail",
           "u": "AspectRatio 16/9",
-          "a": "Hardcoded <code>aspect-video</code>"
+          "a": "Hardcoded pixel height"
         },
         "item2": {
           "s": "Avatar or square thumbnail",
@@ -573,7 +573,7 @@
       "item1": "Modern implementations use the native CSS <code>aspect-ratio</code> property; the ratio is preserved before media loads, with no reflow.",
       "item2": "Bits UI (Svelte) uses the same technique with runes.",
       "item3": "Vanilla implements it manually via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
-      "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or Radix/Reka/Bits composition."
+      "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or composition with the rest of the design system."
     },
     "analytics": {
       "title": "Analytics",
@@ -699,8 +699,8 @@
     "seo": {
       "title": "AspectRatio — Layout",
       "description": "Documentación del AspectRatio: contenedor que preserva proporción fija para imágenes, vídeos e iframes, con 5 ratios canónicos y comportamiento responsivo.",
-      "aiSummary": "Componente AspectRatio contenedor pasivo que preserva proporción ancho/alto en imágenes, vídeos e iframes vía Radix UI, Reka UI y Bits UI; sin estado, sin eventos.",
-      "aiEntities": "AspectRatio, React, Vue, Svelte, Radix UI, Reka UI, Bits UI, CSS aspect-ratio, responsive media"
+      "aiSummary": "Componente AspectRatio: contenedor pasivo que preserva la proporción ancho/alto de imágenes, vídeos e iframes usando la propiedad CSS aspect-ratio; sin estado, sin eventos.",
+      "aiEntities": "AspectRatio, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
       "title": "Demostración",
@@ -737,7 +737,7 @@
         "item1": {
           "s": "Vídeo embebido o miniatura",
           "u": "AspectRatio 16/9",
-          "a": "Hardcode <code>aspect-video</code>"
+          "a": "Fijar altura en píxeles"
         },
         "item2": {
           "s": "Avatar o miniatura cuadrada",
@@ -919,7 +919,7 @@
       "item1": "Las implementaciones modernas usan la propiedad CSS nativa <code>aspect-ratio</code>; la proporción se preserva antes de la carga del medio, sin reflow.",
       "item2": "Bits UI (Svelte) usa la misma técnica con runes.",
       "item3": "Vanilla la implementa manualmente vía <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
-      "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con Radix/Reka/Bits."
+      "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con el resto del design system."
     },
     "analytics": {
       "title": "Analytics",

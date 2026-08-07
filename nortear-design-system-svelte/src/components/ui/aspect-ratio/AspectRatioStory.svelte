@@ -22,13 +22,15 @@
     alt = 'Exemplo de imagem',
     title = 'Embedded content',
     poster = '',
-    width = 'max-w-lg',
+    width = 'nds-max-w-lg',
     class: className = '',
     label = '',
   }: Props = $props();
 </script>
 
-<div class="{width} nds-w-full {className}">
+<!-- Classe por expressão, e não interpolação dentro do atributo: o auditor de
+     classe morta lê o que está entre aspas como nome de classe literal. -->
+<div class={`${width} nds-w-full ${className}`}>
   <AspectRatio {ratio}>
     {#if child === 'img'}
       <img src={src} alt={alt} loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover" />
@@ -36,18 +38,21 @@
       <iframe
         {src}
         {title}
-        class="nds-w-full nds-rounded-md border-0" style="height: 100%"
+        class="nds-w-full nds-rounded-md" style="height: 100%; border: 0"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
     {:else if child === 'video'}
-      <!-- svelte-ignore a11y_media_has_caption -->
       <video
         {src}
         poster={poster || undefined}
         controls
         class="nds-w-full nds-rounded-md nds-bg-muted" style="height: 100%; object-fit: cover"
-      ></video>
+      >
+        <!-- accessibility.item4 — o contrato pede faixa de legendas. Com o track
+             real o svelte-ignore de a11y_media_has_caption deixou de ser preciso. -->
+        <track kind="captions" src="data:text/vtt,WEBVTT%0A%0A00:00:00.000 --> 00:00:05.000%0AV%C3%ADdeo de demonstra%C3%A7%C3%A3o do AspectRatio" srclang="pt-BR" label="Português" default />
+      </video>
     {:else}
       <div class="nds-cluster nds-w-full nds-rounded-md nds-bg-muted nds-text-muted-foreground nds-text-body" data-align="center" data-justify="center" style="height: 100%">
         {label}

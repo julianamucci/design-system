@@ -24,7 +24,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { stripHtml, toPlainText } from "@/lib/strip-html";
+import { toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -196,7 +196,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";`;
 │   └── div (inner absolute inset-0)
 │       └── [children] — img | video | iframe`;
 
-  const interfaceCode = `// AspectRatio (Radix)
+  const interfaceCode = `// AspectRatio — nesta stack é um <div> com --ratio, sem lib primitiva
 interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
   ratio?: number;        // largura / altura — padrão 1
   asChild?: boolean;     // mescla props no primeiro filho
@@ -360,8 +360,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 />
               </AspectRatio>
             ),
-            doCaption: stripHtml(tContent("doDont.pair1.do")),
-            dontCaption: stripHtml(tContent("doDont.pair1.dont")),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -390,8 +390,8 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
                 />
               </AspectRatio>
             ),
-            doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: stripHtml(tContent("doDont.pair2.dont")),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />

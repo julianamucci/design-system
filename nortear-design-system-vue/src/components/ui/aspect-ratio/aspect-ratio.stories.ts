@@ -33,6 +33,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: ['functional.item1', 'functional.item3', 'accessibility.item1'],
+  },
   render: (args) => ({
     components: { AspectRatio },
     setup() { return { args }; },
@@ -50,22 +53,34 @@ export const Playground: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const img = canvas.getByRole('img', { name: /Paisagem ao amanhecer/ });
 
-    await step('Wrapper com data-slot aspect-ratio está presente', async () => {
-      const wrapper = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-      await expect(wrapper).toBeInTheDocument();
-    });
-
-    await step('Imagem renderiza dentro do container', async () => {
-      const img = canvas.getByRole('img', { name: /Paisagem ao amanhecer/ });
-      await expect(img).toBeVisible();
+    await step('Caixa respeita a proporção do control', async () => {
+      // functional.item1 — medir contra args.ratio prova que o control chega ao
+      // CSS; a presença do wrapper sozinha não prova proporção nenhuma.
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+      await expect(caixa).not.toBeNull();
+      const { width, height } = caixa!.getBoundingClientRect();
+      await expect(width).toBeGreaterThan(0);
+      await expect(Math.abs(width / height - args.ratio!)).toBeLessThan(0.02);
     });
 
     await step('Imagem tem atributo alt descritivo', async () => {
-      const img = canvas.getByRole('img', { name: /Paisagem ao amanhecer/ });
+      // accessibility.item1
       await expect(img).toHaveAttribute('alt', 'Paisagem ao amanhecer');
+    });
+
+    await step('Imagem preenche a caixa sem distorcer', async () => {
+      // functional.item3 — comportamento, não classe.
+      await expect(getComputedStyle(img).objectFit).toBe('cover');
+      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]')!;
+      await expect(img.getBoundingClientRect().width).toBeCloseTo(
+        caixa.getBoundingClientRect().width,
+        0,
+      );
+      await expect(img).toBeVisible();
     });
   },
 };

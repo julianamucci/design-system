@@ -33,6 +33,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ComImagem: Story = {
   parameters: {
+    covers: ["functional.item3", "accessibility.item1"],
     docs: {
       description: {
         story:
@@ -54,14 +55,20 @@ export const ComImagem: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(caixa).not.toBeNull();
     const img = canvasElement.querySelector("img");
-    await expect(img).toBeInTheDocument();
-    await expect(img).toHaveAttribute("alt", "Paisagem ao entardecer");
+    await expect(img).not.toBeNull();
+    // accessibility.item1 — imagem informativa precisa de alt não vazio.
+    await expect(img!.getAttribute("alt")).not.toBe("");
+    // functional.item3 — o filho cobre a caixa sem distorcer.
+    await expect(getComputedStyle(img!).objectFit).toBe("cover");
   },
 };
 
 export const ComIframe: Story = {
   parameters: {
+    covers: ["accessibility.item3"],
     docs: {
       description: {
         story:
@@ -75,23 +82,25 @@ export const ComIframe: Story = {
         <iframe
           title="Mapa do escritório em São Paulo"
           src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.57%2C-46.62%2C-23.54&layer=mapnik"
-          className="nds-w-full nds-rounded-md border-0" style={{ height: "100%" }}
+          className="nds-w-full nds-rounded-md" style={{ height: "100%", border: 0 }}
           loading="lazy"
         />
       </AspectRatio>
     </div>
   ),
-  play: async ({ canvasElement, step }) => {
-    await step("Iframe tem atributo title não vazio (WCAG 4.1.2)", async () => {
-      const iframe = canvasElement.querySelector("iframe");
-      await expect(iframe).toBeInTheDocument();
-      await expect(iframe).toHaveAttribute("title", "Mapa do escritório em São Paulo");
-    });
+  play: async ({ canvasElement }) => {
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(caixa).not.toBeNull();
+    const frame = canvasElement.querySelector("iframe");
+    await expect(frame).not.toBeNull();
+    // accessibility.item3 — sem title o iframe não tem nome acessível.
+    await expect(frame!.getAttribute("title")).toBeTruthy();
   },
 };
 
 export const ComVideo: Story = {
   parameters: {
+    covers: ["accessibility.item4", "accessibility.item5"],
     docs: {
       description: {
         story:
@@ -105,27 +114,78 @@ export const ComVideo: Story = {
         <video
           controls
           preload="metadata"
-          className="nds-rounded-md nds-w-full bg-black" style={{objectFit: "cover", height: "100%" }} 
+          className="nds-rounded-md nds-w-full" style={{ objectFit: "cover", height: "100%", background: "black" }}
           aria-label="Vídeo demonstrativo"
         >
           <source
             src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
             type="video/mp4"
           />
+          {/* accessibility.item4 — o contrato pede faixa de legendas; a cue vem
+              em data: URI para não depender de arquivo servido. */}
+          <track kind="captions" src="data:text/vtt,WEBVTT%0A%0A00:00:00.000 --> 00:00:05.000%0AV%C3%ADdeo de demonstra%C3%A7%C3%A3o do AspectRatio" srcLang="pt-BR" label="Português" default />
           Seu navegador não suporta a tag de vídeo.
         </video>
       </AspectRatio>
     </div>
   ),
   play: async ({ canvasElement }) => {
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(caixa).not.toBeNull();
     const video = canvasElement.querySelector("video");
-    await expect(video).toBeInTheDocument();
-    await expect(video).toHaveAttribute("aria-label", "Vídeo demonstrativo");
+    await expect(video).not.toBeNull();
+    // accessibility.item4 — a faixa de legendas é o que o contrato promete.
+    const legenda = video!.querySelector('track[kind="captions"]');
+    await expect(legenda).not.toBeNull();
+    await expect(legenda!.getAttribute("src")).toBeTruthy();
+    // accessibility.item5 — o controle de mídia é alcançável pelo teclado.
+    // focus() em vez de tab(): a ordem de tabulação parte do documento inteiro,
+    // e o que o critério promete é que o vídeo aceita foco — se não aceitasse,
+    // activeElement continuaria no body e a asserção reprovaria.
+    await expect(video!.hasAttribute("controls")).toBe(true);
+    video!.focus();
+    await expect(document.activeElement).toBe(video);
   },
 };
 
-export const GridConsistente: Story = {
+export const PlaceholderVazio: Story = {
   parameters: {
+    covers: ["functional.item5"],
+    docs: {
+      description: {
+        story:
+          "Sem mídia dentro, o container já reserva o espaço na proporção — é o que evita o salto de layout quando o conteúdo termina de carregar.",
+      },
+    },
+  },
+  render: () => (
+    <div style={{ maxWidth: "100%", width: "480px" }}>
+      <AspectRatio ratio={16 / 9}>
+        <div
+          className="nds-cluster nds-w-full nds-bg-muted nds-rounded-md nds-text-body nds-text-muted-foreground"
+          data-align="center"
+          data-justify="center"
+          style={{ height: "100%" }}
+          role="img"
+          aria-label="Conteúdo carregando"
+        >
+          Carregando…
+        </div>
+      </AspectRatio>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
+    await expect(caixa).not.toBeNull();
+    // functional.item5 — sem mídia dentro, a caixa ainda reserva o espaço.
+    await expect(caixa!.querySelector("img, video, iframe")).toBeNull();
+    await expect(caixa!.getBoundingClientRect().height).toBeGreaterThan(0);
+  },
+};
+
+export const EmGrid: Story = {
+  parameters: {
+    covers: ["functional.item4"],
     docs: {
       description: {
         story:
@@ -156,13 +216,25 @@ export const GridConsistente: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const imgs = canvasElement.querySelectorAll("img");
-    await expect(imgs.length).toBe(3);
+    const caixas = Array.from(
+      canvasElement.querySelectorAll('[data-slot="aspect-ratio"]'),
+    );
+    await expect(caixas.length).toBeGreaterThan(1);
+    // functional.item4 — larguras diferentes, mesma proporção: é o que garante
+    // que a altura é recalculada a partir da largura, e não fixada.
+    const proporcoes = caixas.map((c) => {
+      const r = c.getBoundingClientRect();
+      return r.width / r.height;
+    });
+    for (const p of proporcoes) {
+      await expect(Math.abs(p - proporcoes[0])).toBeLessThan(0.02);
+    }
   },
 };
 
 export const ComImagemDecorativa: Story = {
   parameters: {
+    covers: ["accessibility.item2"],
     docs: {
       description: {
         story:
