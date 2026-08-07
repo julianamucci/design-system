@@ -24,10 +24,10 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-// Nome acessível de última instância: o AlertDialogTitle é obrigatório e já
-// alimenta o aria-labelledby, então isto só entra em composição fora do
-// contrato — por isso o ramo não tem story. Sem ele, um painel sem título cai
-// na violação aria-dialog-name do axe.
+// PATCH: a11y — nome acessível de fallback quando o consumidor não renderiza
+// AlertDialogTitle (ver PATCHES.md#vue-alert-dialog-fallback-label)
+// O Title é obrigatório e já alimenta o aria-labelledby, então isto só entra em
+// composição fora do contrato — por isso o ramo não tem story.
 const attrs = useAttrs()
 /* v8 ignore next */
 const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'AlertDialog'))

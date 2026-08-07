@@ -533,6 +533,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 
       <DocsVariants
         title={tContent("variants.title")}
+        note={tContent("variants.note")}
         items={[
           {
             name: "destructive",

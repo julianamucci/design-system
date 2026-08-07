@@ -546,6 +546,40 @@ A versão original tinha apenas `role="combobox"` + `aria-expanded`, o que é in
 
 **Verificação após bump:** n/a (sem upstream no Alert). Manter o default em `'alert'` — trocá-lo seria breaking. Story `SemAnuncio` (arquivo de estados do Alert nas 4 stacks) trava as duas pontas: `role="note"` explícito e default `alert` quando a prop é omitida.
 
+### vue/alert-dialog — `aria-label` de fallback no Content {#vue-alert-dialog-fallback-label}
+
+- **Arquivo:** `nortear-design-system-vue/src/components/ui/alert-dialog/AlertDialogContent.vue`
+- **Categoria:** a11y
+- **Data:** 2026-08-06 (registro; o código é de 2026-05, commit f04827e7)
+- **Upstream ref:** — (comportamento do `reka-ui`, não bug)
+
+**Antes (upstream):**
+```vue
+<AlertDialogContent v-bind="{ ...$attrs, ...forwarded }">
+```
+
+**Depois (custom):**
+```vue
+<AlertDialogContent v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }">
+```
+
+**Motivo:** o `reka-ui` só emite `aria-labelledby` quando existe um `AlertDialogTitle`; sem ele o painel fica sem nome acessível e o axe reprova por `aria-dialog-name`. O fallback entrega o nome mínimo. É a única stack com essa rede — base-ui, bits-ui e a factory Vanilla deixam o painel sem nome se o consumidor omitir o Title, o que o contrato documentado proíbe (`anatomy.item5`: título obrigatório).
+
+**Verificação após bump:** conferir se o reka-ui passou a emitir um nome padrão. O ramo não tem story (o Title está em todas), então está declarado com `v8 ignore` — se o fallback sair, o ignore sai junto.
+
+### vanilla/alert-dialog — `defaultOpen` na factory {#vanilla-alert-dialog-defaultopen}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/alert-dialog.ts`
+- **Categoria:** api
+- **Data:** 2026-08-06
+- **Upstream ref:** — (stack standalone)
+
+**Depois:** `defaultOpen?: boolean` abre o diálogo assim que o wrapper entra no DOM (microtask + `isConnected`), sem clique no trigger. `open()` passou a ser idempotente: com o painel montado, um segundo clique no trigger não monta outro painel nem deixa o primeiro órfão no body.
+
+**Motivo:** `defaultOpen` está na tabela de props compartilhada e existe em React, Vue e Svelte; só o Vanilla não expunha. As stories abriam o diálogo com `queueMicrotask(() => trigger.click())` — truque que não é API e que nenhuma documentação descrevia. Não há equivalente para `open` controlado: o estado de abertura continua sendo da factory, e a story `Controlled` declara isso em `coversNotApplicable`.
+
+**Verificação após bump:** n/a (sem upstream). Se a factory ganhar modo controlado, rever o `coversNotApplicable` de `functional.item7` nas stories de estados.
+
 ---
 
 ## Patches `node_modules/` (gerenciados via `patch-package`)
@@ -622,6 +656,19 @@ tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab
 **Verificação após bump:** stories `ui-sonner-*` não devem reportar `nested-interactive`.
 
 ---
+
+## Divergências idiomáticas entre libs (sem patch — não alinhar)
+
+Diferenças de saída que vêm da lib primitiva e que **entregam o mesmo resultado
+para o usuário**. Ficam registradas para que uma auditoria cross-stack não as
+trate como bug e "alinhe" na força.
+
+### alert-dialog — `aria-modal` só em bits-ui e Vanilla
+
+- **Onde:** `role="alertdialog"` do painel, nas 4 stacks.
+- **Divergência:** `bits-ui` (Svelte) e a factory Vanilla emitem `aria-modal="true"`. `@base-ui/react` e `reka-ui` não emitem: marcam todo o resto da página com `aria-hidden` (base-ui soma `data-base-ui-inert`), que é a técnica mais nova e mais confiável de isolamento.
+- **Por que não alinhar:** as duas técnicas entregam o mesmo isolamento para leitor de tela; forçar `aria-modal` em base-ui/reka duplicaria a semântica sem ganho, e remover dos outros dois perderia isolamento onde o `aria-hidden` não é aplicado. As play functions asseveram o mecanismo de cada stack e os comentários explicam qual é.
+- **Rever se:** base-ui ou reka passarem a emitir `aria-modal`, ou se o axe passar a exigir o atributo.
 
 ## Bugs upstream conhecidos (sem patch aplicado)
 

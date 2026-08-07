@@ -261,8 +261,8 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item4'],
     // createAlertDialog não recebe `open`: a factory é a dona do estado de
-    // abertura e só o expõe por onOpenChange — não existe prop para o
-    // consumidor renderizar o diálogo já aberto nem para forçar o fechamento.
+    // abertura e só o expõe por onOpenChange. `defaultOpen` cobre nascer
+    // aberto, mas não há como o consumidor forçar o fechamento de fora.
     // Esta story é o equivalente possível: trigger externo + callback.
     coversNotApplicable: {
       'functional.item7':

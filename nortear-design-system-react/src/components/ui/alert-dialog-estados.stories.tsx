@@ -382,7 +382,8 @@ export const Controlled: Story = {
 
     await step("Escape fecha o diálogo controlado e notifica o pai", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitForClosed(500);
+      // Mesmo motivo do Playground: sem teto abaixo do default.
+      await waitForClosed();
       await waitFor(() => expect(onControlledOpenChange).toHaveBeenCalledWith(false));
     });
   },

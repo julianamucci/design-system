@@ -314,15 +314,16 @@ export const Playground: Story = {
 
     await step("Escape fecha o diálogo", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitFor(
-        () => {
-          const dialog = within(document.body).queryByRole("alertdialog");
-          if (dialog && dialog.getAttribute("data-state") !== "closed") {
-            throw new Error("dialog still open");
-          }
-        },
-        { timeout: 500 }
-      );
+      // Sem teto próprio: a saída é animada (--duration-base, 200ms) e um teto
+      // de 500ms deixava a asserção no limite sob carga — uma falha em dez
+      // execuções nesta story, sem reprodução depois. O default do waitFor
+      // (1000ms) mantém o mesmo critério com folga.
+      await waitFor(() => {
+        const dialog = within(document.body).queryByRole("alertdialog");
+        if (dialog && dialog.getAttribute("data-state") !== "closed") {
+          throw new Error("dialog still open");
+        }
+      });
       await waitFor(() => expect(openedWith(false)).toBe(true));
     });
 

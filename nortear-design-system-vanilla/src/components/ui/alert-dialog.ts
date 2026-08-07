@@ -86,8 +86,13 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   // wrapper só contém o trigger, então title/description/cancelLabel/actionLabel
   // não o alteravam e o snippet congelava nesses controls.
   wrapper.dataset.dialogId = String(id);
-  // O trigger abre um diálogo: anuncia isso antes do clique.
+  // O trigger abre um diálogo: anuncia isso antes do clique. O aria-expanded
+  // acompanha a abertura, como base-ui, reka-ui e bits-ui fazem sozinhas.
+  trigger.dataset.slot = 'alert-dialog-trigger';
   trigger.setAttribute('aria-haspopup', 'dialog');
+  trigger.setAttribute('aria-expanded', 'false');
+  cancelButton.dataset.slot = 'alert-dialog-cancel';
+  actionButton.dataset.slot = 'alert-dialog-action';
   wrapper.appendChild(trigger);
 
   function open(): void {
@@ -156,6 +161,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
     cancelButton.focus();
 
+    trigger.setAttribute('aria-expanded', 'true');
     document.addEventListener('keydown', handleKeydown);
     onOpenChange?.(true);
   }
@@ -167,6 +173,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     overlayEl = null;
     panelEl = null;
 
+    trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();
     onOpenChange?.(false);
