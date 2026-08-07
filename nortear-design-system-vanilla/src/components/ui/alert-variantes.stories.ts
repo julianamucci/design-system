@@ -148,8 +148,21 @@ export const Dismissible: Story = {
     const canvas = within(canvasElement);
 
     // Primeiro step de propósito: só vale enquanto a entrada ainda roda.
+    // A entrada só existe logo depois de montar. O painel Interactions
+    // reexecuta a play no MESMO DOM, onde o alert já assentou — então, quando a
+    // classe não está lá, provocamos uma remontagem (o wrapper remonta ao
+    // fechar) e medimos no nó novo. Em montagem limpa nada disso roda.
     await step('Animação de descendente não encerra a entrada antes da hora', async () => {
-      const alert = canvas.getByRole('alert');
+      let alert = canvas.getByRole('alert');
+      if (!alert.classList.contains('nds-animate-in')) {
+        await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+        alert = await waitFor(() => {
+          const novo = canvas.getByRole('alert');
+          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return novo;
+        });
+        onDismissClick.mockClear(); // o fechamento de preparo não entra na contagem
+      }
       await expect(alert).toHaveClass('nds-animate-in');
 
       // `animationend` borbulha — sem a guarda de `event.target`, a animação de
