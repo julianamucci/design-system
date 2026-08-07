@@ -27,7 +27,9 @@
       "item2": "<strong>Ícone interno</strong> (opcional) — <code>&lt;svg&gt;</code> com <code>aria-hidden=\"true\"</code> e tamanho <code>size-4</code>.",
       "item3": "<strong>aria-label</strong> — OBRIGATÓRIO em toggles icon-only.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "{/* Toggle simples icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle com label visível */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+      "structureCode": {
+        "react": "{/* Toggle simples icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle com label visível */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -248,7 +250,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Toggle de formatação com tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      "extensibilityCode": {
+        "react": "// Toggle de formatação com tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -282,7 +286,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Cor customizada do estado ativo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override do tamanho via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      "customizationCode": {
+        "web": "/* Cor customizada do estado ativo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override do tamanho via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -462,7 +468,9 @@
       "item2": "<strong>Internal icon</strong> (optional) — <code>&lt;svg&gt;</code> with <code>aria-hidden=\"true\"</code> and <code>size-4</code>.",
       "item3": "<strong>aria-label</strong> — REQUIRED on icon-only toggles.",
       "structureLabel": "Basic structure:",
-      "structureCode": "{/* Simple icon-only Toggle */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle with visible label */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Show hidden\n</Toggle>"
+      "structureCode": {
+        "react": "{/* Simple icon-only Toggle */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle with visible label */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Show hidden\n</Toggle>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -683,7 +691,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Formatting Toggle with tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      "extensibilityCode": {
+        "react": "// Formatting Toggle with tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -717,7 +727,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom active state color */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override size via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      "customizationCode": {
+        "web": "/* Custom active state color */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override size via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -897,7 +909,9 @@
       "item2": "<strong>Icono interno</strong> (opcional) — <code>&lt;svg&gt;</code> con <code>aria-hidden=\"true\"</code> y <code>size-4</code>.",
       "item3": "<strong>aria-label</strong> — OBLIGATORIO en toggles icon-only.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "{/* Toggle simple icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle con label visible */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+      "structureCode": {
+        "react": "{/* Toggle simple icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle con label visible */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1118,7 +1132,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Toggle de formato con tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      "extensibilityCode": {
+        "react": "// Toggle de formato con tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1152,7 +1168,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Color personalizado del estado activo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override del tamaño vía tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      "customizationCode": {
+        "web": "/* Color personalizado del estado activo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override del tamaño vía tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

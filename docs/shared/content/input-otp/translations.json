@@ -26,7 +26,9 @@
       "item3": "<strong>InputOTPSlot</strong> — renderiza um caractere por <code>index</code>; aplica estilos de foco e estado.",
       "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (ícone Minus por padrão); <code>role=\"separator\"</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      "structureCode": {
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -256,7 +258,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// InputOTP com pattern alfanumérico e autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      "extensibilityCode": {
+        "react": "// InputOTP com pattern alfanumérico e autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -294,7 +298,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Slot maior para conteúdo touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      "customizationCode": {
+        "web": "/* Slot maior para conteúdo touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -488,7 +494,9 @@
       "item3": "<strong>InputOTPSlot</strong> — renders a single character per <code>index</code>; applies focus and state styles.",
       "item4": "<strong>InputOTPSeparator</strong> — visual divider between groups (Minus icon by default); <code>role=\"separator\"</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      "structureCode": {
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -718,7 +726,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// InputOTP with alphanumeric pattern and autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      "extensibilityCode": {
+        "react": "// InputOTP with alphanumeric pattern and autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -756,7 +766,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Larger slot for touch-friendly content */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      "customizationCode": {
+        "web": "/* Larger slot for touch-friendly content */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -950,7 +962,9 @@
       "item3": "<strong>InputOTPSlot</strong> — renderiza un carácter por <code>index</code>; aplica estilos de foco y estado.",
       "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (icono Minus por defecto); <code>role=\"separator\"</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      "structureCode": {
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1180,7 +1194,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// InputOTP con pattern alfanumérico y autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      "extensibilityCode": {
+        "react": "// InputOTP con pattern alfanumérico y autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1218,7 +1234,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Slot mayor para contenido touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      "customizationCode": {
+        "web": "/* Slot mayor para contenido touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

@@ -38,7 +38,9 @@
       "item10": "<strong>ContextMenuSeparator</strong> — linha divisória horizontal entre grupos.",
       "item11": "<strong>ContextMenuShortcut</strong> — span visual de atalho de teclado; apenas decorativo.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      "structureCode": {
+        "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -469,7 +471,9 @@
       "item10": "<strong>ContextMenuSeparator</strong> — horizontal divider line between groups.",
       "item11": "<strong>ContextMenuShortcut</strong> — visual keyboard shortcut span; decorative only.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      "structureCode": {
+        "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -900,7 +904,9 @@
       "item10": "<strong>ContextMenuSeparator</strong> — línea divisoria horizontal entre grupos.",
       "item11": "<strong>ContextMenuShortcut</strong> — span visual de atajo de teclado; solo decorativo.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      "structureCode": {
+        "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

@@ -44,7 +44,9 @@
       "item15": "<strong>SidebarMenuSkeleton</strong> — placeholder de carregamento para itens de menu.",
       "item16": "<strong>useSidebar</strong> — hook que expõe <code>state</code>, <code>open</code>, <code>isMobile</code> e <code>toggleSidebar</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Navegação principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      "structureCode": {
+        "react": "<SidebarProvider>\n  <nav aria-label=\"Navegação principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -515,7 +517,9 @@
       "item15": "<strong>SidebarMenuSkeleton</strong> — loading placeholder for menu items.",
       "item16": "<strong>useSidebar</strong> — hook exposing <code>state</code>, <code>open</code>, <code>isMobile</code>, and <code>toggleSidebar</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Main navigation\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      "structureCode": {
+        "react": "<SidebarProvider>\n  <nav aria-label=\"Main navigation\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Item</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -986,7 +990,9 @@
       "item15": "<strong>SidebarMenuSkeleton</strong> — placeholder de carga para ítems de menú.",
       "item16": "<strong>useSidebar</strong> — hook que expone <code>state</code>, <code>open</code>, <code>isMobile</code> y <code>toggleSidebar</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<SidebarProvider>\n  <nav aria-label=\"Navegación principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Ítem</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      "structureCode": {
+        "react": "<SidebarProvider>\n  <nav aria-label=\"Navegación principal\">\n    <Sidebar side=\"left\" variant=\"sidebar\" collapsible=\"offcanvas\">\n      <SidebarHeader />\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel />\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton isActive>\n                  <Icon aria-hidden=\"true\" />\n                  <span>Ítem</span>\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter />\n    </Sidebar>\n  </nav>\n  <SidebarInset>\n    <SidebarTrigger />\n    <main id=\"main-content\" tabIndex={-1}>{children}</main>\n  </SidebarInset>\n</SidebarProvider>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

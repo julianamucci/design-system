@@ -27,7 +27,9 @@
       "item2": "<strong>CollapsibleTrigger</strong> — botão que alterna o estado. Componha com elemento filho <code>Button</code> para aproveitar seus estilos.",
       "item3": "<strong>CollapsibleContent</strong> — painel expansível. Renderizado como <code>Panel</code> do Base UI com animação de altura.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* conteúdo colapsável */}\n  </CollapsibleContent>\n</Collapsible>"
+      "structureCode": {
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* conteúdo colapsável */}\n  </CollapsibleContent>\n</Collapsible>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -408,7 +410,9 @@
       "item2": "<strong>CollapsibleTrigger</strong> — button that toggles the state. Compose with a child <code>Button</code> to leverage its styles.",
       "item3": "<strong>CollapsibleContent</strong> — expandable panel. Rendered as a Base UI <code>Panel</code> with height animation.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* collapsible content */}\n  </CollapsibleContent>\n</Collapsible>"
+      "structureCode": {
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* collapsible content */}\n  </CollapsibleContent>\n</Collapsible>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -789,7 +793,9 @@
       "item2": "<strong>CollapsibleTrigger</strong> — botón que alterna el estado. Compón con un <code>Button</code> como hijo para aprovechar sus estilos.",
       "item3": "<strong>CollapsibleContent</strong> — panel expandible. Renderizado como <code>Panel</code> de Base UI con animación de altura.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* contenido colapsable */}\n  </CollapsibleContent>\n</Collapsible>"
+      "structureCode": {
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* contenido colapsable */}\n  </CollapsibleContent>\n</Collapsible>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

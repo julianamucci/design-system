@@ -31,7 +31,9 @@
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenu aninhado dentro de um Content.",
       "item9": "<strong>MenubarLabel</strong> — cabeçalho de grupo (não interativo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> exibe atalho.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "structureCode": {
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -243,7 +245,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Menubar controlado com loop desabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "extensibilityCode": {
+        "react": "// Menubar controlado com loop desabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -285,7 +289,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor da barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Override de cor da barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -495,7 +501,9 @@
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — nested submenu inside a Content.",
       "item9": "<strong>MenubarLabel</strong> — group heading (non-interactive); <strong>MenubarSeparator</strong> divides groups; <strong>MenubarShortcut</strong> displays a shortcut.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "structureCode": {
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -707,7 +715,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled Menubar with disabled loop\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "extensibilityCode": {
+        "react": "// Controlled Menubar with disabled loop\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -749,7 +759,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Bar color override */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Bar color override */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -959,7 +971,9 @@
       "item8": "<strong>MenubarSub + SubTrigger + SubContent</strong> — submenú anidado dentro de un Content.",
       "item9": "<strong>MenubarLabel</strong> — encabezado de grupo (no interactivo); <strong>MenubarSeparator</strong> divide grupos; <strong>MenubarShortcut</strong> muestra atajo.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "structureCode": {
+        "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1171,7 +1185,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Menubar controlado con loop deshabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      "extensibilityCode": {
+        "react": "// Menubar controlado con loop deshabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1213,7 +1229,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de color de la barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Override de color de la barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

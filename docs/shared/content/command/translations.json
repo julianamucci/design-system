@@ -41,7 +41,9 @@
       "item8": "<strong>CommandSeparator</strong> — divisor horizontal entre grupos.",
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> com <code>Dialog</code> para o padrão command palette.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      "structureCode": {
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -423,7 +425,9 @@
       "item8": "<strong>CommandSeparator</strong> — horizontal divider between groups.",
       "item9": "<strong>CommandDialog</strong> — wrapper combining <code>Command</code> with <code>Dialog</code> for the command palette pattern.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      "structureCode": {
+        "react": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -805,7 +809,9 @@
       "item8": "<strong>CommandSeparator</strong> — divisor horizontal entre grupos.",
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> con <code>Dialog</code> para el patrón command palette.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      "structureCode": {
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

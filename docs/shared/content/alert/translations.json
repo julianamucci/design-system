@@ -31,7 +31,9 @@
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir quando a descrição já é autoexplicativa.",
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para o texto principal da mensagem.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -240,7 +242,9 @@
         "alertGlow": "Tom base do gradiente animado da borda — var interna, igual nas 5 variantes; as 4 variações saem daí"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
+      "customizationCode": {
+        "web": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -447,7 +451,9 @@
       "item3": "<strong>AlertTitle (optional)</strong> — <code>&lt;h5&gt;</code> element. Omit when the description is self-explanatory.",
       "item4": "<strong>AlertDescription</strong> — <code>&lt;div&gt;</code> element for the primary message text.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -656,7 +662,9 @@
         "alertGlow": "Base tone of the animated border gradient — internal var, the same across all 5 variants; the 4 variations derive from it"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
+      "customizationCode": {
+        "web": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -863,7 +871,9 @@
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir cuando la descripción es autoexplicativa.",
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para el texto principal del mensaje.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1072,7 +1082,9 @@
         "alertGlow": "Tono base del degradado animado del borde — var interna, igual en las 5 variantes; las 4 variaciones salen de ahí"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"
+      "customizationCode": {
+        "web": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

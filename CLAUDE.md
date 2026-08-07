@@ -48,7 +48,11 @@ npm run chromatic
 ```bash
 node scripts/audit.mjs <slug> --json              # quick deterministic audit per component
 node scripts/audit.mjs --all --json
-node scripts/audit-translation-literals.mjs       # check translations.json for stack-specific API references in descriptive text
+node scripts/audit-translation-literals.mjs       # audita o conteúdo compartilhado (5 seções)
+node scripts/audit-translation-literals.mjs --only cobertura   # chaves *Code sem variante por stack
+node scripts/audit-translation-literals.mjs --only plataforma  # texto preso a navegador (custo de portar)
+node scripts/audit-translation-literals.mjs --only soltos      # snippet preso em override de stack
+npm run core:pack                                # empacota docs/shared como @nortear/ds-core
 ```
 
 ## Architecture
@@ -68,7 +72,7 @@ For a component `<slug>`, each stack has:
 - `src/components/docs/<Slug>Docs.*` — full docs page (consumed via `withAutoDocsTab` HOC)
 - `src/components/docs/shared/sections/Docs*.*` — 15 generic section containers used by every docs page (header, anatomy, when-to-use, do-dont, import, variants, states, props, tokens, accessibility, related, notes, analytics, testes, demonstration)
 
-Content for all of those comes from `docs/shared/content/<slug>/translations.json`. Code snippets in the JSON (keys ending in `Code`, `structureCode`, `extensibilityCode`, `customizationCode`, `interfaceCode`) are stack-specific; descriptive text must be API-neutral.
+Content for all of those comes from `docs/shared/content/<slug>/translations.json`. Code snippets in the JSON (keys ending in `Code`) carry one variant per stack; descriptive text must be API-neutral.
 
 ### Shared `lib` per stack
 
@@ -85,7 +89,27 @@ Each stack has these files in `src/lib/`:
 Different UI libraries (`@base-ui` / `reka-ui` / `bits-ui` / factories) expose different prop names for the same concept. The convention is:
 
 1. **Descriptive text in shared `translations.json` is API-neutral** ("modo múltiplo", "callback de mudança"). The auditor at `scripts/audit-translation-literals.mjs` flags literal prop references in descriptive keys.
-2. **Code snippets (keys ending in `Code`) are stack-specific** and stay verbatim. Each stack reads its own subset; e.g. `structureCode` for React contains JSX, for Vue contains `<template>`, etc.
+2. **Code snippets (keys ending in `Code`) carry one variant per stack**, keyed by stack name inside the JSON:
+
+```jsonc
+"structureCode": {
+  "react": "<Button>Salvar</Button>",
+  "vue":   "<Button>Salvar</Button>",
+  "web":   "/* CSS igual nos 4 stacks de navegador */"
+}
+```
+
+`web` is a group covering react+vue+svelte+vanilla — use it for CSS. A plain
+string still works and means "same snippet for every stack". Resolution lives in
+`docs/shared/primitives/code-variants.ts`; each stack's `i18n.ts` declares its
+own `STACK` constant and the flatten step swaps the variant in, so docs pages
+keep calling `t('anatomy.structureCode')` unchanged. Missing variants fall back
+to `web` → `react` (never an empty code block) and are listed by
+`node scripts/audit-translation-literals.mjs --only cobertura`.
+
+**Never put a `*Code` snippet in a `useTranslation` override** — it strands the
+snippet inside one stack, invisible to the shared content. Overrides are for
+prop names and labels only; `--only soltos` flags violations.
 3. **Stack-specific prop tables use overrides**: when the shared `translations.json` describes props in the API of (say) `reka-ui` but the React stack uses `@base-ui` with different names, override at the call site:
 
 ```tsx

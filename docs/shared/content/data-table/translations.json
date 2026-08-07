@@ -42,7 +42,9 @@
       "item5": "<strong>Corpo</strong> — linhas renderizadas com seleção opcional (checkbox), edição inline opcional por célula e <code>data-state=\"selected\"</code> quando marcada.",
       "item6": "<strong>Paginação</strong> — rodapé com contagem, seletor de tamanho e navegação. Desativada automaticamente quando virtualizado.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+      "structureCode": {
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -528,7 +530,9 @@
       "item5": "<strong>Body</strong> — rendered rows with optional selection (checkbox), optional per-cell inline editing and <code>data-state=\"selected\"</code> when marked.",
       "item6": "<strong>Pagination</strong> — footer with count, page-size selector, and navigation. Automatically disabled when virtualized.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>"
+      "structureCode": {
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -1014,7 +1018,9 @@
       "item5": "<strong>Cuerpo</strong> — filas renderizadas con selección opcional (checkbox), edición inline opcional por celda y <code>data-state=\"selected\"</code> cuando está marcada.",
       "item6": "<strong>Paginación</strong> — pie con conteo, selector de tamaño y navegación. Se desactiva automáticamente cuando está virtualizado.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+      "structureCode": {
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

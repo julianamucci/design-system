@@ -33,7 +33,9 @@
       "item3": "<strong>FormDescription</strong> — texto auxiliar opcional descrevendo o conteúdo esperado.",
       "item4": "<strong>Contador de caracteres</strong> — texto adjacente com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo, vinculado a <code>maxLength</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -271,7 +273,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Textarea com contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      "extensibilityCode": {
+        "react": "// Textarea com contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -305,7 +309,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Altura mínima customizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borda colorida quando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Altura mínima customizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borda colorida quando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -497,7 +503,9 @@
       "item3": "<strong>FormDescription</strong> — optional helper text describing the expected content.",
       "item4": "<strong>Character counter</strong> — adjacent text with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>, linked to <code>maxLength</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -735,7 +743,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Textarea with accessible character counter\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} of ${max} characters used`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      "extensibilityCode": {
+        "react": "// Textarea with accessible character counter\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} of ${max} characters used`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -769,7 +779,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom minimum height */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Colored border when invalid + focus */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Custom minimum height */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Colored border when invalid + focus */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -961,7 +973,9 @@
       "item3": "<strong>FormDescription</strong> — texto auxiliar opcional que describe el contenido esperado.",
       "item4": "<strong>Contador de caracteres</strong> — texto adyacente con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo, vinculado a <code>maxLength</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1199,7 +1213,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Textarea con contador de caracteres accesible\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ej: Describe el producto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      "extensibilityCode": {
+        "react": "// Textarea con contador de caracteres accesible\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ej: Describe el producto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1233,7 +1249,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Altura mínima personalizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borde coloreado cuando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Altura mínima personalizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borde coloreado cuando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

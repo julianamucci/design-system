@@ -27,7 +27,9 @@
       "item4": "<strong>Thumb</strong> — pegador interno da scrollbar, indica a posição atual.",
       "item5": "<strong>Corner</strong> — quadrado no canto quando há ambas as scrollbars visíveis.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Conteúdo longo */}\n  </ScrollArea>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Conteúdo longo */}\n  </ScrollArea>\n</div>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -208,7 +210,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Scroll horizontal — adicionar ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      "extensibilityCode": {
+        "react": "// Scroll horizontal — adicionar ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -242,7 +246,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Espessura customizada da scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      "customizationCode": {
+        "web": "/* Espessura customizada da scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -426,7 +432,9 @@
       "item4": "<strong>Thumb</strong> — internal scrollbar grabber, shows current position.",
       "item5": "<strong>Corner</strong> — corner square when both scrollbars are visible.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Long content */}\n  </ScrollArea>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Long content */}\n  </ScrollArea>\n</div>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -607,7 +615,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Horizontal scroll — add explicit horizontal ScrollBar\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      "extensibilityCode": {
+        "react": "// Horizontal scroll — add explicit horizontal ScrollBar\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -641,7 +651,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom scrollbar thickness */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      "customizationCode": {
+        "web": "/* Custom scrollbar thickness */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -825,7 +837,9 @@
       "item4": "<strong>Thumb</strong> — agarre interno de la scrollbar, indica la posición actual.",
       "item5": "<strong>Corner</strong> — cuadrado en la esquina cuando ambas scrollbars están visibles.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Contenido largo */}\n  </ScrollArea>\n</div>"
+      "structureCode": {
+        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Contenido largo */}\n  </ScrollArea>\n</div>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1006,7 +1020,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Scroll horizontal — añadir ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      "extensibilityCode": {
+        "react": "// Scroll horizontal — añadir ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1040,7 +1056,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Grosor personalizado de la scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      "customizationCode": {
+        "web": "/* Grosor personalizado de la scrollbar */\n[data-slot=\"scroll-area-scrollbar\"] {\n  --scrollbar-size: 8px;\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"vertical\"] {\n  width: var(--scrollbar-size);\n}\n[data-slot=\"scroll-area-scrollbar\"][data-orientation=\"horizontal\"] {\n  height: var(--scrollbar-size);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

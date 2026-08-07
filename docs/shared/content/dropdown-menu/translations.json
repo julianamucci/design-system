@@ -31,7 +31,9 @@
       "item8": "<strong>DropdownMenuLabel</strong> — cabeçalho de grupo (não interativo); <strong>DropdownMenuSeparator</strong> divide grupos.",
       "item9": "<strong>DropdownMenuShortcut</strong> — exibe atalho de teclado (ex: \"⌘K\") alinhado à direita do item.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "structureCode": {
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -243,7 +245,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "extensibilityCode": {
+        "react": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -281,7 +285,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de offset do Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destrutivo com cor mais saturada */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Override de offset do Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destrutivo com cor mais saturada */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -487,7 +493,9 @@
       "item8": "<strong>DropdownMenuLabel</strong> — group heading (non-interactive); <strong>DropdownMenuSeparator</strong> divides groups.",
       "item9": "<strong>DropdownMenuShortcut</strong> — displays keyboard shortcut (e.g., \"⌘K\") aligned to the right of the item.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "structureCode": {
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -699,7 +707,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "extensibilityCode": {
+        "react": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -737,7 +747,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Content offset override for custom theme */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* More saturated destructive item */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Content offset override for custom theme */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* More saturated destructive item */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -943,7 +955,9 @@
       "item8": "<strong>DropdownMenuLabel</strong> — encabezado de grupo (no interactivo); <strong>DropdownMenuSeparator</strong> divide grupos.",
       "item9": "<strong>DropdownMenuShortcut</strong> — muestra atajo de teclado (ej: \"⌘K\") alineado a la derecha del item.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "structureCode": {
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1155,7 +1169,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      "extensibilityCode": {
+        "react": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1193,7 +1209,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de offset del Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destructivo con color más saturado */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      "customizationCode": {
+        "web": "/* Override de offset del Content para tema custom */\n[data-slot='dropdown-menu-content'] {\n  --side-offset: 8px;\n}\n\n/* Item destructivo con color más saturado */\n[data-slot='dropdown-menu-item'][data-variant='destructive'] {\n  color: hsl(var(--destructive));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

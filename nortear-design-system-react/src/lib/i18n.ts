@@ -1,5 +1,13 @@
 import { create } from 'zustand';
 import { useCallback, useMemo } from 'react';
+import {
+  isCodeVariantNode,
+  resolveCodeVariant,
+  type Stack,
+} from '@shared/primitives/code-variants';
+
+/** Stack deste pacote — escolhe a variante das chaves `*Code`. */
+const STACK: Stack = 'react';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -89,7 +97,16 @@ export function useTranslation(
       for (const key of Object.keys(obj)) {
         const path = prefix ? `${prefix}.${key}` : key;
         const value = obj[key];
-        if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+        // Chave `*Code` em forma de objeto carrega um snippet por stack. A chave
+        // base recebe a variante deste stack; as variantes seguem acessíveis
+        // por caminho explícito (`anatomy.structureCode.flutter`).
+        if (isCodeVariantNode(key, value)) {
+          const resolved = resolveCodeVariant(value, STACK);
+          if (resolved !== undefined) result[path] = resolved;
+          for (const [variant, snippet] of Object.entries(value)) {
+            result[`${path}.${variant}`] = snippet;
+          }
+        } else if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
           flatten(value as Record<string, unknown>, path);
         } else {
           result[path] = value;

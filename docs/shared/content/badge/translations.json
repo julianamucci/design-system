@@ -30,7 +30,9 @@
       "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive ou outline.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>"
+      "structureCode": {
+        "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -216,7 +218,9 @@
         "badgeBorder": "Borda — var interna"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -414,7 +418,9 @@
       "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, or outline.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>"
+      "structureCode": {
+        "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -600,7 +606,9 @@
         "badgeBorder": "Border — internal var"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -798,7 +806,9 @@
       "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive u outline.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>"
+      "structureCode": {
+        "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -984,7 +994,9 @@
         "badgeBorder": "Borde — var interna"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      "customizationCode": {
+        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

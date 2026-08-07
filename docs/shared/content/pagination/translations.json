@@ -29,7 +29,9 @@
       "item5": "<strong>PaginationPrevious / PaginationNext</strong> — links de direção com ícone e label.",
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      "structureCode": {
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -235,7 +237,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      "extensibilityCode": {
+        "react": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -269,7 +273,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override via CSS variables no escopo do componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      "customizationCode": {
+        "web": "/* Override via CSS variables no escopo do componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -449,7 +455,9 @@
       "item5": "<strong>PaginationPrevious / PaginationNext</strong> — directional links with icon and label.",
       "item6": "<strong>PaginationEllipsis</strong> — decorative indicator (<code>aria-hidden</code>) of omitted pages.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      "structureCode": {
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -655,7 +663,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      "extensibilityCode": {
+        "react": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -689,7 +699,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override via CSS variables in component scope */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      "customizationCode": {
+        "web": "/* Override via CSS variables in component scope */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -869,7 +881,9 @@
       "item5": "<strong>PaginationPrevious / PaginationNext</strong> — links de dirección con icono y etiqueta.",
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      "structureCode": {
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1075,7 +1089,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      "extensibilityCode": {
+        "react": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1109,7 +1125,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Sobreescribe vía CSS variables en el ámbito del componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      "customizationCode": {
+        "web": "/* Sobreescribe vía CSS variables en el ámbito del componente */\n[data-slot=\"pagination\"] {\n  --primary: 220 90% 50%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

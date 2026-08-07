@@ -30,7 +30,9 @@
       "item7": "<strong>DrawerFooter</strong> — área de ações no rodapé (botões de confirmação/cancelamento).",
       "item8": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      "structureCode": {
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -239,7 +241,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>"
+      "extensibilityCode": {
+        "react": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -273,7 +277,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      "customizationCode": {
+        "web": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -464,7 +470,9 @@
       "item7": "<strong>DrawerFooter</strong> — footer action area (confirm/cancel buttons).",
       "item8": "<strong>DrawerClose</strong> — close button; compose with Button as a child element.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      "structureCode": {
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -673,7 +681,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>"
+      "extensibilityCode": {
+        "react": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -707,7 +717,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Overlay override for custom theme */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      "customizationCode": {
+        "web": "/* Overlay override for custom theme */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -898,7 +910,9 @@
       "item7": "<strong>DrawerFooter</strong> — área de acciones del pie (botones de confirmación/cancelación).",
       "item8": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      "structureCode": {
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1107,7 +1121,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>"
+      "extensibilityCode": {
+        "react": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1141,7 +1157,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      "customizationCode": {
+        "web": "/* Override de overlay para tema custom */\n[data-slot='drawer-overlay'] {\n  background-color: hsl(var(--background) / 0.6);\n  backdrop-filter: blur(8px);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

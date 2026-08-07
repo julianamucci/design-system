@@ -38,7 +38,9 @@
       "item6": "<strong>CardContent</strong> — corpo do card com padding lateral padrão; conteúdo principal.",
       "item7": "<strong>CardFooter</strong> — rodapé com borda superior e fundo soft (<code>--muted</code>); ideal para ações.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com fundo soft */}\n</Card>"
+      "structureCode": {
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com fundo soft */}\n</Card>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -228,7 +230,9 @@
         "cardRing": "Anel de contorno sutil — var interna"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* Override escopado — declarar no :root não vence o .nds-card. */\n.meu-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* Override escopado — declarar no :root não vence o .nds-card. */\n.meu-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -453,7 +457,9 @@
       "item6": "<strong>CardContent</strong> — card body with default horizontal padding; primary content area.",
       "item7": "<strong>CardFooter</strong> — footer with top border and soft background (<code>--muted</code>); ideal for actions.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with soft background */}\n</Card>"
+      "structureCode": {
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with soft background */}\n</Card>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -643,7 +649,9 @@
         "cardRing": "Subtle outline ring — internal var"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Scoped override — :root does not beat .nds-card's own declaration. */\n.my-theme .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* Scoped override — :root does not beat .nds-card's own declaration. */\n.my-theme .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -868,7 +876,9 @@
       "item6": "<strong>CardContent</strong> — cuerpo del card con padding lateral por defecto; contenido principal.",
       "item7": "<strong>CardFooter</strong> — pie con borde superior y fondo soft (<code>--muted</code>); ideal para acciones.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con fondo soft */}\n</Card>"
+      "structureCode": {
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con fondo soft */}\n</Card>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1058,7 +1068,9 @@
         "cardRing": "Anillo de contorno sutil — var interna"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Override con alcance — :root no gana a la declaración de .nds-card. */\n.mi-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* Override con alcance — :root no gana a la declaración de .nds-card. */\n.mi-tema .nds-card {\n  --card-bg: hsl(var(--muted));\n  --card-ring: hsl(var(--primary) / 0.2);\n  --card-fg: hsl(var(--foreground));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

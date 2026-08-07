@@ -36,7 +36,9 @@
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupamento opcional com cabeçalho.",
       "item6": "<strong>SelectItem</strong> — opção individual com <code>role=\"option\"</code> e <code>aria-selected</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      "structureCode": {
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -252,7 +254,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -294,7 +298,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Largura mínima do dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura customizada do trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      "customizationCode": {
+        "web": "/* Largura mínima do dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura customizada do trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -495,7 +501,9 @@
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — optional grouping with header.",
       "item6": "<strong>SelectItem</strong> — individual option with <code>role=\"option\"</code> and <code>aria-selected</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      "structureCode": {
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -711,7 +719,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -753,7 +763,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Minimum dropdown width */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Custom trigger height */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      "customizationCode": {
+        "web": "/* Minimum dropdown width */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Custom trigger height */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -954,7 +966,9 @@
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupación opcional con encabezado.",
       "item6": "<strong>SelectItem</strong> — opción individual con <code>role=\"option\"</code> y <code>aria-selected</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      "structureCode": {
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1170,7 +1184,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1212,7 +1228,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Ancho mínimo del dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura personalizada del trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      "customizationCode": {
+        "web": "/* Ancho mínimo del dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura personalizada del trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

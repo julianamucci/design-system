@@ -34,7 +34,9 @@
       "item3": "<strong>aria-label</strong> no ToggleGroup — OBRIGATÓRIO para descrever o agrupamento.",
       "item4": "<strong>spacing</strong> — distância entre itens; <code>0</code> conecta as bordas (estilo segmented).",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "{/* Seleção única (single) */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alinhamento do texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinhar à esquerda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centralizar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinhar à direita\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "structureCode": {
+        "react": "{/* Seleção única (single) */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alinhamento do texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinhar à esquerda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centralizar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinhar à direita\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -267,7 +269,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// ToggleGroup type=multiple com analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatação\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrito\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálico\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Sublinhado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "extensibilityCode": {
+        "react": "// ToggleGroup type=multiple com analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatação\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrito\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálico\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Sublinhado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -301,7 +305,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Spacing customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      "customizationCode": {
+        "web": "/* Spacing customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -498,7 +504,9 @@
       "item3": "<strong>aria-label</strong> on ToggleGroup — REQUIRED to describe the grouping.",
       "item4": "<strong>spacing</strong> — distance between items; <code>0</code> connects borders (segmented style).",
       "structureLabel": "Basic structure:",
-      "structureCode": "{/* Single selection */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Text alignment\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Align left\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Align center\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Align right\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "structureCode": {
+        "react": "{/* Single selection */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Text alignment\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Align left\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Align center\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Align right\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -731,7 +739,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// ToggleGroup type=multiple with analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatting\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Bold\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Italic\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Underline\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "extensibilityCode": {
+        "react": "// ToggleGroup type=multiple with analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formatting\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Bold\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Italic\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Underline\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -765,7 +775,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      "customizationCode": {
+        "web": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -962,7 +974,9 @@
       "item3": "<strong>aria-label</strong> en ToggleGroup — OBLIGATORIO para describir la agrupación.",
       "item4": "<strong>spacing</strong> — distancia entre ítems; <code>0</code> conecta los bordes (estilo segmented).",
       "structureLabel": "Estructura básica:",
-      "structureCode": "{/* Selección única */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alineación del texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinear a la izquierda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centrar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinear a la derecha\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "structureCode": {
+        "react": "{/* Selección única */}\n<ToggleGroup\n  type=\"single\"\n  value={alignment}\n  onValueChange={setAlignment}\n  aria-label=\"Alineación del texto\"\n>\n  <ToggleGroupItem value=\"left\" aria-label=\"Alinear a la izquierda\">\n    <AlignLeft aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"center\" aria-label=\"Centrar\">\n    <AlignCenter aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"right\" aria-label=\"Alinear a la derecha\">\n    <AlignRight aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1195,7 +1209,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// ToggleGroup type=multiple con analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formato\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrita\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálica\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Subrayado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      "extensibilityCode": {
+        "react": "// ToggleGroup type=multiple con analytics\nconst [formats, setFormats] = useState<string[]>([]);\n\n<ToggleGroup\n  type=\"multiple\"\n  value={formats}\n  onValueChange={(next) => {\n    track('field_change', {\n      component: 'toggle_group',\n      field_name: 'text_formatting',\n      value: next.join(','),\n    });\n    setFormats(next);\n  }}\n  aria-label=\"Formato\"\n>\n  <ToggleGroupItem value=\"bold\" aria-label=\"Negrita\">\n    <Bold aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"italic\" aria-label=\"Itálica\">\n    <Italic aria-hidden=\"true\" />\n  </ToggleGroupItem>\n  <ToggleGroupItem value=\"underline\" aria-label=\"Subrayado\">\n    <Underline aria-hidden=\"true\" />\n  </ToggleGroupItem>\n</ToggleGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1229,7 +1245,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Spacing personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      "customizationCode": {
+        "web": "/* Spacing personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

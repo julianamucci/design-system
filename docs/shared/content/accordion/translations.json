@@ -30,7 +30,9 @@
       "item3": "<strong>AccordionTrigger</strong> — botão de ação. Inclui <code>aria-expanded</code> automático e chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      "structureCode": {
+        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -367,7 +369,9 @@
         }
       },
       "customizationTitle": "Customização via tokens",
-      "customizationCode": "/* Separador mais forte entre itens */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com fundo no hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Animação mais lenta — entrada e saída leem estes tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      "customizationCode": {
+        "web": "/* Separador mais forte entre itens */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger com fundo no hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Animação mais lenta — entrada e saída leem estes tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      }
     },
     "doDont": {
       "pair1": {
@@ -603,7 +607,9 @@
       "item3": "<strong>AccordionTrigger</strong> — action button. Includes automatic <code>aria-expanded</code> and rotating chevron.",
       "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      "structureCode": {
+        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -940,7 +946,9 @@
         }
       },
       "customizationTitle": "Customization via tokens",
-      "customizationCode": "/* Stronger separator between items */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Slower animation — both enter and exit read these tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      "customizationCode": {
+        "web": "/* Stronger separator between items */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger with background on hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Slower animation — both enter and exit read these tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      }
     },
     "doDont": {
       "pair1": {
@@ -1176,7 +1184,9 @@
       "item3": "<strong>AccordionTrigger</strong> — botón de acción. Incluye <code>aria-expanded</code> automático y chevron rotativo.",
       "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      "structureCode": {
+        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1513,7 +1523,9 @@
         }
       },
       "customizationTitle": "Personalización via tokens",
-      "customizationCode": "/* Separador más fuerte entre ítems */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Animación más lenta — entrada y salida leen estos tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      "customizationCode": {
+        "web": "/* Separador más fuerte entre ítems */\n.nds-accordion-item {\n  border-bottom-width: 2px;\n  border-color: hsl(var(--border) / 60%);\n}\n\n/* Trigger con fondo en hover */\n.nds-accordion-trigger:hover {\n  background-color: hsl(var(--muted) / 0.4);\n  border-radius: var(--radius-sm);\n}\n\n/* Animación más lenta — entrada y salida leen estos tokens */\n.nds-accordion-content[data-state='open'] {\n  animation-duration: var(--duration-slow);\n}"
+      }
     },
     "doDont": {
       "pair1": {

@@ -34,7 +34,9 @@
       "item9": "<strong>DialogFooter</strong> — agrupa ações. Empilhado em mobile, lado a lado em desktop.",
       "item10": "<strong>DialogClose</strong> — botão de fechamento (X no canto ou botão no Footer via <code>showCloseButton</code>).",
       "structureLabel": "Estrutura completa:",
-      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Atualize suas informações pessoais.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Salvar alterações</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      "structureCode": {
+        "react": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Atualize suas informações pessoais.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Salvar alterações</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -485,7 +487,9 @@
       "item9": "<strong>DialogFooter</strong> — groups actions. Stacked on mobile, side-by-side on desktop.",
       "item10": "<strong>DialogClose</strong> — close button (X in the corner or button in the Footer via <code>showCloseButton</code>).",
       "structureLabel": "Full structure:",
-      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Edit profile</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Edit profile</DialogTitle>\n      <DialogDescription>\n        Update your personal information.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* fields */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DialogClose>\n      <Button type=\"submit\">Save changes</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      "structureCode": {
+        "react": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Edit profile</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Edit profile</DialogTitle>\n      <DialogDescription>\n        Update your personal information.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* fields */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DialogClose>\n      <Button type=\"submit\">Save changes</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -936,7 +940,9 @@
       "item9": "<strong>DialogFooter</strong> — agrupa acciones. Apilado en mobile, lado a lado en desktop.",
       "item10": "<strong>DialogClose</strong> — botón de cierre (X en la esquina o botón en el Footer vía <code>showCloseButton</code>).",
       "structureLabel": "Estructura completa:",
-      "structureCode": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Actualiza tu información personal.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Guardar cambios</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      "structureCode": {
+        "react": "<Dialog>\n  <DialogTrigger asChild>\n    <Button>Editar perfil</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Editar perfil</DialogTitle>\n      <DialogDescription>\n        Actualiza tu información personal.\n      </DialogDescription>\n    </DialogHeader>\n    <form>{/* campos */}</form>\n    <DialogFooter>\n      <DialogClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DialogClose>\n      <Button type=\"submit\">Guardar cambios</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
