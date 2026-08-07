@@ -97,27 +97,9 @@
   --badge-border: hsl(var(--border));
 }
 
-/* Ghost — transparente, ganha bg no hover (uso interativo) */
-.nds-badge-ghost {
-  --badge-bg: transparent;
-  --badge-fg: hsl(var(--foreground));
-  --badge-border: transparent;
-}
-.nds-badge-ghost:hover {
-  --badge-bg: hsl(var(--muted));
-  --badge-fg: hsl(var(--muted-foreground));
-}
-
-/* Link — texto primary com sublinhado no hover */
-.nds-badge-link {
-  --badge-bg: transparent;
-  --badge-fg: hsl(var(--primary));
-  --badge-border: transparent;
-  text-underline-offset: 4px;
-}
-.nds-badge-link:hover {
-  text-decoration: underline;
-}
+/* Ghost e link saíram daqui: eram estilos de badge INTERATIVO, e a orientação
+ * do componente é a oposta — nunca ponha onClick no badge, envolva em <button>
+ * ou <a>. Ninguém os renderizava em stack nenhuma. */
 
 /* Ícone posicional: encurta o padding do lado do ícone */
 .nds-badge:has([data-icon="inline-start"]) {

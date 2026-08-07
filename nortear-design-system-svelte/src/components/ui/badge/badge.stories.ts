@@ -30,6 +30,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: { covers: ['accessibility.item1', 'visual.item1'] },
   render: (args) => ({
     Component: BadgeStory,
     props: {
@@ -37,16 +38,27 @@ export const Playground: Story = {
       label: 'Novo',
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    const badge = canvas.getByText('Novo');
 
-    await step('Badge renderiza texto corretamente', async () => {
-      await expect(canvas.getByText('Novo')).toBeVisible();
+    await step('Os controls chegam ao elemento', async () => {
+      await expect(badge).toHaveAttribute('data-slot', 'badge');
+      await expect(badge).toHaveAttribute('data-variant', String(args.variant));
     });
 
-    await step('Badge possui data-slot="badge"', async () => {
-      const el = canvasElement.querySelector('[data-slot="badge"]');
-      await expect(el).not.toBeNull();
+    await step('Etiqueta inline, não bloco', async () => {
+      // accessibility.item1 — o badge mora dentro de frase e de célula: se
+      // virasse bloco, quebraria a linha do texto que o acompanha.
+      const estilo = getComputedStyle(badge);
+      await expect(estilo.display).toBe('inline-flex');
+      await expect(estilo.whiteSpace).toBe('nowrap');
+    });
+
+    await step('Tipografia compacta do componente', async () => {
+      const estilo = getComputedStyle(badge);
+      await expect(estilo.fontSize).toBe('12px');
+      await expect(Number(estilo.fontWeight)).toBeGreaterThanOrEqual(500);
     });
   },
 };

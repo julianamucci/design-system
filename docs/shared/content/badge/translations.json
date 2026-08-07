@@ -25,7 +25,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Badge</strong> — container <code>&lt;div&gt;</code>. Recebe todos os atributos HTML do elemento.",
+      "item1": "<strong>Badge</strong> — container <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de frase, título e célula de tabela sem quebrar a linha.",
       "item2": "<strong>Conteúdo</strong> — texto curto ou número. Ideal: 1 a 3 palavras ou valores numéricos compactos.",
       "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive ou outline.",
@@ -196,7 +196,7 @@
         "children": "Conteúdo do Badge: texto curto, número ou ícone + texto."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>Badge</code> estende <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — aceita <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. Para torná-lo interativo, prefira envolvê-lo em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code> em vez de usar <code>onClick</code> direto."
+      "extensibility": "O <code>Badge</code> aceita os atributos do elemento — <code>aria-*</code>, <code>data-*</code> e classes. Para torná-lo interativo, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>: quem gerencia foco, teclado e evento é o pai, e o badge fica só com a aparência."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -357,11 +357,11 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Configurações — com ícone, contador, como link",
+          "story": "Configurações — com ícone e contador",
           "priority": "medium"
         },
         "item4": {
-          "story": "Composições — Badge dentro de Card, Table e List",
+          "story": "Composições — envolvido em link e em botão",
           "priority": "medium"
         }
       }
@@ -413,7 +413,7 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Badge</strong> — <code>&lt;div&gt;</code> container. Accepts all HTML div attributes.",
+      "item1": "<strong>Badge</strong> — <code>&lt;span&gt;</code> container. An inline label: it fits inside a sentence, a heading, or a table cell without breaking the line.",
       "item2": "<strong>Content</strong> — short text or number. Ideal: 1 to 3 words or compact numeric values.",
       "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, or outline.",
@@ -584,7 +584,7 @@
         "children": "Badge content: short text, number, or icon + text."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>Badge</code> extends <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — accepts <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. To make it interactive, prefer wrapping in <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> rather than attaching <code>onClick</code> directly."
+      "extensibility": "<code>Badge</code> accepts the element's attributes — <code>aria-*</code>, <code>data-*</code>, and classes. To make it interactive, wrap it in <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>: the parent handles focus, keyboard, and events, and the badge only carries the appearance."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -745,11 +745,11 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Configurations — with icon, counter, as link",
+          "story": "Configurations — with icon and counter",
           "priority": "medium"
         },
         "item4": {
-          "story": "Compositions — Badge inside Card, Table, and List",
+          "story": "Compositions — wrapped in a link and in a button",
           "priority": "medium"
         }
       }
@@ -801,7 +801,7 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Badge</strong> — contenedor <code>&lt;div&gt;</code>. Acepta todos los atributos HTML del elemento.",
+      "item1": "<strong>Badge</strong> — contenedor <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de una frase, un título o una celda de tabla sin romper la línea.",
       "item2": "<strong>Contenido</strong> — texto corto o número. Ideal: 1 a 3 palabras o valores numéricos compactos.",
       "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
       "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive u outline.",
@@ -972,7 +972,7 @@
         "children": "Contenido del Badge: texto corto, número o ícono + texto."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>Badge</code> extiende <code>HTMLAttributes&lt;HTMLDivElement&gt;</code> — acepta <code>onClick</code>, <code>aria-*</code>, <code>data-*</code>. Para hacerlo interactivo, prefiere envolverlo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code> en lugar de usar <code>onClick</code> directo."
+      "extensibility": "El <code>Badge</code> acepta los atributos del elemento — <code>aria-*</code>, <code>data-*</code> y clases. Para hacerlo interactivo, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>: el padre gestiona foco, teclado y eventos, y el badge se queda solo con la apariencia."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1133,11 +1133,11 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Configuraciones — con ícono, contador, como link",
+          "story": "Configuraciones — con ícono y contador",
           "priority": "medium"
         },
         "item4": {
-          "story": "Composiciones — Badge dentro de Card, Table y List",
+          "story": "Composiciones — envuelto en link y en botón",
           "priority": "medium"
         }
       }

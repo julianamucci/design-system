@@ -32,32 +32,29 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ['accessibility.item1', 'visual.item1'] },
   render: (args) => <Badge {...args} />,
-  play: async ({ canvasElement, step, args }) => {
+  play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    const badge = canvas.getByText(String(args.children));
 
-    await step("Badge é renderizado com o texto correto", async () => {
-      const badge = canvas.getByText(String(args.children));
-      await expect(badge).toBeVisible();
-    });
-
-    await step("Badge expõe data-slot e data-variant para tooling", async () => {
-      const badge = canvas.getByText(String(args.children));
+    await step("Os controls chegam ao elemento", async () => {
       await expect(badge).toHaveAttribute("data-slot", "badge");
-      await expect(badge).toHaveAttribute("data-variant", String(args.variant ?? "default"));
+      await expect(badge).toHaveAttribute("data-variant", String(args.variant));
     });
 
-    await step("Badge usa layout inline-flex", async () => {
-      const badge = canvas.getByText(String(args.children));
-      await expect(badge).toHaveClass("nds-badge");
-      await expect(getComputedStyle(badge).display).toBe("inline-flex");
+    await step("Etiqueta inline, não bloco", async () => {
+      // accessibility.item1 — o badge mora dentro de frase e de célula: se
+      // virasse bloco, quebraria a linha do texto que o acompanha.
+      const estilo = getComputedStyle(badge);
+      await expect(estilo.display).toBe("inline-flex");
+      await expect(estilo.whiteSpace).toBe("nowrap");
     });
 
-    await step("Badge tem tipografia compacta", async () => {
-      const badge = canvas.getByText(String(args.children));
-      const style = getComputedStyle(badge);
-      await expect(style.fontSize).toBe("12px");
-      await expect(Number(style.fontWeight)).toBeGreaterThanOrEqual(500);
+    await step("Tipografia compacta do componente", async () => {
+      const estilo = getComputedStyle(badge);
+      await expect(estilo.fontSize).toBe("12px");
+      await expect(Number(estilo.fontWeight)).toBeGreaterThanOrEqual(500);
     });
   },
 };

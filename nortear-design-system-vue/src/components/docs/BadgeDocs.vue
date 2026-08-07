@@ -132,7 +132,7 @@ interface BadgeProps {
   class?: string;
 }
 
-// Badge aceita todos os HTMLAttributes<HTMLDivElement>`;
+// Badge aceita todos os HTMLAttributes<HTMLSpanElement>`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 

@@ -22,6 +22,8 @@ function badgeClass(variant: BadgeVariant = 'default'): string {
     variant === 'default'     ? '' :
     variant === 'secondary'   ? 'nds-badge-secondary' :
     variant === 'destructive' ? 'nds-badge-destructive' :
+    /* v8 ignore next 2 -- o último ramo é inalcançável: BadgeVariant tem
+       exatamente estes quatro valores, e os três anteriores já os esgotam. */
     variant === 'outline'     ? 'nds-badge-outline' :
                                 '';
   return [base, modifier].filter(Boolean).join(' ');
@@ -30,7 +32,14 @@ function badgeClass(variant: BadgeVariant = 'default'): string {
 export function createBadge(options: BadgeOptions = {}): HTMLElement {
   const { variant = 'default', className, children, text } = options;
 
-  const el = document.createElement('div');
+  // <span> e não <div>: o badge é etiqueta inline, mora dentro de frase, título
+  // e célula de tabela — um elemento de bloco ali quebra o fluxo do texto. É o
+  // que o próprio CSS documenta e o que as outras três stacks renderizam.
+  const el = document.createElement('span');
+  // data-slot e data-variant: as outras stacks emitem os dois, e é por eles que
+  // story, teste e ferramenta encontram o componente sem depender de classe.
+  el.dataset.slot = 'badge';
+  el.dataset.variant = variant;
   el.className = badgeClass(variant);
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 

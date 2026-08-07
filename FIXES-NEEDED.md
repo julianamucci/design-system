@@ -1442,3 +1442,12 @@ As duas saídas do §2e6 valem aqui, e a escolha é de produto:
 Os outros quatro ramos são de tempo, não de API: `if (img.complete)`,
 o guarda dentro do temporizador do atraso e o `if (text)` do contador. Só
 fecham com controle de rede que a suíte não tem.
+
+## badge — `className` da factory do Vanilla (baixo)
+
+Mesmo caso já registrado no avatar, agora medido também aqui: ramos em 90,9%
+(acima do limiar de 80), com `if (className)` em `createBadge` sem story que o
+exercite. A prop é usada de verdade — o `DocsHeader` monta as duas etiquetas do
+cabeçalho com ela —, então remover não é opção; o que falta é uma story que
+demonstre customização por classe sem contrariar a orientação da própria página,
+que manda usar a variante e não a classe.

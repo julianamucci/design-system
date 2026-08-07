@@ -9,8 +9,6 @@
 				secondary: "nds-badge-secondary",
 				destructive: "nds-badge-destructive",
 				outline: "nds-badge-outline",
-				ghost: "nds-badge-ghost",
-				link: "nds-badge-link",
 			},
 		},
 		defaultVariants: {
@@ -22,28 +20,29 @@
 </script>
 
 <script lang="ts">
-	import type { HTMLAnchorAttributes } from "svelte/elements";
+	import type { HTMLAttributes } from "svelte/elements";
 	import { cn, type WithElementRef } from "@/lib/utils.js";
 
 	let {
 		ref = $bindable(null),
-		href,
 		class: className,
 		variant = "default",
 		children,
 		...restProps
-	}: WithElementRef<HTMLAnchorAttributes> & {
+	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> & {
 		variant?: BadgeVariant;
 	} = $props();
 </script>
 
-<svelte:element
-	this={href ? "a" : "span"}
+<!-- Sempre <span>: a prop href saiu do contrato. A orientação do componente é
+     envolver o badge em <a> ou <button>, e não transformá-lo no elemento
+     interativo — nenhuma outra stack o fazia, e nenhuma docs page o documenta. -->
+<span
 	bind:this={ref}
 	data-slot="badge"
-	{href}
+	data-variant={variant}
 	class={cn(badgeVariants({ variant }), className)}
 	{...restProps}
 >
 	{@render children?.()}
-</svelte:element>
+</span>

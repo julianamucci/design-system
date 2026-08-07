@@ -108,13 +108,13 @@ import Check from '@lucide/svelte/icons/check';`;
   12
 </Badge>`;
 
-  const codeAsLink = `<Badge
-  variant="secondary"
+  const codeAsLink = `<a
   href="/categoria/design"
   aria-label="Filtrar por categoria Design"
+  class="nds-cluster nds-rounded-md nds-focus-ring-inset"
 >
-  Design
-</Badge>`;
+  <Badge variant="secondary">Design</Badge>
+</a>`;
 
   const codeAsTrigger = `<button
   type="button"

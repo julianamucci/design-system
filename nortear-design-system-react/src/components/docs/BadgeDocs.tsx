@@ -128,7 +128,7 @@ import { CheckCircle2 } from "lucide-react";`;
 
   const interfaceCode = `// Badge
 interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {}
 
 const badgeVariants = cva(

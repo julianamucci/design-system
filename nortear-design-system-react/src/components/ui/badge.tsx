@@ -11,8 +11,6 @@ const badgeVariants = cva("nds-badge", {
       secondary: "nds-badge-secondary",
       destructive: "nds-badge-destructive",
       outline: "nds-badge-outline",
-      ghost: "nds-badge-ghost",
-      link: "nds-badge-link",
     },
   },
   defaultVariants: {
