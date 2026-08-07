@@ -170,6 +170,11 @@ passo anterior deixou, e muito menos o estado de montagem.
 - Asserção que **só vale na montagem** (`defaultValue`, `defaultOpen`, foco
   inicial) não pertence a uma story que interage — nenhum replay a alcança.
   Mora numa story sem interação, e é lá que o item do contrato é declarado.
+- **Estado transitório é exceção**: classe de animação de entrada some sozinha
+  em segundos, então nem uma story sem interação a alcança no replay. Aí a play
+  **provoca a montagem** — no alert, fechar remonta o componente, e é no nó novo
+  que a asserção roda. Limpe o spy depois do preparo, senão a contagem do
+  "disparado uma única vez" passa a mentir.
 - Clique em elemento desabilitado é exceção legítima: ele não muda de estado em
   rodada nenhuma.
 
