@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
-import AlertDialogMidiaStory from './AlertDialogMidiaStory.svelte';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Composicoes',
@@ -35,7 +34,9 @@ export const ComIcone: Story = {
       },
     },
   },
-  render: () => ({ Component: AlertDialogMidiaStory, props: { open: true } }),
+  // Mesmo wrapper das demais composições, com a mídia ligada — é o caminho que
+  // o control showMedia do Playground exercita.
+  render: () => ({ Component: AlertDialogStory, props: { open: true, showMedia: true } }),
   play: async () => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');

@@ -72,12 +72,10 @@ function buildDemo(opts: DemoOptions): HTMLElement {
     description: opts.description,
     cancelButton,
     actionButton,
+    // Estado inicial aberto, como o defaultOpen das outras stacks — é o que as
+    // capturas visuais precisam.
+    defaultOpen: opts.openInitially,
   });
-
-  if (opts.openInitially) {
-    // Vanilla AlertDialog opens on trigger click. Open programmatically for snapshots.
-    queueMicrotask(() => trigger.click());
-  }
 
   return dialog;
 }

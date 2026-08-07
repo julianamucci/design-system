@@ -37,7 +37,7 @@
       "item9": "<strong>AlertDialogAction</strong> — botão de confirmação. Executa a ação e fecha o diálogo.",
       "structureLabel": "Estrutura completa:",
       "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir conta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos os seus dados serão removidos permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction>Excluir</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
-      "item10": "<strong>AlertDialogMedia</strong> — bloco opcional de ícone no topo do header. Quando presente, centraliza header e texto no mobile e no tamanho compacto."
+      "item10": "<strong>AlertDialogMedia</strong> — bloco opcional de ícone no topo do header. Acompanha o alinhamento do header: centralizado em telas estreitas, à esquerda a partir de 40rem."
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -471,7 +471,7 @@
       "item9": "<strong>AlertDialogAction</strong> — confirmation button. Executes the action and closes the dialog.",
       "structureLabel": "Full structure:",
       "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Delete account</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete account</AlertDialogTitle>\n      <AlertDialogDescription>\n        All your data will be permanently removed.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction>Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
-      "item10": "<strong>AlertDialogMedia</strong> — optional icon block at the top of the header. When present, it centers the header and its text on mobile and in the compact size."
+      "item10": "<strong>AlertDialogMedia</strong> — optional icon block at the top of the header. It follows the header alignment: centered on narrow screens, left-aligned from 40rem up."
     },
     "usage": {
       "title": "When and How to Use",
@@ -905,7 +905,7 @@
       "item9": "<strong>AlertDialogAction</strong> — botón de confirmación. Ejecuta la acción y cierra el diálogo.",
       "structureLabel": "Estructura completa:",
       "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Eliminar cuenta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Eliminar cuenta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos tus datos se eliminarán permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction>Eliminar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
-      "item10": "<strong>AlertDialogMedia</strong> — bloque opcional de icono al inicio del header. Cuando está presente, centra el header y el texto en mobile y en el tamaño compacto."
+      "item10": "<strong>AlertDialogMedia</strong> — bloque opcional de icono al inicio del header. Sigue la alineación del header: centrado en pantallas estrechas, a la izquierda desde 40rem."
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

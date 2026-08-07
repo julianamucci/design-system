@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
@@ -9,12 +10,29 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./alert-dialog";
 import { Button } from "./button";
+import { TriangleAlert } from "lucide-react";
 import { AlertDialogDocs } from "@/components/docs/AlertDialogDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+
+// Args da raiz + args que montam a composição. Os segundos ficam na categoria
+// "Demonstração" — mesmos nomes, ordem e valores nas 4 stacks, para o painel de
+// controls ser o mesmo em qualquer Storybook do design system.
+type PlaygroundArgs = ComponentProps<typeof AlertDialog> & {
+  tone: "destructive" | "default";
+  showMedia: boolean;
+  triggerLabel: string;
+  title: string;
+  description: string;
+  cancelLabel: string;
+  actionLabel: string;
+};
+
+const DEMO = { table: { category: "Demonstração" } } as const;
 
 const meta = {
   title: "UI/AlertDialog",
@@ -74,15 +92,51 @@ const meta = {
       description: "Composição: Trigger, Content, Header, Footer, Cancel e Action.",
       table: { type: { summary: "ReactNode" } },
     },
+
+    tone: {
+      control: "select",
+      options: ["destructive", "default"],
+      description: "Severidade da confirmação — escolhe a variante do Button do trigger e da ação.",
+      ...DEMO,
+    },
+    showMedia: {
+      control: "boolean",
+      description:
+        "Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, o CSS centraliza header e texto.",
+      ...DEMO,
+    },
+    triggerLabel: { control: "text", description: "Rótulo do botão que abre o diálogo.", ...DEMO },
+    title: { control: "text", description: "Título, associado por aria-labelledby.", ...DEMO },
+    description: {
+      control: "text",
+      description: "Descrição, associada por aria-describedby.",
+      ...DEMO,
+    },
+    cancelLabel: {
+      control: "text",
+      description: "Rótulo do botão que fecha sem executar a ação.",
+      ...DEMO,
+    },
+    actionLabel: { control: "text", description: "Rótulo do botão que confirma.", ...DEMO },
   },
+  // Conteúdo dos rótulos: docs/shared/content/alert-dialog/translations.json →
+  // demonstration.labels. É o mesmo exemplo da seção Demonstração da docs page.
   args: {
     defaultOpen: false,
     onOpenChange: fn(),
+    tone: "destructive",
+    showMedia: false,
+    triggerLabel: "Excluir conta",
+    title: "Excluir conta",
+    description:
+      "Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.",
+    cancelLabel: "Cancelar",
+    actionLabel: "Excluir",
   },
-} satisfies Meta<typeof AlertDialog>;
+} satisfies Meta<PlaygroundArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PlaygroundArgs>;
 
 // Mesmos rótulos da seção Demonstração / variante destructive da docs page.
 export const Playground: Story = {
@@ -102,21 +156,33 @@ export const Playground: Story = {
       "visual.item1",
     ],
   },
-  render: (args) => (
-    <AlertDialog {...args}>
-      <AlertDialogTrigger render={<Button variant="destructive" />}>
-        Excluir conta
-      </AlertDialogTrigger>
+  render: ({
+    tone,
+    showMedia,
+    triggerLabel,
+    title,
+    description,
+    cancelLabel,
+    actionLabel,
+    ...args
+  }) => (
+    // defaultOpen só é lido na montagem: sem a key, trocar o control não teria
+    // efeito nenhum na tela.
+    <AlertDialog key={String(args.defaultOpen)} {...args}>
+      <AlertDialogTrigger render={<Button variant={tone} />}>{triggerLabel}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-          <AlertDialogDescription>
-            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-          </AlertDialogDescription>
+          {showMedia ? (
+            <AlertDialogMedia>
+              <TriangleAlert aria-hidden="true" />
+            </AlertDialogMedia>
+          ) : null}
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+          <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction variant={tone}>{actionLabel}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -143,6 +209,20 @@ export const Playground: Story = {
         document.querySelector('[data-slot="alert-dialog-overlay"]'),
       ).not.toBeNull();
       await waitFor(() => expect(openedWith(true)).toBe(true));
+    });
+
+    await step("Bloco de mídia segue o control showMedia", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+      if (!args.showMedia) {
+        await expect(media).toBeNull();
+        return;
+      }
+      // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o
+      // :has() do CSS e a ordem de leitura ícone → título → descrição.
+      const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+      await expect(header!.firstElementChild).toBe(media);
+      await expect(media!.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
 
     await step("Diálogo tem role alertdialog e isola o fundo de leitores de tela", async () => {

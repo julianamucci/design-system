@@ -25,6 +25,12 @@ export type AlertDialogOptions = {
   media?: HTMLElement;
   cancelButton: HTMLElement;
   actionButton: HTMLElement;
+  /**
+   * Abre o diálogo assim que o wrapper entra no DOM, sem clique no trigger.
+   * Equivale ao `defaultOpen` das outras stacks — é o estado inicial em modo
+   * não controlado, usado por capturas visuais e pelas composições.
+   */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
@@ -85,6 +91,11 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   wrapper.appendChild(trigger);
 
   function open(): void {
+    // Já aberto: um segundo open() (clique no trigger com o diálogo em cima,
+    // possível quando ele nasce aberto) montaria um painel novo e perderia a
+    // referência do anterior, que ficaria órfão no body.
+    if (panelEl) return;
+
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
@@ -233,6 +244,16 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     };
     if (document.body) startObserve();
     else queueMicrotask(startObserve);
+  }
+
+  // O wrapper só entra na página depois que a factory retorna: o microtask
+  // espera a montagem para o painel portalado e o foco encontrarem a árvore
+  // pronta. Sem o isConnected, um wrapper descartado antes de montar abriria um
+  // painel órfão no body.
+  if (options.defaultOpen) {
+    queueMicrotask(() => {
+      if (wrapper.isConnected) open();
+    });
   }
 
   return wrapper;

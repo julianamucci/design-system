@@ -53,8 +53,10 @@ function buildDemo(opts: Options): HTMLElement {
     description: opts.description,
     cancelButton,
     actionButton,
+    // Estado inicial aberto, como o defaultOpen das outras stacks — é o que as
+    // capturas visuais precisam.
+    defaultOpen: true,
   });
-  queueMicrotask(() => trigger.click());
   return dialog;
 }
 
@@ -121,8 +123,8 @@ export const ComIcone: Story = {
       media,
       cancelButton,
       actionButton,
+      defaultOpen: true,
     });
-    queueMicrotask(() => trigger.click());
     return dialog;
   },
   play: async () => {

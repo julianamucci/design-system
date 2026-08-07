@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { createAlertDialog } from './alert-dialog';
+import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { createAlertIcon } from './alert';
 import { createButton } from './button';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -9,15 +10,22 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type AlertDialogArgs = {
+  defaultOpen: boolean;
   triggerLabel: string;
   title: string;
   description: string;
+  showMedia: boolean;
   cancelLabel: string;
   actionLabel: string;
   tone: 'destructive' | 'default';
   class?: string;
   onOpenChange?: (open: boolean) => void;
 };
+
+// Args que montam a composição ficam na categoria "Demonstração" — mesmos nomes,
+// ordem e valores nas 4 stacks, para o painel de controls ser o mesmo em
+// qualquer Storybook do design system.
+const DEMO = { table: { category: 'Demonstração' } } as const;
 
 const meta: Meta<AlertDialogArgs> = {
   title: 'UI/AlertDialog',
@@ -28,36 +36,10 @@ const meta: Meta<AlertDialogArgs> = {
   // Esta stack não tem docgen (não há componente de framework para
   // introspectar): a aba "API Reference" sai só destes argTypes.
   argTypes: {
-    tone: {
-      control: 'select',
-      options: ['destructive', 'default'],
-      description: 'Severidade do action — escolhe a variante do Button de confirmação.',
-      table: { type: { summary: "'destructive' | 'default'" }, defaultValue: { summary: "'destructive'" } },
-    },
-    triggerLabel: {
-      control: 'text',
-      description: 'Rótulo do botão que abre o diálogo.',
-      table: { type: { summary: 'string' } },
-    },
-    title: {
-      control: 'text',
-      description: 'Título do diálogo, associado por aria-labelledby.',
-      table: { type: { summary: 'string' } },
-    },
-    description: {
-      control: 'text',
-      description: 'Descrição do diálogo, associada por aria-describedby.',
-      table: { type: { summary: 'string' } },
-    },
-    cancelLabel: {
-      control: 'text',
-      description: 'Rótulo do botão que fecha sem executar a ação.',
-      table: { type: { summary: 'string' } },
-    },
-    actionLabel: {
-      control: 'text',
-      description: 'Rótulo do botão que confirma a ação.',
-      table: { type: { summary: 'string' } },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Estado inicial em modo não controlado. Útil para capturas visuais.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     class: {
       control: 'text',
@@ -69,18 +51,52 @@ const meta: Meta<AlertDialogArgs> = {
       description: 'Callback disparado quando o diálogo abre ou fecha.',
       table: { type: { summary: '(open: boolean) => void' } },
     },
+
+    tone: {
+      control: 'select',
+      options: ['destructive', 'default'],
+      description: 'Severidade da confirmação — escolhe a variante do Button do trigger e da ação.',
+      ...DEMO,
+    },
+    showMedia: {
+      control: 'boolean',
+      description:
+        'Bloco de ícone no topo do header (createAlertDialogMedia). Quando presente, o CSS centraliza header e texto.',
+      ...DEMO,
+    },
+    triggerLabel: { control: 'text', description: 'Rótulo do botão que abre o diálogo.', ...DEMO },
+    title: {
+      control: 'text',
+      description: 'Título, associado por aria-labelledby. Opção title da factory.',
+      ...DEMO,
+    },
+    description: {
+      control: 'text',
+      description: 'Descrição, associada por aria-describedby. Opção description da factory.',
+      ...DEMO,
+    },
+    cancelLabel: {
+      control: 'text',
+      description: 'Rótulo do botão que fecha sem executar a ação.',
+      ...DEMO,
+    },
+    actionLabel: { control: 'text', description: 'Rótulo do botão que confirma.', ...DEMO },
   },
+  // Conteúdo dos rótulos: docs/shared/content/alert-dialog/translations.json →
+  // demonstration.labels. É o mesmo exemplo da seção Demonstração da docs page.
   args: {
-    triggerLabel: 'Excluir conta',
-    title: 'Excluir sua conta?',
-    description:
-      'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos e não poderão ser recuperados.',
-    cancelLabel: 'Cancelar',
-    actionLabel: 'Excluir conta',
-    tone: 'destructive',
+    defaultOpen: false,
     class: '',
     // Popula a aba Actions e deixa a play verificar cada transição de abertura.
     onOpenChange: fn(),
+    tone: 'destructive',
+    showMedia: false,
+    triggerLabel: 'Excluir conta',
+    title: 'Excluir conta',
+    description:
+      'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    cancelLabel: 'Cancelar',
+    actionLabel: 'Excluir',
   },
 };
 
@@ -106,12 +122,23 @@ function buildDemo(args: AlertDialogArgs, onConfirm?: () => void, onCancel?: () 
     label: args.actionLabel,
     onClick: onConfirm,
   });
+
+  // createAlertIcon já devolve o svg com aria-hidden; o CSS do media dimensiona
+  // qualquer svg filho em 24px.
+  let media: HTMLElement | undefined;
+  if (args.showMedia) {
+    media = createAlertDialogMedia();
+    media.appendChild(createAlertIcon('warning'));
+  }
+
   return createAlertDialog({
     trigger,
     title: args.title,
     description: args.description,
+    media,
     cancelButton,
     actionButton,
+    defaultOpen: args.defaultOpen,
     class: args.class,
     onOpenChange: args.onOpenChange,
   });
@@ -143,19 +170,31 @@ export const Playground: Story = {
           const a = ctx.args ?? {};
           const actionVariant = a.tone === 'destructive' ? 'destructive' : 'default';
           return [
-            "import { createAlertDialog } from '@/components/ui/alert-dialog';",
+            a.showMedia
+              ? "import { createAlertDialog, createAlertDialogMedia } from '@/components/ui/alert-dialog';"
+              : "import { createAlertDialog } from '@/components/ui/alert-dialog';",
+            ...(a.showMedia ? ["import { createAlertIcon } from '@/components/ui/alert';"] : []),
             "import { createButton } from '@/components/ui/button';",
             '',
             `const trigger = createButton({ variant: '${actionVariant}', label: '${a.triggerLabel ?? ''}' });`,
             `const cancelButton = createButton({ variant: 'outline', label: '${a.cancelLabel ?? ''}' });`,
             `const actionButton = createButton({ variant: '${actionVariant}', label: '${a.actionLabel ?? ''}' });`,
+            ...(a.showMedia
+              ? [
+                  '',
+                  'const media = createAlertDialogMedia();',
+                  "media.appendChild(createAlertIcon('warning'));",
+                ]
+              : []),
             '',
             'const dialog = createAlertDialog({',
             '  trigger,',
             `  title: '${a.title ?? ''}',`,
             `  description: '${a.description ?? ''}',`,
+            ...(a.showMedia ? ['  media,'] : []),
             '  cancelButton,',
             '  actionButton,',
+            ...(a.defaultOpen ? ['  defaultOpen: true,'] : []),
             ...(a.class ? [`  class: '${a.class}',`] : []),
             '});',
             '',
@@ -173,7 +212,7 @@ export const Playground: Story = {
     onOpenChange.mockClear();
 
     await step('Trigger está presente e anuncia que abre um diálogo', async () => {
-      const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
+      const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
       await expect(trigger).toBeInTheDocument();
       await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
     });
@@ -184,7 +223,7 @@ export const Playground: Story = {
     });
 
     await step('Diálogo abre ao clicar no trigger e reporta a abertura', async () => {
-      const trigger = canvas.getByRole('button', { name: /Excluir conta/i });
+      const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
       await userEvent.click(trigger);
       const dialog = await waitForPortal('alertdialog');
       // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já
@@ -215,6 +254,20 @@ export const Playground: Story = {
       await expect(dialog).toHaveAccessibleDescription(args.description);
     });
 
+    await step('Bloco de mídia segue o control showMedia', async () => {
+      const dialog = await waitForPortal('alertdialog');
+      const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+      if (!args.showMedia) {
+        await expect(media).toBeNull();
+        return;
+      }
+      // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o
+      // :has() do CSS e a ordem de leitura ícone → título → descrição.
+      const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+      await expect(header!.firstElementChild).toBe(media);
+      await expect(media!.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    });
+
     await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
       const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
@@ -224,7 +277,7 @@ export const Playground: Story = {
     await step('Tab e Shift+Tab ficam presos entre Cancelar e a ação', async () => {
       const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
+      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
 
       await userEvent.tab();
       await expect(action).toHaveFocus();
@@ -251,7 +304,7 @@ export const Playground: Story = {
       // A saída também é animada: o painel só sai do DOM depois do animationend
       // (ou do fallback de tempo), não no clique.
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
-      await expect(canvas.getByRole('button', { name: /Excluir conta/i })).toHaveFocus();
+      await expect(canvas.getByRole('button', { name: /^Excluir conta$/i })).toHaveFocus();
       await expect(onOpenChange).toHaveBeenCalledWith(false);
     });
   },
