@@ -24,6 +24,10 @@
     description?: string;
     /** Bloco de ícone no topo do header. É o control showMedia do Playground. */
     showMedia?: boolean;
+    /** Classe extra no painel — o caminho de extensibilidade documentado. */
+    contentClass?: string;
+    /** Classe extra no bloco de mídia. */
+    mediaClass?: string;
     cancelLabel?: string;
     actionLabel?: string;
     tone?: Tone;
@@ -41,6 +45,8 @@
     title = 'Excluir conta',
     description = 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
     showMedia = false,
+    contentClass,
+    mediaClass,
     cancelLabel = 'Cancelar',
     actionLabel = 'Excluir',
     tone = 'destructive',
@@ -60,10 +66,10 @@
       <Button {...props} variant={triggerVariant}>{triggerLabel}</Button>
     {/snippet}
   </AlertDialogTrigger>
-  <AlertDialogContent>
+  <AlertDialogContent class={contentClass}>
     <AlertDialogHeader>
       {#if showMedia}
-        <AlertDialogMedia>
+        <AlertDialogMedia class={mediaClass}>
           <TriangleAlert aria-hidden="true" />
         </AlertDialogMedia>
       {/if}

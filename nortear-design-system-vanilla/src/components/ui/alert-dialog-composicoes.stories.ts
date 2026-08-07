@@ -269,3 +269,44 @@ export const Responsivo: Story = {
     await expect(rect.left).toBeGreaterThanOrEqual(0);
   },
 };
+
+// A extensibilidade por classe é documentada em props.extensibility, e esta é
+// a story que a exercita: antes, a única prova de que a classe chega ao painel
+// e ao bloco de mídia era a prosa da docs page.
+export const ClasseExtra: Story = {
+  parameters: {
+    docs: { description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
+    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
+    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
+
+    const media = createAlertDialogMedia({ className: 'nds-shrink-0' });
+    media.appendChild(createAlertIcon('warning'));
+
+    return createAlertDialog({
+      trigger,
+      title: 'Excluir conta',
+      description:
+        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      media,
+      cancelButton,
+      actionButton,
+      class: 'nds-overflow-hidden',
+      defaultOpen: true,
+    });
+  },
+  play: async () => {
+    const dialog = await waitForPortal('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+    // Propriedade que o componente NÃO declara: utilities.css é importado antes
+    // do CSS do componente, então classe utilitária de mesma especificidade
+    // perde para a regra do painel — max-width, padding e cor não são
+    // extensíveis por classe. Medido: nds-max-w-sm deixava o painel em 512px.
+    await expect(getComputedStyle(dialog).overflow).toBe('hidden');
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
+    await expect(getComputedStyle(media as HTMLElement).flexShrink).toBe('0');
+  },
+};

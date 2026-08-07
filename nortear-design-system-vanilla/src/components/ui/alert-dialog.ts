@@ -118,6 +118,9 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     panelEl.setAttribute('role', 'alertdialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);
+    /* v8 ignore next -- diálogo sem descrição: a anatomia documenta a
+       descrição como obrigatória e nenhuma story a omite. A opção continua
+       opcional na assinatura — contradição registrada no FIXES-NEEDED. */
     if (description) panelEl.setAttribute('aria-describedby', descId);
     panelEl.dataset.slot = 'alert-dialog-content';
 
@@ -137,6 +140,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
+    /* v8 ignore next -- mesmo caso do aria-describedby acima. */
     if (description) {
       const descEl = document.createElement('p');
       descEl.id = descId;
@@ -254,6 +258,9 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
   trigger.addEventListener('click', open);
 
   // Cleanup ao remover o wrapper (Storybook remount).
+  /* v8 ignore next -- guarda de ambiente: o browser sempre tem
+     MutationObserver, e a suíte roda em browser. Existe para render em
+     ambiente sem DOM completo. */
   if (typeof MutationObserver !== 'undefined') {
     const observer = new MutationObserver(() => {
       if (!wrapper.isConnected) {

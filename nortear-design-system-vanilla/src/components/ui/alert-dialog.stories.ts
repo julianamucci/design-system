@@ -45,7 +45,7 @@ const meta: Meta<AlertDialogArgs> = {
     },
     class: {
       control: 'text',
-      description: 'Classes extras aplicadas ao painel do diálogo — ex.: uma largura máxima diferente.',
+      description: 'Classes extras aplicadas ao painel do diálogo. Valem para propriedade que o componente não declara — max-width, padding e cor vêm do próprio CSS.',
       table: { type: { summary: 'string' } },
     },
     onOpenChange: {
@@ -300,6 +300,10 @@ export const Playground: Story = {
       // Primeiro elemento: Shift+Tab volta ao último, também sem sair.
       await userEvent.tab({ shift: true });
       await expect(action).toHaveFocus();
+      // E do último para o penúltimo o trap não intervém: sem wrap, o foco
+      // anda para trás naturalmente. É o outro lado da guarda de borda.
+      await userEvent.tab({ shift: true });
+      await expect(cancel).toHaveFocus();
     });
 
     await step('Clique no overlay não fecha — a decisão é obrigatória', async () => {

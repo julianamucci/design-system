@@ -42,6 +42,34 @@ decisão sua — não é trabalho parado por falta de tempo.
   forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
   ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
 
+- [ ] **Classe utilitária não vence CSS de componente — e a docs page prometia
+  que sim (2026-08-07).** `utilities.css` é importado na linha 13 do bundle e o
+  CSS dos componentes a partir da 31: mesma especificidade, quem vem depois
+  ganha. Então `class="nds-max-w-sm"` num `.nds-alert-dialog-content` não muda
+  a largura — medido, o painel continua em 512px.
+
+  Corrigi o texto do alert-dialog, que prometia "ex.: uma largura máxima
+  diferente", e a story nova (`ClasseExtra`, nas 4 stacks) passou a demonstrar
+  propriedade que o componente **não** declara. Mas a regra vale para o design
+  system inteiro e ninguém a documentou: **classe extra só alcança o que o
+  componente não define**.
+
+  Decisão sua: (a) deixar como está e documentar a regra na guideline de
+  extensibilidade, ou (b) mover `utilities.css` para depois dos componentes —
+  inverte a precedência em 48 componentes de uma vez, e o que hoje é ignorado
+  passa a valer, inclusive onde ninguém esperava.
+
+- [ ] **`description` do alert-dialog: opcional no código, obrigatória na
+  anatomia (2026-08-07).** A factory do Vanilla declara `description?: string`
+  e a props table diz "Obrigatório: Não"; a anatomia (`anatomy.item6`, texto
+  compartilhado) diz "descrição obrigatória. Fonte do aria-describedby". React,
+  Vue e Svelte também permitem omitir — é um componente separado.
+
+  Nenhuma story omite, então o caminho sem descrição está declarado com
+  `v8 ignore` no Vanilla. Resolver é escolher: ou a anatomia passa a dizer
+  "recomendada", ou as quatro stacks passam a exigir — e aí a story que prova
+  isso precisa nascer nas quatro.
+
 - [ ] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova
   `play_nao_idempotente`. São plays que clicam e asseveram estado no mesmo alvo:
   passam no vitest (que remonta) e falham no replay do painel Interactions (que
