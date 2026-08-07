@@ -3,12 +3,20 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Presets do CSS compartilhado: sm 24 · md 32 · lg 40 · xl 48 · 2xl 64.
+ * Antes o tipo era `"default" | "sm" | "lg"`, e `data-size="default"` não casa
+ * com seletor nenhum — caía no diâmetro base por acidente, enquanto xl e 2xl,
+ * que o CSS tem e a docs page documenta, não existiam na API.
+ */
+type AvatarSize = "sm" | "md" | "lg" | "xl" | "2xl"
+
 function Avatar({
   className,
-  size = "default",
+  size = "md",
   ...props
 }: AvatarPrimitive.Root.Props & {
-  size?: "default" | "sm" | "lg"
+  size?: AvatarSize
 }) {
   return (
     <AvatarPrimitive.Root
@@ -30,16 +38,25 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   )
 }
 
-type AvatarFallbackProps = AvatarPrimitive.Fallback.Props & { delayMs?: number }
+type AvatarFallbackProps = Omit<AvatarPrimitive.Fallback.Props, "delay"> & {
+  /**
+   * Atraso, em ms, antes de mostrar o fallback. O nome é o das outras stacks;
+   * aqui a lib chama de `delay`, e o valor era repassado cru: ia parar no DOM
+   * como atributo desconhecido e o atraso simplesmente não acontecia.
+   */
+  delayMs?: number
+}
 function AvatarFallback({
   className,
+  delayMs,
   ...props
 }: AvatarFallbackProps) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn("nds-avatar-fallback", className)}
-      {...(props as AvatarPrimitive.Fallback.Props)}
+      delay={delayMs}
+      {...props}
     />
   )
 }

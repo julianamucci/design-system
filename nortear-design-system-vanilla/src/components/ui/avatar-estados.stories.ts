@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
-import { createAvatar, createAvatarFallback, createAvatarImage, createAvatarRoot } from './avatar';
+import { within, expect, waitFor } from 'storybook/test';
+import { createAvatar, createAvatarFallback, createAvatarRoot } from './avatar';
+
+const IMG_MARIA =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
+
+// src garantidamente inválido para forçar o estado failed
+const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta: Meta = {
   tags: ['display'],
@@ -12,7 +18,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados canônicos do Avatar: loaded (imagem ok), loading (simulado), failed (src inválido), noImage.',
+          'Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.',
       },
     },
   },
@@ -25,57 +31,69 @@ type Story = StoryObj;
 
 export const Loaded: Story = {
   parameters: {
+    covers: ['functional.item1', 'visual.item1'],
     docs: {
       description: { story: 'Imagem válida — AvatarImage visível; fallback oculto após load.' },
     },
   },
-  render: () =>
-    createAvatar({
-      src: 'https://i.pravatar.cc/128?img=47',
+  render: () => {
+    const av = createAvatar({
+      src: IMG_MARIA,
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
-    }),
+    });
+    av.querySelector('[data-slot="avatar-fallback"]')?.setAttribute('aria-hidden', 'true');
+    return av;
+  },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // hidden:true — img começa com display:none até o load completar.
-    const img = (await canvas.findByRole('img', { hidden: true })) as HTMLImageElement;
-    await expect(img).toBeInTheDocument();
-    await expect(img.alt).toBe('Foto de perfil de Maria Rodrigues');
+    // functional.item1 — carregada a imagem, ela é o que fica; o fallback sai.
+    const img = canvasElement.querySelector<HTMLImageElement>('[data-slot="avatar-image"]');
+    await expect(img).not.toBeNull();
+    await expect(img!.alt).toBe('Foto de perfil de Maria Rodrigues');
+    // Quem está pintado no centro é a imagem: uma stack remove o fallback do
+    // DOM, outra só o esconde, e a promessa das duas é a mesma — depois do load
+    // é a foto que aparece.
+    const root = canvasElement.querySelector('[data-slot="avatar"]')!;
+    await waitFor(async () => {
+      const r = root.getBoundingClientRect();
+      const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).not.toBeNull();
+    }, { timeout: 5000 });
   },
 };
 
 export const Loading: Story = {
+  name: 'Loading (atraso de 600ms)',
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story:
-          'Estado de carregamento simulado: fallback exibido enquanto a imagem é buscada. Aqui o <img> tem src mas nunca é anexado, simulando um fetch pendente.',
+          'Com atraso configurado, as iniciais só entram se o carregamento passar do prazo — é o que evita o piscar em imagem rápida.',
       },
     },
   },
-  render: () => {
-    const root = createAvatarRoot();
-
-    // Simulação: imagem "pendente" fica escondida, fallback aparece como placeholder.
-    const img = createAvatarImage({
-      src: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&q=80',
-      alt: '',
-    });
-    img.style.display = 'none';
-
-    const fallback = createAvatarFallback({ text: 'MR' });
-
-    root.append(img, fallback);
-    return root;
-  },
+  render: () =>
+    createAvatar({
+      src: IMG_BROKEN,
+      alt: 'Foto de perfil de Maria Rodrigues',
+      fallbackText: 'MR',
+      delayMs: 600,
+    }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText('MR')).toBeVisible();
+    // functional.item4 — o atraso segura as iniciais e depois as entrega. A
+    // janela ANTES do prazo não é asserida de propósito: ela é transitória e o
+    // replay do painel roda no mesmo DOM, já com o prazo vencido.
+    await waitFor(async () => {
+      await expect(canvas.getByText('MR')).toBeVisible();
+    }, { timeout: 3000 });
   },
 };
 
 export const Failed: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       description: {
         story:
@@ -85,23 +103,29 @@ export const Failed: Story = {
   },
   render: () =>
     createAvatar({
-      src: 'https://invalid.example.com/does-not-exist.png',
-      alt: '',
+      src: IMG_BROKEN,
+      alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    await step('Fallback aparece quando a imagem falha', async () => {
-      // Aguarda o handler onerror disparar e o fallback virar visível
-      await new Promise((resolve) => setTimeout(resolve, 400));
+    // functional.item2 — com src inválido o fallback fica, e a imagem não entra.
+    await waitFor(async () => {
       await expect(canvas.getByText('MR')).toBeVisible();
-    });
+    }, { timeout: 5000 });
+    // A imagem não pode estar por cima: uma stack tira o <img> do DOM no erro,
+    // outra o mantém escondido. O que vale nas duas é quem está pintado no
+    // centro do avatar — e é isso que o leitor vê.
+    const root = canvasElement.querySelector('[data-slot="avatar"]')!;
+    const r = root.getBoundingClientRect();
+    const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
   },
 };
 
 export const NoImage: Story = {
   parameters: {
+    covers: ['functional.item3'],
     docs: {
       description: {
         story: 'Sem AvatarImage — apenas fallback, exibido imediatamente sem tentativa de carregamento.',
@@ -115,7 +139,8 @@ export const NoImage: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // functional.item3 — sem imagem o fallback é imediato, sem espera nenhuma.
     await expect(canvas.getByText('JP')).toBeVisible();
-    await expect(canvas.queryByRole('img')).not.toBeInTheDocument();
+    await expect(canvasElement.querySelector('img')).toBeNull();
   },
 };

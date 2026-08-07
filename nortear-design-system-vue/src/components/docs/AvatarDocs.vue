@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from '@/components/ui/avatar';
 import { User } from 'lucide-vue-next';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -141,35 +141,23 @@ const codeIcon = `<Avatar>
   </AvatarFallback>
 </Avatar>`;
 
-const codeGroup = `<div style="display: flex">
-  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
+const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
+  <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
     <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarImage src="/ana.jpg" alt="" />
-    <AvatarFallback aria-hidden="true">AS</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarFallback class="nds-text-caption" aria-hidden="true">+3</AvatarFallback>
-  </Avatar>
-</div>`;
+  <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
+</AvatarGroup>`;
 
-const codeWithStatus = `<div style="position: relative; display: inline-block">
-  <Avatar>
-    <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />
-    <AvatarFallback>MR</AvatarFallback>
-  </Avatar>
-  <span
-    class="nds-rounded-full nds-bg-primary"
-    style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-    role="status"
-    aria-label="online"
-  />
-</div>`;
+const codeWithStatus = `<Avatar>
+  <AvatarImage src="/maria.jpg" alt="" />
+  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarBadge role="img" aria-label="Online" />
+</Avatar>`;
 
 const interfaceCode = `// Avatar
 interface AvatarProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   class?: string;
 }
 
@@ -194,6 +182,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item2'),
   tContent('anatomy.item3'),
   tContent('anatomy.item4'),
+  tContent('anatomy.item5'),
 ]);
 
 const variantItems = computed(() => [
@@ -218,6 +207,7 @@ const propCols = computed(() => ({
 }));
 
 const avatarPropItems = computed(() => [
+  { name: 'size',     type: "'sm' | 'md' | 'lg' | 'xl' | '2xl'", defaultValue: 'md', required: 'Não', description: toPlainText(tContent('props.table.size')) },
   { name: 'class',    type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className')) },
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
 ]);
@@ -318,7 +308,7 @@ const whenToUseScenarios = computed(() => ({
   cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
   items: [
     { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-    { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
+    { s: tContent('usage.scenarios.item2.s'), u: toPlainText(tContent('usage.scenarios.item2.u')), a: tContent('usage.scenarios.item2.a') },
     { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: toPlainText(tContent('usage.scenarios.item3.a')) },
     { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: toPlainText(tContent('usage.scenarios.item4.a')) },
   ],
@@ -328,10 +318,10 @@ const whenToUseUxWriting = computed(() => ({
   title: tContent('usage.uxWriting.title'),
   cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
   items: [
-    { element: tContent('usage.uxWriting.table.alt.name'), rules: tContent('usage.uxWriting.table.alt.format'), do: tContent('usage.uxWriting.table.alt.good'), dont: tContent('usage.uxWriting.table.alt.bad') },
+    { element: tContent('usage.uxWriting.table.alt.name'), rules: tContent('usage.uxWriting.table.alt.format'), do: toPlainText(tContent('usage.uxWriting.table.alt.good')), dont: tContent('usage.uxWriting.table.alt.bad') },
     { element: tContent('usage.uxWriting.table.initials.name'), rules: tContent('usage.uxWriting.table.initials.format'), do: tContent('usage.uxWriting.table.initials.good'), dont: tContent('usage.uxWriting.table.initials.bad') },
     { element: tContent('usage.uxWriting.table.status.name'), rules: tContent('usage.uxWriting.table.status.format'), do: tContent('usage.uxWriting.table.status.good'), dont: tContent('usage.uxWriting.table.status.bad') },
-    { element: tContent('usage.uxWriting.table.decorative.name'), rules: tContent('usage.uxWriting.table.decorative.format'), do: tContent('usage.uxWriting.table.decorative.good'), dont: tContent('usage.uxWriting.table.decorative.bad') },
+    { element: tContent('usage.uxWriting.table.decorative.name'), rules: toPlainText(tContent('usage.uxWriting.table.decorative.format')), do: tContent('usage.uxWriting.table.decorative.good'), dont: tContent('usage.uxWriting.table.decorative.bad') },
   ],
 }));
 
@@ -467,8 +457,13 @@ const testesVisual = computed(() => ({
           data-spacing="xs"
           style="align-items: center"
         >
-          <div style="display: flex">
-            <Avatar style="box-shadow: 0 0 0 2px var(--background)">
+          <!-- O recuo e a borda são do AvatarGroup: reproduzi-los com estilo
+               inline aqui deixava a classe compartilhada sem uso. -->
+          <AvatarGroup
+            role="group"
+            :aria-label="tContent('demonstration.labels.groupTitle')"
+          >
+            <Avatar>
               <AvatarImage
                 :src="imgMaria"
                 alt=""
@@ -477,7 +472,7 @@ const testesVisual = computed(() => ({
                 MR
               </AvatarFallback>
             </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+            <Avatar>
               <AvatarImage
                 :src="imgAna"
                 alt=""
@@ -486,7 +481,7 @@ const testesVisual = computed(() => ({
                 AS
               </AvatarFallback>
             </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+            <Avatar>
               <AvatarImage
                 :src="imgCarlos"
                 alt=""
@@ -495,15 +490,10 @@ const testesVisual = computed(() => ({
                 CS
               </AvatarFallback>
             </Avatar>
-            <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-              <AvatarFallback
-                class="nds-text-caption"
-                aria-hidden="true"
-              >
-                +3
-              </AvatarFallback>
-            </Avatar>
-          </div>
+            <AvatarGroupCount aria-hidden="true">
+              +3
+            </AvatarGroupCount>
+          </AvatarGroup>
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.groupTitle') }}</span>
         </div>
 
@@ -512,21 +502,21 @@ const testesVisual = computed(() => ({
           data-spacing="xs"
           style="align-items: center"
         >
-          <div style="position: relative; display: inline-block">
-            <Avatar>
-              <AvatarImage
-                :src="imgMaria"
-                :alt="tContent('demonstration.labels.withImageAlt')"
-              />
-              <AvatarFallback>MR</AvatarFallback>
-            </Avatar>
-            <span
-              class="nds-rounded-full nds-bg-primary"
-              style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-              role="status"
+          <!-- role="img" e não "status": um ponto que não muda não é live
+               region, e o AvatarBadge já posiciona no canto. -->
+          <Avatar>
+            <AvatarImage
+              :src="imgMaria"
+              :alt="tContent('demonstration.labels.withImageAlt')"
+            />
+            <AvatarFallback aria-hidden="true">
+              MR
+            </AvatarFallback>
+            <AvatarBadge
+              role="img"
               :aria-label="tContent('demonstration.labels.statusOnline')"
             />
-          </div>
+          </Avatar>
           <span class="nds-text-caption nds-text-muted-foreground">{{ tContent('demonstration.labels.statusTitle') }}</span>
         </div>
       </div>
@@ -630,8 +620,11 @@ const testesVisual = computed(() => ({
         </Avatar>
       </template>
       <template #variant-preview-3>
-        <div style="display: flex">
-          <Avatar style="box-shadow: 0 0 0 2px var(--background)">
+        <AvatarGroup
+          role="group"
+          :aria-label="tContent('demonstration.labels.groupTitle')"
+        >
+          <Avatar>
             <AvatarImage
               :src="imgMaria"
               alt=""
@@ -640,7 +633,7 @@ const testesVisual = computed(() => ({
               MR
             </AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+          <Avatar>
             <AvatarImage
               :src="imgAna"
               alt=""
@@ -649,7 +642,7 @@ const testesVisual = computed(() => ({
               AS
             </AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+          <Avatar>
             <AvatarImage
               :src="imgCarlos"
               alt=""
@@ -658,32 +651,25 @@ const testesVisual = computed(() => ({
               CS
             </AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-            <AvatarFallback
-              class="nds-text-caption"
-              aria-hidden="true"
-            >
-              +3
-            </AvatarFallback>
-          </Avatar>
-        </div>
+          <AvatarGroupCount aria-hidden="true">
+            +3
+          </AvatarGroupCount>
+        </AvatarGroup>
       </template>
       <template #variant-preview-4>
-        <div style="position: relative; display: inline-block">
-          <Avatar>
-            <AvatarImage
-              :src="imgMaria"
-              :alt="tContent('demonstration.labels.withImageAlt')"
-            />
-            <AvatarFallback>MR</AvatarFallback>
-          </Avatar>
-          <span
-            class="nds-rounded-full nds-bg-primary"
-            style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-            role="status"
+        <Avatar>
+          <AvatarImage
+            :src="imgMaria"
+            :alt="tContent('demonstration.labels.withImageAlt')"
+          />
+          <AvatarFallback aria-hidden="true">
+            MR
+          </AvatarFallback>
+          <AvatarBadge
+            role="img"
             :aria-label="tContent('demonstration.labels.statusOnline')"
           />
-        </div>
+        </Avatar>
       </template>
     </DocsVariants>
 

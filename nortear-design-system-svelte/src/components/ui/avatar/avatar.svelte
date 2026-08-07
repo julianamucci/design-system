@@ -5,17 +5,22 @@
 	let {
 		ref = $bindable(null),
 		loadingStatus = $bindable("loading"),
-		size = "default",
+		delayMs,
+		size = "md",
 		class: className,
 		...restProps
 	}: AvatarPrimitive.RootProps & {
-		size?: "default" | "sm" | "lg";
+		/** Atraso da troca entre fallback e imagem. Nesta lib a prop é da raiz. */
+		delayMs?: number;
+		/** Presets do CSS: sm 24 · md 32 · lg 40 · xl 48 · 2xl 64. */
+		size?: "sm" | "md" | "lg" | "xl" | "2xl";
 	} = $props();
 </script>
 
 <AvatarPrimitive.Root
 	bind:ref
 	bind:loadingStatus
+	{delayMs}
 	data-slot="avatar"
 	data-size={size}
 	class={cn(

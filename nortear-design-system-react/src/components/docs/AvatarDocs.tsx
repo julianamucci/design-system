@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { User } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from "@/components/ui/avatar";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -146,38 +146,24 @@ import { User } from "lucide-react";`;
   </AvatarFallback>
 </Avatar>`;
 
-  const codeGroup = `<div style={{ display: "flex" }}>
-  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
-    <AvatarImage src="/maria.jpg" alt="Maria Rodrigues" />
-    <AvatarFallback>MR</AvatarFallback>
-  </Avatar>
-  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-    <AvatarFallback>JP</AvatarFallback>
-  </Avatar>
-  <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-    <AvatarFallback>
-      <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
-    </AvatarFallback>
-  </Avatar>
-</div>`;
-
-  const codeWithStatus = `<div style={{ position: "relative", display: "inline-block" }}>
+  const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
     <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
-  <span
-    role="status"
-    aria-label="online"
-    className="nds-rounded-full nds-bg-primary"
-    style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
-  />
-</div>`;
+  <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
+</AvatarGroup>`;
+
+  const codeWithStatus = `<Avatar>
+  <AvatarImage src="/maria.jpg" alt="" />
+  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarBadge role="img" aria-label="Online" />
+</Avatar>`;
 
   const interfaceCode = `// Avatar
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
-  asChild?: boolean;
   children: React.ReactNode;
 }
 
@@ -253,39 +239,37 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           </div>
 
           <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
-            <div style={{ display: "flex" }}>
-              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
+            {/* O recuo e a borda são do AvatarGroup: reproduzi-los com estilo
+                inline aqui deixava a classe compartilhada sem uso. */}
+            <AvatarGroup role="group" aria-label={tContent("demonstration.labels.groupTitle")}>
+              <Avatar>
                 <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
                 <AvatarFallback aria-hidden="true">MR</AvatarFallback>
               </Avatar>
-              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
+              <Avatar>
                 <AvatarImage src={DEMO_IMAGE_SECOND} alt="" />
                 <AvatarFallback aria-hidden="true">JP</AvatarFallback>
               </Avatar>
-              <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
+              <Avatar>
                 <AvatarFallback aria-hidden="true">
                   <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
-            </div>
+              <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
+            </AvatarGroup>
             <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.groupTitle")}
             </span>
           </div>
 
           <div className="nds-stack" data-spacing="xs" style={{ alignItems: "center" }}>
-            <div style={{ position: "relative", display: "inline-block" }}>
-              <Avatar>
-                <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
-                <AvatarFallback aria-hidden="true">MR</AvatarFallback>
-              </Avatar>
-              <span
-                role="status"
-                aria-label={tContent("demonstration.labels.statusOnline")}
-                className="nds-rounded-full nds-bg-primary"
-                style={{ position: "absolute", bottom: 0, right: 0, height: "0.625rem", width: "0.625rem", boxShadow: "0 0 0 2px var(--background)" }}
-              />
-            </div>
+            {/* role="img" e não "status": um ponto que não muda não é live
+                region, e o AvatarBadge já posiciona no canto. */}
+            <Avatar>
+              <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
+              <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+              <AvatarBadge role="img" aria-label={tContent("demonstration.labels.statusOnline")} />
+            </Avatar>
             <span className="nds-text-caption nds-text-muted-foreground">
               {tContent("demonstration.labels.statusTitle")}
             </span>
@@ -301,6 +285,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           tContent("anatomy.item2"),
           tContent("anatomy.item3"),
           tContent("anatomy.item4"),
+          tContent("anatomy.item5"),
         ]}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -327,7 +312,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           },
           items: [
             { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-            { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
+            { s: tContent("usage.scenarios.item2.s"), u: toPlainText(tContent("usage.scenarios.item2.u")), a: tContent("usage.scenarios.item2.a") },
             { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: toPlainText(tContent("usage.scenarios.item3.a")) },
             { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: toPlainText(tContent("usage.scenarios.item4.a")) },
           ],
@@ -344,7 +329,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             {
               element: tContent("usage.uxWriting.table.alt.name"),
               rules: tContent("usage.uxWriting.table.alt.format"),
-              do: tContent("usage.uxWriting.table.alt.good"),
+              do: toPlainText(tContent("usage.uxWriting.table.alt.good")),
               dont: tContent("usage.uxWriting.table.alt.bad"),
             },
             {
@@ -361,7 +346,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             },
             {
               element: tContent("usage.uxWriting.table.decorative.name"),
-              rules: tContent("usage.uxWriting.table.decorative.format"),
+              rules: toPlainText(tContent("usage.uxWriting.table.decorative.format")),
               do: tContent("usage.uxWriting.table.decorative.good"),
               dont: tContent("usage.uxWriting.table.decorative.bad"),
             },
@@ -583,12 +568,11 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 description: toPlainText(tContent("props.table.className")),
               },
               {
-                name: "asChild",
-                type: "boolean",
-                defaultValue: "false",
+                name: "size",
+                type: '"sm" | "md" | "lg" | "xl" | "2xl"',
+                defaultValue: "md",
                 required: "Não",
-                description:
-                  "Radix slot pattern — compõe com o elemento filho ao invés de renderizar um novo.",
+                description: toPlainText(tContent("props.table.size")),
               },
               {
                 name: "children",

@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Tamanhos canônicos do Avatar controlados exclusivamente via `className` — não existe prop `size`.",
+          "Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).",
       },
     },
   },
@@ -25,62 +25,102 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Size6: Story = {
-  name: "h-6 w-6 (compacto)",
+/**
+ * O diâmetro é o contrato do preset. Medir o elemento renderizado prova que
+ * `data-size` chegou ao CSS — as stories antigas fixavam a altura por estilo
+ * inline na própria story e depois conferiam esse mesmo estilo, então passavam
+ * mesmo com o preset quebrado.
+ */
+const caixaDo = (canvasElement: HTMLElement) => {
+  const root = canvasElement.querySelector('[data-slot="avatar"]');
+  if (!root) throw new Error('avatar não renderizou');
+  return root.getBoundingClientRect();
+};
+
+export const Sm: Story = {
+  name: "sm (24px)",
+  parameters: { covers: ["functional.item6", "visual.item3"] },
   render: () => (
-    <Avatar className="" style={{ height: "1.5rem", width: "1.5rem" }}>
+    <Avatar size="sm">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback className="" style={{ fontSize: "10px" }}>MR</AvatarFallback>
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveStyle({ height: "24px", width: "24px" });
+    await expect(
+      canvasElement.querySelector('[data-slot="avatar"]'),
+    ).toHaveAttribute("data-size", "sm");
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 24)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 24)).toBeLessThan(0.5);
   },
 };
 
-export const Size8: Story = {
-  name: "h-8 w-8 (médio-compacto)",
-  render: () => (
-    <Avatar className="" style={{ height: "2rem", width: "2rem" }}>
-      <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback className="nds-text-caption">MR</AvatarFallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveStyle({ height: "32px", width: "32px" });
-  },
-};
-
-export const Size10: Story = {
-  name: "size-8 (padrão)",
+export const Md: Story = {
+  name: "md (32px · padrão)",
+  parameters: { covers: ["functional.item6", "visual.item3"] },
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback>MR</AvatarFallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await step("Tamanho padrão aplicado via --size-default token + data-size", async () => {
-      await expect(root).toHaveAttribute("data-size", "default");
-      // Avatar usa size-(--size-default) — validar via data attribute
-      await expect(root).toHaveClass("nds-avatar");
-    });
-  },
-};
-
-export const Size12: Story = {
-  name: "h-12 w-12 (grande)",
-  render: () => (
-    <Avatar className="" style={{ height: "3rem", width: "3rem" }}>
-      <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback>MR</AvatarFallback>
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const root = canvasElement.querySelector('[data-slot="avatar"]');
-    await expect(root).toHaveStyle({ height: "48px", width: "48px" });
+    // Sem passar size: o padrão do componente é o preset md, e não um valor
+    // que não casa com seletor nenhum.
+    await expect(
+      canvasElement.querySelector('[data-slot="avatar"]'),
+    ).toHaveAttribute("data-size", "md");
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 32)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 32)).toBeLessThan(0.5);
+  },
+};
+
+export const Lg: Story = {
+  name: "lg (40px)",
+  parameters: { covers: ["functional.item6", "visual.item3"] },
+  render: () => (
+    <Avatar size="lg">
+      <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    </Avatar>
+  ),
+  play: async ({ canvasElement }) => {
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 40)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 40)).toBeLessThan(0.5);
+  },
+};
+
+export const Xl: Story = {
+  name: "xl (48px)",
+  parameters: { covers: ["functional.item6", "visual.item3"] },
+  render: () => (
+    <Avatar size="xl">
+      <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    </Avatar>
+  ),
+  play: async ({ canvasElement }) => {
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 48)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 48)).toBeLessThan(0.5);
+  },
+};
+
+export const TwoXl: Story = {
+  name: "2xl (64px)",
+  parameters: { covers: ["functional.item6", "visual.item3"] },
+  render: () => (
+    <Avatar size="2xl">
+      <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    </Avatar>
+  ),
+  play: async ({ canvasElement }) => {
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 64)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 64)).toBeLessThan(0.5);
   },
 };

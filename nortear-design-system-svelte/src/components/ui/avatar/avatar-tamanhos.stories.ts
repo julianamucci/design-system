@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tamanhos do Avatar aplicados via className (não via prop): h-6, h-8 (padrão), h-10 e h-12.',
+          'Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).',
       },
     },
   },
@@ -31,50 +31,79 @@ const baseProps = {
   initials: 'MR',
 };
 
-export const Size6: Story = {
-  name: 'h-6 w-6',
-  render: () => ({
-    Component: AvatarStory,
-    props: { ...baseProps, sizeClass: 'h-6 w-6' },
-  }),
+/**
+ * O diâmetro é o contrato do preset. Medir o elemento renderizado prova que
+ * `data-size` chegou ao CSS — as stories antigas passavam classes do Tailwind
+ * (`h-6 w-6`), que saíram do projeto: os cinco tamanhos renderizavam igual e
+ * nenhuma asserção reprovava.
+ */
+const caixaDo = (canvasElement: HTMLElement) => {
+  const root = canvasElement.querySelector('[data-slot="avatar"]');
+  if (!root) throw new Error('avatar não renderizou');
+  return root.getBoundingClientRect();
+};
 
+export const Sm: Story = {
+  name: 'sm (24px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'sm' } }),
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
+      'data-size',
+      'sm',
+    );
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 24)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 24)).toBeLessThan(0.5);
   },
 };
 
-export const Size8: Story = {
-  name: 'h-8 w-8 (default)',
-  render: () => ({
-    Component: AvatarStory,
-    props: { ...baseProps, sizeClass: 'h-8 w-8' },
-  }),
-
+export const Md: Story = {
+  name: 'md (32px · padrão)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({ Component: AvatarStory, props: { ...baseProps } }),
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    // Sem passar size: o padrão do componente é o preset md, e não um valor
+    // que não casa com seletor nenhum.
+    await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
+      'data-size',
+      'md',
+    );
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 32)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 32)).toBeLessThan(0.5);
   },
 };
 
-export const Size10: Story = {
-  name: 'h-10 w-10',
-  render: () => ({
-    Component: AvatarStory,
-    props: { ...baseProps, sizeClass: 'h-10 w-10' },
-  }),
-
+export const Lg: Story = {
+  name: 'lg (40px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'lg' } }),
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 40)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 40)).toBeLessThan(0.5);
   },
 };
 
-export const Size12: Story = {
-  name: 'h-12 w-12',
-  render: () => ({
-    Component: AvatarStory,
-    props: { ...baseProps, sizeClass: 'h-12 w-12' },
-  }),
-
+export const Xl: Story = {
+  name: 'xl (48px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'xl' } }),
   play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 48)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 48)).toBeLessThan(0.5);
+  },
+};
+
+export const TwoXl: Story = {
+  name: '2xl (64px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({ Component: AvatarStory, props: { ...baseProps, size: '2xl' } }),
+  play: async ({ canvasElement }) => {
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 64)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 64)).toBeLessThan(0.5);
   },
 };

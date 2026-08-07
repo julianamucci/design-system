@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+  import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from '@/components/ui/avatar';
   import User from '@lucide/svelte/icons/user';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -95,7 +95,7 @@ import User from '@lucide/svelte/icons/user';`;
 
   const codeImage = `<Avatar>
   <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />
-  <AvatarFallback delayMs={600}>MR</AvatarFallback>
+  <AvatarFallback>MR</AvatarFallback>
 </Avatar>`;
 
   const codeInitials = `<Avatar>
@@ -108,34 +108,24 @@ import User from '@lucide/svelte/icons/user';`;
   </AvatarFallback>
 </Avatar>`;
 
-  const codeGroup = `<div style="display: flex" role="group" aria-label="Participantes">
-  <Avatar style="box-shadow: 0 0 0 2px var(--background)">
-    <AvatarImage src="/maria.jpg" alt="" />
-    <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarImage src="/joao.jpg" alt="" />
-    <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
-  </Avatar>
-  <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-    <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
-  </Avatar>
-</div>`;
-
-  const codeStatus = `<div style="position: relative; display: inline-block">
+  const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
   <Avatar>
-    <AvatarImage src="/maria.jpg" alt="Foto de perfil de Maria Rodrigues" />
-    <AvatarFallback>MR</AvatarFallback>
+    <AvatarImage src="/maria.jpg" alt="" />
+    <AvatarFallback aria-hidden="true">MR</AvatarFallback>
   </Avatar>
-  <span
-    role="status"
-    aria-label="online"
-    class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-  />
-</div>`;
+  <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
+</AvatarGroup>`;
+
+  const codeStatus = `<Avatar>
+  <AvatarImage src="/maria.jpg" alt="" />
+  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarBadge role="img" aria-label="Online" />
+</Avatar>`;
 
   const interfaceCode = `// Avatar
 interface AvatarProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  delayMs?: number;
   class?: string;
   children?: Snippet;
   loadingStatus?: 'idle' | 'loading' | 'loaded' | 'error';
@@ -151,7 +141,6 @@ interface AvatarImageProps {
 
 // AvatarFallback
 interface AvatarFallbackProps {
-  delayMs?: number;
   class?: string;
   children?: Snippet;
 }`;
@@ -171,9 +160,9 @@ interface AvatarFallbackProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
       <div class="nds-stack" data-spacing="xs" style="align-items: center">
-        <Avatar>
+        <Avatar delayMs={600}>
           <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
-          <AvatarFallback delayMs={600}>MR</AvatarFallback>
+          <AvatarFallback>MR</AvatarFallback>
         </Avatar>
         <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withImage')}</span>
       </div>
@@ -192,37 +181,33 @@ interface AvatarFallbackProps {
         <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.withIcon')}</span>
       </div>
       <div class="nds-stack" data-spacing="xs" style="align-items: center">
-        <div style="display: flex" role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background)">
+        <!-- O recuo e a borda são do AvatarGroup: reproduzi-los com estilo
+             inline aqui deixava a classe compartilhada sem uso. -->
+        <AvatarGroup role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
+          <Avatar>
             <AvatarImage src={IMG_MARIA} alt="" />
-            <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
+            <AvatarFallback aria-hidden="true">MR</AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+          <Avatar>
             <AvatarImage src={IMG_JOAO} alt="" />
-            <AvatarFallback class="nds-text-caption">JP</AvatarFallback>
+            <AvatarFallback aria-hidden="true">JP</AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
+          <Avatar>
             <AvatarImage src={IMG_ANA} alt="" />
-            <AvatarFallback class="nds-text-caption">AS</AvatarFallback>
+            <AvatarFallback aria-hidden="true">AS</AvatarFallback>
           </Avatar>
-          <Avatar style="box-shadow: 0 0 0 2px var(--background); margin-left: -0.5rem">
-            <AvatarFallback class="nds-text-caption">+2</AvatarFallback>
-          </Avatar>
-        </div>
+          <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
+        </AvatarGroup>
         <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.groupTitle')}</span>
       </div>
       <div class="nds-stack" data-spacing="xs" style="align-items: center">
-        <div style="position: relative; display: inline-block">
-          <Avatar>
-            <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
-            <AvatarFallback>MR</AvatarFallback>
-          </Avatar>
-          <span
-            role="status"
-            aria-label={$tStore('demonstration.labels.statusOnline')}
-            class="nds-rounded-full nds-bg-primary" style="position: absolute; bottom: 0; right: 0; height: 0.625rem; width: 0.625rem; box-shadow: 0 0 0 2px var(--background)"
-          ></span>
-        </div>
+        <!-- role="img" e não "status": um ponto que não muda não é live
+             region, e o AvatarBadge já posiciona no canto. -->
+        <Avatar>
+          <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
+          <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+          <AvatarBadge role="img" aria-label={$tStore('demonstration.labels.statusOnline')} />
+        </Avatar>
         <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>
       </div>
     </div>
@@ -236,6 +221,7 @@ interface AvatarFallbackProps {
       $tStore('anatomy.item2'),
       $tStore('anatomy.item3'),
       $tStore('anatomy.item4'),
+      $tStore('anatomy.item5'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -262,7 +248,7 @@ interface AvatarFallbackProps {
       },
       items: [
         { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-        { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
+        { s: $tStore('usage.scenarios.item2.s'), u: toPlainText($tStore('usage.scenarios.item2.u')), a: $tStore('usage.scenarios.item2.a') },
         { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: toPlainText($tStore('usage.scenarios.item3.a')) },
         { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: toPlainText($tStore('usage.scenarios.item4.a')) },
       ],
@@ -276,10 +262,10 @@ interface AvatarFallbackProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.alt.name'),        rules: $tStore('usage.uxWriting.table.alt.format'),        do: $tStore('usage.uxWriting.table.alt.good'),        dont: $tStore('usage.uxWriting.table.alt.bad') },
+        { element: $tStore('usage.uxWriting.table.alt.name'),        rules: $tStore('usage.uxWriting.table.alt.format'),        do: toPlainText($tStore('usage.uxWriting.table.alt.good')),        dont: $tStore('usage.uxWriting.table.alt.bad') },
         { element: $tStore('usage.uxWriting.table.initials.name'),   rules: $tStore('usage.uxWriting.table.initials.format'),   do: $tStore('usage.uxWriting.table.initials.good'),   dont: $tStore('usage.uxWriting.table.initials.bad') },
         { element: $tStore('usage.uxWriting.table.status.name'),     rules: $tStore('usage.uxWriting.table.status.format'),     do: $tStore('usage.uxWriting.table.status.good'),     dont: $tStore('usage.uxWriting.table.status.bad') },
-        { element: $tStore('usage.uxWriting.table.decorative.name'), rules: $tStore('usage.uxWriting.table.decorative.format'), do: $tStore('usage.uxWriting.table.decorative.good'), dont: $tStore('usage.uxWriting.table.decorative.bad') },
+        { element: $tStore('usage.uxWriting.table.decorative.name'), rules: toPlainText($tStore('usage.uxWriting.table.decorative.format')), do: $tStore('usage.uxWriting.table.decorative.good'), dont: $tStore('usage.uxWriting.table.decorative.bad') },
       ],
     }}
     do={{
@@ -308,8 +294,8 @@ interface AvatarFallbackProps {
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair1.do'),
-        dontCaption: $tStore('doDont.pair1.dont'),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
@@ -328,7 +314,7 @@ interface AvatarFallbackProps {
     <div class="nds-cluster nds-w-full" data-justify="center">
       <Avatar>
         <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-        <AvatarFallback delayMs={600}>MR</AvatarFallback>
+        <AvatarFallback>MR</AvatarFallback>
       </Avatar>
     </div>
   {/snippet}
@@ -378,7 +364,7 @@ interface AvatarFallbackProps {
   {#snippet variantImage()}
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback delayMs={600}>MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   {/snippet}
   {#snippet variantInitials()}
@@ -456,6 +442,8 @@ interface AvatarFallbackProps {
           description: $tStore('props.table.description'),
         },
         items: [
+          { name: 'size',     type: "'sm' | 'md' | 'lg' | 'xl' | '2xl'", defaultValue: 'md', required: 'Não', description: toPlainText($tStore('props.table.size')) },
+          { name: 'delayMs',  type: 'number',  defaultValue: '—', required: 'Não', description: $tStore('props.table.delayMs') },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.className')) },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children') },
         ],
@@ -486,7 +474,6 @@ interface AvatarFallbackProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'delayMs',  type: 'number',  defaultValue: '—', required: 'Não', description: $tStore('props.table.delayMs') },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.className')) },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children') },
         ],

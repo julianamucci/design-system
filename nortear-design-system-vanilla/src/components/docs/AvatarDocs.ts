@@ -8,6 +8,9 @@ import {
   createAvatarFallback,
   createAvatarImage,
   createAvatarRoot,
+  createAvatarGroup,
+  createAvatarGroupCount,
+  createAvatarBadge,
 } from '@/components/ui/avatar';
 import uiTranslations from '@/i18n/ui.json';
 import avatarTranslations from '@shared/content/avatar/translations.json';
@@ -100,63 +103,45 @@ function buildIconAvatar(className = ''): HTMLElement {
 }
 
 function buildGroupAvatar(): HTMLElement {
-  const group = document.createElement('div');
-  group.style.display = 'flex';
-  group.setAttribute('role', 'group');
-  group.setAttribute('aria-label', stripHtml(t('demonstration.labels.groupTitle')));
+  // O grupo e o contador saem das factories: o recuo e a borda que separa um
+  // avatar do outro são do .nds-avatar-group. Antes a demo reproduzia as duas
+  // coisas com estilo inline, e a classe compartilhada não era exercitada.
+  const group = createAvatarGroup({ label: stripHtml(t('demonstration.labels.groupTitle')) });
 
-  const ringStyle = 'box-shadow: 0 0 0 2px var(--background);';
-  const applyRing = (el: HTMLElement, offset: boolean) => {
-    el.style.cssText += ringStyle;
-    if (offset) el.style.marginLeft = '-0.5rem';
-  };
+  group.appendChild(
+    createAvatar({
+      src: PREVIEW_SRC,
+      alt: t('demonstration.labels.withImageAlt'),
+      fallbackText: 'MR',
+    }),
+  );
 
-  const a1 = createAvatar({
-    src: PREVIEW_SRC,
-    alt: t('demonstration.labels.withImageAlt'),
-    fallbackText: 'MR',
-  });
-  applyRing(a1, false);
-  group.appendChild(a1);
+  for (const iniciais of ['JP', 'AL']) {
+    const av = createAvatarRoot();
+    av.appendChild(createAvatarFallback({ text: iniciais }));
+    group.appendChild(av);
+  }
 
-  const initialsA = createAvatarRoot();
-  initialsA.appendChild(createAvatarFallback({ text: 'JP' }));
-  applyRing(initialsA, true);
-  group.appendChild(initialsA);
-
-  const initialsB = createAvatarRoot();
-  initialsB.appendChild(createAvatarFallback({ text: 'AL' }));
-  applyRing(initialsB, true);
-  group.appendChild(initialsB);
-
-  const more = createAvatarRoot();
-  more.appendChild(createAvatarFallback({ text: '+3', className: 'nds-text-caption' }));
-  applyRing(more, true);
-  group.appendChild(more);
+  const contador = createAvatarGroupCount({ text: '+3' });
+  contador.setAttribute('aria-hidden', 'true');
+  group.appendChild(contador);
 
   return group;
 }
 
 function buildStatusAvatar(): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.position = 'relative';
-  wrapper.style.display = 'inline-block';
-
+  // O ponto é filho do avatar e vem da factory: .nds-avatar-badge posiciona no
+  // canto e acompanha o diâmetro. O wrapper relative com estilo inline que
+  // existia aqui reproduzia a classe compartilhada linha por linha.
   const avatar = createAvatar({
     src: PREVIEW_SRC,
     alt: t('demonstration.labels.withImageAlt'),
     fallbackText: 'MR',
   });
-
-  const status = document.createElement('span');
-  status.className = 'nds-rounded-full nds-bg-primary';
-  status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
-  // role="status" permite aria-label em <span> (senão axe aponta aria-prohibited-attr).
-  status.setAttribute('role', 'status');
-  status.setAttribute('aria-label', stripHtml(t('demonstration.labels.statusOnline')));
-
-  wrapper.append(avatar, status);
-  return wrapper;
+  avatar.appendChild(
+    createAvatarBadge({ label: stripHtml(t('demonstration.labels.statusOnline')) }),
+  );
+  return avatar;
 }
 
 // ─── createAvatarDocs ─────────────────────────────────────────────────────────
@@ -297,6 +282,7 @@ export function createAvatarDocs(): HTMLElement {
             t('anatomy.item2'),
             t('anatomy.item3'),
             t('anatomy.item4'),
+            t('anatomy.item5'),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -323,7 +309,7 @@ export function createAvatarDocs(): HTMLElement {
             },
             items: [1, 2, 3, 4].map(i => ({
               s: t(`usage.scenarios.item${i}.s`),
-              u: t(`usage.scenarios.item${i}.u`),
+              u: toPlainText(t(`usage.scenarios.item${i}.u`)),
               a: toPlainText(t(`usage.scenarios.item${i}.a`)),
             })),
           },
@@ -368,8 +354,8 @@ export function createAvatarDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair1.do')),
-              dontCaption: stripHtml(t('doDont.pair1.dont')),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildImageAvatar(),
               dontPreviewFactory: () => {
                 // Avatar sem fallback: apenas <img>, quebra se falhar.
@@ -428,27 +414,12 @@ fallback.setAttribute('aria-label', 'Usuário genérico');
 // ...append User icon SVG
 root.appendChild(fallback);`;
 
-        const codeGroup = `const group = document.createElement('div');
-group.style.display = 'flex';
-group.setAttribute('role', 'group');
-group.setAttribute('aria-label', 'Participantes');
+        const codeGroup = `const group = createAvatarGroup({ label: 'Participantes' });
+group.appendChild(createAvatar({ src, alt: '', fallbackText: 'MR' }));
+group.appendChild(createAvatarGroupCount({ text: '+3' }));`;
 
-const av = createAvatar({ src, alt, fallbackText: 'MR' });
-av.style.cssText = 'box-shadow:0 0 0 2px var(--background);';
-group.appendChild(av);`;
-
-        const codeStatus = `const wrapper = document.createElement('div');
-wrapper.style.position = 'relative';
-wrapper.style.display = 'inline-block';
-
-wrapper.appendChild(createAvatar({ src, alt, fallbackText: 'MR' }));
-
-const status = document.createElement('span');
-status.className = 'nds-rounded-full nds-bg-primary';
-status.style.cssText = 'position:absolute;bottom:0;right:0;height:0.625rem;width:0.625rem;box-shadow:0 0 0 2px var(--background);';
-status.setAttribute('role', 'status');
-status.setAttribute('aria-label', 'online');
-wrapper.appendChild(status);`;
+        const codeStatus = `const avatar = createAvatar({ src, alt, fallbackText: 'MR' });
+avatar.appendChild(createAvatarBadge({ label: 'Online' }));`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -545,6 +516,7 @@ export interface AvatarFallbackOptions {
               title: t('props.avatarTitle'),
               cols: propsCols,
               items: [
+                { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl' | '2xl'", defaultValue: 'md', required: 'Não', description: toPlainText(t('props.table.size')) },
                 { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },

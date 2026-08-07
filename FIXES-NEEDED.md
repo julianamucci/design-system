@@ -1415,3 +1415,30 @@ caption que só deveria existir para o leitor de tela — e o teste assertava
 corrigidos.
 
 Restam: table 15, sonner 2, calendar 1, chart 1, select 1.
+
+## avatar — `className` das factories-folha do Vanilla (baixo)
+
+Ramos abertos: 78,7% no Vanilla (37/47), abaixo do limiar de 80. Dez ramos, e a
+maioria é o mesmo caso: `if (className)` em `createAvatarImage`,
+`createAvatarFallback`, `createAvatarGroup`, `createAvatarGroupCount` e
+`createAvatarBadge`. Nenhuma story passa, nenhuma docs page passa — só o root
+recebe, e é por ele que o composto encaminha.
+
+Não fechei com story porque toda tentativa saía artificial: o design system
+manda usar a prop `size` para diâmetro e as próprias classes `.nds-*` do
+componente para o resto, então uma story que passa classe numa peça interna
+demonstraria o que a documentação desaconselha.
+
+As duas saídas do §2e6 valem aqui, e a escolha é de produto:
+
+- **Remover** o `className` das cinco factories-folha, mantendo no
+  `createAvatarRoot` e no `createAvatar`. Fecha os ramos e tira superfície que
+  ninguém usa — mas contradiz `props.extensibility`, que promete `className` em
+  todos os subcomponentes, e nas outras três stacks a promessa é verdadeira
+  porque o `cn()` do wrapper aceita.
+- **Manter e exercitar** num caso real de customização por peça, se ele
+  aparecer.
+
+Os outros quatro ramos são de tempo, não de API: `if (img.complete)`,
+o guarda dentro do temporizador do atraso e o `if (text)` do contador. Só
+fecham com controle de rede que a suíte não tem.

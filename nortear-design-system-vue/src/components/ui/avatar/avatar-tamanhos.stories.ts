@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 
+const IMG_MARIA =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
+
 const meta = {
   title: 'UI/Avatar/Tamanhos',
   component: Avatar,
@@ -13,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Tamanhos são controlados via className (h-6 w-6, h-8 w-8 padrão, h-10 w-10, h-12 w-12). Não existe prop size.',
+          'Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).',
       },
     },
   },
@@ -22,71 +25,90 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const demoSrc =
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format';
-const demoAlt = 'Foto de perfil de Maria Rodrigues';
+/**
+ * O diâmetro é o contrato do preset. Medir o elemento renderizado prova que
+ * `data-size` chegou ao CSS — as stories antigas fixavam a altura por estilo
+ * inline na própria story e depois conferiam esse mesmo estilo, então passavam
+ * mesmo com o preset quebrado.
+ */
+const caixaDo = (canvasElement: HTMLElement) => {
+  const root = canvasElement.querySelector('[data-slot="avatar"]');
+  if (!root) throw new Error('avatar não renderizou');
+  return root.getBoundingClientRect();
+};
 
-export const Size6: Story = {
-  render: () => ({
-    components: { Avatar, AvatarImage, AvatarFallback },
-    setup() { return { demoSrc, demoAlt }; },
-    template: `
-      <Avatar class="" style="height: 1.5rem; width: 1.5rem">
-        <AvatarImage :src="demoSrc" :alt="demoAlt" />
-        <AvatarFallback class="text-[0.625rem]">MR</AvatarFallback>
-      </Avatar>
-    `,
-  }),
+const render = (size?: string) => () => ({
+  components: { Avatar, AvatarImage, AvatarFallback },
+  setup: () => ({ IMG_MARIA, size }),
+  template: `
+    <Avatar :size="size">
+      <AvatarImage :src="IMG_MARIA" alt="Foto de perfil de Maria Rodrigues" />
+      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    </Avatar>
+  `,
+});
+
+export const Sm: Story = {
+  name: 'sm (24px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: render('sm'),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
+      'data-size',
+      'sm',
+    );
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 24)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 24)).toBeLessThan(0.5);
   },
 };
 
-export const Size8: Story = {
-  name: 'Size8 (default)',
-  render: () => ({
-    components: { Avatar, AvatarImage, AvatarFallback },
-    setup() { return { demoSrc, demoAlt }; },
-    template: `
-      <Avatar>
-        <AvatarImage :src="demoSrc" :alt="demoAlt" />
-        <AvatarFallback class="nds-text-caption">MR</AvatarFallback>
-      </Avatar>
-    `,
-  }),
+export const Md: Story = {
+  name: 'md (32px · padrão)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: render(undefined),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    // Sem passar size: o padrão do componente é o preset md, e não um valor
+    // que não casa com seletor nenhum.
+    await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
+      'data-size',
+      'md',
+    );
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 32)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 32)).toBeLessThan(0.5);
   },
 };
 
-export const Size10: Story = {
-  render: () => ({
-    components: { Avatar, AvatarImage, AvatarFallback },
-    setup() { return { demoSrc, demoAlt }; },
-    template: `
-      <Avatar class="" style="height: 2.5rem; width: 2.5rem">
-        <AvatarImage :src="demoSrc" :alt="demoAlt" />
-        <AvatarFallback>MR</AvatarFallback>
-      </Avatar>
-    `,
-  }),
+export const Lg: Story = {
+  name: 'lg (40px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: render('lg'),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 40)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 40)).toBeLessThan(0.5);
   },
 };
 
-export const Size12: Story = {
-  render: () => ({
-    components: { Avatar, AvatarImage, AvatarFallback },
-    setup() { return { demoSrc, demoAlt }; },
-    template: `
-      <Avatar class="" style="height: 3rem; width: 3rem">
-        <AvatarImage :src="demoSrc" :alt="demoAlt" />
-        <AvatarFallback>MR</AvatarFallback>
-      </Avatar>
-    `,
-  }),
+export const Xl: Story = {
+  name: 'xl (48px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: render('xl'),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 48)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 48)).toBeLessThan(0.5);
+  },
+};
+
+export const TwoXl: Story = {
+  name: '2xl (64px)',
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: render('2xl'),
+  play: async ({ canvasElement }) => {
+    const { width, height } = caixaDo(canvasElement);
+    await expect(Math.abs(width - 64)).toBeLessThan(0.5);
+    await expect(Math.abs(height - 64)).toBeLessThan(0.5);
   },
 };

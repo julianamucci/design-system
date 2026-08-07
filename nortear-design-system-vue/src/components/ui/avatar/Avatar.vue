@@ -14,7 +14,7 @@ const props = defineProps<{
 <template>
   <AvatarRoot
     data-slot="avatar"
-    :data-size="size ?? 'default'"
+    :data-size="size ?? 'md'"
     :class="cn(avatarVariants({ size }), props.class)"
   >
     <slot />

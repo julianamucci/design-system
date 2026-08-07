@@ -12,14 +12,19 @@ export const avatarVariants = cva(
   'nds-avatar',
   {
     variants: {
+      // Os presets moram no CSS, via [data-size]; a cva só declara o eixo para
+      // o tipo. Antes faltavam md, xl e 2xl, e o default era 'default', que não
+      // casa com seletor nenhum.
       size: {
         sm: '',
-        default: '',
+        md: '',
         lg: '',
+        xl: '',
+        '2xl': '',
       },
     },
     defaultVariants: {
-      size: 'default',
+      size: 'md',
     },
   },
 )

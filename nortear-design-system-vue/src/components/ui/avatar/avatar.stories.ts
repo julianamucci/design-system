@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 import AvatarDocs from '@/components/docs/AvatarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+/** Diâmetro de cada preset, em px, com a densidade padrão. */
+const DIAMETRO = { sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64 } as const;
 
 const meta = {
   title: 'UI/Avatar',
@@ -14,18 +17,30 @@ const meta = {
       page: withAutoDocsTab(AvatarDocs),
       description: {
         component:
-          'Avatar representa um usuário via foto, iniciais ou ícone. Baseado em reka-ui com AvatarRoot, AvatarImage e AvatarFallback. Tamanhos via className — sem prop size.',
+          'Avatar representa um usuário via foto, iniciais ou ícone. O diâmetro sai dos presets da prop size.',
       },
     },
   },
   argTypes: {
+    size: {
+      control: 'select',
+      options: ['sm', 'md', 'lg', 'xl', '2xl'],
+      description: 'Preset de diâmetro: sm 24px, md 32px, lg 40px, xl 48px, 2xl 64px.',
+      table: {
+        type: { summary: "'sm' | 'md' | 'lg' | 'xl' | '2xl'" },
+        defaultValue: { summary: 'md' },
+      },
+    },
     class: {
       control: 'text',
-      description: 'Classes utilitárias .nds-* adicionais — use para ajustar tamanho (h-6 w-6, h-8 w-8, h-10 w-10, h-12 w-12).',
+      description:
+        'Classes .nds-* adicionais para ajustes pontuais de forma ou borda. O diâmetro sai da prop size.',
+      table: { type: { summary: 'string' } },
     },
   },
   args: {
-    class: '',
+    size: 'md',
+    class: 'nds-shadow-sm',
   },
 } satisfies Meta<typeof Avatar>;
 
@@ -33,6 +48,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ['accessibility.item4', 'visual.item1'] },
   render: (args) => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     setup() { return { args }; },
@@ -46,25 +62,31 @@ export const Playground: Story = {
       </Avatar>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, args, step }) => {
+    const root = canvasElement.querySelector('[data-slot="avatar"]');
 
-    await step('Container do Avatar está presente no DOM', async () => {
-      const root = canvasElement.querySelector('[data-slot="avatar"]');
-      await expect(root).toBeInTheDocument();
+    await step('O preset do control chega ao elemento', async () => {
+      await expect(root).not.toBeNull();
+      await expect(root).toHaveAttribute('data-size', args.size!);
+      // Medir e não conferir a classe: o diâmetro é o contrato do preset, e a
+      // classe base é a mesma nos cinco.
+      const { width } = root!.getBoundingClientRect();
+      await expect(Math.abs(width - DIAMETRO[args.size!])).toBeLessThan(0.5);
     });
 
-    await step('Avatar aplica rounded-full + size via token --size-default', async () => {
-      const root = canvasElement.querySelector('[data-slot="avatar"]');
+    await step('A foto identifica a pessoa pelo alt', async () => {
+      await waitFor(async () => {
+        const img = canvasElement.querySelector<HTMLImageElement>('[data-slot="avatar-image"]');
+        await expect(img).not.toBeNull();
+        await expect(img!.alt).toBe('Foto de perfil de Maria Rodrigues');
+      }, { timeout: 5000 });
+    });
+
+    await step('A classe extra do control chega à raiz', async () => {
+      // A extensibilidade documentada é justamente esta: classe .nds-* somada
+      // à do componente, sem substituir.
       await expect(root).toHaveClass('nds-avatar');
-      // size-(--size-default) — validar via data-slot em vez de classe literal
-      await expect(root).toHaveAttribute('data-slot', 'avatar');
-    });
-
-    await step('Avatar renderiza imagem ou fallback', async () => {
-      // Quando a imagem carrega, AvatarImage renderiza; caso contrário, Fallback com 'MR'
-      const img = canvasElement.querySelector('[data-slot="avatar-image"]');
-      const fallback = canvasElement.querySelector('[data-slot="avatar-fallback"]');
-      await expect(img || fallback).toBeTruthy();
+      await expect(root).toHaveClass('nds-shadow-sm');
     });
   },
 };

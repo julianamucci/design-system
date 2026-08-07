@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
+
+const IMG_MARIA =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
+
+// src garantidamente inválido para forçar o estado failed
+const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta = {
   title: 'UI/Avatar/Estados',
@@ -13,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Estados de carregamento do Avatar: loaded (imagem ok), loading (aguardando delayMs), failed (imagem quebrada) e noImage (sem AvatarImage).',
+          'Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.',
       },
     },
   },
@@ -23,89 +29,111 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Loaded: Story = {
+  parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
+    setup: () => ({ IMG_MARIA }),
     template: `
       <Avatar>
-        <AvatarImage
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format"
-          alt="Foto de perfil de Maria Rodrigues"
-        />
-        <AvatarFallback>MR</AvatarFallback>
+        <AvatarImage :src="IMG_MARIA" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarFallback aria-hidden="true">MR</AvatarFallback>
       </Avatar>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
-    await step('Container Avatar presente', async () => {
-      const root = canvasElement.querySelector('[data-slot="avatar"]');
-      await expect(root).toBeInTheDocument();
-    });
+  play: async ({ canvasElement }) => {
+    // functional.item1 — carregada a imagem, ela é o que fica; o fallback sai.
+    await waitFor(async () => {
+      const img = canvasElement.querySelector<HTMLImageElement>('[data-slot="avatar-image"]');
+      await expect(img).not.toBeNull();
+      await expect(img!.alt).toBe('Foto de perfil de Maria Rodrigues');
+    }, { timeout: 5000 });
+    // Quem está pintado no centro é a imagem: uma stack remove o fallback do
+    // DOM, outra só o esconde, e a promessa das duas é a mesma — depois do load
+    // é a foto que aparece.
+    const root = canvasElement.querySelector('[data-slot="avatar"]')!;
+    await waitFor(async () => {
+      const r = root.getBoundingClientRect();
+      const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).not.toBeNull();
+    }, { timeout: 5000 });
   },
 };
 
 export const Loading: Story = {
-  name: 'Loading (delayMs=600)',
+  name: 'Loading (atraso de 600ms)',
+  parameters: { covers: ['functional.item4'] },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
+    setup: () => ({ IMG_BROKEN }),
     template: `
       <Avatar>
-        <AvatarImage
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format"
-          alt="Foto de perfil de Maria Rodrigues"
-        />
+        <AvatarImage :src="IMG_BROKEN" alt="Foto de perfil de Maria Rodrigues" />
         <AvatarFallback :delay-ms="600">MR</AvatarFallback>
       </Avatar>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
-    await step('Container Avatar presente', async () => {
-      const root = canvasElement.querySelector('[data-slot="avatar"]');
-      await expect(root).toBeInTheDocument();
-    });
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // functional.item4 — o atraso segura as iniciais e depois as entrega. A
+    // janela ANTES do prazo não é asserida de propósito: ela é transitória e o
+    // replay do painel roda no mesmo DOM, já com o prazo vencido.
+    await waitFor(async () => {
+      await expect(canvas.getByText('MR')).toBeVisible();
+    }, { timeout: 3000 });
   },
 };
 
 export const Failed: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
+    setup: () => ({ IMG_BROKEN }),
     template: `
       <Avatar>
-        <AvatarImage
-          src="https://broken.example.com/not-found.png"
-          alt="Foto de perfil de João Pereira"
-        />
-        <AvatarFallback>JP</AvatarFallback>
+        <AvatarImage :src="IMG_BROKEN" alt="Foto de perfil de Maria Rodrigues" />
+        <AvatarFallback>MR</AvatarFallback>
       </Avatar>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    await step('Fallback exibido após falha da imagem', async () => {
-      await expect(await canvas.findByText('JP')).toBeVisible();
-    });
+    // functional.item2 — com src inválido o fallback fica, e a imagem não entra.
+    await waitFor(async () => {
+      await expect(canvas.getByText('MR')).toBeVisible();
+    }, { timeout: 5000 });
+    // A imagem não pode estar por cima: uma stack tira o <img> do DOM no erro,
+    // outra o mantém escondido. O que vale nas duas é quem está pintado no
+    // centro do avatar — e é isso que o leitor vê.
+    const root = canvasElement.querySelector('[data-slot="avatar"]')!;
+    const r = root.getBoundingClientRect();
+    const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
   },
 };
 
 export const NoImage: Story = {
+  parameters: { covers: ['functional.item3'] },
   render: () => ({
     components: { Avatar, AvatarFallback },
     template: `
       <Avatar>
-        <AvatarFallback>JP</AvatarFallback>
+        <AvatarFallback role="img" aria-label="Usuário genérico">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               style="height: 1.25rem; width: 1.25rem">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </AvatarFallback>
       </Avatar>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    await step('Fallback exibido imediatamente sem AvatarImage', async () => {
-      await expect(canvas.getByText('JP')).toBeVisible();
-    });
-
-    await step('Não existe elemento AvatarImage no DOM', async () => {
-      const img = canvasElement.querySelector('[data-slot="avatar-image"]');
-      await expect(img).toBeNull();
-    });
+    // functional.item3 — sem imagem o fallback é imediato, sem espera nenhuma.
+    const fallback = canvas.getByRole('img', { name: /Usuário genérico/i });
+    await expect(fallback).toBeVisible();
+    await expect(fallback.querySelector('svg')).not.toBeNull();
+    await expect(canvasElement.querySelector('img')).toBeNull();
   },
 };
