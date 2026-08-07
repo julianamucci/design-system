@@ -42,6 +42,17 @@ decisão sua — não é trabalho parado por falta de tempo.
   forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
   ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
 
+- [ ] **`slider > Em Formulario` reprova no axe por `target-size`, só em Vue e
+  Svelte (2026-08-07).** Medido nas quatro: react e vanilla passam, vue e svelte
+  falham com "16px by 16px, should be at least 24px" e "insufficient space to
+  its closest neighbors".
+
+  O CSS compartilhado dá a hit-area por `.nds-slider-thumb::after { inset:
+  -0.25rem }` — 16+8 = 24px, exatamente o que a guideline promete em WCAG 2.5.8.
+  Como duas stacks passam com o mesmo CSS, a diferença está no DOM que cada lib
+  monta em volta do thumb, não na regra. Achado ao rodar a suíte depois do lint;
+  é anterior a esta rodada e não foi diagnosticado.
+
 - [ ] **Classe utilitária não vence CSS de componente — e a docs page prometia
   que sim (2026-08-07).** `utilities.css` é importado na linha 13 do bundle e o
   CSS dos componentes a partir da 31: mesma especificidade, quem vem depois

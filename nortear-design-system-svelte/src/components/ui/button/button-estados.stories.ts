@@ -1,6 +1,5 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import type { ComponentProps } from 'svelte';
 
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Button } from './index';

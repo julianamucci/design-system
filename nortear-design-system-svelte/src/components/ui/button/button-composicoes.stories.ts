@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonPairStory from './ButtonPairStory.svelte';
@@ -152,7 +152,8 @@ export const LinkDesabilitado: Story = {
 export const HrefComProtocoloInseguro: Story = {
   render: () => ({
     Component: ButtonStory,
-    // eslint-disable-next-line no-script-url -- é o vetor que a guarda existe para barrar
+    // O javascript: aqui é proposital — é o vetor que a guarda do Button existe
+    // para barrar, e a play confere que o href não chega ao DOM.
     props: { variant: 'link', label: 'Ver documentação', href: 'javascript:window.__xss = true' },
   }),
   parameters: {

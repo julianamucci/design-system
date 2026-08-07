@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, within } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 

@@ -45,7 +45,6 @@ export const VolumeComValor: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
     await step('Valor textual visível', async () => {
       await expect(canvas.getByText('50%')).toBeVisible();

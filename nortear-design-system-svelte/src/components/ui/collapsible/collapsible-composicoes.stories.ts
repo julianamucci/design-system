@@ -23,7 +23,6 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
 
 // Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
 export const ComButton: StoryObj<Record<string, never>> = {
