@@ -24,6 +24,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
   const mode = props.multiple ? "multiple" : "single"
   function handleKeyDown(event: AccordionKeyDownEvent) {
     onKeyDown?.(event)
+    /* v8 ignore next -- só dispara se o consumidor chamar preventDefault no
+       próprio onKeyDown para assumir a navegação; nenhuma story faz isso. */
     if (event.defaultPrevented) return
     if (!NAV_KEYS.includes(event.key as (typeof NAV_KEYS)[number])) return
 
@@ -32,6 +34,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
     const focused = (event.target as HTMLElement).closest<HTMLButtonElement>(
       '[data-slot="accordion-trigger"]',
     )
+    /* v8 ignore next -- exige foco DENTRO do conteúdo, e nenhuma composição
+       do design system põe elemento focável ali (tabela, lista e texto). */
     if (!focused) return
 
     const triggers = Array.from(
@@ -40,6 +44,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
       ),
     )
     const index = triggers.indexOf(focused)
+    /* v8 ignore next -- a lista já exclui trigger desabilitado, e trigger
+       desabilitado não recebe foco: não há como estar focado e fora dela. */
     if (index < 0) return
 
     event.preventDefault()

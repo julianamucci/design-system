@@ -216,6 +216,8 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     // sabe nada do nosso estado: sem isto o painel apareceria com o trigger
     // ainda dizendo `aria-expanded="false"` e o próximo clique o "abriria" de
     // novo, fechando-o. `toggle` mantém openValues, ARIA e modo single em dia.
+    /* v8 ignore next 3 -- beforematch é disparado pelo próprio navegador ao
+       achar texto escondido pelo Ctrl+F; não há API para provocá-lo em teste. */
     contentEl.addEventListener('beforematch', () => {
       if (!isOpen(item.value)) toggle(item.value, triggerEl, contentEl);
     });

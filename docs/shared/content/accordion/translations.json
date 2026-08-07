@@ -416,17 +416,17 @@
       "collapsible": {
         "name": "Collapsible",
         "description": "Use para uma única seção expansível isolada.",
-        "href": "disclosure-collapsible--playground"
+        "href": "ui-collapsible--docs"
       },
       "tabs": {
         "name": "Tabs",
         "description": "Use para alternância entre views paralelas.",
-        "href": "navigation-tabs--playground"
+        "href": "ui-tabs--docs"
       },
       "sidebar": {
         "name": "Sidebar",
         "description": "Accordion aninhado em Sidebar para navegação hierárquica.",
-        "href": "layout-sidebar--playground"
+        "href": "ui-sidebar--docs"
       }
     },
     "notes": {
@@ -993,17 +993,17 @@
       "collapsible": {
         "name": "Collapsible",
         "description": "Use for a single isolated expandable section.",
-        "href": "disclosure-collapsible--playground"
+        "href": "ui-collapsible--docs"
       },
       "tabs": {
         "name": "Tabs",
         "description": "Use for switching between parallel views.",
-        "href": "navigation-tabs--playground"
+        "href": "ui-tabs--docs"
       },
       "sidebar": {
         "name": "Sidebar",
         "description": "Nested Accordion in Sidebar for hierarchical navigation.",
-        "href": "layout-sidebar--playground"
+        "href": "ui-sidebar--docs"
       }
     },
     "notes": {
@@ -1570,17 +1570,17 @@
       "collapsible": {
         "name": "Collapsible",
         "description": "Usa para una única sección expandible aislada.",
-        "href": "disclosure-collapsible--playground"
+        "href": "ui-collapsible--docs"
       },
       "tabs": {
         "name": "Tabs",
         "description": "Usa para alternar entre vistas paralelas.",
-        "href": "navigation-tabs--playground"
+        "href": "ui-tabs--docs"
       },
       "sidebar": {
         "name": "Sidebar",
         "description": "Accordion anidado en Sidebar para navegación jerárquica.",
-        "href": "layout-sidebar--playground"
+        "href": "ui-sidebar--docs"
       }
     },
     "notes": {

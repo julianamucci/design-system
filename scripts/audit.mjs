@@ -1822,7 +1822,10 @@ function auditQuality(slug) {
       if (typeof node === 'string') {
         const last = keyPath[keyPath.length - 1] || '';
         const full = keyPath.join('.');
-        if (CODE_KEY_RX.test(last) || TYPE_PATH_RX.test(full) || PROP_NAME_PATH_RX.test(full)) return;
+        // `some` e não só a última chave: com as variantes por stack, o snippet
+        // mora em `structureCode.react` — a folha vira o nome da stack e a marca
+        // de código fica no ancestral. Testar só a folha acusava JSX como texto.
+        if (keyPath.some((k) => CODE_KEY_RX.test(k)) || TYPE_PATH_RX.test(full) || PROP_NAME_PATH_RX.test(full)) return;
         for (const { rx, label } of LITERAL_RX) {
           if (rx.test(node)) {
             violations.push({

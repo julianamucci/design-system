@@ -434,7 +434,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("variants.title")}
             items={[
               {
-                name: "single",
+                name: tContent("variants.items.single.label"),
                 description: stripHtml(tContent("variants.items.single.description")),
                 code: codeSingle,
                 preview: (
@@ -453,7 +453,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "multiple",
+                name: tContent("variants.items.multiple.label"),
                 description: stripHtml(tContent("variants.items.multiple.description")),
                 code: codeMultiple,
                 preview: (
@@ -470,7 +470,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "controlled",
+                name: tContent("variants.items.controlled.label"),
                 description: stripHtml(tContent("variants.items.controlled.description")),
                 code: codeControlled,
                 preview: (
@@ -483,7 +483,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "defaultOpen",
+                name: tContent("variants.items.defaultOpen.label"),
                 description: stripHtml(tContent("variants.items.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
@@ -887,19 +887,19 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("related.title")}
             items={[
               {
-                name: "Collapsible",
+                name: tContent("related.collapsible.name"),
                 description: stripHtml(tContent("related.collapsible.description")),
-                path: "?path=/docs/ui-collapsible--docs",
+                path: `?path=/docs/${tContent("related.collapsible.href")}`,
               },
               {
-                name: "Tabs",
+                name: tContent("related.tabs.name"),
                 description: toPlainText(tContent("related.tabs.description")),
-                path: "?path=/docs/ui-tabs--docs",
+                path: `?path=/docs/${tContent("related.tabs.href")}`,
               },
               {
-                name: "Sidebar",
+                name: tContent("related.sidebar.name"),
                 description: toPlainText(tContent("related.sidebar.description")),
-                path: "?path=/docs/ui-sidebar--docs",
+                path: `?path=/docs/${tContent("related.sidebar.href")}`,
               },
             ]}
           />
