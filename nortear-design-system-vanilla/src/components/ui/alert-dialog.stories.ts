@@ -254,6 +254,17 @@ export const Playground: Story = {
       await expect(dialog).toHaveAccessibleDescription(args.description);
     });
 
+    await step('Clique repetido no trigger não monta um segundo painel', async () => {
+      const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
+      trigger.click();
+      // Sem a guarda de open(), o segundo clique montaria outro painel e
+      // perderia a referência do primeiro, que ficaria órfão no body.
+      await expect(document.querySelectorAll('[role="alertdialog"]')).toHaveLength(1);
+      await expect(
+        document.querySelectorAll('[data-slot="alert-dialog-overlay"]'),
+      ).toHaveLength(1);
+    });
+
     await step('Bloco de mídia segue o control showMedia', async () => {
       const dialog = await waitForPortal('alertdialog');
       const media = dialog.querySelector('[data-slot="alert-dialog-media"]');

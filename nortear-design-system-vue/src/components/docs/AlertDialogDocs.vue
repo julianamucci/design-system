@@ -175,7 +175,7 @@ const codeDestructive = `<AlertDialog>
 
 const codeDefault = `<AlertDialog>
   <AlertDialogTrigger as-child>
-    <Button>Sair da conta</Button>
+    <Button variant="outline">Sair da conta</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
@@ -231,6 +231,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item7'),
   tContent('anatomy.item8'),
   tContent('anatomy.item9'),
+  tContent('anatomy.item10'),
 ]);
 
 const variantItems = computed(() => [
@@ -291,14 +292,19 @@ const cancelProps = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--background',             value: 'bg-black/80',                           description: tContent('tokens.table.overlayBg')             },
-  { token: '--background',             value: 'bg-background',                         description: tContent('tokens.table.contentBg')             },
-  { token: '--foreground',             value: 'text-foreground',                       description: tContent('tokens.table.contentForeground')     },
-  { token: '--border',                 value: 'border',                                description: tContent('tokens.table.border')                },
-  { token: '--muted-foreground',       value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground')       },
-  { token: '--destructive',            value: 'bg-destructive',                        description: tContent('tokens.table.destructive')           },
-  { token: '--destructive-foreground', value: 'text-destructive-foreground',           description: tContent('tokens.table.destructiveForeground') },
-  { token: '--radius',                 value: 'sm:rounded-lg',                         description: tContent('tokens.table.radius')                },
+  // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+  { token: '—',                        value: '.nds-alert-dialog-overlay',     description: tContent('tokens.table.overlayBg')             },
+  { token: '--background',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentBg')             },
+  { token: '--foreground',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentForeground')     },
+  { token: '--border',                 value: '.nds-alert-dialog-content',     description: tContent('tokens.table.border')                },
+  { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: tContent('tokens.table.radius')                },
+  { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: tContent('tokens.table.elevation')             },
+  { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: tContent('tokens.table.padding')               },
+  { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: tContent('tokens.table.mutedForeground')       },
+  { token: '--muted',                  value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaBg')               },
+  // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
+  { token: '--destructive',            value: '.nds-button-destructive',       description: tContent('tokens.table.destructive')           },
+  { token: '--destructive-foreground', value: '.nds-button-destructive',       description: tContent('tokens.table.destructiveForeground') },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -353,7 +359,7 @@ const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
   how: tContent(`testes.accessibility.item${i}.how`),
 })));
 
-const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
+const visualTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
   story: tContent(`testes.visual.item${i}.story`),
   priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
 })));
@@ -385,7 +391,6 @@ const a11yCritCols = computed(() => ({
         class="nds-cluster nds-w-full"
         data-justify="center"
         data-spacing="md"
-        style="flex-wrap: wrap"
       >
         <AlertDialogDemo
           :trigger-label="tContent('demonstration.labels.triggerLabel')"
@@ -399,7 +404,7 @@ const a11yCritCols = computed(() => ({
 
         <AlertDialogDemo
           :trigger-label="tContent('demonstration.labels.neutralTriggerLabel')"
-          trigger-variant="default"
+          trigger-variant="outline"
           :title="tContent('demonstration.labels.neutralTitle')"
           :description="tContent('demonstration.labels.neutralDescription')"
           :cancel-label="tContent('demonstration.labels.cancel')"
@@ -489,12 +494,12 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <AlertDialogDemo
-          trigger-label="Excluir conta"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir conta"
-          description="Todos os dados serão removidos. Esta ação não pode ser desfeita."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
@@ -510,12 +515,12 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <AlertDialogDemo
-          trigger-label="Excluir"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir projeto"
-          description="O projeto será removido permanentemente."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
@@ -548,23 +553,23 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <AlertDialogDemo
-          trigger-label="Excluir conta"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir conta"
-          description="Esta ação não pode ser desfeita."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
       <template #variant-preview-1>
         <AlertDialogDemo
-          trigger-label="Sair da conta"
-          trigger-variant="default"
-          title="Sair da conta"
-          description="Você precisará entrar novamente."
-          cancel-label="Cancelar"
-          action-label="Sair"
+          :trigger-label="tContent('demonstration.labels.neutralTriggerLabel')"
+          trigger-variant="outline"
+          :title="tContent('demonstration.labels.neutralTitle')"
+          :description="tContent('demonstration.labels.neutralDescription')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.neutralAction')"
         />
       </template>
     </DocsVariants>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AlertDialogContentEmits, AlertDialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   AlertDialogContent,
@@ -22,6 +23,14 @@ const emits = defineEmits<AlertDialogContentEmits>()
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+// Nome acessível de última instância: o AlertDialogTitle é obrigatório e já
+// alimenta o aria-labelledby, então isto só entra em composição fora do
+// contrato — por isso o ramo não tem story. Sem ele, um painel sem título cai
+// na violação aria-dialog-name do axe.
+const attrs = useAttrs()
+/* v8 ignore next */
+const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'AlertDialog'))
 </script>
 
 <template>
@@ -32,7 +41,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'AlertDialog', ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

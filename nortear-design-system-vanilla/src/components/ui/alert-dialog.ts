@@ -19,8 +19,8 @@ export type AlertDialogOptions = {
   description?: string;
   /**
    * Bloco de ícone no topo do header (`.nds-alert-dialog-media`). Opcional —
-   * quando presente, o CSS centraliza header e texto no mobile e no tamanho sm.
-   * Use `createAlertDialogMedia()` para montá-lo.
+   * acompanha o alinhamento do header: centralizado abaixo de 40rem, à
+   * esquerda acima. Use `createAlertDialogMedia()` para montá-lo.
    */
   media?: HTMLElement;
   cancelButton: HTMLElement;
@@ -127,6 +127,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
     const titleEl = document.createElement('h2');
     titleEl.id = titleId;
+    titleEl.dataset.slot = 'alert-dialog-title';
     titleEl.className = 'nds-alert-dialog-title';
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
@@ -134,6 +135,7 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     if (description) {
       const descEl = document.createElement('p');
       descEl.id = descId;
+      descEl.dataset.slot = 'alert-dialog-description';
       descEl.className = 'nds-alert-dialog-description';
       descEl.textContent = description;
       headerEl.appendChild(descEl);
@@ -169,6 +171,10 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     previousFocus?.focus();
     onOpenChange?.(false);
 
+    /* v8 ignore next -- guarda de dupla finalização: close() já zerou as
+       referências, então o segundo close (ESC durante a saída) não tem o que
+       remover. Sem story: exercitar exige encadear dois fechamentos no mesmo
+       quadro. */
     if (saindo.length === 0) return;
     saindo.forEach((el) => { el.dataset.state = 'closed'; });
 
@@ -177,6 +183,9 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     // por animationend só atrasaria o fechamento para quem pediu menos
     // movimento. getComputedStyle força o recálculo antes de perguntar.
     void getComputedStyle(saindo[0]).animationName;
+    /* v8 ignore next 4 -- caminho sem animação (prefers-reduced-motion ou
+       ambiente que não anima). O browser dos testes roda COM animação, por
+       decisão do projeto, então este ramo é inalcançável na suíte. */
     if (saindo.every((el) => el.getAnimations().length === 0)) {
       saindo.forEach((el) => el.remove());
       return;
@@ -189,7 +198,11 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     // remoção.
     let removido = false;
     const remover = (event?: Event) => {
+      /* v8 ignore next 2 -- filtros de reentrância do animationend: evento de
+         um filho animado e segunda chamada depois do timeout. Nenhum dos dois
+         acontece com overlay e painel animando juntos, que é o caso da suíte. */
       if (event && !saindo.includes(event.target as HTMLElement)) return;
+      /* v8 ignore next */
       if (removido) return;
       removido = true;
       window.clearTimeout(timer);
@@ -215,6 +228,8 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     }
     if (e.key === 'Tab' && panelEl) {
       const focusable = getFocusable(panelEl);
+      /* v8 ignore next -- painel sem nada focável: o contrato exige Cancel e
+         Action, então só um consumidor fora do padrão chegaria aqui. */
       if (!focusable.length) { e.preventDefault(); return; }
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -242,6 +257,8 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     const startObserve = () => {
       observer.observe(document.body, { childList: true, subtree: true });
     };
+    /* v8 ignore next 2 -- no browser o body já existe quando a factory roda; o
+       fallback cobre montagem em documento ainda sem body. */
     if (document.body) startObserve();
     else queueMicrotask(startObserve);
   }

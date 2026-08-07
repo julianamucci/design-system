@@ -120,15 +120,15 @@ export const Destrutiva: Story = {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
             <AlertDialogDescription>
-              Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
+              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction variant="destructive">
-              Excluir conta
+              Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -142,14 +142,14 @@ export const Destrutiva: Story = {
     // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
     await waitFor(() => expect(dialog).toBeVisible());
 
-    const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
+    const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
     await expect(action).toHaveClass('nds-button-destructive');
 
     // Guideline: Cancel sempre antes de Action no DOM.
     const labels = within(dialog)
       .getAllByRole('button')
       .map((b) => b.textContent?.trim());
-    await expect(labels).toEqual(['Cancelar', 'Excluir conta']);
+    await expect(labels).toEqual(['Cancelar', 'Excluir']);
   },
 };
 
@@ -168,18 +168,18 @@ export const Neutra: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button>Publicar agora</Button>
+          <Button variant="outline">Sair da conta</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Publicar este conteúdo?</AlertDialogTitle>
+            <AlertDialogTitle>Sair da conta</AlertDialogTitle>
             <AlertDialogDescription>
-              Ao publicar, o conteúdo fica visível para todos os usuários. Você poderá editá-lo depois.
+              Você precisará entrar novamente para acessar seus dados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Voltar</AlertDialogCancel>
-            <AlertDialogAction>Publicar</AlertDialogAction>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction>Sair</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -192,7 +192,7 @@ export const Neutra: Story = {
     // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
     await waitFor(() => expect(dialog).toBeVisible());
 
-    const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
+    const action = within(dialog).getByRole('button', { name: /^Sair$/i });
     await waitFor(() => expect(action).toBeVisible());
     // A severidade vem do Button: na composição neutra o Action não pode
     // herdar os tokens destrutivos.
@@ -201,7 +201,7 @@ export const Neutra: Story = {
     const labels = within(dialog)
       .getAllByRole('button')
       .map((b) => b.textContent?.trim());
-    await expect(labels).toEqual(['Voltar', 'Publicar']);
+    await expect(labels).toEqual(['Cancelar', 'Sair']);
   },
 };
 
@@ -225,7 +225,7 @@ export const DescricaoLonga: Story = {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
             <AlertDialogDescription>
               Todos os seus dados, arquivos enviados, integrações ativas e o histórico
               completo de faturamento serão removidos permanentemente dos nossos
@@ -236,7 +236,7 @@ export const DescricaoLonga: Story = {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction variant="destructive">
-              Excluir conta
+              Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -296,15 +296,15 @@ export const Responsivo: Story = {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
             <AlertDialogDescription>
-              Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.
+              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction variant="destructive">
-              Excluir conta
+              Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -329,7 +329,7 @@ export const Responsivo: Story = {
       const labels = Array.from(footer!.querySelectorAll('button')).map((b) =>
         b.textContent?.trim(),
       );
-      await expect(labels).toEqual(['Cancelar', 'Excluir conta']);
+      await expect(labels).toEqual(['Cancelar', 'Excluir']);
     });
 
     await step('Painel respeita a margem lateral em qualquer largura', async () => {

@@ -142,8 +142,8 @@ import {
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction class="nds-bg-destructive">
-        Excluir conta
+      <AlertDialogAction variant="destructive">
+        Excluir
       </AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
@@ -152,7 +152,7 @@ import {
   const codeDefault = `<AlertDialog>
   <AlertDialogTrigger>
     {#snippet child({ props })}
-      <Button {...props}>Sair da conta</Button>
+      <Button variant="outline" {...props}>Sair da conta</Button>
     {/snippet}
   </AlertDialogTrigger>
   <AlertDialogContent>
@@ -219,8 +219,8 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'trigger-label', location: 'docs_demo' })}>
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'destructive', location: 'docs_demo' })}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
             <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
@@ -233,17 +233,17 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction class="nds-bg-destructive" onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'action', location: 'docs_demo' })}>
+            <AlertDialogAction variant="destructive" onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'destructive', location: 'docs_demo' })}>
               {$tStore('demonstration.labels.action')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'neutral-trigger-label', location: 'docs_demo' })}>
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'neutral', location: 'docs_demo' })}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
-            <Button {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
+            <Button variant="outline" {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
           {/snippet}
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -253,7 +253,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'neutral-action', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
+            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'neutral', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -273,6 +273,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
       $tStore('anatomy.item7'),
       $tStore('anatomy.item8'),
       $tStore('anatomy.item9'),
+      $tStore('anatomy.item10'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -364,55 +365,6 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     ]}
   />
 
-  <!--
-    Previews mostram o gatilho fechado (AlertDialogStory encapsula trigger +
-    conteúdo). Renderizar com `open` empilharia overlays modais sobre a página
-    inteira assim que a docs page carrega.
-  -->
-  {#snippet doPair1()}
-    <AlertDialogStory
-      triggerLabel="Excluir conta"
-      triggerVariant="destructive"
-      title="Excluir conta"
-      description="Todos os dados serão removidos. Esta ação não pode ser desfeita."
-      cancelLabel="Cancelar"
-      actionLabel="Excluir"
-      tone="destructive"
-    />
-  {/snippet}
-  {#snippet dontPair1()}
-    <AlertDialogStory
-      triggerLabel="Excluir"
-      triggerVariant="destructive"
-      title="Tem certeza?"
-      description="Deseja continuar?"
-      cancelLabel="Não"
-      actionLabel="OK"
-      tone="default"
-    />
-  {/snippet}
-  {#snippet doPair2()}
-    <AlertDialogStory
-      triggerLabel="Excluir projeto"
-      triggerVariant="destructive"
-      title="Excluir projeto"
-      description="O projeto será removido permanentemente."
-      cancelLabel="Cancelar"
-      actionLabel="Excluir"
-      tone="destructive"
-    />
-  {/snippet}
-  {#snippet dontPair2()}
-    <AlertDialogStory
-      triggerLabel="Excluir projeto"
-      triggerVariant="destructive"
-      title="Excluir projeto"
-      description="O projeto será removido permanentemente."
-      cancelLabel="Cancelar"
-      actionLabel="Confirmar"
-      tone="default"
-    />
-  {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
@@ -433,28 +385,6 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     ]}
   />
 
-  {#snippet variantDestructive()}
-    <AlertDialogStory
-      triggerLabel="Excluir conta"
-      triggerVariant="destructive"
-      title="Excluir conta"
-      description="Esta ação não pode ser desfeita."
-      cancelLabel="Cancelar"
-      actionLabel="Excluir"
-      tone="destructive"
-    />
-  {/snippet}
-  {#snippet variantDefault()}
-    <AlertDialogStory
-      triggerLabel="Sair da conta"
-      triggerVariant="default"
-      title="Sair da conta"
-      description="Você precisará entrar novamente."
-      cancelLabel="Cancelar"
-      actionLabel="Sair"
-      tone="default"
-    />
-  {/snippet}
 
   <!-- ── Configurações (States) ─────────────────────────────────── -->
   <DocsStates
@@ -537,14 +467,18 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--background',             value: 'bg-black/80',                 description: $tStore('tokens.table.overlayBg')             },
-      { token: '--background',             value: 'bg-background',               description: $tStore('tokens.table.contentBg')             },
-      { token: '--foreground',             value: 'text-foreground',             description: $tStore('tokens.table.contentForeground')     },
-      { token: '--border',                 value: 'border',                      description: $tStore('tokens.table.border')                },
-      { token: '--muted-foreground',       value: 'nds-text-muted-foreground',       description: $tStore('tokens.table.mutedForeground')       },
-      { token: '--destructive',            value: 'bg-destructive',              description: $tStore('tokens.table.destructive')           },
-      { token: '--destructive-foreground', value: 'text-destructive-foreground', description: $tStore('tokens.table.destructiveForeground') },
-      { token: '--radius',                 value: 'sm:rounded-lg',               description: $tStore('tokens.table.radius')                },
+      // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+      { token: '—',                      value: '.nds-alert-dialog-overlay',     description: $tStore('tokens.table.overlayBg')             },
+      { token: '--background',             value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.contentBg')             },
+      { token: '--foreground',             value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.contentForeground')     },
+      { token: '--border',                 value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.border')                },
+      { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.radius')                },
+      { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.elevation')             },
+      { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.padding')               },
+      { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: $tStore('tokens.table.mutedForeground')       },
+      { token: '--muted',                  value: '.nds-alert-dialog-media',       description: $tStore('tokens.table.mediaBg')               },
+      { token: '--destructive',            value: '.nds-button-destructive',       description: $tStore('tokens.table.destructive')           },
+      { token: '--destructive-foreground', value: '.nds-button-destructive',       description: $tStore('tokens.table.destructiveForeground') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}
@@ -649,10 +583,81 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6].map((i) => ({
         story: $tStore(`testes.visual.item${i}.story`),
         priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
       })),
     }}
   />
+
+  <!--
+    Previews renderizam o gatilho fechado: com `open` o overlay modal cobriria
+    a página inteira no load.
+  -->
+  {#snippet doPair1()}
+    <AlertDialogStory
+      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
+      triggerVariant="destructive"
+      title={$tStore('demonstration.labels.title')}
+      description={$tStore('demonstration.labels.description')}
+      cancelLabel={$tStore('demonstration.labels.cancel')}
+      actionLabel={$tStore('demonstration.labels.action')}
+      tone="destructive"
+    />
+  {/snippet}
+  {#snippet dontPair1()}
+    <AlertDialogStory
+      triggerLabel="Excluir"
+      triggerVariant="destructive"
+      title="Tem certeza?"
+      description="Deseja continuar?"
+      cancelLabel="Não"
+      actionLabel="OK"
+      tone="default"
+    />
+  {/snippet}
+  {#snippet doPair2()}
+    <AlertDialogStory
+      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
+      triggerVariant="destructive"
+      title={$tStore('demonstration.labels.title')}
+      description={$tStore('demonstration.labels.description')}
+      cancelLabel={$tStore('demonstration.labels.cancel')}
+      actionLabel={$tStore('demonstration.labels.action')}
+      tone="destructive"
+    />
+  {/snippet}
+  {#snippet dontPair2()}
+    <AlertDialogStory
+      triggerLabel="Excluir projeto"
+      triggerVariant="destructive"
+      title="Excluir projeto"
+      description="O projeto será removido permanentemente."
+      cancelLabel="Cancelar"
+      actionLabel="Confirmar"
+      tone="default"
+    />
+  {/snippet}
+  {#snippet variantDestructive()}
+    <AlertDialogStory
+      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
+      triggerVariant="destructive"
+      title={$tStore('demonstration.labels.title')}
+      description={$tStore('demonstration.labels.description')}
+      cancelLabel={$tStore('demonstration.labels.cancel')}
+      actionLabel={$tStore('demonstration.labels.action')}
+      tone="destructive"
+    />
+  {/snippet}
+  {#snippet variantDefault()}
+    <AlertDialogStory
+      triggerLabel={$tStore('demonstration.labels.neutralTriggerLabel')}
+      triggerVariant="outline"
+      title={$tStore('demonstration.labels.neutralTitle')}
+      description={$tStore('demonstration.labels.neutralDescription')}
+      cancelLabel={$tStore('demonstration.labels.cancel')}
+      actionLabel={$tStore('demonstration.labels.neutralAction')}
+      tone="default"
+    />
+  {/snippet}
 </DocsPageLayout>

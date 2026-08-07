@@ -36,10 +36,12 @@ const props = withDefaults(defineProps<{
   tone: 'default',
 });
 
+// Rótulo estável: o título é texto traduzido e quebraria a agregação no GA4
+// (um rótulo por idioma para o mesmo demo).
 function handleOpenChange(open: boolean) {
   track(open ? 'dialog_open' : 'dialog_close', {
     component: 'alert_dialog',
-    label: props.title,
+    label: props.tone === 'destructive' ? 'destructive' : 'neutral',
     location: 'docs_demo',
   });
 }
@@ -47,7 +49,7 @@ function handleOpenChange(open: boolean) {
 function handleConfirm() {
   track('dialog_confirm', {
     component: 'alert_dialog',
-    label: props.title,
+    label: props.tone === 'destructive' ? 'destructive' : 'neutral',
     location: 'docs_demo',
   });
 }

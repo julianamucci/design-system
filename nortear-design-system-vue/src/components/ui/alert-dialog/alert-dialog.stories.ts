@@ -27,7 +27,7 @@ type PlaygroundArgs = {
   unmountOnHide: boolean;
   // Documentadas na aba API Reference, sem control (o template não as encaminha).
   open?: boolean;
-  'onUpdate:open'?: (open: boolean) => void;
+  'onUpdate:open': (open: boolean) => void;
   default?: unknown;
   tone: 'destructive' | 'default';
   showMedia: boolean;
@@ -68,7 +68,7 @@ const meta = {
     'onUpdate:open': {
       control: false,
       description: 'Emitido ao abrir ou fechar. Recebe o novo estado.',
-      table: { type: { summary: '(open: boolean) => void' } },
+      table: { category: 'events', type: { summary: '(open: boolean) => void' } },
     },
     default: {
       control: false,
@@ -107,6 +107,8 @@ const meta = {
   args: {
     defaultOpen: false,
     unmountOnHide: true,
+    // Popula a aba Actions e deixa o play asseverar cada transição de abertura.
+    'onUpdate:open': fn(),
     tone: 'destructive',
     showMedia: false,
     triggerLabel: 'Excluir conta',
@@ -123,7 +125,6 @@ type Story = StoryObj<PlaygroundArgs>;
 
 // Spies em escopo de módulo: a story renderiza uma vez por execução e o play
 // precisa inspecioná-los. São limpos no início do play, antes de qualquer ação.
-const onOpenChange = fn();
 const onConfirm = fn();
 const onCancel = fn();
 
@@ -166,11 +167,12 @@ export const Playground: Story = {
       const rootProps = computed(() => ({
         defaultOpen: args.defaultOpen,
         unmountOnHide: args.unmountOnHide,
+        'onUpdate:open': args['onUpdate:open'],
       }));
-      return { args, rootProps, onOpenChange, onConfirm, onCancel };
+      return { args, rootProps, onConfirm, onCancel };
     },
     template: `
-      <AlertDialog :key="String(args.defaultOpen)" v-bind="rootProps" @update:open="onOpenChange">
+      <AlertDialog :key="String(args.defaultOpen)" v-bind="rootProps">
         <AlertDialogTrigger as-child>
           <Button :variant="args.tone">{{ args.triggerLabel }}</Button>
         </AlertDialogTrigger>
@@ -200,6 +202,7 @@ export const Playground: Story = {
     // Guardado como nó: com o diálogo aberto o conteúdo externo recebe
     // aria-hidden/inert, então uma nova query por role não o encontraria.
     const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
+    const onOpenChange = args['onUpdate:open'] as unknown as ReturnType<typeof fn>;
     const openedWith = (open: boolean) =>
       onOpenChange.mock.calls.some((call) => call[0] === open);
 

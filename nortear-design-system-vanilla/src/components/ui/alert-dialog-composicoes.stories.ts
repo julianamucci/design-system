@@ -76,11 +76,11 @@ export const Destrutiva: Story = {
     buildDemo({
       triggerLabel: 'Excluir conta',
       triggerVariant: 'destructive',
-      title: 'Excluir sua conta?',
+      title: 'Excluir conta',
       description:
-        'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.',
+        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
       cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir conta',
+      actionLabel: 'Excluir',
       tone: 'destructive',
     }),
   play: async () => {
@@ -89,8 +89,7 @@ export const Destrutiva: Story = {
     // no DOM mas ainda conta como invisível. waitFor passa no primeiro tick
     // quando não há animação, então serve aos dois ambientes.
     await waitFor(() => expect(dialog).toBeVisible());
-    // Trigger e action têm o mesmo rótulo — o action fica dentro do dialog.
-    const action = within(dialog).getByRole('button', { name: /Excluir conta/i });
+    const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
     await expect(action).toHaveClass('nds-button-destructive');
   },
 };
@@ -154,13 +153,13 @@ export const Neutra: Story = {
   },
   render: () =>
     buildDemo({
-      triggerLabel: 'Publicar agora',
-      triggerVariant: 'default',
-      title: 'Publicar este conteúdo?',
+      triggerLabel: 'Sair da conta',
+      triggerVariant: 'outline',
+      title: 'Sair da conta',
       description:
-        'Ao publicar, o conteúdo fica visível para todos os usuários. Você poderá editá-lo depois.',
-      cancelLabel: 'Voltar',
-      actionLabel: 'Publicar',
+        'Você precisará entrar novamente para acessar seus dados.',
+      cancelLabel: 'Cancelar',
+      actionLabel: 'Sair',
       tone: 'default',
     }),
   play: async () => {
@@ -168,7 +167,7 @@ export const Neutra: Story = {
     // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
     // no DOM mas ainda conta como invisível.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = within(dialog).getByRole('button', { name: /^Publicar$/i });
+    const action = within(dialog).getByRole('button', { name: /^Sair$/i });
     await waitFor(() => expect(action).toBeVisible());
     // Confirmação não destrutiva: a ação usa a variante default do Button.
     await expect(action).toHaveClass('nds-button-default');
@@ -200,8 +199,7 @@ export const DescricaoLonga: Story = {
   play: async () => {
     const dialog = await waitForPortal('alertdialog');
 
-    // A factory não emite data-slot na descrição: a classe é o gancho estável.
-    const description = dialog.querySelector<HTMLElement>('.nds-alert-dialog-description');
+    const description = dialog.querySelector<HTMLElement>('[data-slot="alert-dialog-description"]');
     await expect(description).not.toBeNull();
     await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
     await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);

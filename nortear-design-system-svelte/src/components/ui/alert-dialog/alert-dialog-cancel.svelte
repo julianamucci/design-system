@@ -27,6 +27,8 @@
 		event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }
 	) {
 		onkeydown?.(event);
+		/* v8 ignore next -- só dispara se o handler do consumidor chamar
+		   preventDefault para segurar o diálogo aberto; nenhuma story faz isso. */
 		if (event.defaultPrevented) return;
 		if (event.key !== "Enter" && event.key !== " ") return;
 		onclick?.(event as unknown as MouseEvent & { currentTarget: EventTarget & HTMLButtonElement });

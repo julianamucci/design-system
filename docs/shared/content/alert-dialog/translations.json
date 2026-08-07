@@ -219,14 +219,17 @@
         "token": "Token CSS",
         "class": "Aplicação no tema",
         "part": "Parte do componente",
-        "overlayBg": "Fundo do overlay (backdrop)",
+        "overlayBg": "Fundo do overlay — valor literal, sem token de cor",
         "contentBg": "Fundo do AlertDialogContent",
         "contentForeground": "Texto principal do conteúdo",
         "border": "Borda do AlertDialogContent",
         "mutedForeground": "Texto da AlertDialogDescription",
         "destructive": "Fundo do AlertDialogAction destructive",
         "destructiveForeground": "Texto do AlertDialogAction destructive",
-        "radius": "Border radius do AlertDialogContent (desktop)"
+        "radius": "Raio do painel",
+        "elevation": "Sombra do painel",
+        "mediaBg": "Fundo do bloco de mídia",
+        "padding": "Espaçamento interno do painel"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -653,14 +656,17 @@
         "token": "CSS Token",
         "class": "Theme application",
         "part": "Component Part",
-        "overlayBg": "Overlay background (backdrop)",
+        "overlayBg": "Overlay background — literal value, no color token",
         "contentBg": "AlertDialogContent background",
         "contentForeground": "Main content text",
         "border": "AlertDialogContent border",
         "mutedForeground": "AlertDialogDescription text",
         "destructive": "Destructive AlertDialogAction background",
         "destructiveForeground": "Destructive AlertDialogAction text",
-        "radius": "AlertDialogContent border radius (desktop)"
+        "radius": "Panel border radius",
+        "elevation": "Panel shadow",
+        "mediaBg": "Media block background",
+        "padding": "Panel inner spacing"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -1087,14 +1093,17 @@
         "token": "Token CSS",
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
-        "overlayBg": "Fondo del overlay (backdrop)",
+        "overlayBg": "Fondo del overlay — valor literal, sin token de color",
         "contentBg": "Fondo del AlertDialogContent",
         "contentForeground": "Texto principal del contenido",
         "border": "Borde del AlertDialogContent",
         "mutedForeground": "Texto de AlertDialogDescription",
         "destructive": "Fondo del AlertDialogAction destructive",
         "destructiveForeground": "Texto del AlertDialogAction destructive",
-        "radius": "Border radius del AlertDialogContent (desktop)"
+        "radius": "Radio del panel",
+        "elevation": "Sombra del panel",
+        "mediaBg": "Fondo del bloque de medios",
+        "padding": "Espaciado interno del panel"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },

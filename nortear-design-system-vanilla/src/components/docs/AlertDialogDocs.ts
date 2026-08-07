@@ -65,6 +65,9 @@ type AlertDialogDemoOptions = {
 };
 
 function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
+  // Rótulo estável: o texto do botão é traduzido e quebraria a agregação no
+  // GA4 (um rótulo por idioma para o mesmo demo).
+  const label = opts.tone === 'destructive' ? 'destructive' : 'neutral';
   const trigger = createButton({
     variant: opts.triggerVariant ?? 'destructive',
     label: opts.triggerLabel,
@@ -82,7 +85,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   cancelButton.addEventListener('click', () => {
     track('dialog_close', {
       component: 'alert_dialog',
-      label: opts.triggerLabel,
+      label,
       reason: 'close-button',
       location: 'docs_demo',
     });
@@ -90,14 +93,14 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   actionButton.addEventListener('click', () => {
     track('dialog_confirm', {
       component: 'alert_dialog',
-      label: opts.actionLabel,
+      label,
       location: 'docs_demo',
     });
     // A ação primária também fecha o diálogo — confirm + close (reason
     // 'action'), na mesma ordem das demais stacks.
     track('dialog_close', {
       component: 'alert_dialog',
-      label: opts.triggerLabel,
+      label,
       reason: 'action',
       location: 'docs_demo',
     });
@@ -112,7 +115,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
       if (open) {
         track('dialog_open', {
           component: 'alert_dialog',
-          label: opts.triggerLabel,
+          label,
           location: 'docs_demo',
         });
       }
@@ -261,6 +264,7 @@ export function createAlertDialogDocs(): HTMLElement {
             t('anatomy.item7'),
             t('anatomy.item8'),
             t('anatomy.item9'),
+            t('anatomy.item10'),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -567,14 +571,19 @@ export interface AlertDialogOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--background',             value: 'bg-black/80',                  description: t('tokens.table.overlayBg') },
-            { token: '--background',             value: 'bg-background',                description: t('tokens.table.contentBg') },
-            { token: '--foreground',             value: 'text-foreground',              description: t('tokens.table.contentForeground') },
-            { token: '--border',                 value: 'border',                       description: t('tokens.table.border') },
-            { token: '--muted-foreground',       value: 'nds-text-muted-foreground',        description: t('tokens.table.mutedForeground') },
-            { token: '--destructive',            value: 'bg-destructive',               description: t('tokens.table.destructive') },
-            { token: '--destructive-foreground', value: 'text-destructive-foreground',  description: t('tokens.table.destructiveForeground') },
-            { token: '--radius',                 value: 'sm:rounded-lg',                description: t('tokens.table.radius') },
+            // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+            { token: '—',                        value: '.nds-alert-dialog-overlay',     description: t('tokens.table.overlayBg') },
+            { token: '--background',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentBg') },
+            { token: '--foreground',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentForeground') },
+            { token: '--border',                 value: '.nds-alert-dialog-content',     description: t('tokens.table.border') },
+            { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: t('tokens.table.radius') },
+            { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: t('tokens.table.elevation') },
+            { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: t('tokens.table.padding') },
+            { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: t('tokens.table.mutedForeground') },
+            { token: '--muted',                  value: '.nds-alert-dialog-media',       description: t('tokens.table.mediaBg') },
+            // A ação herda o tom do Button: o destrutivo vem da variante, não deste CSS.
+            { token: '--destructive',            value: '.nds-button-destructive',       description: t('tokens.table.destructive') },
+            { token: '--destructive-foreground', value: '.nds-button-destructive',       description: t('tokens.table.destructiveForeground') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -676,7 +685,7 @@ export interface AlertDialogOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

@@ -80,23 +80,25 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
+// Os previews renderizam SEMPRE o gatilho fechado: o AlertDialog vive num
+// portal com overlay modal, e um preview aberto cobriria a página no load.
 type DestructiveDemoProps = {
   triggerLabel: string;
   title: string;
   description: string;
   cancel: string;
   action: string;
-  defaultOpen?: boolean;
 };
 
-function DestructiveDemo({ triggerLabel, title, description, cancel, action, defaultOpen }: DestructiveDemoProps) {
+function DestructiveDemo({ triggerLabel, title, description, cancel, action }: DestructiveDemoProps) {
   return (
     <AlertDialog
-      defaultOpen={defaultOpen}
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
+          // Identificador estável: o título é texto traduzido e quebraria a
+          // agregação no GA4 (um rótulo por idioma para o mesmo demo).
           component: "alert_dialog",
-          label: title,
+          label: "destructive",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
@@ -117,7 +119,7 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action, def
             onClick={() =>
               track("dialog_confirm", {
                 component: "alert_dialog",
-                label: action,
+                label: "destructive",
                 location: "docs_demo",
               })
             }
@@ -136,17 +138,15 @@ type NeutralDemoProps = {
   description: string;
   cancel: string;
   action: string;
-  defaultOpen?: boolean;
 };
 
-function NeutralDemo({ triggerLabel, title, description, cancel, action, defaultOpen }: NeutralDemoProps) {
+function NeutralDemo({ triggerLabel, title, description, cancel, action }: NeutralDemoProps) {
   return (
     <AlertDialog
-      defaultOpen={defaultOpen}
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "alert_dialog",
-          label: title,
+          label: "neutral",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
         })
@@ -166,7 +166,7 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action, default
             onClick={() =>
               track("dialog_confirm", {
                 component: "alert_dialog",
-                label: action,
+                label: "neutral",
                 location: "docs_demo",
               })
             }
@@ -361,6 +361,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
           tContent("anatomy.item7"),
           tContent("anatomy.item8"),
           tContent("anatomy.item9"),
+          tContent("anatomy.item10"),
         ]}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -672,14 +673,19 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--background",           value: "bg-black/80",                              description: tContent("tokens.table.overlayBg") },
-          { token: "--background",           value: "bg-background",                            description: tContent("tokens.table.contentBg") },
-          { token: "--foreground",           value: "text-foreground",                          description: tContent("tokens.table.contentForeground") },
-          { token: "--border",               value: "border",                                   description: tContent("tokens.table.border") },
-          { token: "--muted-foreground",     value: "nds-text-muted-foreground",                    description: tContent("tokens.table.mutedForeground") },
-          { token: "--destructive",          value: "bg-destructive",                           description: tContent("tokens.table.destructive") },
-          { token: "--destructive-foreground", value: "text-destructive-foreground",            description: tContent("tokens.table.destructiveForeground") },
-          { token: "--radius",               value: "sm:rounded-lg",                            description: tContent("tokens.table.radius") },
+          // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+          { token: "—",                        value: ".nds-alert-dialog-overlay",     description: tContent("tokens.table.overlayBg") },
+          { token: "--background",             value: ".nds-alert-dialog-content",     description: tContent("tokens.table.contentBg") },
+          { token: "--foreground",             value: ".nds-alert-dialog-content",     description: tContent("tokens.table.contentForeground") },
+          { token: "--border",                 value: ".nds-alert-dialog-content",     description: tContent("tokens.table.border") },
+          { token: "--radius-card",            value: ".nds-alert-dialog-content",     description: tContent("tokens.table.radius") },
+          { token: "--elevation-lg",           value: ".nds-alert-dialog-content",     description: tContent("tokens.table.elevation") },
+          { token: "--spacing-6",              value: ".nds-alert-dialog-content",     description: tContent("tokens.table.padding") },
+          { token: "--muted-foreground",       value: ".nds-alert-dialog-description", description: tContent("tokens.table.mutedForeground") },
+          { token: "--muted",                  value: ".nds-alert-dialog-media",       description: tContent("tokens.table.mediaBg") },
+          // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
+          { token: "--destructive",            value: ".nds-button-destructive",       description: tContent("tokens.table.destructive") },
+          { token: "--destructive-foreground", value: ".nds-button-destructive",       description: tContent("tokens.table.destructiveForeground") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}
@@ -779,7 +785,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [1, 2, 3, 4, 5].map((i) => ({
+          items: [1, 2, 3, 4, 5, 6].map((i) => ({
             story: tContent(`testes.visual.item${i}.story`),
             priority: tNav(priorityKeyMap[tContent(`testes.visual.item${i}.priority`)] ?? "common.high"),
           })),

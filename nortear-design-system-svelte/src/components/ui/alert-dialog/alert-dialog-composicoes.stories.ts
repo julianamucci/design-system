@@ -69,11 +69,10 @@ export const Destrutiva: Story = {
       open: true,
       triggerVariant: 'destructive',
       triggerLabel: 'Excluir conta',
-      title: 'Excluir sua conta?',
-      description:
-        'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos.',
+      title: 'Excluir conta',
+      description: 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
       cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir conta',
+      actionLabel: 'Excluir',
       tone: 'destructive',
     },
   }),
@@ -83,11 +82,9 @@ export const Destrutiva: Story = {
     // O painel entra animando (opacity 0 → 1); sem waitFor a asserção roda no
     // primeiro quadro e toBeVisible() reprova por opacity: 0.
     await waitFor(() => expect(dialog).toBeVisible());
-    // Ambos trigger e action têm o mesmo texto; escolher o que está dentro do dialog.
-    const actions = await body.findAllByRole('button', { name: /Excluir conta/i });
-    const action = actions.find((el) => dialog.contains(el));
-    await expect(action).toBeDefined();
-    await expect(action!).toHaveClass('nds-button-destructive');
+    const action = await body.findByRole('button', { name: /^Excluir$/i });
+    await expect(dialog.contains(action)).toBe(true);
+    await expect(action).toHaveClass('nds-button-destructive');
   },
 };
 
@@ -105,13 +102,12 @@ export const Neutra: Story = {
     Component: AlertDialogStory,
     props: {
       open: true,
-      triggerVariant: 'default',
-      triggerLabel: 'Publicar agora',
-      title: 'Publicar este conteúdo?',
-      description:
-        'Ao publicar, o conteúdo fica visível para todos os usuários. Você poderá editá-lo depois.',
-      cancelLabel: 'Voltar',
-      actionLabel: 'Publicar',
+      triggerVariant: 'outline',
+      triggerLabel: 'Sair da conta',
+      title: 'Sair da conta',
+      description: 'Você precisará entrar novamente para acessar seus dados.',
+      cancelLabel: 'Cancelar',
+      actionLabel: 'Sair',
       tone: 'default',
     },
   }),
@@ -121,11 +117,11 @@ export const Neutra: Story = {
     // Painel e conteúdo entram animando (opacity 0 → 1); a asserção de
     // visibilidade só é válida depois que a animação termina.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = await body.findByRole('button', { name: /^Publicar$/i });
+    const action = await body.findByRole('button', { name: /^Sair$/i });
     await waitFor(() => expect(action).toBeVisible());
     // O ponto da variante neutra: a confirmação NÃO herda a severidade destrutiva.
     await expect(action).not.toHaveClass('nds-button-destructive');
-    await expect(dialog).toHaveAccessibleName(/Publicar este conteúdo/i);
+    await expect(dialog).toHaveAccessibleName(/Sair da conta/i);
   },
 };
 
