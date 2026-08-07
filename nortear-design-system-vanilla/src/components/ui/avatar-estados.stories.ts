@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarRoot } from './avatar';
@@ -12,6 +13,7 @@ const meta: Meta = {
   tags: ['display'],
   title: 'UI/Avatar/Estados',
   parameters: {
+    design: figmaDesign('avatar'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

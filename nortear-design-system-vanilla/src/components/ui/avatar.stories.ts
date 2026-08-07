@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import { createAvatar, type AvatarSize } from './avatar';
@@ -18,6 +19,7 @@ const meta: Meta<AvatarArgs> = {
   title: 'UI/Avatar',
   tags: ['autodocs', 'display'],
   parameters: {
+    design: figmaDesign('avatar'),
     docs: { page: withAutoDocsTab(createAvatarDocs) },
   },
   argTypes: {

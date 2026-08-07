@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { User } from 'lucide';
@@ -18,6 +19,7 @@ const meta: Meta = {
   tags: ['display'],
   title: 'UI/Avatar/Composicoes',
   parameters: {
+    design: [figmaDesign('avatar', 'Avatar'), figmaDesign('avatarGroup', 'Grupo')],
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

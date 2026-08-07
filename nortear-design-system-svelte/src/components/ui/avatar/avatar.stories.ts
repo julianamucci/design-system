@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect, waitFor } from 'storybook/test';
@@ -14,6 +15,7 @@ const meta: Meta = {
   component: Avatar,
   tags: ['autodocs', 'display'],
   parameters: {
+    design: figmaDesign('avatar'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(AvatarDocs) },
   },

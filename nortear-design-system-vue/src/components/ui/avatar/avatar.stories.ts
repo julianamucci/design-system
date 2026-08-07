@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
@@ -12,6 +13,7 @@ const meta = {
   component: Avatar,
   tags: ['autodocs', 'display'],
   parameters: {
+    design: figmaDesign('avatar'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(AvatarDocs),

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
@@ -10,6 +11,7 @@ const meta = {
   component: Avatar,
   tags: ['display'],
   parameters: {
+    design: figmaDesign('avatar'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

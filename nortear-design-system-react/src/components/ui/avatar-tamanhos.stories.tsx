@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
@@ -10,6 +11,7 @@ const meta = {
   tags: ["display"],
   component: Avatar,
   parameters: {
+    design: figmaDesign("avatar"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

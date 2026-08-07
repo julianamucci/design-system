@@ -78,6 +78,17 @@ export const figmaNodes = {
   /** Página de documentação do componente. */
   aspectRatioDocs: '308-7',
 
+  /**
+   * Variant set do avatar: eixo único `size` (sm, md, lg, xl, 2xl). Foto,
+   * iniciais e status são propriedades — conteúdo por eixo multiplicaria a
+   * matriz por três e daria colunas iguais na tela.
+   */
+  avatar: '322-23',
+  /** Componente da fila sobreposta, com o contador do excedente. */
+  avatarGroup: '322-24',
+  /** Página de documentação do componente. */
+  avatarDocs: '323-17',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect, waitFor } from 'storybook/test';
@@ -15,6 +16,7 @@ const meta: Meta = {
   component: Avatar,
   tags: ['display'],
   parameters: {
+    design: figmaDesign('avatar'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

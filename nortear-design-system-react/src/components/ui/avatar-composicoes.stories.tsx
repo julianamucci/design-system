@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import { User } from "lucide-react";
@@ -22,6 +23,7 @@ const meta = {
   tags: ["display"],
   component: Avatar,
   parameters: {
+    design: [figmaDesign("avatar", "Avatar"), figmaDesign("avatarGroup", "Grupo")],
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

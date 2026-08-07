@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createAvatar, type AvatarSize } from './avatar';
@@ -6,6 +7,7 @@ const meta: Meta = {
   tags: ['display'],
   title: 'UI/Avatar/Tamanhos',
   parameters: {
+    design: figmaDesign('avatar'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
