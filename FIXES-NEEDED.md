@@ -42,6 +42,22 @@ decisão sua — não é trabalho parado por falta de tempo.
   forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
   ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
 
+- [ ] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova
+  `play_nao_idempotente`. São plays que clicam e asseveram estado no mesmo alvo:
+  passam no vitest (que remonta) e falham no replay do painel Interactions (que
+  não remonta). Medido depois de corrigir o accordion, que zerou:
+
+  ```
+  collapsible 24 · toggle-group 16 · toggle 13 · switch 10 · radio-group 6
+  select 6 · tabs 6 · checkbox 4 · navigation-menu 2 · carousel 1 · command 1
+  dropdown-menu 1 · pagination 1 · popover 1
+  ```
+
+  O conserto é mecânico e está descrito em `/quality` §2e2b — o par
+  `abrir`/`fechar`. Vale fazer componente a componente, junto da auditoria de
+  cada um, e não num lote só: em toggle e collapsible o volume sugere que a
+  story inteira precisa de releitura, não só a troca de chamada.
+
 - [ ] **`collapsible: false` no accordion não tem story em stack nenhuma (2026-08-07).**
   A prop está documentada na tabela compartilhada (`props.accordion.items.collapsible`,
   "Permite fechar o item ativo clicando nele novamente") e existe em Vue (reka),

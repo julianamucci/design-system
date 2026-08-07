@@ -956,6 +956,64 @@ function auditCssTokenUsage() {
   return violations;
 }
 
+// ─── Play idempotente ───────────────────────────────────────────────────────
+//
+// O painel Interactions REEXECUTA a play no mesmo DOM — não remonta. O vitest
+// remonta a cada teste, então a suíte fica verde enquanto o painel falha: a
+// suíte não consegue ver este defeito, e por isso ele precisa de regra.
+//
+// Assinatura: clique seguido de asserção de ESTADO no mesmo alvo. Na segunda
+// rodada o clique parte do estado que a primeira deixou, alterna a partir dele e
+// inverte o resultado. A saída é o par idempotente (`abrir`/`fechar`): clicar só
+// quando o estado atual não é o desejado.
+//
+// Clique com `pointerEventsCheck` fica de fora: é o clique no elemento
+// desabilitado, que não muda de estado em rodada nenhuma.
+const ESTADO_ATTR_RX = /aria-expanded|aria-checked|aria-pressed|aria-selected|aria-current|data-state/;
+
+function auditPlayIdempotente(slug) {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const storyRx = new RegExp(
+      `^${slug.toLowerCase()}(-(${STORY_VARIANT_SUFFIXES.join('|')}))?\\.stories\\.(ts|tsx)$`,
+    );
+    const files = globStack(stack, 'components/ui', ['.ts', '.tsx']).filter((f) =>
+      storyRx.test(basename(f).toLowerCase()),
+    );
+
+    for (const file of files) {
+      const content = readFile(file);
+      if (!content) continue;
+      const linhas = content.split('\n');
+
+      linhas.forEach((linha, i) => {
+        const m = linha.match(/await userEvent\.click\(([^;]+?)\)\s*;/);
+        if (!m) return;
+        if (/!==/.test(linha)) return;              // corpo do próprio helper
+        if (/pointerEventsCheck/.test(linha)) return; // clique em desabilitado
+        const alvo = m[1].split(',')[0].trim();
+        if (!alvo || alvo.startsWith('{')) return;
+
+        const janela = linhas.slice(i + 1, i + 6).join('\n');
+        const alvoRx = alvo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const asserta = new RegExp(
+          `expect\\(${alvoRx}\\)[\\s\\S]{0,80}?toHaveAttribute\\(['"](${ESTADO_ATTR_RX.source})`,
+        );
+        if (!asserta.test(janela)) return;
+
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), line: i + 1, rule: 'play_nao_idempotente',
+          message: `clique cego em ${alvo} seguido de asserção de estado — no replay do painel Interactions o clique parte do estado da rodada anterior e inverte o resultado. Use o par abrir/fechar, que só clica quando o estado atual não é o desejado`,
+        });
+      });
+    }
+  }
+
+  return violations;
+}
+
 // ─── SEO/a11y: idioma do documento (slug-independente) ──────────────────────
 //
 // Regra POSITIVA de instrumentação, no mesmo espírito das de analytics: grep não
@@ -1897,6 +1955,7 @@ function auditQuality(slug) {
   violations.push(...auditStoryQuality(slug));
   violations.push(...auditStoryApiReference(slug));
   violations.push(...auditContractCoverage(slug));
+  violations.push(...auditPlayIdempotente(slug));
 
   return violations;
 }

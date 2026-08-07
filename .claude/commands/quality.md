@@ -61,6 +61,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `play_nao_idempotente` | clique seguido de asserção de estado no MESMO alvo. O painel Interactions reexecuta a play no mesmo DOM: na segunda rodada o clique parte do estado que a primeira deixou e inverte o resultado. O vitest remonta a cada teste, então a suíte fica verde enquanto o painel falha — é defeito que só regra pega |
 | `document_lang_so_no_pai` · `document_lang_ausente` | `useSeoEffect` escreve `documentElement.lang` só no documento pai (ou não escreve). Sai sob `_infra`: é regra de presença, e o alvo é o hook, não a página. O leitor de tela lê o iframe — sem isso, o idioma anunciado é o do template do Storybook |
 | `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
@@ -147,6 +148,37 @@ comportamento está certo — pode estar afirmando o defeito. Rejeite:
   deixa a aba Actions vazia. Tem que ser de escopo de módulo;
 - story cujo propósito é um estado visual e cuja `play` termina em outro
   estado — o Chromatic fotografa o final (ex.: `Open` que fecha no fim).
+
+**2e2b. A play tem que sobreviver ao REPLAY.** O painel Interactions reexecuta
+a play no **mesmo DOM** — não remonta. O vitest remonta a cada teste, então a
+suíte verde não prova nada aqui: o defeito só aparece em quem aperta replay.
+
+Regra: **cada passo estabelece a própria precondição**. Nada de assumir o que o
+passo anterior deixou, e muito menos o estado de montagem.
+
+- Clique que leva a um estado → par idempotente, que só clica se o estado atual
+  não for o desejado:
+  ```ts
+  const abrir  = async (t: HTMLElement) => {
+    if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+    await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+  };
+  ```
+- Passo que precisa provar que o **clique aconteceu** (callback, aba Actions):
+  `fechar(x)` e depois `abrir(x)` — o par garante um clique real nesta rodada.
+- Tecla que alterna (Enter, Space): estabeleça o estado oposto antes.
+- Asserção que **só vale na montagem** (`defaultValue`, `defaultOpen`, foco
+  inicial) não pertence a uma story que interage — nenhum replay a alcança.
+  Mora numa story sem interação, e é lá que o item do contrato é declarado.
+- Clique em elemento desabilitado é exceção legítima: ele não muda de estado em
+  rodada nenhuma.
+
+**Não deixe o spy receber o objeto de evento da lib.** `onValueChange` do base-ui
+entrega `(value, eventDetails)`, e a aba Actions serializa o payload: dentro do
+`eventDetails` vem o evento nativo, `event.view` é o `Window` do iframe e a
+serialização estoura `SecurityError`, que aparece como "unhandled error" na play
+e contamina o resultado. No `render`, encaminhe só o valor:
+`onValueChange={(value) => onValueChange?.(value)}`.
 
 **2e3. Confira o comportamento na FONTE da lib, não na documentação.** Quando
 o texto e a implementação divergirem, a implementação costuma estar certa e o
