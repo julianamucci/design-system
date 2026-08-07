@@ -17,6 +17,18 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+};
+
 // O payload do callback é montado pela própria factory nesta stack — nas outras
 // três quem monta é a lib headless. Por isso a asserção de formato vive aqui.
 const onMultipleChange = fn();
@@ -57,14 +69,12 @@ export const Single: Story = {
     });
 
     await step('Abrir item 2 fecha automaticamente o item 1', async () => {
-      await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no item ativo fecha-o (modo single permite collapse)', async () => {
-      await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      await fechar(triggers[1]);
     });
   },
 };
@@ -85,10 +95,8 @@ export const Multiple: Story = {
     const triggers = canvas.getAllByRole('button');
 
     await step('Abre dois itens simultaneamente', async () => {
-      await userEvent.click(triggers[0]);
-      await userEvent.click(triggers[1]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
     });
 
     await step('O callback recebe a lista de abertos, não um valor só', async () => {
@@ -101,8 +109,7 @@ export const Multiple: Story = {
     });
 
     await step('Clicar em trigger aberto fecha individualmente (modo múltiplo)', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+      await fechar(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -155,8 +162,7 @@ export const Controlled: Story = {
 
     await step('Clicar em item 2 atualiza o estado externo', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
     });
   },
 };

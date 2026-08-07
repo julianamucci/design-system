@@ -22,6 +22,18 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+};
+
 export const Single: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
@@ -70,18 +82,13 @@ export const Single: Story = {
 
     await step('Abrir o item 2 fecha automaticamente o item 1 (modo single)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no trigger ativo fecha o item (collapsible)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute('aria-expanded', 'false'),
-        { timeout: 500 }
-      );
+      await fechar(triggers[1]);
     });
   },
 };
@@ -125,26 +132,14 @@ export const Multiple: Story = {
 
     await step('Abrir dois itens — ambos permanecem expandidos (modo múltiplo)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'),
-        { timeout: 500 }
-      );
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'),
-        { timeout: 500 }
-      );
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar em trigger aberto fecha o item individualmente (modo múltiplo)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'false'),
-        { timeout: 500 }
-      );
+      await fechar(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -199,8 +194,7 @@ export const Controlled: Story = {
 
     await step('Clicar em item 2 atualiza o estado externo', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
     });
   },
 };

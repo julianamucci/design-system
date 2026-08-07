@@ -23,6 +23,14 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
+};
+
 export const ComIconeNoTrigger: Story = {
   render: () => (
     <Accordion className="nds-max-w-lg">
@@ -83,11 +91,7 @@ export const ComIconeNoTrigger: Story = {
 
     await step("Clicar no trigger abre o item correspondente", async () => {
       const trigger = canvas.getByRole("button", { name: /^informação$/i });
-      await userEvent.click(trigger);
-      await waitFor(
-        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(trigger);
     });
   },
 };
@@ -139,11 +143,7 @@ export const ComBadgeNoTrigger: Story = {
 
     await step("Clicar abre o item correspondente", async () => {
       const trigger = canvas.getByRole("button", { name: /novidades da versão 3.0/i });
-      await userEvent.click(trigger);
-      await waitFor(
-        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(trigger);
     });
   },
 };
@@ -200,21 +200,13 @@ export const ConteudoRico: Story = {
 
     await step("Abrir o item renderiza o conteúdo rico (especificações)", async () => {
       const triggers = canvas.getAllByRole("button");
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(triggers[0]);
       await expect(canvasElement.textContent).toContain("Intel Core i7-12700");
     });
 
     await step("Modo múltiplo: segundo item abre sem fechar o primeiro", async () => {
       const triggers = canvas.getAllByRole("button");
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
     });
   },
@@ -275,8 +267,7 @@ export const FAQ: Story = {
     });
 
     await step("Clicar no primeiro abre apenas ele", async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute("aria-expanded", "false");
     });
   },

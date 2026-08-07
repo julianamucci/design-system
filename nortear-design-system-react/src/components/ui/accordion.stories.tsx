@@ -93,8 +93,17 @@ export const Playground: Story = {
       'visual.item1',
     ],
   },
-  render: (args) => (
-    <Accordion {...args} defaultValue={["item-1"]} className="nds-max-w-lg">
+  render: ({ onValueChange, ...args }) => (
+    <Accordion
+      {...args}
+      // Só o valor chega ao spy. O segundo argumento do base-ui é o
+      // eventDetails, que carrega o evento nativo — a aba Actions serializa o
+      // payload, event.view é o Window do iframe, e a serialização estoura
+      // SecurityError, poluindo a play com "unhandled error".
+      onValueChange={(value) => onValueChange?.(value)}
+      defaultValue={["item-1"]}
+      className="nds-max-w-lg"
+    >
       <AccordionItem value="item-1">
         <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
         <AccordionContent>
@@ -269,13 +278,11 @@ export const Playground: Story = {
     if (args.multiple === false) {
       await step("Abrir item fecha o anteriormente aberto (modo único)", async () => {
         const triggers = canvas.getAllByRole("button");
-        // Item 1 segue aberto neste ponto (defaultValue), e item 2 foi aberto no step 2 mas fechou.
-        // Re-abrindo item 2 deve fechar item 1.
-        await userEvent.click(triggers[1]);
-        await waitFor(
-          () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
-          { timeout: 500 }
-        );
+        // Parte de um aberto conhecido e abre OUTRO: é a exclusividade que os
+        // passos anteriores não provam, porque lá o anterior era sempre o item 1.
+        await abrir(triggers[1]);
+        await abrir(triggers[2]);
+        await expect(triggers[1]).toHaveAttribute("aria-expanded", "false");
         await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
       });
     }
