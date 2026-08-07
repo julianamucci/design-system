@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
@@ -5,6 +6,7 @@ import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 const meta: Meta = {
   tags: ['feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -15,6 +17,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  parameters: { covers: ['functional.item1', 'accessibility.item3', 'visual.item2'] },
   render: () => {
     const alert = createAlert({ variant: 'default' });
     alert.appendChild(createAlertIcon('info'));
@@ -33,6 +36,7 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => {
     const alert = createAlert({ variant: 'destructive' });
     alert.appendChild(createAlertIcon('error'));
@@ -50,6 +54,7 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => {
     const alert = createAlert({ variant: 'success' });
     alert.appendChild(createAlertIcon('success'));
@@ -127,6 +132,7 @@ function mountRemountingAlert(spy: () => void, build: (onDismiss: () => void) =>
 // DismissibleTeclado): mesma matriz de cobertura por nome de story nas 4, e o
 // Chromatic fotografa os mesmos casos.
 export const Dismissible: Story = {
+  parameters: { covers: ['functional.item7', 'visual.item5'] },
   render: () => {
     onDismissClick.mockClear();
     return mountRemountingAlert(onDismissClick, (onDismiss) => {
@@ -140,6 +146,39 @@ export const Dismissible: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+
+    // Primeiro step de propósito: só vale enquanto a entrada ainda roda.
+    // A entrada só existe logo depois de montar. O painel Interactions
+    // reexecuta a play no MESMO DOM, onde o alert já assentou — então, quando a
+    // classe não está lá, provocamos uma remontagem (o wrapper remonta ao
+    // fechar) e medimos no nó novo. Em montagem limpa nada disso roda.
+    await step('Animação de descendente não encerra a entrada antes da hora', async () => {
+      let alert = canvas.getByRole('alert');
+      if (!alert.classList.contains('nds-animate-in')) {
+        await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+        alert = await waitFor(() => {
+          const novo = canvas.getByRole('alert');
+          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return novo;
+        });
+        onDismissClick.mockClear(); // o fechamento de preparo não entra na contagem
+      }
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a fase de
+      // entrada do alert.
+      const dismiss = canvas.getByRole('button', { name: 'Fechar alerta' });
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar.
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).not.toHaveClass('nds-animate-in');
+    });
 
     await step('X visível, acessível por rótulo e registrado na raiz', async () => {
       await expect(canvas.getByRole('alert')).toHaveAttribute('data-dismissible', 'true');
@@ -162,7 +201,15 @@ export const Dismissible: Story = {
 
     await step('Clique no X remove o alert original, dispara o callback uma vez e a demo remonta', async () => {
       const alertOriginal = canvas.getByRole('alert');
-      await userEvent.click(within(alertOriginal).getByRole('button', { name: 'Fechar alerta' }));
+      const dismiss = within(alertOriginal).getByRole('button', { name: 'Fechar alerta' });
+      await userEvent.click(dismiss);
+      // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
+      // fechamento em andamento. Sem ela o `toHaveBeenCalledTimes(1)` abaixo é
+      // verdade trivial — nunca houve chance de disparar duas vezes.
+      dismiss.click();
+      // E a animação de um descendente também não pode encerrar a saída.
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alertOriginal).toBeInTheDocument();
 
       // waitFor: a saída é animada (.nds-animate-out) e o nó só é removido
       // quando a animação termina — ou no timeout de segurança do primitivo.

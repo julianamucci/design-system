@@ -37,17 +37,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(sheetTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (sheetTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -130,8 +138,6 @@ const navGroups = computed(() => [
 const allSectionIds = computed(() =>
   navGroups.value.flatMap((g) => g.sections.map((s) => s.id))
 );
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -295,11 +301,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),         trigger: tContent('states.closed.trigger'),         behavior: stripHtml(tContent('states.closed.behavior')) },
-  { label: tContent('states.open.label'),           trigger: tContent('states.open.trigger'),           behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.transitioning.label'),  trigger: tContent('states.transitioning.trigger'),  behavior: stripHtml(tContent('states.transitioning.behavior')) },
-  { label: tContent('states.focused.label'),        trigger: tContent('states.focused.trigger'),        behavior: stripHtml(tContent('states.focused.behavior')) },
-  { label: tContent('states.longScrollBody.label'), trigger: stripHtml(tContent('states.longScrollBody.trigger')), behavior: stripHtml(tContent('states.longScrollBody.behavior')) },
+  { label: tContent('states.closed.label'),         trigger: toPlainText(tContent('states.closed.trigger')),         behavior: toPlainText(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),           trigger: toPlainText(tContent('states.open.trigger')),           behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.transitioning.label'),  trigger: toPlainText(tContent('states.transitioning.trigger')),  behavior: toPlainText(tContent('states.transitioning.behavior')) },
+  { label: tContent('states.focused.label'),        trigger: toPlainText(tContent('states.focused.trigger')),        behavior: toPlainText(tContent('states.focused.behavior')) },
+  { label: tContent('states.longScrollBody.label'), trigger: toPlainText(tContent('states.longScrollBody.trigger')), behavior: toPlainText(tContent('states.longScrollBody.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -311,12 +317,12 @@ const propCols = computed(() => ({
 }));
 
 const propRows = computed(() => [
-  { name: 'open',            type: tContent('props.table.open.type'),            defaultValue: tContent('props.table.open.default'),            required: tContent('props.table.open.required'),            description: stripHtml(tContent('props.table.open.description'))            },
-  { name: 'defaultOpen',     type: tContent('props.table.defaultOpen.type'),     defaultValue: tContent('props.table.defaultOpen.default'),     required: tContent('props.table.defaultOpen.required'),     description: stripHtml(tContent('props.table.defaultOpen.description'))     },
-  { name: 'onUpdate:open',   type: tContent('props.table.onOpenChange.type'),    defaultValue: tContent('props.table.onOpenChange.default'),    required: tContent('props.table.onOpenChange.required'),    description: stripHtml(tContent('props.table.onOpenChange.description'))    },
-  { name: 'side',            type: tContent('props.table.side.type'),            defaultValue: tContent('props.table.side.default'),            required: tContent('props.table.side.required'),            description: stripHtml(tContent('props.table.side.description'))            },
-  { name: 'showCloseButton', type: tContent('props.table.showCloseButton.type'), defaultValue: tContent('props.table.showCloseButton.default'), required: tContent('props.table.showCloseButton.required'), description: stripHtml(tContent('props.table.showCloseButton.description')) },
-  { name: 'class',           type: tContent('props.table.className.type'),       defaultValue: tContent('props.table.className.default'),       required: tContent('props.table.className.required'),       description: stripHtml(tContent('props.table.className.description'))       },
+  { name: 'open',            type: tContent('props.table.open.type'),            defaultValue: tContent('props.table.open.default'),            required: tContent('props.table.open.required'),            description: toPlainText(tContent('props.table.open.description'))            },
+  { name: 'defaultOpen',     type: tContent('props.table.defaultOpen.type'),     defaultValue: tContent('props.table.defaultOpen.default'),     required: tContent('props.table.defaultOpen.required'),     description: toPlainText(tContent('props.table.defaultOpen.description'))     },
+  { name: 'onUpdate:open',   type: tContent('props.table.onOpenChange.type'),    defaultValue: tContent('props.table.onOpenChange.default'),    required: tContent('props.table.onOpenChange.required'),    description: toPlainText(tContent('props.table.onOpenChange.description'))    },
+  { name: 'side',            type: tContent('props.table.side.type'),            defaultValue: tContent('props.table.side.default'),            required: tContent('props.table.side.required'),            description: toPlainText(tContent('props.table.side.description'))            },
+  { name: 'showCloseButton', type: tContent('props.table.showCloseButton.type'), defaultValue: tContent('props.table.showCloseButton.default'), required: tContent('props.table.showCloseButton.required'), description: toPlainText(tContent('props.table.showCloseButton.description')) },
+  { name: 'class',           type: tContent('props.table.className.type'),       defaultValue: tContent('props.table.className.default'),       required: tContent('props.table.className.required'),       description: toPlainText(tContent('props.table.className.description'))       },
 ]);
 
 const tokenRows = computed(() => [
@@ -347,10 +353,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.drawer.name'),      description: tContent('related.items.drawer.description'),      path: '?path=/docs/ui-drawer--docs'      },
-  { name: tContent('related.items.dialog.name'),      description: tContent('related.items.dialog.description'),      path: '?path=/docs/ui-dialog--docs'      },
-  { name: tContent('related.items.alertDialog.name'), description: tContent('related.items.alertDialog.description'), path: '?path=/docs/ui-alertdialog--docs' },
-  { name: tContent('related.items.popover.name'),     description: tContent('related.items.popover.description'),     path: '?path=/docs/ui-popover--docs'     },
+  { name: tContent('related.items.drawer.name'),      description: toPlainText(tContent('related.items.drawer.description')),      path: '?path=/docs/ui-drawer--docs'      },
+  { name: tContent('related.items.dialog.name'),      description: toPlainText(tContent('related.items.dialog.description')),      path: '?path=/docs/ui-dialog--docs'      },
+  { name: tContent('related.items.alertDialog.name'), description: toPlainText(tContent('related.items.alertDialog.description')), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: tContent('related.items.popover.name'),     description: toPlainText(tContent('related.items.popover.description')),     path: '?path=/docs/ui-popover--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -361,9 +367,9 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'dialog_open',    trigger: tContent('analytics.table.dialog_open.trigger'),    payload: tContent('analytics.table.dialog_open.payload')    },
-  { event: 'dialog_close',   trigger: tContent('analytics.table.dialog_close.trigger'),   payload: tContent('analytics.table.dialog_close.payload')   },
-  { event: 'dialog_confirm', trigger: tContent('analytics.table.dialog_confirm.trigger'), payload: tContent('analytics.table.dialog_confirm.payload') },
+  { event: 'dialog_open',    trigger: toPlainText(tContent('analytics.table.dialog_open.trigger')),    payload: tContent('analytics.table.dialog_open.payload')    },
+  { event: 'dialog_close',   trigger: toPlainText(tContent('analytics.table.dialog_close.trigger')),   payload: tContent('analytics.table.dialog_close.payload')   },
+  { event: 'dialog_confirm', trigger: toPlainText(tContent('analytics.table.dialog_confirm.trigger')), payload: tContent('analytics.table.dialog_confirm.payload') },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
@@ -520,8 +526,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -766,8 +772,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -798,6 +804,8 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Acessibilidade ───────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="stripHtml(tContent('accessibility.summary'))"
       :items="accessibilityItems"
@@ -822,7 +830,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

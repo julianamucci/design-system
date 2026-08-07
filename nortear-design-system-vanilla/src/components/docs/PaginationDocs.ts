@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (paginationTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(paginationTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -233,8 +240,8 @@ export function createPaginationDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -286,8 +293,8 @@ export function createPaginationDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.contain = 'layout';
@@ -520,16 +527,16 @@ const nav = createPagination({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.lastPage.label'), trigger: t('states.lastPage.trigger'), behavior: stripHtml(t('states.lastPage.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.active.label'),   trigger: toPlainText(t('states.active.trigger')),   behavior: toPlainText(t('states.active.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.lastPage.label'), trigger: toPlainText(t('states.lastPage.trigger')), behavior: toPlainText(t('states.lastPage.behavior')) },
           ],
         });
 
@@ -596,15 +603,17 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Enter',       description: stripHtml(t('accessibility.keyboard.enter'))    },
-            { key: 'Space',       description: stripHtml(t('accessibility.keyboard.space'))    },
-            { key: 'Shift+Tab',   description: stripHtml(t('accessibility.keyboard.shiftTab')) },
+            { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))      },
+            { key: 'Enter',       description: toPlainText(t('accessibility.keyboard.enter'))    },
+            { key: 'Space',       description: toPlainText(t('accessibility.keyboard.space'))    },
+            { key: 'Shift+Tab',   description: toPlainText(t('accessibility.keyboard.shiftTab')) },
           ],
         });
 
@@ -612,9 +621,9 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.breadcrumb.name'), description: t('related.items.breadcrumb.description'), path: '?path=/docs/ui-breadcrumb--docs' },
-            { name: t('related.items.tabs.name'),       description: t('related.items.tabs.description'),       path: '?path=/docs/ui-tabs--docs'       },
-            { name: t('related.items.button.name'),     description: t('related.items.button.description'),     path: '?path=/docs/ui-button--docs'     },
+            { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/ui-breadcrumb--docs' },
+            { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/ui-tabs--docs'       },
+            { name: t('related.items.button.name'),     description: toPlainText(t('related.items.button.description')),     path: '?path=/docs/ui-button--docs'     },
           ],
         });
 
@@ -629,13 +638,13 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: 'page_change',
-              trigger: t('analytics.table.page_change.trigger'),
+              trigger: toPlainText(t('analytics.table.page_change.trigger')),
               payload: t('analytics.table.page_change.payload'),
             },
             {

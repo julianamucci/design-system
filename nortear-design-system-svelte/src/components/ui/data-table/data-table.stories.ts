@@ -5,7 +5,7 @@ import DataTableDocs from '@/components/docs/DataTableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { invoices, baseColumns } from './data-table.fixtures';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/DataTable',
   component: DataTable,
   tags: ['autodocs', 'tables'],
@@ -13,10 +13,10 @@ const meta = {
     layout: 'padded',
     docs: { page: withAutoDocsTab(DataTableDocs) },
   },
-} satisfies Meta<typeof DataTable>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   args: {

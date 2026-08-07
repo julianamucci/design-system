@@ -31,12 +31,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -84,12 +81,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function TooltipDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(tooltipTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (tooltipTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -704,34 +713,34 @@ interface TooltipContentProps {
           title={tContent("states.title")}
           cols={{
             state: tContent("states.cols.state"),
-            trigger: tContent("states.cols.trigger"),
-            behavior: tContent("states.cols.behavior"),
+            trigger: toPlainText(tContent("states.cols.trigger")),
+            behavior: toPlainText(tContent("states.cols.behavior")),
           }}
           items={[
             {
               label: tContent("states.closed.label"),
-              trigger: tContent("states.closed.trigger"),
-              behavior: stripHtml(tContent("states.closed.behavior")),
+              trigger: toPlainText(tContent("states.closed.trigger")),
+              behavior: toPlainText(tContent("states.closed.behavior")),
             },
             {
               label: tContent("states.open.label"),
-              trigger: tContent("states.open.trigger"),
-              behavior: stripHtml(tContent("states.open.behavior")),
+              trigger: toPlainText(tContent("states.open.trigger")),
+              behavior: toPlainText(tContent("states.open.behavior")),
             },
             {
               label: tContent("states.hover.label"),
-              trigger: tContent("states.hover.trigger"),
-              behavior: stripHtml(tContent("states.hover.behavior")),
+              trigger: toPlainText(tContent("states.hover.trigger")),
+              behavior: toPlainText(tContent("states.hover.behavior")),
             },
             {
               label: tContent("states.focus.label"),
-              trigger: tContent("states.focus.trigger"),
-              behavior: stripHtml(tContent("states.focus.behavior")),
+              trigger: toPlainText(tContent("states.focus.trigger")),
+              behavior: toPlainText(tContent("states.focus.behavior")),
             },
             {
               label: tContent("states.delayed.label"),
-              trigger: tContent("states.delayed.trigger"),
-              behavior: stripHtml(tContent("states.delayed.behavior")),
+              trigger: toPlainText(tContent("states.delayed.trigger")),
+              behavior: toPlainText(tContent("states.delayed.behavior")),
             },
           ]}
         />
@@ -854,6 +863,8 @@ interface TooltipContentProps {
 
         {/* ── Acessibilidade ────────────────────────────────────────── */}
         <DocsAccessibility
+          screenReaderTitle={tNav("common.screenReader")}
+          screenReaderItems={screenReaderItems}
           title={tContent("accessibility.title")}
           summary={tContent("accessibility.summary")}
           items={[
@@ -866,9 +877,9 @@ interface TooltipContentProps {
           ]}
           keyboardTitle={tContent("accessibility.keyboard.title")}
           keyboardItems={[
-            { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-            { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
-            { key: "Shift+Tab", description: stripHtml(tContent("accessibility.keyboard.shiftTab")) },
+            { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+            { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+            { key: "Shift+Tab", description: toPlainText(tContent("accessibility.keyboard.shiftTab")) },
           ]}
         />
 
@@ -879,22 +890,22 @@ interface TooltipContentProps {
           items={[
             {
               name: tContent("related.items.popover.name"),
-              description: tContent("related.items.popover.description"),
+              description: toPlainText(tContent("related.items.popover.description")),
               path: "?path=/docs/ui-popover--docs",
             },
             {
               name: tContent("related.items.hoverCard.name"),
-              description: tContent("related.items.hoverCard.description"),
+              description: toPlainText(tContent("related.items.hoverCard.description")),
               path: "?path=/docs/ui-hovercard--docs",
             },
             {
               name: tContent("related.items.button.name"),
-              description: tContent("related.items.button.description"),
+              description: toPlainText(tContent("related.items.button.description")),
               path: "?path=/docs/ui-button--docs",
             },
             {
               name: tContent("related.items.kbd.name"),
-              description: tContent("related.items.kbd.description"),
+              description: toPlainText(tContent("related.items.kbd.description")),
               path: "?path=/docs/ui-kbd--docs",
             },
           ]}
@@ -919,7 +930,7 @@ interface TooltipContentProps {
           items={[
             {
               event: "tooltip_view",
-              trigger: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.trigger")),
+              trigger: toPlainText(tContent("analytics.table.tooltip_view.trigger")),
               payload: DOMPurify.sanitize(tContent("analytics.table.tooltip_view.payload")),
             },
           ]}

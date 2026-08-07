@@ -192,6 +192,21 @@ Violations em uma stack que não existem em outra = implementação inconsistent
 | Ícone tamanho diferente | `.nds-icon-sm` faltando no ícone | Adicionar a classe |
 | Dark mode inconsistente | Classe de tema no `<html>` faltando ou divergente | Alinhar toggler de tema |
 | Animação faltando | Transição/`.nds-animate-spin` ausente | Copiar do React |
+| ARIA divergente | Uma lib emite o `role`/atributo e outra não | Comparar o **DOM final**, não o código |
+
+### O DOM final é o que precisa bater
+
+Libs headless diferentes cobrem coisas diferentes: base-ui emite
+`role="combobox"` no select, bits-ui não; bits-ui fixa `aria-label` em inglês na
+paginação, os outros não. Comparar código não revela isso — compare os
+atributos renderizados.
+
+Quando divergirem, o **Vanilla** decide: não tem lib headless escondendo o
+contrato, então o que está lá é o que o design system define. Complete a stack
+que falta; não remova o atributo das que já têm.
+
+Prop com o mesmo nome e semântica diferente conta como divergência de API e vai
+para override no `t()`, não para o código — ver §Textos de instrução.
 
 ---
 

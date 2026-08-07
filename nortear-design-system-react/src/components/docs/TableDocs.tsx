@@ -45,12 +45,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high:   "common.high",
@@ -108,12 +105,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function TableDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(tableTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (tableTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -514,8 +523,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 </Table>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -557,8 +566,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 </Table>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -1022,24 +1031,24 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         title={tContent("states.title")}
         cols={{
           state:    tContent("states.cols.state"),
-          trigger:  tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label:    tContent("states.empty.label"),
-            trigger:  stripHtml(tContent("states.empty.trigger")),
-            behavior: tContent("states.empty.behavior"),
+            trigger:  toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label:    tContent("states.selected.label"),
-            trigger:  stripHtml(tContent("states.selected.trigger")),
-            behavior: tContent("states.selected.behavior"),
+            trigger:  toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label:    tContent("states.loading.label"),
-            trigger:  stripHtml(tContent("states.loading.trigger")),
-            behavior: tContent("states.loading.behavior"),
+            trigger:  toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
         ]}
       />
@@ -1193,6 +1202,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
 
       {/* ── Acessibilidade ───────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -1218,22 +1229,22 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         items={[
           {
             name: "Skeleton",
-            description: tContent("related.skeleton"),
+            description: toPlainText(tContent("related.skeleton")),
             path: "?path=/docs/ui-skeleton--docs",
           },
           {
             name: "Badge",
-            description: tContent("related.badge"),
+            description: toPlainText(tContent("related.badge")),
             path: "?path=/docs/ui-badge--docs",
           },
           {
             name: "Pagination",
-            description: tContent("related.pagination"),
+            description: toPlainText(tContent("related.pagination")),
             path: "?path=/docs/ui-pagination--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
         ]}
@@ -1257,23 +1268,23 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event:   tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event:   tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event:   tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

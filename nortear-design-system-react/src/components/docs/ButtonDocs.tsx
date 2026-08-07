@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Plus, Trash2, Pencil, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -25,10 +25,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -75,10 +72,22 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 export function ButtonDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(buttonTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (buttonTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -119,21 +128,25 @@ export function ButtonDocs() {
 import { Plus } from "lucide-react";`;
 
   const codeDefault = `<Button>Salvar</Button>`;
-  const codeDestructive = `<Button variant="destructive">Excluir item</Button>`;
-  const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
-  const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
-  const codeGhost = `<Button variant="ghost">Editar</Button>`;
+  const codeDestructive = `<Button variant="destructive">Excluir conta</Button>`;
+  const codeOutline = `<Button variant="outline">Cancelar</Button>`;
+  const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
+  const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
-  const codeSizeDefault = `<Button>Salvar</Button>`;
-  const codeSizeSm = `<Button size="sm">Salvar</Button>`;
-  const codeSizeLg = `<Button size="lg">Salvar</Button>`;
-  const codeSizeIcon = `<Button size="icon" aria-label="Excluir item">
+  const codeSizeDefault = `<Button>Padrão</Button>`;
+  const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
+  const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
+  const codeSizeLg = `<Button size="lg">Grande</Button>`;
+  const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Trash2 aria-hidden="true" />
 </Button>`;
-  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Editar">
+  const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Pencil aria-hidden="true" />
 </Button>`;
-  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Pencil aria-hidden="true" />
+</Button>`;
+  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -149,11 +162,13 @@ import { Plus } from "lucide-react";`;
   --primary-foreground: 222 47% 11%;
 }`;
 
-  const interfaceCode = `interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+  const interfaceCode = `interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-  size?: "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
-  asChild?: boolean;
+  size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+  /** Elemento que substitui o <button> mantendo os estilos — ex.: <a href="…" />. */
+  render?: React.ReactElement;
+  disabled?: boolean;
+  className?: string;
 }`;
 
   return (
@@ -238,11 +253,11 @@ import { Plus } from "lucide-react";`;
                 alternative: tContent("usage.scenarios.cols.alternative"),
               },
               items: [
-                { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-                { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-                { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-                { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-                { s: tContent("usage.scenarios.item5.s"), u: tContent("usage.scenarios.item5.u"), a: tContent("usage.scenarios.item5.a") },
+                { s: toPlainText(tContent("usage.scenarios.item1.s")), u: toPlainText(tContent("usage.scenarios.item1.u")), a: toPlainText(tContent("usage.scenarios.item1.a")) },
+                { s: toPlainText(tContent("usage.scenarios.item2.s")), u: toPlainText(tContent("usage.scenarios.item2.u")), a: toPlainText(tContent("usage.scenarios.item2.a")) },
+                { s: toPlainText(tContent("usage.scenarios.item3.s")), u: toPlainText(tContent("usage.scenarios.item3.u")), a: toPlainText(tContent("usage.scenarios.item3.a")) },
+                { s: toPlainText(tContent("usage.scenarios.item4.s")), u: toPlainText(tContent("usage.scenarios.item4.u")), a: toPlainText(tContent("usage.scenarios.item4.a")) },
+                { s: toPlainText(tContent("usage.scenarios.item5.s")), u: toPlainText(tContent("usage.scenarios.item5.u")), a: toPlainText(tContent("usage.scenarios.item5.a")) },
               ],
             }}
             uxWriting={{
@@ -269,8 +284,8 @@ import { Plus } from "lucide-react";`;
                 {
                   element: tContent("usage.uxWriting.table.iconOnly.name"),
                   rules: tContent("usage.uxWriting.table.iconOnly.format"),
-                  do: tContent("usage.uxWriting.table.iconOnly.good"),
-                  dont: tContent("usage.uxWriting.table.iconOnly.bad"),
+                  do: toPlainText(tContent("usage.uxWriting.table.iconOnly.good")),
+                  dont: toPlainText(tContent("usage.uxWriting.table.iconOnly.bad")),
                 },
                 {
                   element: tContent("usage.uxWriting.table.loading.name"),
@@ -309,8 +324,8 @@ import { Plus } from "lucide-react";`;
                 dontLabel: tNav("common.dont"),
                 doPreview: <Button>Salvar</Button>,
                 dontPreview: <Button>Clique aqui</Button>,
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -327,8 +342,8 @@ import { Plus } from "lucide-react";`;
                     <Button>Enviar</Button>
                   </div>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -383,11 +398,14 @@ import { Plus } from "lucide-react";`;
                 name: tContent("variants.items.asLink.name"),
                 description: tContent("variants.items.asLink.description"),
                 useWhen: tContent("variants.items.asLink.use"),
-                code: `<Button render={<a href="/docs" />} variant="link">\n  Ver documentação\n</Button>`,
+                code: `<a href="/docs" className={buttonVariants({ variant: "link" })}>\n  Ver documentação\n</a>`,
                 preview: (
-                  <Button render={<a href="#docs" />} variant="link">
-                    Ver documentação
-                  </Button>
+                  // Classes da variante num <a> real: preserva a semântica de
+                  // link. Passar o <a> pelo `render` do Button faz a lib impor
+                  // role="button" por cima, anulando o ponto do exemplo.
+                  <a href="#docs" className={buttonVariants({ variant: "link" })}>
+                    {tContent("variants.items.asLink.linkLabel")}
+                  </a>
                 ),
               },
             ]}
@@ -402,6 +420,12 @@ import { Plus } from "lucide-react";`;
                 description: stripHtml(tContent("variants.sizes.default")),
                 code: codeSizeDefault,
                 preview: <Button>{tContent("demonstration.labels.primary")}</Button>,
+              },
+              {
+                name: "xs",
+                description: stripHtml(tContent("variants.sizes.xs")),
+                code: codeSizeXs,
+                preview: <Button size="xs">{tContent("demonstration.labels.primary")}</Button>,
               },
               {
                 name: "sm",
@@ -422,6 +446,16 @@ import { Plus } from "lucide-react";`;
                 preview: (
                   <Button size="icon" aria-label={tContent("demonstration.labels.iconOnly")}>
                     <Trash2 aria-hidden="true" />
+                  </Button>
+                ),
+              },
+              {
+                name: "icon-xs",
+                description: stripHtml(tContent("variants.sizes.icon-xs")),
+                code: codeSizeIconXs,
+                preview: (
+                  <Button size="icon-xs" aria-label={tContent("demonstration.labels.ghost")}>
+                    <Pencil aria-hidden="true" />
                   </Button>
                 ),
               },
@@ -510,39 +544,39 @@ import { Plus } from "lucide-react";`;
             title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
-              trigger: tContent("states.cols.trigger"),
-              behavior: tContent("states.cols.behavior"),
+              trigger: toPlainText(tContent("states.cols.trigger")),
+              behavior: toPlainText(tContent("states.cols.behavior")),
             }}
             items={[
               {
                 label: tContent("states.default.label"),
-                trigger: tContent("states.default.trigger"),
-                behavior: tContent("states.default.behavior"),
+                trigger: toPlainText(tContent("states.default.trigger")),
+                behavior: toPlainText(tContent("states.default.behavior")),
               },
               {
                 label: tContent("states.hover.label"),
-                trigger: tContent("states.hover.trigger"),
-                behavior: stripHtml(tContent("states.hover.behavior")),
+                trigger: toPlainText(tContent("states.hover.trigger")),
+                behavior: toPlainText(tContent("states.hover.behavior")),
               },
               {
                 label: tContent("states.focusVisible.label"),
-                trigger: tContent("states.focusVisible.trigger"),
-                behavior: stripHtml(tContent("states.focusVisible.behavior")),
+                trigger: toPlainText(tContent("states.focusVisible.trigger")),
+                behavior: toPlainText(tContent("states.focusVisible.behavior")),
               },
               {
                 label: tContent("states.disabled.label"),
-                trigger: stripHtml(tContent("states.disabled.trigger")),
-                behavior: stripHtml(tContent("states.disabled.behavior")),
+                trigger: toPlainText(tContent("states.disabled.trigger")),
+                behavior: toPlainText(tContent("states.disabled.behavior")),
               },
               {
                 label: tContent("states.loading.label"),
-                trigger: stripHtml(tContent("states.loading.trigger")),
-                behavior: tContent("states.loading.behavior"),
+                trigger: toPlainText(tContent("states.loading.trigger")),
+                behavior: toPlainText(tContent("states.loading.behavior")),
               },
               {
                 label: tContent("states.invalid.label"),
-                trigger: stripHtml(tContent("states.invalid.trigger")),
-                behavior: stripHtml(tContent("states.invalid.behavior")),
+                trigger: toPlainText(tContent("states.invalid.trigger")),
+                behavior: toPlainText(tContent("states.invalid.behavior")),
               },
             ]}
           />
@@ -566,49 +600,52 @@ import { Plus } from "lucide-react";`;
                     type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"',
                     defaultValue: '"default"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.variant")),
+                    description: toPlainText(tContent("props.table.variant")),
                   },
                   {
                     name: "size",
-                    type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',
+                    type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
                     defaultValue: '"default"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.size")),
+                    description: toPlainText(tContent("props.table.size")),
                   },
                   {
-                    name: "asChild",
-                    type: "boolean",
-                    defaultValue: "false",
+                    // Nesta stack a composição é `render` (base-ui). Não existe
+                    // `asChild`: a tabela documentava uma prop inexistente.
+                    name: "render",
+                    type: "ReactElement",
+                    defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.asChild")),
+                    description: toPlainText(tContent("props.table.asChild")),
                   },
                   {
                     name: "disabled",
                     type: "boolean",
                     defaultValue: "false",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.disabled")),
+                    description: toPlainText(tContent("props.table.disabled")),
                   },
                   {
                     name: "type",
                     type: '"button" | "submit" | "reset"',
                     defaultValue: '"button"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.type")),
+                    // htmlType, não `type`: esta última é o cabeçalho da coluna.
+                    description: toPlainText(tContent("props.table.htmlType")),
                   },
                   {
                     name: "onClick",
                     type: "(e: MouseEvent) => void",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.onClick")),
+                    description: toPlainText(tContent("props.table.onClick")),
                   },
                   {
                     name: "className",
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                 ],
               },
@@ -627,14 +664,17 @@ import { Plus } from "lucide-react";`;
               description: tContent("tokens.table.part"),
             }}
             items={[
-              { token: "--primary", value: "bg-primary", description: tContent("tokens.table.primary") },
-              { token: "--primary-foreground", value: "text-primary-foreground", description: tContent("tokens.table.primaryForeground") },
-              { token: "--secondary", value: "bg-secondary", description: tContent("tokens.table.secondary") },
-              { token: "--destructive", value: "bg-destructive text-white", description: tContent("tokens.table.destructive") },
-              { token: "--border", value: "border", description: tContent("tokens.table.border") },
-              { token: "--accent", value: "nds-hover-bg-accent", description: tContent("tokens.table.accent") },
-              { token: "--ring", value: "nds-focus-ring", description: tContent("tokens.table.ring") },
-              { token: "--radius", value: "rounded-md", description: tContent("tokens.table.radius") },
+              // A coluna aponta ONDE o token é lido no CSS do componente.
+              // Antes listava classes do Tailwind (bg-primary, rounded-md) que
+              // não existem mais: quem seguisse a tabela não mudava nada.
+              { token: "--primary", value: ".nds-button-default", description: tContent("tokens.table.primary") },
+              { token: "--primary-foreground", value: ".nds-button-default", description: tContent("tokens.table.primaryForeground") },
+              { token: "--secondary", value: ".nds-button-secondary", description: tContent("tokens.table.secondary") },
+              { token: "--destructive", value: ".nds-button-destructive", description: tContent("tokens.table.destructive") },
+              { token: "--border", value: ".nds-button-outline", description: tContent("tokens.table.border") },
+              { token: "--accent", value: ".nds-button-outline:hover, .nds-button-ghost:hover", description: tContent("tokens.table.accent") },
+              { token: "--ring", value: ".nds-button:focus-visible", description: tContent("tokens.table.ring") },
+              { token: "--radius-button", value: ".nds-button", description: tContent("tokens.table.radius") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={codeCustomizationTokens}
@@ -642,6 +682,8 @@ import { Plus } from "lucide-react";`;
 
           {/* ── Acessibilidade ────────────────────────────────────────── */}
           <DocsAccessibility
+            screenReaderTitle={tNav("common.screenReader")}
+            screenReaderItems={screenReaderItems}
             title={tContent("accessibility.title")}
             summary={tContent("accessibility.summary")}
             items={[
@@ -653,10 +695,10 @@ import { Plus } from "lucide-react";`;
             ]}
             keyboardTitle={tContent("accessibility.keyboardTitle")}
             keyboardItems={[
-              { key: "Tab",     description: tContent("accessibility.keyboard.tab") },
-              { key: "Enter",   description: stripHtml(tContent("accessibility.keyboard.enter")) },
-              { key: "Space",   description: stripHtml(tContent("accessibility.keyboard.space")) },
-              { key: "—",       description: stripHtml(tContent("accessibility.keyboard.disabled")) },
+              { key: "Tab",     description: toPlainText(tContent("accessibility.keyboard.tab")) },
+              { key: "Enter",   description: toPlainText(tContent("accessibility.keyboard.enter")) },
+              { key: "Space",   description: toPlainText(tContent("accessibility.keyboard.space")) },
+              { key: "—",       description: toPlainText(tContent("accessibility.keyboard.disabled")) },
             ]}
           />
 
@@ -666,32 +708,32 @@ import { Plus } from "lucide-react";`;
             items={[
               {
                 name: "Toggle",
-                description: stripHtml(tContent("related.toggle")),
+                description: toPlainText(tContent("related.toggle")),
                 path: "?path=/docs/ui-toggle--docs",
               },
               {
                 name: "Switch",
-                description: tContent("related.switch"),
+                description: toPlainText(tContent("related.switch")),
                 path: "?path=/docs/ui-switch--docs",
               },
               {
                 name: "Link",
-                description: tContent("related.link"),
+                description: toPlainText(tContent("related.link")),
                 path: "?path=/docs/ui-link--docs",
               },
               {
                 name: "Form",
-                description: tContent("related.form"),
+                description: toPlainText(tContent("related.form")),
                 path: "?path=/docs/ui-form--docs",
               },
               {
                 name: "Dialog",
-                description: tContent("related.dialog"),
+                description: toPlainText(tContent("related.dialog")),
                 path: "?path=/docs/ui-dialog--docs",
               },
               {
                 name: "AlertDialog",
-                description: tContent("related.alertDialog"),
+                description: toPlainText(tContent("related.alertDialog")),
                 path: "?path=/docs/ui-alertdialog--docs",
               },
             ]}
@@ -712,28 +754,28 @@ import { Plus } from "lucide-react";`;
             title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
-              trigger: tContent("analytics.table.trigger"),
+              trigger: toPlainText(tContent("analytics.table.trigger")),
               payload: tContent("analytics.table.payload"),
             }}
             items={[
               {
                 event: tContent("analytics.table.click"),
-                trigger: stripHtml(tContent("analytics.table.clickTrigger")),
+                trigger: toPlainText(tContent("analytics.table.clickTrigger")),
                 payload: tContent("analytics.table.clickPayload"),
               },
               {
                 event: tContent("analytics.table.pageView"),
-                trigger: tContent("analytics.table.pageViewTrigger"),
+                trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
                 payload: tContent("analytics.table.pageViewPayload"),
               },
               {
                 event: tContent("analytics.table.sectionViewed"),
-                trigger: tContent("analytics.table.sectionViewedTrigger"),
+                trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
                 payload: tContent("analytics.table.sectionViewedPayload"),
               },
               {
                 event: tContent("analytics.table.langSwitch"),
-                trigger: tContent("analytics.table.langSwitchTrigger"),
+                trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
                 payload: tContent("analytics.table.langSwitchPayload"),
               },
             ]}
@@ -750,8 +792,8 @@ import { Plus } from "lucide-react";`;
                 priority: tNav("common.priority"),
               },
               items: [1, 2, 3, 4, 5, 6].map((i) => ({
-                action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-                result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+                action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+                result: toPlainText(tContent(`testes.functional.item${i}.result`)),
                 priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
               })),
             }}
@@ -763,7 +805,7 @@ import { Plus } from "lucide-react";`;
                 how: tNav("common.howToVerify"),
               },
               items: [1, 2, 3, 4, 5].map((i) => ({
-                criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+                criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),
               })),

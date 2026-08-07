@@ -6,17 +6,17 @@ import TableEstadoEmpty from './TableEstadoEmpty.svelte';
 import TableEstadoLinhaSelecionada from './TableEstadoLinhaSelecionada.svelte';
 import TableEstadoCarregando from './TableEstadoCarregando.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Table/Estados',
   component: Table,
   tags: ['tables'],
   parameters: {
     controls: { disable: true },
   },
-} satisfies Meta<typeof Table>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Empty: Story = {
   render: () => ({

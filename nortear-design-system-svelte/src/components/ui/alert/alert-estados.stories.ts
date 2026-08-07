@@ -1,21 +1,24 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
+import AlertSemAnuncioStory from './AlertSemAnuncioStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },
   title: 'UI/Alert/Estados',
   component: Alert,
   tags: ['feedback'],
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Completo: Story = {
   render: () => ({
@@ -43,6 +46,7 @@ export const Completo: Story = {
 };
 
 export const SemTitulo: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -93,7 +97,32 @@ export const SemIcone: Story = {
   },
 };
 
+// Alert estático não pode ser live region: com o `role="alert"` padrão o leitor
+// de tela interrompe a leitura e salta para o alert no carregamento da página.
+// `role="note"` remove o anúncio sem mexer no visual — e o default segue `alert`.
+export const SemAnuncio: Story = {
+  render: () => ({
+    Component: AlertSemAnuncioStory,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Alert estático usa role="note" — não é live region', async () => {
+      const nota = canvas.getByRole('note');
+      await expect(nota).toHaveAttribute('role', 'note');
+      await expect(canvas.getByText(/não deve ser anunciado/)).toBeVisible();
+    });
+
+    await step('Sem a prop, o padrão continua role="alert"', async () => {
+      const alerts = canvas.getAllByRole('alert');
+      await expect(alerts).toHaveLength(1);
+      await expect(alerts[0]).toHaveAttribute('role', 'alert');
+    });
+  },
+};
+
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ['functional.item6'] },
   render: () => ({
     Component: AlertStory,
     props: {

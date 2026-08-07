@@ -30,17 +30,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tContent, locale } = useTranslation(componentTranslations);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (componentTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 const { t: tNav } = useTranslation(uiTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'Alta',
@@ -120,8 +128,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -280,11 +286,10 @@ const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   </HoverCardContent>
 </HoverCard>`;
 
-
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),     trigger: tContent('states.closed.trigger'),     behavior: stripHtml(tContent('states.closed.behavior')) },
-  { label: tContent('states.open.label'),       trigger: tContent('states.open.trigger'),       behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.controlled.label'), trigger: tContent('states.controlled.trigger'), behavior: stripHtml(tContent('states.controlled.behavior')) },
+  { label: tContent('states.closed.label'),     trigger: toPlainText(tContent('states.closed.trigger')),     behavior: toPlainText(tContent('states.closed.behavior')) },
+  { label: tContent('states.open.label'),       trigger: toPlainText(tContent('states.open.trigger')),       behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.controlled.label'), trigger: toPlainText(tContent('states.controlled.trigger')), behavior: toPlainText(tContent('states.controlled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -296,13 +301,13 @@ const propCols = computed(() => ({
 }));
 
 const hoverCardPropItems = computed(() => [
-  { name: 'open',          type: tContent('props.table.open.type'),         defaultValue: tContent('props.table.open.default'),         required: tContent('props.table.open.required'),         description: stripHtml(tContent('props.table.open.description'))         },
-  { name: 'onUpdate:open', type: tContent('props.table.onOpenChange.type'), defaultValue: tContent('props.table.onOpenChange.default'), required: tContent('props.table.onOpenChange.required'), description: stripHtml(tContent('props.table.onOpenChange.description')) },
-  { name: 'defaultOpen',   type: tContent('props.table.defaultOpen.type'),  defaultValue: tContent('props.table.defaultOpen.default'),  required: tContent('props.table.defaultOpen.required'),  description: stripHtml(tContent('props.table.defaultOpen.description'))  },
-  { name: 'openDelay',     type: tContent('props.table.openDelay.type'),    defaultValue: tContent('props.table.openDelay.default'),    required: tContent('props.table.openDelay.required'),    description: stripHtml(tContent('props.table.openDelay.description'))    },
-  { name: 'closeDelay',    type: tContent('props.table.closeDelay.type'),   defaultValue: tContent('props.table.closeDelay.default'),   required: tContent('props.table.closeDelay.required'),   description: stripHtml(tContent('props.table.closeDelay.description'))   },
-  { name: 'side',          type: tContent('props.table.side.type'),         defaultValue: tContent('props.table.side.default'),         required: tContent('props.table.side.required'),         description: stripHtml(tContent('props.table.side.description'))         },
-  { name: 'align',         type: tContent('props.table.align.type'),        defaultValue: tContent('props.table.align.default'),        required: tContent('props.table.align.required'),        description: stripHtml(tContent('props.table.align.description'))        },
+  { name: 'open',          type: tContent('props.table.open.type'),         defaultValue: tContent('props.table.open.default'),         required: tContent('props.table.open.required'),         description: toPlainText(tContent('props.table.open.description'))         },
+  { name: 'onUpdate:open', type: tContent('props.table.onOpenChange.type'), defaultValue: tContent('props.table.onOpenChange.default'), required: tContent('props.table.onOpenChange.required'), description: toPlainText(tContent('props.table.onOpenChange.description')) },
+  { name: 'defaultOpen',   type: tContent('props.table.defaultOpen.type'),  defaultValue: tContent('props.table.defaultOpen.default'),  required: tContent('props.table.defaultOpen.required'),  description: toPlainText(tContent('props.table.defaultOpen.description'))  },
+  { name: 'openDelay',     type: tContent('props.table.openDelay.type'),    defaultValue: tContent('props.table.openDelay.default'),    required: tContent('props.table.openDelay.required'),    description: toPlainText(tContent('props.table.openDelay.description'))    },
+  { name: 'closeDelay',    type: tContent('props.table.closeDelay.type'),   defaultValue: tContent('props.table.closeDelay.default'),   required: tContent('props.table.closeDelay.required'),   description: toPlainText(tContent('props.table.closeDelay.description'))   },
+  { name: 'side',          type: tContent('props.table.side.type'),         defaultValue: tContent('props.table.side.default'),         required: tContent('props.table.side.required'),         description: toPlainText(tContent('props.table.side.description'))         },
+  { name: 'align',         type: tContent('props.table.align.type'),        defaultValue: tContent('props.table.align.default'),        required: tContent('props.table.align.required'),        description: toPlainText(tContent('props.table.align.description'))        },
 ]);
 
 const tokenRows = computed(() => [
@@ -325,17 +330,17 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',       description: stripHtml(tContent('accessibility.keyboard.tab'))      },
-  { key: 'Esc',       description: stripHtml(tContent('accessibility.keyboard.escape'))   },
-  { key: 'Shift+Tab', description: stripHtml(tContent('accessibility.keyboard.shiftTab')) },
-  { key: 'Enter',     description: stripHtml(tContent('accessibility.keyboard.enter'))    },
+  { key: 'Tab',       description: toPlainText(tContent('accessibility.keyboard.tab'))      },
+  { key: 'Esc',       description: toPlainText(tContent('accessibility.keyboard.escape'))   },
+  { key: 'Shift+Tab', description: toPlainText(tContent('accessibility.keyboard.shiftTab')) },
+  { key: 'Enter',     description: toPlainText(tContent('accessibility.keyboard.enter'))    },
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.tooltip.name'),      description: tContent('related.items.tooltip.description'),      path: '?path=/docs/ui-tooltip--docs'      },
-  { name: tContent('related.items.popover.name'),      description: tContent('related.items.popover.description'),      path: '?path=/docs/ui-popover--docs'      },
-  { name: tContent('related.items.dropdownMenu.name'), description: tContent('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs' },
-  { name: tContent('related.items.card.name'),         description: tContent('related.items.card.description'),         path: '?path=/docs/ui-card--docs'         },
+  { name: tContent('related.items.tooltip.name'),      description: toPlainText(tContent('related.items.tooltip.description')),      path: '?path=/docs/ui-tooltip--docs'      },
+  { name: tContent('related.items.popover.name'),      description: toPlainText(tContent('related.items.popover.description')),      path: '?path=/docs/ui-popover--docs'      },
+  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs' },
+  { name: tContent('related.items.card.name'),         description: toPlainText(tContent('related.items.card.description')),         path: '?path=/docs/ui-card--docs'         },
 ]);
 
 const noteItems = computed(() => [
@@ -351,8 +356,8 @@ const analyticsItems = computed(() => [
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
-  action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-  result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
@@ -638,8 +643,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -894,8 +899,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -926,6 +931,8 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Acessibilidade ───────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"

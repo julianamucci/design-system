@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { Accordion as AccordionPrimitive } from "bits-ui";
+	import { getContext } from "svelte";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+	import { ACCORDION_ITEM_IDS, type AccordionItemIds } from "./accordion-a11y.js";
+
+	const ids = getContext<AccordionItemIds | undefined>(ACCORDION_ITEM_IDS);
 
 	let {
 		ref = $bindable(null),
@@ -23,6 +27,8 @@
 			className
 		)}
 		{...restProps}
+		id={ids?.triggerId}
+		aria-controls={ids?.contentId}
 	>
 		<!-- O rótulo vive num <span> próprio: o sublinhado de hover é
 		     `.nds-accordion-trigger:hover > span:first-child` e não deve

@@ -19,7 +19,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -56,12 +55,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -109,7 +105,6 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Sidebar Demo Preview ─────────────────────────────────────────────────────
 
 function SidebarDemoPreview({
@@ -118,7 +113,6 @@ function SidebarDemoPreview({
   side = "left",
   defaultOpen = true,
   navLabel,
-  mainLandmark = false,
 }: {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
@@ -126,8 +120,6 @@ function SidebarDemoPreview({
   defaultOpen?: boolean;
   /** Rótulo único da <nav> do demo (axe landmark-unique) — reusa a string que já intitula o bloco. */
   navLabel: string;
-  /** Só UM demo por página mantém o <main> do SidebarInset (axe landmark-no-duplicate-main). */
-  mainLandmark?: boolean;
 }) {
   // label/destination usam a CHAVE estável do item (não o texto traduzido):
   // mesmo valor nas 4 stacks e em qualquer locale, sem fragmentar o GA4.
@@ -222,22 +214,19 @@ function SidebarDemoPreview({
             </SidebarFooter>
           </Sidebar>
         </nav>
-        {mainLandmark ? (
-          <SidebarInset>
-            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
-              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
-            </header>
-          </SidebarInset>
-        ) : (
-          // Equivalente pixel-idêntico ao SidebarInset sem o landmark <main>
-          <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-            <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
-              <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
-              <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
-            </header>
-          </div>
-        )}
+        {/*
+          Equivalente pixel-idêntico ao SidebarInset sem o landmark <main>: o
+          <main> da página é o do DocsPageLayout, e um demo que renderizasse o
+          SidebarInset de verdade recriaria landmark-no-duplicate-main. O
+          snippet de código da doc segue mostrando <SidebarInset>, que é a API
+          correta para uma aplicação real.
+        */}
+        <div data-slot="sidebar-inset" className="nds-sidebar-inset">
+          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+            <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
+            <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
+          </header>
+        </div>
       </SidebarProvider>
     </div>
   );
@@ -529,6 +518,19 @@ export function SidebarDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(sidebarTranslations);
 
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (sidebarTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
+
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
     () => navGroups.flatMap((g) => g.sections.map((s) => s.id)),
@@ -689,7 +691,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={tContent("demonstration.title")} mainLandmark />
+        <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={tContent("demonstration.title")} />
       </DocsDemonstration>
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
@@ -781,8 +783,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 </p>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -797,8 +799,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 <code className="nds-whitespace-pre">{`// Ícone sem tooltip no modo icon\n<SidebarMenuButton>\n  <Icon />\n</SidebarMenuButton>`}</code>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -813,8 +815,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 <code className="nds-whitespace-pre">{`// Trigger visível em desktop\n<SidebarTrigger />\n{/* ocupa espaço do conteúdo */}`}</code>
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -988,34 +990,34 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.expanded.label"),
-            trigger: stripHtml(tContent("states.expanded.trigger")),
-            behavior: tContent("states.expanded.behavior"),
+            trigger: toPlainText(tContent("states.expanded.trigger")),
+            behavior: toPlainText(tContent("states.expanded.behavior")),
           },
           {
             label: tContent("states.collapsed.label"),
-            trigger: stripHtml(tContent("states.collapsed.trigger")),
-            behavior: tContent("states.collapsed.behavior"),
+            trigger: toPlainText(tContent("states.collapsed.trigger")),
+            behavior: toPlainText(tContent("states.collapsed.behavior")),
           },
           {
             label: tContent("states.offcanvas.label"),
-            trigger: stripHtml(tContent("states.offcanvas.trigger")),
-            behavior: tContent("states.offcanvas.behavior"),
+            trigger: toPlainText(tContent("states.offcanvas.trigger")),
+            behavior: toPlainText(tContent("states.offcanvas.behavior")),
           },
           {
             label: tContent("states.mobile.label"),
-            trigger: stripHtml(tContent("states.mobile.trigger")),
-            behavior: tContent("states.mobile.behavior"),
+            trigger: toPlainText(tContent("states.mobile.trigger")),
+            behavior: toPlainText(tContent("states.mobile.behavior")),
           },
           {
             label: tContent("states.hidden.label"),
-            trigger: stripHtml(tContent("states.hidden.trigger")),
-            behavior: tContent("states.hidden.behavior"),
+            trigger: toPlainText(tContent("states.hidden.trigger")),
+            behavior: toPlainText(tContent("states.hidden.behavior")),
           },
         ]}
       />
@@ -1227,6 +1229,8 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -1255,37 +1259,37 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         items={[
           {
             name: "NavigationMenu",
-            description: tContent("related.navigationMenu"),
+            description: toPlainText(tContent("related.navigationMenu")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "Sheet",
-            description: tContent("related.sheet"),
+            description: toPlainText(tContent("related.sheet")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: "Accordion",
-            description: tContent("related.accordion"),
+            description: toPlainText(tContent("related.accordion")),
             path: "?path=/docs/ui-accordion--docs",
           },
           {
             name: "Tooltip",
-            description: tContent("related.tooltip"),
+            description: toPlainText(tContent("related.tooltip")),
             path: "?path=/docs/ui-tooltip--docs",
           },
           {
             name: "Separator",
-            description: tContent("related.separator"),
+            description: toPlainText(tContent("related.separator")),
             path: "?path=/docs/ui-separator--docs",
           },
           {
             name: "Skeleton",
-            description: tContent("related.skeleton"),
+            description: toPlainText(tContent("related.skeleton")),
             path: "?path=/docs/ui-skeleton--docs",
           },
         ]}
@@ -1308,33 +1312,33 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.navClick"),
-            trigger: tContent("analytics.table.navClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.navClickTrigger")),
             payload: tContent("analytics.table.navClickPayload"),
           },
           {
             event: tContent("analytics.table.toggleOpen"),
-            trigger: tContent("analytics.table.toggleOpenTrigger"),
+            trigger: toPlainText(tContent("analytics.table.toggleOpenTrigger")),
             payload: tContent("analytics.table.togglePayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

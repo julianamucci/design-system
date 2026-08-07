@@ -53,7 +53,8 @@
       "yes": "Sim",
       "no": "Não",
       "token": "Token",
-      "cssClass": "Classe"
+      "cssClass": "Classe",
+      "screenReader": "Leitor de tela"
     }
   },
   "en": {
@@ -110,7 +111,8 @@
       "yes": "Yes",
       "no": "No",
       "token": "Token",
-      "cssClass": "Class"
+      "cssClass": "Class",
+      "screenReader": "Screen reader"
     }
   },
   "es": {
@@ -167,7 +169,8 @@
       "yes": "Sí",
       "no": "No",
       "token": "Token",
-      "cssClass": "Clase"
+      "cssClass": "Clase",
+      "screenReader": "Lector de pantalla"
     }
   }
 }

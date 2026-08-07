@@ -6,7 +6,7 @@ import SidebarStory from './SidebarStory.svelte';
 import SidebarDocs from '@/components/docs/SidebarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sidebar',
   component: Sidebar,
   tags: ['autodocs', 'layout'],
@@ -36,10 +36,10 @@ const meta = {
     variant: 'sidebar',
     collapsible: 'offcanvas',
   },
-} satisfies Meta<typeof Sidebar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

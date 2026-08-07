@@ -7,14 +7,14 @@ const chartData = [
   { label: 'Mar', value: 237 }, { label: 'Apr', value: 73 },
 ];
 
-const meta = {
+const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Composicoes',
   component: ChartContainer,
   tags: ['display'],
-} satisfies Meta<typeof ChartContainer>;
+};
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 async function expectRendered(el: HTMLElement) {
   await waitFor(() => {

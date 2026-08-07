@@ -28,17 +28,25 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations         from '@/i18n/ui.json';
 import componentTranslations  from '@shared/content/radio-group/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // IMPORTANT: locale comes from useTranslation — NEVER from useLocaleStore/Pinia
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(componentTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (componentTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -119,8 +127,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -295,12 +301,12 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: stripHtml(tContent('states.default.behavior')) },
-  { label: tContent('states.checked.label'),  trigger: tContent('states.checked.trigger'),  behavior: stripHtml(tContent('states.checked.behavior')) },
-  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.invalid.label'),  trigger: tContent('states.invalid.trigger'),  behavior: stripHtml(tContent('states.invalid.behavior')) },
+  { label: tContent('states.default.label'),  trigger: toPlainText(tContent('states.default.trigger')),  behavior: toPlainText(tContent('states.default.behavior')) },
+  { label: tContent('states.checked.label'),  trigger: toPlainText(tContent('states.checked.trigger')),  behavior: toPlainText(tContent('states.checked.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: toPlainText(tContent('states.hover.trigger')),    behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.invalid.label'),  trigger: toPlainText(tContent('states.invalid.trigger')),  behavior: toPlainText(tContent('states.invalid.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -312,13 +318,13 @@ const propCols = computed(() => ({
 }));
 
 const radioGroupPropItems = computed(() => [
-  { name: 'modelValue',          type: tContent('props.table.value.type'),         defaultValue: tContent('props.table.value.default'),         required: tContent('props.table.value.required'),         description: stripHtml(tContent('props.table.value.description'))         },
-  { name: 'defaultValue',        type: tContent('props.table.defaultValue.type'),  defaultValue: tContent('props.table.defaultValue.default'),  required: tContent('props.table.defaultValue.required'),  description: stripHtml(tContent('props.table.defaultValue.description'))  },
-  { name: '@update:modelValue',  type: tContent('props.table.onValueChange.type'), defaultValue: tContent('props.table.onValueChange.default'), required: tContent('props.table.onValueChange.required'), description: stripHtml(tContent('props.table.onValueChange.description')) },
-  { name: 'disabled',            type: tContent('props.table.disabled.type'),      defaultValue: tContent('props.table.disabled.default'),      required: tContent('props.table.disabled.required'),      description: stripHtml(tContent('props.table.disabled.description'))      },
-  { name: 'name',                type: tContent('props.table.name.type'),          defaultValue: tContent('props.table.name.default'),          required: tContent('props.table.name.required'),          description: stripHtml(tContent('props.table.name.description'))          },
-  { name: 'orientation',         type: tContent('props.table.orientation.type'),   defaultValue: tContent('props.table.orientation.default'),   required: tContent('props.table.orientation.required'),   description: stripHtml(tContent('props.table.orientation.description'))   },
-  { name: 'class',               type: tContent('props.table.className.type'),     defaultValue: tContent('props.table.className.default'),     required: tContent('props.table.className.required'),     description: stripHtml(tContent('props.table.className.description'))     },
+  { name: 'modelValue',          type: tContent('props.table.value.type'),         defaultValue: tContent('props.table.value.default'),         required: tContent('props.table.value.required'),         description: toPlainText(tContent('props.table.value.description'))         },
+  { name: 'defaultValue',        type: tContent('props.table.defaultValue.type'),  defaultValue: tContent('props.table.defaultValue.default'),  required: tContent('props.table.defaultValue.required'),  description: toPlainText(tContent('props.table.defaultValue.description'))  },
+  { name: '@update:modelValue',  type: tContent('props.table.onValueChange.type'), defaultValue: tContent('props.table.onValueChange.default'), required: tContent('props.table.onValueChange.required'), description: toPlainText(tContent('props.table.onValueChange.description')) },
+  { name: 'disabled',            type: tContent('props.table.disabled.type'),      defaultValue: tContent('props.table.disabled.default'),      required: tContent('props.table.disabled.required'),      description: toPlainText(tContent('props.table.disabled.description'))      },
+  { name: 'name',                type: tContent('props.table.name.type'),          defaultValue: tContent('props.table.name.default'),          required: tContent('props.table.name.required'),          description: toPlainText(tContent('props.table.name.description'))          },
+  { name: 'orientation',         type: tContent('props.table.orientation.type'),   defaultValue: tContent('props.table.orientation.default'),   required: tContent('props.table.orientation.required'),   description: toPlainText(tContent('props.table.orientation.description'))   },
+  { name: 'class',               type: tContent('props.table.className.type'),     defaultValue: tContent('props.table.className.default'),     required: tContent('props.table.className.required'),     description: toPlainText(tContent('props.table.className.description'))     },
 ]);
 
 const radioGroupItemPropItems = computed(() => [
@@ -356,10 +362,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.checkbox.name'), description: tContent('related.items.checkbox.description'), path: '?path=/docs/ui-checkbox--docs' },
-  { name: tContent('related.items.switch.name'),   description: tContent('related.items.switch.description'),   path: '?path=/docs/ui-switch--docs'   },
-  { name: tContent('related.items.select.name'),   description: tContent('related.items.select.description'),   path: '?path=/docs/ui-select--docs'   },
-  { name: tContent('related.items.form.name'),     description: tContent('related.items.form.description'),     path: '?path=/docs/ui-form--docs'     },
+  { name: tContent('related.items.checkbox.name'), description: toPlainText(tContent('related.items.checkbox.description')), path: '?path=/docs/ui-checkbox--docs' },
+  { name: tContent('related.items.switch.name'),   description: toPlainText(tContent('related.items.switch.description')),   path: '?path=/docs/ui-switch--docs'   },
+  { name: tContent('related.items.select.name'),   description: toPlainText(tContent('related.items.select.description')),   path: '?path=/docs/ui-select--docs'   },
+  { name: tContent('related.items.form.name'),     description: toPlainText(tContent('related.items.form.description')),     path: '?path=/docs/ui-form--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -371,7 +377,7 @@ const noteItems = computed(() => [
 
 const analyticsItems = computed(() => [
   { event: 'radio_change',
-    trigger: tContent('analytics.table.radio_change.trigger'),
+    trigger: toPlainText(tContent('analytics.table.radio_change.trigger')),
     payload: tContent('analytics.table.radio_change.payload') },
 ]);
 
@@ -658,14 +664,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >
@@ -998,8 +1004,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -1031,6 +1037,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -1054,7 +1062,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

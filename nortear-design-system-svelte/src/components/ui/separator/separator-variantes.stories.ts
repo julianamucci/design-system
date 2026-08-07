@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Separator/Variantes',
   component: SeparatorStory,
   tags: ['layout'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SeparatorStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Horizontal: Story = {
   args: {

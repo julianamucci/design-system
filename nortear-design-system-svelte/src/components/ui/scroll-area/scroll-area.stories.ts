@@ -6,7 +6,7 @@ import ScrollAreaStory from './ScrollAreaStory.svelte';
 import ScrollAreaDocs from '@/components/docs/ScrollAreaDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ScrollArea',
   component: ScrollArea,
   tags: ['autodocs', 'layout'],
@@ -38,13 +38,16 @@ const meta = {
   },
   args: {
     orientation: 'vertical',
-    type: 'hover',
+    // 'always' e nao 'hover': o Playground assere que a scrollbar existe, e com
+    // 'hover' ela so se materializa sob o ponteiro — o control continua
+    // oferecendo as quatro opcoes.
+    type: 'always',
     scrollHideDelay: 600,
   },
-} satisfies Meta<typeof ScrollArea>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

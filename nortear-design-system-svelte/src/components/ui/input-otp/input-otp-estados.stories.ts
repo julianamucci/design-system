@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/InputOTP/Estados',
   component: InputOTPStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof InputOTPStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   const input = canvasElement.querySelector(

@@ -69,15 +69,19 @@
   aria-invalid={ariaInvalid ? 'true' : undefined}
   {onclick}
 >
+  <!-- `nds-button-icon-svg` e não `nds-icon`: as duas existem e dão 16px, mas
+       só esta acompanha o tamanho do botão pelos modificadores `-sm`/`-lg`, e é
+       a que a factory Vanilla aplica. O spin usa `.nds-spin` (button.css), que
+       tem guarda de prefers-reduced-motion — `.nds-animate-spin` não tem. -->
   {#if OnlyIcon}
-    <OnlyIcon class={spinIcon ? 'nds-icon nds-animate-spin' : 'nds-icon'} aria-hidden="true" />
+    <OnlyIcon class={spinIcon ? 'nds-button-icon-svg nds-spin' : 'nds-button-icon-svg'} aria-hidden="true" />
   {:else}
     {#if StartIcon}
-      <StartIcon class={spinIcon ? 'nds-icon nds-animate-spin' : 'nds-icon'} aria-hidden="true" />
+      <StartIcon class={spinIcon ? 'nds-button-icon-svg nds-spin' : 'nds-button-icon-svg'} aria-hidden="true" />
     {/if}
     {label}
     {#if EndIcon}
-      <EndIcon class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+      <EndIcon class="nds-button-icon-svg" aria-hidden="true" />
     {/if}
   {/if}
 </Button>

@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Info, AlertTriangle, CheckCircle } from "lucide-react";
@@ -13,6 +14,7 @@ const meta: Meta = {
   title: "UI/Accordion/Composicoes",
   tags: ["disclosure"],
   parameters: {
+    design: figmaDesign("accordionTrigger"),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -20,6 +22,14 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
+};
 
 export const ComIconeNoTrigger: Story = {
   render: () => (
@@ -60,6 +70,7 @@ export const ComIconeNoTrigger: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story:
@@ -80,11 +91,7 @@ export const ComIconeNoTrigger: Story = {
 
     await step("Clicar no trigger abre o item correspondente", async () => {
       const trigger = canvas.getByRole("button", { name: /^informação$/i });
-      await userEvent.click(trigger);
-      await waitFor(
-        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(trigger);
     });
   },
 };
@@ -96,7 +103,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Novidades da versão 3.0
-            <Badge variant="default" className="" style={{fontSize: "10px", height: "1rem" }} >Novo</Badge>
+            <Badge variant="default">Novo</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -107,7 +114,7 @@ export const ComBadgeNoTrigger: Story = {
         <AccordionTrigger>
           <span className="nds-cluster" data-spacing="sm">
             Funcionalidades em beta
-            <Badge variant="secondary" className="" style={{fontSize: "10px", height: "1rem" }} >Beta</Badge>
+            <Badge variant="secondary">Beta</Badge>
           </span>
         </AccordionTrigger>
         <AccordionContent>
@@ -117,6 +124,7 @@ export const ComBadgeNoTrigger: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
@@ -135,11 +143,7 @@ export const ComBadgeNoTrigger: Story = {
 
     await step("Clicar abre o item correspondente", async () => {
       const trigger = canvas.getByRole("button", { name: /novidades da versão 3.0/i });
-      await userEvent.click(trigger);
-      await waitFor(
-        () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(trigger);
     });
   },
 };
@@ -183,6 +187,7 @@ export const ConteudoRico: Story = {
     </Accordion>
   ),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story:
@@ -195,21 +200,13 @@ export const ConteudoRico: Story = {
 
     await step("Abrir o item renderiza o conteúdo rico (especificações)", async () => {
       const triggers = canvas.getAllByRole("button");
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(triggers[0]);
       await expect(canvasElement.textContent).toContain("Intel Core i7-12700");
     });
 
     await step("Modo múltiplo: segundo item abre sem fechar o primeiro", async () => {
       const triggers = canvas.getAllByRole("button");
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute("aria-expanded", "true"),
-        { timeout: 500 }
-      );
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
     });
   },
@@ -217,7 +214,7 @@ export const ConteudoRico: Story = {
 
 export const FAQ: Story = {
   render: () => (
-    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
       <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
       <Accordion>
         {[
@@ -251,6 +248,7 @@ export const FAQ: Story = {
     </div>
   ),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story:
@@ -269,8 +267,7 @@ export const FAQ: Story = {
     });
 
     await step("Clicar no primeiro abre apenas ele", async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute("aria-expanded", "false");
     });
   },

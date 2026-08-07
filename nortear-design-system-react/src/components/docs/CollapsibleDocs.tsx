@@ -29,12 +29,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -81,7 +78,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo: Controlled ─────────────────────────────────────────────────────────
 
@@ -144,6 +140,19 @@ function ControlledDemo({ tContent }: { tContent: (key: string) => string }) {
 export function CollapsibleDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(collapsibleTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (collapsibleTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -425,8 +434,8 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 </CollapsibleContent>
               </Collapsible>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -464,8 +473,8 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 ))}
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -714,29 +723,29 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: stripHtml(tContent("states.closed.trigger")),
-            behavior: tContent("states.closed.behavior"),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: stripHtml(tContent("states.open.trigger")),
-            behavior: tContent("states.open.behavior"),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.defaultOpen.label"),
-            trigger: stripHtml(tContent("states.defaultOpen.trigger")),
-            behavior: tContent("states.defaultOpen.behavior"),
+            trigger: toPlainText(tContent("states.defaultOpen.trigger")),
+            behavior: toPlainText(tContent("states.defaultOpen.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -814,7 +823,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.asChild")),
+                description: toPlainText(tContent("props.table.asChild")),
               },
               {
                 name: "disabled",
@@ -886,6 +895,8 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -910,22 +921,22 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         items={[
           {
             name: "Accordion",
-            description: tContent("related.accordion"),
+            description: toPlainText(tContent("related.accordion")),
             path: "?path=/docs/ui-accordion--docs",
           },
           {
             name: "Sheet",
-            description: tContent("related.sheet"),
+            description: toPlainText(tContent("related.sheet")),
             path: "?path=/docs/ui-sheet--docs",
           },
           {
             name: "Button",
-            description: tContent("related.button"),
+            description: toPlainText(tContent("related.button")),
             path: "?path=/docs/ui-button--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
         ]}
@@ -946,28 +957,28 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.toggle"),
-            trigger: tContent("analytics.table.toggleTrigger"),
+            trigger: toPlainText(tContent("analytics.table.toggleTrigger")),
             payload: tContent("analytics.table.togglePayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

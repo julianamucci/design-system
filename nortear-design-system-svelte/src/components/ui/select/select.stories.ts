@@ -7,7 +7,7 @@ import SelectStory from './SelectStory.svelte';
 import SelectDocs from '@/components/docs/SelectDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Select',
   component: Select,
   tags: ['autodocs', 'form'],
@@ -40,10 +40,10 @@ const meta = {
     disabled: false,
     onValueChange: fn(),
   },
-} satisfies Meta<typeof Select>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({
@@ -82,6 +82,12 @@ export const Playground: Story = {
       await userEvent.click(option);
       await waitFor(async () => {
         await expect(body.queryByRole('listbox')).not.toBeInTheDocument();
+        // Listbox fora do DOM não basta: durante a saída o overlay ainda segura
+        // pointer-events, e o clique do próximo passo no trigger falha.
+        const t = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+        if (getComputedStyle(t).pointerEvents === 'none') {
+          throw new Error('overlay ainda bloqueia o ponteiro');
+        }
       });
       await expect(canvas.getByText('Rio de Janeiro')).toBeInTheDocument();
     });

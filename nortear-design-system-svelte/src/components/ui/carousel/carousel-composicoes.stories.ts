@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Carousel/Composicoes',
   component: Carousel,
   tags: ['display'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Carousel>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComDots: Story = {
   render: () => ({

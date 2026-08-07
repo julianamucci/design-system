@@ -27,17 +27,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (drawerTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(drawerTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -281,8 +288,8 @@ export function createDrawerDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
@@ -302,8 +309,8 @@ export function createDrawerDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Abrir mobile',
                 title: 'Filtros',
@@ -600,13 +607,13 @@ form.dataset.spacing = 'sm';
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),     behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),       trigger: t('states.open.trigger'),       behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.controlled.label'), trigger: t('states.controlled.trigger'), behavior: stripHtml(t('states.controlled.behavior')) },
+            { label: t('states.closed.label'),     trigger: toPlainText(t('states.closed.trigger')),     behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),       trigger: toPlainText(t('states.open.trigger')),       behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.controlled.label'), trigger: toPlainText(t('states.controlled.trigger')), behavior: toPlainText(t('states.controlled.behavior')) },
           ],
         });
 
@@ -646,11 +653,11 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
                 { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) },
-                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: stripHtml(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
-                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.modal.description')) },
-                { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: stripHtml(t('props.table.dismissible.description')) },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
+                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
+                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
+                { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.dismissible.description')) },
               ],
             },
           ],
@@ -682,6 +689,8 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
@@ -698,10 +707,10 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.sheet.name'),       description: t('related.items.sheet.description'),       path: '?path=/docs/ui-sheet--docs'       },
-            { name: t('related.items.dialog.name'),      description: t('related.items.dialog.description'),      path: '?path=/docs/ui-dialog--docs'      },
-            { name: t('related.items.alertDialog.name'), description: t('related.items.alertDialog.description'), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: t('related.items.sidebar.name'),     description: t('related.items.sidebar.description'),     path: '?path=/docs/ui-sidebar--docs'     },
+            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
+            { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/ui-dialog--docs'      },
+            { name: t('related.items.alertDialog.name'), description: toPlainText(t('related.items.alertDialog.description')), path: '?path=/docs/ui-alertdialog--docs' },
+            { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/ui-sidebar--docs'     },
           ],
         });
 

@@ -26,6 +26,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -33,10 +34,6 @@ const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>)
 const { t, subscribe } = createTranslation(formTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -271,8 +268,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createFormField({
                 label: 'Senha',
                 input: createInput({ type: 'password', placeholder: '••••••••' }),
@@ -283,8 +280,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const inp = createInput({ type: 'password', placeholder: '••••••••' });
                 inp.setAttribute('aria-invalid', 'true');
@@ -307,8 +304,8 @@ export function createFormDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair3.do'),
-              dontCaption: t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => createFieldset({
                 legend: 'Endereço',
                 children: [
@@ -439,13 +436,13 @@ export function createFormDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),         trigger: stripHtml(t('states.default.trigger')),         behavior: t('states.default.behavior') },
-            { label: t('states.withError.label'),       trigger: stripHtml(t('states.withError.trigger')),       behavior: t('states.withError.behavior') },
-            { label: t('states.disabled.label'),        trigger: stripHtml(t('states.disabled.trigger')),        behavior: t('states.disabled.behavior') },
+            { label: t('states.default.label'),         trigger: toPlainText(t('states.default.trigger')),         behavior: toPlainText(t('states.default.behavior'))},
+            { label: t('states.withError.label'),       trigger: toPlainText(t('states.withError.trigger')),       behavior: toPlainText(t('states.withError.behavior'))},
+            { label: t('states.disabled.label'),        trigger: toPlainText(t('states.disabled.trigger')),        behavior: toPlainText(t('states.disabled.behavior'))},
           ],
         });
 
@@ -481,20 +478,20 @@ export type FieldsetOptions = {
               title: t('props.fieldTitle'),
               cols: propsCols,
               items: [
-                { name: 'label',       type: 'string',      defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.label')) },
-                { name: 'input',       type: 'HTMLElement', defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.input')) },
-                { name: 'description', type: 'string',      defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.description_prop')) },
-                { name: 'error',       type: 'string',      defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.error')) },
-                { name: 'class',       type: 'string',      defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'label',       type: 'string',      defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.label')) },
+                { name: 'input',       type: 'HTMLElement', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.input')) },
+                { name: 'description', type: 'string',      defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.description_prop')) },
+                { name: 'error',       type: 'string',      defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.error')) },
+                { name: 'class',       type: 'string',      defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
               title: t('props.fieldsetTitle'),
               cols: propsCols,
               items: [
-                { name: 'legend',   type: 'string',          defaultValue: '—',  required: 'Não', description: stripHtml(t('props.table.legend')) },
-                { name: 'children', type: 'HTMLElement[]',   defaultValue: '[]', required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'class',    type: 'string',          defaultValue: '—',  required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'legend',   type: 'string',          defaultValue: '—',  required: 'Não', description: toPlainText(t('props.table.legend')) },
+                { name: 'children', type: 'HTMLElement[]',   defaultValue: '[]', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'class',    type: 'string',          defaultValue: '—',  required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -560,11 +557,11 @@ export type FieldsetOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Input',    description: t('related.input'),    path: '?path=/docs/ui-input--docs' },
-            { name: 'Textarea', description: t('related.textarea'), path: '?path=/docs/ui-textarea--docs' },
-            { name: 'Select',   description: t('related.select'),   path: '?path=/docs/ui-select--docs' },
-            { name: 'Checkbox', description: t('related.checkbox'), path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'Label',    description: t('related.label'),    path: '?path=/docs/ui-label--docs' },
+            { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/ui-input--docs' },
+            { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/ui-textarea--docs' },
+            { name: 'Select',   description: toPlainText(t('related.select')),   path: '?path=/docs/ui-select--docs' },
+            { name: 'Checkbox', description: toPlainText(t('related.checkbox')), path: '?path=/docs/ui-checkbox--docs' },
+            { name: 'Label',    description: toPlainText(t('related.label')),    path: '?path=/docs/ui-label--docs' },
           ],
         });
 
@@ -585,16 +582,16 @@ export type FieldsetOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.fieldFocus'),    trigger: t('analytics.table.fieldFocusTrigger'),    payload: t('analytics.table.fieldFocusPayload') },
-            { event: t('analytics.table.fieldBlur'),     trigger: t('analytics.table.fieldBlurTrigger'),     payload: t('analytics.table.fieldBlurPayload') },
-            { event: t('analytics.table.fieldError'),    trigger: t('analytics.table.fieldErrorTrigger'),    payload: t('analytics.table.fieldErrorPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.fieldFocus'),    trigger: toPlainText(t('analytics.table.fieldFocusTrigger')),    payload: t('analytics.table.fieldFocusPayload') },
+            { event: t('analytics.table.fieldBlur'),     trigger: toPlainText(t('analytics.table.fieldBlurTrigger')),     payload: t('analytics.table.fieldBlurPayload') },
+            { event: t('analytics.table.fieldError'),    trigger: toPlainText(t('analytics.table.fieldErrorTrigger')),    payload: t('analytics.table.fieldErrorPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

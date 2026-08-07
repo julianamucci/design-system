@@ -21,6 +21,8 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 O projeto usa **Storybook** como interface principal. Os `*Docs` rodam dentro de um **iframe**. O hook `useSeoEffect` detecta o contexto de iframe e escreve metatags no **documento pai** (manager do Storybook), garantindo que título da aba e metatags sejam atualizados corretamente.
 
+**Metatag e `lang` não têm o mesmo destino.** Title, description, OG, JSON-LD e canonical descrevem a **página hospedeira** — vão para o documento pai, e é isso que buscador e crawler leem. O `lang` descreve o documento **em que o texto está**, e quem o lê é o leitor de tela: dentro do Storybook isso é o `iframe.html`, servido como `<html lang="en">`. Escrever `lang` só no pai deixa toda a prosa em português com pronúncia inglesa — WCAG 3.1.1, nível A. O idioma vai nos **dois** documentos. A regra `document_lang_so_no_pai` do `audit.mjs` cobra isso; ver `docs/shared/guidelines/01-acessibilidade.md` §"Idioma do documento".
+
 O GA4 vive **apenas no manager** (`manager-head.html`, nunca em `preview-head.html`). `track()` encaminha para `window.top.gtag`. `useSeoEffect` dispara `page_view` no GA4 do manager a cada troca de story/locale.
 
 ### Assinatura do hook
@@ -46,7 +48,9 @@ useSeoEffect(computed(() => ({
 applySeo({ title, description, locale: $locale, componentSlug: '<slug>' });
 ```
 
-O hook gerencia automaticamente: `document.title`, `<meta description>`, Open Graph, JSON-LD (`TechArticle` + `SoftwareSourceCode`), `hreflang` para pt-BR/en/es e `page_view` no GA4. Se title/description/locale/componentSlug estão corretos, todo o resto está correto.
+O hook gerencia automaticamente: `document.title`, `<meta description>`, Open Graph, JSON-LD (`TechArticle` + `SoftwareSourceCode`), `hreflang` para pt-BR/en/es e `page_view` no GA4.
+
+Com title/description/locale/componentSlug corretos, o **conteúdo** de tudo isso sai correto — mas não conclua daí que o hook está certo. O que ele faz com esses quatro valores é responsabilidade desta skill também: foi confiando nessa frase que o `lang` no documento errado sobreviveu a todas as auditorias, com os quatro parâmetros impecáveis. Rode `node scripts/audit.mjs --all --category quality --json` e leia a chave `_infra`.
 
 ---
 
@@ -118,6 +122,7 @@ Para cada stack no escopo:
 
 - [ ] `useSeoEffect` / `applySeo` é chamado com parâmetros reativos ao locale
 - [ ] `title` e `description` vêm de `tContent('seo.title')` / `tContent('seo.description')` — não hardcoded
+- [ ] `_infra` do `audit.mjs --category quality` limpo para esta stack — inclui `document_lang_so_no_pai`, que é sobre o hook, não sobre a página
 - [ ] `componentSlug` está correto (kebab-case, match com a pasta do componente)
 - [ ] Vue: recebe `computed()` (não objeto literal — quebraria reatividade ao trocar locale)
 - [ ] Svelte: chamado dentro de `$effect()` com `return cleanup`

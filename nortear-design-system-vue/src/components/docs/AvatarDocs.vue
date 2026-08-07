@@ -25,6 +25,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -32,10 +33,6 @@ const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(avatarTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -115,8 +112,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -210,10 +205,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.loaded.label'),  trigger: stripHtml(tContent('states.loaded.trigger')),  behavior: tContent('states.loaded.behavior')  },
-  { label: tContent('states.loading.label'), trigger: stripHtml(tContent('states.loading.trigger')), behavior: tContent('states.loading.behavior') },
-  { label: tContent('states.failed.label'),  trigger: stripHtml(tContent('states.failed.trigger')),  behavior: tContent('states.failed.behavior')  },
-  { label: tContent('states.noImage.label'), trigger: stripHtml(tContent('states.noImage.trigger')), behavior: tContent('states.noImage.behavior') },
+  { label: tContent('states.loaded.label'),  trigger: toPlainText(tContent('states.loaded.trigger')),  behavior: toPlainText(tContent('states.loaded.behavior'))},
+  { label: tContent('states.loading.label'), trigger: toPlainText(tContent('states.loading.trigger')), behavior: toPlainText(tContent('states.loading.behavior'))},
+  { label: tContent('states.failed.label'),  trigger: toPlainText(tContent('states.failed.trigger')),  behavior: toPlainText(tContent('states.failed.behavior'))},
+  { label: tContent('states.noImage.label'), trigger: toPlainText(tContent('states.noImage.trigger')), behavior: toPlainText(tContent('states.noImage.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -223,31 +218,31 @@ const propCols = computed(() => ({
 }));
 
 const avatarPropItems = computed(() => [
-  { name: 'class',    type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'class',    type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className')) },
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
 ]);
 
 const avatarImagePropItems = computed(() => [
   { name: 'src',                    type: 'string',   defaultValue: '—', required: 'Sim', description: tContent('props.table.src') },
   { name: 'alt',                    type: 'string',   defaultValue: '—', required: 'Sim', description: tContent('props.table.alt') },
-  { name: 'onLoadingStatusChange',  type: '(status) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onLoadingStatusChange')) },
-  { name: 'class',                  type: 'string',   defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'onLoadingStatusChange',  type: '(status) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onLoadingStatusChange')) },
+  { name: 'class',                  type: 'string',   defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className')) },
 ]);
 
 const avatarFallbackPropItems = computed(() => [
   { name: 'delayMs', type: 'number', defaultValue: '—', required: 'Não', description: tContent('props.table.delayMs') },
-  { name: 'class',   type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'class',   type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className')) },
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Não', description: tContent('props.table.children') },
 ]);
 
 const tokenRows = computed(() => [
   { token: '--muted',            value: 'bg-muted',               description: tContent('tokens.table.muted')           },
   { token: '--muted-foreground', value: 'nds-text-muted-foreground',  description: tContent('tokens.table.mutedForeground') },
-  { token: '--background',       value: 'ring-background',        description: stripHtml(tContent('tokens.table.background')) },
+  { token: '--background',       value: 'ring-background',        description: toPlainText(tContent('tokens.table.background')) },
   { token: '--border',           value: 'border',                 description: tContent('tokens.table.border')          },
   { token: '--primary',          value: 'bg-primary',             description: tContent('tokens.table.primary')         },
   { token: '--avatar-size',      value: 'var(--spacing-8)',       description: tContent('tokens.table.avatarSize')      },
-  { token: '--radius',           value: 'rounded-full',           description: stripHtml(tContent('tokens.table.radius')) },
+  { token: '--radius',           value: 'rounded-full',           description: toPlainText(tContent('tokens.table.radius')) },
   { token: '--ring',             value: 'ring',                   description: tContent('tokens.table.ring')            },
 ]);
 
@@ -263,10 +258,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Badge',       description: tContent('related.badge'),       path: '?path=/docs/ui-badge--docs'       },
-  { name: 'AspectRatio', description: tContent('related.aspectRatio'), path: '?path=/docs/ui-aspectratio--docs' },
-  { name: 'Tooltip',     description: tContent('related.tooltip'),     path: '?path=/docs/ui-tooltip--docs'     },
-  { name: 'Card',        description: tContent('related.card'),        path: '?path=/docs/ui-card--docs'        },
+  { name: 'Badge',       description: toPlainText(tContent('related.badge')),       path: '?path=/docs/ui-badge--docs'       },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.aspectRatio')), path: '?path=/docs/ui-aspectratio--docs' },
+  { name: 'Tooltip',     description: toPlainText(tContent('related.tooltip')),     path: '?path=/docs/ui-tooltip--docs'     },
+  { name: 'Card',        description: toPlainText(tContent('related.card')),        path: '?path=/docs/ui-card--docs'        },
 ]);
 
 const noteItems = computed(() => [
@@ -276,10 +271,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.profileClick'),  trigger: tContent('analytics.table.profileClickTrigger'),  payload: tContent('analytics.table.profileClickPayload')  },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.profileClick'),  trigger: toPlainText(tContent('analytics.table.profileClickTrigger')),  payload: tContent('analytics.table.profileClickPayload')  },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -324,8 +319,8 @@ const whenToUseScenarios = computed(() => ({
   items: [
     { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
     { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-    { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-    { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+    { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: toPlainText(tContent('usage.scenarios.item3.a')) },
+    { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: toPlainText(tContent('usage.scenarios.item4.a')) },
   ],
 }));
 
@@ -351,14 +346,14 @@ const whenToUseDont = computed(() => ({
 }));
 
 const doDontPairs = computed(() => [
-  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+  { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
 ]);
 
 const statesCols = computed(() => ({
   state: tContent('states.cols.state'),
-  trigger: tContent('states.cols.trigger'),
-  behavior: tContent('states.cols.behavior'),
+  trigger: toPlainText(tContent('states.cols.trigger')),
+  behavior: toPlainText(tContent('states.cols.behavior')),
 }));
 
 const propsTables = computed(() => [
@@ -375,7 +370,7 @@ const tokensCols = computed(() => ({
 
 const analyticsCols = computed(() => ({
   event: tContent('analytics.table.event'),
-  trigger: tContent('analytics.table.trigger'),
+  trigger: toPlainText(tContent('analytics.table.trigger')),
   payload: tContent('analytics.table.payload'),
 }));
 

@@ -13,9 +13,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import resizableTranslations from '@shared/content/resizable/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(resizableTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (resizableTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -44,7 +56,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -81,10 +92,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -302,7 +309,7 @@ interface HandleProps {
       items: [
         { element: $tStore('usage.uxWriting.table.ariaLabel.name'),  rules: $tStore('usage.uxWriting.table.ariaLabel.format'),  do: $tStore('usage.uxWriting.table.ariaLabel.good'),  dont: $tStore('usage.uxWriting.table.ariaLabel.bad') },
         { element: $tStore('usage.uxWriting.table.panelLabel.name'), rules: $tStore('usage.uxWriting.table.panelLabel.format'), do: $tStore('usage.uxWriting.table.panelLabel.good'), dont: $tStore('usage.uxWriting.table.panelLabel.bad') },
-        { element: $tStore('usage.uxWriting.table.size.name'),       rules: $tStore('usage.uxWriting.table.size.format'),       do: stripHtml($tStore('usage.uxWriting.table.size.good')), dont: $tStore('usage.uxWriting.table.size.bad') },
+        { element: $tStore('usage.uxWriting.table.size.name'),       rules: $tStore('usage.uxWriting.table.size.format'),       do: toPlainText($tStore('usage.uxWriting.table.size.good')), dont: $tStore('usage.uxWriting.table.size.bad') },
       ],
     }}
     do={{
@@ -471,15 +478,15 @@ interface HandleProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.idle.label'),     trigger: $tStore('states.idle.trigger'),     behavior: stripHtml($tStore('states.idle.behavior')) },
-      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.dragging.label'), trigger: $tStore('states.dragging.trigger'), behavior: stripHtml($tStore('states.dragging.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.idle.label'),     trigger: toPlainText($tStore('states.idle.trigger')),     behavior: toPlainText($tStore('states.idle.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: toPlainText($tStore('states.hover.trigger')),    behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.dragging.label'), trigger: toPlainText($tStore('states.dragging.trigger')), behavior: toPlainText($tStore('states.dragging.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
     ]}
   />
 
@@ -497,9 +504,9 @@ interface HandleProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'direction',      type: $tStore('props.table.direction.type'),  defaultValue: $tStore('props.table.direction.default'),  required: $tStore('props.table.direction.required'),  description: stripHtml($tStore('props.table.direction.description')) },
+          { name: 'direction',      type: $tStore('props.table.direction.type'),  defaultValue: $tStore('props.table.direction.default'),  required: $tStore('props.table.direction.required'),  description: toPlainText($tStore('props.table.direction.description')) },
           { name: 'autoSaveId',     type: 'string',                                defaultValue: '—',                                       required: 'Não',                                       description: 'Persiste tamanhos no storage automaticamente quando definido.' },
-          { name: 'onLayoutChange', type: $tStore('props.table.onLayout.type'),    defaultValue: '—',                                       required: 'Não',                                       description: stripHtml($tStore('props.table.onLayout.description')) },
+          { name: 'onLayoutChange', type: $tStore('props.table.onLayout.type'),    defaultValue: '—',                                       required: 'Não',                                       description: toPlainText($tStore('props.table.onLayout.description')) },
           { name: 'class',          type: 'string',                                defaultValue: '—',                                       required: 'Não',                                       description: 'Classes .nds-* aplicadas ao container.' },
         ],
       },
@@ -530,7 +537,7 @@ interface HandleProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'withHandle', type: $tStore('props.table.withHandle.type'), defaultValue: $tStore('props.table.withHandle.default'), required: $tStore('props.table.withHandle.required'), description: stripHtml($tStore('props.table.withHandle.description')) },
+          { name: 'withHandle', type: $tStore('props.table.withHandle.type'), defaultValue: $tStore('props.table.withHandle.default'), required: $tStore('props.table.withHandle.required'), description: toPlainText($tStore('props.table.withHandle.description')) },
           { name: 'disabled',   type: 'boolean',                               defaultValue: 'false',                                   required: 'Não',                                       description: 'Desabilita o handle (sem cursor de resize, sem teclado).' },
           { name: 'aria-label', type: 'string',                                defaultValue: '—',                                       required: 'Sim',                                       description: 'Rótulo acessível descritivo — incluir o atalho de teclado.' },
         ],
@@ -563,6 +570,8 @@ interface HandleProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -613,11 +622,11 @@ interface HandleProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'panel_resize', trigger: $tStore('analytics.table.panel_resize.trigger'), payload: $tStore('analytics.table.panel_resize.payload') },
+      { event: 'panel_resize', trigger: toPlainText($tStore('analytics.table.panel_resize.trigger')), payload: $tStore('analytics.table.panel_resize.payload') },
     ]}
   />
 

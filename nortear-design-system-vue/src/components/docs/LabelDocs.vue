@@ -25,6 +25,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -32,11 +33,18 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(labelTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (labelTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -110,8 +118,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -167,18 +173,18 @@ const variantItems = computed(() => [
 const stateItems = computed(() => [
   {
     label: tContent('states.default.label'),
-    trigger: tContent('states.default.trigger'),
-    behavior: tContent('states.default.behavior'),
+    trigger: toPlainText(tContent('states.default.trigger')),
+    behavior: toPlainText(tContent('states.default.behavior')),
   },
   {
     label: tContent('states.disabled.label'),
-    trigger: stripHtml(tContent('states.disabled.trigger')),
-    behavior: stripHtml(tContent('states.disabled.behavior')),
+    trigger: toPlainText(tContent('states.disabled.trigger')),
+    behavior: toPlainText(tContent('states.disabled.behavior')),
   },
   {
     label: tContent('states.required.label'),
-    trigger: tContent('states.required.trigger'),
-    behavior: stripHtml(tContent('states.required.behavior')),
+    trigger: toPlainText(tContent('states.required.trigger')),
+    behavior: toPlainText(tContent('states.required.behavior')),
   },
 ]);
 
@@ -191,7 +197,7 @@ const propCols = computed(() => ({
 }));
 
 const labelPropItems = computed(() => [
-  { name: 'for', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.htmlFor')) },
+  { name: 'for', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.htmlFor')) },
   { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: tContent('props.table.className') },
   { name: 'default slot', type: 'VNode', defaultValue: '—', required: 'Sim', description: tContent('props.table.children') },
 ]);
@@ -218,11 +224,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Input',      description: tContent('related.input'),      path: '?path=/docs/ui-input--docs'      },
-  { name: 'FormLabel',  description: tContent('related.formLabel'),  path: '?path=/docs/ui-formlabel--docs'  },
-  { name: 'FormField',  description: tContent('related.formField'),  path: '?path=/docs/ui-formfield--docs'  },
-  { name: 'Checkbox',   description: tContent('related.checkbox'),   path: '?path=/docs/ui-checkbox--docs'   },
-  { name: 'RadioGroup', description: tContent('related.radioGroup'), path: '?path=/docs/ui-radiogroup--docs' },
+  { name: 'Input',      description: toPlainText(tContent('related.input')),      path: '?path=/docs/ui-input--docs'      },
+  { name: 'FormLabel',  description: toPlainText(tContent('related.formLabel')),  path: '?path=/docs/ui-formlabel--docs'  },
+  { name: 'FormField',  description: toPlainText(tContent('related.formField')),  path: '?path=/docs/ui-formfield--docs'  },
+  { name: 'Checkbox',   description: toPlainText(tContent('related.checkbox')),   path: '?path=/docs/ui-checkbox--docs'   },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -384,8 +390,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <!-- Par 1 — com htmlFor vs. sem htmlFor -->
@@ -475,8 +481,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -506,6 +512,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"

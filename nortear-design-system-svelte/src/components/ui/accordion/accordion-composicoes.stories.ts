@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
@@ -7,22 +8,32 @@ import AccordionBadgeStory from './AccordionBadgeStory.svelte';
 import AccordionRichStory from './AccordionRichStory.svelte';
 import AccordionFAQStory from './AccordionFAQStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
+    design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
   },
   title: 'UI/Accordion/Composicoes',
   component: Accordion,
   tags: ['disclosure'],
-} satisfies Meta<typeof Accordion>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
+
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
 
 export const ComIconeNoTrigger: Story = {
   render: () => ({ Component: AccordionIconStory }),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
@@ -42,8 +53,7 @@ export const ComIconeNoTrigger: Story = {
 
     await step('Clicar no trigger abre o item correspondente', async () => {
       const trigger = canvas.getByRole('button', { name: /^informação$/i });
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(trigger);
     });
   },
 };
@@ -51,6 +61,7 @@ export const ComIconeNoTrigger: Story = {
 export const ComBadgeNoTrigger: Story = {
   render: () => ({ Component: AccordionBadgeStory }),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
@@ -68,8 +79,7 @@ export const ComBadgeNoTrigger: Story = {
 
     await step('Clicar abre o item correspondente', async () => {
       const trigger = canvas.getAllByRole('button')[0];
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(trigger);
     });
   },
 };
@@ -77,6 +87,7 @@ export const ComBadgeNoTrigger: Story = {
 export const ConteudoRico: Story = {
   render: () => ({ Component: AccordionRichStory }),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Svelte. Use para tabelas de dados, parágrafos ou listas estruturadas.',
@@ -88,15 +99,13 @@ export const ConteudoRico: Story = {
 
     await step('Abrir o item renderiza o conteúdo rico (especificações)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[0]);
       await expect(canvasElement.textContent).toContain('Intel Core i7-12700');
     });
 
     await step('Modo múltiplo: segundo item abre sem fechar o primeiro', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -105,6 +114,7 @@ export const ConteudoRico: Story = {
 export const FAQ: Story = {
   render: () => ({ Component: AccordionFAQStory }),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
@@ -122,8 +132,7 @@ export const FAQ: Story = {
     });
 
     await step('Clicar no primeiro abre apenas ele', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
   },

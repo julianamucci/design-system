@@ -51,12 +51,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -102,7 +99,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Combobox demo (usado em Demonstração e Variantes) ───────────────────────
 
@@ -288,6 +284,19 @@ function CommandPaletteDemo({
 export function CommandDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(commandTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (commandTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -732,8 +741,8 @@ interface CommandDialogProps
                 </Command>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -759,8 +768,8 @@ interface CommandDialogProps
                 <p className="nds-text-caption nds-text-muted-foreground" style={{ opacity: 0.4, textDecoration: "line-through" }}>⌘K</p>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -901,34 +910,34 @@ interface CommandDialogProps
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.empty.label"),
-            trigger: stripHtml(tContent("states.empty.trigger")),
-            behavior: stripHtml(tContent("states.empty.behavior")),
+            trigger: toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label: tContent("states.selected.label"),
-            trigger: stripHtml(tContent("states.selected.trigger")),
-            behavior: stripHtml(tContent("states.selected.behavior")),
+            trigger: toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: tContent("states.disabled.behavior"),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.loading.label"),
-            trigger: stripHtml(tContent("states.loading.trigger")),
-            behavior: tContent("states.loading.behavior"),
+            trigger: toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
           {
             label: tContent("states.longList.label"),
-            trigger: stripHtml(tContent("states.longList.trigger")),
-            behavior: stripHtml(tContent("states.longList.behavior")),
+            trigger: toPlainText(tContent("states.longList.trigger")),
+            behavior: toPlainText(tContent("states.longList.behavior")),
           },
         ]}
       />
@@ -952,7 +961,7 @@ interface CommandDialogProps
                 type: "(value, search, keywords?) => number",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.commandFilter")),
+                description: toPlainText(tContent("props.table.commandFilter")),
               },
               {
                 name: "value",
@@ -1039,7 +1048,7 @@ interface CommandDialogProps
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.itemDisabled")),
+                description: toPlainText(tContent("props.table.itemDisabled")),
               },
               {
                 name: "className",
@@ -1065,21 +1074,21 @@ interface CommandDialogProps
                 type: "string",
                 defaultValue: '"Command Palette"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.dialogTitle")),
+                description: toPlainText(tContent("props.table.dialogTitle")),
               },
               {
                 name: "description",
                 type: "string",
                 defaultValue: '"Search for a command..."',
                 required: "Não",
-                description: stripHtml(tContent("props.table.dialogDescription")),
+                description: toPlainText(tContent("props.table.dialogDescription")),
               },
               {
                 name: "showCloseButton",
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.dialogShowCloseButton")),
+                description: toPlainText(tContent("props.table.dialogShowCloseButton")),
               },
               {
                 name: "open",
@@ -1124,7 +1133,7 @@ interface CommandDialogProps
           { token: "--muted-foreground", value: "nds-text-muted-foreground", description: tContent("tokens.table.mutedFg") },
           { token: "--input", value: "bg-input/30", description: tContent("tokens.table.inputBg") },
           { token: "--input", value: "border-input/30", description: tContent("tokens.table.inputBorder") },
-          { token: "--muted", value: "data-selected:bg-muted", description: stripHtml(tContent("tokens.table.selectedBg")) },
+          { token: "--muted", value: "data-selected:bg-muted", description: toPlainText(tContent("tokens.table.selectedBg")) },
           { token: "--foreground", value: "data-selected:text-foreground", description: tContent("tokens.table.selectedFg") },
           { token: "--border", value: "bg-border", description: tContent("tokens.table.border") },
           { token: "--radius", value: "rounded-xl / rounded-sm", description: tContent("tokens.table.radius") },
@@ -1135,6 +1144,8 @@ interface CommandDialogProps
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -1147,7 +1158,7 @@ interface CommandDialogProps
         keyboardItems={[
           { key: "Arrow Down", description: tContent("accessibility.keyboard.arrowDown") },
           { key: "Arrow Up", description: tContent("accessibility.keyboard.arrowUp") },
-          { key: "Enter", description: stripHtml(tContent("accessibility.keyboard.enter")) },
+          { key: "Enter", description: toPlainText(tContent("accessibility.keyboard.enter")) },
           { key: "Esc", description: tContent("accessibility.keyboard.escape") },
           { key: "Tab", description: tContent("accessibility.keyboard.tab") },
           { key: "⌘K", description: tContent("accessibility.keyboard.cmdK") },
@@ -1160,27 +1171,27 @@ interface CommandDialogProps
         items={[
           {
             name: "Select",
-            description: tContent("related.select"),
+            description: toPlainText(tContent("related.select")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: "Popover",
-            description: tContent("related.popover"),
+            description: toPlainText(tContent("related.popover")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Dialog",
-            description: tContent("related.dialog"),
+            description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: "InputGroup",
-            description: tContent("related.inputGroup"),
+            description: toPlainText(tContent("related.inputGroup")),
             path: "?path=/docs/ui-inputgroup--docs",
           },
         ]}
@@ -1202,33 +1213,33 @@ interface CommandDialogProps
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.itemSelect"),
-            trigger: tContent("analytics.table.itemSelectTrigger"),
+            trigger: toPlainText(tContent("analytics.table.itemSelectTrigger")),
             payload: tContent("analytics.table.itemSelectPayload"),
           },
           {
             event: tContent("analytics.table.paletteOpen"),
-            trigger: tContent("analytics.table.paletteOpenTrigger"),
+            trigger: toPlainText(tContent("analytics.table.paletteOpenTrigger")),
             payload: tContent("analytics.table.paletteOpenPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

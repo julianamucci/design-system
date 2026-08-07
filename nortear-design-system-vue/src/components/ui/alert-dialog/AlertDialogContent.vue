@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AlertDialogContentEmits, AlertDialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   AlertDialogContent,
@@ -14,20 +15,22 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = withDefaults(
-  defineProps<AlertDialogContentProps & {
-    class?: HTMLAttributes['class']
-    size?: 'default' | 'sm'
-  }>(),
-  {
-    size: 'default',
-  },
-)
+const props = defineProps<AlertDialogContentProps & {
+  class?: HTMLAttributes['class']
+}>()
 const emits = defineEmits<AlertDialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'size')
+const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+// PATCH: a11y — nome acessível de fallback quando o consumidor não renderiza
+// AlertDialogTitle (ver PATCHES.md#vue-alert-dialog-fallback-label)
+// O Title é obrigatório e já alimenta o aria-labelledby, então isto só entra em
+// composição fora do contrato — por isso o ramo não tem story.
+const attrs = useAttrs()
+/* v8 ignore next */
+const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'AlertDialog'))
 </script>
 
 <template>
@@ -38,8 +41,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      :data-size="size"
-      v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'AlertDialog', ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

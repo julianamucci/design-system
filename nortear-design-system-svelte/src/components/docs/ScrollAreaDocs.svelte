@@ -14,9 +14,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import scrollAreaTranslations from '@shared/content/scroll-area/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(scrollAreaTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (scrollAreaTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -45,7 +57,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -82,10 +93,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -270,8 +277,8 @@ interface ScrollAreaRootProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.container.name'),  rules: stripHtml($tStore('usage.uxWriting.table.container.format')),  do: stripHtml($tStore('usage.uxWriting.table.container.good')),  dont: stripHtml($tStore('usage.uxWriting.table.container.bad')) },
-        { element: $tStore('usage.uxWriting.table.scrollArea.name'), rules: stripHtml($tStore('usage.uxWriting.table.scrollArea.format')), do: stripHtml($tStore('usage.uxWriting.table.scrollArea.good')), dont: stripHtml($tStore('usage.uxWriting.table.scrollArea.bad')) },
+        { element: $tStore('usage.uxWriting.table.container.name'),  rules: toPlainText($tStore('usage.uxWriting.table.container.format')),  do: toPlainText($tStore('usage.uxWriting.table.container.good')),  dont: toPlainText($tStore('usage.uxWriting.table.container.bad')) },
+        { element: $tStore('usage.uxWriting.table.scrollArea.name'), rules: toPlainText($tStore('usage.uxWriting.table.scrollArea.format')), do: toPlainText($tStore('usage.uxWriting.table.scrollArea.good')), dont: toPlainText($tStore('usage.uxWriting.table.scrollArea.bad')) },
         { element: $tStore('usage.uxWriting.table.orientation.name'),rules: $tStore('usage.uxWriting.table.orientation.format'),          do: $tStore('usage.uxWriting.table.orientation.good'),          dont: $tStore('usage.uxWriting.table.orientation.bad') },
       ],
     }}
@@ -427,14 +434,14 @@ interface ScrollAreaRootProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.idle.label'),      trigger: $tStore('states.idle.trigger'),      behavior: stripHtml($tStore('states.idle.behavior')) },
-      { label: $tStore('states.scrolling.label'), trigger: $tStore('states.scrolling.trigger'), behavior: stripHtml($tStore('states.scrolling.behavior')) },
-      { label: $tStore('states.hover.label'),     trigger: $tStore('states.hover.trigger'),     behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.focus.label'),     trigger: $tStore('states.focus.trigger'),     behavior: stripHtml($tStore('states.focus.behavior')) },
+      { label: $tStore('states.idle.label'),      trigger: toPlainText($tStore('states.idle.trigger')),      behavior: toPlainText($tStore('states.idle.behavior')) },
+      { label: $tStore('states.scrolling.label'), trigger: toPlainText($tStore('states.scrolling.trigger')), behavior: toPlainText($tStore('states.scrolling.behavior')) },
+      { label: $tStore('states.hover.label'),     trigger: toPlainText($tStore('states.hover.trigger')),     behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),     trigger: toPlainText($tStore('states.focus.trigger')),     behavior: toPlainText($tStore('states.focus.behavior')) },
     ]}
   />
 
@@ -486,6 +493,8 @@ interface ScrollAreaRootProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -537,11 +546,11 @@ interface ScrollAreaRootProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'content_scroll', trigger: $tStore('analytics.table.content_scroll.trigger'), payload: $tStore('analytics.table.content_scroll.payload') },
+      { event: 'content_scroll', trigger: toPlainText($tStore('analytics.table.content_scroll.trigger')), payload: $tStore('analytics.table.content_scroll.payload') },
     ]}
   />
 

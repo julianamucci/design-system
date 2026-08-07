@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (alertDialogTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(alertDialogTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -58,6 +65,9 @@ type AlertDialogDemoOptions = {
 };
 
 function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
+  // Rótulo estável: o texto do botão é traduzido e quebraria a agregação no
+  // GA4 (um rótulo por idioma para o mesmo demo).
+  const label = opts.tone === 'destructive' ? 'destructive' : 'neutral';
   const trigger = createButton({
     variant: opts.triggerVariant ?? 'destructive',
     label: opts.triggerLabel,
@@ -66,18 +76,16 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
     variant: 'outline',
     label: opts.cancelLabel,
   });
+  // Variante do Button — a mesma que as stories montam. `nds-bg-destructive`
+  // solto pintava só o fundo e deixava o texto no foreground default.
   const actionButton = createButton({
-    variant: 'default',
+    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
     label: opts.actionLabel,
-    class:
-      opts.tone === 'destructive'
-        ? 'nds-bg-destructive'
-        : '',
   });
   cancelButton.addEventListener('click', () => {
     track('dialog_close', {
       component: 'alert_dialog',
-      label: opts.triggerLabel,
+      label,
       reason: 'close-button',
       location: 'docs_demo',
     });
@@ -85,14 +93,14 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   actionButton.addEventListener('click', () => {
     track('dialog_confirm', {
       component: 'alert_dialog',
-      label: opts.actionLabel,
+      label,
       location: 'docs_demo',
     });
     // A ação primária também fecha o diálogo — confirm + close (reason
     // 'action'), na mesma ordem das demais stacks.
     track('dialog_close', {
       component: 'alert_dialog',
-      label: opts.triggerLabel,
+      label,
       reason: 'action',
       location: 'docs_demo',
     });
@@ -107,7 +115,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
       if (open) {
         track('dialog_open', {
           component: 'alert_dialog',
-          label: opts.triggerLabel,
+          label,
           location: 'docs_demo',
         });
       }
@@ -256,6 +264,7 @@ export function createAlertDialogDocs(): HTMLElement {
             t('anatomy.item7'),
             t('anatomy.item8'),
             t('anatomy.item9'),
+            t('anatomy.item10'),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -329,8 +338,8 @@ export function createAlertDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 triggerVariant: 'destructive',
@@ -353,8 +362,8 @@ export function createAlertDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 triggerVariant: 'destructive',
@@ -386,11 +395,7 @@ import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.withTrigger'),
           secondaryCode: `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
 const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-const actionButton = createButton({
-  variant: 'default',
-  label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
-});
+const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
 
 const dialog = createAlertDialog({
   trigger,
@@ -404,11 +409,7 @@ const dialog = createAlertDialog({
       case 'variantes': {
         const codeDestructive = `const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
 const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-const actionButton = createButton({
-  variant: 'default',
-  label: 'Excluir',
-  class: 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90',
-});
+const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
 
 createAlertDialog({ trigger, title: 'Excluir conta', description: '...', cancelButton, actionButton });`;
 
@@ -459,15 +460,15 @@ createAlertDialog({ trigger, title: 'Sair da conta', description: '...', cancelB
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),     trigger: t('states.closed.trigger'),                   behavior: t('states.closed.behavior') },
-            { label: t('states.open.label'),       trigger: stripHtml(t('states.open.trigger')),          behavior: t('states.open.behavior') },
-            { label: t('states.confirmed.label'),  trigger: stripHtml(t('states.confirmed.trigger')),     behavior: stripHtml(t('states.confirmed.behavior')) },
-            { label: t('states.cancelled.label'),  trigger: stripHtml(t('states.cancelled.trigger')),     behavior: t('states.cancelled.behavior') },
-            { label: t('states.controlled.label'), trigger: stripHtml(t('states.controlled.trigger')),    behavior: t('states.controlled.behavior') },
+            { label: t('states.closed.label'),     trigger: toPlainText(t('states.closed.trigger')),                   behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.open.label'),       trigger: toPlainText(t('states.open.trigger')),          behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.confirmed.label'),  trigger: toPlainText(t('states.confirmed.trigger')),     behavior: toPlainText(t('states.confirmed.behavior')) },
+            { label: t('states.cancelled.label'),  trigger: toPlainText(t('states.cancelled.trigger')),     behavior: toPlainText(t('states.cancelled.behavior'))},
+            { label: t('states.controlled.label'), trigger: toPlainText(t('states.controlled.trigger')),    behavior: toPlainText(t('states.controlled.behavior'))},
           ],
         });
 
@@ -498,11 +499,13 @@ export interface AlertDialogOptions {
               title: t('props.rootTitle'),
               cols: propsCols,
               items: [
-                { name: 'trigger',       type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'title',         type: 'string',                   defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'cancelButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'actionButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
+                { name: 'trigger',       type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'title',         type: 'string',                   defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'media',         type: 'HTMLElement',              defaultValue: '—', required: 'Não', description: toPlainText(t('anatomy.item10')) },
+                { name: 'cancelButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'actionButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'defaultOpen',   type: 'boolean',                  defaultValue: 'false', required: 'Não', description: t('props.table.defaultOpen') },
                 { name: 'onOpenChange',  type: '(open: boolean) => void',  defaultValue: '—', required: 'Não', description: t('props.table.onOpenChange') },
                 { name: 'class',         type: 'string',                   defaultValue: '—', required: 'Não', description: t('props.table.className') },
               ],
@@ -568,14 +571,19 @@ export interface AlertDialogOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--background',             value: 'bg-black/80',                  description: t('tokens.table.overlayBg') },
-            { token: '--background',             value: 'bg-background',                description: t('tokens.table.contentBg') },
-            { token: '--foreground',             value: 'text-foreground',              description: t('tokens.table.contentForeground') },
-            { token: '--border',                 value: 'border',                       description: t('tokens.table.border') },
-            { token: '--muted-foreground',       value: 'nds-text-muted-foreground',        description: t('tokens.table.mutedForeground') },
-            { token: '--destructive',            value: 'bg-destructive',               description: t('tokens.table.destructive') },
-            { token: '--destructive-foreground', value: 'text-destructive-foreground',  description: t('tokens.table.destructiveForeground') },
-            { token: '--radius',                 value: 'sm:rounded-lg',                description: t('tokens.table.radius') },
+            // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+            { token: '—',                        value: '.nds-alert-dialog-overlay',     description: t('tokens.table.overlayBg') },
+            { token: '--background',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentBg') },
+            { token: '--foreground',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentForeground') },
+            { token: '--border',                 value: '.nds-alert-dialog-content',     description: t('tokens.table.border') },
+            { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: t('tokens.table.radius') },
+            { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: t('tokens.table.elevation') },
+            { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: t('tokens.table.padding') },
+            { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: t('tokens.table.mutedForeground') },
+            { token: '--muted',                  value: '.nds-alert-dialog-media',       description: t('tokens.table.mediaBg') },
+            // A ação herda o tom do Button: o destrutivo vem da variante, não deste CSS.
+            { token: '--destructive',            value: '.nds-button-destructive',       description: t('tokens.table.destructive') },
+            { token: '--destructive-foreground', value: '.nds-button-destructive',       description: t('tokens.table.destructiveForeground') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -584,6 +592,8 @@ export interface AlertDialogOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -608,10 +618,10 @@ export interface AlertDialogOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Dialog', description: t('related.dialog'), path: '?path=/docs/ui-dialog--docs' },
-            { name: 'Sonner', description: t('related.sonner'), path: '?path=/docs/ui-sonner--docs' },
-            { name: 'Alert',  description: t('related.alert'),  path: '?path=/docs/ui-alert--docs'  },
-            { name: 'Button', description: t('related.button'), path: '?path=/docs/ui-button--docs' },
+            { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/ui-dialog--docs' },
+            { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/ui-sonner--docs' },
+            { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/ui-alert--docs'  },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/ui-button--docs' },
           ],
         });
 
@@ -631,16 +641,16 @@ export interface AlertDialogOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.open'),          trigger: t('analytics.table.openTrigger'),          payload: t('analytics.table.openPayload') },
-            { event: t('analytics.table.confirm'),       trigger: t('analytics.table.confirmTrigger'),       payload: t('analytics.table.confirmPayload') },
-            { event: t('analytics.table.close'),         trigger: t('analytics.table.closeTrigger'),         payload: t('analytics.table.closePayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.open'),          trigger: toPlainText(t('analytics.table.openTrigger')),          payload: t('analytics.table.openPayload') },
+            { event: t('analytics.table.confirm'),       trigger: toPlainText(t('analytics.table.confirmTrigger')),       payload: t('analytics.table.confirmPayload') },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 
@@ -675,7 +685,7 @@ export interface AlertDialogOptions {
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

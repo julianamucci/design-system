@@ -14,9 +14,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import checkboxTranslations from '@shared/content/checkbox/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(checkboxTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (checkboxTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -38,7 +50,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -76,10 +87,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -559,15 +566,15 @@ import { Label } from "@/components/ui/label";`;
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.unchecked.label'),     trigger: $tStore('states.unchecked.trigger'),     behavior: $tStore('states.unchecked.behavior') },
-      { label: $tStore('states.checked.label'),       trigger: stripHtml($tStore('states.checked.trigger')), behavior: $tStore('states.checked.behavior') },
-      { label: $tStore('states.indeterminate.label'), trigger: stripHtml($tStore('states.indeterminate.trigger')), behavior: $tStore('states.indeterminate.behavior') },
-      { label: $tStore('states.disabled.label'),      trigger: stripHtml($tStore('states.disabled.trigger')), behavior: stripHtml($tStore('states.disabled.behavior')) },
-      { label: $tStore('states.error.label'),         trigger: stripHtml($tStore('states.error.trigger')), behavior: stripHtml($tStore('states.error.behavior')) },
+      { label: $tStore('states.unchecked.label'),     trigger: toPlainText($tStore('states.unchecked.trigger')),     behavior: toPlainText($tStore('states.unchecked.behavior'))},
+      { label: $tStore('states.checked.label'),       trigger: toPlainText($tStore('states.checked.trigger')), behavior: toPlainText($tStore('states.checked.behavior'))},
+      { label: $tStore('states.indeterminate.label'), trigger: toPlainText($tStore('states.indeterminate.trigger')), behavior: toPlainText($tStore('states.indeterminate.behavior'))},
+      { label: $tStore('states.disabled.label'),      trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.error.label'),         trigger: toPlainText($tStore('states.error.trigger')), behavior: toPlainText($tStore('states.error.behavior')) },
     ]}
   />
 
@@ -620,6 +627,8 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -631,9 +640,9 @@ import { Label } from "@/components/ui/label";`;
     ]}
     keyboardItems={[
       { key: 'Tab',       description: $tStore('accessibility.keyboard.tab') },
-      { key: 'Space',     description: stripHtml($tStore('accessibility.keyboard.space')) },
+      { key: 'Space',     description: toPlainText($tStore('accessibility.keyboard.space')) },
       { key: 'Shift+Tab', description: $tStore('accessibility.keyboard.shiftTab') },
-      { key: '—',         description: stripHtml($tStore('accessibility.keyboard.disabled')) },
+      { key: '—',         description: toPlainText($tStore('accessibility.keyboard.disabled')) },
     ]}
   />
 
@@ -664,14 +673,14 @@ import { Label } from "@/components/ui/label";`;
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.fieldChange'),    trigger: $tStore('analytics.table.fieldChangeTrigger'),    payload: $tStore('analytics.table.fieldChangePayload') },
-      { event: $tStore('analytics.table.pageView'),       trigger: $tStore('analytics.table.pageViewTrigger'),       payload: $tStore('analytics.table.pageViewPayload') },
-      { event: $tStore('analytics.table.sectionViewed'),  trigger: $tStore('analytics.table.sectionViewedTrigger'),  payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),     trigger: $tStore('analytics.table.langSwitchTrigger'),     payload: $tStore('analytics.table.langSwitchPayload') },
+      { event: $tStore('analytics.table.fieldChange'),    trigger: toPlainText($tStore('analytics.table.fieldChangeTrigger')),    payload: $tStore('analytics.table.fieldChangePayload') },
+      { event: $tStore('analytics.table.pageView'),       trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),       payload: $tStore('analytics.table.pageViewPayload') },
+      { event: $tStore('analytics.table.sectionViewed'),  trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),  payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),     trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),     payload: $tStore('analytics.table.langSwitchPayload') },
     ]}
     note={$tStore('analytics.note')}
   />
@@ -687,12 +696,12 @@ import { Label } from "@/components/ui/label";`;
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: stripHtml($tStore('testes.functional.item1.action')), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item5.action')), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item6.action')), result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item6.action')), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -703,7 +712,7 @@ import { Label } from "@/components/ui/label";`;
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
+        { criterion: toPlainText($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
         { criterion: $tStore('testes.accessibility.item2.criterion'),            level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
         { criterion: $tStore('testes.accessibility.item3.criterion'),            level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },

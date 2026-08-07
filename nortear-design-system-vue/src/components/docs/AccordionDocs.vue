@@ -32,6 +32,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -39,10 +40,6 @@ const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(accordionTranslations);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -117,8 +114,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -166,7 +161,6 @@ const openItem = ref('item-1');
     <AccordionContent>Estado gerenciado externamente.</AccordionContent>
   </AccordionItem>
 </Accordion>`;
-
 
 const interfaceCode = `interface AccordionProps {
   type: 'single' | 'multiple';
@@ -226,10 +220,10 @@ const tokenRows = computed(() => {
 });
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),   trigger: tContent('states.closed.trigger'),   behavior: tContent('states.closed.behavior') },
-  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: tContent('states.open.behavior') },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.focused.label'),  trigger: tContent('states.focused.trigger'),  behavior: tContent('states.focused.behavior') },
+  { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior'))},
+  { label: tContent('states.open.label'),     trigger: toPlainText(tContent('states.open.trigger')),     behavior: toPlainText(tContent('states.open.behavior'))},
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.focused.label'),  trigger: toPlainText(tContent('states.focused.trigger')),  behavior: toPlainText(tContent('states.focused.behavior'))},
 ]);
 
 const modeItems = computed(() => [
@@ -324,17 +318,28 @@ const keyboardItems = computed(() => [
   { key: 'End',        description: tContent('accessibility.keyboard.end')       },
 ]);
 
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (accordionTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
+
 const accessibilityItems = computed(() => [
   tContent('accessibility.aria.ariaExpanded'),
   tContent('accessibility.aria.ariaControls'),
-  tContent('accessibility.aria.role'),
-  tContent('accessibility.aria.ariaLabelledBy'),
+  tContent('accessibility.aria.hiddenUntilFound'),
+  tContent('accessibility.aria.noRegion'),
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.collapsible.name'), description: tContent('related.collapsible.description'), path: `?path=/docs/${tContent('related.collapsible.href')}` },
-  { name: tContent('related.tabs.name'),        description: tContent('related.tabs.description'),        path: `?path=/docs/${tContent('related.tabs.href')}`        },
-  { name: tContent('related.sidebar.name'),     description: tContent('related.sidebar.description'),     path: `?path=/docs/${tContent('related.sidebar.href')}`     },
+  { name: tContent('related.collapsible.name'), description: toPlainText(tContent('related.collapsible.description')), path: `?path=/docs/${tContent('related.collapsible.href')}` },
+  { name: tContent('related.tabs.name'),        description: toPlainText(tContent('related.tabs.description')),        path: `?path=/docs/${tContent('related.tabs.href')}`        },
+  { name: tContent('related.sidebar.name'),     description: toPlainText(tContent('related.sidebar.description')),     path: `?path=/docs/${tContent('related.sidebar.href')}`     },
 ]);
 
 const noteItems = computed(() => [
@@ -346,8 +351,8 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.events.expand.event'),   trigger: tContent('analytics.events.expand.trigger'),   payload: tContent('analytics.events.expand.payload')   },
-  { event: tContent('analytics.events.collapse.event'), trigger: tContent('analytics.events.collapse.trigger'), payload: tContent('analytics.events.collapse.payload') },
+  { event: tContent('analytics.events.expand.event'),   trigger: toPlainText(tContent('analytics.events.expand.trigger')),   payload: tContent('analytics.events.expand.payload')   },
+  { event: tContent('analytics.events.collapse.event'), trigger: toPlainText(tContent('analytics.events.collapse.trigger')), payload: tContent('analytics.events.collapse.payload') },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6].map(i => ({
@@ -397,6 +402,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
   <DocsPageLayout
     :nav-groups="navGroups"
     :active-section="activeSection"
+    component-slug="accordion"
   >
     <template #header>
       <DocsHeader
@@ -486,8 +492,8 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -808,8 +814,8 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -844,6 +850,9 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
       :keyboard-items="keyboardItems"
+      :contrast="tContent('accessibility.contrast')"
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
     />
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
@@ -861,7 +870,7 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

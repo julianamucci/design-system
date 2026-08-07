@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (progressTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(progressTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -371,8 +378,8 @@ export function createProgressDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
                 buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
               dontPreviewFactory: () => {
@@ -384,8 +391,8 @@ export function createProgressDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
                 buildLabeled({ value: 50, labelText: 'Enviando arquivo', ariaLabel: 'Progresso do upload' }),
               dontPreviewFactory: () =>
@@ -437,14 +444,14 @@ export function createProgressDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),       trigger: t('states.default.trigger'),       behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.loading.label'),       trigger: t('states.loading.trigger'),       behavior: stripHtml(t('states.loading.behavior')) },
-            { label: t('states.complete.label'),      trigger: t('states.complete.trigger'),      behavior: stripHtml(t('states.complete.behavior')) },
-            { label: t('states.indeterminate.label'), trigger: t('states.indeterminate.trigger'), behavior: stripHtml(t('states.indeterminate.behavior')) },
+            { label: t('states.default.label'),       trigger: toPlainText(t('states.default.trigger')),       behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.loading.label'),       trigger: toPlainText(t('states.loading.trigger')),       behavior: toPlainText(t('states.loading.behavior')) },
+            { label: t('states.complete.label'),      trigger: toPlainText(t('states.complete.trigger')),      behavior: toPlainText(t('states.complete.behavior')) },
+            { label: t('states.indeterminate.label'), trigger: toPlainText(t('states.indeterminate.trigger')), behavior: toPlainText(t('states.indeterminate.behavior')) },
           ],
         });
 
@@ -536,6 +543,8 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -557,10 +566,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.skeleton.name'), description: t('related.items.skeleton.description'), path: '?path=/docs/ui-skeleton--docs' },
-            { name: t('related.items.spinner.name'),  description: t('related.items.spinner.description'),  path: '?path=/docs/ui-spinner--docs' },
-            { name: t('related.items.alert.name'),    description: t('related.items.alert.description'),    path: '?path=/docs/ui-alert--docs' },
-            { name: t('related.items.sonner.name'),   description: t('related.items.sonner.description'),   path: '?path=/docs/ui-sonner--docs' },
+            { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/ui-skeleton--docs' },
+            { name: t('related.items.spinner.name'),  description: toPlainText(t('related.items.spinner.description')),  path: '?path=/docs/ui-spinner--docs' },
+            { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/ui-alert--docs' },
+            { name: t('related.items.sonner.name'),   description: toPlainText(t('related.items.sonner.description')),   path: '?path=/docs/ui-sonner--docs' },
           ],
         });
 
@@ -584,12 +593,12 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'task_progress', trigger: t('analytics.table.task_progress.trigger'), payload: t('analytics.table.task_progress.payload') },
-            { event: 'task_complete', trigger: t('analytics.table.task_complete.trigger'), payload: t('analytics.table.task_complete.payload') },
+            { event: 'task_progress', trigger: toPlainText(t('analytics.table.task_progress.trigger')), payload: t('analytics.table.task_progress.payload') },
+            { event: 'task_complete', trigger: toPlainText(t('analytics.table.task_complete.trigger')), payload: t('analytics.table.task_complete.payload') },
           ],
         });
 

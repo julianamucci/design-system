@@ -30,7 +30,9 @@
       "item2": "<strong>ResizablePanel</strong> — área redimensionável com <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> em porcentagem.",
       "item3": "<strong>ResizableHandle</strong> — divisor focável entre painéis; aceita <code>withHandle</code> para mostrar pegador visual.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Painel esquerdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Painel direito */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "structureCode": {
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Painel esquerdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Painel direito */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -228,7 +230,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Persistir tamanhos via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis — use setas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "extensibilityCode": {
+        "react": "// Persistir tamanhos via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis — use setas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -262,7 +266,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Handle mais espesso para mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      "customizationCode": {
+        "web": "/* Handle mais espesso para mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -450,7 +456,9 @@
       "item2": "<strong>ResizablePanel</strong> — resizable area with <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> in percentage.",
       "item3": "<strong>ResizableHandle</strong> — focusable divider between panels; accepts <code>withHandle</code> to show visual grabber.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Left panel */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Right panel */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "structureCode": {
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Left panel */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Right panel */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -648,7 +656,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Persist sizes via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels — use arrow keys\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "extensibilityCode": {
+        "react": "// Persist sizes via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels — use arrow keys\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -682,7 +692,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Thicker handle for mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      "customizationCode": {
+        "web": "/* Thicker handle for mobile */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -870,7 +882,9 @@
       "item2": "<strong>ResizablePanel</strong> — área redimensionable con <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> en porcentaje.",
       "item3": "<strong>ResizableHandle</strong> — divisor focalizable entre paneles; acepta <code>withHandle</code> para mostrar agarre visual.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Panel izquierdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Panel derecho */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "structureCode": {
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Panel izquierdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Panel derecho */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1068,7 +1082,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Persistir tamaños vía autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles — usa flechas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      "extensibilityCode": {
+        "react": "// Persistir tamaños vía autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles — usa flechas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1102,7 +1118,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Handle más grueso para móvil */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      "customizationCode": {
+        "web": "/* Handle más grueso para móvil */\n[data-slot=\"resizable-handle\"] {\n  --handle-width: 3px;\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"vertical\"] {\n  width: var(--handle-width);\n}\n[data-slot=\"resizable-handle\"][aria-orientation=\"horizontal\"] {\n  height: var(--handle-width);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

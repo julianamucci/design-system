@@ -25,9 +25,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import tooltipTranslations from '@shared/content/tooltip/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(tooltipTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (tooltipTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -56,7 +68,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -95,10 +106,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -319,9 +326,9 @@ interface TooltipTriggerProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.content.name'),  rules: stripHtml($tStore('usage.uxWriting.table.content.format')),  do: $tStore('usage.uxWriting.table.content.good'),  dont: $tStore('usage.uxWriting.table.content.bad') },
-        { element: $tStore('usage.uxWriting.table.shortcut.name'), rules: stripHtml($tStore('usage.uxWriting.table.shortcut.format')), do: $tStore('usage.uxWriting.table.shortcut.good'), dont: $tStore('usage.uxWriting.table.shortcut.bad') },
-        { element: $tStore('usage.uxWriting.table.icon.name'),     rules: stripHtml($tStore('usage.uxWriting.table.icon.format')),     do: $tStore('usage.uxWriting.table.icon.good'),     dont: $tStore('usage.uxWriting.table.icon.bad') },
+        { element: $tStore('usage.uxWriting.table.content.name'),  rules: toPlainText($tStore('usage.uxWriting.table.content.format')),  do: $tStore('usage.uxWriting.table.content.good'),  dont: $tStore('usage.uxWriting.table.content.bad') },
+        { element: $tStore('usage.uxWriting.table.shortcut.name'), rules: toPlainText($tStore('usage.uxWriting.table.shortcut.format')), do: $tStore('usage.uxWriting.table.shortcut.good'), dont: $tStore('usage.uxWriting.table.shortcut.bad') },
+        { element: $tStore('usage.uxWriting.table.icon.name'),     rules: toPlainText($tStore('usage.uxWriting.table.icon.format')),     do: $tStore('usage.uxWriting.table.icon.good'),     dont: $tStore('usage.uxWriting.table.icon.bad') },
       ],
     }}
     do={{
@@ -704,15 +711,15 @@ interface TooltipTriggerProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),  trigger: $tStore('states.closed.trigger'),  behavior: stripHtml($tStore('states.closed.behavior')) },
-      { label: $tStore('states.open.label'),    trigger: $tStore('states.open.trigger'),    behavior: stripHtml($tStore('states.open.behavior')) },
-      { label: $tStore('states.hover.label'),   trigger: $tStore('states.hover.trigger'),   behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.focus.label'),   trigger: $tStore('states.focus.trigger'),   behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.delayed.label'), trigger: $tStore('states.delayed.trigger'), behavior: stripHtml($tStore('states.delayed.behavior')) },
+      { label: $tStore('states.closed.label'),  trigger: toPlainText($tStore('states.closed.trigger')),  behavior: toPlainText($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),    trigger: toPlainText($tStore('states.open.trigger')),    behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.hover.label'),   trigger: toPlainText($tStore('states.hover.trigger')),   behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),   trigger: toPlainText($tStore('states.focus.trigger')),   behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.delayed.label'), trigger: toPlainText($tStore('states.delayed.trigger')), behavior: toPlainText($tStore('states.delayed.behavior')) },
     ]}
   />
 
@@ -723,14 +730,14 @@ interface TooltipTriggerProps {
       {
         cols: propsTableCols,
         items: [
-          { name: 'delay',        type: $tStore('props.table.delay.type'),        defaultValue: $tStore('props.table.delay.default'),        required: $tStore('props.table.delay.required'),        description: stripHtml($tStore('props.table.delay.description'))        },
-          { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: stripHtml($tStore('props.table.open.description'))         },
-          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: stripHtml($tStore('props.table.defaultOpen.description'))  },
-          { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: stripHtml($tStore('props.table.onOpenChange.description')) },
-          { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: stripHtml($tStore('props.table.side.description'))         },
-          { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: stripHtml($tStore('props.table.align.description'))        },
-          { name: 'sideOffset',   type: $tStore('props.table.sideOffset.type'),   defaultValue: $tStore('props.table.sideOffset.default'),   required: $tStore('props.table.sideOffset.required'),   description: stripHtml($tStore('props.table.sideOffset.description'))   },
-          { name: 'class',        type: $tStore('props.table.className.type'),    defaultValue: $tStore('props.table.className.default'),    required: $tStore('props.table.className.required'),    description: stripHtml($tStore('props.table.className.description'))    },
+          { name: 'delay',        type: $tStore('props.table.delay.type'),        defaultValue: $tStore('props.table.delay.default'),        required: $tStore('props.table.delay.required'),        description: toPlainText($tStore('props.table.delay.description'))        },
+          { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: toPlainText($tStore('props.table.open.description'))         },
+          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: toPlainText($tStore('props.table.defaultOpen.description'))  },
+          { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: toPlainText($tStore('props.table.onOpenChange.description')) },
+          { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: toPlainText($tStore('props.table.side.description'))         },
+          { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: toPlainText($tStore('props.table.align.description'))        },
+          { name: 'sideOffset',   type: $tStore('props.table.sideOffset.type'),   defaultValue: $tStore('props.table.sideOffset.default'),   required: $tStore('props.table.sideOffset.required'),   description: toPlainText($tStore('props.table.sideOffset.description'))   },
+          { name: 'class',        type: $tStore('props.table.className.type'),    defaultValue: $tStore('props.table.className.default'),    required: $tStore('props.table.className.required'),    description: toPlainText($tStore('props.table.className.description'))    },
         ],
       },
     ]}
@@ -760,6 +767,8 @@ interface TooltipTriggerProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -772,9 +781,9 @@ interface TooltipTriggerProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: 'Tab',       description: stripHtml($tStore('accessibility.keyboard.tab'))      },
-      { key: 'Escape',    description: stripHtml($tStore('accessibility.keyboard.escape'))   },
-      { key: 'Shift+Tab', description: stripHtml($tStore('accessibility.keyboard.shiftTab')) },
+      { key: 'Tab',       description: toPlainText($tStore('accessibility.keyboard.tab'))      },
+      { key: 'Escape',    description: toPlainText($tStore('accessibility.keyboard.escape'))   },
+      { key: 'Shift+Tab', description: toPlainText($tStore('accessibility.keyboard.shiftTab')) },
     ]}
   />
 
@@ -805,11 +814,11 @@ interface TooltipTriggerProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'tooltip_view', trigger: $tStore('analytics.table.tooltip_view.trigger'), payload: $tStore('analytics.table.tooltip_view.payload') },
+      { event: 'tooltip_view', trigger: toPlainText($tStore('analytics.table.tooltip_view.trigger')), payload: $tStore('analytics.table.tooltip_view.payload') },
     ]}
   />
 
@@ -824,8 +833,8 @@ interface TooltipTriggerProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -837,11 +846,11 @@ interface TooltipTriggerProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'         },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.3',  how: 'Contrast checker' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '4.1.2',  how: 'DevTools a11y'    },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '1.3.1',  how: 'DevTools a11y'    },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools a11y'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'         },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.3',  how: 'Contrast checker' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2',  how: 'DevTools a11y'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '1.3.1',  how: 'DevTools a11y'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools a11y'    },
       ],
     }}
     visual={{

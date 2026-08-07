@@ -28,7 +28,9 @@
       "item3": "<strong>TooltipTrigger</strong> — elemento que ativa o tooltip ao hover ou foco. Permite compor com elemento filho para envolver um Button.",
       "item4": "<strong>TooltipContent</strong> — popover em portal com o texto explicativo; renderiza Arrow automaticamente.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "{/* No root da app — uma vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Onde precisar */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Salvar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      "structureCode": {
+        "react": "{/* No root da app — uma vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Onde precisar */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Salvar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -255,7 +257,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// TooltipProvider no root da app (uma vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip com atalho de teclado em botão icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      "extensibilityCode": {
+        "react": "// TooltipProvider no root da app (uma vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip com atalho de teclado em botão icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -464,7 +468,9 @@
       "item3": "<strong>TooltipTrigger</strong> — element that activates the tooltip on hover or focus. Compose with a child element to wrap a Button.",
       "item4": "<strong>TooltipContent</strong> — portal popover with explanatory text; renders Arrow automatically.",
       "structureLabel": "Basic structure:",
-      "structureCode": "{/* At app root — once */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      "structureCode": {
+        "react": "{/* At app root — once */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -691,7 +697,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// TooltipProvider at app root (once)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      "extensibilityCode": {
+        "react": "// TooltipProvider at app root (once)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -900,7 +908,9 @@
       "item3": "<strong>TooltipTrigger</strong> — elemento que activa el tooltip al hover o foco. Compón con elemento hijo para envolver un Button.",
       "item4": "<strong>TooltipContent</strong> — popover en portal con el texto explicativo; renderiza Arrow automáticamente.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "{/* En el root de la app — una vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      "structureCode": {
+        "react": "{/* En el root de la app — una vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1127,7 +1137,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      "extensibilityCode": {
+        "react": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",

@@ -23,6 +23,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { toPlainText } from "@/lib/strip-html";
 
 const SLUG = "code-block";
 
@@ -131,6 +132,19 @@ const variantSnippet = (language: string) =>
 export function CodeBlockDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(codeBlockTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (codeBlockTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -397,8 +411,8 @@ export function CodeBlockDocs() {
                 data-track-id="code-block:do-dont:dont-1"
               />
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -429,8 +443,8 @@ export function CodeBlockDocs() {
                 data-track-id="code-block:do-dont:dont-2"
               />
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -641,16 +655,16 @@ export function CodeBlockDocs() {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
-          { label: tContent("states.idle.label"),            trigger: tContent("states.idle.trigger"),            behavior: tContent("states.idle.behavior") },
-          { label: tContent("states.copied.label"),          trigger: tContent("states.copied.trigger"),          behavior: tContent("states.copied.behavior") },
-          { label: tContent("states.numbered.label"),        trigger: tContent("states.numbered.trigger"),        behavior: tContent("states.numbered.behavior") },
-          { label: tContent("states.unnumbered.label"),      trigger: tContent("states.unnumbered.trigger"),      behavior: tContent("states.unnumbered.behavior") },
-          { label: tContent("states.scrolling.label"),       trigger: tContent("states.scrolling.trigger"),       behavior: tContent("states.scrolling.behavior") },
-          { label: tContent("states.unknownLanguage.label"), trigger: tContent("states.unknownLanguage.trigger"), behavior: tContent("states.unknownLanguage.behavior") },
+          { label: tContent("states.idle.label"),            trigger: toPlainText(tContent("states.idle.trigger")),            behavior: toPlainText(tContent("states.idle.behavior"))},
+          { label: tContent("states.copied.label"),          trigger: toPlainText(tContent("states.copied.trigger")),          behavior: toPlainText(tContent("states.copied.behavior"))},
+          { label: tContent("states.numbered.label"),        trigger: toPlainText(tContent("states.numbered.trigger")),        behavior: toPlainText(tContent("states.numbered.behavior"))},
+          { label: tContent("states.unnumbered.label"),      trigger: toPlainText(tContent("states.unnumbered.trigger")),      behavior: toPlainText(tContent("states.unnumbered.behavior"))},
+          { label: tContent("states.scrolling.label"),       trigger: toPlainText(tContent("states.scrolling.trigger")),       behavior: toPlainText(tContent("states.scrolling.behavior"))},
+          { label: tContent("states.unknownLanguage.label"), trigger: toPlainText(tContent("states.unknownLanguage.trigger")), behavior: toPlainText(tContent("states.unknownLanguage.behavior"))},
         ]}
       />
 
@@ -725,6 +739,8 @@ export function CodeBlockDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -750,10 +766,10 @@ export function CodeBlockDocs() {
         title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
-          { name: "Table", description: tContent("related.table"), path: "?path=/docs/ui-table--docs" },
-          { name: "Alert", description: tContent("related.alert"), path: "?path=/docs/ui-alert--docs" },
-          { name: "Tabs",  description: tContent("related.tabs"),  path: "?path=/docs/ui-tabs--docs" },
-          { name: "Card",  description: tContent("related.card"),  path: "?path=/docs/ui-card--docs" },
+          { name: "Table", description: toPlainText(tContent("related.table")), path: "?path=/docs/ui-table--docs" },
+          { name: "Alert", description: toPlainText(tContent("related.alert")), path: "?path=/docs/ui-alert--docs" },
+          { name: "Tabs",  description: toPlainText(tContent("related.tabs")),  path: "?path=/docs/ui-tabs--docs" },
+          { name: "Card",  description: toPlainText(tContent("related.card")),  path: "?path=/docs/ui-card--docs" },
         ]}
       />
 
@@ -775,14 +791,14 @@ export function CodeBlockDocs() {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
-          { event: tContent("analytics.table.copy"),          trigger: tContent("analytics.table.copyTrigger"),          payload: tContent("analytics.table.copyPayload") },
-          { event: tContent("analytics.table.pageView"),      trigger: tContent("analytics.table.pageViewTrigger"),      payload: tContent("analytics.table.pageViewPayload") },
-          { event: tContent("analytics.table.sectionViewed"), trigger: tContent("analytics.table.sectionViewedTrigger"), payload: tContent("analytics.table.sectionViewedPayload") },
-          { event: tContent("analytics.table.langSwitch"),    trigger: tContent("analytics.table.langSwitchTrigger"),    payload: tContent("analytics.table.langSwitchPayload") },
+          { event: tContent("analytics.table.copy"),          trigger: toPlainText(tContent("analytics.table.copyTrigger")),          payload: tContent("analytics.table.copyPayload") },
+          { event: tContent("analytics.table.pageView"),      trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),      payload: tContent("analytics.table.pageViewPayload") },
+          { event: tContent("analytics.table.sectionViewed"), trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")), payload: tContent("analytics.table.sectionViewedPayload") },
+          { event: tContent("analytics.table.langSwitch"),    trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),    payload: tContent("analytics.table.langSwitchPayload") },
         ]}
       />
 

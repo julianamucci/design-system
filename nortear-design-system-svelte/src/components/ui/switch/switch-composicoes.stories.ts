@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Switch/Composicoes',
   component: SwitchStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SwitchStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const SemLabel: Story = {
   args: {

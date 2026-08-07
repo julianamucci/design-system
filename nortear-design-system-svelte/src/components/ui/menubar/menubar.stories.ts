@@ -6,7 +6,7 @@ import MenubarStory from './MenubarStory.svelte';
 import MenubarDocs from '@/components/docs/MenubarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Menubar',
   component: MenubarStory,
   tags: ['autodocs', 'navigation'],
@@ -46,10 +46,10 @@ const meta = {
     variant: 'default',
     demonstration: 'default',
   },
-} satisfies Meta<typeof MenubarStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

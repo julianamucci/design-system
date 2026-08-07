@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect , waitFor } from 'storybook/test';
 import {
@@ -13,6 +14,7 @@ const meta = {
   title: 'UI/Accordion/Composicoes',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -20,6 +22,14 @@ const meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
 
 export const ComIconeNoTrigger: Story = {
   render: () => ({
@@ -63,6 +73,7 @@ export const ComIconeNoTrigger: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item1', 'visual.item4'],
     docs: {
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
@@ -82,8 +93,7 @@ export const ComIconeNoTrigger: Story = {
 
     await step('Clicar no trigger abre o item correspondente', async () => {
       const trigger = canvas.getByRole('button', { name: /^informação$/i });
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(trigger);
     });
   },
 };
@@ -97,7 +107,7 @@ export const ComBadgeNoTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               Novidades da versão 3.0
-              <Badge variant="default" class="" style="font-size: 10px; height: 1rem">Novo</Badge>
+              <Badge variant="default">Novo</Badge>
             </span>
           </AccordionTrigger>
           <AccordionContent>
@@ -108,7 +118,7 @@ export const ComBadgeNoTrigger: Story = {
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
               Funcionalidades em beta
-              <Badge variant="secondary" class="" style="font-size: 10px; height: 1rem">Beta</Badge>
+              <Badge variant="secondary">Beta</Badge>
             </span>
           </AccordionTrigger>
           <AccordionContent>
@@ -119,6 +129,7 @@ export const ComBadgeNoTrigger: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
@@ -136,8 +147,7 @@ export const ComBadgeNoTrigger: Story = {
 
     await step('Clicar abre o item correspondente', async () => {
       const trigger = canvas.getAllByRole('button')[0];
-      await userEvent.click(trigger);
-      await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(trigger);
     });
   },
 };
@@ -184,6 +194,7 @@ export const ConteudoRico: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Vue. Use para tabelas de dados, parágrafos ou listas estruturadas.',
@@ -195,15 +206,13 @@ export const ConteudoRico: Story = {
 
     await step('Abrir o item renderiza o conteúdo rico (especificações)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[0]);
       await expect(canvasElement.textContent).toContain('Intel Core i7-12700');
     });
 
     await step('Modo múltiplo: segundo item abre sem fechar o primeiro', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -222,7 +231,7 @@ export const FAQ: Story = {
       return { items };
     },
     template: `
-      <div class="nds-w-full nds-max-w-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
         <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
         <Accordion type="single" :collapsible="true">
           <AccordionItem v-for="item in items" :key="item.value" :value="item.value">
@@ -234,6 +243,7 @@ export const FAQ: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item1', 'functional.item3'],
     docs: {
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
@@ -251,8 +261,7 @@ export const FAQ: Story = {
     });
 
     await step('Clicar no primeiro abre apenas ele', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
     });
   },

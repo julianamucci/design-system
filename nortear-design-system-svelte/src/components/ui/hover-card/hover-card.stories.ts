@@ -6,7 +6,7 @@ import HoverCardStory from './HoverCardStory.svelte';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/HoverCard',
   component: HoverCardStory,
   tags: ['autodocs', 'overlay'],
@@ -62,10 +62,10 @@ const meta = {
     triggerLabel: '@joana',
     variant: 'default',
   },
-} satisfies Meta<typeof HoverCardStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

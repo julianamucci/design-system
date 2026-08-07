@@ -15,9 +15,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import sonnerTranslations from '@shared/content/sonner/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(sonnerTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (sonnerTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -39,7 +51,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -80,10 +91,6 @@
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -467,10 +474,10 @@ toast.promise(promise, {
       behavior: $tNavStore('common.behavior') ?? 'Comportamento',
     }}
     items={[
-      { label: $tStore('states.items.withDescription.label'), trigger: 'toast.success(msg, { description })', behavior: $tStore('states.items.withDescription.description') },
-      { label: $tStore('states.items.withAction.label'),      trigger: 'toast(msg, { action: { label, onClick } })',   behavior: stripHtml($tStore('states.items.withAction.description'))      },
-      { label: $tStore('states.items.promise.label'),         trigger: 'toast.promise(promise, { loading, success, error })', behavior: stripHtml($tStore('states.items.promise.description'))         },
-      { label: $tStore('states.items.persistent.label'),      trigger: 'toast.error(msg, { duration: Infinity })',   behavior: stripHtml($tStore('states.items.persistent.description'))      },
+      { label: $tStore('states.items.withDescription.label'), trigger: 'toast.success(msg, { description })', behavior: toPlainText($tStore('states.items.withDescription.description'))},
+      { label: $tStore('states.items.withAction.label'),      trigger: 'toast(msg, { action: { label, onClick } })',   behavior: toPlainText($tStore('states.items.withAction.description'))      },
+      { label: $tStore('states.items.promise.label'),         trigger: 'toast.promise(promise, { loading, success, error })', behavior: toPlainText($tStore('states.items.promise.description'))         },
+      { label: $tStore('states.items.persistent.label'),      trigger: 'toast.error(msg, { duration: Infinity })',   behavior: toPlainText($tStore('states.items.persistent.description'))      },
     ]}
   />
 
@@ -488,13 +495,13 @@ toast.promise(promise, {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'position',     type: '"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"', defaultValue: '"bottom-right"', required: 'Não', description: stripHtml($tStore('props.table.position'))     },
-          { name: 'richColors',   type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: stripHtml($tStore('props.table.richColors'))   },
-          { name: 'expand',       type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: stripHtml($tStore('props.table.expand'))       },
-          { name: 'duration',     type: 'number',                                                                                     defaultValue: '4000',          required: 'Não', description: stripHtml($tStore('props.table.duration'))     },
-          { name: 'theme',        type: '"light" | "dark" | "system"',                                                               defaultValue: '"system"',      required: 'Não', description: stripHtml($tStore('props.table.theme'))        },
-          { name: 'icons',        type: 'ToastIcons',                                                                                 defaultValue: '—',             required: 'Não', description: stripHtml($tStore('props.table.icons'))        },
-          { name: 'toastOptions', type: 'ToastOptions',                                                                               defaultValue: '—',             required: 'Não', description: stripHtml($tStore('props.table.toastOptions')) },
+          { name: 'position',     type: '"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"', defaultValue: '"bottom-right"', required: 'Não', description: toPlainText($tStore('props.table.position'))     },
+          { name: 'richColors',   type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: toPlainText($tStore('props.table.richColors'))   },
+          { name: 'expand',       type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: toPlainText($tStore('props.table.expand'))       },
+          { name: 'duration',     type: 'number',                                                                                     defaultValue: '4000',          required: 'Não', description: toPlainText($tStore('props.table.duration'))     },
+          { name: 'theme',        type: '"light" | "dark" | "system"',                                                               defaultValue: '"system"',      required: 'Não', description: toPlainText($tStore('props.table.theme'))        },
+          { name: 'icons',        type: 'ToastIcons',                                                                                 defaultValue: '—',             required: 'Não', description: toPlainText($tStore('props.table.icons'))        },
+          { name: 'toastOptions', type: 'ToastOptions',                                                                               defaultValue: '—',             required: 'Não', description: toPlainText($tStore('props.table.toastOptions')) },
         ],
       },
     ]}
@@ -521,6 +528,8 @@ toast.promise(promise, {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -567,14 +576,14 @@ toast.promise(promise, {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.actionClick'),   trigger: $tStore('analytics.table.actionClickTrigger'),   payload: $tStore('analytics.table.actionClickPayload')   },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.actionClick'),   trigger: toPlainText($tStore('analytics.table.actionClickTrigger')),   payload: $tStore('analytics.table.actionClickPayload')   },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

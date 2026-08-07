@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (separatorTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(separatorTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -359,8 +366,8 @@ export function createSeparatorDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-xs nds-stack nds-rounded-md nds-border-default nds-bg-background nds-p-1 nds-text-body';
@@ -399,8 +406,8 @@ export function createSeparatorDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster nds-w-full nds-max-w-sm';
@@ -472,12 +479,12 @@ export function createSeparatorDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.decorative.label'), trigger: t('states.decorative.trigger'), behavior: stripHtml(t('states.decorative.behavior')) },
-            { label: t('states.semantic.label'),   trigger: t('states.semantic.trigger'),   behavior: stripHtml(t('states.semantic.behavior')) },
+            { label: t('states.decorative.label'), trigger: toPlainText(t('states.decorative.trigger')), behavior: toPlainText(t('states.decorative.behavior')) },
+            { label: t('states.semantic.label'),   trigger: toPlainText(t('states.semantic.trigger')),   behavior: toPlainText(t('states.semantic.behavior')) },
           ],
         });
 
@@ -560,6 +567,8 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -580,10 +589,10 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.card.name'),           description: t('related.items.card.description'),           path: '?path=/docs/ui-card--docs' },
-            { name: t('related.items.sheet.name'),          description: t('related.items.sheet.description'),          path: '?path=/docs/ui-sheet--docs' },
-            { name: t('related.items.sidebar.name'),        description: t('related.items.sidebar.description'),        path: '?path=/docs/ui-sidebar--docs' },
-            { name: t('related.items.navigationMenu.name'), description: t('related.items.navigationMenu.description'), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: t('related.items.card.name'),           description: toPlainText(t('related.items.card.description')),           path: '?path=/docs/ui-card--docs' },
+            { name: t('related.items.sheet.name'),          description: toPlainText(t('related.items.sheet.description')),          path: '?path=/docs/ui-sheet--docs' },
+            { name: t('related.items.sidebar.name'),        description: toPlainText(t('related.items.sidebar.description')),        path: '?path=/docs/ui-sidebar--docs' },
+            { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/ui-navigationmenu--docs' },
           ],
         });
 
@@ -609,7 +618,7 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
           items: [
             {
               event: '—',
-              trigger: DOMPurify.sanitize(t('analytics.description')),
+              trigger: toPlainText(t('analytics.description')),
               payload: '—',
             },
           ],

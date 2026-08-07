@@ -4,7 +4,7 @@
 // Política: página que falha no axe recebe parameters.a11y.test='todo' com as
 // rules em comentário; página que crasha fica FORA do arquivo, listada aqui.
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { AboutDocs } from './AboutDocs';
 import { AccessibilityDocs } from './AccessibilityDocs';
@@ -88,6 +88,33 @@ type Story = StoryObj<typeof meta>;
 // relaxado para cobrir todas sem perder a prova de mount (crash = 0 sections).
 const mounted: Story['play'] = async ({ canvasElement }) => {
   await expect(canvasElement.querySelector('section')).not.toBeNull();
+
+  // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
+  // preview, servido como <html lang="en"> pelo template do Storybook: se o
+  // useSeoEffect voltar a escrever o lang só no documento pai, a prosa em
+  // português volta a ser anunciada em inglês e ninguém percebe. WCAG 3.1.1.
+  // 'pt-BR' e não a lista de locales: 'en' é justamente o valor que o template
+  // do Storybook deixa no iframe, e uma asserção que o aceita passa com o bug.
+  await waitFor(() => expect(document.documentElement.lang).toBe('pt-BR'));
+};
+
+// Página que anima a entrada (opacity 0 → 1 via style inline, rAF) precisa
+// assentar ANTES do axe, que roda no postVisit — logo depois da play. Sem isto
+// ele mede no quadro em que o texto ainda está invisível e reprova por
+// color-contrast: o "1.01 (#fdfdfd sobre #ffffff)" não é contraste ruim, é
+// corrida com a animação. A play só termina quando nada está a meio caminho.
+const settled: Story['play'] = async (ctx) => {
+  const { canvasElement } = ctx;
+  await mounted!(ctx);
+  await waitFor(
+    () => {
+      const midFlight = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('[style*="opacity"]'),
+      ).filter((el) => Number(el.style.opacity || '1') < 1);
+      expect(midFlight).toHaveLength(0);
+    },
+    { timeout: 5000 },
+  );
 };
 
 export const About: Story = {
@@ -290,7 +317,7 @@ export const Menubar: Story = {
 
 export const Motion: Story = {
   render: () => <MotionDocs />,
-  play: mounted,
+  play: settled,
 };
 
 // axe: aria-hidden-focus — catalogado no FIXES-NEEDED; landmark-unique restante

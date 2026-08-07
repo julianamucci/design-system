@@ -12,6 +12,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-themes',
     '@storybook/addon-mcp',
+    '@storybook/addon-designs',
   ],
   framework: {
     name: '@storybook/svelte-vite',

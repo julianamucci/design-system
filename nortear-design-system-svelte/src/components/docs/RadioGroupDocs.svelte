@@ -15,9 +15,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import radioGroupTranslations from '@shared/content/radio-group/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(radioGroupTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (radioGroupTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -46,7 +58,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -84,10 +95,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -631,16 +638,16 @@ interface RadioGroupItemProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.checked.label'),  trigger: $tStore('states.checked.trigger'),  behavior: stripHtml($tStore('states.checked.behavior')) },
-      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
-      { label: $tStore('states.invalid.label'),  trigger: $tStore('states.invalid.trigger'),  behavior: stripHtml($tStore('states.invalid.behavior')) },
+      { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),  behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.checked.label'),  trigger: toPlainText($tStore('states.checked.trigger')),  behavior: toPlainText($tStore('states.checked.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: toPlainText($tStore('states.hover.trigger')),    behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.invalid.label'),  trigger: toPlainText($tStore('states.invalid.trigger')),  behavior: toPlainText($tStore('states.invalid.behavior')) },
     ]}
   />
 
@@ -657,13 +664,13 @@ interface RadioGroupItemProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',         type: $tStore('props.table.value.type'),         defaultValue: $tStore('props.table.value.default'),         required: $tStore('props.table.value.required'),         description: stripHtml($tStore('props.table.value.description')) },
-          { name: 'defaultValue',  type: $tStore('props.table.defaultValue.type'),  defaultValue: $tStore('props.table.defaultValue.default'),  required: $tStore('props.table.defaultValue.required'),  description: stripHtml($tStore('props.table.defaultValue.description')) },
-          { name: 'onValueChange', type: $tStore('props.table.onValueChange.type'), defaultValue: $tStore('props.table.onValueChange.default'), required: $tStore('props.table.onValueChange.required'), description: stripHtml($tStore('props.table.onValueChange.description')) },
-          { name: 'disabled',      type: $tStore('props.table.disabled.type'),      defaultValue: $tStore('props.table.disabled.default'),      required: $tStore('props.table.disabled.required'),      description: stripHtml($tStore('props.table.disabled.description')) },
-          { name: 'name',          type: $tStore('props.table.name.type'),          defaultValue: $tStore('props.table.name.default'),          required: $tStore('props.table.name.required'),          description: stripHtml($tStore('props.table.name.description')) },
-          { name: 'orientation',   type: $tStore('props.table.orientation.type'),   defaultValue: $tStore('props.table.orientation.default'),   required: $tStore('props.table.orientation.required'),   description: stripHtml($tStore('props.table.orientation.description')) },
-          { name: 'class',         type: $tStore('props.table.className.type'),     defaultValue: $tStore('props.table.className.default'),     required: $tStore('props.table.className.required'),     description: stripHtml($tStore('props.table.className.description')) },
+          { name: 'value',         type: $tStore('props.table.value.type'),         defaultValue: $tStore('props.table.value.default'),         required: $tStore('props.table.value.required'),         description: toPlainText($tStore('props.table.value.description')) },
+          { name: 'defaultValue',  type: $tStore('props.table.defaultValue.type'),  defaultValue: $tStore('props.table.defaultValue.default'),  required: $tStore('props.table.defaultValue.required'),  description: toPlainText($tStore('props.table.defaultValue.description')) },
+          { name: 'onValueChange', type: $tStore('props.table.onValueChange.type'), defaultValue: $tStore('props.table.onValueChange.default'), required: $tStore('props.table.onValueChange.required'), description: toPlainText($tStore('props.table.onValueChange.description')) },
+          { name: 'disabled',      type: $tStore('props.table.disabled.type'),      defaultValue: $tStore('props.table.disabled.default'),      required: $tStore('props.table.disabled.required'),      description: toPlainText($tStore('props.table.disabled.description')) },
+          { name: 'name',          type: $tStore('props.table.name.type'),          defaultValue: $tStore('props.table.name.default'),          required: $tStore('props.table.name.required'),          description: toPlainText($tStore('props.table.name.description')) },
+          { name: 'orientation',   type: $tStore('props.table.orientation.type'),   defaultValue: $tStore('props.table.orientation.default'),   required: $tStore('props.table.orientation.required'),   description: toPlainText($tStore('props.table.orientation.description')) },
+          { name: 'class',         type: $tStore('props.table.className.type'),     defaultValue: $tStore('props.table.className.default'),     required: $tStore('props.table.className.required'),     description: toPlainText($tStore('props.table.className.description')) },
         ],
       },
     ]}
@@ -692,6 +699,8 @@ interface RadioGroupItemProps {
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -704,12 +713,12 @@ interface RadioGroupItemProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: 'Tab',          description: stripHtml($tStore('accessibility.keyboard.tab')) },
-      { key: 'Arrow Down',  description: stripHtml($tStore('accessibility.keyboard.arrowDown')) },
-      { key: 'Arrow Up',    description: stripHtml($tStore('accessibility.keyboard.arrowUp')) },
-      { key: 'Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrowRight')) },
-      { key: 'Arrow Left',  description: stripHtml($tStore('accessibility.keyboard.arrowLeft')) },
-      { key: 'Space',        description: stripHtml($tStore('accessibility.keyboard.space')) },
+      { key: 'Tab',          description: toPlainText($tStore('accessibility.keyboard.tab')) },
+      { key: 'Arrow Down',  description: toPlainText($tStore('accessibility.keyboard.arrowDown')) },
+      { key: 'Arrow Up',    description: toPlainText($tStore('accessibility.keyboard.arrowUp')) },
+      { key: 'Arrow Right', description: toPlainText($tStore('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: toPlainText($tStore('accessibility.keyboard.arrowLeft')) },
+      { key: 'Space',        description: toPlainText($tStore('accessibility.keyboard.space')) },
     ]}
   />
 
@@ -740,13 +749,13 @@ interface RadioGroupItemProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
       {
         event: 'radio_change',
-        trigger: $tStore('analytics.table.radio_change.trigger'),
+        trigger: toPlainText($tStore('analytics.table.radio_change.trigger')),
         payload: $tStore('analytics.table.radio_change.payload'),
       },
     ]}
@@ -763,10 +772,10 @@ interface RadioGroupItemProps {
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: stripHtml($tStore('testes.functional.item1.action')), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
       ],
     }}
     accessibility={{

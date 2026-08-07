@@ -29,7 +29,11 @@
   <div class="nds-stack" data-spacing="md">
     {#each items as item, i (i)}
       <div data-track="link" data-track-id={trackId(i)}>
-        <Alert variant="default">
+        <!-- role="note": as notas são conteúdo ESTÁTICO, já presente quando a
+             página carrega. Com o `role="alert"` padrão do primitivo, cada nota
+             vira live region assertiva e o leitor de tela salta para esta seção
+             no carregamento (e fica preso nela). -->
+        <Alert variant="default" role="note">
           {#if item.title}
             <AlertTitle>{item.title}</AlertTitle>
           {/if}

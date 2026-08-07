@@ -24,9 +24,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import sheetTranslations from '@shared/content/sheet/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(sheetTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (sheetTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -55,7 +67,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -94,10 +105,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -640,15 +647,15 @@ interface TriggerProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),         trigger: $tStore('states.closed.trigger'),                    behavior: stripHtml($tStore('states.closed.behavior')) },
-      { label: $tStore('states.open.label'),           trigger: $tStore('states.open.trigger'),                      behavior: stripHtml($tStore('states.open.behavior')) },
-      { label: $tStore('states.transitioning.label'),  trigger: $tStore('states.transitioning.trigger'),             behavior: stripHtml($tStore('states.transitioning.behavior')) },
-      { label: $tStore('states.focused.label'),        trigger: $tStore('states.focused.trigger'),                   behavior: stripHtml($tStore('states.focused.behavior')) },
-      { label: $tStore('states.longScrollBody.label'), trigger: stripHtml($tStore('states.longScrollBody.trigger')), behavior: stripHtml($tStore('states.longScrollBody.behavior')) },
+      { label: $tStore('states.closed.label'),         trigger: toPlainText($tStore('states.closed.trigger')),                    behavior: toPlainText($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),           trigger: toPlainText($tStore('states.open.trigger')),                      behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.transitioning.label'),  trigger: toPlainText($tStore('states.transitioning.trigger')),             behavior: toPlainText($tStore('states.transitioning.behavior')) },
+      { label: $tStore('states.focused.label'),        trigger: toPlainText($tStore('states.focused.trigger')),                   behavior: toPlainText($tStore('states.focused.behavior')) },
+      { label: $tStore('states.longScrollBody.label'), trigger: toPlainText($tStore('states.longScrollBody.trigger')), behavior: toPlainText($tStore('states.longScrollBody.behavior')) },
     ]}
   />
 
@@ -659,12 +666,12 @@ interface TriggerProps {
       {
         cols: propsTableCols,
         items: [
-          { name: 'open',            type: $tStore('props.table.open.type'),            defaultValue: $tStore('props.table.open.default'),            required: $tStore('props.table.open.required'),            description: stripHtml($tStore('props.table.open.description'))            },
+          { name: 'open',            type: $tStore('props.table.open.type'),            defaultValue: $tStore('props.table.open.default'),            required: $tStore('props.table.open.required'),            description: toPlainText($tStore('props.table.open.description'))            },
           { name: 'defaultOpen',     type: $tStore('props.table.defaultOpen.type'),     defaultValue: $tStore('props.table.defaultOpen.default'),     required: $tStore('props.table.defaultOpen.required'),     description: $tStore('props.table.defaultOpen.description')                },
           { name: 'onOpenChange',    type: $tStore('props.table.onOpenChange.type'),    defaultValue: $tStore('props.table.onOpenChange.default'),    required: $tStore('props.table.onOpenChange.required'),    description: $tStore('props.table.onOpenChange.description')               },
-          { name: 'side',            type: $tStore('props.table.side.type'),            defaultValue: $tStore('props.table.side.default'),            required: $tStore('props.table.side.required'),            description: stripHtml($tStore('props.table.side.description'))            },
-          { name: 'showCloseButton', type: $tStore('props.table.showCloseButton.type'), defaultValue: $tStore('props.table.showCloseButton.default'), required: $tStore('props.table.showCloseButton.required'), description: stripHtml($tStore('props.table.showCloseButton.description')) },
-          { name: 'class',           type: $tStore('props.table.className.type'),       defaultValue: $tStore('props.table.className.default'),       required: $tStore('props.table.className.required'),       description: stripHtml($tStore('props.table.className.description'))       },
+          { name: 'side',            type: $tStore('props.table.side.type'),            defaultValue: $tStore('props.table.side.default'),            required: $tStore('props.table.side.required'),            description: toPlainText($tStore('props.table.side.description'))            },
+          { name: 'showCloseButton', type: $tStore('props.table.showCloseButton.type'), defaultValue: $tStore('props.table.showCloseButton.default'), required: $tStore('props.table.showCloseButton.required'), description: toPlainText($tStore('props.table.showCloseButton.description')) },
+          { name: 'class',           type: $tStore('props.table.className.type'),       defaultValue: $tStore('props.table.className.default'),       required: $tStore('props.table.className.required'),       description: toPlainText($tStore('props.table.className.description'))       },
         ],
       },
     ]}
@@ -696,6 +703,8 @@ interface TriggerProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -743,13 +752,13 @@ interface TriggerProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'dialog_open',    trigger: $tStore('analytics.table.dialog_open.trigger'),    payload: $tStore('analytics.table.dialog_open.payload')    },
-      { event: 'dialog_close',   trigger: $tStore('analytics.table.dialog_close.trigger'),   payload: $tStore('analytics.table.dialog_close.payload')   },
-      { event: 'dialog_confirm', trigger: $tStore('analytics.table.dialog_confirm.trigger'), payload: $tStore('analytics.table.dialog_confirm.payload') },
+      { event: 'dialog_open',    trigger: toPlainText($tStore('analytics.table.dialog_open.trigger')),    payload: $tStore('analytics.table.dialog_open.payload')    },
+      { event: 'dialog_close',   trigger: toPlainText($tStore('analytics.table.dialog_close.trigger')),   payload: $tStore('analytics.table.dialog_close.payload')   },
+      { event: 'dialog_confirm', trigger: toPlainText($tStore('analytics.table.dialog_confirm.trigger')), payload: $tStore('analytics.table.dialog_confirm.payload') },
     ]}
   />
 

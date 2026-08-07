@@ -6,7 +6,7 @@ import ToggleGroupStory from './ToggleGroupStory.svelte';
 import ToggleGroupDocs from '@/components/docs/ToggleGroupDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ToggleGroup',
   component: ToggleGroup,
   tags: ['autodocs', 'form'],
@@ -48,10 +48,10 @@ const meta = {
     size: 'default',
     onValueChange: fn(),
   },
-} satisfies Meta<typeof ToggleGroup>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

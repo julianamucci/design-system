@@ -34,7 +34,9 @@
       "item3": "<strong>TabsTrigger</strong> — botão <code>role=\"tab\"</code> que ativa o painel correspondente via <code>value</code>.",
       "item4": "<strong>TabsContent</strong> — painel <code>role=\"tabpanel\"</code> vinculado ao trigger via <code>value</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Seções\">\n    <TabsTrigger value=\"overview\">Visão geral</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propriedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Exemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Conteúdo da visão geral</TabsContent>\n  <TabsContent value=\"properties\">Lista de propriedades</TabsContent>\n  <TabsContent value=\"examples\">Exemplos de uso</TabsContent>\n</Tabs>"
+      "structureCode": {
+        "react": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Seções\">\n    <TabsTrigger value=\"overview\">Visão geral</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propriedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Exemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Conteúdo da visão geral</TabsContent>\n  <TabsContent value=\"properties\">Lista de propriedades</TabsContent>\n  <TabsContent value=\"examples\">Exemplos de uso</TabsContent>\n</Tabs>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -245,7 +247,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Tabs controladas com analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Seções do componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      "extensibilityCode": {
+        "react": "// Tabs controladas com analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Seções do componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -279,7 +283,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Altura customizada do TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      "customizationCode": {
+        "web": "/* Altura customizada do TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -472,7 +478,9 @@
       "item3": "<strong>TabsTrigger</strong> — <code>role=\"tab\"</code> button that activates the corresponding panel via <code>value</code>.",
       "item4": "<strong>TabsContent</strong> — <code>role=\"tabpanel\"</code> panel linked to trigger via <code>value</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Sections\">\n    <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n    <TabsTrigger value=\"properties\">Properties</TabsTrigger>\n    <TabsTrigger value=\"examples\">Examples</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Overview content</TabsContent>\n  <TabsContent value=\"properties\">Property list</TabsContent>\n  <TabsContent value=\"examples\">Usage examples</TabsContent>\n</Tabs>"
+      "structureCode": {
+        "react": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Sections\">\n    <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n    <TabsTrigger value=\"properties\">Properties</TabsTrigger>\n    <TabsTrigger value=\"examples\">Examples</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Overview content</TabsContent>\n  <TabsContent value=\"properties\">Property list</TabsContent>\n  <TabsContent value=\"examples\">Usage examples</TabsContent>\n</Tabs>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -683,7 +691,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled tabs with analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Component sections\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      "extensibilityCode": {
+        "react": "// Controlled tabs with analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Component sections\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -717,7 +727,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom TabsList height */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      "customizationCode": {
+        "web": "/* Custom TabsList height */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -910,7 +922,9 @@
       "item3": "<strong>TabsTrigger</strong> — botón <code>role=\"tab\"</code> que activa el panel correspondiente vía <code>value</code>.",
       "item4": "<strong>TabsContent</strong> — panel <code>role=\"tabpanel\"</code> vinculado al trigger vía <code>value</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Secciones\">\n    <TabsTrigger value=\"overview\">Visión general</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propiedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Ejemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Contenido de la visión general</TabsContent>\n  <TabsContent value=\"properties\">Lista de propiedades</TabsContent>\n  <TabsContent value=\"examples\">Ejemplos de uso</TabsContent>\n</Tabs>"
+      "structureCode": {
+        "react": "<Tabs defaultValue=\"overview\">\n  <TabsList aria-label=\"Secciones\">\n    <TabsTrigger value=\"overview\">Visión general</TabsTrigger>\n    <TabsTrigger value=\"properties\">Propiedades</TabsTrigger>\n    <TabsTrigger value=\"examples\">Ejemplos</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"overview\">Contenido de la visión general</TabsContent>\n  <TabsContent value=\"properties\">Lista de propiedades</TabsContent>\n  <TabsContent value=\"examples\">Ejemplos de uso</TabsContent>\n</Tabs>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1121,7 +1135,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Tabs controladas con analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Secciones del componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      "extensibilityCode": {
+        "react": "// Tabs controladas con analytics\nconst [value, setValue] = useState('overview');\n\n<Tabs\n  value={value}\n  onValueChange={(next) => {\n    track('tab_change', {\n      component: 'tabs',\n      label: tabs.find((t) => t.value === next)?.label,\n      index: tabs.findIndex((t) => t.value === next),\n      total: tabs.length,\n    });\n    setValue(next);\n  }}\n>\n  <TabsList aria-label=\"Secciones del componente\">\n    {tabs.map((t) => (\n      <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>\n    ))}\n  </TabsList>\n  {tabs.map((t) => (\n    <TabsContent key={t.value} value={t.value}>{t.content}</TabsContent>\n  ))}\n</Tabs>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1155,7 +1171,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Altura personalizada del TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      "customizationCode": {
+        "web": "/* Altura personalizada del TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

@@ -24,17 +24,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(scrollAreaTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (scrollAreaTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -114,8 +122,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap((g) => g.sections.map((s) => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -205,10 +211,10 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.idle.label'),      trigger: tContent('states.idle.trigger'),      behavior: stripHtml(tContent('states.idle.behavior')) },
-  { label: tContent('states.scrolling.label'), trigger: tContent('states.scrolling.trigger'), behavior: stripHtml(tContent('states.scrolling.behavior')) },
-  { label: tContent('states.hover.label'),     trigger: tContent('states.hover.trigger'),     behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.focus.label'),     trigger: tContent('states.focus.trigger'),     behavior: stripHtml(tContent('states.focus.behavior')) },
+  { label: tContent('states.idle.label'),      trigger: toPlainText(tContent('states.idle.trigger')),      behavior: toPlainText(tContent('states.idle.behavior')) },
+  { label: tContent('states.scrolling.label'), trigger: toPlainText(tContent('states.scrolling.trigger')), behavior: toPlainText(tContent('states.scrolling.behavior')) },
+  { label: tContent('states.hover.label'),     trigger: toPlainText(tContent('states.hover.trigger')),     behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),     trigger: toPlainText(tContent('states.focus.trigger')),     behavior: toPlainText(tContent('states.focus.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -220,15 +226,15 @@ const propCols = computed(() => ({
 }));
 
 const scrollAreaPropItems = computed(() => [
-  { name: 'type',            type: tContent('props.table.type_prop.type'),        defaultValue: tContent('props.table.type_prop.default'),        required: tContent('props.table.type_prop.required'),        description: stripHtml(tContent('props.table.type_prop.description'))        },
-  { name: 'scrollHideDelay', type: tContent('props.table.scrollHideDelay.type'),  defaultValue: tContent('props.table.scrollHideDelay.default'),  required: tContent('props.table.scrollHideDelay.required'),  description: stripHtml(tContent('props.table.scrollHideDelay.description'))  },
-  { name: 'class',           type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: stripHtml(tContent('props.table.className.description'))        },
-  { name: 'slot:default',    type: tContent('props.table.children.type'),         defaultValue: tContent('props.table.children.default'),         required: tContent('props.table.children.required'),         description: stripHtml(tContent('props.table.children.description'))         },
+  { name: 'type',            type: tContent('props.table.type_prop.type'),        defaultValue: tContent('props.table.type_prop.default'),        required: tContent('props.table.type_prop.required'),        description: toPlainText(tContent('props.table.type_prop.description'))        },
+  { name: 'scrollHideDelay', type: tContent('props.table.scrollHideDelay.type'),  defaultValue: tContent('props.table.scrollHideDelay.default'),  required: tContent('props.table.scrollHideDelay.required'),  description: toPlainText(tContent('props.table.scrollHideDelay.description'))  },
+  { name: 'class',           type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: toPlainText(tContent('props.table.className.description'))        },
+  { name: 'slot:default',    type: tContent('props.table.children.type'),         defaultValue: tContent('props.table.children.default'),         required: tContent('props.table.children.required'),         description: toPlainText(tContent('props.table.children.description'))         },
 ]);
 
 const scrollBarPropItems = computed(() => [
-  { name: 'orientation', type: tContent('props.table.orientation.type'), defaultValue: tContent('props.table.orientation.default'), required: tContent('props.table.orientation.required'), description: stripHtml(tContent('props.table.orientation.description')) },
-  { name: 'class',       type: tContent('props.table.className.type'),   defaultValue: tContent('props.table.className.default'),   required: tContent('props.table.className.required'),   description: stripHtml(tContent('props.table.className.description'))   },
+  { name: 'orientation', type: tContent('props.table.orientation.type'), defaultValue: tContent('props.table.orientation.default'), required: tContent('props.table.orientation.required'), description: toPlainText(tContent('props.table.orientation.description')) },
+  { name: 'class',       type: tContent('props.table.className.type'),   defaultValue: tContent('props.table.className.default'),   required: tContent('props.table.className.required'),   description: toPlainText(tContent('props.table.className.description'))   },
 ]);
 
 const tokenRows = computed(() => [
@@ -262,10 +268,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Resizable', description: tContent('related.items.resizable.description'), path: '?path=/docs/ui-resizable--docs' },
-  { name: 'Sheet',     description: tContent('related.items.sheet.description'),     path: '?path=/docs/ui-sheet--docs'     },
-  { name: 'Dialog',    description: tContent('related.items.dialog.description'),    path: '?path=/docs/ui-dialog--docs'    },
-  { name: 'Command',   description: tContent('related.items.command.description'),   path: '?path=/docs/ui-command--docs'   },
+  { name: 'Resizable', description: toPlainText(tContent('related.items.resizable.description')), path: '?path=/docs/ui-resizable--docs' },
+  { name: 'Sheet',     description: toPlainText(tContent('related.items.sheet.description')),     path: '?path=/docs/ui-sheet--docs'     },
+  { name: 'Dialog',    description: toPlainText(tContent('related.items.dialog.description')),    path: '?path=/docs/ui-dialog--docs'    },
+  { name: 'Command',   description: toPlainText(tContent('related.items.command.description')),   path: '?path=/docs/ui-command--docs'   },
 ]);
 
 const noteItems = computed(() => [
@@ -276,7 +282,7 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'content_scroll', trigger: tContent('analytics.table.content_scroll.trigger'), payload: tContent('analytics.table.content_scroll.payload') },
+  { event: 'content_scroll', trigger: toPlainText(tContent('analytics.table.content_scroll.trigger')), payload: tContent('analytics.table.content_scroll.payload') },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -526,8 +532,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -733,8 +739,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -766,6 +772,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -790,7 +798,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

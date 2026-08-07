@@ -26,17 +26,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(buttonTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (buttonTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -112,8 +120,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -134,15 +140,19 @@ const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
 const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
 const codeSizeDefault = `<Button>Padrão</Button>`;
+const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
 const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
 const codeSizeLg = `<Button size="lg">Grande</Button>`;
-const codeSizeIcon = `<Button size="icon" aria-label="Adicionar">
+const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
-const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar">
+const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
-const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Plus aria-hidden="true" />
+</Button>`;
+const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -159,7 +169,7 @@ const codeCustomizationTokens = `/* Em globals.css — sobrescrever tokens de co
 
 const interfaceCode = `interface ButtonProps {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  size?: 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+  size?: 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
   asChild?: boolean;
   disabled?: boolean;
   class?: string;
@@ -190,9 +200,11 @@ const variantItems = computed(() => [
 
 const sizeItems = computed(() => [
   { name: 'default',  description: stripHtml(tContent('variants.sizes.default')),  code: codeSizeDefault  },
+  { name: 'xs',       description: stripHtml(tContent('variants.sizes.xs')),       code: codeSizeXs       },
   { name: 'sm',       description: stripHtml(tContent('variants.sizes.sm')),       code: codeSizeSm       },
   { name: 'lg',       description: stripHtml(tContent('variants.sizes.lg')),       code: codeSizeLg       },
   { name: 'icon',     description: stripHtml(tContent('variants.sizes.icon')),     code: codeSizeIcon     },
+  { name: 'icon-xs',  description: stripHtml(tContent('variants.sizes.icon-xs')), code: codeSizeIconXs   },
   { name: 'icon-sm',  description: stripHtml(tContent('variants.sizes.icon-sm')), code: codeSizeIconSm   },
   { name: 'icon-lg',  description: stripHtml(tContent('variants.sizes.icon-lg')), code: codeSizeIconLg   },
 ]);
@@ -225,12 +237,12 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),      trigger: tContent('states.default.trigger'),      behavior: tContent('states.default.behavior')      },
-  { label: tContent('states.hover.label'),        trigger: tContent('states.hover.trigger'),        behavior: tContent('states.hover.behavior')        },
-  { label: tContent('states.focusVisible.label'), trigger: tContent('states.focusVisible.trigger'), behavior: tContent('states.focusVisible.behavior') },
-  { label: tContent('states.disabled.label'),     trigger: tContent('states.disabled.trigger'),     behavior: tContent('states.disabled.behavior')     },
-  { label: tContent('states.loading.label'),      trigger: tContent('states.loading.trigger'),      behavior: tContent('states.loading.behavior')      },
-  { label: tContent('states.invalid.label'),      trigger: tContent('states.invalid.trigger'),      behavior: tContent('states.invalid.behavior')      },
+  { label: tContent('states.default.label'),      trigger: toPlainText(tContent('states.default.trigger')),      behavior: toPlainText(tContent('states.default.behavior'))},
+  { label: tContent('states.hover.label'),        trigger: toPlainText(tContent('states.hover.trigger')),        behavior: toPlainText(tContent('states.hover.behavior'))},
+  { label: tContent('states.focusVisible.label'), trigger: toPlainText(tContent('states.focusVisible.trigger')), behavior: toPlainText(tContent('states.focusVisible.behavior'))},
+  { label: tContent('states.disabled.label'),     trigger: toPlainText(tContent('states.disabled.trigger')),     behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.loading.label'),      trigger: toPlainText(tContent('states.loading.trigger')),      behavior: toPlainText(tContent('states.loading.behavior'))},
+  { label: tContent('states.invalid.label'),      trigger: toPlainText(tContent('states.invalid.trigger')),      behavior: toPlainText(tContent('states.invalid.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -240,24 +252,28 @@ const propCols = computed(() => ({
 }));
 
 const buttonPropItems = computed(() => [
-  { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant')) },
-  { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.size')) },
-  { name: 'asChild',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.asChild')) },
-  { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.table.disabled')) },
-  { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(tContent('props.table.type')) },
-  { name: '@click',   type: '(event: MouseEvent) => void',                                            defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.onClick')) },
-  { name: 'class',    type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className')) },
+  { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant')) },
+  { name: 'size',     type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.size')) },
+  { name: 'asChild',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: toPlainText(tContent('props.table.asChild')) },
+  { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: toPlainText(tContent('props.table.disabled')) },
+  // htmlType, não `type`: esta última é o cabeçalho da coluna.
+  { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: toPlainText(tContent('props.table.htmlType')) },
+  { name: '@click',   type: '(event: MouseEvent) => void',                                            defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.onClick')) },
+  { name: 'class',    type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--primary',            value: 'bg-primary',            description: tContent('tokens.table.primary')            },
-  { token: '--primary-foreground', value: 'text-primary-foreground', description: tContent('tokens.table.primaryForeground') },
-  { token: '--secondary',          value: 'bg-secondary',          description: tContent('tokens.table.secondary')          },
-  { token: '--destructive',        value: 'bg-destructive',        description: tContent('tokens.table.destructive')        },
-  { token: '--border',             value: 'border',                description: tContent('tokens.table.border')             },
-  { token: '--accent',             value: 'bg-accent',             description: tContent('tokens.table.accent')             },
-  { token: '--ring',               value: 'nds-focus-ring', description: tContent('tokens.table.ring')          },
-  { token: '--radius',             value: 'rounded-md',            description: tContent('tokens.table.radius')             },
+  // A coluna aponta ONDE o token é lido no CSS do componente. Antes listava
+  // classes do Tailwind (bg-primary, rounded-md) que não existem mais: quem
+  // seguisse a tabela não mudava nada.
+  { token: '--primary',            value: '.nds-button-default',   description: tContent('tokens.table.primary')            },
+  { token: '--primary-foreground', value: '.nds-button-default',   description: tContent('tokens.table.primaryForeground') },
+  { token: '--secondary',          value: '.nds-button-secondary', description: tContent('tokens.table.secondary')          },
+  { token: '--destructive',        value: '.nds-button-destructive', description: tContent('tokens.table.destructive')      },
+  { token: '--border',             value: '.nds-button-outline',   description: tContent('tokens.table.border')             },
+  { token: '--accent',             value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: tContent('tokens.table.accent') },
+  { token: '--ring',               value: '.nds-button:focus-visible', description: tContent('tokens.table.ring')          },
+  { token: '--radius-button',      value: '.nds-button',           description: tContent('tokens.table.radius')             },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -266,19 +282,22 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',    description: tContent('accessibility.keyboard.tab')    },
-  { key: 'Enter',  description: tContent('accessibility.keyboard.enter')  },
-  { key: 'Space',  description: tContent('accessibility.keyboard.space')  },
-  { key: 'Escape', description: tContent('accessibility.keyboard.escape') },
+  { key: 'Tab',    description: toPlainText(tContent('accessibility.keyboard.tab'))    },
+  { key: 'Enter',  description: toPlainText(tContent('accessibility.keyboard.enter'))  },
+  { key: 'Space',  description: toPlainText(tContent('accessibility.keyboard.space'))  },
+  // Era `Escape`, tecla que o button não trata e cuja chave não existe — a
+  // linha saía com o nome da chave como texto. As outras stacks documentam
+  // aqui o comportamento em disabled.
+  { key: '—',      description: toPlainText(tContent('accessibility.keyboard.disabled')) },
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Toggle',      description: tContent('related.toggle'),      path: '?path=/docs/ui-toggle--docs'      },
-  { name: 'Switch',      description: tContent('related.switch'),      path: '?path=/docs/ui-switch--docs'      },
-  { name: 'Link',        description: tContent('related.link'),        path: '?path=/docs/foundations-link--docs' },
-  { name: 'Form',        description: tContent('related.form'),        path: '?path=/docs/ui-form--docs'        },
-  { name: 'Dialog',      description: tContent('related.dialog'),      path: '?path=/docs/ui-dialog--docs'      },
-  { name: 'AlertDialog', description: tContent('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: 'Toggle',      description: toPlainText(tContent('related.toggle')),      path: '?path=/docs/ui-toggle--docs'      },
+  { name: 'Switch',      description: toPlainText(tContent('related.switch')),      path: '?path=/docs/ui-switch--docs'      },
+  { name: 'Link',        description: toPlainText(tContent('related.link')),        path: '?path=/docs/foundations-link--docs' },
+  { name: 'Form',        description: toPlainText(tContent('related.form')),        path: '?path=/docs/ui-form--docs'        },
+  { name: 'Dialog',      description: toPlainText(tContent('related.dialog')),      path: '?path=/docs/ui-dialog--docs'      },
+  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -288,10 +307,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.click'),         trigger: tContent('analytics.table.clickTrigger'),         payload: tContent('analytics.table.clickPayload')         },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.click'),         trigger: toPlainText(tContent('analytics.table.clickTrigger')),         payload: tContent('analytics.table.clickPayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -301,28 +320,28 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: toPlainText(tContent('testes.functional.item1.action')), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: toPlainText(tContent('testes.functional.item2.action')), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: toPlainText(tContent('testes.functional.item3.action')), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: toPlainText(tContent('testes.functional.item6.action')), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-  { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: toPlainText(tContent('testes.accessibility.item1.criterion')), level: tContent('testes.accessibility.item1.level'), how: toPlainText(tContent('testes.accessibility.item1.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: toPlainText(tContent('testes.accessibility.item2.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: toPlainText(tContent('testes.accessibility.item3.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item4.criterion')), level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
+  { criterion: toPlainText(tContent('testes.accessibility.item5.criterion')), level: tContent('testes.accessibility.item5.level'), how: toPlainText(tContent('testes.accessibility.item5.how')) },
 ]);
 
 const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
+  { story: toPlainText(tContent('testes.visual.item1.story')), priority: localPriority(tContent('testes.visual.item1.priority')) },
+  { story: toPlainText(tContent('testes.visual.item2.story')), priority: localPriority(tContent('testes.visual.item2.priority')) },
+  { story: toPlainText(tContent('testes.visual.item3.story')), priority: localPriority(tContent('testes.visual.item3.priority')) },
+  { story: toPlainText(tContent('testes.visual.item4.story')), priority: localPriority(tContent('testes.visual.item4.priority')) },
+  { story: toPlainText(tContent('testes.visual.item5.story')), priority: localPriority(tContent('testes.visual.item5.priority')) },
 ]);
 
 function handleDemoClick(variant: string) {
@@ -350,10 +369,10 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
+      <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
       <div
         class="nds-cluster"
         data-spacing="sm"
-        style="flex-wrap: wrap"
       >
         <Button @click="handleDemoClick('default')">
           {{ tContent('demonstration.labels.primary') }}
@@ -421,19 +440,20 @@ function handleDemoClick(variant: string) {
         title: tContent('usage.scenarios.title'),
         cols: { scenario: tContent('usage.scenarios.cols.scenario'), use: tContent('usage.scenarios.cols.use'), alternative: tContent('usage.scenarios.cols.alternative') },
         items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
+          { s: toPlainText(tContent('usage.scenarios.item1.s')), u: toPlainText(tContent('usage.scenarios.item1.u')), a: toPlainText(tContent('usage.scenarios.item1.a')) },
+          { s: toPlainText(tContent('usage.scenarios.item2.s')), u: toPlainText(tContent('usage.scenarios.item2.u')), a: toPlainText(tContent('usage.scenarios.item2.a')) },
+          { s: toPlainText(tContent('usage.scenarios.item3.s')), u: toPlainText(tContent('usage.scenarios.item3.u')), a: toPlainText(tContent('usage.scenarios.item3.a')) },
+          { s: toPlainText(tContent('usage.scenarios.item4.s')), u: toPlainText(tContent('usage.scenarios.item4.u')), a: toPlainText(tContent('usage.scenarios.item4.a')) },
         ],
       }"
       :ux-writing="{
         title: tContent('usage.uxWriting.title'),
         cols: { element: tContent('usage.uxWriting.table.element'), rules: tContent('usage.uxWriting.table.rules'), do: tContent('usage.uxWriting.table.correct'), dont: tContent('usage.uxWriting.table.avoid') },
         items: [
-          { element: tContent('usage.uxWriting.table.primary.name'), rules: tContent('usage.uxWriting.table.primary.format'), do: tContent('usage.uxWriting.table.primary.good'), dont: tContent('usage.uxWriting.table.primary.bad') },
-          { element: tContent('usage.uxWriting.table.destructive.name'), rules: tContent('usage.uxWriting.table.destructive.format'), do: tContent('usage.uxWriting.table.destructive.good'), dont: tContent('usage.uxWriting.table.destructive.bad') },
-          { element: tContent('usage.uxWriting.table.cancel.name'), rules: tContent('usage.uxWriting.table.cancel.format'), do: tContent('usage.uxWriting.table.cancel.good'), dont: tContent('usage.uxWriting.table.cancel.bad') },
+          { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
+          { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
+          { element: tContent('usage.uxWriting.table.iconOnly.name'), rules: tContent('usage.uxWriting.table.iconOnly.format'), do: toPlainText(tContent('usage.uxWriting.table.iconOnly.good')), dont: toPlainText(tContent('usage.uxWriting.table.iconOnly.bad')) },
+          { element: tContent('usage.uxWriting.table.loading.name'), rules: tContent('usage.uxWriting.table.loading.format'), do: tContent('usage.uxWriting.table.loading.good'), dont: tContent('usage.uxWriting.table.loading.bad') },
         ],
       }"
       :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
@@ -444,8 +464,8 @@ function handleDemoClick(variant: string) {
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -522,7 +542,7 @@ function handleDemoClick(variant: string) {
           href="#docs"
           variant="link"
         >
-          Ver documentação
+          {{ tContent('variants.items.asLink.linkLabel') }}
         </Button>
       </template>
     </DocsCompositions>
@@ -613,7 +633,7 @@ function handleDemoClick(variant: string) {
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -639,6 +659,8 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -661,7 +683,7 @@ function handleDemoClick(variant: string) {
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

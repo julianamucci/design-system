@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -83,7 +80,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
@@ -332,8 +328,8 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
           items: [
             { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
             { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-            { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-            { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
+            { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: toPlainText(tContent("usage.scenarios.item3.a")) },
+            { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: toPlainText(tContent("usage.scenarios.item4.a")) },
           ],
         }}
         uxWriting={{
@@ -414,8 +410,8 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 />
               </Avatar>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -430,8 +426,8 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 <AvatarFallback className="nds-text-caption">mar</AvatarFallback>
               </Avatar>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -538,29 +534,29 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.loaded.label"),
-            trigger: stripHtml(tContent("states.loaded.trigger")),
-            behavior: tContent("states.loaded.behavior"),
+            trigger: toPlainText(tContent("states.loaded.trigger")),
+            behavior: toPlainText(tContent("states.loaded.behavior")),
           },
           {
             label: tContent("states.loading.label"),
-            trigger: stripHtml(tContent("states.loading.trigger")),
-            behavior: tContent("states.loading.behavior"),
+            trigger: toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
           {
             label: tContent("states.failed.label"),
-            trigger: stripHtml(tContent("states.failed.trigger")),
-            behavior: tContent("states.failed.behavior"),
+            trigger: toPlainText(tContent("states.failed.trigger")),
+            behavior: toPlainText(tContent("states.failed.behavior")),
           },
           {
             label: tContent("states.noImage.label"),
-            trigger: stripHtml(tContent("states.noImage.trigger")),
-            behavior: tContent("states.noImage.behavior"),
+            trigger: toPlainText(tContent("states.noImage.trigger")),
+            behavior: toPlainText(tContent("states.noImage.behavior")),
           },
         ]}
       />
@@ -584,7 +580,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
               {
                 name: "asChild",
@@ -632,14 +628,14 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 type: '(status: "idle" | "loading" | "loaded" | "error") => void',
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.onLoadingStatusChange")),
+                description: toPlainText(tContent("props.table.onLoadingStatusChange")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
             ],
           },
@@ -665,7 +661,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
               {
                 name: "children",
@@ -693,11 +689,11 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
         items={[
           { token: "--muted",             value: "bg-muted",                 description: tContent("tokens.table.muted") },
           { token: "--muted-foreground",  value: "nds-text-muted-foreground",    description: tContent("tokens.table.mutedForeground") },
-          { token: "--background",        value: "ring-background",          description: stripHtml(tContent("tokens.table.background")) },
+          { token: "--background",        value: "ring-background",          description: toPlainText(tContent("tokens.table.background")) },
           { token: "--border",            value: "border",                   description: tContent("tokens.table.border") },
           { token: "--primary",           value: "bg-primary",               description: tContent("tokens.table.primary") },
           { token: "--avatar-size",       value: "var(--spacing-8)",         description: tContent("tokens.table.avatarSize") },
-          { token: "--radius",            value: "rounded-full",             description: stripHtml(tContent("tokens.table.radius")) },
+          { token: "--radius",            value: "rounded-full",             description: toPlainText(tContent("tokens.table.radius")) },
           { token: "--ring",              value: "nds-focus-ring",  description: tContent("tokens.table.ring") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
@@ -741,22 +737,22 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
         items={[
           {
             name: "Badge",
-            description: tContent("related.badge"),
+            description: toPlainText(tContent("related.badge")),
             path: "?path=/docs/ui-badge--docs",
           },
           {
             name: "AspectRatio",
-            description: tContent("related.aspectRatio"),
+            description: toPlainText(tContent("related.aspectRatio")),
             path: "?path=/docs/ui-aspectratio--docs",
           },
           {
             name: "Tooltip",
-            description: tContent("related.tooltip"),
+            description: toPlainText(tContent("related.tooltip")),
             path: "?path=/docs/ui-tooltip--docs",
           },
           {
             name: "Card",
-            description: tContent("related.card"),
+            description: toPlainText(tContent("related.card")),
             path: "?path=/docs/ui-card--docs",
           },
         ]}
@@ -777,28 +773,28 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.profileClick"),
-            trigger: tContent("analytics.table.profileClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.profileClickTrigger")),
             payload: tContent("analytics.table.profileClickPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

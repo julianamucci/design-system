@@ -20,6 +20,23 @@ export default defineConfig({
     },
   },
   test: {
+    // Mesma configuração de cobertura do React — os thresholds valem para o
+    // design system inteiro, não por stack.
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json', 'json-summary'],
+      include: ['src/components/ui/**/*.ts'],
+      exclude: [
+        'src/components/ui/**/*.stories.{ts,tsx}',
+        'src/components/ui/**/index.ts',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 80,
+        functions: 90,
+        lines: 90,
+      },
+    },
     projects: [
       {
         extends: true,
@@ -32,10 +49,15 @@ export default defineConfig({
           // rende o catálogo lucide inteiro (~2000 ícones) — o scan do axe
           // leva ~20s e estoura o default de 15s. addon-vitest não expõe
           // timeout por story.
-          testTimeout: 45_000,
+          // 120s como nas outras stacks: a 45s a página Icons encostava no
+          // limite (~47s medidos) e falhava conforme a carga da máquina.
+          testTimeout: 120_000,
           browser: {
             enabled: true,
             headless: true,
+            // Sem emulação de prefers-reduced-motion: as animações rodam de
+            // verdade, como para a maioria dos usuários. Asserção de abertura
+            // de portal usa waitForPortal() (src/lib/wait-for-portal.ts).
             provider: playwright({}),
             instances: [{ browser: 'chromium' }],
           },

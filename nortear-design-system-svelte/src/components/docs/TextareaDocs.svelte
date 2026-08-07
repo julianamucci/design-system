@@ -15,9 +15,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import textareaTranslations from '@shared/content/textarea/translations.json';
+  import { toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(textareaTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (textareaTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -46,7 +58,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -176,9 +187,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
   const counterAriaLabel = $derived(`${demoDescriptionValue.length} de ${demoMax} caracteres usados`);
   const bioAriaLabel = $derived(`${demoBioValue.length} de ${demoBioMax} caracteres usados`);
 
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="textarea">
@@ -492,16 +500,16 @@ interface TextareaProps extends HTMLTextareaAttributes {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.filled.label'),   trigger: $tStore('states.filled.trigger'),   behavior: stripHtml($tStore('states.filled.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
-      { label: $tStore('states.invalid.label'),  trigger: $tStore('states.invalid.trigger'),  behavior: stripHtml($tStore('states.invalid.behavior')) },
-      { label: $tStore('states.readonly.label'), trigger: $tStore('states.readonly.trigger'), behavior: stripHtml($tStore('states.readonly.behavior')) },
+      { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),  behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.filled.label'),   trigger: toPlainText($tStore('states.filled.trigger')),   behavior: toPlainText($tStore('states.filled.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.invalid.label'),  trigger: toPlainText($tStore('states.invalid.trigger')),  behavior: toPlainText($tStore('states.invalid.behavior')) },
+      { label: $tStore('states.readonly.label'), trigger: toPlainText($tStore('states.readonly.trigger')), behavior: toPlainText($tStore('states.readonly.behavior')) },
     ]}
   />
 
@@ -555,6 +563,8 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -602,11 +612,11 @@ interface TextareaProps extends HTMLTextareaAttributes {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'field_blur', trigger: $tStore('analytics.table.field_blur.trigger'), payload: $tStore('analytics.table.field_blur.payload') },
+      { event: 'field_blur', trigger: toPlainText($tStore('analytics.table.field_blur.trigger')), payload: $tStore('analytics.table.field_blur.payload') },
       { event: 'docs_page_view', trigger: $locale === 'en' ? 'Page mount per locale' : $locale === 'es' ? 'Montaje de página por locale' : 'Mount da página por locale', payload: '{ component_name: "textarea", locale, page_title }' },
       { event: 'docs_section_viewed', trigger: $locale === 'en' ? 'Section enters viewport' : $locale === 'es' ? 'La sección entra al viewport' : 'Seção entra no viewport', payload: '{ component_name: "textarea", section_id, locale }' },
     ]}

@@ -1,3 +1,12 @@
+import {
+  isCodeVariantNode,
+  resolveCodeVariant,
+  type Stack,
+} from '@shared/primitives/code-variants';
+
+/** Stack deste pacote — escolhe a variante das chaves `*Code`. */
+const STACK: Stack = 'vanilla';
+
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export type Locale = 'pt-BR' | 'en' | 'es';
@@ -48,6 +57,17 @@ function flattenDict(obj: Record<string, unknown>, prefix = ''): Record<string, 
   for (const key of Object.keys(obj)) {
     const path = prefix ? `${prefix}.${key}` : key;
     const value = obj[key];
+    // Chave `*Code` em forma de objeto carrega um snippet por stack. A chave
+    // base recebe a variante deste stack; as variantes seguem acessíveis por
+    // caminho explícito (`anatomy.structureCode.flutter`).
+    if (isCodeVariantNode(key, value)) {
+      const resolved = resolveCodeVariant(value, STACK);
+      if (resolved !== undefined) result[path] = resolved;
+      for (const [variant, snippet] of Object.entries(value)) {
+        result[`${path}.${variant}`] = snippet;
+      }
+      continue;
+    }
     // Arrays também recursam (índices viram chaves: rows.0.1) — necessário
     // para tabelas com linhas em array e listas indexadas.
     if (value !== null && typeof value === 'object') {

@@ -25,7 +25,9 @@
       "item2": "<strong>orientation</strong> — <code>horizontal</code> aplica <code>h-px w-full</code>; <code>vertical</code> aplica <code>w-px h-full</code> e exige altura no parent.",
       "item3": "<strong>decorative</strong> — quando <code>true</code> aplica <code>role=\"none\"</code> e <code>aria-hidden</code>; quando <code>false</code> usa <code>role=\"separator\"</code> com <code>aria-orientation</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      "structureCode": {
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -189,7 +191,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Customizar cor ou espessura via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      "extensibilityCode": {
+        "react": "// Customizar cor ou espessura via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -219,7 +223,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor para tema customizado */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      "customizationCode": {
+        "web": "/* Override de cor para tema customizado */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -394,7 +400,9 @@
       "item2": "<strong>orientation</strong> — <code>horizontal</code> applies <code>h-px w-full</code>; <code>vertical</code> applies <code>w-px h-full</code> and requires height on the parent.",
       "item3": "<strong>decorative</strong> — when <code>true</code> applies <code>role=\"none\"</code> and <code>aria-hidden</code>; when <code>false</code> uses <code>role=\"separator\"</code> with <code>aria-orientation</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      "structureCode": {
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -558,7 +566,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Customize color or thickness via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      "extensibilityCode": {
+        "react": "// Customize color or thickness via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -588,7 +598,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Color override for custom theme */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      "customizationCode": {
+        "web": "/* Color override for custom theme */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -763,7 +775,9 @@
       "item2": "<strong>orientation</strong> — <code>horizontal</code> aplica <code>h-px w-full</code>; <code>vertical</code> aplica <code>w-px h-full</code> y requiere altura en el padre.",
       "item3": "<strong>decorative</strong> — cuando es <code>true</code> aplica <code>role=\"none\"</code> y <code>aria-hidden</code>; cuando es <code>false</code> usa <code>role=\"separator\"</code> con <code>aria-orientation</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      "structureCode": {
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -927,7 +941,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Personalizar color o grosor mediante className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      "extensibilityCode": {
+        "react": "// Personalizar color o grosor mediante className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -957,7 +973,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de color para tema personalizado */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      "customizationCode": {
+        "web": "/* Override de color para tema personalizado */\n.theme-custom [data-slot='separator'] {\n  background-color: hsl(var(--accent) / 0.4);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

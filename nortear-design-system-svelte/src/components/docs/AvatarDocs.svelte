@@ -14,6 +14,7 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import avatarTranslations from '@shared/content/avatar/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(avatarTranslations);
@@ -38,7 +39,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -75,10 +75,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -267,8 +263,8 @@ interface AvatarFallbackProps {
       items: [
         { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
         { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
+        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: toPlainText($tStore('usage.scenarios.item3.a')) },
+        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: toPlainText($tStore('usage.scenarios.item4.a')) },
       ],
     }}
     uxWriting={{
@@ -435,14 +431,14 @@ interface AvatarFallbackProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.loaded.label'),  trigger: stripHtml($tStore('states.loaded.trigger')),  behavior: $tStore('states.loaded.behavior')  },
-      { label: $tStore('states.loading.label'), trigger: stripHtml($tStore('states.loading.trigger')), behavior: $tStore('states.loading.behavior') },
-      { label: $tStore('states.failed.label'),  trigger: stripHtml($tStore('states.failed.trigger')),  behavior: $tStore('states.failed.behavior')  },
-      { label: $tStore('states.noImage.label'), trigger: stripHtml($tStore('states.noImage.trigger')), behavior: $tStore('states.noImage.behavior') },
+      { label: $tStore('states.loaded.label'),  trigger: toPlainText($tStore('states.loaded.trigger')),  behavior: toPlainText($tStore('states.loaded.behavior'))},
+      { label: $tStore('states.loading.label'), trigger: toPlainText($tStore('states.loading.trigger')), behavior: toPlainText($tStore('states.loading.behavior'))},
+      { label: $tStore('states.failed.label'),  trigger: toPlainText($tStore('states.failed.trigger')),  behavior: toPlainText($tStore('states.failed.behavior'))},
+      { label: $tStore('states.noImage.label'), trigger: toPlainText($tStore('states.noImage.trigger')), behavior: toPlainText($tStore('states.noImage.behavior'))},
     ]}
   />
 
@@ -460,7 +456,7 @@ interface AvatarFallbackProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.className')) },
+          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.className')) },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children') },
         ],
       },
@@ -476,8 +472,8 @@ interface AvatarFallbackProps {
         items: [
           { name: 'src',                   type: 'string',   defaultValue: '—', required: 'Sim', description: $tStore('props.table.src') },
           { name: 'alt',                   type: 'string',   defaultValue: '—', required: 'Sim', description: $tStore('props.table.alt') },
-          { name: 'onLoadingStatusChange', type: '(status) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.onLoadingStatusChange')) },
-          { name: 'class',                 type: 'string',   defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.className')) },
+          { name: 'onLoadingStatusChange', type: '(status) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onLoadingStatusChange')) },
+          { name: 'class',                 type: 'string',   defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.className')) },
         ],
       },
       {
@@ -491,7 +487,7 @@ interface AvatarFallbackProps {
         },
         items: [
           { name: 'delayMs',  type: 'number',  defaultValue: '—', required: 'Não', description: $tStore('props.table.delayMs') },
-          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.className')) },
+          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.className')) },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children') },
         ],
       },
@@ -512,11 +508,11 @@ interface AvatarFallbackProps {
     items={[
       { token: '--muted',            value: 'bg-muted',             description: $tStore('tokens.table.muted')           },
       { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: $tStore('tokens.table.mutedForeground') },
-      { token: '--background',       value: 'ring-background',      description: stripHtml($tStore('tokens.table.background')) },
+      { token: '--background',       value: 'ring-background',      description: toPlainText($tStore('tokens.table.background')) },
       { token: '--border',           value: 'border',               description: $tStore('tokens.table.border')          },
       { token: '--primary',          value: 'bg-primary',           description: $tStore('tokens.table.primary')         },
       { token: '--avatar-size',      value: 'var(--spacing-8)',     description: $tStore('tokens.table.avatarSize')      },
-      { token: '--radius',           value: 'rounded-full',         description: stripHtml($tStore('tokens.table.radius')) },
+      { token: '--radius',           value: 'rounded-full',         description: toPlainText($tStore('tokens.table.radius')) },
       { token: '--ring',             value: 'ring-ring',            description: $tStore('tokens.table.ring')            },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
@@ -568,14 +564,14 @@ interface AvatarFallbackProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.profileClick'),  trigger: $tStore('analytics.table.profileClickTrigger'),  payload: $tStore('analytics.table.profileClickPayload')  },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.profileClick'),  trigger: toPlainText($tStore('analytics.table.profileClickTrigger')),  payload: $tStore('analytics.table.profileClickPayload')  },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

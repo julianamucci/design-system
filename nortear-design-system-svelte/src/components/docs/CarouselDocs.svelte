@@ -21,9 +21,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import carouselTranslations from '@shared/content/carousel/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(carouselTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (carouselTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -45,7 +57,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -83,10 +94,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -420,8 +427,8 @@ interface CarouselNavProps extends ButtonProps {
         dont: $tStore('usage.uxWriting.table.avoid'),
       },
       items: [
-        { element: $tStore('usage.uxWriting.table.previous.name'), rules: $tStore('usage.uxWriting.table.previous.format'), do: $tStore('usage.uxWriting.table.previous.good'), dont: $tStore('usage.uxWriting.table.previous.bad') },
-        { element: $tStore('usage.uxWriting.table.next.name'),     rules: $tStore('usage.uxWriting.table.next.format'),     do: $tStore('usage.uxWriting.table.next.good'),     dont: $tStore('usage.uxWriting.table.next.bad') },
+        { element: $tStore('usage.uxWriting.table.previous.name'), rules: $tStore('usage.uxWriting.table.previous.format'), do: $tStore('usage.uxWriting.table.previous.good'), dont: toPlainText($tStore('usage.uxWriting.table.previous.bad')) },
+        { element: $tStore('usage.uxWriting.table.next.name'),     rules: $tStore('usage.uxWriting.table.next.format'),     do: $tStore('usage.uxWriting.table.next.good'),     dont: toPlainText($tStore('usage.uxWriting.table.next.bad')) },
         { element: $tStore('usage.uxWriting.table.dots.name'),     rules: $tStore('usage.uxWriting.table.dots.format'),     do: $tStore('usage.uxWriting.table.dots.good'),     dont: $tStore('usage.uxWriting.table.dots.bad') },
         { element: $tStore('usage.uxWriting.table.caption.name'),  rules: $tStore('usage.uxWriting.table.caption.format'),  do: $tStore('usage.uxWriting.table.caption.good'),  dont: $tStore('usage.uxWriting.table.caption.bad') },
       ],
@@ -768,11 +775,11 @@ interface CarouselNavProps extends ButtonProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.trigger')), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
     ]}
   />
 
@@ -790,10 +797,10 @@ interface CarouselNavProps extends ButtonProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'opts',        type: 'EmblaOptionsType',               defaultValue: '—',            required: 'Não', description: stripHtml($tStore('props.table.opts'))        },
-          { name: 'plugins',     type: 'EmblaPluginType[]',              defaultValue: '—',            required: 'Não', description: stripHtml($tStore('props.table.plugins'))     },
-          { name: 'orientation', type: '"horizontal" | "vertical"',      defaultValue: '"horizontal"', required: 'Não', description: stripHtml($tStore('props.table.orientation')) },
-          { name: 'setApi',      type: '(api: CarouselApi) => void',     defaultValue: '—',            required: 'Não', description: stripHtml($tStore('props.table.setApi'))      },
+          { name: 'opts',        type: 'EmblaOptionsType',               defaultValue: '—',            required: 'Não', description: toPlainText($tStore('props.table.opts'))        },
+          { name: 'plugins',     type: 'EmblaPluginType[]',              defaultValue: '—',            required: 'Não', description: toPlainText($tStore('props.table.plugins'))     },
+          { name: 'orientation', type: '"horizontal" | "vertical"',      defaultValue: '"horizontal"', required: 'Não', description: toPlainText($tStore('props.table.orientation')) },
+          { name: 'setApi',      type: '(api: CarouselApi) => void',     defaultValue: '—',            required: 'Não', description: toPlainText($tStore('props.table.setApi'))      },
           { name: 'class',       type: 'string',                         defaultValue: '—',            required: 'Não', description: $tStore('props.table.className')              },
           { name: 'children',    type: 'Snippet',                        defaultValue: '—',            required: 'Sim', description: $tStore('props.table.children')               },
         ],
@@ -836,8 +843,8 @@ interface CarouselNavProps extends ButtonProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant', type: 'ButtonVariant', defaultValue: '"outline"',  required: 'Não', description: stripHtml($tStore('props.table.variant')) },
-          { name: 'size',    type: 'ButtonSize',    defaultValue: '"icon-sm"',  required: 'Não', description: stripHtml($tStore('props.table.size'))    },
+          { name: 'variant', type: 'ButtonVariant', defaultValue: '"outline"',  required: 'Não', description: toPlainText($tStore('props.table.variant')) },
+          { name: 'size',    type: 'ButtonSize',    defaultValue: '"icon-sm"',  required: 'Não', description: toPlainText($tStore('props.table.size'))    },
           { name: 'class',   type: 'string',        defaultValue: '—',           required: 'Não', description: $tStore('props.table.className')          },
         ],
       },
@@ -870,6 +877,8 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -916,15 +925,15 @@ interface CarouselNavProps extends ButtonProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.slideChange'),   trigger: $tStore('analytics.table.slideChangeTrigger'),   payload: $tStore('analytics.table.slideChangePayload')   },
-      { event: $tStore('analytics.table.autoplayPause'), trigger: $tStore('analytics.table.autoplayPauseTrigger'), payload: $tStore('analytics.table.autoplayPausePayload') },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.slideChange'),   trigger: toPlainText($tStore('analytics.table.slideChangeTrigger')),   payload: $tStore('analytics.table.slideChangePayload')   },
+      { event: $tStore('analytics.table.autoplayPause'), trigger: toPlainText($tStore('analytics.table.autoplayPauseTrigger')), payload: $tStore('analytics.table.autoplayPausePayload') },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

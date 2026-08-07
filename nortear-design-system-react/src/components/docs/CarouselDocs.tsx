@@ -31,12 +31,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -83,7 +80,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Helpers de slide ─────────────────────────────────────────────────────────
 
@@ -171,6 +167,19 @@ function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slide
 export function CarouselDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(carouselTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (carouselTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -374,7 +383,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         >
           <Carousel
             className="nds-w-full nds-max-w-md"
-            aria-label={stripHtml(tContent("usage.uxWriting.table.caption.good"))}
+            aria-label={toPlainText(tContent("usage.uxWriting.table.caption.good"))}
             setApi={setDemoApi}
           >
             <CarouselContent>
@@ -443,13 +452,13 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               element: tContent("usage.uxWriting.table.previous.name"),
               rules: tContent("usage.uxWriting.table.previous.format"),
               do: tContent("usage.uxWriting.table.previous.good"),
-              dont: stripHtml(tContent("usage.uxWriting.table.previous.bad")),
+              dont: toPlainText(tContent("usage.uxWriting.table.previous.bad")),
             },
             {
               element: tContent("usage.uxWriting.table.next.name"),
               rules: tContent("usage.uxWriting.table.next.format"),
               do: tContent("usage.uxWriting.table.next.good"),
-              dont: stripHtml(tContent("usage.uxWriting.table.next.bad")),
+              dont: toPlainText(tContent("usage.uxWriting.table.next.bad")),
             },
             {
               element: tContent("usage.uxWriting.table.dots.name"),
@@ -516,8 +525,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 </CarouselContent>
               </Carousel>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -548,8 +557,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 <CarouselNext aria-label={nextLabel} />
               </Carousel>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -839,14 +848,14 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -870,28 +879,28 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 type: "EmblaOptionsType",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.opts")),
+                description: toPlainText(tContent("props.table.opts")),
               },
               {
                 name: "plugins",
                 type: "EmblaPluginType[]",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.plugins")),
+                description: toPlainText(tContent("props.table.plugins")),
               },
               {
                 name: "orientation",
                 type: '"horizontal" | "vertical"',
                 defaultValue: '"horizontal"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.orientation")),
+                description: toPlainText(tContent("props.table.orientation")),
               },
               {
                 name: "setApi",
                 type: "(api: CarouselApi) => void",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.setApi")),
+                description: toPlainText(tContent("props.table.setApi")),
               },
               {
                 name: "className",
@@ -976,14 +985,14 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                 type: '"default" | "outline" | "ghost" | ...',
                 defaultValue: '"outline"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.variant")),
+                description: toPlainText(tContent("props.table.variant")),
               },
               {
                 name: "size",
                 type: '"default" | "sm" | "lg" | "icon" | "icon-sm"',
                 defaultValue: '"icon-sm"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.size")),
+                description: toPlainText(tContent("props.table.size")),
               },
               {
                 name: "className",
@@ -1023,6 +1032,8 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -1049,22 +1060,22 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         items={[
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "ScrollArea",
-            description: tContent("related.scrollArea"),
+            description: toPlainText(tContent("related.scrollArea")),
             path: "?path=/docs/ui-scrollarea--docs",
           },
           {
             name: "Card",
-            description: tContent("related.card"),
+            description: toPlainText(tContent("related.card")),
             path: "?path=/docs/ui-card--docs",
           },
           {
             name: "Pagination",
-            description: tContent("related.pagination"),
+            description: toPlainText(tContent("related.pagination")),
             path: "?path=/docs/ui-pagination--docs",
           },
         ]}
@@ -1087,33 +1098,33 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.slideChange"),
-            trigger: tContent("analytics.table.slideChangeTrigger"),
+            trigger: toPlainText(tContent("analytics.table.slideChangeTrigger")),
             payload: tContent("analytics.table.slideChangePayload"),
           },
           {
             event: tContent("analytics.table.autoplayPause"),
-            trigger: tContent("analytics.table.autoplayPauseTrigger"),
+            trigger: toPlainText(tContent("analytics.table.autoplayPauseTrigger")),
             payload: tContent("analytics.table.autoplayPausePayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

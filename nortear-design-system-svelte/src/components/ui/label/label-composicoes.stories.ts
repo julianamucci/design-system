@@ -11,7 +11,7 @@ import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
  * O Label é sempre associado ao campo via `for`/`id`.
  * Estas stories demonstram os pares mais comuns.
  */
-const meta = {
+const meta: Meta = {
   title: 'UI/Label/Composicoes',
   component: LabelWithInputStory,
   tags: ['form'],
@@ -25,10 +25,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof LabelWithInputStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComInput: Story = {
   render: () => ({

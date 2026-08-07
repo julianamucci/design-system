@@ -8,6 +8,15 @@ export interface DocsAccessibilityProps {
   items: string[];
   keyboardTitle: string;
   keyboardItems: DocsKeyboardItem[];
+  /**
+   * Anúncios de leitor de tela. As chaves de `accessibility.screenReader` variam
+   * por componente (`closed/open/disabled`, `onOpen/onClose`, …), então o
+   * container recebe só os valores — quem chama passa `Object.values(...)`.
+   */
+  screenReaderTitle?: string;
+  screenReaderItems?: string[];
+  /** Nota de contraste, quando o componente documenta uma. */
+  contrast?: string;
 }
 
 export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElement {
@@ -29,7 +38,8 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
     <p class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">${DOMPurify.sanitize(props.summary)}</p>
     <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
       ${props.items.map(item => `<li class="nds-leading-relaxed">${DOMPurify.sanitize(item)}</li>`).join('')}
-    </ul>`;
+    </ul>
+    ${props.contrast ? `<p class="nds-text-body nds-leading-relaxed">${DOMPurify.sanitize(props.contrast)}</p>` : ''}`;
 
   const keyboardBlock = document.createElement('div');
   keyboardBlock.innerHTML = `<h3 class="nds-text-base nds-font-semibold nds-mb-4">${DOMPurify.sanitize(props.keyboardTitle)}</h3>`;
@@ -53,6 +63,18 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
   keyboardBlock.appendChild(kbGrid);
 
   container.append(summaryBlock, keyboardBlock);
+
+  const srItems = props.screenReaderItems ?? [];
+  if (srItems.length > 0) {
+    const srBlock = document.createElement('div');
+    srBlock.innerHTML = `
+      ${props.screenReaderTitle ? `<h3 class="nds-text-base nds-font-semibold nds-mb-4">${DOMPurify.sanitize(props.screenReaderTitle)}</h3>` : ''}
+      <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
+        ${srItems.map(item => `<li class="nds-leading-relaxed">${DOMPurify.sanitize(item)}</li>`).join('')}
+      </ul>`;
+    container.appendChild(srBlock);
+  }
+
   section.appendChild(container);
   return section;
 }

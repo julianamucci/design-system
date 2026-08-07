@@ -7,7 +7,7 @@ import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.s
 import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Command/Composicoes',
   component: Command,
   tags: ['overlay'],
@@ -22,10 +22,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Command>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComGrupos: Story = {
   render: () => ({
@@ -81,7 +81,8 @@ export const ComLinkItem: Story = {
   },
 };
 
-export const CommandPalette: Story = {
+// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
+export const CommandPalette: StoryObj<Record<string, never>> = {
   render: () => ({
     Component: CommandComposicaoPaletteStory,
     props: {},

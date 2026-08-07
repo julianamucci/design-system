@@ -27,17 +27,25 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations       from '@/i18n/ui.json';
 import checkboxTranslations from '@shared/content/checkbox/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // IMPORTANT: locale comes from useTranslation — NEVER from useLocaleStore/Pinia
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(checkboxTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (checkboxTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -111,8 +119,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -256,11 +262,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.unchecked.label'),     trigger: tContent('states.unchecked.trigger'),     behavior: tContent('states.unchecked.behavior')     },
-  { label: tContent('states.checked.label'),       trigger: tContent('states.checked.trigger'),       behavior: tContent('states.checked.behavior')       },
-  { label: tContent('states.disabled.label'),      trigger: tContent('states.disabled.trigger'),      behavior: tContent('states.disabled.behavior')      },
-  { label: tContent('states.error.label'),         trigger: tContent('states.error.trigger'),         behavior: tContent('states.error.behavior')         },
-  { label: tContent('states.indeterminate.label'), trigger: tContent('states.indeterminate.trigger'), behavior: tContent('states.indeterminate.behavior') },
+  { label: tContent('states.unchecked.label'),     trigger: toPlainText(tContent('states.unchecked.trigger')),     behavior: toPlainText(tContent('states.unchecked.behavior'))},
+  { label: tContent('states.checked.label'),       trigger: toPlainText(tContent('states.checked.trigger')),       behavior: toPlainText(tContent('states.checked.behavior'))},
+  { label: tContent('states.disabled.label'),      trigger: toPlainText(tContent('states.disabled.trigger')),      behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.error.label'),         trigger: toPlainText(tContent('states.error.trigger')),         behavior: toPlainText(tContent('states.error.behavior'))},
+  { label: tContent('states.indeterminate.label'), trigger: toPlainText(tContent('states.indeterminate.trigger')), behavior: toPlainText(tContent('states.indeterminate.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -306,10 +312,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Switch',     description: tContent('related.switch'),     path: '?path=/docs/ui-switch--docs'      },
-  { name: 'RadioGroup', description: tContent('related.radioGroup'), path: '?path=/docs/ui-radiogroup--docs'  },
-  { name: 'Form',       description: tContent('related.form'),       path: '?path=/docs/ui-form--docs'        },
-  { name: 'Select',     description: tContent('related.select'),     path: '?path=/docs/ui-select--docs'      },
+  { name: 'Switch',     description: toPlainText(tContent('related.switch')),     path: '?path=/docs/ui-switch--docs'      },
+  { name: 'RadioGroup', description: toPlainText(tContent('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs'  },
+  { name: 'Form',       description: toPlainText(tContent('related.form')),       path: '?path=/docs/ui-form--docs'        },
+  { name: 'Select',     description: toPlainText(tContent('related.select')),     path: '?path=/docs/ui-select--docs'      },
 ]);
 
 const noteItems = computed(() => [
@@ -320,10 +326,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.fieldChange'),    trigger: tContent('analytics.table.fieldChangeTrigger'),    payload: tContent('analytics.table.fieldChangePayload')    },
-  { event: tContent('analytics.table.pageView'),       trigger: tContent('analytics.table.pageViewTrigger'),       payload: tContent('analytics.table.pageViewPayload')       },
-  { event: tContent('analytics.table.sectionViewed'),  trigger: tContent('analytics.table.sectionViewedTrigger'),  payload: tContent('analytics.table.sectionViewedPayload')  },
-  { event: tContent('analytics.table.langSwitch'),     trigger: tContent('analytics.table.langSwitchTrigger'),     payload: tContent('analytics.table.langSwitchPayload')     },
+  { event: tContent('analytics.table.fieldChange'),    trigger: toPlainText(tContent('analytics.table.fieldChangeTrigger')),    payload: tContent('analytics.table.fieldChangePayload')    },
+  { event: tContent('analytics.table.pageView'),       trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),       payload: tContent('analytics.table.pageViewPayload')       },
+  { event: tContent('analytics.table.sectionViewed'),  trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),  payload: tContent('analytics.table.sectionViewedPayload')  },
+  { event: tContent('analytics.table.langSwitch'),     trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),     payload: tContent('analytics.table.langSwitchPayload')     },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -516,14 +522,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >
@@ -877,8 +883,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -911,6 +917,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -934,7 +942,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

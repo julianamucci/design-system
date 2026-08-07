@@ -5,7 +5,7 @@
 // rules em comentário; página que crasha fica FORA do arquivo, listada aqui.
 // FORA: Icons — catálogo lucide completo estoura o axe/timeout do runner (>4min); excluída por decisão da dona em 2026-07-31
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import AboutDocs from './AboutDocs.svelte';
 import AccessibilityDocs from './AccessibilityDocs.svelte';
@@ -94,6 +94,14 @@ const mounted: Story['play'] = async ({ canvasElement }) => {
   await expect(
     canvasElement.querySelector('section[id], section.nds-docs-section-divider'),
   ).not.toBeNull();
+
+  // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
+  // preview, servido como <html lang="en"> pelo template do Storybook: se o
+  // useSeoEffect voltar a escrever o lang só no documento pai, a prosa em
+  // português volta a ser anunciada em inglês e ninguém percebe. WCAG 3.1.1.
+  // 'pt-BR' e não a lista de locales: 'en' é justamente o valor que o template
+  // do Storybook deixa no iframe, e uma asserção que o aceita passa com o bug.
+  await waitFor(() => expect(document.documentElement.lang).toBe('pt-BR'));
 };
 
 export const About: Story = { render: page(AboutDocs), play: mounted };

@@ -35,7 +35,9 @@
       "item5": "<strong>PopoverTitle</strong> — título acessível, anunciado pelo leitor de tela ao abrir.",
       "item6": "<strong>PopoverDescription</strong> — descrição opcional, vinculada via <code>aria-describedby</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>"
+      "structureCode": {
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -251,7 +253,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      "extensibilityCode": {
+        "react": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -285,7 +289,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de tokens no escopo do componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      "customizationCode": {
+        "web": "/* Override de tokens no escopo do componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -480,7 +486,9 @@
       "item5": "<strong>PopoverTitle</strong> — accessible title, announced by the screen reader on open.",
       "item6": "<strong>PopoverDescription</strong> — optional description, linked via <code>aria-describedby</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>"
+      "structureCode": {
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -696,7 +704,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      "extensibilityCode": {
+        "react": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -730,7 +740,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override tokens in component scope */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      "customizationCode": {
+        "web": "/* Override tokens in component scope */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -925,7 +937,9 @@
       "item5": "<strong>PopoverTitle</strong> — título accesible, anunciado por el lector de pantalla al abrir.",
       "item6": "<strong>PopoverDescription</strong> — descripción opcional, vinculada vía <code>aria-describedby</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>"
+      "structureCode": {
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1141,7 +1155,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      "extensibilityCode": {
+        "react": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1175,7 +1191,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de tokens en el ámbito del componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      "customizationCode": {
+        "web": "/* Override de tokens en el ámbito del componente */\n[data-slot=\"popover-content\"] {\n  --popover: 220 14% 96%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

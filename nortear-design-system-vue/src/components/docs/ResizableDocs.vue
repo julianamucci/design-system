@@ -28,17 +28,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(resizableTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (resizableTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -118,8 +126,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -244,11 +250,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.idle.label'),     trigger: tContent('states.idle.trigger'),     behavior: stripHtml(tContent('states.idle.behavior')) },
-  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.dragging.label'), trigger: tContent('states.dragging.trigger'), behavior: stripHtml(tContent('states.dragging.behavior')) },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
+  { label: tContent('states.idle.label'),     trigger: toPlainText(tContent('states.idle.trigger')),     behavior: toPlainText(tContent('states.idle.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: toPlainText(tContent('states.hover.trigger')),    behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.dragging.label'), trigger: toPlainText(tContent('states.dragging.trigger')), behavior: toPlainText(tContent('states.dragging.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -260,19 +266,19 @@ const propCols = computed(() => ({
 }));
 
 const panelGroupPropItems = computed(() => [
-  { name: 'direction',     type: tContent('props.table.direction.type'),     defaultValue: tContent('props.table.direction.default'),     required: tContent('props.table.direction.required'),     description: stripHtml(tContent('props.table.direction.description'))     },
-  { name: 'id',            type: tContent('props.table.id.type'),            defaultValue: tContent('props.table.id.default'),            required: tContent('props.table.id.required'),            description: stripHtml(tContent('props.table.id.description'))            },
+  { name: 'direction',     type: tContent('props.table.direction.type'),     defaultValue: tContent('props.table.direction.default'),     required: tContent('props.table.direction.required'),     description: toPlainText(tContent('props.table.direction.description'))     },
+  { name: 'id',            type: tContent('props.table.id.type'),            defaultValue: tContent('props.table.id.default'),            required: tContent('props.table.id.required'),            description: toPlainText(tContent('props.table.id.description'))            },
 ]);
 
 const panelPropItems = computed(() => [
-  { name: 'defaultSize',   type: tContent('props.table.defaultSize.type'),   defaultValue: tContent('props.table.defaultSize.default'),   required: tContent('props.table.defaultSize.required'),   description: stripHtml(tContent('props.table.defaultSize.description'))   },
-  { name: 'minSize',       type: tContent('props.table.minSize.type'),       defaultValue: tContent('props.table.minSize.default'),       required: tContent('props.table.minSize.required'),       description: stripHtml(tContent('props.table.minSize.description'))       },
-  { name: 'maxSize',       type: tContent('props.table.maxSize.type'),       defaultValue: tContent('props.table.maxSize.default'),       required: tContent('props.table.maxSize.required'),       description: stripHtml(tContent('props.table.maxSize.description'))       },
-  { name: 'id',            type: tContent('props.table.id.type'),            defaultValue: tContent('props.table.id.default'),            required: tContent('props.table.id.required'),            description: stripHtml(tContent('props.table.id.description'))            },
+  { name: 'defaultSize',   type: tContent('props.table.defaultSize.type'),   defaultValue: tContent('props.table.defaultSize.default'),   required: tContent('props.table.defaultSize.required'),   description: toPlainText(tContent('props.table.defaultSize.description'))   },
+  { name: 'minSize',       type: tContent('props.table.minSize.type'),       defaultValue: tContent('props.table.minSize.default'),       required: tContent('props.table.minSize.required'),       description: toPlainText(tContent('props.table.minSize.description'))       },
+  { name: 'maxSize',       type: tContent('props.table.maxSize.type'),       defaultValue: tContent('props.table.maxSize.default'),       required: tContent('props.table.maxSize.required'),       description: toPlainText(tContent('props.table.maxSize.description'))       },
+  { name: 'id',            type: tContent('props.table.id.type'),            defaultValue: tContent('props.table.id.default'),            required: tContent('props.table.id.required'),            description: toPlainText(tContent('props.table.id.description'))            },
 ]);
 
 const handlePropItems = computed(() => [
-  { name: 'withHandle',    type: tContent('props.table.withHandle.type'),    defaultValue: tContent('props.table.withHandle.default'),    required: tContent('props.table.withHandle.required'),    description: stripHtml(tContent('props.table.withHandle.description'))    },
+  { name: 'withHandle',    type: tContent('props.table.withHandle.type'),    defaultValue: tContent('props.table.withHandle.default'),    required: tContent('props.table.withHandle.required'),    description: toPlainText(tContent('props.table.withHandle.description'))    },
   { name: 'aria-label',    type: 'string',                                   defaultValue: '—',                                            required: 'Sim',                                              description: stripHtml(tContent('usage.guidelines.item2'))                  },
 ]);
 
@@ -306,10 +312,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'ScrollArea',  description: tContent('related.items.scrollArea.description'),  path: '?path=/docs/ui-scrollarea--docs'  },
-  { name: 'Sheet',       description: tContent('related.items.sheet.description'),       path: '?path=/docs/ui-sheet--docs'       },
-  { name: 'Separator',   description: tContent('related.items.separator.description'),   path: '?path=/docs/ui-separator--docs'   },
-  { name: 'AspectRatio', description: tContent('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
+  { name: 'ScrollArea',  description: toPlainText(tContent('related.items.scrollArea.description')),  path: '?path=/docs/ui-scrollarea--docs'  },
+  { name: 'Sheet',       description: toPlainText(tContent('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
+  { name: 'Separator',   description: toPlainText(tContent('related.items.separator.description')),   path: '?path=/docs/ui-separator--docs'   },
+  { name: 'AspectRatio', description: toPlainText(tContent('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -320,7 +326,7 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'panel_resize', trigger: tContent('analytics.table.panel_resize.trigger'), payload: tContent('analytics.table.panel_resize.payload') },
+  { event: 'panel_resize', trigger: toPlainText(tContent('analytics.table.panel_resize.trigger')), payload: tContent('analytics.table.panel_resize.payload') },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -581,7 +587,7 @@ const visualTestItems = computed(() => [
         items: [
           { element: tContent('usage.uxWriting.table.ariaLabel.name'), rules: tContent('usage.uxWriting.table.ariaLabel.format'), do: tContent('usage.uxWriting.table.ariaLabel.good'), dont: tContent('usage.uxWriting.table.ariaLabel.bad') },
           { element: tContent('usage.uxWriting.table.panelLabel.name'), rules: tContent('usage.uxWriting.table.panelLabel.format'), do: tContent('usage.uxWriting.table.panelLabel.good'), dont: tContent('usage.uxWriting.table.panelLabel.bad') },
-          { element: tContent('usage.uxWriting.table.size.name'), rules: tContent('usage.uxWriting.table.size.format'), do: stripHtml(tContent('usage.uxWriting.table.size.good')), dont: tContent('usage.uxWriting.table.size.bad') },
+          { element: tContent('usage.uxWriting.table.size.name'), rules: tContent('usage.uxWriting.table.size.format'), do: toPlainText(tContent('usage.uxWriting.table.size.good')), dont: tContent('usage.uxWriting.table.size.bad') },
         ],
       }"
       :do="{
@@ -608,8 +614,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -927,8 +933,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -961,6 +967,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -985,7 +993,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

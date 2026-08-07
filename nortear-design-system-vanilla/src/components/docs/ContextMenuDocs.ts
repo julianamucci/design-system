@@ -5,6 +5,7 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createContextMenu } from '@/components/ui/context-menu';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -28,6 +29,16 @@ import {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (contextMenuTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(contextMenuTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -247,8 +258,8 @@ export function createContextMenuDocs(): HTMLElement {
             {
               doLabel:      tNav('common.do'),
               dontLabel:    tNav('common.dont'),
-              doCaption:    t('doDont.pair1.do'),
-              dontCaption:  t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-text-body nds-p-2';
@@ -292,8 +303,8 @@ export function createContextMenuDocs(): HTMLElement {
             {
               doLabel:      tNav('common.do'),
               dontLabel:    tNav('common.dont'),
-              doCaption:    t('doDont.pair2.do'),
-              dontCaption:  t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const menu = document.createElement('ul');
                 menu.setAttribute('role', 'menu');
@@ -353,8 +364,8 @@ export function createContextMenuDocs(): HTMLElement {
             {
               doLabel:      tNav('common.do'),
               dontLabel:    tNav('common.dont'),
-              doCaption:    t('doDont.pair3.do'),
-              dontCaption:  t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => {
                 const li = document.createElement('li');
                 li.setAttribute('role', 'menuitem');
@@ -809,16 +820,16 @@ lbl.textContent = 'Ações';`,
           title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
-            trigger:  t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),  trigger: t('states.closed.trigger'),  behavior: t('states.closed.behavior')  },
-            { label: t('states.open.label'),     trigger: t('states.open.trigger'),    behavior: t('states.open.behavior')    },
-            { label: t('states.focused.label'),  trigger: t('states.focused.trigger'), behavior: t('states.focused.behavior') },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'),behavior: t('states.disabled.behavior')},
-            { label: t('states.checked.label'),  trigger: t('states.checked.trigger'), behavior: t('states.checked.behavior') },
-            { label: t('states.subOpen.label'),  trigger: t('states.subOpen.trigger'), behavior: t('states.subOpen.behavior') },
+            { label: t('states.closed.label'),  trigger: toPlainText(t('states.closed.trigger')),  behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.open.label'),     trigger: toPlainText(t('states.open.trigger')),    behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.focused.label'),  trigger: toPlainText(t('states.focused.trigger')), behavior: toPlainText(t('states.focused.behavior'))},
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')),behavior: toPlainText(t('states.disabled.behavior'))},
+            { label: t('states.checked.label'),  trigger: toPlainText(t('states.checked.trigger')), behavior: toPlainText(t('states.checked.behavior'))},
+            { label: t('states.subOpen.label'),  trigger: toPlainText(t('states.subOpen.trigger')), behavior: toPlainText(t('states.subOpen.behavior'))},
           ],
         });
 
@@ -925,6 +936,8 @@ export type ContextMenuOptions = {
       // ── 10. Acessibilidade ───────────────────────────────────────────────
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -957,11 +970,11 @@ export type ContextMenuOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs'  },
-            { name: 'Menubar',      description: t('related.menubar'),      path: '?path=/docs/ui-menubar--docs'       },
-            { name: 'Dialog',       description: t('related.dialog'),       path: '?path=/docs/ui-dialog--docs'        },
-            { name: 'AlertDialog',  description: t('related.alertDialog'),  path: '?path=/docs/ui-alertdialog--docs'   },
-            { name: 'Tooltip',      description: t('related.tooltip'),      path: '?path=/docs/ui-tooltip--docs'       },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs'  },
+            { name: 'Menubar',      description: toPlainText(t('related.menubar')),      path: '?path=/docs/ui-menubar--docs'       },
+            { name: 'Dialog',       description: toPlainText(t('related.dialog')),       path: '?path=/docs/ui-dialog--docs'        },
+            { name: 'AlertDialog',  description: toPlainText(t('related.alertDialog')),  path: '?path=/docs/ui-alertdialog--docs'   },
+            { name: 'Tooltip',      description: toPlainText(t('related.tooltip')),      path: '?path=/docs/ui-tooltip--docs'       },
           ],
         });
 
@@ -984,15 +997,15 @@ export type ContextMenuOptions = {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.menuOpen'),      trigger: t('analytics.table.menuOpenTrigger'),      payload: t('analytics.table.menuOpenPayload')      },
-            { event: t('analytics.table.itemClick'),     trigger: t('analytics.table.itemClickTrigger'),     payload: t('analytics.table.itemClickPayload')     },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload')      },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload')    },
+            { event: t('analytics.table.menuOpen'),      trigger: toPlainText(t('analytics.table.menuOpenTrigger')),      payload: t('analytics.table.menuOpenPayload')      },
+            { event: t('analytics.table.itemClick'),     trigger: toPlainText(t('analytics.table.itemClickTrigger')),     payload: t('analytics.table.itemClickPayload')     },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
           ],
         });
 

@@ -1,0 +1,12 @@
+{
+  "teste": {
+    "inteiro": {
+      "$type": "number",
+      "$value": 16
+    },
+    "decimal": {
+      "$type": "number",
+      "$value": 12.8
+    }
+  }
+}

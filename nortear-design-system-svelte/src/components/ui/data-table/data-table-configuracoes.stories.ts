@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import DataTable from './data-table.svelte';
 import { invoices, baseColumns, type Invoice } from './data-table.fixtures';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/DataTable/Configuracoes',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
-} satisfies Meta<typeof DataTable>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const bigData: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   id: `INV-${String(i + 1).padStart(5, '0')}`,

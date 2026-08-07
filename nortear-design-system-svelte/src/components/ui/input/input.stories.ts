@@ -6,7 +6,7 @@ import InputStory from './InputStory.svelte';
 import InputDocs from '@/components/docs/InputDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Input',
   component: Input,
   tags: ['autodocs', 'form'],
@@ -39,10 +39,10 @@ const meta = {
     placeholder: 'ex: João da Silva',
     disabled: false,
   },
-} satisfies Meta<typeof Input>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

@@ -38,17 +38,25 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations from '@/i18n/ui.json';
 import commandTranslations from '@shared/content/command/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(commandTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (commandTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -121,8 +129,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -371,28 +377,28 @@ const variantItems = computed(() => [
 const stateItems = computed(() => [
   {
     label: tContent('states.empty.label'),
-    trigger: stripHtml(tContent('states.empty.trigger')),
-    behavior: tContent('states.empty.behavior'),
+    trigger: toPlainText(tContent('states.empty.trigger')),
+    behavior: toPlainText(tContent('states.empty.behavior')),
   },
   {
     label: tContent('states.selected.label'),
-    trigger: stripHtml(tContent('states.selected.trigger')),
-    behavior: tContent('states.selected.behavior'),
+    trigger: toPlainText(tContent('states.selected.trigger')),
+    behavior: toPlainText(tContent('states.selected.behavior')),
   },
   {
     label: tContent('states.disabled.label'),
-    trigger: stripHtml(tContent('states.disabled.trigger')),
-    behavior: tContent('states.disabled.behavior'),
+    trigger: toPlainText(tContent('states.disabled.trigger')),
+    behavior: toPlainText(tContent('states.disabled.behavior')),
   },
   {
     label: tContent('states.loading.label'),
-    trigger: stripHtml(tContent('states.loading.trigger')),
-    behavior: tContent('states.loading.behavior'),
+    trigger: toPlainText(tContent('states.loading.trigger')),
+    behavior: toPlainText(tContent('states.loading.behavior')),
   },
   {
     label: tContent('states.longList.label'),
-    trigger: stripHtml(tContent('states.longList.trigger')),
-    behavior: tContent('states.longList.behavior'),
+    trigger: toPlainText(tContent('states.longList.trigger')),
+    behavior: toPlainText(tContent('states.longList.behavior')),
   },
 ]);
 
@@ -405,30 +411,30 @@ const propCols = computed(() => ({
 }));
 
 const commandPropItems = computed(() => [
-  { name: 'filter',        type: '(value, search, keywords?) => number', defaultValue: 'built-in fuzzy', required: 'Não', description: stripHtml(tContent('props.table.commandFilter'))         },
-  { name: 'modelValue',    type: 'string',                                defaultValue: '""',             required: 'Não', description: stripHtml(tContent('props.table.commandValue'))           },
-  { name: 'onUpdate:modelValue', type: '(value: string) => void',        defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.commandOnValueChange'))   },
-  { name: 'class',         type: 'string',                                defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.className'))              },
+  { name: 'filter',        type: '(value, search, keywords?) => number', defaultValue: 'built-in fuzzy', required: 'Não', description: toPlainText(tContent('props.table.commandFilter'))         },
+  { name: 'modelValue',    type: 'string',                                defaultValue: '""',             required: 'Não', description: toPlainText(tContent('props.table.commandValue'))           },
+  { name: 'onUpdate:modelValue', type: '(value: string) => void',        defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.commandOnValueChange'))   },
+  { name: 'class',         type: 'string',                                defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.className'))              },
 ]);
 
 const commandInputPropItems = computed(() => [
-  { name: 'placeholder', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.inputPlaceholder')) },
-  { name: 'class',       type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.className'))        },
+  { name: 'placeholder', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.inputPlaceholder')) },
+  { name: 'class',       type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className'))        },
 ]);
 
 const commandItemPropItems = computed(() => [
-  { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.itemValue'))    },
-  { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.itemDisabled')) },
-  { name: 'onSelect', type: '() => void',          defaultValue: '—',     required: 'Não', description: stripHtml(tContent('props.table.itemOnSelect')) },
-  { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: stripHtml(tContent('props.table.className'))    },
+  { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.itemValue'))    },
+  { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.itemDisabled')) },
+  { name: 'onSelect', type: '() => void',          defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.itemOnSelect')) },
+  { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className'))    },
 ]);
 
 const commandDialogPropItems = computed(() => [
-  { name: 'open',            type: 'boolean',    defaultValue: '—',                        required: 'Não', description: stripHtml(tContent('props.table.commandValue'))              },
-  { name: 'title',           type: 'string',     defaultValue: '"Command Palette"',        required: 'Não', description: stripHtml(tContent('props.table.dialogTitle'))               },
-  { name: 'description',     type: 'string',     defaultValue: '"Search for a command..."', required: 'Não', description: stripHtml(tContent('props.table.dialogDescription'))         },
-  { name: 'showCloseButton', type: 'boolean',    defaultValue: 'false',                    required: 'Não', description: stripHtml(tContent('props.table.dialogShowCloseButton'))     },
-  { name: 'class',           type: 'string',     defaultValue: '—',                        required: 'Não', description: stripHtml(tContent('props.table.className'))                 },
+  { name: 'open',            type: 'boolean',    defaultValue: '—',                        required: 'Não', description: toPlainText(tContent('props.table.commandValue'))              },
+  { name: 'title',           type: 'string',     defaultValue: '"Command Palette"',        required: 'Não', description: toPlainText(tContent('props.table.dialogTitle'))               },
+  { name: 'description',     type: 'string',     defaultValue: '"Search for a command..."', required: 'Não', description: toPlainText(tContent('props.table.dialogDescription'))         },
+  { name: 'showCloseButton', type: 'boolean',    defaultValue: 'false',                    required: 'Não', description: toPlainText(tContent('props.table.dialogShowCloseButton'))     },
+  { name: 'class',           type: 'string',     defaultValue: '—',                        required: 'Não', description: toPlainText(tContent('props.table.className'))                 },
 ]);
 
 const tokenRows = computed(() => [
@@ -459,10 +465,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Select',       description: tContent('related.select'),       path: '?path=/docs/ui-select--docs'       },
-  { name: 'DropdownMenu', description: tContent('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
-  { name: 'Popover',      description: tContent('related.popover'),      path: '?path=/docs/ui-popover--docs'      },
-  { name: 'Dialog',       description: tContent('related.dialog'),       path: '?path=/docs/ui-dialog--docs'       },
+  { name: 'Select',       description: toPlainText(tContent('related.select')),       path: '?path=/docs/ui-select--docs'       },
+  { name: 'DropdownMenu', description: toPlainText(tContent('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
+  { name: 'Popover',      description: toPlainText(tContent('related.popover')),      path: '?path=/docs/ui-popover--docs'      },
+  { name: 'Dialog',       description: toPlainText(tContent('related.dialog')),       path: '?path=/docs/ui-dialog--docs'       },
 ]);
 
 const noteItems = computed(() => [
@@ -473,11 +479,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.itemSelect'),   trigger: tContent('analytics.table.itemSelectTrigger'),   payload: tContent('analytics.table.itemSelectPayload')   },
-  { event: tContent('analytics.table.paletteOpen'),  trigger: tContent('analytics.table.paletteOpenTrigger'),  payload: tContent('analytics.table.paletteOpenPayload')  },
-  { event: tContent('analytics.table.pageView'),     trigger: tContent('analytics.table.pageViewTrigger'),     payload: tContent('analytics.table.pageViewPayload')     },
-  { event: tContent('analytics.table.sectionViewed'),trigger: tContent('analytics.table.sectionViewedTrigger'),payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),   trigger: tContent('analytics.table.langSwitchTrigger'),   payload: tContent('analytics.table.langSwitchPayload')   },
+  { event: tContent('analytics.table.itemSelect'),   trigger: toPlainText(tContent('analytics.table.itemSelectTrigger')),   payload: tContent('analytics.table.itemSelectPayload')   },
+  { event: tContent('analytics.table.paletteOpen'),  trigger: toPlainText(tContent('analytics.table.paletteOpenTrigger')),  payload: tContent('analytics.table.paletteOpenPayload')  },
+  { event: tContent('analytics.table.pageView'),     trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),     payload: tContent('analytics.table.pageViewPayload')     },
+  { event: tContent('analytics.table.sectionViewed'),trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),   trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),   payload: tContent('analytics.table.langSwitchPayload')   },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -742,8 +748,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <!-- Pair 1: CommandEmpty -->
@@ -961,7 +967,7 @@ const visualTestItems = computed(() => [
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -990,6 +996,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -1012,7 +1020,7 @@ const visualTestItems = computed(() => [
     <DocsAnalytics
       :title="tContent('analytics.title')"
       :description="tContent('analytics.description')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

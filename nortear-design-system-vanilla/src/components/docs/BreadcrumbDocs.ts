@@ -32,17 +32,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (breadcrumbTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(breadcrumbTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -366,8 +373,8 @@ export function createBreadcrumbDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDefaultBreadcrumb(stripHtml(t('doDont.pair1.do'))),
               dontPreviewFactory: () =>
                 buildBreadcrumb(
@@ -383,8 +390,8 @@ export function createBreadcrumbDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildWithEllipsisBreadcrumb(stripHtml(t('doDont.pair2.do'))),
               dontPreviewFactory: () =>
                 buildBreadcrumb(
@@ -502,19 +509,19 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.simple.label'),
-              trigger: stripHtml(t('states.simple.trigger')),
-              behavior: stripHtml(t('states.simple.behavior')),
+              trigger: toPlainText(t('states.simple.trigger')),
+              behavior: toPlainText(t('states.simple.behavior')),
             },
             {
               label: t('states.asChildLink.label'),
-              trigger: stripHtml(t('states.asChildLink.trigger')),
-              behavior: stripHtml(t('states.asChildLink.behavior')),
+              trigger: toPlainText(t('states.asChildLink.trigger')),
+              behavior: toPlainText(t('states.asChildLink.behavior')),
             },
           ],
         });
@@ -583,7 +590,7 @@ export interface BreadcrumbEllipsisOptions {
               title: t('props.linkTitle'),
               cols: propsCols,
               items: [
-                { name: 'href', type: 'string', defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.href')) },
+                { name: 'href', type: 'string', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.href')) },
                 { name: 'text', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
                 { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
               ],
@@ -655,6 +662,8 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -676,10 +685,10 @@ export interface BreadcrumbEllipsisOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'NavigationMenu', description: t('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: 'Stepper', description: t('related.stepper'), path: '?path=/docs/ui-stepper--docs' },
-            { name: 'Tabs', description: t('related.tabs'), path: '?path=/docs/ui-tabs--docs' },
-            { name: 'DropdownMenu', description: t('related.dropdownMenu'), path: '?path=/docs/ui-dropdownmenu--docs' },
+            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/ui-stepper--docs' },
+            { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/ui-tabs--docs' },
+            { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/ui-dropdownmenu--docs' },
           ],
         });
 
@@ -699,7 +708,7 @@ export interface BreadcrumbEllipsisOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
@@ -715,17 +724,17 @@ export interface BreadcrumbEllipsisOptions {
             },
             {
               event: t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event: t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event: t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],
@@ -743,7 +752,7 @@ export interface BreadcrumbEllipsisOptions {
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
               action: t(`testes.functional.item${i}.action`),
-              result: t(`testes.functional.item${i}.result`),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -755,7 +764,7 @@ export interface BreadcrumbEllipsisOptions {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
-              criterion: t(`testes.accessibility.item${i}.criterion`),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
             })),

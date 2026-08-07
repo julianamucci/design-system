@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Root as ContextMenu } from './index';
 import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ContextMenu/Composicoes',
   component: ContextMenu,
   tags: ['overlay'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ContextMenu>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 // ── Com Shortcut ─────────────────────────────────────────────────────────────
 

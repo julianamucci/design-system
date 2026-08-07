@@ -1,4 +1,5 @@
 import { createDocsNav, type DocsNavGroup, type DocsNavHandle } from '../DocsNav';
+import { DOCS_PAGE_TITLE_ID } from './DocsHeader';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 
 export interface DocsPageLayoutProps {
@@ -44,10 +45,18 @@ export function createDocsPageLayout(props: DocsPageLayoutProps): DocsPageLayout
   sidebar.className = 'nds-stack';
   sidebar.dataset.spacing = 'md';
 
-  // Conteúdo: stack com gap grande entre seções.
-  const main = document.createElement('div');
+  // Conteúdo: landmark <main> (mesmas classes e mesmo lugar na árvore que o
+  // <div> anterior — zero mudança visual) + stack com gap grande entre seções.
+  // - tabindex="-1": recebe foco programático (skip link "Ir para o conteúdo")
+  //   sem entrar na ordem de tabulação;
+  // - aria-labelledby → <h1> do DocsHeader: o leitor de tela anuncia
+  //   "principal, <título da página>" ao cair aqui, sem precisar mover o
+  //   header no DOM.
+  const main = document.createElement('main');
   main.className = 'ds-docs nds-stack';
   main.dataset.spacing = '2xl';
+  main.tabIndex = -1;
+  main.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
 
   layout.append(sidebar, main);
   root.append(headerSlot, layout);

@@ -1,11 +1,13 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -14,11 +16,11 @@ const meta = {
   tags: ['form'],
   args: {
     onclick: fn(),
-  } as never,
-} satisfies Meta<typeof Button>;
+  },
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Disabled: Story = {
   render: (args) => ({
@@ -30,13 +32,21 @@ export const Disabled: Story = {
       onclick: (args as { onclick: ReturnType<typeof fn> }).onclick,
     },
   }),
-  parameters: { docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
+  parameters: {
+    covers: ['functional.item2', 'visual.item4'], docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
 
     await step('Botão possui atributo disabled', async () => {
       await expect(button).toBeDisabled();
+    });
+
+    await step('Tab pula o botão desabilitado', async () => {
+      // accessibility.keyboard.disabled afirma isso e nada verificava.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(button).not.toHaveFocus();
     });
 
     await step('Clique não dispara onclick quando disabled', async () => {
@@ -78,7 +88,8 @@ export const FocusVisible: Story = {
     Component: ButtonStory,
     props: { variant: 'default', label: 'Foco visível' },
   }),
-  parameters: { docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
+  parameters: {
+    covers: ['accessibility.item3'], docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;

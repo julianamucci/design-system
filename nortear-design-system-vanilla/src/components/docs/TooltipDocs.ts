@@ -26,17 +26,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (tooltipTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(tooltipTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -278,7 +285,7 @@ export function createTooltipDocs(): HTMLElement {
             },
             items: ['content', 'shortcut', 'icon'].map(key => ({
               element: t(`usage.uxWriting.table.${key}.name`),
-              rules: stripHtml(t(`usage.uxWriting.table.${key}.format`)),
+              rules: toPlainText(t(`usage.uxWriting.table.${key}.format`)),
               do: t(`usage.uxWriting.table.${key}.good`),
               dont: t(`usage.uxWriting.table.${key}.bad`),
             })),
@@ -300,8 +307,8 @@ export function createTooltipDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-text-caption nds-font-mono';
@@ -318,8 +325,8 @@ export function createTooltipDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
                 code.className = 'nds-text-body nds-font-mono';
@@ -607,15 +614,15 @@ createTooltip({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),  trigger: t('states.closed.trigger'),  behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),    trigger: t('states.open.trigger'),    behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.hover.label'),   trigger: t('states.hover.trigger'),   behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),   trigger: t('states.focus.trigger'),   behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.delayed.label'), trigger: t('states.delayed.trigger'), behavior: stripHtml(t('states.delayed.behavior')) },
+            { label: t('states.closed.label'),  trigger: toPlainText(t('states.closed.trigger')),  behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),    trigger: toPlainText(t('states.open.trigger')),    behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.hover.label'),   trigger: toPlainText(t('states.hover.trigger')),   behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),   trigger: toPlainText(t('states.focus.trigger')),   behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.delayed.label'), trigger: toPlainText(t('states.delayed.trigger')), behavior: toPlainText(t('states.delayed.behavior')) },
           ],
         });
 
@@ -649,14 +656,14 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
               items: [
                 { name: 'trigger', type: 'HTMLElement',                         defaultValue: '—',     required: 'Sim', description: 'Elemento que ativa o tooltip por hover ou foco. aria-describedby é setado automaticamente.' },
                 { name: 'content', type: 'string',                              defaultValue: '—',     required: 'Sim', description: 'Texto do tooltip. Renderizado via textContent (sem HTML).' },
-                { name: 'side',    type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear NÃO faz auto-flip por colisão.' },
-                { name: 'class',   type: 'string',                              defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.className.description')) },
-                { name: 'delay',        type: 'number',                       defaultValue: '300',   required: 'Não', description: stripHtml(t('props.table.delay.description')) + ' NOTA: factory Nortear usa SHOW_DELAY interno fixo de 300 ms; não é configurável via prop nem via Provider compartilhado.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",   defaultValue: "'center'", required: 'Não', description: stripHtml(t('props.table.align.description')) + ' NOTA: factory Nortear só aplica center implícito; align não é suportado.' },
-                { name: 'sideOffset',   type: 'number',                       defaultValue: '6',     required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (6px).' },
-                { name: 'open',         type: 'boolean',                      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Nortear é uncontrolled-only.' },
-                { name: 'defaultOpen',  type: 'boolean',                      defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen.description')) + ' NOTA: não suportado pela factory Nortear.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',      defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) + ' NOTA: não exposto pela factory Nortear.' },
+                { name: 'side',    type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear NÃO faz auto-flip por colisão.' },
+                { name: 'class',   type: 'string',                              defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.className.description')) },
+                { name: 'delay',        type: 'number',                       defaultValue: '300',   required: 'Não', description: toPlainText(t('props.table.delay.description')) + ' NOTA: factory Nortear usa SHOW_DELAY interno fixo de 300 ms; não é configurável via prop nem via Provider compartilhado.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",   defaultValue: "'center'", required: 'Não', description: toPlainText(t('props.table.align.description')) + ' NOTA: factory Nortear só aplica center implícito; align não é suportado.' },
+                { name: 'sideOffset',   type: 'number',                       defaultValue: '6',     required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (6px).' },
+                { name: 'open',         type: 'boolean',                      defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' NOTA: factory Nortear é uncontrolled-only.' },
+                { name: 'defaultOpen',  type: 'boolean',                      defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) + ' NOTA: não suportado pela factory Nortear.' },
+                { name: 'onOpenChange', type: '(open: boolean) => void',      defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) + ' NOTA: não exposto pela factory Nortear.' },
               ],
             },
           ],
@@ -687,14 +694,16 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',       description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Esc',       description: stripHtml(t('accessibility.keyboard.escape'))   + ' NOTA: factory Nortear não implementa Escape — apenas blur fecha.' },
-            { key: 'Shift+Tab', description: stripHtml(t('accessibility.keyboard.shiftTab')) },
+            { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
+            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   + ' NOTA: factory Nortear não implementa Escape — apenas blur fecha.' },
+            { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
           ],
         });
 
@@ -702,10 +711,10 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.popover.name'),   description: t('related.items.popover.description'),   path: '?path=/docs/ui-popover--docs'    },
-            { name: t('related.items.hoverCard.name'), description: t('related.items.hoverCard.description'), path: '?path=/docs/ui-hovercard--docs'  },
-            { name: t('related.items.button.name'),    description: t('related.items.button.description'),    path: '?path=/docs/ui-button--docs'     },
-            { name: t('related.items.kbd.name'),       description: t('related.items.kbd.description'),       path: '?path=/docs/ui-kbd--docs'        },
+            { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/ui-popover--docs'    },
+            { name: t('related.items.hoverCard.name'), description: toPlainText(t('related.items.hoverCard.description')), path: '?path=/docs/ui-hovercard--docs'  },
+            { name: t('related.items.button.name'),    description: toPlainText(t('related.items.button.description')),    path: '?path=/docs/ui-button--docs'     },
+            { name: t('related.items.kbd.name'),       description: toPlainText(t('related.items.kbd.description')),       path: '?path=/docs/ui-kbd--docs'        },
           ],
         });
 

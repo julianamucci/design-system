@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { deriveSlugFromUrl } from '@/lib/docs-tracking';
+
   export interface DocsNavSection {
     id: string;
     label: string;
@@ -18,8 +20,28 @@
 
   const { groups, activeSection, componentSlug }: Props = $props();
 
-  function scrollTo(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  /**
+   * `componentSlug` é opcional por contrato: quando a página não o passa, o
+   * observer (`mountDocsTracking`) deriva o slug do `?id=` do iframe. O nav usa
+   * a MESMA derivação para nunca emitir `data-track-id` ausente — sem ele o
+   * `docs_nav_click` sairia com `section_id` vazio nas páginas que omitem o slug.
+   */
+  const slug = $derived(componentSlug ?? deriveSlugFromUrl());
+
+  /**
+   * Rola até a seção *e* move o foco para ela. Sem o focus() o cursor de
+   * leitura do leitor de tela fica no botão do menu: a leitura não continua a
+   * partir do título da seção e o Tab seguinte volta para o próximo item do
+   * menu. `preventScroll` deixa a rolagem suave acontecer enquanto o foco já
+   * se move; o tabindex="-1" é aplicado no clique para não sujar o HTML das
+   * seções e não entra na ordem de tabulação.
+   */
+  function goToSection(id: string) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.focus({ preventScroll: true });
   }
 </script>
 
@@ -35,9 +57,9 @@
               class="nds-docs-nav-button"
               aria-current={activeSection === section.id ? 'location' : undefined}
               data-track="nav"
-              data-track-id={componentSlug ? `${componentSlug}:nav:${section.id}` : undefined}
+              data-track-id={`${slug}:nav:${section.id}`}
               data-track-label={section.label}
-              onclick={() => scrollTo(section.id)}
+              onclick={() => goToSection(section.id)}
             >
               {section.label}
             </button>

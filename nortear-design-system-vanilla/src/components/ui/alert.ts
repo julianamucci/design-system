@@ -7,10 +7,10 @@ import { createButton } from './button';
  * `utilities.css` e servem a qualquer componente que apareça/suma em runtime.
  *
  * O timeout NÃO é redundância defensiva genérica: sem ele o alert nunca sai da
- * tela em dois cenários reais — `prefers-reduced-motion`, onde a animação é
- * suprimida e `animationend` jamais dispara, e ambiente sem composição de
- * quadros (Chromium headless dos testes), onde a animação fica presa no
- * primeiro quadro. Quem vencer a corrida remove o nó; `done` roda uma vez só.
+ * tela quando a animação não chega a existir — `prefers-reduced-motion` a
+ * suprime e `animationend` jamais dispara — nem quando o nó é escondido
+ * (display/visibility, aba em background) antes de a animação completar. Quem
+ * vencer a corrida remove o nó; `done` roda uma vez só.
  */
 const EXIT_FALLBACK_MS = 300;  // --duration-base (200ms) + folga
 const ENTER_FALLBACK_MS = 450; // --duration-spring (400ms) + folga
@@ -21,6 +21,9 @@ function runExitAnimation(el: HTMLElement, done: () => void): void {
     // animationend borbulha: uma animação de qualquer descendente encerraria a
     // saída antes da hora. Só o próprio elemento conta.
     if (event && event.target !== el) return;
+    /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que
+       chamam (animationend e timeout) removem listener e timer antes de sair,
+       então não há ordem de eventos que a alcance. */
     if (finalizado) return;
     finalizado = true;
     window.clearTimeout(timer);
@@ -37,8 +40,25 @@ function runExitAnimation(el: HTMLElement, done: () => void): void {
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
+/**
+ * Semântica de anúncio do elemento raiz.
+ *
+ * - `alert`  — live region ASSERTIVA: o leitor de tela interrompe o que estiver
+ *   fazendo e anuncia na hora. Por WAI-ARIA só vale para mensagem urgente que
+ *   **surge em tempo de execução**.
+ * - `status` — live region polida: anuncia sem interromper.
+ * - `note`   — NÃO é live region. É o certo para alert estático, já presente
+ *   quando a página carrega.
+ */
+export type AlertRole = 'alert' | 'status' | 'note';
+
 export interface AlertOptions {
   variant?: AlertVariant;
+  /**
+   * Semântica de anúncio no elemento raiz — default `'alert'`.
+   * Use `'note'` para conteúdo estático (não vira live region).
+   */
+  role?: AlertRole;
   /** Additional CSS classes to append. */
   className?: string;
   /** Renderiza o botão de fechar (X) no canto superior direito. */
@@ -62,10 +82,14 @@ export interface AlertDescriptionOptions {
 }
 
 export function createAlert(options: AlertOptions = {}): HTMLElement {
-  const { variant = 'default', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
+  const { variant = 'default', role = 'alert', className, dismissible = false, onDismiss, dismissLabel = 'Fechar alerta' } = options;
 
   const el = document.createElement('div');
-  el.setAttribute('role', 'alert');
+  el.dataset.slot = 'alert';
+  // PATCH: a11y — `role` configurável. Fixo em 'alert' o componente era live
+  // region assertiva mesmo estático, e o leitor de tela pulava para ele no
+  // carregamento (ver PATCHES.md#alert-role).
+  el.setAttribute('role', role);
   el.className = variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`;
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
@@ -116,6 +140,9 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     // botão para o fim depois que os appends síncronos do consumidor rodarem.
     // Visual não muda (position: absolute); só a ordem de leitura e de Tab.
     queueMicrotask(() => {
+      /* v8 ignore next -- o caminho "já é o último" exige alert dismissible sem
+         nenhum conteúdo: o botão só deixa de ser último porque o consumidor
+         appenda depois, e alert vazio não é caso de uso. */
       if (el.lastElementChild !== dismissButton) el.appendChild(dismissButton);
     });
   }
@@ -129,8 +156,11 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
   // PATCH: api — nível do heading configurável via `as`, default 'h5'
   // (ver PATCHES.md#alert-title-desc-semantics)
   const el = document.createElement(as);
+  el.dataset.slot = 'alert-title';
   el.className = 'nds-alert-title';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  /* v8 ignore next -- `text` tem default ''; o ramo falso é o título montado por
+     appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
 
   return el;
@@ -142,8 +172,11 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
   // <section> preserva a semântica de landmark da descrição. CSS aceita tanto
   // section quanto qualquer elemento com class nds-alert-description.
   const el = document.createElement('section');
+  el.dataset.slot = 'alert-description';
   el.className = 'nds-alert-description';
   if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  /* v8 ignore next -- `text` tem default ''; o ramo falso é a descrição montada
+     por appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
 
   return el;

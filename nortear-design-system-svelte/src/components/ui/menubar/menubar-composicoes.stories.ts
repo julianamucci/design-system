@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Menubar/Composicoes',
   component: MenubarStory,
   tags: ['navigation'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MenubarStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 async function expectMenuOpen() {
   const menu = await waitForPortal('menu');

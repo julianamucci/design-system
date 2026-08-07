@@ -7,10 +7,12 @@
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
+    AlertDialogMedia,
     AlertDialogTitle,
     AlertDialogTrigger,
   } from './index';
   import { Button } from '@/components/ui/button';
+  import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
   type Tone = 'destructive' | 'default';
 
@@ -20,24 +22,37 @@
     triggerVariant?: 'default' | 'destructive' | 'outline' | 'ghost' | 'secondary' | 'link';
     title?: string;
     description?: string;
+    /** Bloco de ícone no topo do header. É o control showMedia do Playground. */
+    showMedia?: boolean;
+    /** Classe extra no painel — o caminho de extensibilidade documentado. */
+    contentClass?: string;
+    /** Classe extra no bloco de mídia. */
+    mediaClass?: string;
     cancelLabel?: string;
     actionLabel?: string;
     tone?: Tone;
     onConfirm?: () => void;
     onCancel?: () => void;
+    onOpenChange?: (open: boolean) => void;
   }
 
+  // Rótulos padrão: docs/shared/content/alert-dialog/translations.json →
+  // demonstration.labels.
   let {
     open = $bindable(false),
     triggerLabel = 'Excluir conta',
     triggerVariant = 'destructive',
-    title = 'Excluir sua conta?',
-    description = 'Essa ação é permanente. Todos os dados, arquivos e histórico serão removidos e não poderão ser recuperados.',
+    title = 'Excluir conta',
+    description = 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    showMedia = false,
+    contentClass,
+    mediaClass,
     cancelLabel = 'Cancelar',
-    actionLabel = 'Excluir conta',
+    actionLabel = 'Excluir',
     tone = 'destructive',
     onConfirm,
     onCancel,
+    onOpenChange,
   }: Props = $props();
 
   // Variante do Button, não classe de fundo crua: bg-destructive e
@@ -45,14 +60,19 @@
   const actionVariant = $derived(tone === 'destructive' ? 'destructive' : 'default');
 </script>
 
-<AlertDialog bind:open>
+<AlertDialog bind:open {onOpenChange}>
   <AlertDialogTrigger>
     {#snippet child({ props })}
       <Button {...props} variant={triggerVariant}>{triggerLabel}</Button>
     {/snippet}
   </AlertDialogTrigger>
-  <AlertDialogContent>
+  <AlertDialogContent class={contentClass}>
     <AlertDialogHeader>
+      {#if showMedia}
+        <AlertDialogMedia class={mediaClass}>
+          <TriangleAlert aria-hidden="true" />
+        </AlertDialogMedia>
+      {/if}
       <AlertDialogTitle>{title}</AlertDialogTitle>
       <AlertDialogDescription>{description}</AlertDialogDescription>
     </AlertDialogHeader>

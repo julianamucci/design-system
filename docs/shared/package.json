@@ -1,0 +1,33 @@
+{
+  "name": "@nortear/ds-core",
+  "version": "1.0.0",
+  "description": "Fonte de verdade do Nortear Design System — tokens, temas, conteúdo trilíngue e guidelines. Sem dependência de framework.",
+  "license": "MIT",
+  "author": "Juliana Mucci dos Santos",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "assets",
+    "content",
+    "figma",
+    "guidelines",
+    "primitives",
+    "skill-refs",
+    "styles",
+    "themes",
+    "tokens",
+    "README.md"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    "./content/*": "./content/*",
+    "./themes/*": "./themes/*",
+    "./tokens/*": "./tokens/*",
+    "./primitives/*": "./primitives/*",
+    "./styles/*": "./styles/*",
+    "./assets/*": "./assets/*",
+    "./figma/*": "./figma/*",
+    "./guidelines/*": "./guidelines/*",
+    "./skill-refs/*": "./skill-refs/*"
+  }
+}

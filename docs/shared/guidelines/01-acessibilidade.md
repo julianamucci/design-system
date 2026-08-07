@@ -378,6 +378,36 @@ const navigateTo = (page: string, pageTitle: string) => {
 
 ---
 
+## Role não vem sozinho
+
+Declarar um `role` cria obrigações. Role pela metade é pior que role nenhum: o
+leitor de tela anuncia um contrato que o componente não cumpre, e o axe reprova.
+
+| Role | Exige |
+|------|-------|
+| `dialog` | nome acessível — `aria-labelledby` para o título interno, ou `aria-label` |
+| `combobox` | `aria-controls` apontando para o listbox, além de `aria-expanded` |
+| `listbox` | filhos `option`/`group` e nome acessível. Estado vazio precisa de uma `option` desabilitada com o motivo — listbox sem filho é inválido |
+| `tooltip`/`menu` | existir de fato no painel: se o trigger diz `aria-haspopup`, o painel tem que ter o role correspondente |
+
+Nada de `role="progressbar"` dentro de `listbox` — não é filho permitido. Estado
+de carregamento fica fora da lista.
+
+## Nome acessível não pode divergir do texto visível
+
+WCAG 2.5.3 (Label in Name). Um botão que mostra "Buscar..." e tem
+`aria-label="Abrir command palette"` não é acionável por comando de voz: a
+pessoa fala o que vê. Se há texto visível, ele é o nome — `aria-label` só entra
+quando não há texto, ou contendo o texto visível.
+
+## Alvo e região rolável
+
+- **Alvo mínimo 24×24** (WCAG 2.5.8). Expandir com pseudo-elemento **não
+  resolve**: a verificação mede a caixa do elemento, não o `::after`. O elemento
+  interativo é que precisa ter o tamanho; o visual menor sai de um filho.
+- **Região rolável precisa de `tabindex="0"`** mais `role` e rótulo — sem isso
+  quem navega por teclado não alcança o conteúdo.
+
 ## Estados ARIA dinâmicos
 
 Mudanças de estado que devem ser anunciadas por leitores de tela:
@@ -425,6 +455,50 @@ Para trechos em outro idioma dentro da página:
 <code lang="en">border-radius</code>
 <span lang="en">Design System</span>
 ```
+
+**WCAG 3.1.2 — Nível AA.** É o único recurso que muda pronúncia de verdade:
+NVDA, JAWS e VoiceOver trocam a voz no fragmento quando o pacote do idioma está
+instalado. O `DOMPurify` aceita `span` e `lang` na allowlist padrão, então
+conteúdo vindo do `translations.json` pode marcar sem configuração extra.
+
+### Dentro do Storybook, escrever no documento certo
+
+`useSeoEffect` escreve meta tags no documento **pai** quando detecta iframe —
+correto para SEO, errado para o `lang`. Quem o leitor de tela lê é o
+`iframe.html`, que o Storybook serve como `<html lang="en">`. O idioma precisa
+ir para os **dois** documentos; medir só o do manager dá falso positivo.
+
+### O que marcar, e o que não marcar
+
+Marque por **estrutura** antes de marcar por palavra: bloco de código, coluna de
+nome de prop, nome de token — lugares onde o conteúdo é inglês por construção.
+Cobre mais com menos edição e não toca conteúdo.
+
+Já aplicado nas 4 stacks, não repetir por página:
+
+| Onde | O quê |
+|---|---|
+| `CodeBlock` → `<pre lang="en">` | todo snippet do design system, docs e consumidor |
+| `DocsProps` | células monoespaçadas de nome de prop e tipo |
+| `DocsTokens` | células monoespaçadas de token e seletor |
+
+A célula monoespaçada é o sinal: `nds-font-mono` na tabela quer dizer
+identificador, não prosa.
+
+Na prosa, marque só o termo que a voz em português realmente erra
+(`tooltip`, `hover`, `placeholder`, `skeleton`, `breadcrumb`). Empréstimo já
+absorvido — `menu`, `link`, `card`, `mobile`, `design` — **não** se marca:
+forçar troca de idioma neles deixa a fala picotada e piora o resultado.
+
+### O que não funciona (não gastar tempo)
+
+| Recurso | Por que não |
+|---|---|
+| `aria-label` com grafia fonética | quebra braille, controle por voz e o nome acessível copiado; muda o nome para todo mundo |
+| CSS Speech (`speak-as`) | nenhum navegador implementa |
+| `data-ssml` / SSML em HTML | rascunho do W3C, sem implementação |
+| `<abbr title>` | ajuda compreensão, não pronúncia; poucos leitores anunciam por padrão |
+| Dicionário de pronúncia | existe, mas é configuração do usuário (NVDA), não do autor |
 
 ---
 

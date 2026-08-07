@@ -19,9 +19,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import hoverCardTranslations from '@shared/content/hover-card/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(hoverCardTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (hoverCardTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -50,7 +62,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -88,10 +99,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -516,7 +523,6 @@ interface HoverCardContentProps {
     </div>
   {/snippet}
 
-
   {#snippet variantUserProfile()}
     <div class="nds-w-full" style="contain: layout; min-height: 140px; position: relative;">
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
@@ -620,13 +626,13 @@ interface HoverCardContentProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),     trigger: $tStore('states.closed.trigger'),     behavior: stripHtml($tStore('states.closed.behavior')) },
-      { label: $tStore('states.open.label'),       trigger: $tStore('states.open.trigger'),       behavior: stripHtml($tStore('states.open.behavior')) },
-      { label: $tStore('states.controlled.label'), trigger: $tStore('states.controlled.trigger'), behavior: stripHtml($tStore('states.controlled.behavior')) },
+      { label: $tStore('states.closed.label'),     trigger: toPlainText($tStore('states.closed.trigger')),     behavior: toPlainText($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),       trigger: toPlainText($tStore('states.open.trigger')),       behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.controlled.label'), trigger: toPlainText($tStore('states.controlled.trigger')), behavior: toPlainText($tStore('states.controlled.behavior')) },
     ]}
   />
 
@@ -675,6 +681,8 @@ interface HoverCardContentProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -687,10 +695,10 @@ interface HoverCardContentProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: 'Tab',       description: stripHtml($tStore('accessibility.keyboard.tab'))      },
-      { key: 'Esc',       description: stripHtml($tStore('accessibility.keyboard.escape'))   },
-      { key: 'Shift+Tab', description: stripHtml($tStore('accessibility.keyboard.shiftTab')) },
-      { key: 'Enter',     description: stripHtml($tStore('accessibility.keyboard.enter'))    },
+      { key: 'Tab',       description: toPlainText($tStore('accessibility.keyboard.tab'))      },
+      { key: 'Esc',       description: toPlainText($tStore('accessibility.keyboard.escape'))   },
+      { key: 'Shift+Tab', description: toPlainText($tStore('accessibility.keyboard.shiftTab')) },
+      { key: 'Enter',     description: toPlainText($tStore('accessibility.keyboard.enter'))    },
     ]}
   />
 
@@ -743,8 +751,8 @@ interface HoverCardContentProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4, 5, 6].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -756,12 +764,12 @@ interface HoverCardContentProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'           },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '4.1.2',  how: 'DevTools a11y tree' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '1.4.13', how: 'Keyboard test'      },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '1.4.13', how: 'Keyboard test'      },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '1.4.3',  how: 'Contrast checker'   },
-        { criterion: stripHtml($tStore('testes.accessibility.item6')), level: 'AA',     how: 'Manual review'      },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'           },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2',  how: 'DevTools a11y tree' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '1.4.13', how: 'Keyboard test'      },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '1.4.13', how: 'Keyboard test'      },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '1.4.3',  how: 'Contrast checker'   },
+        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: 'AA',     how: 'Manual review'      },
       ],
     }}
     visual={{

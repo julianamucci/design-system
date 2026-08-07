@@ -70,12 +70,19 @@ onUnmounted(() => {
         />
       </nav>
 
-      <div
+      <!-- Landmark de conteúdo: alvo do "Ir para o conteúdo" do Storybook e do
+           foco programático. tabindex="-1" mantém fora da ordem de tabulação;
+           aria-labelledby aponta para o <h1> do DocsHeader (id fixo) para o
+           leitor anunciar "principal, <título da página>". Mesmas classes e
+           mesma posição na árvore — sem mudança visual. -->
+      <main
         class="ds-docs nds-stack"
         data-spacing="2xl"
+        tabindex="-1"
+        aria-labelledby="docs-page-title"
       >
         <slot />
-      </div>
+      </main>
     </div>
   </div>
 </template>

@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, fn } from 'storybook/test';
@@ -6,11 +7,12 @@ import ButtonStory from './ButtonStory.svelte';
 import ButtonDocs from '@/components/docs/ButtonDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Button',
   component: Button,
   tags: ['autodocs', 'form'],
   parameters: {
+    design: figmaDesign('button'),
     docs: { page: withAutoDocsTab(ButtonDocs) },
   },
   argTypes: {
@@ -21,12 +23,34 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
+      options: ['default', 'xs', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg'],
       description: 'Tamanho do botão',
     },
     disabled: {
       control: 'boolean',
       description: 'Desabilita interação com o botão',
+    },
+    // A aba "API Reference" documenta a API real; o Playground não encaminha
+    // estas três, então control ativo aqui seria controle morto.
+    href: {
+      control: false,
+      description: 'Quando fornecido, renderiza como <a> mantendo estilos e semântica de link.',
+      table: { type: { summary: 'string' } },
+    },
+    type: {
+      control: false,
+      description: 'Tipo HTML do botão. Use "submit" dentro de forms.',
+      table: { type: { summary: '"button" | "submit" | "reset"' }, defaultValue: { summary: '"button"' } },
+    },
+    class: {
+      control: false,
+      description: 'Classes adicionais, mescladas com as da variante.',
+      table: { type: { summary: 'string' } },
+    },
+    onclick: {
+      control: false,
+      description: 'Callback disparado ao clique. Não dispara quando desabilitado.',
+      table: { type: { summary: '(e: MouseEvent) => void' } },
     },
   },
   args: {
@@ -34,15 +58,26 @@ const meta = {
     size: 'default',
     disabled: false,
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item5',
+      'visual.item1',
+    ],
+  },
   args: {
     onclick: fn(),
-  } as never,
+  },
   render: (args) => ({
     Component: ButtonStory,
     props: {
@@ -50,7 +85,7 @@ export const Playground: Story = {
       size: args.size,
       disabled: args.disabled,
       label: 'Botão',
-      onclick: (args as { onclick: ReturnType<typeof fn> }).onclick,
+      onclick: args.onclick,
     },
   }),
   play: async ({ canvasElement, step, args }) => {
@@ -64,24 +99,29 @@ export const Playground: Story = {
 
     await step('Clique dispara onclick', async () => {
       await userEvent.click(button);
-      await expect((args as { onclick: ReturnType<typeof fn> }).onclick).toHaveBeenCalledTimes(1);
+      await expect(args.onclick).toHaveBeenCalledTimes(1);
     });
 
-    await step('Focus via teclado', async () => {
-      (button as HTMLElement).focus();
+    await step('Tab leva o foco ao botão', async () => {
+      // userEvent.tab() e não .focus(): o documentado é "recebe foco na ordem
+      // natural do DOM". Forçar o foco passaria até com tabindex="-1".
+      // O clique do passo anterior deixou o foco no botão; sem zerar, o Tab
+      // sairia dele e a asserção mediria o contrário do que promete.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(button).toHaveFocus();
     });
 
     await step('Enter dispara onclick', async () => {
       (button as HTMLElement).focus();
       await userEvent.keyboard('{Enter}');
-      await expect((args as { onclick: ReturnType<typeof fn> }).onclick).toHaveBeenCalledTimes(2);
+      await expect(args.onclick).toHaveBeenCalledTimes(2);
     });
 
     await step('Space dispara onclick', async () => {
       (button as HTMLElement).focus();
       await userEvent.keyboard(' ');
-      await expect((args as { onclick: ReturnType<typeof fn> }).onclick).toHaveBeenCalledTimes(3);
+      await expect(args.onclick).toHaveBeenCalledTimes(3);
     });
   },
 };

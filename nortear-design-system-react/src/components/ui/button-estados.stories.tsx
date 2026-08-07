@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Loader2 } from "lucide-react";
@@ -7,6 +8,9 @@ const meta = {
   title: "UI/Button/Estados",
   tags: ["form"],
   component: Button,
+  parameters: {
+    design: figmaDesign("button"),
+  },
   args: {
     onClick: fn(),
   },
@@ -22,6 +26,7 @@ export const Disabled: Story = {
     </Button>
   ),
   parameters: {
+    covers: ["functional.item2", "visual.item4"],
     docs: {
       description: {
         story: "Estado desabilitado. Previne cliques e reduz opacidade para 50%.",
@@ -36,6 +41,13 @@ export const Disabled: Story = {
       await expect(button).toBeDisabled();
     });
 
+    await step("Tab pula o botão desabilitado", async () => {
+      // accessibility.keyboard.disabled afirma isso e nada verificava.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(button).not.toHaveFocus();
+    });
+
     await step("Clique não dispara onClick quando disabled", async () => {
       await userEvent.click(button, { pointerEventsCheck: 0 });
       await expect(args.onClick).not.toHaveBeenCalled();
@@ -46,7 +58,9 @@ export const Disabled: Story = {
 export const Loading: Story = {
   render: (args) => (
     <Button {...args} disabled aria-busy="true">
-      <Loader2 aria-hidden="true" className="nds-animate-spin" />
+      {/* .nds-spin (button.css) tem guarda de prefers-reduced-motion;
+          .nds-animate-spin (utilities.css) não tem. */}
+      <Loader2 aria-hidden="true" className="nds-button-icon-svg nds-spin" />
       Salvando…
     </Button>
   ),
@@ -74,6 +88,7 @@ export const Loading: Story = {
 export const FocusVisible: Story = {
   render: (args) => <Button {...args}>Foco visível</Button>,
   parameters: {
+    covers: ["accessibility.item3"],
     docs: {
       description: {
         story: "Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.",

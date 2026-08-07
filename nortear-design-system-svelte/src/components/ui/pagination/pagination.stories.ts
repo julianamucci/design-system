@@ -5,7 +5,7 @@ import PaginationStory from './PaginationStory.svelte';
 import PaginationDocs from '@/components/docs/PaginationDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Pagination',
   component: PaginationStory,
   tags: ['autodocs', 'navigation'],
@@ -49,10 +49,10 @@ const meta = {
     siblingCount: 1,
     demonstration: 'simples',
   },
-} satisfies Meta<typeof PaginationStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

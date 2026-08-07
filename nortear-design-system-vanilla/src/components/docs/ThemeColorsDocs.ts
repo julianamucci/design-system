@@ -13,6 +13,7 @@ import {
   createTableCell,
 } from '@/components/ui/table';
 import { createSwatch as createSwatchEl } from '@/components/docs/shared/swatch';
+import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
 // ─── Definições estáticas ──────────────────────────────────────────────────────
@@ -122,11 +123,16 @@ export function createThemeColorsDocs(): HTMLElement {
   root.style.height = '100%';
   root.style.overflow = 'auto';
 
-  const container = document.createElement('div');
+  // Landmark <main> — esta página monta layout próprio (não passa pelo
+  // foundationsRenderer nem pelo DocsPageLayout). Mesmas classes e mesmo lugar
+  // na árvore que o <div> anterior: zero mudança visual.
+  const container = document.createElement('main');
   container.className = 'nds-p-8 nds-stack';
   container.dataset.spacing = 'xl';
   container.style.maxWidth = '72rem';
   container.style.marginInline = 'auto';
+  container.tabIndex = -1;
+  container.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
   root.appendChild(container);
 
   // ── SEO + analytics reativos ───────────────────────────────────────────────
@@ -177,6 +183,7 @@ export function createThemeColorsDocs(): HTMLElement {
   topRow.append(badgeCategory, badgeType, switcher);
 
   const h1 = document.createElement('h1');
+  h1.id = DOCS_PAGE_TITLE_ID;
   h1.className = 'nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground';
 
   const desc = document.createElement('p');

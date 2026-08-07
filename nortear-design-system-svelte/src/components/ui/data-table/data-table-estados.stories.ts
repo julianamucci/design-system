@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import DataTable from './data-table.svelte';
 import { baseColumns } from './data-table.fixtures';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/DataTable/Estados',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
-} satisfies Meta<typeof DataTable>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const SemResultados: Story = {
   args: {

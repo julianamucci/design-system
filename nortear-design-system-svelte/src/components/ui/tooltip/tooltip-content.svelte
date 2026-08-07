@@ -21,9 +21,14 @@
 </script>
 
 <TooltipPortal {...portalProps}>
+	<!-- role="tooltip": o bits-ui não emite role no conteúdo. Sem ele o painel
+	     é um <div> qualquer para o leitor de tela, e o `aria-describedby` do
+	     trigger aponta para algo sem papel definido. O Vanilla — referência
+	     cross-stack — já define role="tooltip". -->
 	<TooltipPrimitive.Content
 		bind:ref
 		data-slot="tooltip-content"
+		role="tooltip"
 		{sideOffset}
 		{side}
 		class={cn("nds-tooltip-content", className)}

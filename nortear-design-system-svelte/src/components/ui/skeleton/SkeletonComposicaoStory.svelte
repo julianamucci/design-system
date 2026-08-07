@@ -38,7 +38,7 @@
 {:else if variant === 'imagemEmAspectRatio'}
   <div role="status" aria-busy="true" aria-label="Carregando imagem" class="nds-w-sm">
     <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;" >
-      <Skeleton class="inset-0 nds-w-full nds-motion-reduce-none" style="position: absolute; height: 100%" aria-hidden="true" />
+      <Skeleton class="nds-w-full nds-h-full nds-motion-reduce-none" style="position: absolute; inset: 0" aria-hidden="true" />
     </div>
   </div>
 {:else if variant === 'paragrafo'}

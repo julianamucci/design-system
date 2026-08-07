@@ -1,7 +1,10 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, userEvent, waitFor } from "storybook/test";
-import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
+// `Info as InfoIcon`: a story exportada se chama `Info` nas 4 stacks; sem o
+// alias o ícone e o export colidem no mesmo escopo de módulo.
+import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {
@@ -9,6 +12,7 @@ const meta = {
   tags: ["feedback"],
   component: Alert,
   parameters: {
+    design: figmaDesign("alert"),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -18,9 +22,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: { covers: ["functional.item1", "accessibility.item3", "visual.item2"] },
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="nds-icon" />
+      <InfoIcon aria-hidden="true" className="nds-icon" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
@@ -37,6 +42,7 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
+  parameters: { covers: ["functional.item2"] },
   render: () => (
     <Alert variant="destructive">
       <AlertCircle aria-hidden="true" className="nds-icon" />
@@ -55,6 +61,7 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  parameters: { covers: ["functional.item5"] },
   render: () => (
     <Alert variant="success">
       <CheckCircle2 aria-hidden="true" className="nds-icon" />
@@ -90,11 +97,11 @@ export const Warning: Story = {
   },
 };
 
-export const InfoVariante: Story = {
+export const Info: Story = {
   name: "Info",
   render: () => (
     <Alert variant="info">
-      <Info aria-hidden="true" className="nds-icon" />
+      <InfoIcon aria-hidden="true" className="nds-icon" />
       <AlertTitle>Dica</AlertTitle>
       <AlertDescription>
         Você pode alterar o tema em Configurações a qualquer momento.
@@ -146,6 +153,7 @@ function AlertDismissivelRemontavel({
 }
 
 export const Dismissible: Story = {
+  parameters: { covers: ["functional.item7", "visual.item5"] },
   args: { onDismiss: fn() },
   render: (args) => (
     <AlertDismissivelRemontavel
@@ -157,6 +165,39 @@ export const Dismissible: Story = {
   ),
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    const onDismiss = args.onDismiss as unknown as ReturnType<typeof fn>;
+
+    // A entrada só existe logo depois de montar. O painel Interactions
+    // reexecuta a play no MESMO DOM, onde o alert já assentou — então, quando a
+    // classe não está lá, provocamos uma remontagem (o wrapper remonta ao
+    // fechar) e medimos no nó novo. Em montagem limpa nada disso roda.
+    await step("Animação de descendente não encerra a entrada antes da hora", async () => {
+      let alert = canvas.getByRole("alert");
+      if (!alert.classList.contains("nds-animate-in")) {
+        await userEvent.click(canvas.getByRole("button", { name: "Fechar alerta" }));
+        alert = await waitFor(() => {
+          const novo = canvas.getByRole("alert");
+          if (!novo.classList.contains("nds-animate-in")) throw new Error("aguardando remontagem");
+          return novo;
+        });
+        onDismiss.mockClear(); // o fechamento de preparo não entra na contagem
+      }
+      await expect(alert).toHaveClass("nds-animate-in");
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a fase de
+      // entrada do alert.
+      const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
+      dismiss.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
+      await expect(alert).toHaveClass("nds-animate-in");
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar.
+      alert.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
+      await waitFor(() => expect(alert).not.toHaveClass("nds-animate-in"));
+      alert.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
+      await expect(alert).not.toHaveClass("nds-animate-in");
+    });
 
     await step("Botão de fechar visível e acessível por rótulo", async () => {
       const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
@@ -170,7 +211,15 @@ export const Dismissible: Story = {
 
     await step("Clique remove o alert original e a demo remonta", async () => {
       const alertOriginal = canvas.getByRole("alert");
-      await userEvent.click(canvas.getByRole("button", { name: "Fechar alerta" }));
+      const dismiss = canvas.getByRole("button", { name: "Fechar alerta" });
+      await userEvent.click(dismiss);
+      // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
+      // fechamento em andamento. Sem ela o `toHaveBeenCalledTimes(1)` do último
+      // step é verdade trivial — nunca houve chance de disparar duas vezes.
+      dismiss.click();
+      // E a animação de um descendente também não pode encerrar a saída.
+      dismiss.dispatchEvent(new AnimationEvent("animationend", { bubbles: true }));
+      await expect(alertOriginal).toBeInTheDocument();
 
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
@@ -198,7 +247,7 @@ export const DismissibleTeclado: Story = {
   render: (args) => (
     <AlertDismissivelRemontavel
       onDismiss={args.onDismiss}
-      icon={<Info aria-hidden="true" className="nds-icon" />}
+      icon={<InfoIcon aria-hidden="true" className="nds-icon" />}
       title="Atenção"
       description="Suas alterações serão aplicadas na próxima sessão."
     />

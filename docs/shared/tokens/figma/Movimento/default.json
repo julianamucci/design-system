@@ -1,0 +1,84 @@
+{
+  "duracao": {
+    "duration-instant": {
+      "$type": "number",
+      "$value": 0
+    },
+    "duration-fast": {
+      "$type": "number",
+      "$value": 120
+    },
+    "duration-base": {
+      "$type": "number",
+      "$value": 200
+    },
+    "duration-moderate": {
+      "$type": "number",
+      "$value": 320
+    },
+    "duration-panel": {
+      "$type": "number",
+      "$value": 300
+    },
+    "duration-spring": {
+      "$type": "number",
+      "$value": 400
+    },
+    "duration-slow": {
+      "$type": "number",
+      "$value": 500
+    },
+    "duration-stately": {
+      "$type": "number",
+      "$value": 800
+    }
+  },
+  "curva": {
+    "ease-linear": {
+      "$type": "string",
+      "$value": "linear"
+    },
+    "ease-standard": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.2, 0, 0, 1)"
+    },
+    "ease-size": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.25, 0.1, 0.25, 1)"
+    },
+    "ease-spring": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.365, 0.565, 0.121, 1.163)"
+    },
+    "ease-emphasis": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.3, 0, 0, 1)"
+    },
+    "ease-entrance": {
+      "$type": "string",
+      "$value": "cubic-bezier(0, 0, 0, 1)"
+    },
+    "ease-exit": {
+      "$type": "string",
+      "$value": "cubic-bezier(0.3, 0, 1, 1)"
+    }
+  },
+  "deslocamento": {
+    "motion-offset-xs": {
+      "$type": "number",
+      "$value": 4
+    },
+    "motion-offset-sm": {
+      "$type": "number",
+      "$value": 8
+    },
+    "motion-offset-md": {
+      "$type": "number",
+      "$value": 16
+    },
+    "motion-offset-lg": {
+      "$type": "number",
+      "$value": 32
+    }
+  }
+}

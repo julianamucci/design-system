@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ScrollArea/Variantes',
   component: ScrollAreaStory,
   tags: ['layout'],
@@ -17,16 +17,20 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ScrollAreaStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Vertical: Story = {
   render: () => ({
     Component: ScrollAreaStory,
     props: {
       variant: 'vertical',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       height: '300px',
       width: '320px',
       itemCount: 30,
@@ -56,6 +60,10 @@ export const Horizontal: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'horizontal',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       height: '180px',
       width: '500px',
       itemCount: 10,
@@ -71,9 +79,14 @@ export const Horizontal: Story = {
         expect(scrollbar).toBeInTheDocument();
       });
     });
-    await step('Conteúdo em flex w-max', async () => {
-      const inner = canvasElement.querySelector('.flex.w-max');
+    await step('Conteúdo transborda na horizontal', async () => {
+      // Antes procurava '.flex.w-max' — Tailwind morto, a faixa usa .nds-row.
+      // A asserção passa a ser o contrato real: o conteúdo é mais largo que a
+      // viewport, que é o que faz a scrollbar existir.
+      const inner = canvasElement.querySelector('.nds-row');
       await expect(inner).toBeInTheDocument();
+      const vp = canvasElement.querySelector('[data-slot="scroll-area-viewport"]')!;
+      await expect(vp.scrollWidth).toBeGreaterThan(vp.clientWidth);
     });
   },
 };
@@ -83,6 +96,10 @@ export const Both: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'both',
+      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
+      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
+      // Chromatic nem a assercao viam nada.
+      type: 'always',
       height: '260px',
       width: '500px',
       rowCount: 12,

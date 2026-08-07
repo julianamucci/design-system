@@ -27,6 +27,9 @@ type CodeBlockArgs = {
   footer: string;
 };
 
+// Única story do arquivo renderiza o CodeBlock direto (não um wrapper de
+// fixture), então aqui Meta<typeof Componente> é o tipo certo: os args SÃO as
+// props do componente.
 const meta = {
   title: 'UI/CodeBlock',
   component: CodeBlock,

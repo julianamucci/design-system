@@ -49,7 +49,9 @@
       "item6": "<strong>Botão de ação</strong> — configurado via <code>{ action: { label, onClick } }</code>. Focável por teclado.",
       "item7": "<strong>Botão de fechar</strong> — exibido automaticamente; remove o toast imediatamente ao clicar.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "// Setup no root (uma vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalhes\" })\ntoast(\"Título\", { action: { label: \"Desfazer\", onClick: fn } })\ntoast.promise(promessa, { loading: \"...\", success: \"...\", error: \"...\" })"
+      "structureCode": {
+        "react": "// Setup no root (uma vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalhes\" })\ntoast(\"Título\", { action: { label: \"Desfazer\", onClick: fn } })\ntoast.promise(promessa, { loading: \"...\", success: \"...\", error: \"...\" })"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -438,7 +440,9 @@
       "item6": "<strong>Action button</strong> — configured via <code>{ action: { label, onClick } }</code>. Keyboard focusable.",
       "item7": "<strong>Close button</strong> — shown automatically; removes the toast immediately on click.",
       "structureLabel": "Basic structure:",
-      "structureCode": "// Setup at root (once)\n<Toaster position=\"top-right\" richColors />\n\n// Toast dispatch (anywhere)\ntoast.success(\"Title\")\ntoast.success(\"Title\", { description: \"Details\" })\ntoast(\"Title\", { action: { label: \"Undo\", onClick: fn } })\ntoast.promise(promise, { loading: \"...\", success: \"...\", error: \"...\" })"
+      "structureCode": {
+        "react": "// Setup at root (once)\n<Toaster position=\"top-right\" richColors />\n\n// Toast dispatch (anywhere)\ntoast.success(\"Title\")\ntoast.success(\"Title\", { description: \"Details\" })\ntoast(\"Title\", { action: { label: \"Undo\", onClick: fn } })\ntoast.promise(promise, { loading: \"...\", success: \"...\", error: \"...\" })"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -827,7 +831,9 @@
       "item6": "<strong>Botón de acción</strong> — configurado vía <code>{ action: { label, onClick } }</code>. Accesible por teclado.",
       "item7": "<strong>Botón de cerrar</strong> — se muestra automáticamente; elimina el toast inmediatamente al hacer clic.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "// Setup en el root (una vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalles\" })\ntoast(\"Título\", { action: { label: \"Deshacer\", onClick: fn } })\ntoast.promise(promesa, { loading: \"...\", success: \"...\", error: \"...\" })"
+      "structureCode": {
+        "react": "// Setup en el root (una vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalles\" })\ntoast(\"Título\", { action: { label: \"Deshacer\", onClick: fn } })\ntoast.promise(promesa, { loading: \"...\", success: \"...\", error: \"...\" })"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

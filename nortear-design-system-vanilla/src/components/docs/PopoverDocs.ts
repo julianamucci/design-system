@@ -29,17 +29,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (popoverTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(popoverTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -348,8 +355,8 @@ export function createPopoverDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-text-body';
@@ -376,8 +383,8 @@ export function createPopoverDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const code = document.createElement('div');
                 code.className = 'nds-text-body nds-font-mono';
@@ -788,14 +795,14 @@ createPopover({ trigger, content });`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),        trigger: t('states.closed.trigger'),        behavior: stripHtml(t('states.closed.behavior')) },
-            { label: t('states.open.label'),          trigger: t('states.open.trigger'),          behavior: stripHtml(t('states.open.behavior')) },
-            { label: t('states.transitioning.label'), trigger: t('states.transitioning.trigger'), behavior: stripHtml(t('states.transitioning.behavior')) },
-            { label: t('states.focused.label'),       trigger: t('states.focused.trigger'),       behavior: stripHtml(t('states.focused.behavior')) },
+            { label: t('states.closed.label'),        trigger: toPlainText(t('states.closed.trigger')),        behavior: toPlainText(t('states.closed.behavior')) },
+            { label: t('states.open.label'),          trigger: toPlainText(t('states.open.trigger')),          behavior: toPlainText(t('states.open.behavior')) },
+            { label: t('states.transitioning.label'), trigger: toPlainText(t('states.transitioning.trigger')), behavior: toPlainText(t('states.transitioning.behavior')) },
+            { label: t('states.focused.label'),       trigger: toPlainText(t('states.focused.trigger')),       behavior: toPlainText(t('states.focused.behavior')) },
           ],
         });
 
@@ -832,13 +839,13 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                         defaultValue: '—',         required: 'Sim', description: 'Elemento que abre o popover ao clicar (geralmente Button).' },
                 { name: 'content',      type: 'HTMLElement | string',                defaultValue: '—',         required: 'Sim', description: 'Conteúdo do painel. String é renderizada via textContent.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: stripHtml(t('props.table.side.description')) + ' NOTA: factory Nortear não faz auto-flip por colisão.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: stripHtml(t('props.table.align.description')) },
-                { name: 'onOpenChange', type: '(open: boolean) => void',             defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onOpenChange.description')) },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear não faz auto-flip por colisão.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) },
+                { name: 'onOpenChange', type: '(open: boolean) => void',             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.open.description')) + ' NOTA: factory Nortear só suporta estado uncontrolled — observe via onOpenChange.' },
-                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: stripHtml(t('props.table.modal.description')) + ' NOTA: factory Nortear não implementa focus trap nem scroll lock.' },
-                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: stripHtml(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (8px).' },
+                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' NOTA: factory Nortear só suporta estado uncontrolled — observe via onOpenChange.' },
+                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.modal.description')) + ' NOTA: factory Nortear não implementa focus trap nem scroll lock.' },
+                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (8px).' },
               ],
             },
           ],
@@ -870,16 +877,18 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',       description: stripHtml(t('accessibility.keyboard.tab'))      },
-            { key: 'Shift+Tab', description: stripHtml(t('accessibility.keyboard.shiftTab')) },
-            { key: 'Esc',       description: stripHtml(t('accessibility.keyboard.escape'))   },
-            { key: 'Enter',     description: stripHtml(t('accessibility.keyboard.enter'))    },
-            { key: 'Space',     description: stripHtml(t('accessibility.keyboard.space'))    },
+            { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
+            { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
+            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   },
+            { key: 'Enter',     description: toPlainText(t('accessibility.keyboard.enter'))    },
+            { key: 'Space',     description: toPlainText(t('accessibility.keyboard.space'))    },
           ],
         });
 
@@ -887,10 +896,10 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.tooltip.name'),      description: t('related.items.tooltip.description'),      path: '?path=/docs/ui-tooltip--docs'      },
-            { name: t('related.items.dropdownMenu.name'), description: t('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs' },
-            { name: t('related.items.dialog.name'),       description: t('related.items.dialog.description'),       path: '?path=/docs/ui-dialog--docs'       },
-            { name: t('related.items.hoverCard.name'),    description: t('related.items.hoverCard.description'),    path: '?path=/docs/ui-hovercard--docs'    },
+            { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/ui-tooltip--docs'      },
+            { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs' },
+            { name: t('related.items.dialog.name'),       description: toPlainText(t('related.items.dialog.description')),       path: '?path=/docs/ui-dialog--docs'       },
+            { name: t('related.items.hoverCard.name'),    description: toPlainText(t('related.items.hoverCard.description')),    path: '?path=/docs/ui-hovercard--docs'    },
           ],
         });
 

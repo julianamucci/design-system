@@ -30,12 +30,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -102,12 +99,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function ChartDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(chartTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (chartTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -372,8 +381,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 aria-label="Gráfico multi-séries sem legenda"
               />
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -391,8 +400,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 className="nds-w-full" style={{ height: "200px" }}
               />
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -538,39 +547,39 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.empty.label"),
-            trigger: stripHtml(tContent("states.empty.trigger")),
-            behavior: tContent("states.empty.behavior"),
+            trigger: toPlainText(tContent("states.empty.trigger")),
+            behavior: toPlainText(tContent("states.empty.behavior")),
           },
           {
             label: tContent("states.loading.label"),
-            trigger: stripHtml(tContent("states.loading.trigger")),
-            behavior: stripHtml(tContent("states.loading.behavior")),
+            trigger: toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
           {
             label: tContent("states.singleSeries.label"),
-            trigger: stripHtml(tContent("states.singleSeries.trigger")),
-            behavior: stripHtml(tContent("states.singleSeries.behavior")),
+            trigger: toPlainText(tContent("states.singleSeries.trigger")),
+            behavior: toPlainText(tContent("states.singleSeries.behavior")),
           },
           {
             label: tContent("states.multiSeries.label"),
-            trigger: stripHtml(tContent("states.multiSeries.trigger")),
-            behavior: stripHtml(tContent("states.multiSeries.behavior")),
+            trigger: toPlainText(tContent("states.multiSeries.trigger")),
+            behavior: toPlainText(tContent("states.multiSeries.behavior")),
           },
           {
             label: tContent("states.withEmptyState.label"),
-            trigger: stripHtml(tContent("states.withEmptyState.trigger")),
-            behavior: stripHtml(tContent("states.withEmptyState.behavior")),
+            trigger: toPlainText(tContent("states.withEmptyState.trigger")),
+            behavior: toPlainText(tContent("states.withEmptyState.behavior")),
           },
           {
             label: tContent("states.multiSeriesWithLegend.label"),
-            trigger: stripHtml(tContent("states.multiSeriesWithLegend.trigger")),
-            behavior: stripHtml(tContent("states.multiSeriesWithLegend.behavior")),
+            trigger: toPlainText(tContent("states.multiSeriesWithLegend.trigger")),
+            behavior: toPlainText(tContent("states.multiSeriesWithLegend.behavior")),
           },
         ]}
       />
@@ -594,28 +603,28 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 type: "EChartsCoreOption",
                 defaultValue: "—",
                 required: "Sim",
-                description: stripHtml(tContent("props.table.option")),
+                description: toPlainText(tContent("props.table.option")),
               },
               {
                 name: "renderer",
                 type: '"svg" | "canvas"',
                 defaultValue: '"svg"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.renderer")),
+                description: toPlainText(tContent("props.table.renderer")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
               {
                 name: "aria-label",
                 type: "string",
                 defaultValue: "—",
                 required: "Sim",
-                description: stripHtml(tContent("props.table.ariaLabel")),
+                description: toPlainText(tContent("props.table.ariaLabel")),
               },
             ],
           },
@@ -634,35 +643,35 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 type: "{ label: string; value: number }[]",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.data")),
+                description: toPlainText(tContent("props.table.data")),
               },
               {
                 name: "xAxis",
                 type: "(string | number)[]",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.xAxis")),
+                description: toPlainText(tContent("props.table.xAxis")),
               },
               {
                 name: "series",
                 type: "{ name: string; data: number[]; color?: string }[]",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.series")),
+                description: toPlainText(tContent("props.table.series")),
               },
               {
                 name: "title",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.title")),
+                description: toPlainText(tContent("props.table.title")),
               },
               {
                 name: "showLegend",
                 type: "boolean",
                 defaultValue: "auto",
                 required: "Não",
-                description: stripHtml(tContent("props.table.showLegend")),
+                description: toPlainText(tContent("props.table.showLegend")),
               },
             ],
           },
@@ -698,6 +707,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -723,17 +734,17 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         items={[
           {
             name: "Table",
-            description: tContent("related.table"),
+            description: toPlainText(tContent("related.table")),
             path: "?path=/docs/ui-table--docs",
           },
           {
             name: "Card",
-            description: tContent("related.card"),
+            description: toPlainText(tContent("related.card")),
             path: "?path=/docs/ui-card--docs",
           },
           {
             name: "DataTable",
-            description: tContent("related.dataTable"),
+            description: toPlainText(tContent("related.dataTable")),
             path: "?path=/docs/ui-data-table--docs",
           },
         ]}
@@ -757,23 +768,23 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

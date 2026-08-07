@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (resizableTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(resizableTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -259,8 +266,8 @@ export function createResizableDocs(): HTMLElement {
             items: ['ariaLabel', 'panelLabel', 'size'].map(key => ({
               element: t(`usage.uxWriting.table.${key}.name`),
               rules: t(`usage.uxWriting.table.${key}.format`),
-              do: stripHtml(t(`usage.uxWriting.table.${key}.good`)),
-              dont: stripHtml(t(`usage.uxWriting.table.${key}.bad`)),
+              do: toPlainText(t(`usage.uxWriting.table.${key}.good`)),
+              dont: toPlainText(t(`usage.uxWriting.table.${key}.bad`)),
             })),
           },
           do: {
@@ -280,8 +287,8 @@ export function createResizableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
@@ -307,8 +314,8 @@ export function createResizableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
@@ -404,15 +411,15 @@ const root = createResizablePanel({
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.idle.label'),     trigger: t('states.idle.trigger'),     behavior: stripHtml(t('states.idle.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.dragging.label'), trigger: t('states.dragging.trigger'), behavior: stripHtml(t('states.dragging.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.idle.label'),     trigger: toPlainText(t('states.idle.trigger')),     behavior: toPlainText(t('states.idle.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.dragging.label'), trigger: toPlainText(t('states.dragging.trigger')), behavior: toPlainText(t('states.dragging.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
           ],
         });
 
@@ -449,11 +456,11 @@ export function createResizablePanel(
               title: 'createResizablePanel(options) — ResizablePanelOptions',
               cols: propsCols,
               items: [
-                { name: 'direction',   type: t('props.table.direction.type'),   defaultValue: "'horizontal'", required: t('props.table.direction.required'),   description: stripHtml(t('props.table.direction.description')) },
+                { name: 'direction',   type: t('props.table.direction.type'),   defaultValue: "'horizontal'", required: t('props.table.direction.required'),   description: toPlainText(t('props.table.direction.description')) },
                 { name: 'panels',      type: 'ResizablePanel[]',                defaultValue: '—',            required: 'Sim',                                  description: 'Lista de painéis renderizados em ordem; handles inseridos automaticamente entre painéis adjacentes.' },
                 { name: 'class',       type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: 'Classes adicionais no Root <div data-slot="resizable">.' },
-                { name: 'autoSaveId',  type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Nortear NÃO persiste tamanhos em localStorage; argType para paridade com react-resizable-panels.' },
-                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: stripHtml(t('props.table.onLayout.description')) + ' NOTA: factory Nortear NÃO emite callback; consumidor deve observar mutações de width/height ou implementar wrapper.' },
+                { name: 'autoSaveId',  type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: toPlainText(t('props.table.id.description')) + ' NOTA: factory Nortear NÃO persiste tamanhos em localStorage; argType para paridade com react-resizable-panels.' },
+                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: toPlainText(t('props.table.onLayout.description')) + ' NOTA: factory Nortear NÃO emite callback; consumidor deve observar mutações de width/height ou implementar wrapper.' },
               ],
             },
             {
@@ -461,10 +468,10 @@ export function createResizablePanel(
               cols: propsCols,
               items: [
                 { name: 'content',     type: 'HTMLElement', defaultValue: '—',  required: 'Sim',                                   description: 'Elemento renderizado dentro do painel — consumidor define background e overflow.' },
-                { name: 'defaultSize', type: 'number',      defaultValue: '—',  required: t('props.table.defaultSize.required'),   description: stripHtml(t('props.table.defaultSize.description')) + ' Quando omitido, tamanho é distribuído igualmente entre os painéis.' },
-                { name: 'minSize',     type: 'number',      defaultValue: '10', required: t('props.table.minSize.required'),       description: stripHtml(t('props.table.minSize.description')) },
-                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: stripHtml(t('props.table.maxSize.description')) + ' NOTA: factory Nortear ainda NÃO aplica maxSize — apenas minSize é respeitado.' },
-                { name: 'id',          type: 'string',      defaultValue: '—',  required: 'Não',                                   description: stripHtml(t('props.table.id.description')) + ' NOTA: factory Nortear não usa id (sem persistência).' },
+                { name: 'defaultSize', type: 'number',      defaultValue: '—',  required: t('props.table.defaultSize.required'),   description: toPlainText(t('props.table.defaultSize.description')) + ' Quando omitido, tamanho é distribuído igualmente entre os painéis.' },
+                { name: 'minSize',     type: 'number',      defaultValue: '10', required: t('props.table.minSize.required'),       description: toPlainText(t('props.table.minSize.description')) },
+                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: toPlainText(t('props.table.maxSize.description')) + ' NOTA: factory Nortear ainda NÃO aplica maxSize — apenas minSize é respeitado.' },
+                { name: 'id',          type: 'string',      defaultValue: '—',  required: 'Não',                                   description: toPlainText(t('props.table.id.description')) + ' NOTA: factory Nortear não usa id (sem persistência).' },
               ],
             },
             {
@@ -475,7 +482,7 @@ export function createResizablePanel(
                 { name: 'aria-orientation', type: '"horizontal"|"vertical"', defaultValue: 'derivado', required: 'Auto', description: 'Derivado de direction: handle de PanelGroup horizontal recebe aria-orientation="vertical".' },
                 { name: 'tabindex',         type: 'number',                defaultValue: '0',            required: 'Auto', description: 'Handle é focável; setas ajustam tamanho (WCAG 2.5.7).' },
                 { name: 'aria-label',       type: 'string',                defaultValue: '—',            required: 'Sim*', description: '*OBRIGATÓRIO pelo consumidor — a factory NÃO aplica aria-label; defina via handle.setAttribute("aria-label", ...) após criar.' },
-                { name: 'withHandle',       type: 'boolean',               defaultValue: 'true',         required: 'Auto', description: stripHtml(t('props.table.withHandle.description')) + ' NOTA: factory Nortear SEMPRE exibe o grip visual; não há opção para ocultar.' },
+                { name: 'withHandle',       type: 'boolean',               defaultValue: 'true',         required: 'Auto', description: toPlainText(t('props.table.withHandle.description')) + ' NOTA: factory Nortear SEMPRE exibe o grip visual; não há opção para ocultar.' },
               ],
             },
           ],
@@ -509,19 +516,21 @@ export function createResizablePanel(
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',     description: stripHtml(t('accessibility.keyboard.tab'))        },
-            { key: 'Arrow Left',       description: stripHtml(t('accessibility.keyboard.arrowLeft'))  },
-            { key: 'Arrow Right',       description: stripHtml(t('accessibility.keyboard.arrowRight')) },
-            { key: 'Arrow Up',       description: stripHtml(t('accessibility.keyboard.arrowUp'))    },
-            { key: 'Arrow Down',       description: stripHtml(t('accessibility.keyboard.arrowDown'))  },
-            { key: 'Home',    description: stripHtml(t('accessibility.keyboard.home'))       },
-            { key: 'End',     description: stripHtml(t('accessibility.keyboard.end'))        },
-            { key: 'Enter',   description: stripHtml(t('accessibility.keyboard.enter'))      },
+            { key: 'Tab',     description: toPlainText(t('accessibility.keyboard.tab'))        },
+            { key: 'Arrow Left',       description: toPlainText(t('accessibility.keyboard.arrowLeft'))  },
+            { key: 'Arrow Right',       description: toPlainText(t('accessibility.keyboard.arrowRight')) },
+            { key: 'Arrow Up',       description: toPlainText(t('accessibility.keyboard.arrowUp'))    },
+            { key: 'Arrow Down',       description: toPlainText(t('accessibility.keyboard.arrowDown'))  },
+            { key: 'Home',    description: toPlainText(t('accessibility.keyboard.home'))       },
+            { key: 'End',     description: toPlainText(t('accessibility.keyboard.end'))        },
+            { key: 'Enter',   description: toPlainText(t('accessibility.keyboard.enter'))      },
           ],
         });
 
@@ -529,10 +538,10 @@ export function createResizablePanel(
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.scrollArea.name'),  description: t('related.items.scrollArea.description'),  path: '?path=/docs/ui-scrollarea--docs'  },
-            { name: t('related.items.sheet.name'),       description: t('related.items.sheet.description'),       path: '?path=/docs/ui-sheet--docs'       },
-            { name: t('related.items.separator.name'),   description: t('related.items.separator.description'),   path: '?path=/docs/ui-separator--docs'   },
-            { name: t('related.items.aspectRatio.name'), description: t('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
+            { name: t('related.items.scrollArea.name'),  description: toPlainText(t('related.items.scrollArea.description')),  path: '?path=/docs/ui-scrollarea--docs'  },
+            { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/ui-sheet--docs'       },
+            { name: t('related.items.separator.name'),   description: toPlainText(t('related.items.separator.description')),   path: '?path=/docs/ui-separator--docs'   },
+            { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
           ],
         });
 
@@ -547,13 +556,13 @@ export function createResizablePanel(
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: 'panel_resize',
-              trigger: t('analytics.table.panel_resize.trigger'),
+              trigger: toPlainText(t('analytics.table.panel_resize.trigger')),
               payload: t('analytics.table.panel_resize.payload'),
             },
             {

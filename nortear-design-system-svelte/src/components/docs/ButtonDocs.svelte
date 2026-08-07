@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Button } from '@/components/ui/button';
+  import { Button, buttonVariants } from '@/components/ui/button';
   import Plus from '@lucide/svelte/icons/plus';
   import Trash2 from '@lucide/svelte/icons/trash-2';
   import Pencil from '@lucide/svelte/icons/pencil';
@@ -17,9 +17,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import buttonTranslations from '@shared/content/button/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(buttonTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (buttonTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -41,7 +53,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -81,10 +92,6 @@
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
-
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -102,21 +109,25 @@
 import Plus from '@lucide/svelte/icons/plus';`;
 
   const codeDefault = `<Button>Salvar</Button>`;
-  const codeDestructive = `<Button variant="destructive">Excluir item</Button>`;
-  const codeOutline = `<Button variant="outline">Ver detalhes</Button>`;
-  const codeSecondary = `<Button variant="secondary">Cancelar</Button>`;
-  const codeGhost = `<Button variant="ghost">Editar</Button>`;
+  const codeDestructive = `<Button variant="destructive">Excluir conta</Button>`;
+  const codeOutline = `<Button variant="outline">Cancelar</Button>`;
+  const codeSecondary = `<Button variant="secondary">Ver detalhes</Button>`;
+  const codeGhost = `<Button variant="ghost">Fechar</Button>`;
 
-  const codeSizeDefault = `<Button>Salvar</Button>`;
-  const codeSizeSm = `<Button size="sm">Salvar</Button>`;
-  const codeSizeLg = `<Button size="lg">Salvar</Button>`;
-  const codeSizeIcon = `<Button size="icon" aria-label="Excluir item">
+  const codeSizeDefault = `<Button>Padrão</Button>`;
+  const codeSizeXs = `<Button size="xs">Mínimo</Button>`;
+  const codeSizeSm = `<Button size="sm">Pequeno</Button>`;
+  const codeSizeLg = `<Button size="lg">Grande</Button>`;
+  const codeSizeIcon = `<Button size="icon" aria-label="Adicionar item">
   <Trash2 aria-hidden="true" />
 </Button>`;
-  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Editar">
+  const codeSizeIconXs = `<Button size="icon-xs" aria-label="Adicionar item">
   <Pencil aria-hidden="true" />
 </Button>`;
-  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar">
+  const codeSizeIconSm = `<Button size="icon-sm" aria-label="Adicionar item">
+  <Pencil aria-hidden="true" />
+</Button>`;
+  const codeSizeIconLg = `<Button size="icon-lg" aria-label="Adicionar item">
   <Plus aria-hidden="true" />
 </Button>`;
 
@@ -137,7 +148,8 @@ export type ButtonVariant =
   | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 
 export type ButtonSize =
-  | 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+  | 'default' | 'xs' | 'sm' | 'lg'
+  | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
 
 export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
   WithElementRef<HTMLAnchorAttributes> & {
@@ -161,7 +173,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
       <DocsDemonstration title={$tStore('demonstration.title')}>
-        <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
+        <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
+        <div class="nds-cluster" data-spacing="sm">
           <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
           <Button variant="secondary" onclick={() => handleDemoClick('secondary')}>{$tStore('demonstration.labels.secondary')}</Button>
           <Button variant="destructive" onclick={() => handleDemoClick('destructive')}>{$tStore('demonstration.labels.destructive')}</Button>
@@ -169,11 +182,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           <Button variant="ghost" onclick={() => handleDemoClick('ghost')}>{$tStore('demonstration.labels.ghost')}</Button>
           <Button variant="link" onclick={() => handleDemoClick('link')}>{$tStore('demonstration.labels.link')}</Button>
           <Button variant="outline" onclick={() => handleDemoClick('outline-icon')}>
-            <Plus class="nds-icon" aria-hidden="true" />
+            <Plus class="nds-button-icon-svg" aria-hidden="true" />
             {$tStore('demonstration.labels.withIcon')}
           </Button>
           <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')} onclick={() => handleDemoClick('icon-only')}>
-            <Trash2 class="nds-icon" aria-hidden="true" />
+            <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
           </Button>
         </div>
       </DocsDemonstration>
@@ -211,11 +224,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             alternative: $tStore('usage.scenarios.cols.alternative'),
           },
           items: [
-            { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-            { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-            { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-            { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
-            { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: stripHtml($tStore('usage.scenarios.item5.a')) },
+            { s: toPlainText($tStore('usage.scenarios.item1.s')), u: toPlainText($tStore('usage.scenarios.item1.u')), a: toPlainText($tStore('usage.scenarios.item1.a')) },
+            { s: toPlainText($tStore('usage.scenarios.item2.s')), u: toPlainText($tStore('usage.scenarios.item2.u')), a: toPlainText($tStore('usage.scenarios.item2.a')) },
+            { s: toPlainText($tStore('usage.scenarios.item3.s')), u: toPlainText($tStore('usage.scenarios.item3.u')), a: toPlainText($tStore('usage.scenarios.item3.a')) },
+            { s: toPlainText($tStore('usage.scenarios.item4.s')), u: toPlainText($tStore('usage.scenarios.item4.u')), a: toPlainText($tStore('usage.scenarios.item4.a')) },
+            { s: toPlainText($tStore('usage.scenarios.item5.s')), u: toPlainText($tStore('usage.scenarios.item5.u')), a: stripHtml(toPlainText($tStore('usage.scenarios.item5.a'))) },
           ],
         }}
         uxWriting={{
@@ -229,7 +242,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           items: [
             { element: $tStore('usage.uxWriting.table.label.name'),     rules: $tStore('usage.uxWriting.table.label.format'),     do: $tStore('usage.uxWriting.table.label.good'),     dont: $tStore('usage.uxWriting.table.label.bad') },
             { element: $tStore('usage.uxWriting.table.ariaLabel.name'), rules: $tStore('usage.uxWriting.table.ariaLabel.format'), do: $tStore('usage.uxWriting.table.ariaLabel.good'), dont: $tStore('usage.uxWriting.table.ariaLabel.bad') },
-            { element: $tStore('usage.uxWriting.table.iconOnly.name'),  rules: $tStore('usage.uxWriting.table.iconOnly.format'),  do: stripHtml($tStore('usage.uxWriting.table.iconOnly.good')),  dont: stripHtml($tStore('usage.uxWriting.table.iconOnly.bad')) },
+            { element: $tStore('usage.uxWriting.table.iconOnly.name'),  rules: $tStore('usage.uxWriting.table.iconOnly.format'),  do: toPlainText($tStore('usage.uxWriting.table.iconOnly.good')),  dont: toPlainText($tStore('usage.uxWriting.table.iconOnly.bad')) },
             { element: $tStore('usage.uxWriting.table.loading.name'),   rules: $tStore('usage.uxWriting.table.loading.format'),   do: $tStore('usage.uxWriting.table.loading.good'),   dont: $tStore('usage.uxWriting.table.loading.bad') },
           ],
         }}
@@ -268,8 +281,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           {
             doLabel: $tNavStore('common.do'),
             dontLabel: $tNavStore('common.dont'),
-            doCaption: stripHtml($tStore('doDont.pair2.do')),
-            dontCaption: $tStore('doDont.pair2.dont'),
+            doCaption: toPlainText($tStore('doDont.pair2.do')),
+            dontCaption: toPlainText($tStore('doDont.pair2.dont')),
             doPreview: doPair2,
             dontPreview: dontPair2,
           },
@@ -342,7 +355,9 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         <Button variant="ghost">{$tStore('demonstration.labels.ghost')}</Button>
       {/snippet}
       {#snippet variantAsLink()}
-        <a href="#docs" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px">Ver documentação</a>
+        <!-- O snippet ao lado mostra buttonVariants aplicado num <a>; a demo
+             renderizava um link de texto comum, então ilustrava outra coisa. -->
+        <a href="#docs" class={buttonVariants({ variant: 'link' })}>{$tStore('variants.items.asLink.linkLabel')}</a>
       {/snippet}
 
       <!-- ── Tamanhos ───────────────────────────────────────────────── -->
@@ -351,9 +366,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         title={$tStore('variants.sizesTitle')}
         items={[
           { name: 'default', description: stripHtml($tStore('variants.sizes.default')), code: codeSizeDefault, preview: sizeDefault },
+          { name: 'xs',      description: stripHtml($tStore('variants.sizes.xs')),      code: codeSizeXs,      preview: sizeXs      },
           { name: 'sm',      description: stripHtml($tStore('variants.sizes.sm')),      code: codeSizeSm,      preview: sizeSm      },
           { name: 'lg',      description: stripHtml($tStore('variants.sizes.lg')),      code: codeSizeLg,      preview: sizeLg      },
           { name: 'icon',    description: stripHtml($tStore('variants.sizes.icon')),    code: codeSizeIcon,    preview: sizeIcon    },
+          { name: 'icon-xs', description: stripHtml($tStore('variants.sizes.icon-xs')), code: codeSizeIconXs,  preview: sizeIconXs  },
           { name: 'icon-sm', description: stripHtml($tStore('variants.sizes.icon-sm')), code: codeSizeIconSm,  preview: sizeIconSm  },
           { name: 'icon-lg', description: stripHtml($tStore('variants.sizes.icon-lg')), code: codeSizeIconLg,  preview: sizeIconLg  },
         ]}
@@ -361,6 +378,9 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       {#snippet sizeDefault()}
         <Button>{$tStore('demonstration.labels.primary')}</Button>
+      {/snippet}
+      {#snippet sizeXs()}
+        <Button size="xs">{$tStore('demonstration.labels.primary')}</Button>
       {/snippet}
       {#snippet sizeSm()}
         <Button size="sm">{$tStore('demonstration.labels.primary')}</Button>
@@ -370,17 +390,22 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       {/snippet}
       {#snippet sizeIcon()}
         <Button size="icon" aria-label={$tStore('demonstration.labels.iconOnly')}>
-          <Trash2 class="nds-icon" aria-hidden="true" />
+          <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
+        </Button>
+      {/snippet}
+      {#snippet sizeIconXs()}
+        <Button size="icon-xs" aria-label={$tStore('demonstration.labels.ghost')}>
+          <Pencil class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconSm()}
         <Button size="icon-sm" aria-label={$tStore('demonstration.labels.ghost')}>
-          <Pencil class="nds-icon" aria-hidden="true" />
+          <Pencil class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet sizeIconLg()}
         <Button size="icon-lg" aria-label={$tStore('demonstration.labels.withIcon')}>
-          <Plus class="nds-icon" aria-hidden="true" />
+          <Plus class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
 
@@ -423,19 +448,19 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       {#snippet compIconLeft()}
         <Button>
-          <Plus class="nds-icon" aria-hidden="true" />
+          <Plus class="nds-button-icon-svg" aria-hidden="true" />
           Adicionar item
         </Button>
       {/snippet}
       {#snippet compIconRight()}
         <Button variant="outline">
           Próximo
-          <ChevronRight class="nds-icon" aria-hidden="true" />
+          <ChevronRight class="nds-button-icon-svg" aria-hidden="true" />
         </Button>
       {/snippet}
       {#snippet compDestructive()}
         <Button variant="destructive">
-          <Trash2 class="nds-icon" aria-hidden="true" />
+          <Trash2 class="nds-button-icon-svg" aria-hidden="true" />
           Excluir
         </Button>
       {/snippet}
@@ -451,16 +476,16 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.default.label'),      trigger: $tStore('states.default.trigger'),                behavior: $tStore('states.default.behavior') },
-          { label: $tStore('states.hover.label'),        trigger: $tStore('states.hover.trigger'),                  behavior: stripHtml($tStore('states.hover.behavior')) },
-          { label: $tStore('states.focusVisible.label'), trigger: $tStore('states.focusVisible.trigger'),           behavior: stripHtml($tStore('states.focusVisible.behavior')) },
-          { label: $tStore('states.disabled.label'),     trigger: stripHtml($tStore('states.disabled.trigger')),    behavior: stripHtml($tStore('states.disabled.behavior')) },
-          { label: $tStore('states.loading.label'),      trigger: stripHtml($tStore('states.loading.trigger')),     behavior: $tStore('states.loading.behavior') },
-          { label: $tStore('states.invalid.label'),      trigger: stripHtml($tStore('states.invalid.trigger')),     behavior: stripHtml($tStore('states.invalid.behavior')) },
+          { label: $tStore('states.default.label'),      trigger: toPlainText($tStore('states.default.trigger')),                behavior: toPlainText($tStore('states.default.behavior'))},
+          { label: $tStore('states.hover.label'),        trigger: toPlainText($tStore('states.hover.trigger')),                  behavior: toPlainText($tStore('states.hover.behavior')) },
+          { label: $tStore('states.focusVisible.label'), trigger: toPlainText($tStore('states.focusVisible.trigger')),           behavior: toPlainText($tStore('states.focusVisible.behavior')) },
+          { label: $tStore('states.disabled.label'),     trigger: toPlainText($tStore('states.disabled.trigger')),    behavior: toPlainText($tStore('states.disabled.behavior')) },
+          { label: $tStore('states.loading.label'),      trigger: toPlainText($tStore('states.loading.trigger')),     behavior: toPlainText($tStore('states.loading.behavior'))},
+          { label: $tStore('states.invalid.label'),      trigger: toPlainText($tStore('states.invalid.trigger')),     behavior: toPlainText($tStore('states.invalid.behavior')) },
         ]}
       />
 
@@ -478,12 +503,12 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.variant')) },
-              { name: 'size',     type: '"default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.table.size')) },
+              { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
+              { name: 'size',     type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.size')) },
               { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos e a semântica de link.' },
-              { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.table.disabled')) },
-              { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml($tStore('props.table.type')) },
-              { name: 'onclick',  type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.table.onClick')) },
+              { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: toPlainText($tStore('props.table.disabled')) },
+              { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: toPlainText($tStore('props.table.htmlType')) },
+              { name: 'onclick',  type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.onClick')) },
               { name: 'class',    type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: $tStore('props.table.className') },
             ],
           },
@@ -502,14 +527,17 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           description: $tStore('tokens.table.part'),
         }}
         items={[
-          { token: '--primary',            value: 'bg-primary',                  description: $tStore('tokens.table.primary') },
-          { token: '--primary-foreground', value: 'text-primary-foreground',     description: $tStore('tokens.table.primaryForeground') },
-          { token: '--secondary',          value: 'bg-secondary',                description: $tStore('tokens.table.secondary') },
-          { token: '--destructive',        value: 'bg-destructive text-white',   description: $tStore('tokens.table.destructive') },
-          { token: '--border',             value: 'border',                      description: $tStore('tokens.table.border') },
-          { token: '--accent',             value: 'nds-hover-bg-accent',             description: $tStore('tokens.table.accent') },
-          { token: '--ring',               value: 'nds-focus-ring',  description: $tStore('tokens.table.ring') },
-          { token: '--radius',             value: 'rounded-lg',                  description: $tStore('tokens.table.radius') },
+          // A coluna aponta ONDE o token é lido no CSS do componente. Antes
+          // listava classes do Tailwind (bg-primary, rounded-lg) que não
+          // existem mais: quem seguisse a tabela não mudava nada.
+          { token: '--primary',            value: '.nds-button-default',     description: $tStore('tokens.table.primary') },
+          { token: '--primary-foreground', value: '.nds-button-default',     description: $tStore('tokens.table.primaryForeground') },
+          { token: '--secondary',          value: '.nds-button-secondary',   description: $tStore('tokens.table.secondary') },
+          { token: '--destructive',        value: '.nds-button-destructive', description: $tStore('tokens.table.destructive') },
+          { token: '--border',             value: '.nds-button-outline',     description: $tStore('tokens.table.border') },
+          { token: '--accent',             value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: $tStore('tokens.table.accent') },
+          { token: '--ring',               value: '.nds-button:focus-visible', description: $tStore('tokens.table.ring') },
+          { token: '--radius-button',      value: '.nds-button',             description: $tStore('tokens.table.radius') },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeCustomizationTokens}
@@ -517,6 +545,8 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->
       <DocsAccessibility
+        screenReaderTitle={$tNavStore('common.screenReader')}
+        screenReaderItems={screenReaderItems}
         title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
@@ -528,10 +558,10 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         ]}
         keyboardTitle={$tStore('accessibility.keyboardTitle')}
         keyboardItems={[
-          { key: 'Tab',   description: $tStore('accessibility.keyboard.tab') },
-          { key: 'Enter', description: stripHtml($tStore('accessibility.keyboard.enter')) },
-          { key: 'Space', description: stripHtml($tStore('accessibility.keyboard.space')) },
-          { key: '—',     description: stripHtml($tStore('accessibility.keyboard.disabled')) },
+          { key: 'Tab',   description: toPlainText($tStore('accessibility.keyboard.tab')) },
+          { key: 'Enter', description: toPlainText($tStore('accessibility.keyboard.enter')) },
+          { key: 'Space', description: toPlainText($tStore('accessibility.keyboard.space')) },
+          { key: '—',     description: toPlainText($tStore('accessibility.keyboard.disabled')) },
         ]}
       />
 
@@ -539,10 +569,10 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <DocsRelated
         title={$tStore('related.title')}
         items={[
-          { name: 'Toggle',      description: stripHtml($tStore('related.toggle')),     path: '?path=/docs/ui-toggle--docs' },
+          { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/ui-toggle--docs' },
           { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/ui-switch--docs' },
           { name: 'Link',        description: $tStore('related.link'),                  path: '?path=/docs/ui-link--docs' },
-          { name: 'Form',        description: $tStore('related.form'),                  path: '?path=/docs/ui-form--docs' },
+          { name: 'Form',        description: toPlainText($tStore('related.form')),                  path: '?path=/docs/ui-form--docs' },
           { name: 'Dialog',      description: $tStore('related.dialog'),                path: '?path=/docs/ui-dialog--docs' },
           { name: 'AlertDialog', description: $tStore('related.alertDialog'),           path: '?path=/docs/ui-alertdialog--docs' },
         ]}
@@ -563,14 +593,14 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.click'),         trigger: stripHtml($tStore('analytics.table.clickTrigger')),    payload: $tStore('analytics.table.clickPayload') },
-          { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),            payload: $tStore('analytics.table.pageViewPayload') },
-          { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'),       payload: $tStore('analytics.table.sectionViewedPayload') },
-          { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),          payload: $tStore('analytics.table.langSwitchPayload') },
+          { event: $tStore('analytics.table.click'),         trigger: toPlainText($tStore('analytics.table.clickTrigger')),    payload: $tStore('analytics.table.clickPayload') },
+          { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),            payload: $tStore('analytics.table.pageViewPayload') },
+          { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),       payload: $tStore('analytics.table.sectionViewedPayload') },
+          { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),          payload: $tStore('analytics.table.langSwitchPayload') },
         ]}
       />
 
@@ -585,12 +615,12 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             priority: $tNavStore('common.priority'),
           },
           items: [
-            { action: stripHtml($tStore('testes.functional.item1.action')), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item5.action')), result: $tStore('testes.functional.item5.result'),            priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-            { action: $tStore('testes.functional.item6.action'),            result: stripHtml($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item6.action')),            result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
           ],
         }}
         accessibility={{
@@ -601,11 +631,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             how: $tNavStore('common.howToVerify'),
           },
           items: [
-            { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-            { criterion: $tStore('testes.accessibility.item2.criterion'),            level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-            { criterion: $tStore('testes.accessibility.item3.criterion'),            level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-            { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-            { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
+            { criterion: stripHtml(toPlainText($tStore('testes.accessibility.item1.criterion'))), level: $tStore('testes.accessibility.item1.level'), how: toPlainText($tStore('testes.accessibility.item1.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')),            level: $tStore('testes.accessibility.item2.level'), how: toPlainText($tStore('testes.accessibility.item2.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')),            level: $tStore('testes.accessibility.item3.level'), how: toPlainText($tStore('testes.accessibility.item3.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item4.criterion')),            level: $tStore('testes.accessibility.item4.level'), how: toPlainText($tStore('testes.accessibility.item4.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item5.criterion')),            level: $tStore('testes.accessibility.item5.level'), how: toPlainText($tStore('testes.accessibility.item5.how')) },
           ],
         }}
         visual={{
@@ -615,11 +645,11 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             priority: $tNavStore('common.priority'),
           },
           items: [
-            { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-            { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
+            { story: toPlainText($tStore('testes.visual.item1.story')), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
+            { story: toPlainText($tStore('testes.visual.item2.story')), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
+            { story: toPlainText($tStore('testes.visual.item3.story')), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
+            { story: toPlainText($tStore('testes.visual.item4.story')), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
+            { story: toPlainText($tStore('testes.visual.item5.story')), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
           ],
         }}
       />

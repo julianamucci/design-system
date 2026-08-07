@@ -8,11 +8,9 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		size = "default",
 		portalProps,
 		...restProps
 	}: WithoutChild<AlertDialogPrimitive.ContentProps> & {
-		size?: "default" | "sm";
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof AlertDialogPortal>>;
 	} = $props();
 </script>
@@ -22,7 +20,6 @@
 	<AlertDialogPrimitive.Content
 		bind:ref
 		data-slot="alert-dialog-content"
-		data-size={size}
 		class={cn("nds-alert-dialog-content", className)}
 		{...restProps}
 	/>

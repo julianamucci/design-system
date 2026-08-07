@@ -124,6 +124,7 @@ export const ProfileEdit: Story = {
     );
   },
   play: async () => {
+    await waitForPortal("dialog");
     const input = await within(document.body).findByLabelText(/Nome completo/i);
     await expect(input).toBeVisible();
   },

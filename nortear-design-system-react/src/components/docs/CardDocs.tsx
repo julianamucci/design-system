@@ -36,12 +36,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -94,12 +91,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function CardDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(cardTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (cardTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -651,24 +660,24 @@ interface CardProps extends React.ComponentProps<"div"> {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: stripHtml(tContent("states.default.trigger")),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.small.label"),
-            trigger: stripHtml(tContent("states.small.trigger")),
-            behavior: stripHtml(tContent("states.small.behavior")),
+            trigger: toPlainText(tContent("states.small.trigger")),
+            behavior: toPlainText(tContent("states.small.behavior")),
           },
           {
             label: tContent("states.interactive.label"),
-            trigger: stripHtml(tContent("states.interactive.trigger")),
-            behavior: stripHtml(tContent("states.interactive.behavior")),
+            trigger: toPlainText(tContent("states.interactive.trigger")),
+            behavior: toPlainText(tContent("states.interactive.behavior")),
           },
         ]}
       />
@@ -687,7 +696,7 @@ interface CardProps extends React.ComponentProps<"div"> {
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "size",      type: '"default" | "sm"',    defaultValue: '"default"', required: "Não", description: stripHtml(tContent("props.table.size")) },
+              { name: "size",      type: '"default" | "sm"',    defaultValue: '"default"', required: "Não", description: toPlainText(tContent("props.table.size")) },
               { name: "className", type: "string",              defaultValue: "—",          required: "Não", description: tContent("props.table.className") },
               { name: "children",  type: "React.ReactNode",     defaultValue: "—",          required: "Sim", description: tContent("props.table.children") },
             ],
@@ -794,9 +803,9 @@ interface CardProps extends React.ComponentProps<"div"> {
           { token: "--radius-card",       value: "rounded-(--radius-card)",   description: tContent("tokens.table.radiusCard") },
           { token: "--card",              value: "bg-card",                   description: tContent("tokens.table.card") },
           { token: "--card-foreground",   value: "text-card-foreground",      description: tContent("tokens.table.cardForeground") },
-          { token: "--muted",             value: "nds-bg-muted-50",               description: stripHtml(tContent("tokens.table.muted")) },
+          { token: "--muted",             value: "nds-bg-muted-50",               description: toPlainText(tContent("tokens.table.muted")) },
           { token: "--muted-foreground",  value: "nds-text-muted-foreground",     description: tContent("tokens.table.mutedForeground") },
-          { token: "--foreground",        value: "ring-foreground/10",        description: stripHtml(tContent("tokens.table.foreground")) },
+          { token: "--foreground",        value: "ring-foreground/10",        description: toPlainText(tContent("tokens.table.foreground")) },
           { token: "--border",            value: "border-t",                  description: tContent("tokens.table.border") },
           { token: "--card-bg",           value: "hsl(var(--card))",          description: tContent("tokens.table.cardBg") },
           { token: "--card-fg",           value: "hsl(var(--card-foreground))", description: tContent("tokens.table.cardFg") },
@@ -808,6 +817,8 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -829,9 +840,9 @@ interface CardProps extends React.ComponentProps<"div"> {
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "Separator", description: tContent("related.separator"),            path: "?path=/docs/ui-separator--docs" },
-          { name: "Accordion", description: tContent("related.accordion"),            path: "?path=/docs/ui-accordion--docs" },
-          { name: "Alert",     description: tContent("related.alert"),                path: "?path=/docs/ui-alert--docs" },
+          { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/ui-separator--docs" },
+          { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/ui-accordion--docs" },
+          { name: "Alert",     description: toPlainText(tContent("related.alert")),                path: "?path=/docs/ui-alert--docs" },
           { name: "Button",    description: stripHtml(tContent("related.button")),    path: "?path=/docs/ui-button--docs" },
           { name: "Badge",     description: stripHtml(tContent("related.badge")),     path: "?path=/docs/ui-badge--docs" },
           { name: "Avatar",    description: stripHtml(tContent("related.avatar")),    path: "?path=/docs/ui-avatar--docs" },
@@ -854,13 +865,13 @@ interface CardProps extends React.ComponentProps<"div"> {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.buttonClick"),
-            trigger: tContent("analytics.table.buttonClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.buttonClickTrigger")),
             payload: tContent("analytics.table.buttonClickPayload"),
           },
           {
@@ -870,17 +881,17 @@ interface CardProps extends React.ComponentProps<"div"> {
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}
@@ -897,8 +908,8 @@ interface CardProps extends React.ComponentProps<"div"> {
             priority: tNav("common.priority"),
           },
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
-            action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -910,9 +921,9 @@ interface CardProps extends React.ComponentProps<"div"> {
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
             level: tContent(`testes.accessibility.item${i}.level`),
-            how: stripHtml(tContent(`testes.accessibility.item${i}.how`)),
+            how: toPlainText(tContent(`testes.accessibility.item${i}.how`)),
           })),
         }}
         visual={{

@@ -36,7 +36,13 @@
       "item8": "<strong>AlertDialogCancel</strong> — botão de cancelamento. Fecha o diálogo e retorna foco ao trigger.",
       "item9": "<strong>AlertDialogAction</strong> — botão de confirmação. Executa a ação e fecha o diálogo.",
       "structureLabel": "Estrutura completa:",
-      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir conta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos os seus dados serão removidos permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction>Excluir</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+      "structureCode": {
+        "react": "<AlertDialog>\n  <AlertDialogTrigger render={<Button variant=\"destructive\" />}>\n    Excluir conta\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir conta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos os seus dados serão removidos permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Excluir</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vue": "<AlertDialog>\n  <AlertDialogTrigger as-child>\n    <Button variant=\"destructive\">Excluir conta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir conta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos os seus dados serão removidos permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Excluir</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "svelte": "<AlertDialog>\n  <AlertDialogTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"destructive\">Excluir conta</Button>\n    {/snippet}\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Excluir conta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos os seus dados serão removidos permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Excluir</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vanilla": "const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });\nconst cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });\nconst actionButton = createButton({ variant: 'destructive', label: 'Excluir' });\n\nconst dialog = createAlertDialog({\n  trigger,\n  title: 'Excluir conta',\n  description: 'Todos os seus dados serão removidos permanentemente.',\n  cancelButton,\n  actionButton,\n});"
+      },
+      "item10": "<strong>AlertDialogMedia</strong> — bloco opcional de ícone no topo do header. Acompanha o alinhamento do header: centralizado em telas estreitas, à esquerda a partir de 40rem."
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -169,7 +175,7 @@
       "open": {
         "label": "Aberto",
         "trigger": "Clique no trigger ou <code>open={true}</code>",
-        "behavior": "Overlay com backdrop, conteúdo centralizado, focus trap ativo, foco inicial no AlertDialogCancel"
+        "behavior": "Overlay com backdrop, conteúdo centralizado, focus trap ativo; o foco entra no diálogo e o primeiro controle alcançado é o AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmação",
@@ -178,7 +184,7 @@
       },
       "cancelled": {
         "label": "Cancelamento",
-        "trigger": "Clique em <code>AlertDialogCancel</code>, tecla Escape ou clique no overlay",
+        "trigger": "Clique em <code>AlertDialogCancel</code> ou tecla Escape",
         "behavior": "Fecha sem executar ação. Foco retorna ao trigger"
       },
       "controlled": {
@@ -210,7 +216,7 @@
         "children": "Conteúdo renderizado dentro do subcomponente."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. O <code>AlertDialogAction</code> aceita classes utilitárias para herdar severidade do trigger (ex.: variante <code>destructive</code> baseada no token <code>--destructive</code>) — o estilo do Button pode ser sobrescrito diretamente sem precisar envolver em <code>Button asChild</code>."
+      "extensibility": "Todos os subcomponentes aceitam classes adicionais e props HTML nativas. A severidade da ação vem da <strong>variante do Button</strong> repassada ao <code>AlertDialogAction</code>, não de classe utilitária de cor — o design system não expõe nenhuma. O bloco de mídia é opcional e entra como primeiro filho do header."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -218,14 +224,17 @@
         "token": "Token CSS",
         "class": "Aplicação no tema",
         "part": "Parte do componente",
-        "overlayBg": "Fundo do overlay (backdrop)",
+        "overlayBg": "Fundo do overlay — valor literal, sem token de cor",
         "contentBg": "Fundo do AlertDialogContent",
         "contentForeground": "Texto principal do conteúdo",
         "border": "Borda do AlertDialogContent",
         "mutedForeground": "Texto da AlertDialogDescription",
         "destructive": "Fundo do AlertDialogAction destructive",
         "destructiveForeground": "Texto do AlertDialogAction destructive",
-        "radius": "Border radius do AlertDialogContent (desktop)"
+        "radius": "Raio do painel",
+        "elevation": "Sombra do painel",
+        "mediaBg": "Fundo do bloco de mídia",
+        "padding": "Espaçamento interno do painel"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -237,7 +246,7 @@
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>AlertDialogTitle</code> e <code>AlertDialogDescription</code>. Ambos são obrigatórios.",
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial no <code>AlertDialogCancel</code> para evitar ação acidental.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
-      "item5": "<strong>Escape</strong> — fecha o diálogo sem executar a ação. Clique no overlay também cancela.",
+      "item5": "<strong>Escape</strong> — fecha o diálogo sem executar a ação. Clique no overlay não fecha: a decisão precisa ser explícita.",
       "item6": "<strong>Contraste</strong> — todos os textos e bordas cumprem 4.5:1 mínimo via tokens do tema.",
       "keyboard": {
         "tab": "Navega entre AlertDialogCancel e AlertDialogAction.",
@@ -250,7 +259,7 @@
         "role": "<code>role=\"alertdialog\"</code> — aplicado automaticamente no AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automaticamente o ID do AlertDialogTitle.",
         "describedby": "<code>aria-describedby</code> — referencia automaticamente o ID do AlertDialogDescription.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indica que o conteúdo fora do diálogo está inativo."
+        "ariaModal": "O conteúdo fora do diálogo fica inativo para leitores de tela e para o teclado enquanto ele está aberto."
       },
       "screenReader": {
         "onOpen": "Ao abrir: leitor anuncia \"diálogo de alerta\" seguido do título e da descrição completos.",
@@ -269,7 +278,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O foco inicial vai para o <code>AlertDialogCancel</code> — comportamento intencional para prevenir confirmação acidental em ações destrutivas.",
+      "tip1": "O primeiro controle alcançado pelo teclado é o <code>AlertDialogCancel</code> — comportamento intencional para prevenir confirmação acidental em ações destrutivas.",
       "tip2": "Não use <code>AlertDialogAction</code> via composição (delegando ao filho) — ele já aplica <code>buttonVariants()</code>. Para mudar estilo, use <code>className</code> diretamente.",
       "tip3": "Para estado controlado, lembre de fechar no <code>onClick</code> do Action antes de executar ação assíncrona — ou aguarde o resultado e mantenha aberto em caso de erro.",
       "tip4": "Evite aninhar AlertDialog dentro de DropdownMenu ou outro Portal — pode causar focus trap conflitante. Prefira fechar o menu antes de abrir o diálogo."
@@ -288,8 +297,8 @@
         "confirmTrigger": "Usuário clica em AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancelamento via Cancel, Escape ou clique no overlay",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancelamento via Cancel ou Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -308,7 +317,7 @@
         "description": "O que deve acontecer em cada interação com o AlertDialog.",
         "item1": {
           "action": "Clique no trigger",
-          "result": "AlertDialogContent aparece com backdrop; foco inicial em AlertDialogCancel",
+          "result": "AlertDialogContent aparece com backdrop; o foco entra no diálogo e o primeiro controle alcançado é o AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -333,7 +342,7 @@
         },
         "item6": {
           "action": "Clique fora do AlertDialogContent (overlay)",
-          "result": "Diálogo fecha sem disparar ação",
+          "result": "Diálogo permanece aberto — a escolha precisa ser explícita",
           "priority": "medium"
         },
         "item7": {
@@ -404,6 +413,10 @@
         "item5": {
           "story": "Layout responsivo — mobile com botões empilhados",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "Com ícone no header — bloco de mídia e alinhamento centralizado",
+          "priority": "medium"
         }
       }
     },
@@ -465,7 +478,13 @@
       "item8": "<strong>AlertDialogCancel</strong> — cancel button. Closes the dialog and returns focus to the trigger.",
       "item9": "<strong>AlertDialogAction</strong> — confirmation button. Executes the action and closes the dialog.",
       "structureLabel": "Full structure:",
-      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Delete account</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete account</AlertDialogTitle>\n      <AlertDialogDescription>\n        All your data will be permanently removed.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction>Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+      "structureCode": {
+        "react": "<AlertDialog>\n  <AlertDialogTrigger render={<Button variant=\"destructive\" />}>\n    Delete account\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete account</AlertDialogTitle>\n      <AlertDialogDescription>\n        All your data will be permanently removed.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vue": "<AlertDialog>\n  <AlertDialogTrigger as-child>\n    <Button variant=\"destructive\">Delete account</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete account</AlertDialogTitle>\n      <AlertDialogDescription>\n        All your data will be permanently removed.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "svelte": "<AlertDialog>\n  <AlertDialogTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"destructive\">Delete account</Button>\n    {/snippet}\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Delete account</AlertDialogTitle>\n      <AlertDialogDescription>\n        All your data will be permanently removed.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Delete</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vanilla": "const trigger = createButton({ variant: 'destructive', label: 'Delete account' });\nconst cancelButton = createButton({ variant: 'outline', label: 'Cancel' });\nconst actionButton = createButton({ variant: 'destructive', label: 'Delete' });\n\nconst dialog = createAlertDialog({\n  trigger,\n  title: 'Delete account',\n  description: 'All your data will be permanently removed.',\n  cancelButton,\n  actionButton,\n});"
+      },
+      "item10": "<strong>AlertDialogMedia</strong> — optional icon block at the top of the header. It follows the header alignment: centered on narrow screens, left-aligned from 40rem up."
     },
     "usage": {
       "title": "When and How to Use",
@@ -598,7 +617,7 @@
       "open": {
         "label": "Open",
         "trigger": "Click on trigger or <code>open={true}</code>",
-        "behavior": "Overlay with backdrop, centered content, active focus trap, initial focus on AlertDialogCancel"
+        "behavior": "Overlay with backdrop, centered content, active focus trap; focus moves into the dialog and the first control reached is AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmation",
@@ -607,7 +626,7 @@
       },
       "cancelled": {
         "label": "Cancellation",
-        "trigger": "Click on <code>AlertDialogCancel</code>, Escape key, or click on overlay",
+        "trigger": "Click on <code>AlertDialogCancel</code> or Escape key",
         "behavior": "Closes without executing action. Focus returns to the trigger"
       },
       "controlled": {
@@ -639,7 +658,7 @@
         "children": "Content rendered inside the subcomponent."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. <code>AlertDialogAction</code> accepts utility classes to inherit trigger severity (e.g., <code>destructive</code> variant based on the <code>--destructive</code> token) — Button styling can be overridden directly without wrapping in <code>Button asChild</code>."
+      "extensibility": "All subcomponents accept extra classes and native HTML props. The action severity comes from the <strong>Button variant</strong> forwarded to <code>AlertDialogAction</code>, not from a color utility class — the design system exposes none. The media block is optional and goes in as the header first child."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -647,14 +666,17 @@
         "token": "CSS Token",
         "class": "Theme application",
         "part": "Component Part",
-        "overlayBg": "Overlay background (backdrop)",
+        "overlayBg": "Overlay background — literal value, no color token",
         "contentBg": "AlertDialogContent background",
         "contentForeground": "Main content text",
         "border": "AlertDialogContent border",
         "mutedForeground": "AlertDialogDescription text",
         "destructive": "Destructive AlertDialogAction background",
         "destructiveForeground": "Destructive AlertDialogAction text",
-        "radius": "AlertDialogContent border radius (desktop)"
+        "radius": "Panel border radius",
+        "elevation": "Panel shadow",
+        "mediaBg": "Media block background",
+        "padding": "Panel inner spacing"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -666,7 +688,7 @@
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code>. Both are required.",
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus on <code>AlertDialogCancel</code> to prevent accidental action.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
-      "item5": "<strong>Escape</strong> — closes the dialog without executing the action. Overlay click also cancels.",
+      "item5": "<strong>Escape</strong> — closes the dialog without executing the action. Overlay click does not close it: the decision must be explicit.",
       "item6": "<strong>Contrast</strong> — all text and borders meet the 4.5:1 minimum through theme tokens.",
       "keyboard": {
         "tab": "Navigates between AlertDialogCancel and AlertDialogAction.",
@@ -679,7 +701,7 @@
         "role": "<code>role=\"alertdialog\"</code> — automatically applied to AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — automatically references AlertDialogTitle's ID.",
         "describedby": "<code>aria-describedby</code> — automatically references AlertDialogDescription's ID.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indicates content outside the dialog is inert."
+        "ariaModal": "Content outside the dialog is inert to screen readers and keyboard while it is open."
       },
       "screenReader": {
         "onOpen": "On open: reader announces \"alert dialog\" followed by the full title and description.",
@@ -698,7 +720,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Initial focus goes to <code>AlertDialogCancel</code> — intentional behavior to prevent accidental confirmation of destructive actions.",
+      "tip1": "The first control reached by keyboard is <code>AlertDialogCancel</code> — intentional behavior to prevent accidental confirmation of destructive actions.",
       "tip2": "Don't use <code>AlertDialogAction</code> via composition (delegating to a child) — it already applies <code>buttonVariants()</code>. To change styling, use <code>className</code> directly.",
       "tip3": "In controlled mode, close in the Action's <code>onClick</code> before running an async action — or await the result and keep open on error.",
       "tip4": "Avoid nesting AlertDialog inside DropdownMenu or another Portal — it may cause focus trap conflicts. Close the menu before opening the dialog."
@@ -717,8 +739,8 @@
         "confirmTrigger": "User clicks AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancellation via Cancel, Escape, or overlay click",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancellation via Cancel or Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -737,7 +759,7 @@
         "description": "What should happen for each AlertDialog interaction.",
         "item1": {
           "action": "Click on trigger",
-          "result": "AlertDialogContent appears with backdrop; initial focus on AlertDialogCancel",
+          "result": "AlertDialogContent appears with backdrop; focus moves into the dialog and the first control reached is AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -762,7 +784,7 @@
         },
         "item6": {
           "action": "Click outside AlertDialogContent (overlay)",
-          "result": "Dialog closes without firing action",
+          "result": "Dialog stays open — the choice must be explicit",
           "priority": "medium"
         },
         "item7": {
@@ -833,6 +855,10 @@
         "item5": {
           "story": "Responsive layout — mobile with stacked buttons",
           "priority": "medium"
+        },
+        "item6": {
+          "story": "With header icon — media block and centered alignment",
+          "priority": "medium"
         }
       }
     },
@@ -894,7 +920,13 @@
       "item8": "<strong>AlertDialogCancel</strong> — botón de cancelación. Cierra el diálogo y devuelve el foco al trigger.",
       "item9": "<strong>AlertDialogAction</strong> — botón de confirmación. Ejecuta la acción y cierra el diálogo.",
       "structureLabel": "Estructura completa:",
-      "structureCode": "<AlertDialog>\n  <AlertDialogTrigger asChild>\n    <Button variant=\"destructive\">Eliminar cuenta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Eliminar cuenta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos tus datos se eliminarán permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction>Eliminar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+      "structureCode": {
+        "react": "<AlertDialog>\n  <AlertDialogTrigger render={<Button variant=\"destructive\" />}>\n    Eliminar cuenta\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Eliminar cuenta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos tus datos se eliminarán permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Eliminar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vue": "<AlertDialog>\n  <AlertDialogTrigger as-child>\n    <Button variant=\"destructive\">Eliminar cuenta</Button>\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Eliminar cuenta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos tus datos se eliminarán permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Eliminar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "svelte": "<AlertDialog>\n  <AlertDialogTrigger>\n    {#snippet child({ props })}\n      <Button {...props} variant=\"destructive\">Eliminar cuenta</Button>\n    {/snippet}\n  </AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Eliminar cuenta</AlertDialogTitle>\n      <AlertDialogDescription>\n        Todos tus datos se eliminarán permanentemente.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancelar</AlertDialogCancel>\n      <AlertDialogAction variant=\"destructive\">Eliminar</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>",
+        "vanilla": "const trigger = createButton({ variant: 'destructive', label: 'Eliminar cuenta' });\nconst cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });\nconst actionButton = createButton({ variant: 'destructive', label: 'Eliminar' });\n\nconst dialog = createAlertDialog({\n  trigger,\n  title: 'Eliminar cuenta',\n  description: 'Todos tus datos se eliminarán permanentemente.',\n  cancelButton,\n  actionButton,\n});"
+      },
+      "item10": "<strong>AlertDialogMedia</strong> — bloque opcional de icono al inicio del header. Sigue la alineación del header: centrado en pantallas estrechas, a la izquierda desde 40rem."
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1027,7 +1059,7 @@
       "open": {
         "label": "Abierto",
         "trigger": "Clic en el trigger o <code>open={true}</code>",
-        "behavior": "Overlay con backdrop, contenido centrado, focus trap activo, foco inicial en AlertDialogCancel"
+        "behavior": "Overlay con backdrop, contenido centrado, focus trap activo; el foco entra en el diálogo y el primer control alcanzado es AlertDialogCancel"
       },
       "confirmed": {
         "label": "Confirmación",
@@ -1036,7 +1068,7 @@
       },
       "cancelled": {
         "label": "Cancelación",
-        "trigger": "Clic en <code>AlertDialogCancel</code>, tecla Escape o clic en el overlay",
+        "trigger": "Clic en <code>AlertDialogCancel</code> o tecla Escape",
         "behavior": "Cierra sin ejecutar la acción. El foco vuelve al trigger"
       },
       "controlled": {
@@ -1068,7 +1100,7 @@
         "children": "Contenido renderizado dentro del subcomponente."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. <code>AlertDialogAction</code> acepta clases utilitarias para heredar la severidad del trigger (ej.: variante <code>destructive</code> basada en el token <code>--destructive</code>) — el estilo del Button puede sobrescribirse directamente sin envolver en <code>Button asChild</code>."
+      "extensibility": "Todos los subcomponentes aceptan clases adicionales y props HTML nativas. La severidad de la acción viene de la <strong>variante del Button</strong> que se pasa a <code>AlertDialogAction</code>, no de una clase utilitaria de color — el design system no expone ninguna. El bloque de medios es opcional y entra como primer hijo del header."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1076,14 +1108,17 @@
         "token": "Token CSS",
         "class": "Aplicación en el tema",
         "part": "Parte del componente",
-        "overlayBg": "Fondo del overlay (backdrop)",
+        "overlayBg": "Fondo del overlay — valor literal, sin token de color",
         "contentBg": "Fondo del AlertDialogContent",
         "contentForeground": "Texto principal del contenido",
         "border": "Borde del AlertDialogContent",
         "mutedForeground": "Texto de AlertDialogDescription",
         "destructive": "Fondo del AlertDialogAction destructive",
         "destructiveForeground": "Texto del AlertDialogAction destructive",
-        "radius": "Border radius del AlertDialogContent (desktop)"
+        "radius": "Radio del panel",
+        "elevation": "Sombra del panel",
+        "mediaBg": "Fondo del bloque de medios",
+        "padding": "Espaciado interno del panel"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
@@ -1095,7 +1130,7 @@
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>AlertDialogTitle</code> y <code>AlertDialogDescription</code>. Ambos son obligatorios.",
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. Foco inicial en <code>AlertDialogCancel</code> para evitar acción accidental.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
-      "item5": "<strong>Escape</strong> — cierra el diálogo sin ejecutar la acción. Clic en el overlay también cancela.",
+      "item5": "<strong>Escape</strong> — cierra el diálogo sin ejecutar la acción. El clic en el overlay no lo cierra: la decisión debe ser explícita.",
       "item6": "<strong>Contraste</strong> — todos los textos y bordes cumplen el mínimo 4.5:1 vía tokens del tema.",
       "keyboard": {
         "tab": "Navega entre AlertDialogCancel y AlertDialogAction.",
@@ -1108,7 +1143,7 @@
         "role": "<code>role=\"alertdialog\"</code> — aplicado automáticamente en AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automáticamente el ID de AlertDialogTitle.",
         "describedby": "<code>aria-describedby</code> — referencia automáticamente el ID de AlertDialogDescription.",
-        "ariaModal": "<code>aria-modal=\"true\"</code> — indica que el contenido fuera del diálogo está inerte."
+        "ariaModal": "El contenido fuera del diálogo queda inactivo para lectores de pantalla y teclado mientras está abierto."
       },
       "screenReader": {
         "onOpen": "Al abrir: el lector anuncia \"diálogo de alerta\" seguido del título y la descripción completos.",
@@ -1127,7 +1162,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El foco inicial va al <code>AlertDialogCancel</code> — comportamiento intencional para prevenir confirmación accidental de acciones destructivas.",
+      "tip1": "El primer control alcanzado por teclado es <code>AlertDialogCancel</code> — comportamiento intencional para prevenir confirmación accidental en acciones destructivas.",
       "tip2": "No uses <code>AlertDialogAction</code> vía composición (delegando al hijo) — ya aplica <code>buttonVariants()</code>. Para cambiar el estilo, usa <code>className</code> directamente.",
       "tip3": "En modo controlado, cierra en el <code>onClick</code> del Action antes de ejecutar una acción asíncrona — o espera el resultado y mantén abierto en caso de error.",
       "tip4": "Evita anidar AlertDialog dentro de DropdownMenu u otro Portal — puede causar conflicto de focus trap. Cierra el menú antes de abrir el diálogo."
@@ -1146,8 +1181,8 @@
         "confirmTrigger": "Usuario clica AlertDialogAction",
         "confirmPayload": "{ component: \"alert_dialog\", label, location }",
         "close": "dialog_close",
-        "closeTrigger": "Cancelación vía Cancel, Escape o clic en el overlay",
-        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" | \"overlay\" }",
+        "closeTrigger": "Cancelación vía Cancel o Escape",
+        "closePayload": "{ component: \"alert_dialog\", label, location, trigger: \"cancel_button\" | \"escape\" }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -1166,7 +1201,7 @@
         "description": "Lo que debe ocurrir para cada interacción del AlertDialog.",
         "item1": {
           "action": "Clic en el trigger",
-          "result": "AlertDialogContent aparece con backdrop; foco inicial en AlertDialogCancel",
+          "result": "AlertDialogContent aparece con backdrop; el foco entra en el diálogo y el primer control alcanzado es AlertDialogCancel",
           "priority": "high"
         },
         "item2": {
@@ -1191,7 +1226,7 @@
         },
         "item6": {
           "action": "Clic fuera de AlertDialogContent (overlay)",
-          "result": "Diálogo cierra sin disparar acción",
+          "result": "El diálogo permanece abierto — la elección debe ser explícita",
           "priority": "medium"
         },
         "item7": {
@@ -1261,6 +1296,10 @@
         },
         "item5": {
           "story": "Layout responsivo — mobile con botones apilados",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Con icono en el header — bloque de medios y alineación centrada",
           "priority": "medium"
         }
       }

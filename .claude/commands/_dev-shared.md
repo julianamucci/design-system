@@ -218,6 +218,25 @@ play: async ({ canvasElement, step, args }) => {
 
 **Sub-stories (variantes/estados/composicoes) também precisam de play function** (mesmo simples — verifica role, classes, atributos). Sem play em sub-story = violação `substory_no_play` no audit.
 
+### Esperar overlay, foco e nó
+
+- **`data-state="closed"` não significa overlay liberado.** Durante a animação
+  de saída ele ainda segura `pointer-events`, e o clique seguinte falha. Espere
+  pela condição que o próximo passo precisa: `getComputedStyle(x).pointerEvents
+  !== 'none'`.
+- **Re-consulte o nó antes de focar ou ler atributo.** A renderização substitui
+  o elemento; focar um nó destacado não faz nada — o foco fica no `body` e a
+  tecla não chega. Ler o atributo do nó antigo devolve o valor de antes.
+- **Demo que existe para mostrar algo precisa mostrar** — scrollbar com
+  `type="hover"` só aparece sob o ponteiro: a story não prova nada e o Chromatic
+  fotografa vazio.
+
+### Wrapper de story: um caminho só
+
+Ramo "controlado" e "não controlado" com o mesmo markup é duplicação, e a
+metade menos exercitada apodrece sem ninguém notar. Um caminho, com o estado
+inicial vindo do bindable.
+
 ---
 
 ## Regras Críticas de Renderização
@@ -291,9 +310,88 @@ Ver `PATCHES.md#sidebar` para racional CSS Containment.
 
 ---
 
+## Semântica de anúncio e landmarks
+
+Erros desta família não falham teste nem axe — só aparecem com leitor de tela.
+
+- **Live region só para runtime.** `role="alert"`/`aria-live` interrompem a
+  leitura no carregamento. Conteúdo já presente quando a página abre usa role
+  não-live (`note`). Componente que fixa `role` sem escape hatch é bug: quem
+  renderiza estático não tem saída.
+- **Toda docs page precisa de `<main tabindex="-1" aria-labelledby="<id do h1>">`.**
+  Sem landmark nomeado o "ir para o conteúdo" não tem destino. Vale também
+  para páginas de layout próprio (foundations, catálogos) — verifique TODOS os
+  caminhos de render, não só o principal.
+- **`<main>` aninhado é inválido**: demo que renderiza `main` (SidebarInset e
+  similares) usa `div` dentro da docs page; o snippet continua ensinando o
+  componente real.
+- **Navegação interna move o FOCO, não só o scroll.** `scrollIntoView` sozinho
+  deixa o foco no menu: o leitor não continua a leitura e o Tab volta para o
+  próximo item. Sempre `tabindex="-1"` no alvo + `focus({ preventScroll: true })`.
+- **Role custom não herda nome do conteúdo.** `role="radio|switch|checkbox|combobox"`
+  em `span`/`div` exige `aria-label` — `<label for>` não nomeia elemento
+  não-rotulável.
+- **Ids de componente repetível precisam de escopo por instância.** Duas
+  instâncias com os mesmos ids fazem `aria-labelledby` resolver para o primeiro
+  do documento: nomes acessíveis errados e `landmark-unique` no axe.
+
+---
+
+## Snippet nunca vira DOM
+
+Código de exemplo renderizado como HTML (`innerHTML`, `dangerouslySetInnerHTML`,
+`v-html`, `{@html}`) cria elementos REAIS: um `<Textarea/>` de snippet vira um
+`<textarea>` sem rótulo dentro da página (o parser é case-insensitive).
+
+- Snippet vai por CodeBlock / `extensibilityCode` — nunca por prop de notas.
+- Tag literal em prosa (`<select>`, `<option>`) precisa de escape `&lt;`.
+
+---
+
+## CSS que não aplica
+
+- **Classe sem prefixo `nds-` não existe** — `max-h-[50vh]`, `inset-0`,
+  `h-full`, `text-primary-foreground`, `w-56`, `overflow-y-auto`. São inertes, e
+  o efeito não é cosmético: sem altura máxima o scroll nunca acontece (e a regra
+  de acessibilidade da região rolável nunca é avaliada), e um `text-*` morto
+  deixou um botão com contraste **1.1:1**. Classe morta esconde defeito real.
+- **Nunca asserte classe morta na story.** A asserção passa a existir sem
+  proteger nada, e some junto com o bug. Asserte o comportamento — transbordo,
+  contraste, atributo ARIA — não o nome da classe.
+- **Token de cor exige `hsl()`**: os tokens são triplets. `color: var(--x)` é
+  declaração inválida e cai silenciosamente.
+- **Classe utilitária não vence classe de componente**: mesma especificidade, e
+  `button.css` é importado depois de `colors.css`. Cor em botão vem da
+  variante, não de `nds-bg-*`.
+- **Antes de usar um token, confirme que existe** — `--color-destructive` e
+  afins não existem; `unknown_token_reference` do audit cobre parte disso.
+
+---
+
+## Animação
+
+- **Classe de animação de entrada é TRANSITÓRIA** — remova no `animationend`
+  com timeout de segurança. Classe permanente prende o elemento no estado
+  inicial se a animação não completar (aba em background, tab oculta).
+- **Nunca dependa só de `animationend`** para remover nó: com
+  `prefers-reduced-motion` o evento não dispara. Timeout é obrigatório, e sem
+  animação ativa remova na hora.
+- `animationend` borbulha: `if (event.target !== el) return`.
+- **Altura só anima até o piso do conteúdo**: padding do filho impede o
+  colapso chegar a zero — anime o padding junto.
+- Duração e easing saem de token. Curva de spring de referência se traduz por
+  ajuste numérico, não a olho.
+
+---
+
 ## Trigger asChild + Button
 
 Componentes com Trigger (DropdownMenuTrigger, DialogTrigger, etc.) devem usar `asChild` (React/Vue) ou `child` snippet (Svelte) com `<Button>` para evitar `<button><button>` aninhado (NestedInteractive ARIA violation).
+
+**A prop precisa ser CONSUMIDA.** Declarar `asChild` no tipo e repassar tudo ao
+primitivo faz a lib renderizar o próprio botão em volta do nosso — e `asChild`
+vaza como atributo no DOM. No bits-ui `asChild` não existe: use o snippet
+`child`.
 
 ```tsx
 // ✅ CORRETO
@@ -352,8 +450,16 @@ ciência: <rule> em <file> — <motivo>
 - [ ] Todas as 16 seções com conteúdo real (sem placeholders)
 - [ ] `structureCode` lê de `t('anatomy.structureCode')` — NÃO hardcoded
 - [ ] Sub-stories têm play function + `controls.disable: true`
+- [ ] Stories declaram `covers` com os ids de `testes.*` que verificam (e
+      `coversNotApplicable` com motivo, quando o item não se aplica à stack)
 - [ ] Wrappers com `contain: layout` em previews que abrem portal
-- [ ] Trigger sempre `asChild` + `Button` (evita NestedInteractive)
+- [ ] Trigger sempre `asChild` + `Button`, e a prop é consumida pelo wrapper
+- [ ] `<main tabindex="-1" aria-labelledby>` na docs page — inclusive nos
+      layouts próprios
+- [ ] Nav interna move o foco para a seção, não só rola
+- [ ] Nenhum conteúdo estático dentro de live region
+- [ ] Snippet só por CodeBlock; tag literal em prosa escapada
+- [ ] Cor de token com `hsl()`; nenhum token inventado
 - [ ] Audit inline limpo antes do commit
 - [ ] Nenhum `console.log` ou `TODO` nos arquivos entregues
 

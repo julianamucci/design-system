@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Input } from './index';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Input/Composicoes',
   component: Input,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Input>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComLabel: Story = {
   render: () => ({

@@ -27,12 +27,9 @@ import { DocsRelated } from "@/components/docs/shared/sections/DocsRelated";
 import { DocsNotes } from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics } from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes } from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -80,12 +77,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ────────────────────────────────────────────────────
 
 export function RadioGroupDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(radioGroupTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (radioGroupTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -683,39 +692,39 @@ interface RadioGroupItemProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.checked.label"),
-            trigger: tContent("states.checked.trigger"),
-            behavior: stripHtml(tContent("states.checked.behavior")),
+            trigger: toPlainText(tContent("states.checked.trigger")),
+            behavior: toPlainText(tContent("states.checked.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.invalid.label"),
-            trigger: tContent("states.invalid.trigger"),
-            behavior: stripHtml(tContent("states.invalid.behavior")),
+            trigger: toPlainText(tContent("states.invalid.trigger")),
+            behavior: toPlainText(tContent("states.invalid.behavior")),
           },
         ]}
       />
@@ -738,49 +747,49 @@ interface RadioGroupItemProps {
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: stripHtml(tContent("props.table.value.description")),
+                description: toPlainText(tContent("props.table.value.description")),
               },
               {
                 name: "defaultValue",
                 type: tContent("props.table.defaultValue.type"),
                 defaultValue: tContent("props.table.defaultValue.default"),
                 required: tContent("props.table.defaultValue.required"),
-                description: stripHtml(tContent("props.table.defaultValue.description")),
+                description: toPlainText(tContent("props.table.defaultValue.description")),
               },
               {
                 name: "onValueChange",
                 type: tContent("props.table.onValueChange.type"),
                 defaultValue: tContent("props.table.onValueChange.default"),
                 required: tContent("props.table.onValueChange.required"),
-                description: stripHtml(tContent("props.table.onValueChange.description")),
+                description: toPlainText(tContent("props.table.onValueChange.description")),
               },
               {
                 name: "disabled",
                 type: tContent("props.table.disabled.type"),
                 defaultValue: tContent("props.table.disabled.default"),
                 required: tContent("props.table.disabled.required"),
-                description: stripHtml(tContent("props.table.disabled.description")),
+                description: toPlainText(tContent("props.table.disabled.description")),
               },
               {
                 name: "name",
                 type: tContent("props.table.name.type"),
                 defaultValue: tContent("props.table.name.default"),
                 required: tContent("props.table.name.required"),
-                description: stripHtml(tContent("props.table.name.description")),
+                description: toPlainText(tContent("props.table.name.description")),
               },
               {
                 name: "orientation",
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: stripHtml(tContent("props.table.orientation.description")),
+                description: toPlainText(tContent("props.table.orientation.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
             ],
           },
@@ -812,6 +821,8 @@ interface RadioGroupItemProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -824,12 +835,12 @@ interface RadioGroupItemProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "Arrow Up", description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "Arrow Left", description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
-          { key: "Space", description: stripHtml(tContent("accessibility.keyboard.space")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Down", description: toPlainText(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Up", description: toPlainText(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left", description: toPlainText(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Space", description: toPlainText(tContent("accessibility.keyboard.space")) },
         ]}
       />
 
@@ -840,22 +851,22 @@ interface RadioGroupItemProps {
         items={[
           {
             name: tContent("related.items.checkbox.name"),
-            description: tContent("related.items.checkbox.description"),
+            description: toPlainText(tContent("related.items.checkbox.description")),
             path: "?path=/docs/ui-checkbox--docs",
           },
           {
             name: tContent("related.items.switch.name"),
-            description: tContent("related.items.switch.description"),
+            description: toPlainText(tContent("related.items.switch.description")),
             path: "?path=/docs/ui-switch--docs",
           },
           {
             name: tContent("related.items.select.name"),
-            description: tContent("related.items.select.description"),
+            description: toPlainText(tContent("related.items.select.description")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
         ]}
@@ -878,13 +889,13 @@ interface RadioGroupItemProps {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "radio_change",
-            trigger: tContent("analytics.table.radio_change.trigger"),
+            trigger: toPlainText(tContent("analytics.table.radio_change.trigger")),
             payload: tContent("analytics.table.radio_change.payload"),
           },
         ]}
@@ -901,8 +912,8 @@ interface RadioGroupItemProps {
             priority: tNav("common.priority"),
           },
           items: [1, 2, 3, 4].map((i) => ({
-            action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(
               priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"
             ),

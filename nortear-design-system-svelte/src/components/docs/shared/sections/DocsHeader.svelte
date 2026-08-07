@@ -24,7 +24,9 @@
     </div>
   </div>
   <div class="nds-stack" data-spacing="sm">
-    <h1 class="nds-text-h1 nds-text-foreground">{title}</h1>
+    <!-- id estável: alvo do aria-labelledby do <main> em DocsPageLayout.
+         A docs page é única por iframe, então não há colisão. -->
+    <h1 id="docs-page-title" class="nds-text-h1 nds-text-foreground">{title}</h1>
     <p class="nds-text-lead nds-text-muted-foreground nds-max-w-prose">{description}</p>
   </div>
   {#if installNote}

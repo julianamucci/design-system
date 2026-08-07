@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Tabs/Variantes',
   component: TabsStory,
   tags: ['navigation'],
@@ -13,10 +13,10 @@ const meta = {
   args: {
     defaultValue: 'overview',
   },
-} satisfies Meta<typeof TabsStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const ITEMS = [
   { value: 'overview',   label: 'Visão geral',  content: 'Conteúdo da visão geral.' },

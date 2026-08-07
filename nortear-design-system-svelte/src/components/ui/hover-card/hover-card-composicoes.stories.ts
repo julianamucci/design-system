@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/HoverCard/Composicoes',
   component: HoverCardStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof HoverCardStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const baseArgs = {
   defaultOpen: true,

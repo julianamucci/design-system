@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -76,12 +73,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function SonnerDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(sonnerTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (sonnerTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -406,8 +415,8 @@ interface ToasterProps {
                 </Button>
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -449,8 +458,8 @@ interface ToasterProps {
                 </Button>
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -605,7 +614,7 @@ interface ToasterProps {
           <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
             <p className="nds-text-body nds-font-semibold">{tContent("states.items.withAction.label")}</p>
             <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {stripHtml(tContent("states.items.withAction.description"))}
+              {toPlainText(tContent("states.items.withAction.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
@@ -675,7 +684,7 @@ interface ToasterProps {
           <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
             <p className="nds-text-body nds-font-semibold">{tContent("states.items.persistent.label")}</p>
             <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {stripHtml(tContent("states.items.persistent.description"))}
+              {toPlainText(tContent("states.items.persistent.description"))}
             </p>
             <div
               style={{ contain: "layout", minHeight: 60, position: "relative" }}
@@ -721,7 +730,7 @@ interface ToasterProps {
                 type: "ToastPosition",
                 defaultValue: '"bottom-right"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.position")),
+                description: toPlainText(tContent("props.table.position")),
               },
               {
                 name: "richColors",
@@ -749,7 +758,7 @@ interface ToasterProps {
                 type: '"light" | "dark" | "system"',
                 defaultValue: '"system"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.theme")),
+                description: toPlainText(tContent("props.table.theme")),
               },
               {
                 name: "icons",
@@ -763,7 +772,7 @@ interface ToasterProps {
                 type: "ToastOptions",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.toastOptions")),
+                description: toPlainText(tContent("props.table.toastOptions")),
               },
             ],
           },
@@ -791,6 +800,8 @@ interface ToasterProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -815,22 +826,22 @@ interface ToasterProps {
         items={[
           {
             name: "Alert",
-            description: tContent("related.alert"),
+            description: toPlainText(tContent("related.alert")),
             path: "?path=/docs/ui-alert--docs",
           },
           {
             name: "AlertDialog",
-            description: tContent("related.alertDialog"),
+            description: toPlainText(tContent("related.alertDialog")),
             path: "?path=/docs/ui-alertdialog--docs",
           },
           {
             name: "Badge",
-            description: tContent("related.badge"),
+            description: toPlainText(tContent("related.badge")),
             path: "?path=/docs/ui-badge--docs",
           },
           {
             name: "Progress",
-            description: tContent("related.progress"),
+            description: toPlainText(tContent("related.progress")),
             path: "?path=/docs/ui-progress--docs",
           },
         ]}
@@ -854,28 +865,28 @@ interface ToasterProps {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.actionClick"),
-            trigger: tContent("analytics.table.actionClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.actionClickTrigger")),
             payload: tContent("analytics.table.actionClickPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

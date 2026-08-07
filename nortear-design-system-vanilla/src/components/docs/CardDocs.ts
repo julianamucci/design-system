@@ -34,17 +34,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (cardTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(cardTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -566,24 +573,24 @@ card.append(img, header);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.default.label'),
-              trigger: stripHtml(t('states.default.trigger')),
-              behavior: stripHtml(t('states.default.behavior')),
+              trigger: toPlainText(t('states.default.trigger')),
+              behavior: toPlainText(t('states.default.behavior')),
             },
             {
               label: t('states.small.label'),
-              trigger: stripHtml(t('states.small.trigger')),
-              behavior: stripHtml(t('states.small.behavior')),
+              trigger: toPlainText(t('states.small.trigger')),
+              behavior: toPlainText(t('states.small.behavior')),
             },
             {
               label: t('states.interactive.label'),
-              trigger: stripHtml(t('states.interactive.trigger')),
-              behavior: stripHtml(t('states.interactive.behavior')),
+              trigger: toPlainText(t('states.interactive.trigger')),
+              behavior: toPlainText(t('states.interactive.behavior')),
             },
           ],
         });
@@ -695,9 +702,9 @@ export interface CardFooterOptions      { className?: string; }`;
             { token: '--radius-card', value: 'rounded-(--radius-card)', description: t('tokens.table.radiusCard') },
             { token: '--card', value: 'bg-card', description: t('tokens.table.card') },
             { token: '--card-foreground', value: 'text-card-foreground', description: t('tokens.table.cardForeground') },
-            { token: '--muted', value: 'nds-bg-muted-50', description: stripHtml(t('tokens.table.muted')) },
+            { token: '--muted', value: 'nds-bg-muted-50', description: toPlainText(t('tokens.table.muted')) },
             { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.mutedForeground') },
-            { token: '--foreground', value: 'ring-foreground/10', description: stripHtml(t('tokens.table.foreground')) },
+            { token: '--foreground', value: 'ring-foreground/10', description: toPlainText(t('tokens.table.foreground')) },
             { token: '--border', value: 'border-t', description: t('tokens.table.border') },
             { token: '--card-bg', value: 'hsl(var(--card))', description: t('tokens.table.cardBg') },
             { token: '--card-fg', value: 'hsl(var(--card-foreground))', description: t('tokens.table.cardFg') },
@@ -710,6 +717,8 @@ export interface CardFooterOptions      { className?: string; }`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5].map((i) => t(`accessibility.item${i}`)),
@@ -725,9 +734,9 @@ export interface CardFooterOptions      { className?: string; }`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Separator', description: t('related.separator'), path: '?path=/docs/ui-separator--docs' },
-            { name: 'Accordion', description: t('related.accordion'), path: '?path=/docs/ui-accordion--docs' },
-            { name: 'Alert', description: t('related.alert'), path: '?path=/docs/ui-alert--docs' },
+            { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/ui-separator--docs' },
+            { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/ui-accordion--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
             { name: 'Button', description: stripHtml(t('related.button')), path: '?path=/docs/ui-button--docs' },
             { name: 'Badge', description: stripHtml(t('related.badge')), path: '?path=/docs/ui-badge--docs' },
             { name: 'Avatar', description: stripHtml(t('related.avatar')), path: '?path=/docs/ui-avatar--docs' },
@@ -750,33 +759,33 @@ export interface CardFooterOptions      { className?: string; }`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: t('analytics.table.buttonClick'),
-              trigger: t('analytics.table.buttonClickTrigger'),
+              trigger: toPlainText(t('analytics.table.buttonClickTrigger')),
               payload: t('analytics.table.buttonClickPayload'),
             },
             {
               event: t('analytics.table.cardClick'),
-              trigger: t('analytics.table.cardClickTrigger'),
+              trigger: toPlainText(t('analytics.table.cardClickTrigger')),
               payload: t('analytics.table.cardClickPayload'),
             },
             {
               event: t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event: t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event: t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],
@@ -793,8 +802,8 @@ export interface CardFooterOptions      { className?: string; }`;
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -806,9 +815,9 @@ export interface CardFooterOptions      { className?: string; }`;
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -818,7 +827,7 @@ export interface CardFooterOptions      { className?: string; }`;
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map((i) => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

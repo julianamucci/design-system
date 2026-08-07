@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, waitFor } from "storybook/test";
 import { Info } from "lucide-react";
@@ -10,6 +11,7 @@ const meta = {
   component: Alert,
   tags: ["autodocs", "feedback"],
   parameters: {
+    design: figmaDesign("alert"),
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. children fica sem
@@ -20,6 +22,13 @@ const meta = {
       options: ["default", "destructive", "success", "warning", "info"],
       description: "Variante semântica do alert.",
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
+    },
+    role: {
+      control: "select",
+      options: ["alert", "status", "note"],
+      description:
+        "Semântica de anúncio para leitores de tela. 'alert' e 'status' são live regions; 'note' não é — use-o para conteúdo estático já presente no carregamento da página.",
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
     },
     dismissible: {
       control: "boolean",
@@ -50,6 +59,7 @@ const meta = {
   },
   args: {
     variant: "default",
+    role: "alert",
     dismissible: false,
     onDismiss: fn(),
   },
@@ -59,9 +69,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ["accessibility.item1", "accessibility.item4", "visual.item1"] },
   render: (args) => (
     <Alert {...args}>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.

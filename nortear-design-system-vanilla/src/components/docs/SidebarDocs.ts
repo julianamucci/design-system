@@ -35,17 +35,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (sidebarTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(sidebarTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high:   'common.high',
@@ -368,8 +375,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair1.do'),
-              dontCaption:   t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-p-2';
@@ -403,8 +410,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair2.do'),
-              dontCaption:   t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const item = createSidebarMenuItem({
                   label: t('demonstration.labels.dashboard'),
@@ -439,8 +446,8 @@ export function createSidebarDocs(): HTMLElement {
             {
               doLabel:       tNav('common.do'),
               dontLabel:     tNav('common.dont'),
-              doCaption:     t('doDont.pair3.do'),
-              dontCaption:   t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-cluster nds-p-2 nds-rounded nds-border-default nds-text-caption nds-text-muted-foreground';
@@ -965,15 +972,15 @@ export function createSidebarDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
-            trigger:  t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.expanded.label'),  trigger: stripHtml(t('states.expanded.trigger')),  behavior: t('states.expanded.behavior') },
-            { label: t('states.collapsed.label'), trigger: stripHtml(t('states.collapsed.trigger')), behavior: t('states.collapsed.behavior') },
-            { label: t('states.offcanvas.label'), trigger: stripHtml(t('states.offcanvas.trigger')), behavior: t('states.offcanvas.behavior') },
-            { label: t('states.mobile.label'),    trigger: stripHtml(t('states.mobile.trigger')),    behavior: t('states.mobile.behavior') },
-            { label: t('states.hidden.label'),    trigger: stripHtml(t('states.hidden.trigger')),    behavior: t('states.hidden.behavior') },
+            { label: t('states.expanded.label'),  trigger: toPlainText(t('states.expanded.trigger')),  behavior: toPlainText(t('states.expanded.behavior'))},
+            { label: t('states.collapsed.label'), trigger: toPlainText(t('states.collapsed.trigger')), behavior: toPlainText(t('states.collapsed.behavior'))},
+            { label: t('states.offcanvas.label'), trigger: toPlainText(t('states.offcanvas.trigger')), behavior: toPlainText(t('states.offcanvas.behavior'))},
+            { label: t('states.mobile.label'),    trigger: toPlainText(t('states.mobile.trigger')),    behavior: toPlainText(t('states.mobile.behavior'))},
+            { label: t('states.hidden.label'),    trigger: toPlainText(t('states.hidden.trigger')),    behavior: toPlainText(t('states.hidden.behavior'))},
           ],
         });
 
@@ -1107,6 +1114,8 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
@@ -1127,12 +1136,12 @@ export function createSidebarDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'NavigationMenu', description: t('related.navigationMenu'), path: '?path=/docs/ui-navigationmenu--docs' },
-            { name: 'Tabs',           description: t('related.tabs'),           path: '?path=/docs/ui-tabs--docs'           },
-            { name: 'Sheet',          description: t('related.sheet'),          path: '?path=/docs/ui-sheet--docs'          },
-            { name: 'Accordion',      description: t('related.accordion'),      path: '?path=/docs/ui-accordion--docs'      },
-            { name: 'Tooltip',        description: t('related.tooltip'),        path: '?path=/docs/ui-tooltip--docs'        },
-            { name: 'Separator',      description: t('related.separator'),      path: '?path=/docs/ui-separator--docs'      },
+            { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/ui-navigationmenu--docs' },
+            { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/ui-tabs--docs'           },
+            { name: 'Sheet',          description: toPlainText(t('related.sheet')),          path: '?path=/docs/ui-sheet--docs'          },
+            { name: 'Accordion',      description: toPlainText(t('related.accordion')),      path: '?path=/docs/ui-accordion--docs'      },
+            { name: 'Tooltip',        description: toPlainText(t('related.tooltip')),        path: '?path=/docs/ui-tooltip--docs'        },
+            { name: 'Separator',      description: toPlainText(t('related.separator')),      path: '?path=/docs/ui-separator--docs'      },
           ],
         });
 
@@ -1151,15 +1160,15 @@ export function createSidebarDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.navClick'),      trigger: t('analytics.table.navClickTrigger'),      payload: t('analytics.table.navClickPayload') },
-            { event: t('analytics.table.toggleOpen'),    trigger: t('analytics.table.toggleOpenTrigger'),    payload: t('analytics.table.togglePayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.navClick'),      trigger: toPlainText(t('analytics.table.navClickTrigger')),      payload: t('analytics.table.navClickPayload') },
+            { event: t('analytics.table.toggleOpen'),    trigger: toPlainText(t('analytics.table.toggleOpenTrigger')),    payload: t('analytics.table.togglePayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

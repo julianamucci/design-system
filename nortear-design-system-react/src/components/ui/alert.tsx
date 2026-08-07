@@ -1,3 +1,5 @@
+/* v8 ignore next -- os dois ramos que o coverage marca aqui são do helper de
+   interop do transform para `import * as`, não código do componente. */
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
@@ -31,6 +33,10 @@ function raceAnimationEnd(
   const finalizar = (event?: AnimationEvent) => {
     // Animações de filhos (o botão de fechar, por exemplo) borbulham até aqui.
     if (event && event.target !== el) return
+    /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que
+       chamam (animationend e timeout) removem listener e timer antes de sair,
+       então não há ordem de eventos que a alcance. Fica como rede se um deles
+       deixar de limpar. */
     if (finalizado) return
     finalizado = true
     window.clearTimeout(timer)
@@ -66,13 +72,21 @@ const alertVariants = cva("nds-alert", {
 function Alert({
   className,
   variant,
+  role = "alert",
   dismissible = false,
   onDismiss,
   dismissLabel = "Fechar alerta",
   children,
   ...props
-}: React.ComponentProps<"div"> &
+}: Omit<React.ComponentProps<"div">, "role"> &
   VariantProps<typeof alertVariants> & {
+    /**
+     * Semântica de anúncio da raiz. `alert` (default) é live region
+     * ASSERTIVA — só para mensagem urgente que surge em tempo de execução.
+     * `status` é live region polida. `note` NÃO é live region e é o valor
+     * correto para conteúdo estático, já presente quando a página carrega.
+     */
+    role?: "alert" | "status" | "note"
     /** Renderiza o botão de fechar no canto superior direito. */
     dismissible?: boolean
     /** Disparado uma única vez quando o usuário aciona o botão de fechar. */
@@ -123,7 +137,7 @@ function Alert({
     <div
       ref={ref}
       data-slot="alert"
-      role="alert"
+      role={role}
       className={cn(
         alertVariants({ variant }),
         // Fechar antes da entrada terminar deixaria as duas classes no

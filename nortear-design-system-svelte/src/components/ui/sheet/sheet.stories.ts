@@ -6,7 +6,7 @@ import SheetStory from './SheetStory.svelte';
 import SheetDocs from '@/components/docs/SheetDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sheet',
   component: SheetStory,
   tags: ['autodocs', 'disclosure'],
@@ -42,10 +42,10 @@ const meta = {
     onAction: fn(),
     onCancel: fn(),
   },
-} satisfies Meta<typeof SheetStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
@@ -59,8 +59,15 @@ export const Playground: Story = {
           if (dialog && dialog.getAttribute('data-state') !== 'closed') {
             throw new Error('sheet still open');
           }
+          // data-state=closed nao basta: durante a animacao de saida o overlay
+          // ainda segura pointer-events, e o proximo clique no trigger falha.
+          // A espera tem que ser pela interacao devolvida.
+          const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
+          if (getComputedStyle(trigger).pointerEvents === 'none') {
+            throw new Error('overlay ainda bloqueia o ponteiro');
+          }
         },
-        { timeout: 1200 }
+        { timeout: 3000 }
       );
     };
 

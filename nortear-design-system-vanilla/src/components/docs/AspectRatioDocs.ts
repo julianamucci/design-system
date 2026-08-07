@@ -24,17 +24,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (aspectRatioTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(aspectRatioTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -285,8 +292,8 @@ export function createAspectRatioDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.landscape;
@@ -313,8 +320,8 @@ export function createAspectRatioDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const img = document.createElement('img');
                 img.src = PREVIEW_IMAGES.product;
@@ -422,9 +429,9 @@ export function createAspectRatioDocs(): HTMLElement {
           title: t('states.title'),
           cols: statesCols,
           items: [
-            { label: t('states.item1.label'), trigger: t('states.item1.trigger'), behavior: t('states.item1.behavior') },
-            { label: t('states.item2.label'), trigger: t('states.item2.trigger'), behavior: t('states.item2.behavior') },
-            { label: t('states.item3.label'), trigger: t('states.item3.trigger'), behavior: stripHtml(t('states.item3.behavior')) },
+            { label: t('states.item1.label'), trigger: toPlainText(t('states.item1.trigger')), behavior: toPlainText(t('states.item1.behavior'))},
+            { label: t('states.item2.label'), trigger: toPlainText(t('states.item2.trigger')), behavior: toPlainText(t('states.item2.behavior'))},
+            { label: t('states.item3.label'), trigger: toPlainText(t('states.item3.trigger')), behavior: toPlainText(t('states.item3.behavior')) },
           ],
         });
       }
@@ -452,9 +459,9 @@ export interface AspectRatioOptions {
               title: 'createAspectRatio',
               cols: propsCols,
               items: [
-                { name: 'ratio',     type: 'number',      defaultValue: '1', required: 'Não', description: stripHtml(t('props.table.ratio')) },
-                { name: 'content',   type: 'HTMLElement', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.children')) },
-                { name: 'className', type: 'string',      defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.className')) },
+                { name: 'ratio',     type: 'number',      defaultValue: '1', required: 'Não', description: toPlainText(t('props.table.ratio')) },
+                { name: 'content',   type: 'HTMLElement', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'className', type: 'string',      defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
           ],
@@ -492,6 +499,8 @@ export interface AspectRatioOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -512,9 +521,9 @@ export interface AspectRatioOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Card',       description: t('related.card'),       path: '?path=/docs/ui-card--docs' },
-            { name: 'Avatar',     description: t('related.avatar'),     path: '?path=/docs/ui-avatar--docs' },
-            { name: 'Skeleton',   description: t('related.skeleton'),   path: '?path=/docs/ui-skeleton--docs' },
+            { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/ui-card--docs' },
+            { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/ui-avatar--docs' },
+            { name: 'Skeleton',   description: toPlainText(t('related.skeleton')),   path: '?path=/docs/ui-skeleton--docs' },
           ],
         });
 
@@ -534,7 +543,7 @@ export interface AspectRatioOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
@@ -557,8 +566,8 @@ export interface AspectRatioOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -566,9 +575,9 @@ export interface AspectRatioOptions {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -578,7 +587,7 @@ export interface AspectRatioOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

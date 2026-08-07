@@ -26,17 +26,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (sonnerTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(sonnerTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high:   'common.high',
@@ -382,8 +389,8 @@ export function createSonnerDocs(): HTMLElement {
             {
               doLabel:    tNav('common.do'),
               dontLabel:  tNav('common.dont'),
-              doCaption:  t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
@@ -400,8 +407,8 @@ export function createSonnerDocs(): HTMLElement {
             {
               doLabel:    tNav('common.do'),
               dontLabel:  tNav('common.dont'),
-              doCaption:  t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
@@ -464,7 +471,7 @@ export function createSonnerDocs(): HTMLElement {
         const compositionItems = [
           {
             label:       t('states.items.withDescription.label'),
-            description: stripHtml(t('states.items.withDescription.description')),
+            description: toPlainText(t('states.items.withDescription.description')),
             code:         `toast('Preferências atualizadas.', {\n  description: 'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',\n});`,
             previewFactory: () => buildLocalToast('default', t('demonstration.labels.withDescription'), {
               description: t('demonstration.labels.withDescriptionDesc'),
@@ -481,7 +488,7 @@ export function createSonnerDocs(): HTMLElement {
           },
           {
             label:       t('states.items.promise.label'),
-            description: stripHtml(t('states.items.promise.description')),
+            description: toPlainText(t('states.items.promise.description')),
             code:         `toast.promise(uploadFile(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
             previewFactory: () => buildLocalToast('loading', t('demonstration.labels.promiseLoading')),
           },
@@ -553,7 +560,7 @@ export interface ToastOptions {
               title: t('props.toasterTitle'),
               cols: propsCols,
               items: [
-                { name: 'position',     type: 'ToastPosition',  defaultValue: '"bottom-right"', required: 'Não', description: stripHtml(t('props.table.position'))     },
+                { name: 'position',     type: 'ToastPosition',  defaultValue: '"bottom-right"', required: 'Não', description: toPlainText(t('props.table.position'))     },
                 { name: 'richColors',   type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.richColors')              },
                 { name: 'expand',       type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.expand')                  },
                 { name: 'duration',     type: 'number',          defaultValue: '4000',           required: 'Não', description: t('props.table.duration')                },
@@ -606,6 +613,8 @@ export interface ToastOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
@@ -622,10 +631,10 @@ export interface ToastOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Alert',       description: t('related.alert'),       path: '?path=/docs/ui-alert--docs'       },
-            { name: 'AlertDialog', description: t('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: 'Badge',       description: t('related.badge'),       path: '?path=/docs/ui-badge--docs'       },
-            { name: 'Progress',    description: t('related.progress'),    path: '?path=/docs/ui-progress--docs'    },
+            { name: 'Alert',       description: toPlainText(t('related.alert')),       path: '?path=/docs/ui-alert--docs'       },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+            { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/ui-badge--docs'       },
+            { name: 'Progress',    description: toPlainText(t('related.progress')),    path: '?path=/docs/ui-progress--docs'    },
           ],
         });
 
@@ -643,14 +652,14 @@ export interface ToastOptions {
           title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.actionClick'),    trigger: t('analytics.table.actionClickTrigger'),    payload: t('analytics.table.actionClickPayload')    },
-            { event: t('analytics.table.pageView'),       trigger: t('analytics.table.pageViewTrigger'),       payload: t('analytics.table.pageViewPayload')       },
-            { event: t('analytics.table.sectionViewed'),  trigger: t('analytics.table.sectionViewedTrigger'),  payload: t('analytics.table.sectionViewedPayload')  },
-            { event: t('analytics.table.langSwitch'),     trigger: t('analytics.table.langSwitchTrigger'),     payload: t('analytics.table.langSwitchPayload')     },
+            { event: t('analytics.table.actionClick'),    trigger: toPlainText(t('analytics.table.actionClickTrigger')),    payload: t('analytics.table.actionClickPayload')    },
+            { event: t('analytics.table.pageView'),       trigger: toPlainText(t('analytics.table.pageViewTrigger')),       payload: t('analytics.table.pageViewPayload')       },
+            { event: t('analytics.table.sectionViewed'),  trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),  payload: t('analytics.table.sectionViewedPayload')  },
+            { event: t('analytics.table.langSwitch'),     trigger: toPlainText(t('analytics.table.langSwitchTrigger')),     payload: t('analytics.table.langSwitchPayload')     },
           ],
         });
 

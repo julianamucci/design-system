@@ -1,5 +1,6 @@
 import React from 'react';
 import { DocsNav, type DocsNavGroup } from '../DocsNav';
+import { DOCS_PAGE_TITLE_ID } from './DocsHeader';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 
 export interface DocsPageLayoutProps {
@@ -36,9 +37,21 @@ export function DocsPageLayout({ navGroups, activeSection, header, children, com
           <DocsNav groups={navGroups} activeSection={activeSection} componentSlug={componentSlug} />
         </nav>
 
-        <div className="ds-docs nds-stack" data-spacing="2xl">
+        {/*
+          Landmark de conteúdo: é o alvo do "Ir para o conteúdo" e o que o
+          leitor de tela anuncia como "principal, <título da página>"
+          (aria-labelledby → h1 do DocsHeader). tabindex=-1 permite foco
+          programático sem entrar na ordem de tabulação. Mesmas classes e
+          mesma posição na árvore do <div> anterior — zero mudança visual.
+        */}
+        <main
+          tabIndex={-1}
+          aria-labelledby={DOCS_PAGE_TITLE_ID}
+          className="ds-docs nds-stack"
+          data-spacing="2xl"
+        >
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );

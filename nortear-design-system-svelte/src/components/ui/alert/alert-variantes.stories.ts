@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
@@ -5,20 +6,22 @@ import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDismissivelStory from './AlertDismissivelStory.svelte';
 
-const meta = {
+const meta: Meta = {
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },
   title: 'UI/Alert/Variantes',
   component: Alert,
   tags: ['feedback'],
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
+  parameters: { covers: ['functional.item1', 'accessibility.item3', 'visual.item2'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -39,6 +42,7 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -58,6 +62,7 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -118,6 +123,7 @@ export const Info: Story = {
 // remonta um novo em seguida, então o canvas nunca fica vazio (Chromatic
 // fotografava a story vazia). A prova da remoção mede o nó ORIGINAL.
 export const Dismissible: Story = {
+  parameters: { covers: ['functional.item7', 'visual.item5'] },
   args: {
     dismissible: true,
     onDismiss: fn(),
@@ -131,6 +137,40 @@ export const Dismissible: Story = {
 
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
+    const onDismiss = args.onDismiss as unknown as ReturnType<typeof fn>;
+
+    // Primeiro step de propósito: só vale enquanto a entrada ainda roda.
+    // A entrada só existe logo depois de montar. O painel Interactions
+    // reexecuta a play no MESMO DOM, onde o alert já assentou — então, quando a
+    // classe não está lá, provocamos uma remontagem (o wrapper remonta ao
+    // fechar) e medimos no nó novo. Em montagem limpa nada disso roda.
+    await step('Animação de descendente não encerra a entrada antes da hora', async () => {
+      let alert = await canvas.findByRole('alert');
+      if (!alert.classList.contains('nds-animate-in')) {
+        await userEvent.click(canvas.getByRole('button', { name: 'Fechar alerta' }));
+        alert = await waitFor(() => {
+          const novo = canvas.getByRole('alert');
+          if (!novo.classList.contains('nds-animate-in')) throw new Error('aguardando remontagem');
+          return novo;
+        });
+        onDismiss.mockClear(); // o fechamento de preparo não entra na contagem
+      }
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // `animationend` borbulha — sem a guarda de `event.target`, a animação de
+      // qualquer filho (o botão de fechar, um ícone) encerraria a fase de
+      // entrada do alert.
+      const dismiss = canvas.getByRole('button', { name: 'Fechar alerta' });
+      dismiss.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).toHaveClass('nds-animate-in');
+
+      // Já a animação do PRÓPRIO alert encerra a entrada — e um segundo evento
+      // não tem mais nada a limpar.
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await waitFor(() => expect(alert).not.toHaveClass('nds-animate-in'));
+      alert.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alert).not.toHaveClass('nds-animate-in');
+    });
 
     await step('Botão de fechar visível e acessível por rótulo', async () => {
       // waitFor: o alert dismissible ENTRA animado (.nds-animate-in, opacidade
@@ -143,10 +183,25 @@ export const Dismissible: Story = {
       });
     });
 
+
+    await step('X é o ÚLTIMO filho — leitor de tela encontra o conteúdo antes', async () => {
+      // Mesma verificação do Vanilla e do React: a ordem de leitura é contrato,
+      // não detalhe visual. Botão antes do conteúdo faria o leitor anunciar
+      // "fechar" antes de dizer o que seria fechado.
+      const alert = canvas.getByRole('alert');
+      await expect(alert.lastElementChild).toHaveAttribute('data-slot', 'alert-dismiss');
+    });
     await step('Clique no X remove o alert e dispara o callback uma única vez', async () => {
       const alertOriginal = canvas.getByRole('alert');
       const dismissButton = canvas.getByRole('button', { name: 'Fechar alerta' });
       await userEvent.click(dismissButton);
+      // Segunda ativação com a saída ainda em curso: tem que cair na guarda de
+      // fechamento em andamento. Sem ela o `toHaveBeenCalledTimes(1)` abaixo é
+      // verdade trivial — nunca houve chance de disparar duas vezes.
+      dismissButton.click();
+      // E a animação de um descendente também não pode encerrar a saída.
+      dismissButton.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+      await expect(alertOriginal).toBeInTheDocument();
       // waitFor: a saída é animada (.nds-animate-out) e o nó só sai do DOM
       // quando a animação termina — ou no timeout de segurança do primitivo.
       await waitFor(() => expect(alertOriginal).not.toBeInTheDocument());

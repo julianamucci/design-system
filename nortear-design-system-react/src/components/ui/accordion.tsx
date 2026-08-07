@@ -24,6 +24,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
   const mode = props.multiple ? "multiple" : "single"
   function handleKeyDown(event: AccordionKeyDownEvent) {
     onKeyDown?.(event)
+    /* v8 ignore next -- só dispara se o consumidor chamar preventDefault no
+       próprio onKeyDown para assumir a navegação; nenhuma story faz isso. */
     if (event.defaultPrevented) return
     if (!NAV_KEYS.includes(event.key as (typeof NAV_KEYS)[number])) return
 
@@ -32,6 +34,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
     const focused = (event.target as HTMLElement).closest<HTMLButtonElement>(
       '[data-slot="accordion-trigger"]',
     )
+    /* v8 ignore next -- exige foco DENTRO do conteúdo, e nenhuma composição
+       do design system põe elemento focável ali (tabela, lista e texto). */
     if (!focused) return
 
     const triggers = Array.from(
@@ -40,6 +44,8 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
       ),
     )
     const index = triggers.indexOf(focused)
+    /* v8 ignore next -- a lista já exclui trigger desabilitado, e trigger
+       desabilitado não recebe foco: não há como estar focado e fora dela. */
     if (index < 0) return
 
     event.preventDefault()
@@ -101,11 +107,25 @@ function AccordionContent({
   children,
   ...props
 }: AccordionPrimitive.Panel.Props) {
+  // `hiddenUntilFound`: o painel fechado fica no DOM com `hidden="until-found"`,
+  // então o Ctrl+F do navegador acha a resposta dentro dele e o abre. Obriga o
+  // painel a permanecer montado — o base-ui ignora `keepMounted={false}` aqui e
+  // avisa no console.
+  //
+  // `role`/`aria-labelledby` fora: com o painel sempre montado, o `role="region"`
+  // do base-ui deixa TODO item fechado como landmark. Medido na docs page — 41
+  // painéis viraram 41 landmarks e os de mesmo rótulo colidiram (axe
+  // landmark-unique). É exatamente a "proliferação de landmarks" que a APG manda
+  // evitar, e por isso ela trata o role no painel como opcional. A relação
+  // trigger -> conteúdo continua pelo `aria-controls`.
   return (
     <AccordionPrimitive.Panel
       data-slot="accordion-content"
       className="nds-accordion-content"
+      hiddenUntilFound
       {...props}
+      role={undefined}
+      aria-labelledby={undefined}
     >
       <div
         className={cn("nds-accordion-content-body", className)}

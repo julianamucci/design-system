@@ -26,12 +26,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -79,12 +76,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function TextareaDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(textareaTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (textareaTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -453,8 +462,8 @@ function Textarea({
                 />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -479,8 +488,8 @@ function Textarea({
                 />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -728,16 +737,16 @@ function Textarea({
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
-          { label: tContent("states.default.label"),  trigger: tContent("states.default.trigger"),  behavior: stripHtml(tContent("states.default.behavior")) },
-          { label: tContent("states.focus.label"),    trigger: tContent("states.focus.trigger"),    behavior: stripHtml(tContent("states.focus.behavior")) },
-          { label: tContent("states.filled.label"),   trigger: tContent("states.filled.trigger"),   behavior: stripHtml(tContent("states.filled.behavior")) },
-          { label: tContent("states.disabled.label"), trigger: tContent("states.disabled.trigger"), behavior: stripHtml(tContent("states.disabled.behavior")) },
-          { label: tContent("states.invalid.label"),  trigger: tContent("states.invalid.trigger"),  behavior: stripHtml(tContent("states.invalid.behavior")) },
-          { label: tContent("states.readonly.label"), trigger: tContent("states.readonly.trigger"), behavior: stripHtml(tContent("states.readonly.behavior")) },
+          { label: tContent("states.default.label"),  trigger: toPlainText(tContent("states.default.trigger")),  behavior: toPlainText(tContent("states.default.behavior")) },
+          { label: tContent("states.focus.label"),    trigger: toPlainText(tContent("states.focus.trigger")),    behavior: toPlainText(tContent("states.focus.behavior")) },
+          { label: tContent("states.filled.label"),   trigger: toPlainText(tContent("states.filled.trigger")),   behavior: toPlainText(tContent("states.filled.behavior")) },
+          { label: tContent("states.disabled.label"), trigger: toPlainText(tContent("states.disabled.trigger")), behavior: toPlainText(tContent("states.disabled.behavior")) },
+          { label: tContent("states.invalid.label"),  trigger: toPlainText(tContent("states.invalid.trigger")),  behavior: toPlainText(tContent("states.invalid.behavior")) },
+          { label: tContent("states.readonly.label"), trigger: toPlainText(tContent("states.readonly.trigger")), behavior: toPlainText(tContent("states.readonly.behavior")) },
         ]}
       />
 
@@ -754,15 +763,15 @@ function Textarea({
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "value",        type: tContent("props.table.value.type"),        defaultValue: tContent("props.table.value.default"),        required: tContent("props.table.value.required"),        description: stripHtml(tContent("props.table.value.description")) },
-              { name: "defaultValue", type: tContent("props.table.defaultValue.type"), defaultValue: tContent("props.table.defaultValue.default"), required: tContent("props.table.defaultValue.required"), description: stripHtml(tContent("props.table.defaultValue.description")) },
-              { name: "onChange",     type: tContent("props.table.onChange.type"),     defaultValue: tContent("props.table.onChange.default"),     required: tContent("props.table.onChange.required"),     description: stripHtml(tContent("props.table.onChange.description")) },
-              { name: "placeholder",  type: tContent("props.table.placeholder.type"),  defaultValue: tContent("props.table.placeholder.default"),  required: tContent("props.table.placeholder.required"),  description: stripHtml(tContent("props.table.placeholder.description")) },
-              { name: "maxLength",    type: tContent("props.table.maxLength.type"),    defaultValue: tContent("props.table.maxLength.default"),    required: tContent("props.table.maxLength.required"),    description: stripHtml(tContent("props.table.maxLength.description")) },
-              { name: "rows",         type: tContent("props.table.rows.type"),         defaultValue: tContent("props.table.rows.default"),         required: tContent("props.table.rows.required"),         description: stripHtml(tContent("props.table.rows.description")) },
-              { name: "disabled",     type: tContent("props.table.disabled.type"),     defaultValue: tContent("props.table.disabled.default"),     required: tContent("props.table.disabled.required"),     description: stripHtml(tContent("props.table.disabled.description")) },
-              { name: "readOnly",     type: tContent("props.table.readOnly.type"),     defaultValue: tContent("props.table.readOnly.default"),     required: tContent("props.table.readOnly.required"),     description: stripHtml(tContent("props.table.readOnly.description")) },
-              { name: "className",    type: tContent("props.table.className.type"),    defaultValue: tContent("props.table.className.default"),    required: tContent("props.table.className.required"),    description: stripHtml(tContent("props.table.className.description")) },
+              { name: "value",        type: tContent("props.table.value.type"),        defaultValue: tContent("props.table.value.default"),        required: tContent("props.table.value.required"),        description: toPlainText(tContent("props.table.value.description")) },
+              { name: "defaultValue", type: tContent("props.table.defaultValue.type"), defaultValue: tContent("props.table.defaultValue.default"), required: tContent("props.table.defaultValue.required"), description: toPlainText(tContent("props.table.defaultValue.description")) },
+              { name: "onChange",     type: toPlainText(tContent("props.table.onChange.type")),     defaultValue: tContent("props.table.onChange.default"),     required: tContent("props.table.onChange.required"),     description: toPlainText(tContent("props.table.onChange.description")) },
+              { name: "placeholder",  type: tContent("props.table.placeholder.type"),  defaultValue: tContent("props.table.placeholder.default"),  required: tContent("props.table.placeholder.required"),  description: toPlainText(tContent("props.table.placeholder.description")) },
+              { name: "maxLength",    type: tContent("props.table.maxLength.type"),    defaultValue: tContent("props.table.maxLength.default"),    required: tContent("props.table.maxLength.required"),    description: toPlainText(tContent("props.table.maxLength.description")) },
+              { name: "rows",         type: tContent("props.table.rows.type"),         defaultValue: tContent("props.table.rows.default"),         required: tContent("props.table.rows.required"),         description: toPlainText(tContent("props.table.rows.description")) },
+              { name: "disabled",     type: tContent("props.table.disabled.type"),     defaultValue: tContent("props.table.disabled.default"),     required: tContent("props.table.disabled.required"),     description: toPlainText(tContent("props.table.disabled.description")) },
+              { name: "readOnly",     type: tContent("props.table.readOnly.type"),     defaultValue: tContent("props.table.readOnly.default"),     required: tContent("props.table.readOnly.required"),     description: toPlainText(tContent("props.table.readOnly.description")) },
+              { name: "className",    type: tContent("props.table.className.type"),    defaultValue: tContent("props.table.className.default"),    required: tContent("props.table.className.required"),    description: toPlainText(tContent("props.table.className.description")) },
             ],
           },
         ]}
@@ -796,6 +805,8 @@ function Textarea({
 
       {/* ── Acessibilidade ──────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -822,22 +833,22 @@ function Textarea({
         items={[
           {
             name: tContent("related.items.input.name"),
-            description: tContent("related.items.input.description"),
+            description: toPlainText(tContent("related.items.input.description")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: tContent("related.items.label.name"),
-            description: tContent("related.items.label.description"),
+            description: toPlainText(tContent("related.items.label.description")),
             path: "?path=/docs/ui-label--docs",
           },
           {
             name: tContent("related.items.form.name"),
-            description: tContent("related.items.form.description"),
+            description: toPlainText(tContent("related.items.form.description")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: tContent("related.items.inputOTP.name"),
-            description: tContent("related.items.inputOTP.description"),
+            description: toPlainText(tContent("related.items.inputOTP.description")),
             path: "?path=/docs/ui-inputotp--docs",
           },
         ]}
@@ -859,13 +870,13 @@ function Textarea({
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "field_blur",
-            trigger: tContent("analytics.table.field_blur.trigger"),
+            trigger: toPlainText(tContent("analytics.table.field_blur.trigger")),
             payload: tContent("analytics.table.field_blur.payload"),
           },
           {
@@ -892,8 +903,8 @@ function Textarea({
             priority: tNav("common.priority"),
           },
           items: [1, 2, 3, 4].map((i) => ({
-            action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -905,7 +916,7 @@ function Textarea({
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}`)),
             level: "AA",
             how: "axe-core",
           })),

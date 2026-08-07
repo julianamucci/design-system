@@ -5,7 +5,7 @@ import SkeletonStory from './SkeletonStory.svelte';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Skeleton',
   component: SkeletonStory,
   tags: ['autodocs', 'feedback'],
@@ -29,10 +29,10 @@ const meta = {
   args: {
     class: 'h-4 w-[250px]',
   },
-} satisfies Meta<typeof SkeletonStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

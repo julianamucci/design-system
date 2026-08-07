@@ -27,7 +27,9 @@
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> associado via <code>htmlFor</code>/<code>for</code>. Obrigatório para acessibilidade.",
       "item4": "<strong>Hidden input</strong> — input nativo oculto para participação em formulários HTML (Vanilla). Carrega <code>name</code> e <code>value</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<div>\n  <Checkbox id=\"termos\" />        {/* Root + Indicator */}\n  <Label htmlFor=\"termos\">        {/* Label externo */}\n    Aceito os termos\n  </Label>\n</div>"
+      "structureCode": {
+        "react": "<div>\n  <Checkbox id=\"termos\" />        {/* Root + Indicator */}\n  <Label htmlFor=\"termos\">        {/* Label externo */}\n    Aceito os termos\n  </Label>\n</div>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -411,7 +413,9 @@
       "item3": "<strong>Label (external)</strong> — <code>&lt;label&gt;</code> element associated via <code>htmlFor</code>/<code>for</code>. Required for accessibility.",
       "item4": "<strong>Hidden input</strong> — native hidden input for HTML form participation (Vanilla). Carries <code>name</code> and <code>value</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<div>\n  <Checkbox id=\"terms\" />          {/* Root + Indicator */}\n  <Label htmlFor=\"terms\">          {/* External label */}\n    I accept the terms\n  </Label>\n</div>"
+      "structureCode": {
+        "react": "<div>\n  <Checkbox id=\"terms\" />          {/* Root + Indicator */}\n  <Label htmlFor=\"terms\">          {/* External label */}\n    I accept the terms\n  </Label>\n</div>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -795,7 +799,9 @@
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> asociado vía <code>htmlFor</code>/<code>for</code>. Obligatorio para accesibilidad.",
       "item4": "<strong>Input oculto</strong> — input nativo oculto para participación en formularios HTML (Vanilla). Transporta <code>name</code> y <code>value</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<div>\n  <Checkbox id=\"terminos\" />       {/* Root + Indicator */}\n  <Label htmlFor=\"terminos\">       {/* Label externo */}\n    Acepto los términos\n  </Label>\n</div>"
+      "structureCode": {
+        "react": "<div>\n  <Checkbox id=\"terminos\" />       {/* Root + Indicator */}\n  <Label htmlFor=\"terminos\">       {/* Label externo */}\n    Acepto los términos\n  </Label>\n</div>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

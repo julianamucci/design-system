@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import {
@@ -11,6 +12,7 @@ const meta = {
   title: 'UI/Accordion/Estados',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordionItem'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -32,6 +34,7 @@ export const Fechado: Story = {
     `,
   }),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story: 'Estado fechado. aria-expanded="false" no trigger. Chevron aponta para baixo.',
@@ -63,6 +66,7 @@ export const Aberto: Story = {
     `,
   }),
   parameters: {
+    covers: ['accessibility.item2', 'visual.item3'],
     docs: {
       description: {
         story: 'Estado aberto. aria-expanded="true" no trigger. Conteúdo visível e acessível.',
@@ -96,6 +100,7 @@ export const Disabled: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
       description: {
         story: 'Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.',
@@ -134,6 +139,7 @@ export const FocusVisible: Story = {
     `,
   }),
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story: 'Navegação por teclado. Tab move entre triggers. Enter e Space abrem/fecham. Focus ring ring-[3px] visível.',

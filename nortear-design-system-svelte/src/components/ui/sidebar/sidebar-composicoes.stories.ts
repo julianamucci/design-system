@@ -5,7 +5,7 @@ import SidebarNavGroupsStory from './SidebarNavGroupsStory.svelte';
 import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sidebar/Composicoes',
   component: SidebarNavGroupsStory,
   tags: ['layout'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SidebarNavGroupsStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComGruposDeNav: Story = {
   name: 'Com grupos de navegação',
@@ -45,7 +45,8 @@ export const ComGruposDeNav: Story = {
   },
 };
 
-export const ComSubMenu: Story = {
+// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
+export const ComSubMenu: StoryObj<Record<string, never>> = {
   name: 'Com sub-menu',
   render: () => ({
     Component: SidebarSubMenuStory,

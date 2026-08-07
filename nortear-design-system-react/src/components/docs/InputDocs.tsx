@@ -33,12 +33,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -86,7 +83,6 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── PasswordToggle helper ────────────────────────────────────────────────────
 
 function PasswordToggleDemo({ placeholder }: { placeholder: string }) {
@@ -116,6 +112,19 @@ function PasswordToggleDemo({ placeholder }: { placeholder: string }) {
 export function InputDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(inputTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (inputTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -436,8 +445,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input id="dodont-1-dont" type="email" placeholder="Digite seu email" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -454,8 +463,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input id="dodont-2-dont" type="text" placeholder="ex: joao@empresa.com" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -473,8 +482,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 <Input type="text" placeholder={tContent("demonstration.labels.defaultLabel")} />
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -684,34 +693,34 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: stripHtml(tContent("states.default.trigger")),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: stripHtml(tContent("states.focus.trigger")),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.error.label"),
-            trigger: stripHtml(tContent("states.error.trigger")),
-            behavior: stripHtml(tContent("states.error.behavior")),
+            trigger: toPlainText(tContent("states.error.trigger")),
+            behavior: toPlainText(tContent("states.error.behavior")),
           },
           {
             label: tContent("states.file.label"),
-            trigger: stripHtml(tContent("states.file.trigger")),
-            behavior: stripHtml(tContent("states.file.behavior")),
+            trigger: toPlainText(tContent("states.file.trigger")),
+            behavior: toPlainText(tContent("states.file.behavior")),
           },
         ]}
       />
@@ -735,42 +744,42 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 type: '"text" | "email" | "password" | "number" | "tel" | "url" | "search" | "date" | "file"',
                 defaultValue: '"text"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.type_prop")),
+                description: toPlainText(tContent("props.table.type_prop")),
               },
               {
                 name: "placeholder",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.placeholder")),
+                description: toPlainText(tContent("props.table.placeholder")),
               },
               {
                 name: "disabled",
                 type: "boolean",
                 defaultValue: "false",
                 required: "Não",
-                description: stripHtml(tContent("props.table.disabled")),
+                description: toPlainText(tContent("props.table.disabled")),
               },
               {
                 name: "aria-invalid",
                 type: '"true" | "false"',
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.ariaInvalid")),
+                description: toPlainText(tContent("props.table.ariaInvalid")),
               },
               {
                 name: "autoComplete",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.autoComplete")),
+                description: toPlainText(tContent("props.table.autoComplete")),
               },
               {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: stripHtml(tContent("props.table.className")),
+                description: toPlainText(tContent("props.table.className")),
               },
             ],
           },
@@ -789,7 +798,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
                 type: '"inline-start" | "inline-end" | "block-start" | "block-end"',
                 defaultValue: '"inline-start"',
                 required: "Não",
-                description: stripHtml(tContent("props.table.align_addon")),
+                description: toPlainText(tContent("props.table.align_addon")),
               },
             ],
           },
@@ -826,6 +835,8 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Acessibilidade ──────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -850,27 +861,27 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         items={[
           {
             name: "Textarea",
-            description: tContent("related.textarea"),
+            description: toPlainText(tContent("related.textarea")),
             path: "?path=/docs/ui-textarea--docs",
           },
           {
             name: "InputOTP",
-            description: tContent("related.inputOTP"),
+            description: toPlainText(tContent("related.inputOTP")),
             path: "?path=/docs/ui-inputotp--docs",
           },
           {
             name: "Select",
-            description: tContent("related.select"),
+            description: toPlainText(tContent("related.select")),
             path: "?path=/docs/ui-select--docs",
           },
           {
             name: "Form",
-            description: tContent("related.form"),
+            description: toPlainText(tContent("related.form")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: "Label",
-            description: tContent("related.label"),
+            description: toPlainText(tContent("related.label")),
             path: "?path=/docs/ui-label--docs",
           },
         ]}
@@ -893,38 +904,38 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.fieldFocus"),
-            trigger: tContent("analytics.table.fieldFocusTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldFocusTrigger")),
             payload: tContent("analytics.table.fieldFocusPayload"),
           },
           {
             event: tContent("analytics.table.fieldBlur"),
-            trigger: tContent("analytics.table.fieldBlurTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldBlurTrigger")),
             payload: tContent("analytics.table.fieldBlurPayload"),
           },
           {
             event: tContent("analytics.table.fieldError"),
-            trigger: tContent("analytics.table.fieldErrorTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldErrorTrigger")),
             payload: tContent("analytics.table.fieldErrorPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

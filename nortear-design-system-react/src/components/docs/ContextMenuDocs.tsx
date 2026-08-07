@@ -38,12 +38,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -99,7 +96,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo Components ──────────────────────────────────────────────────────────
 
@@ -207,6 +203,19 @@ function RadioDemo({ tContent }: { tContent: (key: string) => string }) {
 export function ContextMenuDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(contextMenuTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (contextMenuTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -444,8 +453,8 @@ interface ContextMenuCheckboxItemProps
                 </ContextMenuContent>
               </ContextMenu>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -482,8 +491,8 @@ interface ContextMenuCheckboxItemProps
                 </ContextMenuContent>
               </ContextMenu>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -511,8 +520,8 @@ interface ContextMenuCheckboxItemProps
                 <span style={{ textAlign: "center" }}>Área sem dica visual de right-click</span>
               </div>
             ),
-            doCaption: tContent("doDont.pair3.do"),
-            dontCaption: tContent("doDont.pair3.dont"),
+            doCaption: toPlainText(tContent("doDont.pair3.do")),
+            dontCaption: toPlainText(tContent("doDont.pair3.dont")),
           },
         ]}
       />
@@ -720,39 +729,39 @@ const [showRulers, setShowRulers] = useState(false);
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: tContent("states.closed.trigger"),
-            behavior: tContent("states.closed.behavior"),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: tContent("states.open.trigger"),
-            behavior: tContent("states.open.behavior"),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.focused.label"),
-            trigger: tContent("states.focused.trigger"),
-            behavior: tContent("states.focused.behavior"),
+            trigger: toPlainText(tContent("states.focused.trigger")),
+            behavior: toPlainText(tContent("states.focused.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: tContent("states.disabled.behavior"),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.checked.label"),
-            trigger: stripHtml(tContent("states.checked.trigger")),
-            behavior: tContent("states.checked.behavior"),
+            trigger: toPlainText(tContent("states.checked.trigger")),
+            behavior: toPlainText(tContent("states.checked.behavior")),
           },
           {
             label: tContent("states.subOpen.label"),
-            trigger: tContent("states.subOpen.trigger"),
-            behavior: tContent("states.subOpen.behavior"),
+            trigger: toPlainText(tContent("states.subOpen.trigger")),
+            behavior: toPlainText(tContent("states.subOpen.behavior")),
           },
         ]}
       />
@@ -951,6 +960,8 @@ const [showRulers, setShowRulers] = useState(false);
 
       {/* ── Acessibilidade ─────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -985,27 +996,27 @@ const [showRulers, setShowRulers] = useState(false);
         items={[
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: "Menubar",
-            description: tContent("related.menubar"),
+            description: toPlainText(tContent("related.menubar")),
             path: "?path=/docs/ui-menubar--docs",
           },
           {
             name: "Dialog",
-            description: tContent("related.dialog"),
+            description: toPlainText(tContent("related.dialog")),
             path: "?path=/docs/ui-dialog--docs",
           },
           {
             name: "AlertDialog",
-            description: tContent("related.alertDialog"),
+            description: toPlainText(tContent("related.alertDialog")),
             path: "?path=/docs/ui-alertdialog--docs",
           },
           {
             name: "Tooltip",
-            description: tContent("related.tooltip"),
+            description: toPlainText(tContent("related.tooltip")),
             path: "?path=/docs/ui-tooltip--docs",
           },
         ]}
@@ -1028,33 +1039,33 @@ const [showRulers, setShowRulers] = useState(false);
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.menuOpen"),
-            trigger: tContent("analytics.table.menuOpenTrigger"),
+            trigger: toPlainText(tContent("analytics.table.menuOpenTrigger")),
             payload: tContent("analytics.table.menuOpenPayload"),
           },
           {
             event: tContent("analytics.table.itemClick"),
-            trigger: tContent("analytics.table.itemClickTrigger"),
+            trigger: toPlainText(tContent("analytics.table.itemClickTrigger")),
             payload: tContent("analytics.table.itemClickPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}

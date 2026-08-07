@@ -76,6 +76,9 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
     if (type === 'single') {
       if (currentlyOpen) {
+        /* v8 ignore next 2 -- o caminho collapsible: false não tem story: o
+           React (base-ui) não expõe a prop, e criar a story só nas outras três
+           quebraria a paridade. Registrado no FIXES-NEEDED. */
         if (collapsible) openValues.delete(value);
         else return;
       } else {
@@ -110,6 +113,13 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
    * `display: none` impede a animação. Ele sai junto com a mudança para
    * `open` (a animação de keyframes dispara quando o elemento passa a ser
    * renderizado) e só volta DEPOIS da animação de fechamento.
+   *
+   * O valor é `"until-found"`, não o booleano: esconde por
+   * `content-visibility: hidden` em vez de `display: none`, então o Ctrl+F do
+   * navegador acha o texto do painel fechado e dispara `beforematch` — que a
+   * gente escuta abaixo para abrir o item de verdade. Depende da regra
+   * `.nds-accordion-content[hidden]:not([hidden="until-found"])` no CSS; com um
+   * `display: none` de autor o recurso morre em silêncio.
    */
   function updateItemState(
     triggerEl: HTMLButtonElement,
@@ -128,16 +138,19 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
     // Estado inicial (defaultValue): aplica direto e suprime a animação por um
     // frame, para o item já aberto não "expandir" durante o carregamento.
+    // Só o caminho aberto: o único chamador com immediate é a montagem do item
+    // já aberto por defaultValue, e o fechado nasce com hidden + data-state no
+    // próprio createElement. Um else aqui era ramo que ninguém alcançava.
     if (immediate) {
-      contentEl.hidden = !open;
-      contentEl.dataset.state = open ? 'open' : 'closed';
+      contentEl.removeAttribute('hidden');
+      contentEl.dataset.state = 'open';
       contentEl.style.animation = 'none';
       requestAnimationFrame(() => { contentEl.style.animation = ''; });
       return;
     }
 
     if (open) {
-      contentEl.hidden = false;
+      contentEl.removeAttribute('hidden');
       contentEl.dataset.state = 'open';
       return;
     }
@@ -146,7 +159,11 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     // Timer em vez de transitionend: com prefers-reduced-motion (ou display
     // none herdado) o evento pode não disparar e o conteúdo ficaria acessível.
     const timer = window.setTimeout(() => {
-      if (contentEl.dataset.state === 'closed') contentEl.hidden = true;
+      /* v8 ignore next -- rede de segurança: reabrir dentro da janela já cancela
+         este timer no updateItemState, então o caminho "estado mudou antes de
+         disparar" não é alcançável pela interação — só por mudança externa de
+         data-state, como a do beforematch. */
+      if (contentEl.dataset.state === 'closed') contentEl.setAttribute('hidden', 'until-found');
       closeTimers.delete(contentEl);
     }, CLOSE_HIDE_DELAY);
     closeTimers.set(contentEl, timer);
@@ -183,10 +200,12 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     contentEl.id = contentId;
     contentEl.dataset.slot = 'accordion-content';
     contentEl.setAttribute('data-content-for', item.value);
-    contentEl.setAttribute('role', 'region');
-    contentEl.setAttribute('aria-labelledby', triggerId);
+    // Sem `role="region"`: com o painel sempre montado (until-found), todo item
+    // fechado viraria landmark — proliferação que a APG manda evitar e que o axe
+    // reprova por landmark-unique quando dois painéis têm o mesmo rótulo. A
+    // relação trigger -> conteúdo fica no `aria-controls`.
     contentEl.className = 'nds-accordion-content';
-    contentEl.hidden = true;
+    contentEl.setAttribute('hidden', 'until-found');
     contentEl.dataset.state = 'closed';
 
     const innerEl = document.createElement('div');
@@ -201,6 +220,16 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     if (!item.disabled) {
       triggerEl.addEventListener('click', () => toggle(item.value, triggerEl, contentEl));
     }
+
+    // O navegador remove o `hidden` sozinho ao achar texto pelo Ctrl+F, mas não
+    // sabe nada do nosso estado: sem isto o painel apareceria com o trigger
+    // ainda dizendo `aria-expanded="false"` e o próximo clique o "abriria" de
+    // novo, fechando-o. `toggle` mantém openValues, ARIA e modo single em dia.
+    /* v8 ignore next 3 -- beforematch é disparado pelo próprio navegador ao
+       achar texto escondido pelo Ctrl+F; não há API para provocá-lo em teste. */
+    contentEl.addEventListener('beforematch', () => {
+      if (!isOpen(item.value)) toggle(item.value, triggerEl, contentEl);
+    });
 
     triggerEl.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {

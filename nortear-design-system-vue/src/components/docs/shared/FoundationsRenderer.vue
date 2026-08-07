@@ -215,9 +215,16 @@ track('docs_page_view', {
 
 <template>
   <div ref="trackingRoot" class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
-    <div
+    <!-- Landmark de conteúdo (mesmo padrão do DocsPageLayout): as Foundations
+         não usam aquele layout, então o <main> é este wrapper — mesmas classes
+         e mesma posição na árvore, sem mudança visual. tabindex="-1" o mantém
+         fora da ordem de tabulação e aria-labelledby aponta para o <h1> abaixo
+         para o leitor anunciar "principal, <título da página>". -->
+    <main
       class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"
+      tabindex="-1"
+      aria-labelledby="docs-page-title"
     >
       <!-- Header -->
       <header class="nds-stack nds-pb-8">
@@ -243,7 +250,12 @@ track('docs_page_view', {
           </div>
         </div>
 
-        <h1 class="nds-text-h1 nds-text-foreground">
+        <!-- id estável: o <main> acima aponta para cá via aria-labelledby,
+             mesmo contrato do DocsHeader das docs pages de componente. -->
+        <h1
+          id="docs-page-title"
+          class="nds-text-h1 nds-text-foreground"
+        >
           {{ t('title') }}
         </h1>
 
@@ -521,6 +533,6 @@ track('docs_page_view', {
           </template>
         </div>
       </section>
-    </div>
+    </main>
   </div>
 </template>

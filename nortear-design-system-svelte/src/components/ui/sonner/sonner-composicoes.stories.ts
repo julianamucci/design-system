@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sonner/Composicoes',
   component: SonnerToastStory,
   tags: ['feedback'],
@@ -16,10 +16,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SonnerToastStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const WithDescription: Story = {
   render: () => ({

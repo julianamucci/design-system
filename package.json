@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "validate:docs": "npx tsx scripts/validate-docs-consistency.ts",
+    "audit:content": "node scripts/audit-translation-literals.mjs",
+    "core:pack": "npm pack ./docs/shared",
     "patches:list": "node scripts/list-patches.mjs",
     "dev:react": "npm run dev --prefix nortear-design-system-react",
     "dev:vue": "npm run dev --prefix nortear-design-system-vue",

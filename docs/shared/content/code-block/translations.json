@@ -282,7 +282,9 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "A raiz repassa os atributos HTML do elemento e aceita classes adicionais. Toda a aparência é controlada por custom properties declaradas na raiz — sobrescreva-as em uma classe própria em vez de redefinir cor ou espaçamento com seletor de descendente.",
-      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacao\"\n  footer={<span>Requer Node 20 ou superior.</span>}\n/>"
+      "extensibilityCode": {
+        "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacao\"\n  footer={<span>Requer Node 20 ou superior.</span>}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -383,7 +385,9 @@
         }
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": ".nds-code-block-root {\n  /* Altura máxima antes do scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de linha em outra cor semântica */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxe: sobrescreva só o que precisar */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      "customizationCode": {
+        "web": ".nds-code-block-root {\n  /* Altura máxima antes do scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de linha em outra cor semântica */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxe: sobrescreva só o que precisar */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -858,7 +862,9 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibility": "The root forwards the element's HTML attributes and accepts extra classes. The whole appearance is driven by custom properties declared on the root — override them in your own class instead of redefining color or spacing through descendant selectors.",
-      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"install-snippet\"\n  footer={<span>Requires Node 20 or later.</span>}\n/>"
+      "extensibilityCode": {
+        "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"install-snippet\"\n  footer={<span>Requires Node 20 or later.</span>}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -959,7 +965,9 @@
         }
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": ".nds-code-block-root {\n  /* Maximum height before vertical scrolling */\n  --code-block-max-block-size: 32rem;\n\n  /* Line highlight in another semantic color */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Syntax palette: override only what you need */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      "customizationCode": {
+        "web": ".nds-code-block-root {\n  /* Maximum height before vertical scrolling */\n  --code-block-max-block-size: 32rem;\n\n  /* Line highlight in another semantic color */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Syntax palette: override only what you need */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -1434,7 +1442,9 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "La raíz reenvía los atributos HTML del elemento y acepta clases adicionales. Toda la apariencia se controla con custom properties declaradas en la raíz — sobrescríbelas en una clase propia en vez de redefinir color o espaciado con selectores de descendiente.",
-      "extensibilityCode": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacion\"\n  footer={<span>Requiere Node 20 o superior.</span>}\n/>"
+      "extensibilityCode": {
+        "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacion\"\n  footer={<span>Requiere Node 20 o superior.</span>}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1535,7 +1545,9 @@
         }
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": ".nds-code-block-root {\n  /* Altura máxima antes del scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de línea en otro color semántico */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxis: sobrescribe solo lo necesario */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      "customizationCode": {
+        "web": ".nds-code-block-root {\n  /* Altura máxima antes del scroll vertical */\n  --code-block-max-block-size: 32rem;\n\n  /* Destaque de línea en otro color semántico */\n  --code-block-highlight-bg: hsl(var(--warning) / 0.16);\n  --code-block-highlight-accent: hsl(var(--warning));\n}\n\n/* Paleta de sintaxis: sobrescribe solo lo necesario */\n.dark .nds-code-block-root {\n  --code-token-comment: hsl(0 0% 74%);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

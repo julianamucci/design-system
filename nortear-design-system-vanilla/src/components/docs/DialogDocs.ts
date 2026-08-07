@@ -25,6 +25,7 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -32,10 +33,6 @@ const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>)
 const { t, subscribe } = createTranslation(dialogTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -290,7 +287,7 @@ export function createDialogDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDialogDemo({
                 triggerLabel: 'Editar perfil',
@@ -557,15 +554,15 @@ media.style.placeItems = 'center';
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),                trigger: stripHtml(t('states.closed.trigger')),                behavior: t('states.closed.behavior') },
-            { label: t('states.opening.label'),               trigger: t('states.opening.trigger'),                          behavior: stripHtml(t('states.opening.behavior')) },
-            { label: t('states.open.label'),                  trigger: stripHtml(t('states.open.trigger')),                  behavior: t('states.open.behavior') },
-            { label: t('states.closing.label'),               trigger: t('states.closing.trigger'),                          behavior: stripHtml(t('states.closing.behavior')) },
-            { label: t('states.withCloseButtonHidden.label'), trigger: stripHtml(t('states.withCloseButtonHidden.trigger')), behavior: t('states.withCloseButtonHidden.behavior') },
+            { label: t('states.closed.label'),                trigger: toPlainText(t('states.closed.trigger')),                behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.opening.label'),               trigger: toPlainText(t('states.opening.trigger')),                          behavior: toPlainText(t('states.opening.behavior')) },
+            { label: t('states.open.label'),                  trigger: toPlainText(t('states.open.trigger')),                  behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.closing.label'),               trigger: toPlainText(t('states.closing.trigger')),                          behavior: toPlainText(t('states.closing.behavior')) },
+            { label: t('states.withCloseButtonHidden.label'), trigger: toPlainText(t('states.withCloseButtonHidden.trigger')), behavior: toPlainText(t('states.withCloseButtonHidden.behavior'))},
           ],
         });
 
@@ -627,8 +624,8 @@ export interface DialogOptions {
               title: t('props.titleDescriptionTitle'),
               cols: propsCols,
               items: [
-                { name: 'title',       type: 'string', defaultValue: '—', required: 'Sim', description: stripHtml(t('props.table.children')) },
-                { name: 'description', type: 'string', defaultValue: '—', required: 'Não', description: stripHtml(t('props.table.children')) },
+                { name: 'title',       type: 'string', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
+                { name: 'description', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
               ],
             },
           ],
@@ -690,10 +687,10 @@ export interface DialogOptions {
           title: t('related.title'),
           items: [
             { name: 'AlertDialog', description: stripHtml(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
-            { name: 'Sheet',       description: t('related.sheet'),                  path: '?path=/docs/ui-sheet--docs'       },
-            { name: 'Popover',     description: t('related.popover'),                path: '?path=/docs/ui-popover--docs'     },
-            { name: 'Form',        description: t('related.form'),                   path: '?path=/docs/ui-form--docs'        },
-            { name: 'Drawer',      description: t('related.drawer'),                 path: '?path=/docs/ui-drawer--docs'      },
+            { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/ui-sheet--docs'       },
+            { name: 'Popover',     description: toPlainText(t('related.popover')),                path: '?path=/docs/ui-popover--docs'     },
+            { name: 'Form',        description: toPlainText(t('related.form')),                   path: '?path=/docs/ui-form--docs'        },
+            { name: 'Drawer',      description: toPlainText(t('related.drawer')),                 path: '?path=/docs/ui-drawer--docs'      },
           ],
         });
 
@@ -713,16 +710,16 @@ export interface DialogOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.open'),          trigger: t('analytics.table.openTrigger'),          payload: t('analytics.table.openPayload') },
-            { event: t('analytics.table.close'),         trigger: t('analytics.table.closeTrigger'),         payload: t('analytics.table.closePayload') },
-            { event: t('analytics.table.action'),        trigger: t('analytics.table.actionTrigger'),        payload: t('analytics.table.actionPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.open'),          trigger: toPlainText(t('analytics.table.openTrigger')),          payload: t('analytics.table.openPayload') },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload') },
+            { event: t('analytics.table.action'),        trigger: toPlainText(t('analytics.table.actionTrigger')),        payload: t('analytics.table.actionPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

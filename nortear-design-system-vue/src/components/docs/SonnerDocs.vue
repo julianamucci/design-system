@@ -26,17 +26,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(sonnerTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (sonnerTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -109,8 +117,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -252,22 +258,22 @@ const stateItems = computed(() => [
   {
     label:    tContent('states.items.withDescription.label'),
     trigger:  'toast.success(title, { description })',
-    behavior: tContent('states.items.withDescription.description'),
+    behavior: toPlainText(tContent('states.items.withDescription.description')),
   },
   {
     label:    tContent('states.items.withAction.label'),
     trigger:  'toast(title, { action: { label, onClick } })',
-    behavior: stripHtml(tContent('states.items.withAction.description')),
+    behavior: toPlainText(tContent('states.items.withAction.description')),
   },
   {
     label:    tContent('states.items.promise.label'),
     trigger:  'toast.promise(promise, { loading, success, error })',
-    behavior: tContent('states.items.promise.description'),
+    behavior: toPlainText(tContent('states.items.promise.description')),
   },
   {
     label:    tContent('states.items.persistent.label'),
     trigger:  'toast.error(title, { duration: Infinity })',
-    behavior: stripHtml(tContent('states.items.persistent.description')),
+    behavior: toPlainText(tContent('states.items.persistent.description')),
   },
 ]);
 
@@ -280,13 +286,13 @@ const propCols = computed(() => ({
 }));
 
 const toasterPropItems = computed(() => [
-  { name: 'position',     type: 'string',    defaultValue: '"bottom-right"', required: 'Não', description: stripHtml(tContent('props.table.position'))     },
+  { name: 'position',     type: 'string',    defaultValue: '"bottom-right"', required: 'Não', description: toPlainText(tContent('props.table.position'))     },
   { name: 'richColors',   type: 'boolean',   defaultValue: 'false',          required: 'Não', description: tContent('props.table.richColors')              },
   { name: 'expand',       type: 'boolean',   defaultValue: 'false',          required: 'Não', description: tContent('props.table.expand')                  },
   { name: 'duration',     type: 'number',    defaultValue: '4000',           required: 'Não', description: tContent('props.table.duration')                },
-  { name: 'theme',        type: 'string',    defaultValue: '"system"',       required: 'Não', description: stripHtml(tContent('props.table.theme'))        },
+  { name: 'theme',        type: 'string',    defaultValue: '"system"',       required: 'Não', description: toPlainText(tContent('props.table.theme'))        },
   { name: 'icons',        type: 'object',    defaultValue: '—',              required: 'Não', description: tContent('props.table.icons')                   },
-  { name: 'toastOptions', type: 'object',    defaultValue: '—',              required: 'Não', description: stripHtml(tContent('props.table.toastOptions')) },
+  { name: 'toastOptions', type: 'object',    defaultValue: '—',              required: 'Não', description: toPlainText(tContent('props.table.toastOptions')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -312,10 +318,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Alert',        description: tContent('related.alert'),        path: '?path=/docs/ui-alert--docs'        },
-  { name: 'AlertDialog',  description: tContent('related.alertDialog'),  path: '?path=/docs/ui-alertdialog--docs'  },
-  { name: 'Badge',        description: tContent('related.badge'),        path: '?path=/docs/ui-badge--docs'        },
-  { name: 'Progress',     description: tContent('related.progress'),     path: '?path=/docs/ui-progress--docs'     },
+  { name: 'Alert',        description: toPlainText(tContent('related.alert')),        path: '?path=/docs/ui-alert--docs'        },
+  { name: 'AlertDialog',  description: toPlainText(tContent('related.alertDialog')),  path: '?path=/docs/ui-alertdialog--docs'  },
+  { name: 'Badge',        description: toPlainText(tContent('related.badge')),        path: '?path=/docs/ui-badge--docs'        },
+  { name: 'Progress',     description: toPlainText(tContent('related.progress')),     path: '?path=/docs/ui-progress--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -327,10 +333,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.actionClick'),    trigger: tContent('analytics.table.actionClickTrigger'),    payload: tContent('analytics.table.actionClickPayload')    },
-  { event: tContent('analytics.table.pageView'),       trigger: tContent('analytics.table.pageViewTrigger'),       payload: tContent('analytics.table.pageViewPayload')       },
-  { event: tContent('analytics.table.sectionViewed'),  trigger: tContent('analytics.table.sectionViewedTrigger'),  payload: tContent('analytics.table.sectionViewedPayload')  },
-  { event: tContent('analytics.table.langSwitch'),     trigger: tContent('analytics.table.langSwitchTrigger'),     payload: tContent('analytics.table.langSwitchPayload')     },
+  { event: tContent('analytics.table.actionClick'),    trigger: toPlainText(tContent('analytics.table.actionClickTrigger')),    payload: tContent('analytics.table.actionClickPayload')    },
+  { event: tContent('analytics.table.pageView'),       trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),       payload: tContent('analytics.table.pageViewPayload')       },
+  { event: tContent('analytics.table.sectionViewed'),  trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),  payload: tContent('analytics.table.sectionViewedPayload')  },
+  { event: tContent('analytics.table.langSwitch'),     trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),     payload: tContent('analytics.table.langSwitchPayload')     },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -519,8 +525,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -696,6 +702,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -721,7 +729,7 @@ const visualTestItems = computed(() => [
       :description="tContent('analytics.description')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

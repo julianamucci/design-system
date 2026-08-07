@@ -30,7 +30,9 @@
       "item3": "<strong>AvatarFallback</strong> — conteúdo exibido quando a imagem falha ou demora a carregar. Pode ser iniciais ou ícone.",
       "item4": "<strong>Indicador de status (opcional)</strong> — elemento irmão posicionado absolutamente sobre o Avatar. Não é prop.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Avatar>                {/* Container circular */}\n  <AvatarImage />       {/* Imagem com alt */}\n  <AvatarFallback />    {/* Iniciais ou ícone */}\n</Avatar>"
+      "structureCode": {
+        "react": "<Avatar>                {/* Container circular */}\n  <AvatarImage />       {/* Imagem com alt */}\n  <AvatarFallback />    {/* Iniciais ou ícone */}\n</Avatar>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -210,7 +212,9 @@
         "avatarSize": "Largura e altura do avatar — var interna (padrão 32px)"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* Um tamanho fora da escala pré-definida, escopado ao contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      "customizationCode": {
+        "web": "/* Um tamanho fora da escala pré-definida, escopado ao contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -391,7 +395,9 @@
       "item3": "<strong>AvatarFallback</strong> — content displayed while the image loads or when it fails. Can be initials or an icon.",
       "item4": "<strong>Status indicator (optional)</strong> — a sibling element positioned absolutely over the Avatar. Not a prop.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Avatar>                {/* Circular container */}\n  <AvatarImage />       {/* Image with alt */}\n  <AvatarFallback />    {/* Initials or icon */}\n</Avatar>"
+      "structureCode": {
+        "react": "<Avatar>                {/* Circular container */}\n  <AvatarImage />       {/* Image with alt */}\n  <AvatarFallback />    {/* Initials or icon */}\n</Avatar>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -571,7 +577,9 @@
         "avatarSize": "Avatar width and height — internal var (default 32px)"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* A size outside the predefined scale, scoped to the context. */\n.dense-list .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      "customizationCode": {
+        "web": "/* A size outside the predefined scale, scoped to the context. */\n.dense-list .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -752,7 +760,9 @@
       "item3": "<strong>AvatarFallback</strong> — contenido mostrado mientras la imagen carga o cuando falla. Puede ser iniciales o un ícono.",
       "item4": "<strong>Indicador de estado (opcional)</strong> — elemento hermano posicionado absolutamente sobre el Avatar. No es prop.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Avatar>                {/* Contenedor circular */}\n  <AvatarImage />       {/* Imagen con alt */}\n  <AvatarFallback />    {/* Iniciales o ícono */}\n</Avatar>"
+      "structureCode": {
+        "react": "<Avatar>                {/* Contenedor circular */}\n  <AvatarImage />       {/* Imagen con alt */}\n  <AvatarFallback />    {/* Iniciales o ícono */}\n</Avatar>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -932,7 +942,9 @@
         "avatarSize": "Ancho y alto del avatar — var interna (por defecto 32px)"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Un tamaño fuera de la escala predefinida, con alcance al contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      "customizationCode": {
+        "web": "/* Un tamaño fuera de la escala predefinida, con alcance al contexto. */\n.lista-densa .nds-avatar {\n  --avatar-size: var(--spacing-6);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

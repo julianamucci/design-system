@@ -29,7 +29,9 @@
       "item4": "<strong>SliderRange</strong> (Indicator) — segmento preenchido entre os thumbs.",
       "item5": "<strong>SliderThumb</strong> — pegador individual com <code>role=\"slider\"</code> e <code>aria-valuenow</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (dois thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      "structureCode": {
+        "react": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (dois thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -257,7 +259,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Slider controlado com formatador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+      "extensibilityCode": {
+        "react": "// Slider controlado com formatador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -291,7 +295,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Tamanho customizado do Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Cor customizada do Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      "customizationCode": {
+        "web": "/* Tamanho customizado do Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Cor customizada do Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -481,7 +487,9 @@
       "item4": "<strong>SliderRange</strong> (Indicator) — filled segment between thumbs.",
       "item5": "<strong>SliderThumb</strong> — individual grabber with <code>role=\"slider\"</code> and <code>aria-valuenow</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (two thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      "structureCode": {
+        "react": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volume\"\n/>\n\n{/* Range (two thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -709,7 +717,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled Slider with value formatter\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+      "extensibilityCode": {
+        "react": "// Controlled Slider with value formatter\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volume</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volume\"\n  />\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -743,7 +753,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Custom Thumb size */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Custom Range color */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      "customizationCode": {
+        "web": "/* Custom Thumb size */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Custom Range color */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -933,7 +945,9 @@
       "item4": "<strong>SliderRange</strong> (Indicator) — segmento lleno entre los thumbs.",
       "item5": "<strong>SliderThumb</strong> — agarre individual con <code>role=\"slider\"</code> y <code>aria-valuenow</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volumen\"\n/>\n\n{/* Range (dos thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      "structureCode": {
+        "react": "<Slider\n  value={[50]}\n  onValueChange={setValue}\n  min={0}\n  max={100}\n  step={1}\n  aria-label=\"Volumen\"\n/>\n\n{/* Range (dos thumbs) */}\n<Slider\n  value={[20, 80]}\n  onValueChange={setRange}\n  min={0}\n  max={100}\n/>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1161,7 +1175,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Slider controlado con formateador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volumen</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volumen\"\n  />\n</div>"
+      "extensibilityCode": {
+        "react": "// Slider controlado con formateador de valor\nconst [value, setValue] = useState([50]);\n\n<div className=\"space-y-3\">\n  <div className=\"flex items-center justify-between\">\n    <Label>Volumen</Label>\n    <span aria-live=\"polite\" className=\"text-sm tabular-nums\">{value[0]}%</span>\n  </div>\n  <Slider\n    value={value}\n    onValueChange={setValue}\n    min={0}\n    max={100}\n    step={1}\n    aria-label=\"Volumen\"\n  />\n</div>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1195,7 +1211,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Tamaño personalizado del Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Color personalizado del Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      "customizationCode": {
+        "web": "/* Tamaño personalizado del Thumb */\n[data-slot=\"slider-thumb\"] {\n  width: 1rem;\n  height: 1rem;\n}\n\n/* Color personalizado del Range */\n.slider-success [data-slot=\"slider-range\"] {\n  @apply bg-green-500;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

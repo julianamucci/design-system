@@ -29,7 +29,11 @@ export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
           const trackId = componentSlug ? `${componentSlug}:link:notes-${i + 1}` : undefined;
           return (
             <div key={i} data-track="link" data-track-id={trackId}>
-              <Alert variant="default">
+              {/* role="note": as notas são conteúdo estático, já presente no
+                  carregamento. Com o `alert` default cada nota vira live
+                  region assertiva e o leitor de tela salta para cá assim que
+                  a página monta — era o bug em todas as docs pages. */}
+              <Alert variant="default" role="note">
                 {item.title && <AlertTitle>{item.title}</AlertTitle>}
                 <AlertDescription>
                   {/* O <p> é obrigatório: `.nds-alert-description` é `display:

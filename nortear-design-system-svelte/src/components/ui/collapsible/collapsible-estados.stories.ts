@@ -5,7 +5,7 @@ import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Collapsible/Estados',
   component: Collapsible,
   tags: ['disclosure'],
@@ -20,10 +20,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Collapsible>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Controlado: Story = {
   render: () => ({

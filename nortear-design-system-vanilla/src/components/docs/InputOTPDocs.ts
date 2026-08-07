@@ -27,17 +27,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (inputOtpTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(inputOtpTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -265,8 +272,8 @@ export function createInputOTPDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
@@ -283,8 +290,8 @@ export function createInputOTPDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-text-caption';
@@ -539,15 +546,15 @@ row.append(note, btn);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.empty.label'),    trigger: t('states.empty.trigger'),    behavior: stripHtml(t('states.empty.behavior')) },
-            { label: t('states.filling.label'),  trigger: t('states.filling.trigger'),  behavior: stripHtml(t('states.filling.behavior')) },
-            { label: t('states.complete.label'), trigger: t('states.complete.trigger'), behavior: stripHtml(t('states.complete.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.error.label'),    trigger: t('states.error.trigger'),    behavior: stripHtml(t('states.error.behavior')) },
+            { label: t('states.empty.label'),    trigger: toPlainText(t('states.empty.trigger')),    behavior: toPlainText(t('states.empty.behavior')) },
+            { label: t('states.filling.label'),  trigger: toPlainText(t('states.filling.trigger')),  behavior: toPlainText(t('states.filling.behavior')) },
+            { label: t('states.complete.label'), trigger: toPlainText(t('states.complete.trigger')), behavior: toPlainText(t('states.complete.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.error.label'),    trigger: toPlainText(t('states.error.trigger')),    behavior: toPlainText(t('states.error.behavior')) },
           ],
         });
 
@@ -619,16 +626,18 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
-            { key: 'Tab',         description: stripHtml(t('accessibility.keyboard.tab'))       },
-            { key: 'Arrow Left / Arrow Right',       description: stripHtml(t('accessibility.keyboard.arrows'))    },
-            { key: 'Backspace',   description: stripHtml(t('accessibility.keyboard.backspace')) },
-            { key: 'Ctrl/Cmd+V',  description: stripHtml(t('accessibility.keyboard.paste'))     },
-            { key: '0-9',         description: stripHtml(t('accessibility.keyboard.digit'))     },
+            { key: 'Tab',         description: toPlainText(t('accessibility.keyboard.tab'))       },
+            { key: 'Arrow Left / Arrow Right',       description: toPlainText(t('accessibility.keyboard.arrows'))    },
+            { key: 'Backspace',   description: toPlainText(t('accessibility.keyboard.backspace')) },
+            { key: 'Ctrl/Cmd+V',  description: toPlainText(t('accessibility.keyboard.paste'))     },
+            { key: '0-9',         description: toPlainText(t('accessibility.keyboard.digit'))     },
           ],
         });
 
@@ -636,10 +645,10 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.input.name'),  description: t('related.items.input.description'),  path: '?path=/docs/ui-input--docs'  },
-            { name: t('related.items.form.name'),   description: t('related.items.form.description'),   path: '?path=/docs/ui-form--docs'   },
-            { name: t('related.items.label.name'),  description: t('related.items.label.description'),  path: '?path=/docs/ui-label--docs'  },
-            { name: t('related.items.button.name'), description: t('related.items.button.description'), path: '?path=/docs/ui-button--docs' },
+            { name: t('related.items.input.name'),  description: toPlainText(t('related.items.input.description')),  path: '?path=/docs/ui-input--docs'  },
+            { name: t('related.items.form.name'),   description: toPlainText(t('related.items.form.description')),   path: '?path=/docs/ui-form--docs'   },
+            { name: t('related.items.label.name'),  description: toPlainText(t('related.items.label.description')),  path: '?path=/docs/ui-label--docs'  },
+            { name: t('related.items.button.name'), description: toPlainText(t('related.items.button.description')), path: '?path=/docs/ui-button--docs' },
           ],
         });
 

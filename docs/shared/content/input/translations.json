@@ -36,7 +36,9 @@
       "item3": "<strong>placeholder</strong> — exemplo do formato esperado, nunca instrução. Nunca substitui o Label.",
       "item4": "<strong>Label (externo)</strong> — rótulo associado via <code>htmlFor</code> ou via <code>FormLabel</code> dentro de <code>FormField</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>"
+      "structureCode": {
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -460,7 +462,9 @@
       "item3": "<strong>placeholder</strong> — example of the expected format, never an instruction. Never replaces Label.",
       "item4": "<strong>Label (external)</strong> — associated via <code>htmlFor</code> or via <code>FormLabel</code> inside <code>FormField</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>"
+      "structureCode": {
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -884,7 +888,9 @@
       "item3": "<strong>placeholder</strong> — ejemplo del formato esperado, nunca una instrucción. Nunca reemplaza al Label.",
       "item4": "<strong>Label (externo)</strong> — rótulo asociado vía <code>htmlFor</code> o vía <code>FormLabel</code> dentro de <code>FormField</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>"
+      "structureCode": {
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

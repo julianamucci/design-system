@@ -29,7 +29,9 @@
       "item5": "<strong>Day</strong> — cada célula do grid é um <code>Button</code> ghost com estado selected/today/outside/disabled.",
       "item6": "<strong>DayButton</strong> — botão interno da célula; recebe foco por teclado e dispara <code>onSelect</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback com o valor novo */}\n  locale={ptBR}                  {/* react-day-picker/locale */}\n/>"
+      "structureCode": {
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback com o valor novo */}\n  locale={ptBR}                  {/* react-day-picker/locale */}\n/>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -245,7 +247,9 @@
         "cellSize": "Tamanho da célula (variável local <code>--nds-cell-size</code>)"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* Células maiores para telas touch, sem tocar na escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      "customizationCode": {
+        "web": "/* Células maiores para telas touch, sem tocar na escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -468,7 +472,9 @@
       "item5": "<strong>Day</strong> — each grid cell is a ghost <code>Button</code> with selected/today/outside/disabled states.",
       "item6": "<strong>DayButton</strong> — cell inner button; receives keyboard focus and fires <code>onSelect</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback with new value */}\n  locale={enUS}                  {/* react-day-picker/locale */}\n/>"
+      "structureCode": {
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback with new value */}\n  locale={enUS}                  {/* react-day-picker/locale */}\n/>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -684,7 +690,9 @@
         "cellSize": "Cell size (local <code>--nds-cell-size</code> variable)"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Larger cells for touch screens, without touching the global scale. */\n.touch-agenda .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      "customizationCode": {
+        "web": "/* Larger cells for touch screens, without touching the global scale. */\n.touch-agenda .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -907,7 +915,9 @@
       "item5": "<strong>Day</strong> — cada celda del grid es un <code>Button</code> ghost con estado selected/today/outside/disabled.",
       "item6": "<strong>DayButton</strong> — botón interno de la celda; recibe foco por teclado y dispara <code>onSelect</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback con el valor nuevo */}\n  locale={es}                    {/* react-day-picker/locale */}\n/>"
+      "structureCode": {
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback con el valor nuevo */}\n  locale={es}                    {/* react-day-picker/locale */}\n/>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1123,7 +1133,9 @@
         "cellSize": "Tamaño de celda (variable local <code>--nds-cell-size</code>)"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Celdas más grandes para pantallas táctiles, sin tocar la escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      "customizationCode": {
+        "web": "/* Celdas más grandes para pantallas táctiles, sin tocar la escala global. */\n.agenda-touch .nds-calendar-root {\n  --nds-cell-size: 2.5rem;\n  --nds-cell-radius: var(--radius-sm);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

@@ -7,6 +7,7 @@ import { createLabel } from '@/components/ui/label';
 import { createInput } from '@/components/ui/input';
 import uiTranslations from '@/i18n/ui.json';
 import labelTranslations from '@shared/content/label/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -30,6 +31,16 @@ import {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (labelTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(labelTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -256,8 +267,8 @@ export function createLabelDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
@@ -281,8 +292,8 @@ export function createLabelDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack nds-w-full nds-max-w-xs';
@@ -339,24 +350,24 @@ export function createLabelDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
             {
               label: t('states.default.label'),
-              trigger: t('states.default.trigger'),
-              behavior: t('states.default.behavior'),
+              trigger: toPlainText(t('states.default.trigger')),
+              behavior: toPlainText(t('states.default.behavior')),
             },
             {
               label: t('states.disabled.label'),
-              trigger: DOMPurify.sanitize(t('states.disabled.trigger')),
-              behavior: DOMPurify.sanitize(t('states.disabled.behavior')),
+              trigger: toPlainText(t('states.disabled.trigger')),
+              behavior: toPlainText(t('states.disabled.behavior')),
             },
             {
               label: t('states.required.label'),
-              trigger: t('states.required.trigger'),
-              behavior: DOMPurify.sanitize(t('states.required.behavior')),
+              trigger: toPlainText(t('states.required.trigger')),
+              behavior: toPlainText(t('states.required.behavior')),
             },
           ],
         });
@@ -414,6 +425,8 @@ export function createLabelDocs(): HTMLElement {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -433,11 +446,11 @@ export function createLabelDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Input',      description: t('related.input'),      path: '?path=/docs/ui-input--docs' },
-            { name: 'Checkbox',   description: t('related.checkbox'),   path: '?path=/docs/ui-checkbox--docs' },
-            { name: 'FormLabel',  description: t('related.formLabel'),  path: '?path=/docs/ui-form--docs' },
-            { name: 'FormField',  description: t('related.formField'),  path: '?path=/docs/ui-form--docs' },
-            { name: 'RadioGroup', description: t('related.radioGroup'), path: '?path=/docs/ui-radiogroup--docs' },
+            { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/ui-input--docs' },
+            { name: 'Checkbox',   description: toPlainText(t('related.checkbox')),   path: '?path=/docs/ui-checkbox--docs' },
+            { name: 'FormLabel',  description: toPlainText(t('related.formLabel')),  path: '?path=/docs/ui-form--docs' },
+            { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/ui-form--docs' },
+            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs' },
           ],
         });
 
@@ -462,7 +475,7 @@ export function createLabelDocs(): HTMLElement {
           items: [
             {
               event: 'docs_page_view',
-              trigger: t('analytics.description'),
+              trigger: toPlainText(t('analytics.description')),
               payload: "{ component_name: 'label', locale }",
             },
             {

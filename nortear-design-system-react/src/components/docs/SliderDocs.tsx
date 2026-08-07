@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -77,7 +74,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 // ─── Demo helpers ────────────────────────────────────────────────────────────
 
@@ -236,6 +232,19 @@ function FormCompDemo() {
 export function SliderDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(sliderTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (sliderTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -491,8 +500,8 @@ interface SliderProps {
                 <Slider defaultValue={[75]} min={0} max={100} aria-label="Volume" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -507,8 +516,8 @@ interface SliderProps {
                 <Slider defaultValue={[50]} min={0} max={100} aria-label="Slider" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -640,34 +649,34 @@ interface SliderProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.active.label"),
-            trigger: tContent("states.active.trigger"),
-            behavior: stripHtml(tContent("states.active.behavior")),
+            trigger: toPlainText(tContent("states.active.trigger")),
+            behavior: toPlainText(tContent("states.active.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
         ]}
       />
@@ -814,6 +823,8 @@ interface SliderProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -827,14 +838,14 @@ interface SliderProps {
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
           { key: "Tab",         description: tContent("accessibility.keyboard.tab") },
-          { key: "Arrow Right",  description: stripHtml(tContent("accessibility.keyboard.arrowRight")) },
-          { key: "Arrow Left",   description: stripHtml(tContent("accessibility.keyboard.arrowLeft")) },
-          { key: "Arrow Up",     description: stripHtml(tContent("accessibility.keyboard.arrowUp")) },
-          { key: "Arrow Down",   description: stripHtml(tContent("accessibility.keyboard.arrowDown")) },
-          { key: "Home",        description: stripHtml(tContent("accessibility.keyboard.home")) },
-          { key: "End",         description: stripHtml(tContent("accessibility.keyboard.end")) },
-          { key: "PageUp",      description: stripHtml(tContent("accessibility.keyboard.pageUp")) },
-          { key: "PageDown",    description: stripHtml(tContent("accessibility.keyboard.pageDown")) },
+          { key: "Arrow Right",  description: toPlainText(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left",   description: toPlainText(tContent("accessibility.keyboard.arrowLeft")) },
+          { key: "Arrow Up",     description: toPlainText(tContent("accessibility.keyboard.arrowUp")) },
+          { key: "Arrow Down",   description: toPlainText(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Home",        description: toPlainText(tContent("accessibility.keyboard.home")) },
+          { key: "End",         description: toPlainText(tContent("accessibility.keyboard.end")) },
+          { key: "PageUp",      description: toPlainText(tContent("accessibility.keyboard.pageUp")) },
+          { key: "PageDown",    description: toPlainText(tContent("accessibility.keyboard.pageDown")) },
         ]}
       />
 
@@ -845,22 +856,22 @@ interface SliderProps {
         items={[
           {
             name: tContent("related.items.input.name"),
-            description: tContent("related.items.input.description"),
+            description: toPlainText(tContent("related.items.input.description")),
             path: "?path=/docs/ui-input--docs",
           },
           {
             name: tContent("related.items.switch.name"),
-            description: tContent("related.items.switch.description"),
+            description: toPlainText(tContent("related.items.switch.description")),
             path: "?path=/docs/ui-switch--docs",
           },
           {
             name: tContent("related.items.progress.name"),
-            description: tContent("related.items.progress.description"),
+            description: toPlainText(tContent("related.items.progress.description")),
             path: "?path=/docs/ui-progress--docs",
           },
           {
             name: tContent("related.items.radioGroup.name"),
-            description: tContent("related.items.radioGroup.description"),
+            description: toPlainText(tContent("related.items.radioGroup.description")),
             path: "?path=/docs/ui-radiogroup--docs",
           },
         ]}
@@ -883,7 +894,7 @@ interface SliderProps {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[

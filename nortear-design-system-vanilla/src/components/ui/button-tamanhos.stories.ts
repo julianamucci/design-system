@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
@@ -5,6 +6,7 @@ import { createButton, createButtonIcon } from './button';
 const meta: Meta = {
   tags: ['form'],
   parameters: {
+    design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -16,11 +18,26 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => createButton({ size: 'default', label: 'Padrão' }),
-  parameters: { docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } } },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } },
+  },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /padrão/i });
+    await expect(btn).toHaveClass('nds-button');
+    await expect(btn).not.toHaveClass('nds-button-xs');
+    await expect(btn).not.toHaveClass('nds-button-sm');
+    await expect(btn).not.toHaveClass('nds-button-lg');
+  },
+};
+
+export const ExtraSmall: Story = {
+  render: () => createButton({ size: 'xs', label: 'Mínimo' }),
+  parameters: { docs: { description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' } } },
+  play: async ({ canvasElement }) => {
+    const btn = within(canvasElement).getByRole('button', { name: /mínimo/i });
+    await expect(btn).toHaveClass('nds-button-xs');
   },
 };
 
@@ -29,8 +46,8 @@ export const Small: Story = {
   parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /pequeno/i });
+    await expect(btn).toHaveClass('nds-button-sm');
   },
 };
 
@@ -39,8 +56,8 @@ export const Large: Story = {
   parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
 
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const btn = within(canvasElement).getByRole('button', { name: /grande/i });
+    await expect(btn).toHaveClass('nds-button-lg');
   },
 };
 
@@ -58,7 +75,20 @@ export const Icon: Story = {
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } } },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4'],
+    docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
+  },
+  play: iconAriaLabelPlay,
+};
+
+export const IconExtraSmall: Story = {
+  render: () => {
+    const btn = createButton({ size: 'icon-xs', ariaLabel: 'Adicionar item' });
+    btn.appendChild(createButtonIcon('plus'));
+    return btn;
+  },
+  parameters: { docs: { description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' } } },
   play: iconAriaLabelPlay,
 };
 

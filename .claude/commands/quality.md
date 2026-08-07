@@ -61,6 +61,9 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `play_nao_idempotente` | clique seguido de asserção de estado no MESMO alvo. O painel Interactions reexecuta a play no mesmo DOM: na segunda rodada o clique parte do estado que a primeira deixou e inverte o resultado. O vitest remonta a cada teste, então a suíte fica verde enquanto o painel falha — é defeito que só regra pega |
+| `document_lang_so_no_pai` · `document_lang_ausente` | `useSeoEffect` escreve `documentElement.lang` só no documento pai (ou não escreve). Sai sob `_infra`: é regra de presença, e o alvo é o hook, não a página. O leitor de tela lê o iframe — sem isso, o idioma anunciado é o do template do Storybook |
+| `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
 | `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |
 | `static_source_code` | `docs.source.code` fixo — snippet não acompanha os controls |
@@ -134,6 +137,135 @@ Após coletar, **não releia** nada nos passos seguintes.
 - Sub-stories (estados, modos, composições): no mínimo um teste de "renderiza e responde a interação básica"
 - Composições com ícones/badges: testar acessibilidade via `getByRole("button", { name: /text/ })` (validando que o texto, não o ícone, é a label acessível)
 
+**2e2. A asserção pode estar guardando o BUG.** Uma story verde não prova que o
+comportamento está certo — pode estar afirmando o defeito. Rejeite:
+- asserção que passa **por causa** da falha (ex.: verificar que o diálogo
+  continua no DOM depois de confirmar);
+- comentário documentando limitação de lib como se fosse contrato — limitação
+  aceita em silêncio vira contrato por omissão. Se existir, exija item
+  correspondente no `FIXES-NEEDED.md`;
+- spy (`fn()`) criado **dentro** do `render`: é inalcançável pelo `play` e
+  deixa a aba Actions vazia. Tem que ser de escopo de módulo;
+- story cujo propósito é um estado visual e cuja `play` termina em outro
+  estado — o Chromatic fotografa o final (ex.: `Open` que fecha no fim).
+
+**2e2b. A play tem que sobreviver ao REPLAY.** O painel Interactions reexecuta
+a play no **mesmo DOM** — não remonta. O vitest remonta a cada teste, então a
+suíte verde não prova nada aqui: o defeito só aparece em quem aperta replay.
+
+Regra: **cada passo estabelece a própria precondição**. Nada de assumir o que o
+passo anterior deixou, e muito menos o estado de montagem.
+
+- Clique que leva a um estado → par idempotente, que só clica se o estado atual
+  não for o desejado:
+  ```ts
+  const abrir  = async (t: HTMLElement) => {
+    if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+    await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+  };
+  ```
+- Passo que precisa provar que o **clique aconteceu** (callback, aba Actions):
+  `fechar(x)` e depois `abrir(x)` — o par garante um clique real nesta rodada.
+- Tecla que alterna (Enter, Space): estabeleça o estado oposto antes.
+- Asserção que **só vale na montagem** (`defaultValue`, `defaultOpen`, foco
+  inicial) não pertence a uma story que interage — nenhum replay a alcança.
+  Mora numa story sem interação, e é lá que o item do contrato é declarado.
+- **Estado transitório é exceção**: classe de animação de entrada some sozinha
+  em segundos, então nem uma story sem interação a alcança no replay. Aí a play
+  **provoca a montagem** — no alert, fechar remonta o componente, e é no nó novo
+  que a asserção roda. Limpe o spy depois do preparo, senão a contagem do
+  "disparado uma única vez" passa a mentir.
+- Clique em elemento desabilitado é exceção legítima: ele não muda de estado em
+  rodada nenhuma.
+
+**Não deixe o spy receber o objeto de evento da lib.** `onValueChange` do base-ui
+entrega `(value, eventDetails)`, e a aba Actions serializa o payload: dentro do
+`eventDetails` vem o evento nativo, `event.view` é o `Window` do iframe e a
+serialização estoura `SecurityError`, que aparece como "unhandled error" na play
+e contamina o resultado. No `render`, encaminhe só o valor:
+`onValueChange={(value) => onValueChange?.(value)}`.
+
+**2e3. Confira o comportamento na FONTE da lib, não na documentação.** Quando
+o texto e a implementação divergirem, a implementação costuma estar certa e o
+texto desatualizado. Verifique no `node_modules` antes de "corrigir" o código —
+e antes de propor mudança no conteúdo compartilhado, confirme se a afirmação é
+falsa nas 4 stacks ou se é divergência idiomática de uma lib (aí o texto vira
+API-neutro, não é apagado).
+
+**2e4. Animação nos testes.** O browser dos testes roda COM animação, como o
+Storybook — a emulação de `prefers-reduced-motion` foi removida justamente
+porque deixava o CI verde escondendo asserção racy.
+
+Asserção de visibilidade, foco pós-abertura ou remoção em elemento animado
+espera a animação. Prefira o helper da stack (`src/lib/wait-for-portal.ts`:
+`waitForPortal` / `waitForPortalGone`), que gateia na **opacidade computada**
+antes de qualquer asserção — resolve a família inteira de overlays em vez de
+caso a caso. Onde não houver portal, `waitFor`.
+
+NÃO envolva o que é síncrono (foco por Tab, restauração de foco ao fechar):
+`waitFor` indiscriminado mascara bug de foco real.
+
+Cuidado ao concluir "passou": `toBeVisible()` do jest-dom só reprova em
+opacidade **exatamente** 0 — asserção racy costuma passar no vitest e falhar no
+painel Interactions.
+
+**2e5. Teste vermelho: o componente é o suspeito, não a asserção.** Nesta
+revisão, em toda família de overlay do Svelte o teste estava certo e o
+componente incompleto — role ausente, prop inexistente sendo ignorada, classe
+morta. Antes de mexer na asserção:
+
+1. Confira a API real da lib em `node_modules/<lib>/**/types.d.ts`. Prop que não
+   existe é aceita e ignorada em silêncio.
+2. Compare o DOM renderizado com o do **Vanilla** (referência cross-stack).
+3. Só então conclua que a asserção estava errada — e diga por quê no comentário.
+
+Afrouxar a asserção "resolve" o vermelho e mantém o defeito: foi o que teria
+acontecido com um contraste de 1.1:1, um `aria-label` em inglês e três overlays
+sem `role`.
+
+**Nunca asserte classe morta** (sem prefixo `nds-`): a asserção não protege nada
+e desaparece junto com o bug. Asserte comportamento.
+
+**2e6. Prop que uma stack não expõe não é contrato — é sobra.** `export_sem_story`
+pega a peça que ninguém renderiza, mas não pega a PROP que ninguém passa: ela
+mora dentro de um arquivo que outras stories cobrem. Para cada prop pública do
+componente, pergunte duas coisas:
+
+1. **As quatro stacks expõem?** Ausente no Vanilla é o sinal mais forte — ele é a
+   referência, e o que ele não tem não é contrato do design system.
+2. **Alguma story passa?** Prop que nenhuma story exercita e nenhum
+   `translations.json` documenta está no mesmo estado da peça sem story.
+
+Foi assim que o `data-size="sm"` do alert-dialog sobreviveu: CSS completo, prop
+em React, Vue e Svelte, zero no Vanilla, zero stories, zero documentação. A saída
+é sempre uma das duas — **entregar** (implementar na stack que falta, criar a
+composição, documentar) ou **remover**. Deixar como está é manter promessa que o
+produto não cumpre.
+
+**2f0. Cobertura por CONTRATO (é a garantia real)**:
+
+Contagem de asserção é proxy ruim — 12 numa stack e 21 em outra passaram
+despercebidas. A garantia é cada story declarar QUAIS itens de `testes.*` do
+`translations.json` ela verifica:
+
+```ts
+parameters: {
+  covers: ['functional.item2', 'accessibility.item5'],
+  // item que não se aplica à stack: declare o motivo, nunca omita
+  coversNotApplicable: { 'functional.item7': 'a factory não expõe open' },
+}
+```
+
+`audit.mjs` cobra três coisas: `contract_uncovered` (item documentado que
+ninguém verifica), `contract_divergent` (coberto numa stack e não em outra) e
+`contract_unknown_id` (id que não existe — pega typo, que seria cobertura
+fantasma). **É opt-in por componente**: fica calado até a primeira story
+declarar. `node scripts/audit.mjs --contract-status` mostra a adoção.
+
+Ao auditar um componente, **adote o contrato nele** — mapeie o que cada story
+realmente assere, cubra o que faltar e declare o resto com motivo. Declarar o
+que não é verificado é pior que não declarar: o auditor passa a mentir.
+
 **2f. Cobertura equivalente entre as 4 stacks**:
 Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:
 
@@ -142,6 +274,64 @@ Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack tes
 | ConteudoRico | 5 | 1 | 1 | 1 | ← divergência: as 3 são placeholder |
 
 Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 4 — a verificação também deve ser.
+
+**2f2. Cobertura de código — mede o que o contrato não mede**:
+
+Contrato e cobertura respondem perguntas diferentes. O contrato responde "o que
+está documentado tem alguém verificando?"; a cobertura responde "quantos
+caminhos do código as stories realmente percorrem?". Um componente pode estar
+16/16 no contrato e a 50% de ramos — foi o caso do button no Svelte, com 95% de
+linhas e 100% de funções.
+
+Rode por componente, nas 4 stacks:
+
+```bash
+# de dentro de cada nortear-design-system-<stack>
+npx vitest run --coverage <slug>
+# → coverage/coverage-summary.json  (totais por arquivo)
+```
+
+**A suíte inteira não serve.** O vitest não emite relatório nenhum quando
+qualquer teste falha — verificado com uma fatia de 4 arquivos e 2 falhas, que
+não gerou nada, contra a mesma fatia verde, que gerou. Enquanto houver backlog
+aberto (tooltip/drawer/sheet), `npm run test:coverage` volta vazio. Por
+componente contorna e ainda é o recorte que interessa aqui.
+
+Do `coverage-summary.json`, some só os arquivos DO componente: a rodada mede a
+stack toda e os demais saem 0% apenas porque as stories deles não rodaram.
+
+**0% num arquivo DO componente é achado, não estatística.** Depois do recorte
+acima, 0% de linhas significa que nenhuma story renderiza aquele arquivo — peça
+que existe no código e não existe no produto. Não agregue com o resto: reporte o
+arquivo pelo nome e vá conferir se ela é entregue nas outras stacks e se o
+`translations.json` a documenta. O `AlertDialogMedia` apareceu exatamente assim
+(`alertdialogmedia.vue 0%`, `alert-dialog-media.svelte 0%`) e passou batido por
+ter sido lido como média da stack. A regra `export_sem_story` pega o mesmo caso
+em milissegundos, sem rodar suíte; a cobertura é a confirmação.
+
+Thresholds do projeto: **linhas 90 · funções 90 · ramos 80**.
+
+**Feche os ramos que faltam.** Linha e função descoberta quase sempre é código
+morto ou story ausente; **ramo** descoberto é caminho condicional que ninguém
+exercita — `v-if` testado num sentido só, prop opcional nunca passada, early
+return nunca disparado. Para cada ramo descoberto:
+
+1. Abra `coverage/<arquivo>.html` (ou o `coverage-final.json`) e identifique a
+   condição.
+2. Se o caminho é alcançável pela API pública, **escreva a story ou o step que
+   o exercita** — nas 4 stacks, senão vira `coverage_divergence`.
+3. Se não é alcançável (guarda defensiva, branch de tipo que o TS já garante,
+   ramo exclusivo de SSR), **declare o motivo** num comentário na linha, no
+   mesmo espírito do `coversNotApplicable`:
+
+```ts
+/* c8 ignore next 3 -- guarda de protocolo: só alcançável com href externo
+   inválido, que o tipo já impede no call site */
+```
+
+A meta é **100% do que pode ser testado**, com o resto declarado. Ramo
+descoberto e silencioso é o mesmo defeito da asserção vazia: parece coberto e
+não é. Nunca baixe o threshold para o número passar.
 
 **2g. a11y.disable**: nenhuma story sem comentário de justificativa.
 
@@ -206,6 +396,22 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 - Links externos: `target="_blank" rel="noopener noreferrer"`
 - Toda âncora do `DocsNav` tem `<section id="...">`
 
+**3e2. Leitor de tela** — nada aqui falha em teste ou axe; só aparece no NVDA:
+- Um `<main tabindex="-1" aria-labelledby="<id do h1>">` por página, inclusive
+  nas de layout próprio (foundations, catálogos). Zero `<main>` aninhado.
+- Nenhuma live region (`role="alert"`, `aria-live`) em conteúdo estático.
+- Clicar num item do `DocsNav` move o foco para a seção, não só rola.
+- Snippet renderizado como HTML não pode virar controle real: procure
+  `<select>`/`<textarea>`/`<input>` vindos de string de código ou de prosa.
+- **Idioma do documento QUE O LEITOR LÊ.** Dentro do Storybook é o `iframe.html`,
+  não o manager. `useSeoEffect` escreve metatag no documento pai — correto para
+  SEO, insuficiente para `lang`: o iframe fica no `lang="en"` do template e a
+  prosa em português sai com pronúncia inglesa (WCAG 3.1.1, **nível A**).
+  A regra `document_lang_so_no_pai` cobre o mecanismo; aqui julgue o resto —
+  trecho em outro idioma marcado com `lang` (3.1.2, AA) onde a voz erra de fato,
+  e **não** em empréstimo já absorvido (`menu`, `link`, `card`), que só deixa a
+  fala picotada. Ver `01-acessibilidade.md` §"Idioma do documento".
+
 **3f. Tokenização** (do Grep do Passo 1): zero `h-5` a `h-12` / `size-5` a `size-10` em UI primitives. Exceções: `[&_svg]:size-4`, `min-h-16`, `px/gap/py-*`. Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
 **3g. Tipografia + tabelas** (do Grep do Passo 1): zero `text-[9px]`/`text-[10px]` em corpo, zero tabelas dentro de `<ComponentDemo>`, zero wrappers com `overflow-hidden` (correto: `border rounded-xl overflow-x-auto p-4 shadow-sm`).
@@ -224,6 +430,13 @@ Nenhum check anterior ligava os dois artefatos, e eles divergiram em silêncio: 
 ### Passo 4 — Identificar gaps + corrigir
 
 Para gaps diretos (adicionar play function, corrigir classe): corrija. Para gaps de criação inteira: descreva e crie se for parte do escopo do `stack`.
+
+**Ao corrigir texto compartilhado**: varra TODAS as chaves pela afirmação
+errada e confira **quais o container realmente renderiza** — chave não
+consumida é correção que não chega ao usuário. Inclua `seo.*` na varredura.
+
+**Story nova quebra paridade**: criar story só numa stack gera
+`coverage_divergence`. Ou nasce nas 4, ou vira item do `FIXES-NEEDED.md`.
 
 ---
 
@@ -274,6 +487,18 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | testes.visual.item* → story existe | ✅ N/N | ✅ N/N | ✅ N/N | ✅ N/N |
 
 > Use ratio `cobertos/total documentados` para mostrar progresso.
+
+### Cobertura de Código (`vitest run --coverage <slug>`)
+| Métrica | React | Vue | Svelte | Vanilla |
+|---|---|---|---|---|
+| Linhas (≥90) | N% | N% | N% | N% |
+| Funções (≥90) | N% | N% | N% | N% |
+| Ramos (≥80) | N% | N% | N% | N% |
+| Ramos descobertos ainda abertos | 0 | 0 | 0 | 0 |
+
+> Última linha é o que importa: 0 significa "todo caminho alcançável tem teste,
+> o resto está declarado com `c8 ignore` e motivo". Diferente de 0 → liste cada
+> um em Gaps com o arquivo:linha e por que não foi fechado.
 
 ### Docs Page
 | Check | React | Vue | Svelte | Vanilla |

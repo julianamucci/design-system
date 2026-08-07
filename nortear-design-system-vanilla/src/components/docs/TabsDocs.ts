@@ -26,17 +26,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (tabsTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(tabsTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -303,8 +310,8 @@ export function createTabsDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
@@ -333,8 +340,8 @@ export function createTabsDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'profile',
@@ -600,15 +607,15 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),  trigger: t('states.default.trigger'),  behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.active.label'),   trigger: t('states.active.trigger'),   behavior: stripHtml(t('states.active.behavior')) },
-            { label: t('states.hover.label'),    trigger: t('states.hover.trigger'),    behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),    trigger: t('states.focus.trigger'),    behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.disabled.label'), trigger: t('states.disabled.trigger'), behavior: stripHtml(t('states.disabled.behavior')) },
+            { label: t('states.default.label'),  trigger: toPlainText(t('states.default.trigger')),  behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.active.label'),   trigger: toPlainText(t('states.active.trigger')),   behavior: toPlainText(t('states.active.behavior')) },
+            { label: t('states.hover.label'),    trigger: toPlainText(t('states.hover.trigger')),    behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),    trigger: toPlainText(t('states.focus.trigger')),    behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')), behavior: toPlainText(t('states.disabled.behavior')) },
           ],
         });
 
@@ -647,14 +654,14 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
               title: 'createTabs(options)',
               cols: propsCols,
               items: [
-                { name: 'defaultValue', type: 'string',                       defaultValue: '—',         required: 'Sim', description: stripHtml(t('props.table.defaultValue.description')) },
+                { name: 'defaultValue', type: 'string',                       defaultValue: '—',         required: 'Sim', description: toPlainText(t('props.table.defaultValue.description')) },
                 { name: 'items',        type: 'TabsItemDef[]',                defaultValue: '—',         required: 'Sim', description: 'Lista de tabs (value, label, content e disabled opcional).' },
-                { name: 'onValueChange', type: '(value: string) => void',     defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.onValueChange.description')) },
-                { name: 'class',        type: 'string',                       defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.className.description')) },
-                { name: 'value',        type: 'string',                       defaultValue: '—',         required: 'Não', description: stripHtml(t('props.table.value.description')) + DIVERGENCE },
-                { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: stripHtml(t('props.table.orientation.description')) + DIVERGENCE },
-                { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: stripHtml(t('props.table.activationMode.description')) + ' Nortear: apenas "automatic" implementado.' },
-                { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: stripHtml(t('props.table.variant.description')) + DIVERGENCE },
+                { name: 'onValueChange', type: '(value: string) => void',     defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
+                { name: 'class',        type: 'string',                       defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className.description')) },
+                { name: 'value',        type: 'string',                       defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.value.description')) + DIVERGENCE },
+                { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: toPlainText(t('props.table.orientation.description')) + DIVERGENCE },
+                { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: toPlainText(t('props.table.activationMode.description')) + ' Nortear: apenas "automatic" implementado.' },
+                { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant.description')) + DIVERGENCE },
               ],
             },
             {
@@ -698,6 +705,8 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -717,8 +726,8 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             { key: 'Arrow Up',     description: t('accessibility.keyboard.arrowUp') },
             { key: 'Home',  description: t('accessibility.keyboard.home') },
             { key: 'End',   description: t('accessibility.keyboard.end') },
-            { key: 'Enter', description: stripHtml(t('accessibility.keyboard.enter')) },
-            { key: 'Space', description: stripHtml(t('accessibility.keyboard.space')) },
+            { key: 'Enter', description: toPlainText(t('accessibility.keyboard.enter')) },
+            { key: 'Space', description: toPlainText(t('accessibility.keyboard.space')) },
           ],
         });
 
@@ -726,10 +735,10 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: t('related.items.stepper.name'),     description: t('related.items.stepper.description'),     path: '?path=/docs/ui-stepper--docs' },
-            { name: t('related.items.accordion.name'),   description: t('related.items.accordion.description'),   path: '?path=/docs/ui-accordion--docs' },
-            { name: t('related.items.sidebar.name'),     description: t('related.items.sidebar.description'),     path: '?path=/docs/ui-sidebar--docs' },
-            { name: t('related.items.toggleGroup.name'), description: t('related.items.toggleGroup.description'), path: '?path=/docs/ui-togglegroup--docs' },
+            { name: t('related.items.stepper.name'),     description: toPlainText(t('related.items.stepper.description')),     path: '?path=/docs/ui-stepper--docs' },
+            { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/ui-accordion--docs' },
+            { name: t('related.items.sidebar.name'),     description: toPlainText(t('related.items.sidebar.description')),     path: '?path=/docs/ui-sidebar--docs' },
+            { name: t('related.items.toggleGroup.name'), description: toPlainText(t('related.items.toggleGroup.description')), path: '?path=/docs/ui-togglegroup--docs' },
           ],
         });
 
@@ -751,11 +760,11 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'tab_change',         trigger: t('analytics.table.tab_change.trigger'), payload: t('analytics.table.tab_change.payload') },
+            { event: 'tab_change',         trigger: toPlainText(t('analytics.table.tab_change.trigger')), payload: t('analytics.table.tab_change.payload') },
             { event: 'docs_page_view',     trigger: 'Render inicial da docs page',           payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed', trigger: 'Seção entra no viewport',              payload: '{ section_id, component_name, locale }' },
           ],
@@ -772,8 +781,8 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },

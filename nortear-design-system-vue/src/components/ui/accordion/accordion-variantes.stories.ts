@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { ref } from 'vue';
@@ -12,6 +13,7 @@ const meta = {
   title: 'UI/Accordion/Variantes',
   tags: ['disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -19,6 +21,18 @@ const meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// Idempotentes: o painel Interactions reexecuta a play no MESMO DOM, então o
+// estado de partida é o que a rodada anterior deixou. Um clique cego ALTERNA —
+// a partir do estado errado ele inverte o resultado e a asserção seguinte falha.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+};
 
 export const Single: Story = {
   render: () => ({
@@ -48,6 +62,7 @@ export const Single: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
         story: 'Modo single com collapsible. Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
@@ -67,18 +82,13 @@ export const Single: Story = {
 
     await step('Abrir o item 2 fecha automaticamente o item 1 (modo single)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no trigger ativo fecha o item (collapsible)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute('aria-expanded', 'false'),
-        { timeout: 500 }
-      );
+      await fechar(triggers[1]);
     });
   },
 };
@@ -110,6 +120,7 @@ export const Multiple: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item4'],
     docs: {
       description: {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
@@ -121,26 +132,14 @@ export const Multiple: Story = {
 
     await step('Abrir dois itens — ambos permanecem expandidos (modo múltiplo)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'),
-        { timeout: 500 }
-      );
-      await userEvent.click(triggers[1]);
-      await waitFor(
-        () => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'),
-        { timeout: 500 }
-      );
+      await abrir(triggers[0]);
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar em trigger aberto fecha o item individualmente (modo múltiplo)', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[0]);
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'false'),
-        { timeout: 500 }
-      );
+      await fechar(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
     });
   },
@@ -154,7 +153,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="nds-w-full nds-max-w-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Item aberto: <code>{{ value || 'nenhum' }}</code>
         </p>
@@ -178,6 +177,7 @@ export const Controlled: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Modo controlado. model-value e @update:model-value gerenciam o estado externamente. O indicador acima mostra o item ativo.',
@@ -194,8 +194,7 @@ export const Controlled: Story = {
 
     await step('Clicar em item 2 atualiza o estado externo', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await waitFor(() => expect(triggers[1]).toHaveAttribute('aria-expanded', 'true'));
+      await abrir(triggers[1]);
     });
   },
 };
@@ -220,6 +219,7 @@ export const DefaultOpen: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story: 'Prop default-value abre um item na montagem sem modo controlado. Use em documentação e onboarding.',

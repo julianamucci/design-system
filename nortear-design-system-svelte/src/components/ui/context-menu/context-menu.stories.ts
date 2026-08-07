@@ -5,7 +5,7 @@ import ContextMenuStory from './ContextMenuStory.svelte';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/ContextMenu',
   component: ContextMenuStory,
   tags: ['autodocs', 'overlay'],
@@ -32,10 +32,10 @@ const meta = {
     showDestructive: true,
     showShortcuts: true,
   },
-} satisfies Meta<typeof ContextMenuStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

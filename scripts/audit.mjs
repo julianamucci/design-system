@@ -5,6 +5,7 @@
 //   node scripts/audit.mjs <slug> [--json]           // audit de um componente
 //   node scripts/audit.mjs --all [--json]            // audit de todos
 //   node scripts/audit.mjs <slug> --category <cat>   // só 1 categoria
+//   node scripts/audit.mjs --contract-status [--json] // adoção do contrato de teste
 //
 // Saída default: texto legível (pipeline-friendly). --json retorna objeto estruturado
 // compatível com FIXES-NEEDED.md.
@@ -116,7 +117,13 @@ function filesForSlug(slug, stack) {
 
   const uiFiles = globStack(stack, 'components/ui', ext).filter(f => {
     const n = basename(f).toLowerCase();
-    return SUFFIX_RX.test(n) || f.toLowerCase().includes(`/${s}/`);
+    // Normaliza a barra antes de comparar: no Windows o caminho vem com `\`, e
+    // o teste por `/slug/` nunca casava. Efeito colateral silencioso e grande —
+    // Svelte e Vue organizam por pasta, então TODO arquivo do componente que não
+    // fosse `<slug>.<ext>` (wrappers, sub-componentes) ficava fora do audit
+    // nessas duas stacks, para todas as regras que usam esta função.
+    const caminho = f.toLowerCase().replace(/\\/g, '/');
+    return SUFFIX_RX.test(n) || caminho.includes(`/${s}/`);
   });
   // Case-insensitive: o slug `input-otp` deriva `InputOtpDocs`, mas o arquivo
   // real é `InputOTPDocs` — sigla em caixa alta. Com match sensível a caixa, a
@@ -483,12 +490,16 @@ function splitStories(content) {
  * isolar `argTypes` e `args` do meta sem depender de indentação.
  */
 function blockBody(content, name) {
-  const start = content.search(new RegExp(`(^|[\\s,{])${name}\\s*:\\s*\\{`, 'm'));
+  // Casa chaves sobre o texto SEM comentários (stripComments preserva offsets,
+  // então os índices continuam válidos no original): uma chave dentro de um
+  // comentário desbalanceava a contagem e o bloco terminava no lugar errado.
+  const limpo = stripComments(content);
+  const start = limpo.search(new RegExp(`(^|[\\s,{])${name}\\s*:\\s*\\{`, 'm'));
   if (start < 0) return null;
-  const open = content.indexOf('{', start);
+  const open = limpo.indexOf('{', start);
   let depth = 0;
-  for (let i = open; i < content.length; i++) {
-    const c = content[i];
+  for (let i = open; i < limpo.length; i++) {
+    const c = limpo[i];
     if (c === '{') depth++;
     else if (c === '}' && --depth === 0) return content.slice(open + 1, i);
   }
@@ -496,12 +507,50 @@ function blockBody(content, name) {
 }
 
 /**
+ * Troca comentários por espaço, preservando os offsets.
+ *
+ * Sem isto, um comentário dentro de `argTypes` vira código para o walker: a
+ * linha `// Estavam em args sem argType: ficavam fora da aba` registrava uma
+ * chave fantasma chamada "argType", e a regra `argtype_without_arg` acusava um
+ * control sem valor inicial que não existe. Crase em comentário era pior ainda
+ * — abria uma string que só fechava linhas adiante, comendo o resto do objeto.
+ */
+function stripComments(src) {
+  let out = '', inStr = null, i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    if (inStr) {
+      out += c;
+      if (c === '\\') { out += src[i + 1] ?? ''; i += 2; continue; }
+      if (c === inStr) inStr = null;
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; out += c; i++; continue; }
+    if (c === '/' && src[i + 1] === '/') {
+      while (i < src.length && src[i] !== '\n') { out += ' '; i++; }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '*') {
+      const fim = src.indexOf('*/', i + 2);
+      const ate = fim === -1 ? src.length : fim + 2;
+      for (; i < ate; i++) out += src[i] === '\n' ? '\n' : ' ';
+      continue;
+    }
+    out += c;
+    i++;
+  }
+  return out;
+}
+
+/**
  * Pares [chave, valor] de primeiro nível de um corpo de objeto literal.
  * Precisa varrer em profundidade: uma busca textual por `<chave>:` acharia a
  * ocorrência aninhada (`table: { defaultValue: … }`) antes da de primeiro nível.
  */
-function topLevelEntries(body) {
-  if (!body) return [];
+function topLevelEntries(bodyBruto) {
+  if (!bodyBruto) return [];
+  const body = stripComments(bodyBruto);
   const entries = [];
   let depth = 0, inStr = null, pendingKey = null, valueStart = 0;
   for (let i = 0; i < body.length; i++) {
@@ -596,6 +645,56 @@ function auditStoryQuality(slug) {
   /** story → { stack → nº de expects } — base da comparação cross-stack. */
   const coverage = {};
 
+  /**
+   * `play: nomeDaFuncao` não tem expect no corpo da story — ele mora na função
+   * referenciada, normalmente compartilhada por várias stories do arquivo.
+   * Sem resolver, a regra acusava "play sem asserção" em story que verifica de
+   * verdade: 9 falsos positivos só no button (Icon/IconSmall/IconLarge × 3
+   * stacks), todos apontando para `iconAriaLabelPlay`, que assere getByRole +
+   * toBeInTheDocument. Falso positivo aqui é pior que falta de cobertura —
+   * leva alguém a "consertar" story que já estava certa.
+   *
+   * Devolve o corpo da story somado ao da função, para o expect ser contado uma
+   * vez só, onde quer que esteja.
+   */
+  const corpoEfetivoDoPlay = (storyBody, fileContent) => {
+    // Play inline começa com `async (` — o identificador só casa em referência.
+    const ref = /\bplay:\s*([A-Za-z_$][\w$]*)\s*[,}\n]/.exec(storyBody);
+    if (!ref) return storyBody;
+    const decl = new RegExp(`\\b(?:const|let|var|function)\\s+${ref[1]}\\b`).exec(fileContent);
+    if (!decl) return storyBody;               // definida fora do arquivo: não dá para resolver
+
+    // A primeira `{` depois do `const` é a DESESTRUTURAÇÃO dos parâmetros
+    // (`async ({ canvasElement, step }) =>`), não o corpo. Pegar aquela devolvia
+    // `{ canvasElement, step }` — sem expect nenhum, e o falso positivo
+    // sobrevivia à correção. O corpo começa depois do `=>`.
+    const janela = fileContent.slice(decl.index, decl.index + 400);
+    const seta = janela.indexOf('=>');
+    let abre;
+    if (seta !== -1) {
+      abre = fileContent.indexOf('{', decl.index + seta + 2);
+    } else {
+      // `function nome(params) { … }`: pula a lista de parâmetros balanceando.
+      let par = fileContent.indexOf('(', decl.index), d = 0, i = par;
+      if (par === -1) return storyBody;
+      for (; i < fileContent.length; i++) {
+        if (fileContent[i] === '(') d++;
+        else if (fileContent[i] === ')' && --d === 0) break;
+      }
+      abre = fileContent.indexOf('{', i);
+    }
+    if (abre === -1) return storyBody;
+    let profundidade = 0;
+    for (let i = abre; i < fileContent.length; i++) {
+      const c = fileContent[i];
+      if (c === '{') profundidade++;
+      else if (c === '}' && --profundidade === 0) {
+        return `${storyBody}\n${fileContent.slice(abre, i + 1)}`;
+      }
+    }
+    return storyBody;
+  };
+
   for (const stack of STACKS) {
     // Casa o slug EXATO seguido só de um sufixo de VARIAÇÃO conhecido. Um
     // `startsWith` (ou `-[a-z]+` genérico) atribuiria alert-dialog-estados ao
@@ -625,7 +724,8 @@ function auditStoryQuality(slug) {
 
       for (const [name, body] of splitStories(content)) {
         if (!/\bplay:/.test(body)) continue;
-        const expects = (body.match(/\bexpect\(/g) || []).length;
+        const corpoPlay = corpoEfetivoDoPlay(body, content);
+        const expects = (corpoPlay.match(/\bexpect\(/g) || []).length;
         (coverage[name] ??= {})[stack] = expects;
 
         if (expects === 0) {
@@ -634,7 +734,7 @@ function auditStoryQuality(slug) {
             file: rel, rule: 'play_without_assertion',
             message: `story ${name}: play function sem nenhum expect() — não verifica nada`,
           });
-        } else if (NOOP_ASSERTION_RX.test(body) && expects <= 2) {
+        } else if (NOOP_ASSERTION_RX.test(corpoPlay) && expects <= 2) {
           violations.push({
             category: 'quality', severity: 'medium', slug, stack,
             file: rel, rule: 'noop_assertion',
@@ -661,6 +761,27 @@ function auditStoryQuality(slug) {
     }
   }
 
+  violations.push(...auditTextSurfaces(slug));
+  violations.push(...auditNonexistentLibProps(slug));
+  violations.push(...auditDeadClassInComponent(slug));
+  violations.push(...auditExportSemStory(slug));
+
+  // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
+  // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
+  const idsContrato = contractIds(slug);
+  const contratoResolvido = idsContrato.length > 0 && STACKS.every((stack) => {
+    const { ui } = filesForSlug(slug, stack);
+    const resolvidos = new Set();
+    for (const file of ui.filter((f) => /\.stories\.(ts|tsx)$/.test(f))) {
+      const content = readFile(file);
+      if (!content) continue;
+      const d = declaredCoverage(content);
+      d.covers.forEach((c) => resolvidos.add(c));
+      d.waived.forEach((_m, id) => resolvidos.add(id));
+    }
+    return idsContrato.every((id) => resolvidos.has(id));
+  });
+
   // Mesma story com cobertura desproporcional entre stacks: uma testa de
   // verdade, outra tem placeholder. Foi o sintoma visível das no-op.
   for (const [name, byStack] of Object.entries(coverage)) {
@@ -668,12 +789,27 @@ function auditStoryQuality(slug) {
     if (counts.length < 2) continue;
     const min = Math.min(...counts);
     const max = Math.max(...counts);
-    if (min <= 1 && max >= 3) {
+    // Dois gatilhos. O piso (min<=1) pega placeholder puro. A RAZÃO pega o caso
+    // que passou despercebido: um Playground com 12 asserções contra 21 em
+    // outra stack — ambos acima do piso, e ainda assim cobertura desigual.
+    //
+    // A razão é SUPRIMIDA quando o componente já tem o contrato de teste
+    // resolvido nas 4 stacks: ali a garantia é o `covers`, e a contagem por
+    // story passa a medir DISTRIBUIÇÃO, não cobertura — o mesmo item pode ser
+    // legitimamente coberto numa story diferente em cada stack (o Escape mora
+    // no Playground em 3 e no Controlled no vanilla). O piso continua valendo:
+    // story sem asserção nenhuma é placeholder, contrato ou não.
+    const placeholder = min <= 1 && max >= 3;
+    const desproporcional = !contratoResolvido && max >= 5 && min < max * 0.6;
+    if (placeholder || desproporcional) {
       const detail = Object.entries(byStack).map(([s, n]) => `${s}:${n}`).join(' ');
+      const motivo = placeholder
+        ? 'a de menor contagem provavelmente é placeholder'
+        : `a menor cobre ${Math.round((min / max) * 100)}% da maior`;
       violations.push({
         category: 'quality', severity: 'medium', slug, stack: 'cross-stack',
         file: `stories/${slug}`, rule: 'coverage_divergence',
-        message: `story ${name} tem cobertura desproporcional entre stacks (${detail}) — a de menor contagem provavelmente é placeholder`,
+        message: `story ${name} tem cobertura desproporcional entre stacks (${detail}) — ${motivo}`,
       });
     }
   }
@@ -820,6 +956,140 @@ function auditCssTokenUsage() {
   return violations;
 }
 
+// ─── Play idempotente ───────────────────────────────────────────────────────
+//
+// O painel Interactions REEXECUTA a play no mesmo DOM — não remonta. O vitest
+// remonta a cada teste, então a suíte fica verde enquanto o painel falha: a
+// suíte não consegue ver este defeito, e por isso ele precisa de regra.
+//
+// Assinatura: clique seguido de asserção de ESTADO no mesmo alvo. Na segunda
+// rodada o clique parte do estado que a primeira deixou, alterna a partir dele e
+// inverte o resultado. A saída é o par idempotente (`abrir`/`fechar`): clicar só
+// quando o estado atual não é o desejado.
+//
+// Clique com `pointerEventsCheck` fica de fora: é o clique no elemento
+// desabilitado, que não muda de estado em rodada nenhuma.
+const ESTADO_ATTR_RX = /aria-expanded|aria-checked|aria-pressed|aria-selected|aria-current|data-state/;
+
+function auditPlayIdempotente(slug) {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const storyRx = new RegExp(
+      `^${slug.toLowerCase()}(-(${STORY_VARIANT_SUFFIXES.join('|')}))?\\.stories\\.(ts|tsx)$`,
+    );
+    const files = globStack(stack, 'components/ui', ['.ts', '.tsx']).filter((f) =>
+      storyRx.test(basename(f).toLowerCase()),
+    );
+
+    for (const file of files) {
+      const content = readFile(file);
+      if (!content) continue;
+      const linhas = content.split('\n');
+
+      linhas.forEach((linha, i) => {
+        const m = linha.match(/await userEvent\.click\(([^;]+?)\)\s*;/);
+        if (!m) return;
+        if (/!==/.test(linha)) return;              // corpo do próprio helper
+        if (/pointerEventsCheck/.test(linha)) return; // clique em desabilitado
+        const alvo = m[1].split(',')[0].trim();
+        if (!alvo || alvo.startsWith('{')) return;
+
+        const janela = linhas.slice(i + 1, i + 6).join('\n');
+        const alvoRx = alvo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const asserta = new RegExp(
+          `expect\\(${alvoRx}\\)[\\s\\S]{0,80}?toHaveAttribute\\(['"](${ESTADO_ATTR_RX.source})`,
+        );
+        if (!asserta.test(janela)) return;
+
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), line: i + 1, rule: 'play_nao_idempotente',
+          message: `clique cego em ${alvo} seguido de asserção de estado — no replay do painel Interactions o clique parte do estado da rodada anterior e inverte o resultado. Use o par abrir/fechar, que só clica quando o estado atual não é o desejado`,
+        });
+      });
+    }
+  }
+
+  return violations;
+}
+
+// ─── SEO/a11y: idioma do documento (slug-independente) ──────────────────────
+//
+// Regra POSITIVA de instrumentação, no mesmo espírito das de analytics: grep não
+// encontra o que nunca foi escrito. `useSeoEffect` resolve o alvo das metatags
+// como `isIframe ? window.parent.document : document` — correto para title, OG e
+// JSON-LD, que pertencem à página hospedeira, e errado para `lang`, que pertence
+// ao documento que o leitor de tela lê. Dentro do Storybook esse documento é o
+// `iframe.html`, servido como <html lang="en">, e nada o atualiza: a prosa em
+// português sai com pronúncia inglesa. WCAG 3.1.1, nível A.
+//
+// A regra passa quando existe pelo menos UMA escrita de `documentElement.lang`
+// fora do alvo do iframe — normalmente `document.documentElement.lang`, ao lado
+// da do pai.
+//
+// Isto é reconhecimento de padrão, e padrão se burla: `[targetDoc]` numa lista
+// passaria. A prova de comportamento é a asserção na suíte de fumaça, que roda
+// DENTRO do iframe e compara o valor real. Por isso a segunda metade da regra
+// cobra que essa asserção exista — apagar o teste vira violação.
+function auditDocumentLang() {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const file = join(ROOT, stackDir(stack), 'src', 'lib', 'use-seo.ts');
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    const linhas = content.split('\n');
+
+    const escritas = linhas
+      .map((l, i) => ({ l, i }))
+      .filter(({ l }) => /\.documentElement\.lang\s*=/.test(l));
+
+    if (escritas.length === 0) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: rel, line: 1, rule: 'document_lang_ausente',
+        message: 'useSeoEffect não escreve documentElement.lang — sem idioma, o leitor de tela pronuncia o conteúdo pelas regras do idioma do documento hospedeiro (WCAG 3.1.1, nível A)',
+      });
+      continue;
+    }
+
+    // O identificador que recebe o documento do iframe: `const targetDoc = isIframe ? window.parent.document : document`
+    const alvo = content.match(/const\s+(\w+)\s*=\s*[^;\n]*window\.parent\.document[^;\n]*/);
+    if (!alvo) continue; // sem resolução condicional, a escrita é no próprio documento
+
+    const soNoPai = escritas.every(({ l }) =>
+      new RegExp(`\\b${alvo[1]}\\.documentElement\\.lang\\s*=`).test(l),
+    );
+    if (soNoPai) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: rel, line: escritas[0].i + 1, rule: 'document_lang_so_no_pai',
+        message: `documentElement.lang só é escrito em ${alvo[1]} (o manager do Storybook). O leitor de tela lê o iframe, que continua no idioma do template — escreva nos dois documentos (WCAG 3.1.1, nível A)`,
+      });
+    }
+  }
+
+  // A prova de comportamento: a fumaça monta toda docs page dentro do iframe,
+  // então é lá que o valor real do idioma pode ser conferido.
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    const smoke = walkDir(dir, ['.ts', '.tsx']).find((f) => /docs-smoke\.stories\./.test(f.replace(/\\/g, '/')));
+    if (!smoke) continue;
+    const content = readFile(smoke);
+    if (content && !/documentElement\.lang/.test(content)) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, smoke), line: 1, rule: 'document_lang_sem_prova',
+        message: 'a suíte de fumaça não confere documentElement.lang — sem essa asserção, o idioma do iframe volta a quebrar sem teste vermelho (WCAG 3.1.1, nível A)',
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -871,6 +1141,426 @@ function auditDeadLibInfra() {
  * julgamento e fica com o agente. Medido antes destas regras existirem: 22% das
  * composições do repo eram duplicata da própria seção Variantes.
  */
+/**
+ * Ids do contrato de teste declarados no conteúdo compartilhado:
+ * `testes.functional.item1`, `testes.accessibility.item3`, `testes.visual.item2`.
+ * É a lista do que TEM de ser verificado — igual para as 4 stacks, porque
+ * descreve comportamento observável de fora, não implementação.
+ */
+function contractIds(slug) {
+  const path = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(path);
+  if (!raw) return [];
+  let json;
+  try { json = JSON.parse(raw); } catch { return []; }
+  const testes = json['pt-BR']?.testes;
+  if (!testes) return [];
+
+  const ids = [];
+  for (const grupo of ['functional', 'accessibility', 'visual']) {
+    for (const key of Object.keys(testes[grupo] ?? {})) {
+      if (/^item\d+$/.test(key)) ids.push(`${grupo}.${key}`);
+    }
+  }
+  return ids;
+}
+
+/** `covers: ['a.item1', 'b.item2']` e `coversNotApplicable: { 'a.item3': '…' }`. */
+function declaredCoverage(content) {
+  const covers = new Set();
+  const waived = new Map();
+
+  for (const m of content.matchAll(/covers\s*:\s*\[([\s\S]*?)\]/g)) {
+    for (const q of m[1].matchAll(/['"]([a-z]+\.item\d+)['"]/g)) covers.add(q[1]);
+  }
+  for (const m of content.matchAll(/coversNotApplicable\s*:\s*\{([\s\S]*?)\}/g)) {
+    for (const q of m[1].matchAll(/['"]([a-z]+\.item\d+)['"]\s*:\s*['"]([^'"]*)['"]/g)) {
+      waived.set(q[1], q[2]);
+    }
+  }
+  return { covers, waived };
+}
+
+/**
+ * Cobertura por CONTRATO, não por contagem de asserção.
+ *
+ * Contagem é proxy ruim: o Playground do alert-dialog tinha 12 asserções numa
+ * stack e 21 em outra, ambas acima de qualquer piso razoável, e a diferença só
+ * apareceu quando a dona olhou a aba Interactions. Aqui cada story declara
+ * QUAIS itens do contrato ela verifica, e a comparação passa a ser entre o que
+ * o conteúdo compartilhado exige e o que cada stack reivindica.
+ *
+ * ADOÇÃO É OPT-IN POR COMPONENTE: enquanto nenhuma story do slug declarar
+ * `covers`, a regra fica calada. Assim a regra entra sem inundar os 48
+ * componentes de violação — cada um passa a ser cobrado quando adota.
+ * Use `--contract-status` para ver quem ainda não adotou.
+ */
+function auditContractCoverage(slug) {
+  const ids = contractIds(slug);
+  if (ids.length === 0) return [];
+
+  const porStack = {};
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    const stories = ui.filter((f) => /.stories.(ts|tsx)$/.test(f));
+    const covers = new Set();
+    const waived = new Map();
+    for (const file of stories) {
+      const content = readFile(file);
+      if (!content) continue;
+      const d = declaredCoverage(content);
+      d.covers.forEach((c) => covers.add(c));
+      d.waived.forEach((motivo, id) => waived.set(id, motivo));
+    }
+    porStack[stack] = { covers, waived };
+  }
+
+  const adotaram = STACKS.filter((s) => porStack[s].covers.size > 0);
+  if (adotaram.length === 0) return [];
+
+  const violations = [];
+  const validos = new Set(ids);
+
+  for (const stack of STACKS) {
+    const { covers, waived } = porStack[stack];
+
+    // Id que não existe no contrato: a declaração não cobre nada e ninguém
+    // percebe. Sem este check, um typo vira cobertura fantasma.
+    for (const id of [...covers, ...waived.keys()]) {
+      if (!validos.has(id)) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_unknown_id',
+          message: `declara cobertura de "${id}", que não existe em testes.* do conteúdo compartilhado`,
+        });
+      }
+    }
+
+    if (covers.size === 0) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: `stories/${slug}`, rule: 'contract_divergent',
+        message: `outras stacks declaram cobertura de contrato e esta não declara nenhuma (${adotaram.join(', ')} adotaram)`,
+      });
+      continue;
+    }
+
+    for (const id of ids) {
+      if (covers.has(id) || waived.has(id)) continue;
+      const outras = STACKS.filter((s) => porStack[s].covers.has(id));
+      violations.push(outras.length > 0
+        ? {
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_divergent',
+          message: `${id} é coberto em ${outras.join(', ')} e não aqui — cubra ou declare coversNotApplicable com o motivo`,
+        }
+        : {
+          category: 'quality', severity: 'medium', slug, stack,
+          file: `stories/${slug}`, rule: 'contract_uncovered',
+          message: `${id} está documentado em testes.* e nenhuma story o verifica`,
+        });
+    }
+  }
+
+  return violations;
+}
+
+/** Visão de adoção do contrato — fora do audit para não poluir o exit code. */
+function contractStatus() {
+  const dir = join(ROOT, 'docs', 'shared', 'content');
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .map((slug) => {
+      const ids = contractIds(slug);
+      const porStack = STACKS.map((stack) => {
+        const { ui } = filesForSlug(slug, stack);
+    const stories = ui.filter((f) => /.stories.(ts|tsx)$/.test(f));
+        const covers = new Set();
+        const waived = new Set();
+        for (const file of stories) {
+          const content = readFile(file);
+          if (!content) continue;
+          const d = declaredCoverage(content);
+          d.covers.forEach((c) => covers.add(c));
+          d.waived.forEach((_m, id) => waived.add(id));
+        }
+        return { stack, resolvidos: new Set([...covers, ...waived]).size };
+      });
+      return { slug, total: ids.length, porStack };
+    })
+    .filter((r) => r.total > 0);
+}
+
+/**
+ * Classe morta fora das stories.
+ *
+ * `legacy_class_in_story` varre stories e wrappers `*Story.svelte` — e funciona:
+ * os componentes que passaram pelo `/quality` estão zerados. O que escapava eram
+ * os arquivos de componente que não têm `Story` no nome, sobretudo as fixtures
+ * do Svelte (`TableVarianteBasica.svelte` e irmãs) e os primitivos.
+ *
+ * Não é cosmético: `sr-only` está entre as classes mortas encontradas assim, o
+ * que deixa VISÍVEL uma caption que deveria ser só para leitor de tela.
+ *
+ * Aqui só entra `class="literal"`. Valor com `(`, `{` ou interpolação é
+ * expressão (`cn(...)`, `toggleVariants({...})`) e o parse por regex devolveria
+ * pedaços de código como se fossem classes.
+ */
+/**
+ * Peça exportada que nenhuma story renderiza.
+ *
+ * É a assinatura de "especificado e não entregue": o componente existe, o CSS
+ * existe, e nada no produto o exercita. Foi assim que o AlertDialogMedia passou
+ * — presente em três stacks, ausente no Vanilla, zero stories, zero
+ * documentação. O sinal aparecia como 0% de cobertura, mas cobertura só é
+ * calculada rodando a suíte; isto custa milissegundos.
+ *
+ * Só olha export de VALOR (componente/factory). Tipo não renderiza nada.
+ */
+function auditExportSemStory(slug) {
+  const violations = [];
+  const RAIZ_RX = new RegExp(`^${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}$`, 'i');
+
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    const arquivosDeStory = ui.filter(f => /\.stories\./.test(basename(f)));
+    if (!arquivosDeStory.length) continue;
+    const textoDasStories = arquivosDeStory.map(f => readFile(f) || '').join('\n');
+
+    const exportados = new Map();
+    const origensDeAlias = new Set();
+    for (const file of ui) {
+      const nome = basename(file);
+      if (/\.stories\./.test(nome) || /story\.svelte$/i.test(nome)) continue;
+      const content = readFile(file);
+      if (!content) continue;
+
+      // `export { A, B }` — o index.ts de vue/svelte e o rodapé do react
+      for (const m of content.matchAll(/export\s*\{([^}]+)\}/g)) {
+        for (const bruto of m[1].split(',')) {
+          const texto = bruto.trim();
+          const pedacos = texto.split(/\s+as\s+/);
+          // `Media as AlertDialogMedia`: os dois nomes são a MESMA peça. O
+          // Svelte exporta os dois, e cobrar o curto acusa alias como código
+          // morto — foi o maior falso positivo da primeira medição.
+          if (pedacos.length > 1) origensDeAlias.add(pedacos[0].trim());
+          const parte = pedacos.pop().trim();
+          if (/^type\b/.test(texto) || !/^[A-Za-z_]\w*$/.test(parte)) continue;
+          if (!exportados.has(parte)) exportados.set(parte, file);
+        }
+      }
+      // `export function X` / `export const X` — factories do vanilla
+      for (const m of content.matchAll(/export\s+(?:async\s+)?(?:function|const)\s+([A-Za-z_]\w*)/g)) {
+        if (!exportados.has(m[1])) exportados.set(m[1], file);
+      }
+    }
+
+    // Não renderizam nada: cva/estilo e helpers de hook/contexto são API para
+    // quem consome, e a ausência deles numa story não é lacuna de entrega.
+    const NAO_RENDERIZAVEL = /(Variants|Style)$|^(use|set|get)[A-Z]/;
+
+    // Consumidores possíveis: qualquer arquivo da stack que não seja o que
+    // define nem um barril de re-export. Sem isto a regra acusa alias do Svelte
+    // (`Root as Accordion`), cva compartilhada (`buttonVariants`) e
+    // sub-componente que só o próprio componente renderiza — 442 falsos
+    // positivos na primeira versão.
+    const consumidores = globStack(stack, 'components', ['.ts', '.tsx', '.vue', '.svelte'])
+      .filter(f => !/^index\.ts$/i.test(basename(f)));
+
+    for (const [simbolo, file] of exportados) {
+      if (RAIZ_RX.test(simbolo)) continue;                       // a raiz sempre aparece
+      if (origensDeAlias.has(simbolo)) continue;                 // é o nome curto de um alias
+      if (NAO_RENDERIZAVEL.test(simbolo)) continue;
+      const rx = new RegExp(`\\b${simbolo}\\b`);
+      if (rx.test(textoDasStories)) continue;
+
+      // No React o componente inteiro mora num arquivo só: `AlertDialogContent`
+      // renderiza `<AlertDialogPortal>` ali mesmo. Ignorar o arquivo de
+      // definição inteiro marcava esses como mortos. O que não conta é a
+      // declaração e a lista de export — o resto é uso.
+      const proprio = (readFile(file) || '')
+        .replace(/export\s*\{[^}]*\}/g, '')
+        .replace(new RegExp(`(?:function|const)\\s+${simbolo}\\b`, 'g'), '');
+      if (rx.test(proprio)) continue;
+
+      const usadoPorOutro = consumidores.some(f => {
+        if (f === file) return false;
+        const c = readFile(f);
+        return c && rx.test(c);
+      });
+      if (usadoPorOutro) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, file), rule: 'export_sem_story',
+        message: `${simbolo} é exportado e nada o renderiza — nem story, nem outro componente, nem docs page`,
+      });
+    }
+  }
+  return violations;
+}
+
+function auditDeadClassInComponent(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      const nome = basename(file).toLowerCase();
+      if (/\.stories\./.test(nome) || nome.endsWith('story.svelte')) continue;
+
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      const vistas = new Set();
+      for (const m of content.matchAll(/class(?:Name)?=["']([^"']+)["']/g)) {
+        const valor = m[1];
+        if (/[${(}]/.test(valor)) continue;
+        for (const cls of valor.split(/\s+/)) {
+          if (!cls || ALLOWED_CLASS_RX.test(cls) || vistas.has(cls)) continue;
+          vistas.add(cls);
+          violations.push({
+            category: 'quality', severity: 'low', slug, stack,
+            file: rel, rule: 'dead_class_in_component',
+            message: `classe "${cls}" não existe no CSS nds-* — inerte em runtime`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * Prefixos de chave cujo container escreve textNode. Derivado contando
+ * `dangerouslySetInnerHTML` em cada seção compartilhada — DocsTestes,
+ * DocsTokens, DocsStates, DocsRelated, DocsDoDont, DocsAnalytics e as tabelas
+ * do DocsProps e do DocsWhenToUse não renderizam HTML.
+ */
+const TEXT_SURFACE_PREFIXES = [
+  'testes.', 'props.table.', 'tokens.table.', 'accessibility.keyboard.',
+  'usage.scenarios.', 'usage.uxWriting.', 'states.', 'analytics.table.',
+  'doDont.', 'related.',
+];
+
+/**
+ * Markup literal em superfície de texto.
+ *
+ * O `translations.json` é compartilhado entre containers que renderizam HTML e
+ * containers que escrevem textNode, então guarda `<button>` escapado como
+ * `&lt;button&gt;`. No segundo grupo isso chega cru à tela — "Elemento
+ * &lt;button&gt; nativo presente" — e nada mais pega: nem teste, nem axe. Só
+ * olhando a página, que foi como apareceu duas vezes.
+ *
+ * O par correto é `toPlainText()` (tira tags E decodifica entidades) para texto
+ * e `stripHtml()` para destino que renderiza HTML — decodificar antes de HTML
+ * transforma o texto em markup vivo.
+ */
+function auditTextSurfaces(slug) {
+  const violations = [];
+  const tPath = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(tPath)) return violations;
+
+  let json;
+  try { json = JSON.parse(readFile(tPath) || '{}'); } catch { return violations; }
+
+  // chave -> tem markup em algum idioma
+  const comMarkup = new Set();
+  for (const locale of Object.keys(json)) {
+    (function varre(node, caminho) {
+      if (typeof node === 'string') {
+        if (/<[a-z][^>]*>|&lt;|&gt;/.test(node)) comMarkup.add(caminho.replace(/^\./, ''));
+        return;
+      }
+      if (node && typeof node === 'object') {
+        for (const [k, v] of Object.entries(node)) varre(v, `${caminho}.${k}`);
+      }
+    })(json[locale], '');
+  }
+  if (!comMarkup.size) return violations;
+
+  const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      for (const chave of comMarkup) {
+        if (!TEXT_SURFACE_PREFIXES.some((p) => chave.startsWith(p))) continue;
+        // a mesma chave pode aparecer literal ou com índice interpolado; sem o
+        // Set a chave sem `itemN` casaria as duas formas e reportaria dobrado
+        const alvos = new Set([chave, chave.replace(/item\d+/, 'item${i}')]);
+        for (const alvo of alvos) {
+          const re = new RegExp(
+            `(toPlainText\\()?\\s*(?:tContent|\\$?tStore|\\bt)\\(['\`"]${escapar(alvo)}['\`"]\\)`,
+            'g',
+          );
+          for (const m of content.matchAll(re)) {
+            if (m[1]) continue;                       // já envolvido
+            violations.push({
+              category: 'quality', severity: 'medium', slug, stack,
+              file: rel, rule: 'markup_in_text_surface',
+              message: `"${chave}" tem markup e cai em container que escreve textNode — envolva em toPlainText(), senão a tag aparece literal na tela`,
+            });
+          }
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * Prop que a lib não tem.
+ *
+ * Não gera erro de tipo nem aviso: o componente monta e a prop é descartada.
+ * `defaultOpen` e `defaultValue` não existem no bits-ui nem no vaul-svelte — a
+ * API é o estado bindável (`open`, `value`) — e deixaram overlays e menus
+ * fechados em mais de 40 testes, cada um parecendo um bug diferente.
+ *
+ * Só acusa quando a prop vai para um COMPONENTE (maiúscula inicial). Usá-la
+ * como prop do próprio wrapper, para inicializar o bindable, é o padrão certo.
+ */
+const PROPS_INEXISTENTES = {
+  svelte: ['defaultOpen', 'defaultValue'],
+};
+
+function auditNonexistentLibProps(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const proibidas = PROPS_INEXISTENTES[stack];
+    if (!proibidas) continue;
+
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      const content = readFile(file);
+      if (!content) continue;
+      const rel = relative(ROOT, file);
+
+      for (const prop of proibidas) {
+        // `<Componente … {defaultOpen}` ou `defaultOpen={…}` — só em tag de
+        // componente, que no Svelte começa com maiúscula.
+        // Sem `\b` antes de `{`: entre espaço e chave não há fronteira de
+        // palavra, e a regra silenciava justamente na forma abreviada
+        // `<Drawer {defaultOpen}>`, que é a mais usada.
+        const re = new RegExp(`<[A-Z][\\w.]*[^>]*?(?:\\{\\s*${prop}\\s*\\}|\\b${prop}=)`, 'gs');
+        if (!re.test(content)) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file: rel, rule: 'nonexistent_lib_prop',
+          message: `"${prop}" não existe na lib desta stack — é aceita e ignorada em silêncio. Use o estado bindável (open/value) inicializado com ela`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditTaxonomy(slug) {
   const violations = [];
   const file = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
@@ -1190,7 +1880,10 @@ function auditQuality(slug) {
       if (typeof node === 'string') {
         const last = keyPath[keyPath.length - 1] || '';
         const full = keyPath.join('.');
-        if (CODE_KEY_RX.test(last) || TYPE_PATH_RX.test(full) || PROP_NAME_PATH_RX.test(full)) return;
+        // `some` e não só a última chave: com as variantes por stack, o snippet
+        // mora em `structureCode.react` — a folha vira o nome da stack e a marca
+        // de código fica no ancestral. Testar só a folha acusava JSX como texto.
+        if (keyPath.some((k) => CODE_KEY_RX.test(k)) || TYPE_PATH_RX.test(full) || PROP_NAME_PATH_RX.test(full)) return;
         for (const { rx, label } of LITERAL_RX) {
           if (rx.test(node)) {
             violations.push({
@@ -1261,6 +1954,8 @@ function auditQuality(slug) {
 
   violations.push(...auditStoryQuality(slug));
   violations.push(...auditStoryApiReference(slug));
+  violations.push(...auditContractCoverage(slug));
+  violations.push(...auditPlayIdempotente(slug));
 
   return violations;
 }
@@ -1317,6 +2012,30 @@ const json = args.includes('--json');
 const all = args.includes('--all');
 const categoryIdx = args.indexOf('--category');
 const category = categoryIdx >= 0 ? args[categoryIdx + 1] : null;
+
+// Adoção do contrato de teste. Fora do audit de propósito: componente que
+// ainda não adotou não é violação, e entrar no exit code quebraria o gate
+// "audit limpo" dos 48 componentes de uma vez.
+if (args.includes('--contract-status')) {
+  const linhas = contractStatus();
+  if (json) {
+    console.log(JSON.stringify(linhas.map((r) => ({
+      slug: r.slug, total: r.total,
+      stacks: Object.fromEntries(r.porStack.map((p) => [p.stack, p.resolvidos])),
+    })), null, 2));
+  } else {
+    const adotados = linhas.filter((r) => r.porStack.some((p) => p.resolvidos > 0));
+    console.log(`# Contrato de teste — adoção\n`);
+    console.log(`${adotados.length} de ${linhas.length} componentes declaram cobertura.\n`);
+    for (const r of linhas) {
+      const detalhe = r.porStack.map((p) => `${p.stack}:${p.resolvidos}/${r.total}`).join('  ');
+      const marca = r.porStack.every((p) => p.resolvidos === r.total) ? '✓'
+        : r.porStack.some((p) => p.resolvidos > 0) ? '~' : ' ';
+      console.log(`${marca} ${r.slug.padEnd(18)} ${detalhe}`);
+    }
+  }
+  process.exit(0);
+}
 const slug = args.find(a => !a.startsWith('--') && a !== category);
 
 if (!slug && !all) {
@@ -1343,7 +2062,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditDocumentLang()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

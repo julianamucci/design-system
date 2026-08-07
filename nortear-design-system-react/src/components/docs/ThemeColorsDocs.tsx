@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
+import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import themeColorsTranslations from '@shared/content/theme-colors/translations.json';
 
 // ─── Definições estáticas ──────────────────────────────────────────────────────
@@ -143,7 +144,18 @@ export function ThemeColorsDocs() {
 
   return (
     <div ref={rootRef} className="sb-unstyled nds-flex-1 nds-w-full ds-docs" style={{ height: '100%', overflow: 'auto' }}>
-      <div className="nds-p-8 nds-stack" data-spacing="xl" style={{ maxWidth: '72rem', marginInline: 'auto' }}>
+      {/*
+        Landmark de conteúdo: esta página monta layout próprio (não passa pelo
+        DocsPageLayout), então ficava sem <main>. Mesmas classes, mesmo style e
+        mesma posição na árvore do <div> anterior — zero mudança visual.
+      */}
+      <main
+        tabIndex={-1}
+        aria-labelledby={DOCS_PAGE_TITLE_ID}
+        className="nds-p-8 nds-stack"
+        data-spacing="xl"
+        style={{ maxWidth: '72rem', marginInline: 'auto' }}
+      >
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <header className="nds-stack nds-pb-8" style={{ paddingBottom: '2rem' }}>
@@ -165,7 +177,10 @@ export function ThemeColorsDocs() {
             <LanguageSwitcher />
           </div>
 
-          <h1 className="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+          <h1
+            id={DOCS_PAGE_TITLE_ID}
+            className="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground"
+          >
             {t('title')}
           </h1>
 
@@ -310,7 +325,7 @@ export function ThemeColorsDocs() {
           </div>
         </section>
 
-      </div>
+      </main>
     </div>
   );
 }

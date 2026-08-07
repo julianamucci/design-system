@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Slider/Estados',
   component: SliderStory,
   tags: ['form'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SliderStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   args: {
@@ -68,7 +68,9 @@ export const FocoVisivel: Story = {
 
     await step('ArrowRight incrementa o valor', async () => {
       await userEvent.keyboard('{ArrowRight}');
-      const valuenow = Number(thumb.getAttribute('aria-valuenow'));
+      // Re-consulta: a renderizacao pode substituir o thumb, e ler o atributo do
+      // no antigo devolve o valor de antes.
+      const valuenow = Number(canvas.getByRole('slider').getAttribute('aria-valuenow'));
       await expect(valuenow).toBeGreaterThan(50);
     });
   },

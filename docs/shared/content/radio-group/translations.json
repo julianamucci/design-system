@@ -30,7 +30,9 @@
       "item3": "<strong>RadioGroupIndicator</strong> — bolinha interna visível apenas quando <code>data-checked</code>.",
       "item4": "<strong>Label</strong> — rótulo externo obrigatório, associado via <code>htmlFor</code> ao <code>id</code> do item.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pagamento\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"cartao\" id=\"cartao\" />\n    <Label htmlFor=\"cartao\">Cartão de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      "structureCode": {
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pagamento\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"cartao\" id=\"cartao\" />\n    <Label htmlFor=\"cartao\">Cartão de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -241,7 +243,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pagamento</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pagamento</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -275,7 +279,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      "customizationCode": {
+        "web": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -461,7 +467,9 @@
       "item3": "<strong>RadioGroupIndicator</strong> — inner dot visible only when <code>data-checked</code>.",
       "item4": "<strong>Label</strong> — required external label, associated via <code>htmlFor</code> to item's <code>id</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Payment method\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"card\" id=\"card\" />\n    <Label htmlFor=\"card\">Credit card</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      "structureCode": {
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Payment method\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"card\" id=\"card\" />\n    <Label htmlFor=\"card\">Credit card</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -672,7 +680,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Payment method</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Payment method</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -706,7 +716,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      "customizationCode": {
+        "web": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -892,7 +904,9 @@
       "item3": "<strong>RadioGroupIndicator</strong> — punto interno visible solo cuando <code>data-checked</code>.",
       "item4": "<strong>Label</strong> — etiqueta externa obligatoria, asociada vía <code>htmlFor</code> al <code>id</code> del ítem.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pago\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"tarjeta\" id=\"tarjeta\" />\n    <Label htmlFor=\"tarjeta\">Tarjeta de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      "structureCode": {
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pago\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"tarjeta\" id=\"tarjeta\" />\n    <Label htmlFor=\"tarjeta\">Tarjeta de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1103,7 +1117,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pago</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      "extensibilityCode": {
+        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pago</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1137,7 +1153,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      "customizationCode": {
+        "web": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

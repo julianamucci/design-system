@@ -24,9 +24,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import drawerTranslations from '@shared/content/drawer/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(drawerTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (drawerTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -55,7 +67,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -94,10 +105,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -722,13 +729,13 @@ interface TriggerProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.closed.label'),     trigger: $tStore('states.closed.trigger'),     behavior: stripHtml($tStore('states.closed.behavior')) },
-      { label: $tStore('states.open.label'),       trigger: $tStore('states.open.trigger'),       behavior: stripHtml($tStore('states.open.behavior')) },
-      { label: $tStore('states.controlled.label'), trigger: $tStore('states.controlled.trigger'), behavior: stripHtml($tStore('states.controlled.behavior')) },
+      { label: $tStore('states.closed.label'),     trigger: toPlainText($tStore('states.closed.trigger')),     behavior: toPlainText($tStore('states.closed.behavior')) },
+      { label: $tStore('states.open.label'),       trigger: toPlainText($tStore('states.open.trigger')),       behavior: toPlainText($tStore('states.open.behavior')) },
+      { label: $tStore('states.controlled.label'), trigger: toPlainText($tStore('states.controlled.trigger')), behavior: toPlainText($tStore('states.controlled.behavior')) },
     ]}
   />
 
@@ -775,6 +782,8 @@ interface TriggerProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -843,8 +852,8 @@ interface TriggerProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4, 5, 6].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -856,12 +865,12 @@ interface TriggerProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',     how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '4.1.2',  how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '4.1.2',  how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '2.1.2',  how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '2.1.1',  how: '—' },
-        { criterion: stripHtml($tStore('testes.accessibility.item6')), level: '1.4.3',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.1.2',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '2.1.1',  how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '1.4.3',  how: '—' },
       ],
     }}
     visual={{

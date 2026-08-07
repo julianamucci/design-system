@@ -5,7 +5,7 @@ import NavigationMenuStory from './NavigationMenuStory.svelte';
 import NavigationMenuDocs from '@/components/docs/NavigationMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/NavigationMenu',
   component: NavigationMenuStory,
   tags: ['autodocs', 'navigation'],
@@ -55,10 +55,10 @@ const meta = {
     demonstration: 'default',
     activeHref: undefined,
   },
-} satisfies Meta<typeof NavigationMenuStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   play: async ({ canvasElement, step }) => {

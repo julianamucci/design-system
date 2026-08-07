@@ -26,6 +26,7 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -33,11 +34,18 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(chartTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (chartTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -111,8 +119,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -265,12 +271,12 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.empty.label'),        trigger: stripHtml(tContent('states.empty.trigger')),        behavior: stripHtml(tContent('states.empty.behavior'))        },
-  { label: tContent('states.loading.label'),       trigger: stripHtml(tContent('states.loading.trigger')),       behavior: stripHtml(tContent('states.loading.behavior'))       },
-  { label: tContent('states.singleSeries.label'),  trigger: stripHtml(tContent('states.singleSeries.trigger')),  behavior: stripHtml(tContent('states.singleSeries.behavior'))  },
-  { label: tContent('states.multiSeries.label'),   trigger: stripHtml(tContent('states.multiSeries.trigger')),   behavior: stripHtml(tContent('states.multiSeries.behavior'))   },
-  { label: tContent('states.withEmptyState.label'),         trigger: stripHtml(tContent('states.withEmptyState.trigger')),         behavior: stripHtml(tContent('states.withEmptyState.behavior'))         },
-  { label: tContent('states.multiSeriesWithLegend.label'),  trigger: stripHtml(tContent('states.multiSeriesWithLegend.trigger')),  behavior: stripHtml(tContent('states.multiSeriesWithLegend.behavior'))  },
+  { label: tContent('states.empty.label'),        trigger: toPlainText(tContent('states.empty.trigger')),        behavior: toPlainText(tContent('states.empty.behavior'))        },
+  { label: tContent('states.loading.label'),       trigger: toPlainText(tContent('states.loading.trigger')),       behavior: toPlainText(tContent('states.loading.behavior'))       },
+  { label: tContent('states.singleSeries.label'),  trigger: toPlainText(tContent('states.singleSeries.trigger')),  behavior: toPlainText(tContent('states.singleSeries.behavior'))  },
+  { label: tContent('states.multiSeries.label'),   trigger: toPlainText(tContent('states.multiSeries.trigger')),   behavior: toPlainText(tContent('states.multiSeries.behavior'))   },
+  { label: tContent('states.withEmptyState.label'),         trigger: toPlainText(tContent('states.withEmptyState.trigger')),         behavior: toPlainText(tContent('states.withEmptyState.behavior'))         },
+  { label: tContent('states.multiSeriesWithLegend.label'),  trigger: toPlainText(tContent('states.multiSeriesWithLegend.trigger')),  behavior: toPlainText(tContent('states.multiSeriesWithLegend.behavior'))  },
 ]);
 
 const propCols = computed(() => ({
@@ -282,18 +288,18 @@ const propCols = computed(() => ({
 }));
 
 const containerPropItems = computed(() => [
-  { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.option'))    },
-  { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: stripHtml(tContent('props.table.renderer'))  },
-  { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: stripHtml(tContent('props.table.className')) },
-  { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.ariaLabel')) },
+  { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.option'))    },
+  { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: toPlainText(tContent('props.table.renderer'))  },
+  { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className')) },
+  { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.ariaLabel')) },
 ]);
 
 const legendPropItems = computed(() => [
-  { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.data'))       },
-  { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.xAxis'))      },
-  { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.series')) },
-  { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: stripHtml(tContent('props.table.title'))      },
-  { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: stripHtml(tContent('props.table.showLegend')) },
+  { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.data'))       },
+  { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.xAxis'))      },
+  { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.series')) },
+  { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.title'))      },
+  { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: toPlainText(tContent('props.table.showLegend')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -325,9 +331,9 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Table',     description: tContent('related.table'),     path: '?path=/docs/ui-table--docs'      },
-  { name: 'Card',      description: tContent('related.card'),      path: '?path=/docs/ui-card--docs'       },
-  { name: 'DataTable', description: tContent('related.dataTable'), path: '?path=/docs/ui-datatable--docs'  },
+  { name: 'Table',     description: toPlainText(tContent('related.table')),     path: '?path=/docs/ui-table--docs'      },
+  { name: 'Card',      description: toPlainText(tContent('related.card')),      path: '?path=/docs/ui-card--docs'       },
+  { name: 'DataTable', description: toPlainText(tContent('related.dataTable')), path: '?path=/docs/ui-datatable--docs'  },
 ]);
 
 const noteItems = computed(() => [
@@ -339,9 +345,9 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -470,8 +476,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <!-- Pair 1: DO — com legenda visível -->
@@ -692,7 +698,7 @@ const visualTestItems = computed(() => [
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -719,6 +725,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -743,7 +751,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

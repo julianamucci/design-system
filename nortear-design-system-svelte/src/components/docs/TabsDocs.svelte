@@ -18,9 +18,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import tabsTranslations from '@shared/content/tabs/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(tabsTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (tabsTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -49,7 +61,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -88,10 +99,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -528,15 +535,15 @@ interface TabsContentProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.default.label'),  trigger: $tStore('states.default.trigger'),  behavior: stripHtml($tStore('states.default.behavior')) },
-      { label: $tStore('states.active.label'),   trigger: $tStore('states.active.trigger'),   behavior: stripHtml($tStore('states.active.behavior')) },
-      { label: $tStore('states.hover.label'),    trigger: $tStore('states.hover.trigger'),    behavior: stripHtml($tStore('states.hover.behavior')) },
-      { label: $tStore('states.focus.label'),    trigger: $tStore('states.focus.trigger'),    behavior: stripHtml($tStore('states.focus.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.default.label'),  trigger: toPlainText($tStore('states.default.trigger')),  behavior: toPlainText($tStore('states.default.behavior')) },
+      { label: $tStore('states.active.label'),   trigger: toPlainText($tStore('states.active.trigger')),   behavior: toPlainText($tStore('states.active.behavior')) },
+      { label: $tStore('states.hover.label'),    trigger: toPlainText($tStore('states.hover.trigger')),    behavior: toPlainText($tStore('states.hover.behavior')) },
+      { label: $tStore('states.focus.label'),    trigger: toPlainText($tStore('states.focus.trigger')),    behavior: toPlainText($tStore('states.focus.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
     ]}
   />
 
@@ -547,13 +554,13 @@ interface TabsContentProps {
       {
         cols: propsTableCols,
         items: [
-          { name: 'value',          type: $tStore('props.table.value.type'),          defaultValue: $tStore('props.table.value.default'),          required: $tStore('props.table.value.required'),          description: stripHtml($tStore('props.table.value.description'))          },
-          { name: 'defaultValue',   type: $tStore('props.table.defaultValue.type'),   defaultValue: $tStore('props.table.defaultValue.default'),   required: $tStore('props.table.defaultValue.required'),   description: stripHtml($tStore('props.table.defaultValue.description'))   },
-          { name: 'onValueChange',  type: $tStore('props.table.onValueChange.type'),  defaultValue: $tStore('props.table.onValueChange.default'),  required: $tStore('props.table.onValueChange.required'),  description: stripHtml($tStore('props.table.onValueChange.description'))  },
-          { name: 'orientation',    type: $tStore('props.table.orientation.type'),    defaultValue: $tStore('props.table.orientation.default'),    required: $tStore('props.table.orientation.required'),    description: stripHtml($tStore('props.table.orientation.description'))    },
-          { name: 'activationMode', type: $tStore('props.table.activationMode.type'), defaultValue: $tStore('props.table.activationMode.default'), required: $tStore('props.table.activationMode.required'), description: stripHtml($tStore('props.table.activationMode.description')) },
-          { name: 'variant',        type: $tStore('props.table.variant.type'),        defaultValue: $tStore('props.table.variant.default'),        required: $tStore('props.table.variant.required'),        description: stripHtml($tStore('props.table.variant.description'))        },
-          { name: 'class',          type: $tStore('props.table.className.type'),      defaultValue: $tStore('props.table.className.default'),      required: $tStore('props.table.className.required'),      description: stripHtml($tStore('props.table.className.description'))      },
+          { name: 'value',          type: $tStore('props.table.value.type'),          defaultValue: $tStore('props.table.value.default'),          required: $tStore('props.table.value.required'),          description: toPlainText($tStore('props.table.value.description'))          },
+          { name: 'defaultValue',   type: $tStore('props.table.defaultValue.type'),   defaultValue: $tStore('props.table.defaultValue.default'),   required: $tStore('props.table.defaultValue.required'),   description: toPlainText($tStore('props.table.defaultValue.description'))   },
+          { name: 'onValueChange',  type: $tStore('props.table.onValueChange.type'),  defaultValue: $tStore('props.table.onValueChange.default'),  required: $tStore('props.table.onValueChange.required'),  description: toPlainText($tStore('props.table.onValueChange.description'))  },
+          { name: 'orientation',    type: $tStore('props.table.orientation.type'),    defaultValue: $tStore('props.table.orientation.default'),    required: $tStore('props.table.orientation.required'),    description: toPlainText($tStore('props.table.orientation.description'))    },
+          { name: 'activationMode', type: $tStore('props.table.activationMode.type'), defaultValue: $tStore('props.table.activationMode.default'), required: $tStore('props.table.activationMode.required'), description: toPlainText($tStore('props.table.activationMode.description')) },
+          { name: 'variant',        type: $tStore('props.table.variant.type'),        defaultValue: $tStore('props.table.variant.default'),        required: $tStore('props.table.variant.required'),        description: toPlainText($tStore('props.table.variant.description'))        },
+          { name: 'class',          type: $tStore('props.table.className.type'),      defaultValue: $tStore('props.table.className.default'),      required: $tStore('props.table.className.required'),      description: toPlainText($tStore('props.table.className.description'))      },
         ],
       },
     ]}
@@ -584,6 +591,8 @@ interface TabsContentProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -603,8 +612,8 @@ interface TabsContentProps {
       { key: 'Arrow Up',           description: $tStore('accessibility.keyboard.arrowUp')    },
       { key: 'Home',        description: $tStore('accessibility.keyboard.home')       },
       { key: 'End',         description: $tStore('accessibility.keyboard.end')        },
-      { key: 'Enter',       description: stripHtml($tStore('accessibility.keyboard.enter')) },
-      { key: 'Space',       description: stripHtml($tStore('accessibility.keyboard.space')) },
+      { key: 'Enter',       description: toPlainText($tStore('accessibility.keyboard.enter')) },
+      { key: 'Space',       description: toPlainText($tStore('accessibility.keyboard.space')) },
     ]}
   />
 
@@ -635,11 +644,11 @@ interface TabsContentProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'tab_change', trigger: $tStore('analytics.table.tab_change.trigger'), payload: $tStore('analytics.table.tab_change.payload') },
+      { event: 'tab_change', trigger: toPlainText($tStore('analytics.table.tab_change.trigger')), payload: $tStore('analytics.table.tab_change.payload') },
     ]}
   />
 
@@ -654,8 +663,8 @@ interface TabsContentProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4].map((i) => ({
-        action:   stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result:   stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action:   toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result:   toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -667,11 +676,11 @@ interface TabsContentProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.4.3', how: 'Contrast analyzer' },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.4.3', how: 'Contrast analyzer' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
       ],
     }}
     visual={{

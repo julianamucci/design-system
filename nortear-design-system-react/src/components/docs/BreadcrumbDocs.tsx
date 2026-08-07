@@ -38,12 +38,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -90,12 +87,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function BreadcrumbDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(breadcrumbTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (breadcrumbTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -478,20 +487,20 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           items: [
             {
               element: tContent("usage.uxWriting.table.link.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.link.format")),
+              rules: toPlainText(tContent("usage.uxWriting.table.link.format")),
               do: tContent("usage.uxWriting.table.link.good"),
               dont: tContent("usage.uxWriting.table.link.bad"),
             },
             {
               element: tContent("usage.uxWriting.table.page.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.page.format")),
-              do: stripHtml(tContent("usage.uxWriting.table.page.good")),
-              dont: stripHtml(tContent("usage.uxWriting.table.page.bad")),
+              rules: toPlainText(tContent("usage.uxWriting.table.page.format")),
+              do: toPlainText(tContent("usage.uxWriting.table.page.good")),
+              dont: toPlainText(tContent("usage.uxWriting.table.page.bad")),
             },
             {
               element: tContent("usage.uxWriting.table.separator.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.separator.format")),
-              do: stripHtml(tContent("usage.uxWriting.table.separator.good")),
+              rules: toPlainText(tContent("usage.uxWriting.table.separator.format")),
+              do: toPlainText(tContent("usage.uxWriting.table.separator.good")),
               dont: tContent("usage.uxWriting.table.separator.bad"),
             },
           ],
@@ -594,7 +603,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               </Breadcrumb>
             ),
             doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: tContent("doDont.pair2.dont"),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -644,19 +653,19 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.simple.label"),
-            trigger: stripHtml(tContent("states.simple.trigger")),
-            behavior: stripHtml(tContent("states.simple.behavior")),
+            trigger: toPlainText(tContent("states.simple.trigger")),
+            behavior: toPlainText(tContent("states.simple.behavior")),
           },
           {
             label: tContent("states.asChildLink.label"),
-            trigger: stripHtml(tContent("states.asChildLink.trigger")),
-            behavior: stripHtml(tContent("states.asChildLink.behavior")),
+            trigger: toPlainText(tContent("states.asChildLink.trigger")),
+            behavior: toPlainText(tContent("states.asChildLink.behavior")),
           },
         ]}
       />
@@ -717,8 +726,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "href",      type: "string", defaultValue: "—", required: "Sim", description: stripHtml(tContent("props.table.href")) },
-              { name: "render",    type: "useRender.RenderFunction<\"a\">", defaultValue: "—", required: "Não", description: stripHtml(tContent("props.table.render")) },
+              { name: "href",      type: "string", defaultValue: "—", required: "Sim", description: toPlainText(tContent("props.table.href")) },
+              { name: "render",    type: "useRender.RenderFunction<\"a\">", defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.render")) },
               { name: "className", type: "string", defaultValue: "—", required: "Não", description: tContent("props.table.className") },
               { name: "children",  type: "React.ReactNode", defaultValue: "—", required: "Sim", description: tContent("props.table.children") },
             ],
@@ -793,6 +802,8 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -816,22 +827,22 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         items={[
           {
             name: "NavigationMenu",
-            description: tContent("related.navigationMenu"),
+            description: toPlainText(tContent("related.navigationMenu")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: "Stepper",
-            description: tContent("related.stepper"),
+            description: toPlainText(tContent("related.stepper")),
             path: "?path=/docs/ui-stepper--docs",
           },
           {
             name: "Tabs",
-            description: tContent("related.tabs"),
+            description: toPlainText(tContent("related.tabs")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: "DropdownMenu",
-            description: tContent("related.dropdownMenu"),
+            description: toPlainText(tContent("related.dropdownMenu")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
         ]}
@@ -853,7 +864,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
@@ -869,17 +880,17 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}
@@ -897,7 +908,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
           },
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
             action: tContent(`testes.functional.item${i}.action`),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -909,7 +920,7 @@ interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {}`;
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
             level: tContent(`testes.accessibility.item${i}.level`),
             how: tContent(`testes.accessibility.item${i}.how`),
           })),

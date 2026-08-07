@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AspectRatio/Composicoes',
   component: AspectRatioStory,
   tags: ['layout'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof AspectRatioStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const ComImagem: Story = {
   args: {

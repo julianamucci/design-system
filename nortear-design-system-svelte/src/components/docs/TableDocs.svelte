@@ -35,9 +35,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import tableTranslations from '@shared/content/table/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(tableTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (tableTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -59,7 +71,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -101,10 +112,6 @@
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -898,13 +905,13 @@ interface TableRowProps {
         title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
-          trigger: $tStore('states.cols.trigger'),
-          behavior: $tStore('states.cols.behavior'),
+          trigger: toPlainText($tStore('states.cols.trigger')),
+          behavior: toPlainText($tStore('states.cols.behavior')),
         }}
         items={[
-          { label: $tStore('states.empty.label'),    trigger: stripHtml($tStore('states.empty.trigger')),    behavior: $tStore('states.empty.behavior')    },
-          { label: $tStore('states.selected.label'), trigger: stripHtml($tStore('states.selected.trigger')), behavior: $tStore('states.selected.behavior') },
-          { label: $tStore('states.loading.label'),  trigger: stripHtml($tStore('states.loading.trigger')),  behavior: $tStore('states.loading.behavior')  },
+          { label: $tStore('states.empty.label'),    trigger: toPlainText($tStore('states.empty.trigger')),    behavior: toPlainText($tStore('states.empty.behavior'))},
+          { label: $tStore('states.selected.label'), trigger: toPlainText($tStore('states.selected.trigger')), behavior: toPlainText($tStore('states.selected.behavior'))},
+          { label: $tStore('states.loading.label'),  trigger: toPlainText($tStore('states.loading.trigger')),  behavior: toPlainText($tStore('states.loading.behavior'))},
         ]}
       />
 
@@ -1016,6 +1023,8 @@ interface TableRowProps {
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->
       <DocsAccessibility
+        screenReaderTitle={$tNavStore('common.screenReader')}
+        screenReaderItems={screenReaderItems}
         title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
@@ -1063,13 +1072,13 @@ interface TableRowProps {
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
-          { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-          { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-          { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+          { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+          { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+          { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
         ]}
       />
 

@@ -27,17 +27,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (switchTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(switchTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -384,16 +391,16 @@ export function createSwitchDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: buildDoDescriptive,
               dontPreviewFactory: buildDontAmbiguous,
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: buildDoLinked,
               dontPreviewFactory: buildDontLoose,
             },
@@ -658,16 +665,16 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.unchecked.label'), trigger: t('states.unchecked.trigger'), behavior: stripHtml(t('states.unchecked.behavior')) },
-            { label: t('states.checked.label'),   trigger: t('states.checked.trigger'),   behavior: stripHtml(t('states.checked.behavior')) },
-            { label: t('states.hover.label'),     trigger: t('states.hover.trigger'),     behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),     trigger: t('states.focus.trigger'),     behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.disabled.label'),  trigger: t('states.disabled.trigger'),  behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.invalid.label'),   trigger: t('states.invalid.trigger'),   behavior: stripHtml(t('states.invalid.behavior')) },
+            { label: t('states.unchecked.label'), trigger: toPlainText(t('states.unchecked.trigger')), behavior: toPlainText(t('states.unchecked.behavior')) },
+            { label: t('states.checked.label'),   trigger: toPlainText(t('states.checked.trigger')),   behavior: toPlainText(t('states.checked.behavior')) },
+            { label: t('states.hover.label'),     trigger: toPlainText(t('states.hover.trigger')),     behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),     trigger: toPlainText(t('states.focus.trigger')),     behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'),  trigger: toPlainText(t('states.disabled.trigger')),  behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.invalid.label'),   trigger: toPlainText(t('states.invalid.trigger')),   behavior: toPlainText(t('states.invalid.behavior')) },
           ],
         });
 
@@ -702,7 +709,7 @@ export type SwitchOptions = {
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: stripHtml(t('props.table.checked.description')) +
+                  description: toPlainText(t('props.table.checked.description')) +
                     ' Nota: no Nortear, `checked` define apenas o estado inicial — o factory é não-controlado.',
                 },
                 {
@@ -710,21 +717,21 @@ export type SwitchOptions = {
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: stripHtml(t('props.table.disabled.description')),
+                  description: toPlainText(t('props.table.disabled.description')),
                 },
                 {
                   name: 'onCheckedChange',
                   type: '(checked: boolean) => void',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.onCheckedChange.description')),
+                  description: toPlainText(t('props.table.onCheckedChange.description')),
                 },
                 {
                   name: 'id',
                   type: 'string',
                   defaultValue: '—',
                   required: 'Recomendado',
-                  description: stripHtml(t('props.table.id.description')),
+                  description: toPlainText(t('props.table.id.description')),
                 },
                 {
                   name: 'class',
@@ -759,13 +766,13 @@ export type SwitchOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--input',              value: stripHtml(t('tokens.table.input.class')),             description: stripHtml(t('tokens.table.input.part'))             },
-            { token: '--primary',            value: stripHtml(t('tokens.table.primary.class')),           description: stripHtml(t('tokens.table.primary.part'))           },
-            { token: '--background',         value: stripHtml(t('tokens.table.background.class')),        description: stripHtml(t('tokens.table.background.part'))        },
-            { token: '--primary-foreground', value: stripHtml(t('tokens.table.primaryForeground.class')), description: stripHtml(t('tokens.table.primaryForeground.part')) },
-            { token: '--ring',               value: stripHtml(t('tokens.table.ring.class')),              description: stripHtml(t('tokens.table.ring.part'))              },
-            { token: '--destructive',        value: stripHtml(t('tokens.table.destructive.class')),       description: stripHtml(t('tokens.table.destructive.part'))       },
-            { token: '--foreground',         value: stripHtml(t('tokens.table.foreground.class')),        description: stripHtml(t('tokens.table.foreground.part'))        },
+            { token: '--input',              value: toPlainText(t('tokens.table.input.class')),             description: toPlainText(t('tokens.table.input.part'))             },
+            { token: '--primary',            value: toPlainText(t('tokens.table.primary.class')),           description: toPlainText(t('tokens.table.primary.part'))           },
+            { token: '--background',         value: toPlainText(t('tokens.table.background.class')),        description: toPlainText(t('tokens.table.background.part'))        },
+            { token: '--primary-foreground', value: toPlainText(t('tokens.table.primaryForeground.class')), description: toPlainText(t('tokens.table.primaryForeground.part')) },
+            { token: '--ring',               value: toPlainText(t('tokens.table.ring.class')),              description: toPlainText(t('tokens.table.ring.part'))              },
+            { token: '--destructive',        value: toPlainText(t('tokens.table.destructive.class')),       description: toPlainText(t('tokens.table.destructive.part'))       },
+            { token: '--foreground',         value: toPlainText(t('tokens.table.foreground.class')),        description: toPlainText(t('tokens.table.foreground.part'))        },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -774,6 +781,8 @@ export type SwitchOptions = {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
@@ -821,11 +830,11 @@ export type SwitchOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'field_change',         trigger: t('analytics.table.field_change.trigger'), payload: t('analytics.table.field_change.payload') },
+            { event: 'field_change',         trigger: toPlainText(t('analytics.table.field_change.trigger')), payload: t('analytics.table.field_change.payload') },
             { event: 'docs_page_view',       trigger: 'Carregamento da docs page',                payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed',  trigger: 'Seção visível no viewport',                payload: '{ section_id, component_name, locale }' },
           ],
@@ -842,8 +851,8 @@ export type SwitchOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -855,7 +864,7 @@ export type SwitchOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
             })),
@@ -867,7 +876,7 @@ export type SwitchOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

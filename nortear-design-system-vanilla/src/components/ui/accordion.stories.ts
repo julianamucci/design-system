@@ -1,5 +1,6 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 import { createAccordionDocs } from '@/components/docs/AccordionDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -21,6 +22,7 @@ const meta: Meta<AccordionArgs> = {
   title: 'UI/Accordion',
   tags: ['autodocs', 'disclosure'],
   parameters: {
+    design: figmaDesign('accordion'),
     docs: { page: withAutoDocsTab(createAccordionDocs) },
   },
   // Esta stack não tem docgen (não há componente de framework para introspectar):
@@ -41,7 +43,7 @@ const meta: Meta<AccordionArgs> = {
     },
     defaultValue: {
       control: false,
-      description: 'Item(ns) aberto(s) inicialmente. O Playground começa com todos fechados.',
+      description: "Item(ns) aberto(s) inicialmente. O Playground fixa 'item-1'.",
       table: { type: { summary: 'string | string[]' } },
     },
     onValueChange: {
@@ -63,6 +65,7 @@ const meta: Meta<AccordionArgs> = {
   args: {
     type: 'single',
     collapsible: true,
+    onValueChange: fn(),
   },
 };
 
@@ -86,6 +89,11 @@ export const Playground: Story = {
   // DOM não é o que o consumidor escreve: ele chama a factory. O snippet passa
   // a ser a chamada real, montada a partir dos args.
   parameters: {
+    covers: [
+      'functional.item1', 'functional.item3',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
@@ -98,6 +106,8 @@ export const Playground: Story = {
 const accordion = createAccordion({
   type: '${type}',
   collapsible: ${collapsible},
+  defaultValue: ['item-1'],
+  class: 'nds-max-w-lg',
   items: [
 ${items}
   ],
@@ -112,11 +122,30 @@ document.querySelector('#app')?.append(accordion);`;
     createAccordion({
       type: args.type,
       collapsible: args.collapsible,
+      // Array, como o defaultValue={["item-1"]} do Playground do React. A forma
+      // em string continua exercitada nas stories de variantes e estados.
+      defaultValue: ['item-1'],
+      class: 'nds-max-w-lg',
+      onValueChange: args.onValueChange,
       items: DEMO_ITEMS,
     }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const triggers = canvas.getAllByRole('button');
+
+    // Idempotentes de propósito: clicam SÓ se o estado atual já não for o
+    // desejado. Um clique cego ALTERNA — a partir do estado errado ele inverte
+    // o resultado e a asserção seguinte falha. É o que fazia este Playground
+    // passar no vitest (montagem limpa) e falhar no painel Interactions, onde
+    // o replay reaproveita o componente já mexido.
+    const abrir = async (t: HTMLElement) => {
+      if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+      await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+    };
+    const fechar = async (t: HTMLElement) => {
+      if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+      await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+    };
 
     await step('A raiz registra a configuração recebida', async () => {
       const root = canvasElement.querySelector('[data-slot="accordion"]');
@@ -124,21 +153,23 @@ document.querySelector('#app')?.append(accordion);`;
       await expect(root).toHaveAttribute('data-collapsible', String(args.collapsible));
     });
 
-    await step('Todos os triggers estão fechados por padrão', async () => {
-      for (const trigger of triggers) {
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      }
+    // O painel Interactions reexecuta a play no MESMO DOM: o estado inicial da
+    // segunda rodada é o que a primeira deixou. Por isso o passo leva ao estado
+    // que quer provar em vez de assumir o de montagem — e o defaultValue, que só
+    // vale na montagem, é provado pela story DefaultOpen, com DOM limpo.
+    await step('Modo único mantém um item aberto por vez', async () => {
+      await abrir(triggers[0]);
+      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('Clicar no primeiro trigger abre o item', async () => {
-      await userEvent.click(triggers[0]);
-      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
-    });
-
-    await step('No modo single, abrir outro fecha o primeiro', async () => {
-      await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+    await step('Clicar no trigger fechado abre o item, e o modo single fecha o anterior', async () => {
+      // fecha antes de abrir: garante que o clique aconteça de verdade nesta
+      // rodada — é ele que popula a aba Actions.
+      await fechar(triggers[1]);
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+      await expect(args.onValueChange).toHaveBeenCalled();
     });
 
     await step('Conteúdo aberto fica de fato visível, com altura real', async () => {
@@ -159,26 +190,74 @@ document.querySelector('#app')?.append(accordion);`;
     });
 
     await step('Enter expande um item fechado', async () => {
-      // triggers[2] está fechado (single-mode fechou ao abrir triggers[1]).
-      // Focamos e pressionamos Enter — deve abrir (não clicar+Enter, que toggla duas vezes).
+      await fechar(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard('{Enter}');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
     await step('Space colapsa um item aberto (collapsible=true)', async () => {
-      // triggers[2] está aberto do step anterior — Space toggla para fechado.
+      await abrir(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
     });
-    await step('Setas movem o foco entre triggers (com loop)', async () => {
+
+    await step('Reabrir antes do timer não deixa o painel ser escondido depois', async () => {
+      // O fechamento agenda o `hidden` para depois da animação (360ms).
+      // Reabrir dentro da janela precisa cancelar esse timer: sem o
+      // clearTimeout do updateItemState, o painel reaberto seria escondido
+      // meio segundo depois. Só se vê esperando o timer passar.
+      const painel = canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]')[2];
+      await abrir(triggers[2]);
+      await new Promise((r) => setTimeout(r, 500));
+      await expect(painel).not.toHaveAttribute('hidden');
+      await expect(painel).toHaveAttribute('data-state', 'open');
+    });
+    await step('Trigger aponta para o painel por aria-controls, e o painel NAO e landmark', async () => {
+      // Documentado em accessibility.aria.* como automático — esta asserção é o
+      // que impede a docs page de afirmar o que a factory não faz.
+      // Medido com o item ABERTO: onde o painel desmonta ao fechar, apontar
+      // aria-controls para id ausente seria ARIA inválido.
+      const trigger = triggers[0];
+      await abrir(trigger);
+      const contentId = trigger.getAttribute('aria-controls');
+      await expect(contentId).toBeTruthy();
+      const panel = canvasElement.querySelector(`#${CSS.escape(contentId!)}`);
+      // Sem role="region": o painel fica sempre montado por causa do
+      // until-found, e um landmark por item proliferaria — medido na docs
+      // page, 41 paineis viraram 41 landmarks (axe landmark-unique).
+      await expect(panel).not.toHaveAttribute('role');
+      await expect(trigger.id).toBeTruthy();
+    });
+
+    await step('Painel fechado continua no DOM, achável pelo Ctrl+F', async () => {
+      // `hidden="until-found"` esconde por content-visibility, não por display —
+      // é o que deixa a busca do navegador achar a resposta e abrir o item.
+      // O display computado entra na asserção de propósito: uma regra de autor
+      // com `display: none` anula o recurso sem quebrar nada visível.
+      await abrir(triggers[0]);      // parte de aberto, seja qual for o estado herdado
+      await fechar(triggers[0]);
+      const panel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
+        if (!el || el.getAttribute('hidden') === null) throw new Error('painel ainda fechando');
+        return el;
+      });
+      await expect(panel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(panel).display).not.toBe('none');
+    });
+
+    await step('Setas movem o foco entre triggers (com loop) e Home/End vão às pontas', async () => {
       triggers[0].focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(triggers[1]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
       await expect(triggers[0]).toHaveFocus();
       await userEvent.keyboard('{ArrowUp}');
+      await expect(triggers[triggers.length - 1]).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(triggers[0]).toHaveFocus();
+      await userEvent.keyboard('{End}');
       await expect(triggers[triggers.length - 1]).toHaveFocus();
     });
 

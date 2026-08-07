@@ -108,14 +108,52 @@ aparecem nesta stack:
 
 ## Bits UI Specifics
 
-### `open` é bindável (não `defaultOpen`)
+### Prop que não existe é aceita e ignorada em silêncio
+
+Não há erro de tipo nem aviso: o componente monta e simplesmente não faz nada.
+Foi assim que `defaultOpen` e `defaultValue` — que **não existem** no bits-ui
+nem no vaul-svelte — deixaram overlays e menus fechados em 40+ testes.
+
+A API é sempre o estado bindável: `open`, `value`. Para "começa aberto",
+inicialize o bindable:
 
 ```svelte
-<!-- ✅ Bits UI bind -->
-<Collapsible bind:open>
-  <CollapsibleTrigger {disabled}>...</CollapsibleTrigger>
-</Collapsible>
+let { defaultOpen = false, open = $bindable(defaultOpen) } = $props();
 ```
+
+Antes de usar qualquer prop de uma lib, confirme em `node_modules/<lib>/**/types.d.ts`.
+
+### A lib vence o consumidor nas props que ela mesma define
+
+`{...restProps}` não sobrescreve o que o bits-ui define internamente — ele
+merge depois. Foi assim que a paginação inteira ficou com
+`aria-label="Page N"` **em inglês**, e o trigger do hover-card virou
+`role="button"` sendo um `<a>` que navega.
+
+Só o snippet `child` escreve depois do merge:
+
+```svelte
+<Primitive.X {...restProps}>
+  {#snippet child({ props })}
+    <button {...props} aria-label={oNosso}>…</button>
+  {/snippet}
+</Primitive.X>
+```
+
+### O bits-ui não emite `role` no conteúdo dos overlays
+
+Faltavam `role="dialog"` (popover, hover-card), `role="tooltip"` e `role="menu"`.
+Ao criar overlay nesta stack, **compare o DOM final com o do Vanilla** — ele é a
+referência cross-stack e define os roles à mão. Role adicionado exige os
+atributos companheiros (ver `01-acessibilidade.md` §Roles).
+
+### Id entre irmãos portalados vem de contexto, nunca do DOM
+
+`aria-controls`/`aria-labelledby` entre trigger e painel não podem ser
+descobertos com `querySelector`: o painel é portalado e só existe enquanto
+aberto. O id nasce na raiz e desce por contexto — ver `select-a11y.ts` e
+`accordion-a11y.ts`. Um id por instância via `$props.id()`, que só é aceito
+como inicializador de declaração no topo do componente.
 
 ### Props de montagem precisam de `{#key}`
 
@@ -136,6 +174,21 @@ aparecem nesta stack:
   <Button {disabled}>...</Button>
 </CollapsibleTrigger>
 ```
+
+### Estado do wrapper é `$state`, nunca `$derived`
+
+`$derived` é somente leitura e se recalcula: `bind:` não segura a alteração e o
+componente não muda de valor. Ressincronize comparando **conteúdo**, não
+identidade — os args do Storybook chegam como literal novo a cada render, e
+comparar por referência reverte a interação do usuário.
+
+### Sintaxe que não compila
+
+- Comentário `<!-- -->` **não** vai dentro da lista de atributos de um elemento.
+- `let meta: Meta` + `type Story = StoryObj` quando o `render` devolve um
+  wrapper. `Meta<typeof Componente>` fixa o renderer no primitivo e faz **toda**
+  story do arquivo errar no svelte-check. Só use `Meta<typeof X>` quando o
+  `render` devolve o próprio X.
 
 ---
 

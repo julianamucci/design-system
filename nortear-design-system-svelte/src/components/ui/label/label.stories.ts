@@ -6,7 +6,7 @@ import LabelStory from './LabelStory.svelte';
 import LabelDocs from '@/components/docs/LabelDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Label',
   component: Label,
   tags: ['autodocs', 'form'],
@@ -28,10 +28,10 @@ const meta = {
     class: '',
     required: false,
   },
-} satisfies Meta<typeof Label>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

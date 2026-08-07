@@ -36,9 +36,21 @@ import uiTranslations from '@/i18n/ui.json';
   import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.svelte';
   import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.svelte';
   import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.svelte';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(componentTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (componentTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -60,7 +72,6 @@ import uiTranslations from '@/i18n/ui.json';
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -101,10 +112,6 @@ import uiTranslations from '@/i18n/ui.json';
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
 
@@ -738,21 +745,20 @@ interface CommandLoadingProps {
     </div>
   {/snippet}
 
-
   <!-- ── Estados ──────────────────────────────────────────────────── -->
   <DocsStates
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.empty.label'),    trigger: stripHtml($tStore('states.empty.trigger')),    behavior: $tStore('states.empty.behavior')    },
-      { label: $tStore('states.selected.label'), trigger: stripHtml($tStore('states.selected.trigger')), behavior: $tStore('states.selected.behavior') },
-      { label: $tStore('states.disabled.label'), trigger: stripHtml($tStore('states.disabled.trigger')), behavior: $tStore('states.disabled.behavior') },
-      { label: $tStore('states.loading.label'),  trigger: stripHtml($tStore('states.loading.trigger')),  behavior: $tStore('states.loading.behavior')  },
-      { label: $tStore('states.longList.label'),     trigger: stripHtml($tStore('states.longList.trigger')),     behavior: stripHtml($tStore('states.longList.behavior'))     },
+      { label: $tStore('states.empty.label'),    trigger: toPlainText($tStore('states.empty.trigger')),    behavior: toPlainText($tStore('states.empty.behavior'))},
+      { label: $tStore('states.selected.label'), trigger: toPlainText($tStore('states.selected.trigger')), behavior: toPlainText($tStore('states.selected.behavior'))},
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior'))},
+      { label: $tStore('states.loading.label'),  trigger: toPlainText($tStore('states.loading.trigger')),  behavior: toPlainText($tStore('states.loading.behavior'))},
+      { label: $tStore('states.longList.label'),     trigger: toPlainText($tStore('states.longList.trigger')),     behavior: toPlainText($tStore('states.longList.behavior'))     },
     ]}
   />
 
@@ -770,11 +776,11 @@ interface CommandLoadingProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',          type: 'string',                                   defaultValue: '""',  required: 'Não', description: stripHtml($tStore('props.table.commandValue'))         },
-          { name: 'filter',         type: '(value, search, keywords?) => number',     defaultValue: '—',   required: 'Não', description: stripHtml($tStore('props.table.commandFilter'))        },
-          { name: 'onValueChange',  type: '(value: string) => void',                  defaultValue: '—',   required: 'Não', description: stripHtml($tStore('props.table.commandOnValueChange')) },
-          { name: 'class',          type: 'string',                                   defaultValue: '—',   required: 'Não', description: stripHtml($tStore('props.table.className'))            },
-          { name: 'children',       type: 'Snippet',                                  defaultValue: '—',   required: 'Não', description: stripHtml($tStore('props.table.children'))             },
+          { name: 'value',          type: 'string',                                   defaultValue: '""',  required: 'Não', description: toPlainText($tStore('props.table.commandValue'))         },
+          { name: 'filter',         type: '(value, search, keywords?) => number',     defaultValue: '—',   required: 'Não', description: toPlainText($tStore('props.table.commandFilter'))        },
+          { name: 'onValueChange',  type: '(value: string) => void',                  defaultValue: '—',   required: 'Não', description: toPlainText($tStore('props.table.commandOnValueChange')) },
+          { name: 'class',          type: 'string',                                   defaultValue: '—',   required: 'Não', description: toPlainText($tStore('props.table.className'))            },
+          { name: 'children',       type: 'Snippet',                                  defaultValue: '—',   required: 'Não', description: toPlainText($tStore('props.table.children'))             },
         ],
       },
       {
@@ -787,9 +793,9 @@ interface CommandLoadingProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'placeholder', type: 'string',  defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.inputPlaceholder')) },
+          { name: 'placeholder', type: 'string',  defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.inputPlaceholder')) },
           { name: 'value',       type: 'string',  defaultValue: '""',   required: 'Não', description: 'Valor controlado do input (bindable).'            },
-          { name: 'class',       type: 'string',  defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.className'))        },
+          { name: 'class',       type: 'string',  defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.className'))        },
         ],
       },
       {
@@ -802,11 +808,11 @@ interface CommandLoadingProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.table.itemValue'))    },
-          { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.table.itemDisabled')) },
-          { name: 'onselect', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.itemOnSelect')) },
-          { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.table.className'))    },
-          { name: 'children', type: 'Snippet',             defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.table.children'))    },
+          { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.itemValue'))    },
+          { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: toPlainText($tStore('props.table.itemDisabled')) },
+          { name: 'onselect', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.itemOnSelect')) },
+          { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.className'))    },
+          { name: 'children', type: 'Snippet',             defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.children'))    },
         ],
       },
       {
@@ -820,11 +826,11 @@ interface CommandLoadingProps {
         },
         items: [
           { name: 'open',             type: 'boolean', defaultValue: 'false',              required: 'Não', description: 'Estado de abertura do Dialog (bindable).'                     },
-          { name: 'title',            type: 'string',  defaultValue: '"Command Palette"',  required: 'Não', description: stripHtml($tStore('props.table.dialogTitle'))            },
-          { name: 'description',      type: 'string',  defaultValue: '"Search for a command to run..."', required: 'Não', description: stripHtml($tStore('props.table.dialogDescription')) },
-          { name: 'showCloseButton',  type: 'boolean', defaultValue: 'false',              required: 'Não', description: stripHtml($tStore('props.table.dialogShowCloseButton'))  },
-          { name: 'class',            type: 'string',  defaultValue: '—',                  required: 'Não', description: stripHtml($tStore('props.table.className'))              },
-          { name: 'children',         type: 'Snippet', defaultValue: '—',                  required: 'Sim', description: stripHtml($tStore('props.table.children'))              },
+          { name: 'title',            type: 'string',  defaultValue: '"Command Palette"',  required: 'Não', description: toPlainText($tStore('props.table.dialogTitle'))            },
+          { name: 'description',      type: 'string',  defaultValue: '"Search for a command to run..."', required: 'Não', description: toPlainText($tStore('props.table.dialogDescription')) },
+          { name: 'showCloseButton',  type: 'boolean', defaultValue: 'false',              required: 'Não', description: toPlainText($tStore('props.table.dialogShowCloseButton'))  },
+          { name: 'class',            type: 'string',  defaultValue: '—',                  required: 'Não', description: toPlainText($tStore('props.table.className'))              },
+          { name: 'children',         type: 'Snippet', defaultValue: '—',                  required: 'Sim', description: toPlainText($tStore('props.table.children'))              },
         ],
       },
     ]}
@@ -858,6 +864,8 @@ interface CommandLoadingProps {
 
   <!-- ── Acessibilidade ───────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -904,15 +912,15 @@ interface CommandLoadingProps {
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.itemSelect'),    trigger: $tStore('analytics.table.itemSelectTrigger'),    payload: $tStore('analytics.table.itemSelectPayload')    },
-      { event: $tStore('analytics.table.paletteOpen'),   trigger: $tStore('analytics.table.paletteOpenTrigger'),   payload: $tStore('analytics.table.paletteOpenPayload')   },
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.itemSelect'),    trigger: toPlainText($tStore('analytics.table.itemSelectTrigger')),    payload: $tStore('analytics.table.itemSelectPayload')    },
+      { event: $tStore('analytics.table.paletteOpen'),   trigger: toPlainText($tStore('analytics.table.paletteOpenTrigger')),   payload: $tStore('analytics.table.paletteOpenPayload')   },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

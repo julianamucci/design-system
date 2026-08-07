@@ -25,12 +25,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -77,12 +74,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function SkeletonDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(skeletonTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (skeletonTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -473,19 +482,19 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.motionReduced.label"),
-            trigger: tContent("states.motionReduced.trigger"),
-            behavior: stripHtml(tContent("states.motionReduced.behavior")),
+            trigger: toPlainText(tContent("states.motionReduced.trigger")),
+            behavior: toPlainText(tContent("states.motionReduced.behavior")),
           },
         ]}
       />
@@ -568,6 +577,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -591,22 +602,22 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         items={[
           {
             name: tContent("related.items.progress.name"),
-            description: tContent("related.items.progress.description"),
+            description: toPlainText(tContent("related.items.progress.description")),
             path: "?path=/docs/ui-progress--docs",
           },
           {
             name: tContent("related.items.spinner.name"),
-            description: tContent("related.items.spinner.description"),
+            description: toPlainText(tContent("related.items.spinner.description")),
             path: "?path=/docs/ui-spinner--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
-            description: tContent("related.items.aspectRatio.description"),
+            description: toPlainText(tContent("related.items.aspectRatio.description")),
             path: "?path=/docs/ui-aspectratio--docs",
           },
           {
             name: tContent("related.items.card.name"),
-            description: tContent("related.items.card.description"),
+            description: toPlainText(tContent("related.items.card.description")),
             path: "?path=/docs/ui-card--docs",
           },
         ]}
@@ -632,7 +643,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         items={[
           {
             event: "—",
-            trigger: DOMPurify.sanitize(tContent("analytics.description")),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "—",
           },
         ]}

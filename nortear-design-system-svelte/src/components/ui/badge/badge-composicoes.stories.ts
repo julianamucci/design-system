@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Badge/Composicoes',
   component: Badge,
   tags: ['feedback'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Badge>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const WithIcon: Story = {
   render: () => ({

@@ -38,12 +38,9 @@ import { DocsRelated } from "@/components/docs/shared/sections/DocsRelated";
 import { DocsNotes } from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics } from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes } from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -90,12 +87,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ────────────────────────────────────────────────────
 
 export function MenubarDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(menubarTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (menubarTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -712,29 +721,29 @@ interface MenubarItemProps {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.closed.label"),
-            trigger: tContent("states.closed.trigger"),
-            behavior: stripHtml(tContent("states.closed.behavior")),
+            trigger: toPlainText(tContent("states.closed.trigger")),
+            behavior: toPlainText(tContent("states.closed.behavior")),
           },
           {
             label: tContent("states.open.label"),
-            trigger: tContent("states.open.trigger"),
-            behavior: stripHtml(tContent("states.open.behavior")),
+            trigger: toPlainText(tContent("states.open.trigger")),
+            behavior: toPlainText(tContent("states.open.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.checked.label"),
-            trigger: tContent("states.checked.trigger"),
-            behavior: stripHtml(tContent("states.checked.behavior")),
+            trigger: toPlainText(tContent("states.checked.trigger")),
+            behavior: toPlainText(tContent("states.checked.behavior")),
           },
         ]}
       />
@@ -858,6 +867,8 @@ interface MenubarItemProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -870,13 +881,13 @@ interface MenubarItemProps {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
-          { key: "Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrowsHorizontal")) },
-          { key: "Arrow Up / Arrow Down", description: stripHtml(tContent("accessibility.keyboard.arrowsVertical")) },
-          { key: "Enter / Space", description: stripHtml(tContent("accessibility.keyboard.enter")) },
-          { key: "Esc", description: stripHtml(tContent("accessibility.keyboard.escape")) },
-          { key: "Home / End", description: stripHtml(tContent("accessibility.keyboard.homeEnd")) },
-          { key: "A–Z", description: stripHtml(tContent("accessibility.keyboard.typeahead")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Left / Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrowsHorizontal")) },
+          { key: "Arrow Up / Arrow Down", description: toPlainText(tContent("accessibility.keyboard.arrowsVertical")) },
+          { key: "Enter / Space", description: toPlainText(tContent("accessibility.keyboard.enter")) },
+          { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+          { key: "Home / End", description: toPlainText(tContent("accessibility.keyboard.homeEnd")) },
+          { key: "A–Z", description: toPlainText(tContent("accessibility.keyboard.typeahead")) },
         ]}
       />
 
@@ -887,22 +898,22 @@ interface MenubarItemProps {
         items={[
           {
             name: tContent("related.items.navigationMenu.name"),
-            description: tContent("related.items.navigationMenu.description"),
+            description: toPlainText(tContent("related.items.navigationMenu.description")),
             path: "?path=/docs/ui-navigationmenu--docs",
           },
           {
             name: tContent("related.items.dropdownMenu.name"),
-            description: tContent("related.items.dropdownMenu.description"),
+            description: toPlainText(tContent("related.items.dropdownMenu.description")),
             path: "?path=/docs/ui-dropdownmenu--docs",
           },
           {
             name: tContent("related.items.sidebar.name"),
-            description: tContent("related.items.sidebar.description"),
+            description: toPlainText(tContent("related.items.sidebar.description")),
             path: "?path=/docs/ui-sidebar--docs",
           },
           {
             name: tContent("related.items.command.name"),
-            description: tContent("related.items.command.description"),
+            description: toPlainText(tContent("related.items.command.description")),
             path: "?path=/docs/ui-command--docs",
           },
         ]}
@@ -929,7 +940,7 @@ interface MenubarItemProps {
         items={[
           {
             event: "menubar_menu_open / menubar_item_select / menubar_shortcut_invoke",
-            trigger: DOMPurify.sanitize(tContent("analytics.description")),
+            trigger: toPlainText(tContent("analytics.description")),
             payload: "component, menu, label",
           },
         ]}

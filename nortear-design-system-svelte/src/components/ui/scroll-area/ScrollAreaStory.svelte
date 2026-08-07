@@ -50,7 +50,10 @@
 {:else if variant === 'horizontal'}
   <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden {className}" style="height: {height}; width: {width};">
     <ScrollArea orientation="horizontal" {type} {scrollHideDelay} class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
-      <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
+      <!-- nds-row e nao nds-cluster: o cluster tem flex-wrap: wrap, entao os
+           itens quebravam linha em vez de transbordar na horizontal — sem
+           transbordo o bits-ui nao materializa a scrollbar horizontal. -->
+      <div class="nds-row nds-p-4" data-spacing="md" style="width: max-content">
         {#each cards as n (n)}
           <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style="height: 120px; width: 140px">
             {cardLabel} {n}

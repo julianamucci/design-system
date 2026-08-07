@@ -14,9 +14,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import chartTranslations from '@shared/content/chart/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(chartTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (chartTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -38,7 +50,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -76,10 +87,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -497,22 +504,21 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     </Card>
   {/snippet}
 
-
   <!-- ── Estados ───────────────────────────────────────────────── -->
   <DocsStates
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.empty.label'),        trigger: stripHtml($tStore('states.empty.trigger')),        behavior: $tStore('states.empty.behavior')        },
-      { label: $tStore('states.loading.label'),      trigger: stripHtml($tStore('states.loading.trigger')),      behavior: stripHtml($tStore('states.loading.behavior'))      },
-      { label: $tStore('states.singleSeries.label'), trigger: stripHtml($tStore('states.singleSeries.trigger')), behavior: stripHtml($tStore('states.singleSeries.behavior')) },
-      { label: $tStore('states.multiSeries.label'),  trigger: stripHtml($tStore('states.multiSeries.trigger')),  behavior: stripHtml($tStore('states.multiSeries.behavior'))  },
-      { label: $tStore('states.withEmptyState.label'),        trigger: stripHtml($tStore('states.withEmptyState.trigger')),        behavior: stripHtml($tStore('states.withEmptyState.behavior'))        },
-      { label: $tStore('states.multiSeriesWithLegend.label'), trigger: stripHtml($tStore('states.multiSeriesWithLegend.trigger')), behavior: stripHtml($tStore('states.multiSeriesWithLegend.behavior')) },
+      { label: $tStore('states.empty.label'),        trigger: toPlainText($tStore('states.empty.trigger')),        behavior: toPlainText($tStore('states.empty.behavior'))},
+      { label: $tStore('states.loading.label'),      trigger: toPlainText($tStore('states.loading.trigger')),      behavior: toPlainText($tStore('states.loading.behavior'))      },
+      { label: $tStore('states.singleSeries.label'), trigger: toPlainText($tStore('states.singleSeries.trigger')), behavior: toPlainText($tStore('states.singleSeries.behavior')) },
+      { label: $tStore('states.multiSeries.label'),  trigger: toPlainText($tStore('states.multiSeries.trigger')),  behavior: toPlainText($tStore('states.multiSeries.behavior'))  },
+      { label: $tStore('states.withEmptyState.label'),        trigger: toPlainText($tStore('states.withEmptyState.trigger')),        behavior: toPlainText($tStore('states.withEmptyState.behavior'))        },
+      { label: $tStore('states.multiSeriesWithLegend.label'), trigger: toPlainText($tStore('states.multiSeriesWithLegend.trigger')), behavior: toPlainText($tStore('states.multiSeriesWithLegend.behavior')) },
     ]}
   />
 
@@ -530,10 +536,10 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.table.option'))    },
-          { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: stripHtml($tStore('props.table.renderer'))  },
-          { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.table.className')) },
-          { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.table.ariaLabel')) },
+          { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.option'))    },
+          { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: toPlainText($tStore('props.table.renderer'))  },
+          { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.className')) },
+          { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.ariaLabel')) },
         ],
       },
       {
@@ -546,11 +552,11 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.data'))       },
-          { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.xAxis'))      },
-          { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.series')) },
-          { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: stripHtml($tStore('props.table.title'))      },
-          { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: stripHtml($tStore('props.table.showLegend')) },
+          { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.data'))       },
+          { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.xAxis'))      },
+          { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.series')) },
+          { name: 'title',      type: 'string',                                       defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.title'))      },
+          { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: toPlainText($tStore('props.table.showLegend')) },
         ],
       },
     ]}
@@ -585,6 +591,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -630,13 +638,13 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
-      trigger: $tStore('analytics.table.trigger'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
       payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: $tStore('analytics.table.pageView'),      trigger: $tStore('analytics.table.pageViewTrigger'),      payload: $tStore('analytics.table.pageViewPayload')      },
-      { event: $tStore('analytics.table.sectionViewed'), trigger: $tStore('analytics.table.sectionViewedTrigger'), payload: $tStore('analytics.table.sectionViewedPayload') },
-      { event: $tStore('analytics.table.langSwitch'),    trigger: $tStore('analytics.table.langSwitchTrigger'),    payload: $tStore('analytics.table.langSwitchPayload')    },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 

@@ -30,7 +30,9 @@
       "item7": "<strong>NavigationMenuViewport</strong> — container compartilhado que renderiza o Content ativo com transição de tamanho.",
       "item8": "<strong>NavigationMenuIndicator</strong> — seta visual que aponta para o Trigger ativo (opcional).",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Início</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/produtos/a\">Produto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/produtos/b\">Produto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "structureCode": {
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Início</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/produtos/a\">Produto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/produtos/b\">Produto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -237,7 +239,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// NavigationMenu controlado com delays customizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegação principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "extensibilityCode": {
+        "react": "// NavigationMenu controlado com delays customizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegação principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -279,7 +283,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor da barra para tema com header colorido */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger ativo com sublinhado em vez de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      "customizationCode": {
+        "web": "/* Override de cor da barra para tema com header colorido */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger ativo com sublinhado em vez de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -478,7 +484,9 @@
       "item7": "<strong>NavigationMenuViewport</strong> — shared container that renders the active Content with size transition.",
       "item8": "<strong>NavigationMenuIndicator</strong> — visual arrow pointing to active Trigger (optional).",
       "structureLabel": "Basic structure:",
-      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Home</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/products/a\">Product A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/products/b\">Product B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "structureCode": {
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Home</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/products/a\">Product A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/products/b\">Product B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -685,7 +693,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Controlled NavigationMenu with custom delays\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Main navigation\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "extensibilityCode": {
+        "react": "// Controlled NavigationMenu with custom delays\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Main navigation\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -727,7 +737,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Bar color override for colored-header theme */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Active trigger with underline instead of bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      "customizationCode": {
+        "web": "/* Bar color override for colored-header theme */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Active trigger with underline instead of bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -926,7 +938,9 @@
       "item7": "<strong>NavigationMenuViewport</strong> — container compartido que renderiza el Content activo con transición de tamaño.",
       "item8": "<strong>NavigationMenuIndicator</strong> — flecha visual que apunta al Trigger activo (opcional).",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Inicio</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Productos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/productos/a\">Producto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/productos/b\">Producto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "structureCode": {
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Inicio</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Productos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/productos/a\">Producto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/productos/b\">Producto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1133,7 +1147,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// NavigationMenu controlado con delays personalizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegación principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      "extensibilityCode": {
+        "react": "// NavigationMenu controlado con delays personalizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegación principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1175,7 +1191,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de color de la barra para tema con header coloreado */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger activo con subrayado en lugar de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      "customizationCode": {
+        "web": "/* Override de color de la barra para tema con header coloreado */\n[data-slot='navigation-menu'] {\n  background-color: hsl(var(--card));\n}\n\n/* Trigger activo con subrayado en lugar de bg */\n[data-slot='navigation-menu-trigger'][data-state='open'] {\n  background-color: transparent;\n  border-bottom: 2px solid hsl(var(--primary));\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

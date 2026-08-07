@@ -34,12 +34,9 @@ import {
   DocsAnalytics,
   DocsTestes,
 } from "@/components/docs/shared/sections";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -86,12 +83,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ────────────────────────────────────────────────────
 
 export function PaginationDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(paginationTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (paginationTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -816,39 +825,39 @@ const total = 8;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.hover.label"),
-            trigger: tContent("states.hover.trigger"),
-            behavior: stripHtml(tContent("states.hover.behavior")),
+            trigger: toPlainText(tContent("states.hover.trigger")),
+            behavior: toPlainText(tContent("states.hover.behavior")),
           },
           {
             label: tContent("states.active.label"),
-            trigger: tContent("states.active.trigger"),
-            behavior: stripHtml(tContent("states.active.behavior")),
+            trigger: toPlainText(tContent("states.active.trigger")),
+            behavior: toPlainText(tContent("states.active.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: tContent("states.disabled.trigger"),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.focus.label"),
-            trigger: tContent("states.focus.trigger"),
-            behavior: stripHtml(tContent("states.focus.behavior")),
+            trigger: toPlainText(tContent("states.focus.trigger")),
+            behavior: toPlainText(tContent("states.focus.behavior")),
           },
           {
             label: tContent("states.lastPage.label"),
-            trigger: stripHtml(tContent("states.lastPage.trigger")),
-            behavior: stripHtml(tContent("states.lastPage.behavior")),
+            trigger: toPlainText(tContent("states.lastPage.trigger")),
+            behavior: toPlainText(tContent("states.lastPage.behavior")),
           },
         ]}
       />
@@ -961,6 +970,8 @@ const total = 8;
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -973,18 +984,18 @@ const total = 8;
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "Tab", description: stripHtml(tContent("accessibility.keyboard.tab")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
           {
             key: "Shift + Tab",
-            description: stripHtml(tContent("accessibility.keyboard.shiftTab")),
+            description: toPlainText(tContent("accessibility.keyboard.shiftTab")),
           },
           {
             key: "Enter",
-            description: stripHtml(tContent("accessibility.keyboard.enter")),
+            description: toPlainText(tContent("accessibility.keyboard.enter")),
           },
           {
             key: "Space",
-            description: stripHtml(tContent("accessibility.keyboard.space")),
+            description: toPlainText(tContent("accessibility.keyboard.space")),
           },
         ]}
       />
@@ -996,17 +1007,17 @@ const total = 8;
         items={[
           {
             name: tContent("related.items.breadcrumb.name"),
-            description: tContent("related.items.breadcrumb.description"),
+            description: toPlainText(tContent("related.items.breadcrumb.description")),
             path: "?path=/docs/ui-breadcrumb--docs",
           },
           {
             name: tContent("related.items.tabs.name"),
-            description: tContent("related.items.tabs.description"),
+            description: toPlainText(tContent("related.items.tabs.description")),
             path: "?path=/docs/ui-tabs--docs",
           },
           {
             name: tContent("related.items.button.name"),
-            description: tContent("related.items.button.description"),
+            description: toPlainText(tContent("related.items.button.description")),
             path: "?path=/docs/ui-button--docs",
           },
         ]}
@@ -1031,7 +1042,7 @@ const total = 8;
         items={[
           {
             event: "page_change",
-            trigger: tContent("analytics.table.page_change.trigger"),
+            trigger: toPlainText(tContent("analytics.table.page_change.trigger")),
             payload: tContent("analytics.table.page_change.payload"),
           },
         ]}

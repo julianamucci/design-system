@@ -29,12 +29,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -81,7 +78,6 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Animated demo (incremental value) ───────────────────────────────────────
 
 function useAnimatedProgress(intervalMs: number = 500, step: number = 5) {
@@ -100,6 +96,19 @@ function useAnimatedProgress(intervalMs: number = 500, step: number = 5) {
 export function ProgressDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(progressTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (progressTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -388,8 +397,8 @@ interface ProgressProps extends Progress.Root.Props {
                 <Progress value={42} aria-label="Barra" />
               </div>
             ),
-            doCaption: tContent("doDont.pair1.do"),
-            dontCaption: tContent("doDont.pair1.dont"),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -410,8 +419,8 @@ interface ProgressProps extends Progress.Root.Props {
                 <Progress value={51} aria-label="Progresso do upload" />
               </div>
             ),
-            doCaption: tContent("doDont.pair2.do"),
-            dontCaption: tContent("doDont.pair2.dont"),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -458,29 +467,29 @@ interface ProgressProps extends Progress.Root.Props {
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: tContent("states.default.trigger"),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.loading.label"),
-            trigger: tContent("states.loading.trigger"),
-            behavior: stripHtml(tContent("states.loading.behavior")),
+            trigger: toPlainText(tContent("states.loading.trigger")),
+            behavior: toPlainText(tContent("states.loading.behavior")),
           },
           {
             label: tContent("states.complete.label"),
-            trigger: tContent("states.complete.trigger"),
-            behavior: stripHtml(tContent("states.complete.behavior")),
+            trigger: toPlainText(tContent("states.complete.trigger")),
+            behavior: toPlainText(tContent("states.complete.behavior")),
           },
           {
             label: tContent("states.indeterminate.label"),
-            trigger: tContent("states.indeterminate.trigger"),
-            behavior: stripHtml(tContent("states.indeterminate.behavior")),
+            trigger: toPlainText(tContent("states.indeterminate.trigger")),
+            behavior: toPlainText(tContent("states.indeterminate.behavior")),
           },
         ]}
       />
@@ -503,7 +512,7 @@ interface ProgressProps extends Progress.Root.Props {
                 type: tContent("props.table.value.type"),
                 defaultValue: tContent("props.table.value.default"),
                 required: tContent("props.table.value.required"),
-                description: stripHtml(tContent("props.table.value.description")),
+                description: toPlainText(tContent("props.table.value.description")),
               },
               {
                 name: "max",
@@ -531,7 +540,7 @@ interface ProgressProps extends Progress.Root.Props {
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: stripHtml(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
               {
                 name: "aria-label",
@@ -599,6 +608,8 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -623,22 +634,22 @@ interface ProgressProps extends Progress.Root.Props {
         items={[
           {
             name: tContent("related.items.skeleton.name"),
-            description: tContent("related.items.skeleton.description"),
+            description: toPlainText(tContent("related.items.skeleton.description")),
             path: "?path=/docs/ui-skeleton--docs",
           },
           {
             name: tContent("related.items.spinner.name"),
-            description: tContent("related.items.spinner.description"),
+            description: toPlainText(tContent("related.items.spinner.description")),
             path: "?path=/docs/ui-spinner--docs",
           },
           {
             name: tContent("related.items.alert.name"),
-            description: tContent("related.items.alert.description"),
+            description: toPlainText(tContent("related.items.alert.description")),
             path: "?path=/docs/ui-alert--docs",
           },
           {
             name: tContent("related.items.sonner.name"),
-            description: tContent("related.items.sonner.description"),
+            description: toPlainText(tContent("related.items.sonner.description")),
             path: "?path=/docs/ui-sonner--docs",
           },
         ]}
@@ -661,18 +672,18 @@ interface ProgressProps extends Progress.Root.Props {
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: "task_progress",
-            trigger: tContent("analytics.table.task_progress.trigger"),
+            trigger: toPlainText(tContent("analytics.table.task_progress.trigger")),
             payload: tContent("analytics.table.task_progress.payload"),
           },
           {
             event: "task_complete",
-            trigger: tContent("analytics.table.task_complete.trigger"),
+            trigger: toPlainText(tContent("analytics.table.task_complete.trigger")),
             payload: tContent("analytics.table.task_complete.payload"),
           },
         ]}

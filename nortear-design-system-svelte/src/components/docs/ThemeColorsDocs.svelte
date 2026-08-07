@@ -179,7 +179,8 @@
         <LanguageSwitcher />
       </div>
 
-      <h1 class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
+      <!-- id estável: alvo do aria-labelledby do <main>, mesmo id do DocsHeader. -->
+      <h1 id="docs-page-title" class="nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground">
         {$tStore('title')}
       </h1>
 
@@ -187,6 +188,19 @@
         {$tStore('description')}
       </p>
     </header>
+
+    <!-- Landmark de conteúdo: esta página monta layout próprio (não usa o
+         DocsPageLayout nem o FoundationPage), então o <main> vem daqui.
+         tabindex="-1" permite foco programático sem entrar na ordem de
+         tabulação; as classes de stack repetem as do container para o
+         espaçamento não mudar. -->
+    <main
+      id="docs-main-content"
+      tabindex="-1"
+      aria-labelledby="docs-page-title"
+      class="ds-docs nds-stack"
+      data-spacing="xl"
+    >
 
     <!-- ── Paleta semântica ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
@@ -319,6 +333,10 @@
         </div>
       </div>
     </section>
+
+    <!-- fim do landmark de conteúdo (conteúdo não re-indentado de propósito
+         para manter o diff legível) -->
+    </main>
 
   </div>
 </div>

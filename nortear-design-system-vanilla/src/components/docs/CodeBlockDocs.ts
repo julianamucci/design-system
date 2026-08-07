@@ -5,6 +5,7 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCodeBlock, type CodeBlockOptions } from '@/components/ui/code-block';
 import uiTranslations from '@/i18n/ui.json';
 import codeBlockTranslations from '@shared/content/code-block/translations.json';
+import { toPlainText } from '@/lib/strip-html';
 
 import {
   createDocsHeader,
@@ -119,6 +120,16 @@ const overrides: TranslationOverrides = {
 };
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (codeBlockTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(codeBlockTranslations as Record<string, unknown>, overrides);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -453,8 +464,8 @@ export function createCodeBlockDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => block('do-dont', 'do-1', {
                 code: COMPOSITION_CODE,
                 language: 'ts',
@@ -469,8 +480,8 @@ export function createCodeBlockDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => block('do-dont', 'do-2', {
                 code: 'npm run build -- --mode production',
                 language: 'bash',
@@ -591,13 +602,13 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: ['idle', 'copied', 'numbered', 'unnumbered', 'highlighted', 'scrolling', 'unknownLanguage'].map(key => ({
             label: t(`states.${key}.label`),
-            trigger: t(`states.${key}.trigger`),
-            behavior: t(`states.${key}.behavior`),
+            trigger: toPlainText(t(`states.${key}.trigger`)),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
           })),
         });
 
@@ -649,6 +660,8 @@ export function createCodeBlockDocs(): HTMLElement {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => t(`accessibility.item${i}`)),
@@ -667,10 +680,10 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('related.title'),
           componentSlug: 'code-block',
           items: [
-            { name: 'Table', description: t('related.table'), path: '?path=/docs/ui-table--docs' },
-            { name: 'Alert', description: t('related.alert'), path: '?path=/docs/ui-alert--docs' },
-            { name: 'Tabs',  description: t('related.tabs'),  path: '?path=/docs/ui-tabs--docs' },
-            { name: 'Card',  description: t('related.card'),  path: '?path=/docs/ui-card--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/ui-table--docs' },
+            { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
+            { name: 'Tabs',  description: toPlainText(t('related.tabs')),  path: '?path=/docs/ui-tabs--docs' },
+            { name: 'Card',  description: toPlainText(t('related.card')),  path: '?path=/docs/ui-card--docs' },
           ],
         });
 
@@ -686,12 +699,12 @@ export function createCodeBlockDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: ['copy', 'pageView', 'sectionViewed', 'langSwitch'].map(key => ({
             event: t(`analytics.table.${key}`),
-            trigger: t(`analytics.table.${key}Trigger`),
+            trigger: toPlainText(t(`analytics.table.${key}Trigger`)),
             payload: t(`analytics.table.${key}Payload`),
           })),
         });

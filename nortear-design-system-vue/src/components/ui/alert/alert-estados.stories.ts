@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
@@ -8,6 +9,7 @@ const meta = {
   component: Alert,
   tags: ['feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
   },
@@ -43,6 +45,7 @@ export const Completo: Story = {
 };
 
 export const SemTitulo: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     components: { Alert, AlertDescription, Info },
     setup() { return {}; },
@@ -94,7 +97,53 @@ export const SemIcone: Story = {
   },
 };
 
+// Regressão do bug em que TODA docs page tinha suas notas de implementação
+// anunciadas de imediato: o Alert marcava `role="alert"` fixo, e alert é live
+// region assertiva. Conteúdo estático pede `role="note"`, que não anuncia.
+// A story prova os dois lados no mesmo canvas — o valor explícito e o default
+// intacto para quem depende do anúncio.
+export const SemAnuncio: Story = {
+  render: () => ({
+    components: { Alert, AlertTitle, AlertDescription, Info },
+    setup() { return {}; },
+    template: `
+      <div class="nds-stack" data-spacing="md">
+        <Alert role="note" data-testid="alert-nota">
+          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+          <AlertTitle>Nota de implementação</AlertTitle>
+          <AlertDescription>Conteúdo estático, já presente no carregamento: o leitor de tela lê na ordem da página, sem interromper.</AlertDescription>
+        </Alert>
+        <Alert data-testid="alert-padrao">
+          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+          <AlertTitle>Falha ao salvar</AlertTitle>
+          <AlertDescription>Sem role explícito o alert segue como live region assertiva.</AlertDescription>
+        </Alert>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('role="note" chega na raiz do alert', async () => {
+      await expect(canvas.getByTestId('alert-nota')).toHaveAttribute('role', 'note');
+    });
+
+    await step('O alert com role="note" não é live region', async () => {
+      // Um único elemento com role alert no canvas: o da direita. Se o valor da
+      // prop não vencesse o `role` fixo do template, aqui seriam dois.
+      await expect(canvas.getAllByRole('alert')).toHaveLength(1);
+      await expect(canvas.getByRole('note')).toBe(canvas.getByTestId('alert-nota'));
+    });
+
+    await step('Sem a prop, o default continua alert', async () => {
+      await expect(canvas.getByTestId('alert-padrao')).toHaveAttribute('role', 'alert');
+      await expect(canvas.getByRole('alert')).toBe(canvas.getByTestId('alert-padrao'));
+    });
+  },
+};
+
 export const InsercaoDinamica: Story = {
+  parameters: { covers: ['functional.item6'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },

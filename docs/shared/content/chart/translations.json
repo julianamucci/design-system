@@ -28,7 +28,9 @@
       "item3": "<strong>Builders auxiliares</strong> — funções que montam o objeto para os casos típicos (bar, line, area, pie) a partir de dados simples.",
       "item4": "<strong>Tema reativo</strong> — cores e tipografia recalculam quando a classe do <code>&lt;html&gt;</code> muda (tema, dark mode, densidade, fonte).",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Vendas trimestrais\"\n/>"
+      "structureCode": {
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Vendas trimestrais\"\n/>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -447,7 +449,9 @@
       "item3": "<strong>Auxiliary builders</strong> — functions that assemble the object for typical cases (bar, line, area, pie) from simple data.",
       "item4": "<strong>Reactive theme</strong> — colors and typography recompute when the <code>&lt;html&gt;</code> class changes (theme, dark mode, density, font).",
       "structureLabel": "Basic structure:",
-      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Quarterly sales\"\n/>"
+      "structureCode": {
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Quarterly sales\"\n/>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -866,7 +870,9 @@
       "item3": "<strong>Builders auxiliares</strong> — funciones que arman el objeto para los casos típicos (bar, line, area, pie) a partir de datos simples.",
       "item4": "<strong>Tema reactivo</strong> — colores y tipografía se recalculan cuando la clase del <code>&lt;html&gt;</code> cambia (tema, dark mode, densidad, fuente).",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Ventas trimestrales\"\n/>"
+      "structureCode": {
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Ventas trimestrales\"\n/>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

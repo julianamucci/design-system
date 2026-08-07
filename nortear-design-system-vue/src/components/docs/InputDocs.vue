@@ -26,12 +26,24 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 // IMPORTANTE: locale vem de useTranslation, NUNCA de useLocaleStore ou Pinia
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(inputTranslations);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (inputTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -238,11 +250,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: tContent('states.default.behavior')  },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: tContent('states.focus.behavior')    },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: tContent('states.disabled.behavior') },
-  { label: tContent('states.error.label'),    trigger: tContent('states.error.trigger'),    behavior: tContent('states.error.behavior')    },
-  { label: tContent('states.file.label'),     trigger: tContent('states.file.trigger'),     behavior: tContent('states.file.behavior')     },
+  { label: tContent('states.default.label'),  trigger: toPlainText(tContent('states.default.trigger')),  behavior: toPlainText(tContent('states.default.behavior'))},
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior'))},
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior'))},
+  { label: tContent('states.error.label'),    trigger: toPlainText(tContent('states.error.trigger')),    behavior: toPlainText(tContent('states.error.behavior'))},
+  { label: tContent('states.file.label'),     trigger: toPlainText(tContent('states.file.trigger')),     behavior: toPlainText(tContent('states.file.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -289,11 +301,11 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Textarea',  description: tContent('related.textarea'),  path: '?path=/docs/ui-textarea--docs'  },
-  { name: 'InputOTP',  description: tContent('related.inputOTP'),  path: '?path=/docs/ui-inputotp--docs'  },
-  { name: 'Select',    description: tContent('related.select'),    path: '?path=/docs/ui-select--docs'    },
-  { name: 'Form',      description: tContent('related.form'),      path: '?path=/docs/ui-form--docs'      },
-  { name: 'Label',     description: tContent('related.label'),     path: '?path=/docs/ui-label--docs'     },
+  { name: 'Textarea',  description: toPlainText(tContent('related.textarea')),  path: '?path=/docs/ui-textarea--docs'  },
+  { name: 'InputOTP',  description: toPlainText(tContent('related.inputOTP')),  path: '?path=/docs/ui-inputotp--docs'  },
+  { name: 'Select',    description: toPlainText(tContent('related.select')),    path: '?path=/docs/ui-select--docs'    },
+  { name: 'Form',      description: toPlainText(tContent('related.form')),      path: '?path=/docs/ui-form--docs'      },
+  { name: 'Label',     description: toPlainText(tContent('related.label')),     path: '?path=/docs/ui-label--docs'     },
 ]);
 
 const noteItems = computed(() => [
@@ -305,12 +317,12 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.fieldFocus'),   trigger: tContent('analytics.table.fieldFocusTrigger'),   payload: tContent('analytics.table.fieldFocusPayload')   },
-  { event: tContent('analytics.table.fieldBlur'),    trigger: tContent('analytics.table.fieldBlurTrigger'),    payload: tContent('analytics.table.fieldBlurPayload')    },
-  { event: tContent('analytics.table.fieldError'),   trigger: tContent('analytics.table.fieldErrorTrigger'),   payload: tContent('analytics.table.fieldErrorPayload')   },
-  { event: tContent('analytics.table.pageView'),     trigger: tContent('analytics.table.pageViewTrigger'),     payload: tContent('analytics.table.pageViewPayload')     },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),   trigger: tContent('analytics.table.langSwitchTrigger'),   payload: tContent('analytics.table.langSwitchPayload')   },
+  { event: tContent('analytics.table.fieldFocus'),   trigger: toPlainText(tContent('analytics.table.fieldFocusTrigger')),   payload: tContent('analytics.table.fieldFocusPayload')   },
+  { event: tContent('analytics.table.fieldBlur'),    trigger: toPlainText(tContent('analytics.table.fieldBlurTrigger')),    payload: tContent('analytics.table.fieldBlurPayload')    },
+  { event: tContent('analytics.table.fieldError'),   trigger: toPlainText(tContent('analytics.table.fieldErrorTrigger')),   payload: tContent('analytics.table.fieldErrorPayload')   },
+  { event: tContent('analytics.table.pageView'),     trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),     payload: tContent('analytics.table.pageViewPayload')     },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),   trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),   payload: tContent('analytics.table.langSwitchPayload')   },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -483,9 +495,9 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair3.do'), dontCaption: tContent('doDont.pair3.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair3.do')), dontCaption: toPlainText(tContent('doDont.pair3.dont')) },
       ]"
     >
       <!-- Par 1: placeholder como exemplo vs instrução -->
@@ -732,8 +744,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -764,6 +776,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -790,7 +804,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

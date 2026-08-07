@@ -6,7 +6,7 @@ import SwitchStory from './SwitchStory.svelte';
 import SwitchDocs from '@/components/docs/SwitchDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Switch',
   component: Switch,
   tags: ['autodocs', 'form'],
@@ -55,10 +55,10 @@ const meta = {
     labelText: 'Receber notificações por email',
     onCheckedChange: fn(),
   },
-} satisfies Meta<typeof Switch>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

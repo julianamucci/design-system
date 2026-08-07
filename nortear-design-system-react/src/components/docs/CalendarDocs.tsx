@@ -24,12 +24,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -76,12 +73,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function CalendarDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(calendarTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (calendarTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -390,25 +399,25 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           items: [
             {
               element: tContent("usage.uxWriting.table.label.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.label.format")),
+              rules: toPlainText(tContent("usage.uxWriting.table.label.format")),
               do: tContent("usage.uxWriting.table.label.good"),
               dont: tContent("usage.uxWriting.table.label.bad"),
             },
             {
               element: tContent("usage.uxWriting.table.trigger.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.trigger.format")),
+              rules: toPlainText(tContent("usage.uxWriting.table.trigger.format")),
               do: tContent("usage.uxWriting.table.trigger.good"),
               dont: tContent("usage.uxWriting.table.trigger.bad"),
             },
             {
               element: tContent("usage.uxWriting.table.disabled.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.disabled.format")),
-              do: stripHtml(tContent("usage.uxWriting.table.disabled.good")),
+              rules: toPlainText(tContent("usage.uxWriting.table.disabled.format")),
+              do: toPlainText(tContent("usage.uxWriting.table.disabled.good")),
               dont: tContent("usage.uxWriting.table.disabled.bad"),
             },
             {
               element: tContent("usage.uxWriting.table.srOnly.name"),
-              rules: stripHtml(tContent("usage.uxWriting.table.srOnly.format")),
+              rules: toPlainText(tContent("usage.uxWriting.table.srOnly.format")),
               do: tContent("usage.uxWriting.table.srOnly.good"),
               dont: tContent("usage.uxWriting.table.srOnly.bad"),
             },
@@ -561,39 +570,39 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
           {
             label: tContent("states.default.label"),
-            trigger: stripHtml(tContent("states.default.trigger")),
-            behavior: stripHtml(tContent("states.default.behavior")),
+            trigger: toPlainText(tContent("states.default.trigger")),
+            behavior: toPlainText(tContent("states.default.behavior")),
           },
           {
             label: tContent("states.selected.label"),
-            trigger: stripHtml(tContent("states.selected.trigger")),
-            behavior: stripHtml(tContent("states.selected.behavior")),
+            trigger: toPlainText(tContent("states.selected.trigger")),
+            behavior: toPlainText(tContent("states.selected.behavior")),
           },
           {
             label: tContent("states.disabled.label"),
-            trigger: stripHtml(tContent("states.disabled.trigger")),
-            behavior: stripHtml(tContent("states.disabled.behavior")),
+            trigger: toPlainText(tContent("states.disabled.trigger")),
+            behavior: toPlainText(tContent("states.disabled.behavior")),
           },
           {
             label: tContent("states.today.label"),
-            trigger: stripHtml(tContent("states.today.trigger")),
-            behavior: stripHtml(tContent("states.today.behavior")),
+            trigger: toPlainText(tContent("states.today.trigger")),
+            behavior: toPlainText(tContent("states.today.behavior")),
           },
           {
             label: tContent("states.outside.label"),
-            trigger: stripHtml(tContent("states.outside.trigger")),
-            behavior: stripHtml(tContent("states.outside.behavior")),
+            trigger: toPlainText(tContent("states.outside.trigger")),
+            behavior: toPlainText(tContent("states.outside.behavior")),
           },
           {
             label: tContent("states.rangeMiddle.label"),
-            trigger: stripHtml(tContent("states.rangeMiddle.trigger")),
-            behavior: stripHtml(tContent("states.rangeMiddle.behavior")),
+            trigger: toPlainText(tContent("states.rangeMiddle.trigger")),
+            behavior: toPlainText(tContent("states.rangeMiddle.behavior")),
           },
         ]}
       />
@@ -612,17 +621,17 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "mode",            type: '"single" | "multiple" | "range"',    defaultValue: '"single"', required: "Não", description: stripHtml(tContent("props.table.mode")) },
-              { name: "selected",        type: "Date | Date[] | { from, to }",        defaultValue: "—",        required: "Não", description: stripHtml(tContent("props.table.selected")) },
+              { name: "mode",            type: '"single" | "multiple" | "range"',    defaultValue: '"single"', required: "Não", description: toPlainText(tContent("props.table.mode")) },
+              { name: "selected",        type: "Date | Date[] | { from, to }",        defaultValue: "—",        required: "Não", description: toPlainText(tContent("props.table.selected")) },
               { name: "onSelect",        type: "(value) => void",                     defaultValue: "—",        required: "Não", description: tContent("props.table.onSelect") },
-              { name: "locale",          type: "Locale",                              defaultValue: "—",        required: "Sim", description: stripHtml(tContent("props.table.locale")) },
-              { name: "disabled",        type: "Date | Date[] | Matcher | fn",        defaultValue: "—",        required: "Não", description: stripHtml(tContent("props.table.disabled")) },
+              { name: "locale",          type: "Locale",                              defaultValue: "—",        required: "Sim", description: toPlainText(tContent("props.table.locale")) },
+              { name: "disabled",        type: "Date | Date[] | Matcher | fn",        defaultValue: "—",        required: "Não", description: toPlainText(tContent("props.table.disabled")) },
               { name: "showOutsideDays", type: "boolean",                              defaultValue: "true",     required: "Não", description: tContent("props.table.showOutsideDays") },
-              { name: "captionLayout",   type: '"label" | "dropdown"',                 defaultValue: '"label"',  required: "Não", description: stripHtml(tContent("props.table.captionLayout")) },
-              { name: "buttonVariant",   type: "Button variant",                       defaultValue: '"ghost"',  required: "Não", description: stripHtml(tContent("props.table.buttonVariant")) },
+              { name: "captionLayout",   type: '"label" | "dropdown"',                 defaultValue: '"label"',  required: "Não", description: toPlainText(tContent("props.table.captionLayout")) },
+              { name: "buttonVariant",   type: "Button variant",                       defaultValue: '"ghost"',  required: "Não", description: toPlainText(tContent("props.table.buttonVariant")) },
               { name: "numberOfMonths",  type: "number",                               defaultValue: "1",        required: "Não", description: tContent("props.table.numberOfMonths") },
               { name: "className",       type: "string",                               defaultValue: "—",        required: "Não", description: tContent("props.table.className") },
-              { name: "classNames",      type: "Partial<ClassNames>",                  defaultValue: "—",        required: "Não", description: stripHtml(tContent("props.table.classNames")) },
+              { name: "classNames",      type: "Partial<ClassNames>",                  defaultValue: "—",        required: "Não", description: toPlainText(tContent("props.table.classNames")) },
             ],
           },
           {
@@ -635,9 +644,9 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "day",       type: "CalendarDay",            defaultValue: "—", required: "Sim", description: stripHtml(tContent("props.table.selected")) },
-              { name: "modifiers", type: "Modifiers",              defaultValue: "—", required: "Sim", description: stripHtml(tContent("props.table.buttonVariant")) },
-              { name: "locale",    type: "Partial<Locale>",        defaultValue: "—", required: "Não", description: stripHtml(tContent("props.table.locale")) },
+              { name: "day",       type: "CalendarDay",            defaultValue: "—", required: "Sim", description: toPlainText(tContent("props.table.selected")) },
+              { name: "modifiers", type: "Modifiers",              defaultValue: "—", required: "Sim", description: toPlainText(tContent("props.table.buttonVariant")) },
+              { name: "locale",    type: "Partial<Locale>",        defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.locale")) },
               { name: "className", type: "string",                 defaultValue: "—", required: "Não", description: tContent("props.table.className") },
             ],
           },
@@ -661,8 +670,8 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           { token: "--muted-foreground",   value: "nds-text-muted-foreground",              description: tContent("tokens.table.mutedForeground") },
           { token: "--foreground",         value: "text-foreground",                    description: tContent("tokens.table.foreground") },
           { token: "--ring",               value: "ring-ring",                          description: tContent("tokens.table.ring") },
-          { token: "--nds-cell-size",      value: "2rem",                               description: stripHtml(tContent("tokens.table.cellSize")) },
-          { token: "--nds-cell-radius",    value: "var(--radius-md)",                   description: stripHtml(tContent("tokens.table.cellRadius")) },
+          { token: "--nds-cell-size",      value: "2rem",                               description: toPlainText(tContent("tokens.table.cellSize")) },
+          { token: "--nds-cell-radius",    value: "var(--radius-md)",                   description: toPlainText(tContent("tokens.table.cellRadius")) },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}
@@ -670,6 +679,8 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
+        screenReaderTitle={tNav("common.screenReader")}
+        screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
@@ -682,11 +693,11 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         ]}
         keyboardTitle={tContent("accessibility.keyboardTitle")}
         keyboardItems={[
-          { key: "Arrow Up / Arrow Down / Arrow Left / Arrow Right", description: stripHtml(tContent("accessibility.keyboard.arrows")) },
-          { key: "Page Up / Page Down",  description: stripHtml(tContent("accessibility.keyboard.pageUpDown")) },
-          { key: "Home / End",           description: stripHtml(tContent("accessibility.keyboard.homeEnd")) },
-          { key: "Enter / Space",        description: stripHtml(tContent("accessibility.keyboard.enter")) },
-          { key: "Tab",                  description: stripHtml(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Up / Arrow Down / Arrow Left / Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrows")) },
+          { key: "Page Up / Page Down",  description: toPlainText(tContent("accessibility.keyboard.pageUpDown")) },
+          { key: "Home / End",           description: toPlainText(tContent("accessibility.keyboard.homeEnd")) },
+          { key: "Enter / Space",        description: toPlainText(tContent("accessibility.keyboard.enter")) },
+          { key: "Tab",                  description: toPlainText(tContent("accessibility.keyboard.tab")) },
         ]}
       />
 
@@ -696,22 +707,22 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         items={[
           {
             name: "DatePicker",
-            description: tContent("related.datePicker"),
+            description: toPlainText(tContent("related.datePicker")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Popover",
-            description: tContent("related.popover"),
+            description: toPlainText(tContent("related.popover")),
             path: "?path=/docs/ui-popover--docs",
           },
           {
             name: "Form",
-            description: tContent("related.form"),
+            description: toPlainText(tContent("related.form")),
             path: "?path=/docs/ui-form--docs",
           },
           {
             name: "Input",
-            description: tContent("related.input"),
+            description: toPlainText(tContent("related.input")),
             path: "?path=/docs/ui-input--docs",
           },
         ]}
@@ -733,33 +744,33 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
         title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
           {
             event: tContent("analytics.table.fieldChange"),
-            trigger: tContent("analytics.table.fieldChangeTrigger"),
+            trigger: toPlainText(tContent("analytics.table.fieldChangeTrigger")),
             payload: tContent("analytics.table.fieldChangePayload"),
           },
           {
             event: tContent("analytics.table.dialogOpen"),
-            trigger: tContent("analytics.table.dialogOpenTrigger"),
+            trigger: toPlainText(tContent("analytics.table.dialogOpenTrigger")),
             payload: tContent("analytics.table.dialogOpenPayload"),
           },
           {
             event: tContent("analytics.table.pageView"),
-            trigger: tContent("analytics.table.pageViewTrigger"),
+            trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
             payload: tContent("analytics.table.pageViewPayload"),
           },
           {
             event: tContent("analytics.table.sectionViewed"),
-            trigger: tContent("analytics.table.sectionViewedTrigger"),
+            trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
             payload: tContent("analytics.table.sectionViewedPayload"),
           },
           {
             event: tContent("analytics.table.langSwitch"),
-            trigger: tContent("analytics.table.langSwitchTrigger"),
+            trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
             payload: tContent("analytics.table.langSwitchPayload"),
           },
         ]}
@@ -777,7 +788,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           },
           items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
             action: tContent(`testes.functional.item${i}.action`),
-            result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+            result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
           })),
         }}
@@ -789,9 +800,9 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             how: tNav("common.howToVerify"),
           },
           items: [1, 2, 3, 4, 5, 6].map((i) => ({
-            criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+            criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
             level: tContent(`testes.accessibility.item${i}.level`),
-            how: stripHtml(tContent(`testes.accessibility.item${i}.how`)),
+            how: toPlainText(tContent(`testes.accessibility.item${i}.how`)),
           })),
         }}
         visual={{

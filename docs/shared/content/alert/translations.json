@@ -6,8 +6,8 @@
     "description": "Mensagem estática e persistente para comunicar erros, avisos, sucesso ou informações importantes no fluxo da página.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentação do Alert: 5 variantes semânticas via prop, opção dismissible e acessibilidade WCAG com role=\"alert\" automático.",
-      "aiSummary": "Componente Alert com 5 variantes semânticas (default, destructive, success, warning, info) pela prop de variante, opção dismissible com botão de fechar, role=\"alert\" automático e suporte a ícone, título e descrição.",
+      "description": "Documentação do Alert: 5 variantes semânticas via prop, opção dismissible e semântica de anúncio configurável para leitores de tela.",
+      "aiSummary": "Componente Alert com 5 variantes semânticas (default, destructive, success, warning, info) pela prop de variante, opção dismissible com botão de fechar, semântica de anúncio configurável (assertiva, polida ou estática) e suporte a ícone, título e descrição.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
@@ -26,12 +26,14 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Alert</strong> — container <code>&lt;div role=\"alert\"&gt;</code>. Recebe todos os atributos HTML do elemento.",
+      "item1": "<strong>Alert</strong> — container <code>&lt;div&gt;</code> com a semântica de anúncio escolhida pela prop de role. Recebe todos os atributos HTML do elemento.",
       "item2": "<strong>Ícone (opcional)</strong> — filho direto do Alert, sem wrapper. Deve ter <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir quando a descrição já é autoexplicativa.",
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para o texto principal da mensagem.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Alert>                  {/* Container role=\"alert\" */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -209,6 +211,7 @@
         "required": "Obrigatório",
         "description": "Descrição",
         "variant": "Variante semântica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> ou <code>info</code>.",
+        "role": "Semântica de anúncio para leitores de tela. <code>alert</code> (padrão) interrompe e anuncia na hora — use só para mensagem urgente que surge em tempo de execução. <code>status</code> anuncia sem interromper. <code>note</code> não anuncia: é o certo para conteúdo estático já presente ao carregar a página.",
         "className": "Classes CSS adicionais para customizações pontuais de layout. Variantes visuais usam a prop de variante — não classes.",
         "children": "Conteúdo do Alert: ícone, AlertTitle e AlertDescription.",
         "dismissible": "Exibe o botão de fechar no canto superior direito. Fechar remove o alert da tela.",
@@ -235,17 +238,20 @@
         "radius": "Border radius do container",
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
-        "alertBorder": "Borda — var interna"
+        "alertBorder": "Borda — var interna",
+        "alertGlow": "Tom base do gradiente animado da borda — var interna, igual nas 5 variantes; as 4 variações saem daí"
       },
       "customizationTitle": "Como personalizar via tema:",
-      "customizationCode": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Alert usa <code>role=\"alert\"</code> que anuncia o conteúdo automaticamente ao leitor de tela quando inserido no DOM. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 4.1.3 (mensagens de status).",
-      "item1": "<strong>role=\"alert\" automático</strong> — o componente aplica <code>role=\"alert\"</code> no container, fazendo leitores de tela anunciarem o conteúdo imediatamente ao ser inserido.",
-      "item2": "<strong>Inserção dinâmica</strong> — para alerts inseridos após a montagem, adicione <code>aria-live=\"polite\"</code> no container pai. Use <code>aria-live=\"assertive\"</code> apenas para erros críticos que bloqueiam o fluxo.",
+      "summary": "O Alert escolhe a semântica de anúncio pelo uso: por padrão interrompe e anuncia ao ser inserido no DOM, e conteúdo estático pode optar por não anunciar. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 4.1.3 (mensagens de status).",
+      "item1": "<strong>Semântica de anúncio escolhida por uso</strong> — <code>alert</code> (padrão) interrompe o leitor de tela e anuncia na hora: use só para mensagem urgente que surge em tempo de execução. Conteúdo estático, já presente ao carregar a página, deve usar <code>note</code>, que não é live region.",
+      "item2": "<strong>Inserção dinâmica</strong> — um alert que aparece depois da montagem é o caso legítimo de <code>alert</code> (assertivo, para erro que bloqueia o fluxo) ou <code>status</code> (anuncia sem interromper).",
       "item3": "<strong>Ícones decorativos</strong> — sempre <code>aria-hidden=\"true\"</code>. O texto da <code>AlertDescription</code> já descreve o estado.",
       "item4": "<strong>Cor + ícone + texto</strong> — nunca use cor como único indicador (WCAG 1.4.1). Cada variante deve ter ícone e texto correspondentes.",
       "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fundo). Demais variantes mantêm o texto corrido em <code>--foreground</code> sobre fundo soft para garantir 4.5:1.",
@@ -255,7 +261,7 @@
         "noKeyboard": "O Alert em si não é interativo — apenas o conteúdo filho pode receber foco."
       },
       "aria": {
-        "role": "<code>role=\"alert\"</code> — aplicado automaticamente no container. Anuncia o conteúdo ao leitor de tela.",
+        "role": "<code>role</code> — <code>alert</code> por padrão (anúncio imediato). Conteúdo estático deve usar <code>note</code>, que não vira live region.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — no container pai para alerts inseridos dinamicamente.",
         "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — apenas para erros críticos urgentes.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — em todos os ícones decorativos."
@@ -279,7 +285,7 @@
       "title": "Notas de Implementação",
       "tip1": "Para variantes success e warning, use as classes de variante do tema baseadas nos tokens <code>--success</code> e <code>--warning</code> — nunca cores hardcoded. Isso garante consistência no dark mode.",
       "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do componente posiciona o SVG automaticamente via seletor de filho direto.",
-      "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — o <code>role=\"alert\"</code> anuncia imediatamente ao foco mudar para a região."
+      "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — assim a mensagem é anunciada assim que aparece, sem competir com o rótulo do campo."
     },
     "analytics": {
       "title": "Analytics",
@@ -334,7 +340,7 @@
         },
         "item6": {
           "action": "Inserir Alert dinamicamente no DOM",
-          "result": "Leitor de tela anuncia o conteúdo (role=\"alert\" ativo)",
+          "result": "Leitor de tela anuncia o conteúdo quando a semântica de anúncio é assertiva",
           "priority": "high"
         },
         "item7": {
@@ -347,9 +353,9 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
         "item1": {
-          "criterion": "role=\"alert\" presente no container",
+          "criterion": "Semântica de anúncio correta no container (assertiva por padrão, estática quando pedida)",
           "level": "AA",
-          "how": "getByRole('alert') no testing-library"
+          "how": "getByRole('alert') e getByRole('note') no testing-library"
         },
         "item2": {
           "criterion": "Ícones com aria-hidden=\"true\"",
@@ -420,8 +426,8 @@
     "description": "Static, persistent message for communicating errors, warnings, success, or important information within the page flow.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentation for Alert: 5 semantic variants via prop, dismissible option and WCAG accessibility with automatic role=\"alert\".",
-      "aiSummary": "Alert component with 5 semantic variants (default, destructive, success, warning, info) through the variant prop, dismissible option with close button, automatic role=\"alert\" and support for icon, title and description.",
+      "description": "Alert documentation: 5 semantic variants via prop, dismissible option, and configurable announcement semantics for screen readers.",
+      "aiSummary": "Alert component with 5 semantic variants (default, destructive, success, warning, info) via the variant prop, dismissible option with a close button, configurable announcement semantics (assertive, polite, or static), and support for icon, title, and description.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
@@ -440,12 +446,14 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Alert</strong> — <code>&lt;div role=\"alert\"&gt;</code> container. Accepts all HTML div attributes.",
+      "item1": "<strong>Alert</strong> — <code>&lt;div&gt;</code> container with the announcement semantics chosen by the role prop. Accepts all HTML attributes of the element.",
       "item2": "<strong>Icon (optional)</strong> — direct child of Alert, no wrapper needed. Must have <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (optional)</strong> — <code>&lt;h5&gt;</code> element. Omit when the description is self-explanatory.",
       "item4": "<strong>AlertDescription</strong> — <code>&lt;div&gt;</code> element for the primary message text.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Alert>                  {/* Container role=\"alert\" */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -623,6 +631,7 @@
         "required": "Required",
         "description": "Description",
         "variant": "Semantic variant: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> or <code>info</code>.",
+        "role": "Announcement semantics for screen readers. <code>alert</code> (default) interrupts and announces immediately — use only for urgent messages that appear at runtime. <code>status</code> announces without interrupting. <code>note</code> does not announce: the right choice for static content already present on page load.",
         "className": "Additional CSS classes for local layout tweaks. Visual variants use the variant prop — not classes.",
         "children": "Alert content: icon, AlertTitle, and AlertDescription.",
         "dismissible": "Shows the close button in the top-right corner. Closing removes the alert from the screen.",
@@ -649,17 +658,20 @@
         "radius": "Container border radius",
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
-        "alertBorder": "Border — internal var"
+        "alertBorder": "Border — internal var",
+        "alertGlow": "Base tone of the animated border gradient — internal var, the same across all 5 variants; the 4 variations derive from it"
       },
       "customizationTitle": "How to customize via theme:",
-      "customizationCode": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Alert uses <code>role=\"alert\"</code> which announces content automatically to screen readers when inserted in the DOM. Meets WCAG 2.2 AA: 1.4.1 (color not the only indicator), 4.1.3 (status messages).",
-      "item1": "<strong>Automatic role=\"alert\"</strong> — the component applies <code>role=\"alert\"</code> to the container, causing screen readers to announce the content immediately when inserted.",
-      "item2": "<strong>Dynamic insertion</strong> — for alerts inserted after mount, add <code>aria-live=\"polite\"</code> to the parent container. Use <code>aria-live=\"assertive\"</code> only for critical errors that block the flow.",
+      "summary": "Alert picks its announcement semantics per use: by default it interrupts and announces when inserted into the DOM, and static content can opt out of announcing. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 4.1.3 (status messages).",
+      "item1": "<strong>Announcement semantics chosen per use</strong> — <code>alert</code> (default) interrupts the screen reader and announces immediately: use it only for urgent messages that appear at runtime. Static content, already present on page load, should use <code>note</code>, which is not a live region.",
+      "item2": "<strong>Dynamic insertion</strong> — an alert that appears after mount is the legitimate case for <code>alert</code> (assertive, for flow-blocking errors) or <code>status</code> (announces without interrupting).",
       "item3": "<strong>Decorative icons</strong> — always <code>aria-hidden=\"true\"</code>. The <code>AlertDescription</code> text already describes the state.",
       "item4": "<strong>Color + icon + text</strong> — never use color as the only indicator (WCAG 1.4.1). Each variant must have a matching icon and text.",
       "item5": "<strong>Contrast</strong> — default variant: 4.5:1 (text over background). Other variants keep body text in <code>--foreground</code> over a soft background to ensure 4.5:1.",
@@ -669,7 +681,7 @@
         "noKeyboard": "The Alert itself is not interactive — only child content can receive focus."
       },
       "aria": {
-        "role": "<code>role=\"alert\"</code> — automatically applied to the container. Announces content to screen readers.",
+        "role": "<code>role</code> — <code>alert</code> by default (immediate announcement). Static content should use <code>note</code>, which is not a live region.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — on the parent container for dynamically inserted alerts.",
         "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — only for critical urgent errors.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — on all decorative icons."
@@ -693,7 +705,7 @@
       "title": "Implementation Notes",
       "tip1": "For success and warning variants, use the theme variant classes based on the <code>--success</code> and <code>--warning</code> tokens — never hardcoded colors. This ensures dark mode consistency.",
       "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. The component's CSS positions the SVG automatically via a direct-child selector.",
-      "tip3": "In forms, prefer inserting the Alert above the error fields, not inside them — the <code>role=\"alert\"</code> announces immediately when focus moves to the region."
+      "tip3": "In forms, insert the Alert above the fields with errors rather than inside them — the message is announced as soon as it appears, without competing with the field label."
     },
     "analytics": {
       "title": "Analytics",
@@ -747,8 +759,8 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Insert Alert dynamically in DOM",
-          "result": "Screen reader announces content (active role=\"alert\")",
+          "action": "Insert Alert dynamically into the DOM",
+          "result": "Screen reader announces the content when the announcement semantics are assertive",
           "priority": "high"
         },
         "item7": {
@@ -761,9 +773,9 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
         "item1": {
-          "criterion": "role=\"alert\" present on container",
+          "criterion": "Correct announcement semantics on the container (assertive by default, static when requested)",
           "level": "AA",
-          "how": "getByRole('alert') in testing-library"
+          "how": "getByRole('alert') and getByRole('note') in testing-library"
         },
         "item2": {
           "criterion": "Icons with aria-hidden=\"true\"",
@@ -834,8 +846,8 @@
     "description": "Mensaje estático y persistente para comunicar errores, advertencias, éxito o información importante en el flujo de la página.",
     "seo": {
       "title": "Alert — Feedback",
-      "description": "Documentación del Alert: 5 variantes semánticas vía prop, opción dismissible y accesibilidad WCAG con role=\"alert\" automático.",
-      "aiSummary": "Componente Alert con 5 variantes semánticas (default, destructive, success, warning, info) mediante la prop de variante, opción dismissible con botón de cierre, role=\"alert\" automático y soporte para ícono, título y descripción.",
+      "description": "Documentación del Alert: 5 variantes semánticas vía prop, opción dismissible y semántica de anuncio configurable para lectores de pantalla.",
+      "aiSummary": "Componente Alert con 5 variantes semánticas (default, destructive, success, warning, info) por la prop de variante, opción dismissible con botón de cerrar, semántica de anuncio configurable (asertiva, polite o estática) y soporte de icono, título y descripción.",
       "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
@@ -854,12 +866,14 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Alert</strong> — contenedor <code>&lt;div role=\"alert\"&gt;</code>. Acepta todos los atributos HTML del elemento.",
+      "item1": "<strong>Alert</strong> — contenedor <code>&lt;div&gt;</code> con la semántica de anuncio elegida por la prop de role. Acepta todos los atributos HTML del elemento.",
       "item2": "<strong>Ícono (opcional)</strong> — hijo directo del Alert, sin wrapper. Debe tener <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir cuando la descripción es autoexplicativa.",
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para el texto principal del mensaje.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Alert>                  {/* Contenedor role=\"alert\" */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+      "structureCode": {
+        "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1037,6 +1051,7 @@
         "required": "Obligatorio",
         "description": "Descripción",
         "variant": "Variante semántica: <code>default</code>, <code>destructive</code>, <code>success</code>, <code>warning</code> o <code>info</code>.",
+        "role": "Semántica de anuncio para lectores de pantalla. <code>alert</code> (por defecto) interrumpe y anuncia de inmediato — úsalo solo para mensajes urgentes que aparecen en tiempo de ejecución. <code>status</code> anuncia sin interrumpir. <code>note</code> no anuncia: es lo correcto para contenido estático ya presente al cargar la página.",
         "className": "Clases CSS adicionales para personalizaciones puntuales de layout. Las variantes visuales usan la prop de variante — no clases.",
         "children": "Contenido del Alert: ícono, AlertTitle y AlertDescription.",
         "dismissible": "Muestra el botón de cierre en la esquina superior derecha. Cerrar quita el alert de la pantalla.",
@@ -1063,17 +1078,20 @@
         "radius": "Border radius del contenedor",
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",
-        "alertBorder": "Borde — var interna"
+        "alertBorder": "Borde — var interna",
+        "alertGlow": "Tono base del degradado animado del borde — var interna, igual en las 5 variantes; las 4 variaciones salen de ahí"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
-      "customizationCode": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n}"
+      "customizationCode": {
+        "web": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Alert usa <code>role=\"alert\"</code> que anuncia el contenido automáticamente al lector de pantalla cuando se inserta en el DOM. Cumple WCAG 2.2 AA: 1.4.1 (color no es el único indicador), 4.1.3 (mensajes de estado).",
-      "item1": "<strong>role=\"alert\" automático</strong> — el componente aplica <code>role=\"alert\"</code> en el contenedor, haciendo que los lectores de pantalla anuncien el contenido inmediatamente al insertarse.",
-      "item2": "<strong>Inserción dinámica</strong> — para alerts insertados después del montaje, agrega <code>aria-live=\"polite\"</code> al contenedor padre. Usa <code>aria-live=\"assertive\"</code> solo para errores críticos que bloquean el flujo.",
+      "summary": "El Alert elige su semántica de anuncio según el uso: por defecto interrumpe y anuncia al insertarse en el DOM, y el contenido estático puede optar por no anunciar. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 4.1.3 (mensajes de estado).",
+      "item1": "<strong>Semántica de anuncio elegida por uso</strong> — <code>alert</code> (por defecto) interrumpe al lector de pantalla y anuncia de inmediato: úsalo solo para mensajes urgentes que aparecen en tiempo de ejecución. El contenido estático, ya presente al cargar la página, debe usar <code>note</code>, que no es una live region.",
+      "item2": "<strong>Inserción dinámica</strong> — un alert que aparece después del montaje es el caso legítimo de <code>alert</code> (asertivo, para errores que bloquean el flujo) o <code>status</code> (anuncia sin interrumpir).",
       "item3": "<strong>Íconos decorativos</strong> — siempre <code>aria-hidden=\"true\"</code>. El texto de <code>AlertDescription</code> ya describe el estado.",
       "item4": "<strong>Color + ícono + texto</strong> — nunca uses el color como único indicador (WCAG 1.4.1). Cada variante debe tener ícono y texto correspondientes.",
       "item5": "<strong>Contraste</strong> — variante default: 4.5:1 (texto sobre fondo). Las demás variantes mantienen el texto en <code>--foreground</code> sobre fondo soft para garantizar 4.5:1.",
@@ -1083,7 +1101,7 @@
         "noKeyboard": "El Alert en sí no es interactivo — solo el contenido hijo puede recibir foco."
       },
       "aria": {
-        "role": "<code>role=\"alert\"</code> — aplicado automáticamente en el contenedor. Anuncia el contenido al lector de pantalla.",
+        "role": "<code>role</code> — <code>alert</code> por defecto (anuncio inmediato). El contenido estático debe usar <code>note</code>, que no es una live region.",
         "ariaLive": "<code>aria-live=\"polite\"</code> — en el contenedor padre para alerts insertados dinámicamente.",
         "ariaLiveAssertive": "<code>aria-live=\"assertive\"</code> — solo para errores críticos urgentes.",
         "ariaHidden": "<code>aria-hidden=\"true\"</code> — en todos los íconos decorativos."
@@ -1107,7 +1125,7 @@
       "title": "Notas de Implementación",
       "tip1": "Para las variantes success y warning, usa las clases de variante del tema basadas en los tokens <code>--success</code> y <code>--warning</code> — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
       "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS del componente posiciona el SVG automáticamente vía un selector de hijo directo.",
-      "tip3": "En formularios, prefiere insertar el Alert sobre los campos con error, no dentro de ellos — el <code>role=\"alert\"</code> anuncia inmediatamente cuando el foco se mueve a la región."
+      "tip3": "En formularios, inserta el Alert encima de los campos con error, no dentro de ellos — así el mensaje se anuncia en cuanto aparece, sin competir con la etiqueta del campo."
     },
     "analytics": {
       "title": "Analytics",
@@ -1162,7 +1180,7 @@
         },
         "item6": {
           "action": "Insertar Alert dinámicamente en el DOM",
-          "result": "Lector de pantalla anuncia el contenido (role=\"alert\" activo)",
+          "result": "El lector de pantalla anuncia el contenido cuando la semántica de anuncio es asertiva",
           "priority": "high"
         },
         "item7": {
@@ -1175,9 +1193,9 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
         "item1": {
-          "criterion": "role=\"alert\" presente en el contenedor",
+          "criterion": "Semántica de anuncio correcta en el contenedor (asertiva por defecto, estática cuando se pide)",
           "level": "AA",
-          "how": "getByRole('alert') en testing-library"
+          "how": "getByRole('alert') y getByRole('note') en testing-library"
         },
         "item2": {
           "criterion": "Íconos con aria-hidden=\"true\"",

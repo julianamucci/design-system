@@ -13,9 +13,21 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import aspectRatioTranslations from '@shared/content/aspect-ratio/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(aspectRatioTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (aspectRatioTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -37,7 +49,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -74,10 +85,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = { high: 'common.high', medium: 'common.medium', low: 'common.low' };
   function localPriority(raw: string, tNav: (k: string) => string): string {
@@ -222,11 +229,11 @@
             alternative: $tStore('usage.scenarios.cols.alternative'),
           },
           items: [
-            { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: stripHtml($tStore('usage.scenarios.item1.a')) },
-            { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: stripHtml($tStore('usage.scenarios.item2.a')) },
-            { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: stripHtml($tStore('usage.scenarios.item3.a')) },
-            { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: stripHtml($tStore('usage.scenarios.item4.a')) },
-            { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: stripHtml($tStore('usage.scenarios.item5.a')) },
+            { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: toPlainText($tStore('usage.scenarios.item1.a')) },
+            { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: toPlainText($tStore('usage.scenarios.item2.a')) },
+            { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: toPlainText($tStore('usage.scenarios.item3.a')) },
+            { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: toPlainText($tStore('usage.scenarios.item4.a')) },
+            { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: toPlainText($tStore('usage.scenarios.item5.a')) },
           ],
         }}
         do={{
@@ -365,9 +372,9 @@
           behavior: $tNavStore('common.expectedResult'),
         }}
         items={[
-          { label: $tStore('states.item1.label'), trigger: $tStore('states.item1.trigger'), behavior: $tStore('states.item1.behavior')             },
-          { label: $tStore('states.item2.label'), trigger: $tStore('states.item2.trigger'), behavior: $tStore('states.item2.behavior')             },
-          { label: $tStore('states.item3.label'), trigger: $tStore('states.item3.trigger'), behavior: stripHtml($tStore('states.item3.behavior')) },
+          { label: $tStore('states.item1.label'), trigger: toPlainText($tStore('states.item1.trigger')), behavior: toPlainText($tStore('states.item1.behavior'))},
+          { label: $tStore('states.item2.label'), trigger: toPlainText($tStore('states.item2.trigger')), behavior: toPlainText($tStore('states.item2.behavior'))},
+          { label: $tStore('states.item3.label'), trigger: toPlainText($tStore('states.item3.trigger')), behavior: toPlainText($tStore('states.item3.behavior')) },
         ]}
       />
 
@@ -384,10 +391,10 @@
               description: $tStore('props.table.description'),
             },
             items: [
-              { name: 'ratio',    type: 'number',  defaultValue: '1',       required: 'Não', description: stripHtml($tStore('props.table.ratio'))     },
-              { name: 'children', type: 'Snippet', defaultValue: '—',       required: 'Sim', description: stripHtml($tStore('props.table.children'))  },
-              { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.table.asChild'))   },
-              { name: 'class',    type: 'string',  defaultValue: '—',       required: 'Não', description: stripHtml($tStore('props.table.className')) },
+              { name: 'ratio',    type: 'number',  defaultValue: '1',       required: 'Não', description: toPlainText($tStore('props.table.ratio'))     },
+              { name: 'children', type: 'Snippet', defaultValue: '—',       required: 'Sim', description: toPlainText($tStore('props.table.children'))  },
+              { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.asChild'))   },
+              { name: 'class',    type: 'string',  defaultValue: '—',       required: 'Não', description: toPlainText($tStore('props.table.className')) },
             ],
           },
         ]}
@@ -415,6 +422,8 @@
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->
       <DocsAccessibility
+        screenReaderTitle={$tNavStore('common.screenReader')}
+        screenReaderItems={screenReaderItems}
         title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
@@ -458,7 +467,7 @@
         title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
-          trigger: $tStore('analytics.table.trigger'),
+          trigger: toPlainText($tStore('analytics.table.trigger')),
           payload: $tStore('analytics.table.payload'),
         }}
         items={[
@@ -477,11 +486,11 @@
             priority: $tNavStore('common.priority'),
           },
           items: [
-            { action: stripHtml($tStore('testes.functional.item1.action')), result: stripHtml($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item2.action')), result: stripHtml($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item3.action')), result: stripHtml($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item4.action')), result: stripHtml($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-            { action: stripHtml($tStore('testes.functional.item5.action')), result: stripHtml($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+            { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
           ],
         }}
         accessibility={{
@@ -492,11 +501,11 @@
             how: $tNavStore('common.howToVerify'),
           },
           items: [
-            { criterion: stripHtml($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-            { criterion: stripHtml($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-            { criterion: stripHtml($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-            { criterion: stripHtml($tStore('testes.accessibility.item4.criterion')), level: $tStore('testes.accessibility.item4.level'), how: stripHtml($tStore('testes.accessibility.item4.how')) },
-            { criterion: stripHtml($tStore('testes.accessibility.item5.criterion')), level: $tStore('testes.accessibility.item5.level'), how: stripHtml($tStore('testes.accessibility.item5.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item1.criterion')), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
+            { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
+            { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
+            { criterion: toPlainText($tStore('testes.accessibility.item4.criterion')), level: $tStore('testes.accessibility.item4.level'), how: toPlainText($tStore('testes.accessibility.item4.how')) },
+            { criterion: toPlainText($tStore('testes.accessibility.item5.criterion')), level: $tStore('testes.accessibility.item5.level'), how: toPlainText($tStore('testes.accessibility.item5.how')) },
           ],
         }}
         visual={{

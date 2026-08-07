@@ -24,9 +24,21 @@
   import { Label } from '@/components/ui/label';
   import uiTranslations from '@/i18n/ui.json';
   import inputOtpTranslations from '@shared/content/input-otp/translations.json';
+  import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(inputOtpTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = $derived(
+    Object.values(
+      (inputOtpTranslations as unknown as Record<
+        string,
+        { accessibility?: { screenReader?: Record<string, string> } }
+      >)[$locale]?.accessibility?.screenReader ?? {},
+    ),
+  );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -55,7 +67,6 @@
   });
 
   // ─── Active section ──────────────────────────────────────────────────────────
-
 
   const NAV_GROUPS = $derived.by(() => {
     const tNav = $tNavStore;
@@ -94,10 +105,6 @@
   $effect(() => section.attach());
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  function stripHtml(s: string) {
-    return s.replace(/<[^>]*>/g, '');
-  }
 
   const priorityKeyMap: Record<string, string> = {
     high: 'common.high',
@@ -600,15 +607,15 @@ interface InputOTPProps {
     title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
-      trigger: $tStore('states.cols.trigger'),
-      behavior: $tStore('states.cols.behavior'),
+      trigger: toPlainText($tStore('states.cols.trigger')),
+      behavior: toPlainText($tStore('states.cols.behavior')),
     }}
     items={[
-      { label: $tStore('states.empty.label'),    trigger: $tStore('states.empty.trigger'),    behavior: stripHtml($tStore('states.empty.behavior')) },
-      { label: $tStore('states.filling.label'),  trigger: $tStore('states.filling.trigger'),  behavior: stripHtml($tStore('states.filling.behavior')) },
-      { label: $tStore('states.complete.label'), trigger: $tStore('states.complete.trigger'), behavior: stripHtml($tStore('states.complete.behavior')) },
-      { label: $tStore('states.disabled.label'), trigger: $tStore('states.disabled.trigger'), behavior: stripHtml($tStore('states.disabled.behavior')) },
-      { label: $tStore('states.error.label'),    trigger: $tStore('states.error.trigger'),    behavior: stripHtml($tStore('states.error.behavior')) },
+      { label: $tStore('states.empty.label'),    trigger: toPlainText($tStore('states.empty.trigger')),    behavior: toPlainText($tStore('states.empty.behavior')) },
+      { label: $tStore('states.filling.label'),  trigger: toPlainText($tStore('states.filling.trigger')),  behavior: toPlainText($tStore('states.filling.behavior')) },
+      { label: $tStore('states.complete.label'), trigger: toPlainText($tStore('states.complete.trigger')), behavior: toPlainText($tStore('states.complete.behavior')) },
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior')) },
+      { label: $tStore('states.error.label'),    trigger: toPlainText($tStore('states.error.trigger')),    behavior: toPlainText($tStore('states.error.behavior')) },
     ]}
   />
 
@@ -657,6 +664,8 @@ interface InputOTPProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
+    screenReaderTitle={$tNavStore('common.screenReader')}
+    screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
@@ -669,11 +678,11 @@ interface InputOTPProps {
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: 'Tab',       description: stripHtml($tStore('accessibility.keyboard.tab'))       },
-      { key: 'Arrow Left / Arrow Right', description: stripHtml($tStore('accessibility.keyboard.arrows'))    },
-      { key: 'Backspace', description: stripHtml($tStore('accessibility.keyboard.backspace')) },
-      { key: 'Ctrl+V',    description: stripHtml($tStore('accessibility.keyboard.paste'))     },
-      { key: '0-9',       description: stripHtml($tStore('accessibility.keyboard.digit'))     },
+      { key: 'Tab',       description: toPlainText($tStore('accessibility.keyboard.tab'))       },
+      { key: 'Arrow Left / Arrow Right', description: toPlainText($tStore('accessibility.keyboard.arrows'))    },
+      { key: 'Backspace', description: toPlainText($tStore('accessibility.keyboard.backspace')) },
+      { key: 'Ctrl+V',    description: toPlainText($tStore('accessibility.keyboard.paste'))     },
+      { key: '0-9',       description: toPlainText($tStore('accessibility.keyboard.digit'))     },
     ]}
   />
 
@@ -727,8 +736,8 @@ interface InputOTPProps {
         priority: $tNavStore('common.priority'),
       },
       items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-        action: stripHtml($tStore(`testes.functional.item${i}.action`)),
-        result: stripHtml($tStore(`testes.functional.item${i}.result`)),
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
       })),
     }}
@@ -740,12 +749,12 @@ interface InputOTPProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: stripHtml($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'            },
-        { criterion: stripHtml($tStore('testes.accessibility.item2')), level: '1.3.5',  how: 'DevTools attribute'  },
-        { criterion: stripHtml($tStore('testes.accessibility.item3')), level: '3.3.2',  how: 'Manual review'       },
-        { criterion: stripHtml($tStore('testes.accessibility.item4')), level: '4.1.2',  how: 'DevTools a11y tree'  },
-        { criterion: stripHtml($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools attribute'  },
-        { criterion: stripHtml($tStore('testes.accessibility.item6')), level: '1.4.3',  how: 'Contrast checker'    },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',     how: 'axe-core'            },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '1.3.5',  how: 'DevTools attribute'  },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '3.3.2',  how: 'Manual review'       },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2',  how: 'DevTools a11y tree'  },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2',  how: 'DevTools attribute'  },
+        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '1.4.3',  how: 'Contrast checker'    },
       ],
     }}
     visual={{

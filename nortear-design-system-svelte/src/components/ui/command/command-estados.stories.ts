@@ -6,7 +6,7 @@ import CommandEstadoEmptyStory from './CommandEstadoEmptyStory.svelte';
 import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
 import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Command/Estados',
   component: Command.Root,
   tags: ['overlay'],
@@ -21,10 +21,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Command.Root>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const EstadoVazio: Story = {
   name: 'Empty State',
@@ -70,7 +70,9 @@ export const ItemDesabilitado: Story = {
 
     await step('item desabilitado está presente', async () => {
       const items = canvas.getAllByRole('option');
-      const disabled = items.find((el) => el.getAttribute('data-disabled') === 'true');
+      // O bits-ui marca item desabilitado com aria-disabled — e por ele que a
+      // propria lib filtra os itens navegaveis. `data-disabled` nao existe.
+      const disabled = items.find((el) => el.getAttribute('aria-disabled') === 'true');
       await expect(disabled).toBeDefined();
     });
   },

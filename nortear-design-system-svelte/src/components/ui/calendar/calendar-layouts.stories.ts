@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Calendar/Layouts',
   component: Calendar,
   tags: ['form'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Calendar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const CaptionLabel: Story = {
   render: () => ({

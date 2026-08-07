@@ -32,10 +32,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -81,10 +78,22 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 export function AccordionDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(accordionTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (accordionTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   // Override stack-específico: @base-ui usa `multiple` (boolean), não `type` ("single"|"multiple").
   const rootItemsOverride = useMemo(() => {
@@ -235,7 +244,6 @@ export function AccordionDocs() {
   </AccordionItem>
 </Accordion>`;
 
-
   const interfaceCode = `// Accordion (root) — base-ui
 interface AccordionRootProps {
   multiple?: boolean;                              // default: false (single)
@@ -381,8 +389,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                   </Accordion>
                 ),
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -407,8 +415,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                     </AccordionItem>
                   </Accordion>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -426,7 +434,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("variants.title")}
             items={[
               {
-                name: "single",
+                name: tContent("variants.items.single.label"),
                 description: stripHtml(tContent("variants.items.single.description")),
                 code: codeSingle,
                 preview: (
@@ -445,7 +453,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "multiple",
+                name: tContent("variants.items.multiple.label"),
                 description: stripHtml(tContent("variants.items.multiple.description")),
                 code: codeMultiple,
                 preview: (
@@ -462,7 +470,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "controlled",
+                name: tContent("variants.items.controlled.label"),
                 description: stripHtml(tContent("variants.items.controlled.description")),
                 code: codeControlled,
                 preview: (
@@ -475,7 +483,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 ),
               },
               {
-                name: "defaultOpen",
+                name: tContent("variants.items.defaultOpen.label"),
                 description: stripHtml(tContent("variants.items.defaultOpen.description")),
                 code: codeDefaultOpen,
                 preview: (
@@ -736,29 +744,29 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
-              trigger: tContent("states.cols.trigger"),
-              behavior: tContent("states.cols.behavior"),
+              trigger: toPlainText(tContent("states.cols.trigger")),
+              behavior: toPlainText(tContent("states.cols.behavior")),
             }}
             items={[
               {
                 label: tContent("states.closed.label"),
-                trigger: tContent("states.closed.trigger"),
-                behavior: tContent("states.closed.behavior"),
+                trigger: toPlainText(tContent("states.closed.trigger")),
+                behavior: toPlainText(tContent("states.closed.behavior")),
               },
               {
                 label: tContent("states.open.label"),
-                trigger: tContent("states.open.trigger"),
-                behavior: tContent("states.open.behavior"),
+                trigger: toPlainText(tContent("states.open.trigger")),
+                behavior: toPlainText(tContent("states.open.behavior")),
               },
               {
                 label: tContent("states.disabled.label"),
-                trigger: tContent("states.disabled.trigger"),
-                behavior: stripHtml(tContent("states.disabled.behavior")),
+                trigger: toPlainText(tContent("states.disabled.trigger")),
+                behavior: toPlainText(tContent("states.disabled.behavior")),
               },
               {
                 label: tContent("states.focused.label"),
-                trigger: tContent("states.focused.trigger"),
-                behavior: tContent("states.focused.behavior"),
+                trigger: toPlainText(tContent("states.focused.trigger")),
+                behavior: toPlainText(tContent("states.focused.behavior")),
               },
             ]}
           />
@@ -855,9 +863,12 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             items={[
               tContent("accessibility.aria.ariaExpanded"),
               tContent("accessibility.aria.ariaControls"),
-              tContent("accessibility.aria.role"),
-              tContent("accessibility.aria.ariaLabelledBy"),
+              tContent("accessibility.aria.hiddenUntilFound"),
+              tContent("accessibility.aria.noRegion"),
             ]}
+            contrast={tContent("accessibility.contrast")}
+            screenReaderTitle={tNav("common.screenReader")}
+            screenReaderItems={screenReaderItems}
             keyboardTitle={tContent("accessibility.keyboardTitle")}
             keyboardItems={[
               { key: "Tab",        description: tContent("accessibility.keyboard.tab") },
@@ -876,19 +887,19 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("related.title")}
             items={[
               {
-                name: "Collapsible",
+                name: tContent("related.collapsible.name"),
                 description: stripHtml(tContent("related.collapsible.description")),
-                path: "?path=/docs/ui-collapsible--docs",
+                path: `?path=/docs/${tContent("related.collapsible.href")}`,
               },
               {
-                name: "Tabs",
-                description: tContent("related.tabs.description"),
-                path: "?path=/docs/ui-tabs--docs",
+                name: tContent("related.tabs.name"),
+                description: toPlainText(tContent("related.tabs.description")),
+                path: `?path=/docs/${tContent("related.tabs.href")}`,
               },
               {
-                name: "Sidebar",
-                description: tContent("related.sidebar.description"),
-                path: "?path=/docs/ui-sidebar--docs",
+                name: tContent("related.sidebar.name"),
+                description: toPlainText(tContent("related.sidebar.description")),
+                path: `?path=/docs/${tContent("related.sidebar.href")}`,
               },
             ]}
           />
@@ -910,18 +921,18 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
             title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
-              trigger: tContent("analytics.table.trigger"),
+              trigger: toPlainText(tContent("analytics.table.trigger")),
               payload: tContent("analytics.table.payload"),
             }}
             items={[
               {
                 event: tContent("analytics.events.expand.event"),
-                trigger: tContent("analytics.events.expand.trigger"),
+                trigger: toPlainText(tContent("analytics.events.expand.trigger")),
                 payload: tContent("analytics.events.expand.payload"),
               },
               {
                 event: tContent("analytics.events.collapse.event"),
-                trigger: tContent("analytics.events.collapse.trigger"),
+                trigger: toPlainText(tContent("analytics.events.collapse.trigger")),
                 payload: tContent("analytics.events.collapse.payload"),
               },
             ]}
@@ -938,8 +949,8 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 priority: tNav("common.priority"),
               },
               items: [1, 2, 3, 4, 5, 6].map((i) => ({
-                action: stripHtml(tContent(`testes.functional.item${i}.action`)),
-                result: stripHtml(tContent(`testes.functional.item${i}.result`)),
+                action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+                result: toPlainText(tContent(`testes.functional.item${i}.result`)),
                 priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
               })),
             }}
@@ -951,7 +962,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 how: tNav("common.howToVerify"),
               },
               items: [1, 2, 3, 4, 5, 6].map((i) => ({
-                criterion: stripHtml(tContent(`testes.accessibility.item${i}.criterion`)),
+                criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),
               })),

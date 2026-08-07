@@ -28,7 +28,9 @@
       "item4": "<strong>ProgressLabel</strong> — rótulo textual opcional descrevendo a operação.",
       "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ex: 42%), alinhado à direita.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      "structureCode": {
+        "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -208,7 +210,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
+      "extensibilityCode": {
+        "react": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -242,7 +246,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor do indicador via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": {
+        "web": "/* Override de cor do indicador via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -426,7 +432,9 @@
       "item4": "<strong>ProgressLabel</strong> — optional text label describing the operation.",
       "item5": "<strong>ProgressValue</strong> — optional numeric value (e.g. 42%), aligned to the right.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      "structureCode": {
+        "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -606,7 +614,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
+      "extensibilityCode": {
+        "react": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -640,7 +650,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Override indicator color via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": {
+        "web": "/* Override indicator color via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -824,7 +836,9 @@
       "item4": "<strong>ProgressLabel</strong> — etiqueta de texto opcional describiendo la operación.",
       "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ej. 42%), alineado a la derecha.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      "structureCode": {
+        "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1004,7 +1018,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
+      "extensibilityCode": {
+        "react": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1038,7 +1054,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override del color del indicador vía .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      "customizationCode": {
+        "web": "/* Override del color del indicador vía .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

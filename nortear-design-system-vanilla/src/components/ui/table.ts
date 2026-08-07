@@ -53,9 +53,15 @@ export function createTableHead(text: string, extraClass?: string): HTMLTableCel
   return th;
 }
 
-export function createTableCell(text: string, extraClass?: string): HTMLTableCellElement {
+/**
+ * @param lang Idioma do conteúdo da célula. Use 'en' quando o texto é
+ * identificador (nome de prop, tipo, token) — sem isso a voz em pt-BR do leitor
+ * de tela tenta pronunciá-lo como português. WCAG 3.1.2.
+ */
+export function createTableCell(text: string, extraClass?: string, lang?: string): HTMLTableCellElement {
   const td = document.createElement('td');
   if (extraClass) td.className = extraClass;
+  if (lang) td.lang = lang;
   td.textContent = text;
   return td;
 }

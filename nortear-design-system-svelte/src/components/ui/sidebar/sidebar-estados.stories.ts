@@ -5,7 +5,7 @@ import SidebarStory from './SidebarStory.svelte';
 import SidebarIconStory from './SidebarIconStory.svelte';
 import SidebarFixedStory from './SidebarFixedStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Sidebar/Estados',
   component: SidebarStory,
   tags: ['layout'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof SidebarStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Expandido: Story = {
   render: () => ({

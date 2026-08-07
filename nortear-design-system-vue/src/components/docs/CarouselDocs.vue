@@ -25,17 +25,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(carouselTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (carouselTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -109,8 +117,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -334,7 +340,7 @@ const galleryPhotos = [
 ];
 
 const stateItems = computed(() => [
-  { label: tContent('states.disabled.label'), trigger: stripHtml(tContent('states.disabled.trigger')), behavior: stripHtml(tContent('states.disabled.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -346,10 +352,10 @@ const propCols = computed(() => ({
 }));
 
 const carouselPropItems = computed(() => [
-  { name: 'opts',        type: 'EmblaOptionsType',               defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.opts'))        },
-  { name: 'plugins',     type: 'EmblaPluginType[]',              defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.plugins'))     },
-  { name: 'orientation', type: '"horizontal" | "vertical"',     defaultValue: '"horizontal"',  required: 'Não', description: stripHtml(tContent('props.table.orientation')) },
-  { name: '@init-api',   type: '(api: CarouselApi) => void',    defaultValue: '—',             required: 'Não', description: stripHtml(tContent('props.table.setApi'))      },
+  { name: 'opts',        type: 'EmblaOptionsType',               defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.opts'))        },
+  { name: 'plugins',     type: 'EmblaPluginType[]',              defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.plugins'))     },
+  { name: 'orientation', type: '"horizontal" | "vertical"',     defaultValue: '"horizontal"',  required: 'Não', description: toPlainText(tContent('props.table.orientation')) },
+  { name: '@init-api',   type: '(api: CarouselApi) => void',    defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.setApi'))      },
   { name: 'class',       type: 'string',                         defaultValue: '—',             required: 'Não', description: tContent('props.table.className')              },
 ]);
 
@@ -359,8 +365,8 @@ const contentItemPropItems = computed(() => [
 ]);
 
 const navPropItems = computed(() => [
-  { name: 'variant',     type: 'ButtonVariants["variant"]',      defaultValue: '"outline"',     required: 'Não', description: stripHtml(tContent('props.table.variant'))     },
-  { name: 'size',        type: 'ButtonVariants["size"]',         defaultValue: '"icon-sm"',     required: 'Não', description: stripHtml(tContent('props.table.size'))        },
+  { name: 'variant',     type: 'ButtonVariants["variant"]',      defaultValue: '"outline"',     required: 'Não', description: toPlainText(tContent('props.table.variant'))     },
+  { name: 'size',        type: 'ButtonVariants["size"]',         defaultValue: '"icon-sm"',     required: 'Não', description: toPlainText(tContent('props.table.size'))        },
   { name: 'class',       type: 'string',                         defaultValue: '—',             required: 'Não', description: tContent('props.table.className')              },
 ]);
 
@@ -391,10 +397,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Tabs',       description: tContent('related.tabs'),       path: '?path=/docs/ui-tabs--docs'       },
-  { name: 'ScrollArea', description: tContent('related.scrollArea'), path: '?path=/docs/ui-scrollarea--docs' },
-  { name: 'Card',       description: tContent('related.card'),       path: '?path=/docs/ui-card--docs'       },
-  { name: 'Pagination', description: tContent('related.pagination'), path: '?path=/docs/ui-pagination--docs' },
+  { name: 'Tabs',       description: toPlainText(tContent('related.tabs')),       path: '?path=/docs/ui-tabs--docs'       },
+  { name: 'ScrollArea', description: toPlainText(tContent('related.scrollArea')), path: '?path=/docs/ui-scrollarea--docs' },
+  { name: 'Card',       description: toPlainText(tContent('related.card')),       path: '?path=/docs/ui-card--docs'       },
+  { name: 'Pagination', description: toPlainText(tContent('related.pagination')), path: '?path=/docs/ui-pagination--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -405,11 +411,11 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.slideChange'),    trigger: tContent('analytics.table.slideChangeTrigger'),    payload: tContent('analytics.table.slideChangePayload')    },
-  { event: tContent('analytics.table.autoplayPause'),  trigger: tContent('analytics.table.autoplayPauseTrigger'),  payload: tContent('analytics.table.autoplayPausePayload')  },
-  { event: tContent('analytics.table.pageView'),       trigger: tContent('analytics.table.pageViewTrigger'),       payload: tContent('analytics.table.pageViewPayload')       },
-  { event: tContent('analytics.table.sectionViewed'),  trigger: tContent('analytics.table.sectionViewedTrigger'),  payload: tContent('analytics.table.sectionViewedPayload')  },
-  { event: tContent('analytics.table.langSwitch'),     trigger: tContent('analytics.table.langSwitchTrigger'),     payload: tContent('analytics.table.langSwitchPayload')     },
+  { event: tContent('analytics.table.slideChange'),    trigger: toPlainText(tContent('analytics.table.slideChangeTrigger')),    payload: tContent('analytics.table.slideChangePayload')    },
+  { event: tContent('analytics.table.autoplayPause'),  trigger: toPlainText(tContent('analytics.table.autoplayPauseTrigger')),  payload: tContent('analytics.table.autoplayPausePayload')  },
+  { event: tContent('analytics.table.pageView'),       trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),       payload: tContent('analytics.table.pageViewPayload')       },
+  { event: tContent('analytics.table.sectionViewed'),  trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')),  payload: tContent('analytics.table.sectionViewedPayload')  },
+  { event: tContent('analytics.table.langSwitch'),     trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),     payload: tContent('analytics.table.langSwitchPayload')     },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -571,8 +577,8 @@ function onDemoInit(payload: any) {
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.previous.name'), rules: tContent('usage.uxWriting.table.previous.format'), do: tContent('usage.uxWriting.table.previous.good'), dont: tContent('usage.uxWriting.table.previous.bad') },
-          { element: tContent('usage.uxWriting.table.next.name'), rules: tContent('usage.uxWriting.table.next.format'), do: tContent('usage.uxWriting.table.next.good'), dont: tContent('usage.uxWriting.table.next.bad') },
+          { element: tContent('usage.uxWriting.table.previous.name'), rules: tContent('usage.uxWriting.table.previous.format'), do: tContent('usage.uxWriting.table.previous.good'), dont: toPlainText(tContent('usage.uxWriting.table.previous.bad')) },
+          { element: tContent('usage.uxWriting.table.next.name'), rules: tContent('usage.uxWriting.table.next.format'), do: tContent('usage.uxWriting.table.next.good'), dont: toPlainText(tContent('usage.uxWriting.table.next.bad')) },
           { element: tContent('usage.uxWriting.table.dots.name'), rules: tContent('usage.uxWriting.table.dots.format'), do: tContent('usage.uxWriting.table.dots.good'), dont: tContent('usage.uxWriting.table.dots.bad') },
           { element: tContent('usage.uxWriting.table.caption.name'), rules: tContent('usage.uxWriting.table.caption.format'), do: tContent('usage.uxWriting.table.caption.good'), dont: tContent('usage.uxWriting.table.caption.bad') },
         ],
@@ -585,8 +591,8 @@ function onDemoInit(payload: any) {
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -1006,7 +1012,7 @@ function onDemoInit(payload: any) {
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -1035,6 +1041,8 @@ function onDemoInit(payload: any) {
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -1059,7 +1067,7 @@ function onDemoInit(payload: any) {
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

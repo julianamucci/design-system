@@ -10,11 +10,26 @@ import { alertVariants } from './index'
 const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
   variant?: AlertVariants['variant']
+  /**
+   * Semântica de anúncio da raiz.
+   *
+   * `alert` (padrão) é live region assertiva — o leitor de tela interrompe o
+   * que estiver fazendo e anuncia na hora; só faz sentido para mensagem
+   * urgente que SURGE em tempo de execução. `status` é live region polida.
+   * `note` não é live region: é o valor correto para conteúdo estático já
+   * presente quando a página carrega.
+   *
+   * Declarar `role` como prop também o retira de `$attrs`, então o valor aqui
+   * é o único a chegar na raiz — sem atributo duplicado nem fallthrough
+   * sobrescrevendo a decisão do componente.
+   */
+  role?: 'alert' | 'status' | 'note'
   /** Renderiza o botão de fechar no canto superior direito. */
   dismissible?: boolean
   /** Rótulo acessível do botão de fechar. */
   dismissLabel?: string
 }>(), {
+  role: 'alert',
   dismissible: false,
   dismissLabel: 'Fechar alerta',
 })
@@ -51,13 +66,25 @@ let saidaTimer = 0
 let dismissed = false
 let saidaFinalizada = false
 
-function limparEntrada() {
+// `animationend` borbulha: a animação de qualquer descendente (o botão de
+// fechar, um ícone) chegaria aqui e encerraria entrada ou saída antes da hora.
+// Só o próprio elemento conta. Chamada direta (sem evento) sempre passa.
+function ehDoProprioElemento(event?: Event) {
+  return !event || event.target === root.value
+}
+
+function limparEntrada(event?: Event) {
+  if (!ehDoProprioElemento(event)) return
   window.clearTimeout(entradaTimer)
   root.value?.removeEventListener('animationend', limparEntrada)
   if (animationClass.value === 'nds-animate-in') animationClass.value = null
 }
 
-function finalizarSaida() {
+function finalizarSaida(event?: Event) {
+  if (!ehDoProprioElemento(event)) return
+  /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que chamam
+     (animationend e timeout) removem listener e timer antes de sair, então não
+     há ordem de eventos que a alcance. Fica como rede se um deles mudar. */
   if (saidaFinalizada) return
   saidaFinalizada = true
   window.clearTimeout(saidaTimer)
@@ -86,6 +113,8 @@ function handleDismiss() {
   animationClass.value = 'nds-animate-out'
 
   const el = root.value
+  /* v8 ignore next 4 -- o handler só existe dentro do `v-if="visible"`, onde a
+     ref já está preenchida; o ramo existe porque o tipo da ref é nullable. */
   if (!el) {
     finalizarSaida()
     return
@@ -103,7 +132,7 @@ function handleDismiss() {
     ref="root"
     data-slot="alert"
     :class="cn(alertVariants({ variant }), animationClass, props.class)"
-    role="alert"
+    :role="props.role"
   >
     <slot />
     <Button

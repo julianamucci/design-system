@@ -50,8 +50,9 @@ function buildTable(def: DocsPropsTableDef): DocumentFragment {
   const tbody = createTableBody();
   def.items.forEach(item => {
     const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
-    row.appendChild(createTableCell(item.name, 'nds-p-2 nds-font-mono nds-font-bold nds-text-primary'));
-    row.appendChild(createTableCell(item.type, 'nds-p-2 nds-font-mono nds-text-muted-foreground'));
+    // 'en': nome de prop e tipo são identificadores, não português.
+    row.appendChild(createTableCell(item.name, 'nds-p-2 nds-font-mono nds-font-bold nds-text-primary', 'en'));
+    row.appendChild(createTableCell(item.type, 'nds-p-2 nds-font-mono nds-text-muted-foreground', 'en'));
     row.appendChild(createTableCell(item.defaultValue, 'nds-p-2 nds-text-muted-foreground'));
     row.appendChild(createTableCell(item.required, 'nds-p-2 nds-text-muted-foreground'));
     row.appendChild(createTableCell(item.description, 'nds-p-2 nds-text-muted-foreground'));

@@ -7,6 +7,114 @@ decisão sua — não é trabalho parado por falta de tempo.
 
 ## Aberto — precisa de decisão
 
+- [x] **RESOLVIDO (2026-08-07) — o idioma nunca chegava ao documento que o leitor
+  de tela lê.** `langDocs = isIframe ? [targetDoc, document] : [document]` nas 4
+  stacks: metatag segue no pai, `lang` vai nos dois. A suíte de fumaça passou a
+  afirmar `document.documentElement.lang === 'pt-BR'` dentro do iframe — 63
+  páginas no React, 62 no Svelte, 64 no Vanilla, 62 no Vue. A regra
+  `document_lang_so_no_pai` do `audit.mjs` ficou verde, e ganhou irmã
+  (`document_lang_sem_prova`) que acusa se a asserção da fumaça sumir.
+
+  Marcação estrutural também aplicada: `lang="en"` no `<pre>` do CodeBlock (todo
+  snippet do design system) e nas células monoespaçadas de `DocsProps` e
+  `DocsTokens` (nome de prop, tipo, token, seletor). **Segue aberto** o passo 2:
+  o glossário curado de ~20 termos na prosa do `translations.json`.
+
+  Registro do que era, para não voltar: `useSeoEffect` resolvia o alvo assim:
+
+  ```ts
+  const targetDoc = isIframe ? window.parent.document : document;
+  targetDoc.documentElement.lang = localeStr;
+  ```
+
+  Dentro do Storybook, `targetDoc` é o **manager**. O conteúdo das docs e das
+  foundations vive no `iframe.html`, que o Storybook serve como
+  `<html lang="en">` (conferido no `storybook-static`) e que nada nunca
+  atualiza. Resultado: toda a prosa em português é anunciada com regras de
+  pronúncia do inglês. É **WCAG 3.1.1, nível A**, no documento que importa.
+
+  A guideline `01-acessibilidade.md` §"Idioma do documento" já manda fazer
+  certo — quem diverge é a implementação, não a regra.
+
+  O passo que segue aberto: glossário curado (~20 termos) marcado na prosa do
+  `translations.json`. **Não** marcar os 87 termos que a varredura acha —
+  `menu`, `link`, `card` e `mobile` já são lidos bem por voz em português, e
+  forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
+  ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
+
+- [ ] **`slider > Em Formulario` reprova no axe por `target-size`, só em Vue e
+  Svelte (2026-08-07).** Medido nas quatro: react e vanilla passam, vue e svelte
+  falham com "16px by 16px, should be at least 24px" e "insufficient space to
+  its closest neighbors".
+
+  O CSS compartilhado dá a hit-area por `.nds-slider-thumb::after { inset:
+  -0.25rem }` — 16+8 = 24px, exatamente o que a guideline promete em WCAG 2.5.8.
+  Como duas stacks passam com o mesmo CSS, a diferença está no DOM que cada lib
+  monta em volta do thumb, não na regra. Achado ao rodar a suíte depois do lint;
+  é anterior a esta rodada e não foi diagnosticado.
+
+- [ ] **Classe utilitária não vence CSS de componente — e a docs page prometia
+  que sim (2026-08-07).** `utilities.css` é importado na linha 13 do bundle e o
+  CSS dos componentes a partir da 31: mesma especificidade, quem vem depois
+  ganha. Então `class="nds-max-w-sm"` num `.nds-alert-dialog-content` não muda
+  a largura — medido, o painel continua em 512px.
+
+  Corrigi o texto do alert-dialog, que prometia "ex.: uma largura máxima
+  diferente", e a story nova (`ClasseExtra`, nas 4 stacks) passou a demonstrar
+  propriedade que o componente **não** declara. Mas a regra vale para o design
+  system inteiro e ninguém a documentou: **classe extra só alcança o que o
+  componente não define**.
+
+  Decisão sua: (a) deixar como está e documentar a regra na guideline de
+  extensibilidade, ou (b) mover `utilities.css` para depois dos componentes —
+  inverte a precedência em 48 componentes de uma vez, e o que hoje é ignorado
+  passa a valer, inclusive onde ninguém esperava.
+
+- [ ] **`description` do alert-dialog: opcional no código, obrigatória na
+  anatomia (2026-08-07).** A factory do Vanilla declara `description?: string`
+  e a props table diz "Obrigatório: Não"; a anatomia (`anatomy.item6`, texto
+  compartilhado) diz "descrição obrigatória. Fonte do aria-describedby". React,
+  Vue e Svelte também permitem omitir — é um componente separado.
+
+  Nenhuma story omite, então o caminho sem descrição está declarado com
+  `v8 ignore` no Vanilla. Resolver é escolher: ou a anatomia passa a dizer
+  "recomendada", ou as quatro stacks passam a exigir — e aí a story que prova
+  isso precisa nascer nas quatro.
+
+- [ ] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova
+  `play_nao_idempotente`. São plays que clicam e asseveram estado no mesmo alvo:
+  passam no vitest (que remonta) e falham no replay do painel Interactions (que
+  não remonta). Medido depois de corrigir o accordion, que zerou:
+
+  ```
+  collapsible 24 · toggle-group 16 · toggle 13 · switch 10 · radio-group 6
+  select 6 · tabs 6 · checkbox 4 · navigation-menu 2 · carousel 1 · command 1
+  dropdown-menu 1 · pagination 1 · popover 1
+  ```
+
+  O conserto é mecânico e está descrito em `/quality` §2e2b — o par
+  `abrir`/`fechar`. Vale fazer componente a componente, junto da auditoria de
+  cada um, e não num lote só: em toggle e collapsible o volume sugere que a
+  story inteira precisa de releitura, não só a troca de chamada.
+
+- [ ] **`collapsible: false` no accordion não tem story em stack nenhuma (2026-08-07).**
+  A prop está documentada na tabela compartilhada (`props.accordion.items.collapsible`,
+  "Permite fechar o item ativo clicando nele novamente") e existe em Vue (reka),
+  Svelte (bits) e Vanilla. **O React não tem**: o `AccordionRoot` do base-ui expõe
+  `value`, `defaultValue`, `disabled` e `multiple`, e mais nada — conferido no
+  `.d.ts`. Nenhuma das quatro stacks tem story com `collapsible: false`.
+
+  Duas coisas a decidir juntas, porque uma depende da outra:
+  1. A story nasce só nas três que suportam (e o React declara
+     `coversNotApplicable`), ou a prop sai da tabela compartilhada por não ser
+     contrato das quatro?
+  2. O **default documentado está errado**: a tabela diz `false`, a factory do
+     Vanilla usa `true`. Uma das duas precisa ceder, e a escolha muda o
+     comportamento padrão de quem já consome.
+
+  Enquanto isso o ramo está declarado com `v8 ignore` e motivo em
+  `nortear-design-system-vanilla/src/components/ui/accordion.ts`.
+
 - [ ] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**
   A região de scroll do CodeBlock tem `tabindex="0"` de propósito: é o que
   permite rolar o bloco sem mouse (WCAG 2.1.1), e está documentado na própria
@@ -449,18 +557,31 @@ heading-order, listitem, aria-allowed-attr.
   `data-active` em pagination-variantes (6 falhas).
 - vue: 12 falhas em stories de carousel/navigation-menu/sidebar + calendar
   Playground (`role "grid"` ausente).
-- **vue MotionDocs — `color-contrast`: NÃO é defeito de design.** Diagnóstico
-  final (2026-08-01), depois de duas leituras erradas minhas ("flaky sob
-  carga" e depois "violação real de 1.88"). Os três números medidos (1.01,
-  1.02, 1.88) eram **amostras da mesma animação em pontos diferentes**:
-  `MotionDocs.vue` usa `motion-v` com `initial: { opacity: 0 }`, e em
-  **Chromium headless animações de `opacity`/`transform` não avançam** —
-  ficam presas no quadro inicial. O axe então mede contraste de texto quase
-  invisível. Em browser real os elementos chegam a `opacity: 1` e o contraste
-  é o do token. Mesma causa raiz que obrigou a classe `.nds-animate-in` a ser
-  transitória (ver lote de motion abaixo). Ação correta: fazer a story
-  esperar o fim da animação ou desligar motion na medição do axe — NÃO mexer
-  em cor.
+- **vue MotionDocs — `color-contrast`: NÃO reproduz mais; não há o que
+  corrigir.** Este item mudou de diagnóstico três vezes e as duas primeiras
+  leituras foram minhas e erradas ("flaky sob carga"; depois "violação real
+  de 1.88"). A terceira — que eu também escrevi — atribuía a violação ao
+  congelamento de animação em headless. **Também errada**, e agora com
+  evidência: a story `Motion` do docs-smoke do Vue nunca teve
+  `a11y: { test: 'todo' }`, sempre rodou o axe completo e passa. O motivo
+  técnico é que `motion-v` anima via JS/rAF, que **avança** em headless — o
+  congelamento atinge keyframes CSS, não animação por script. Os números
+  díspares (1.01, 1.02, 1.88) eram amostras de execuções sob carga que não se
+  sustentam. Fechado por ausência de defeito, não por correção.
+  **Lição de método**: três diagnósticos sucessivos sem reproduzir de forma
+  controlada. O correto teria sido isolar a story antes de teorizar.
+  **QUARTO diagnóstico — 2026-08-02, este correto e com medição.** O
+  "fechado por ausência de defeito" também estava errado: o defeito existe e é
+  uma **corrida**, não contraste. A play `mounted` do docs-smoke retornava no
+  mesmo quadro da montagem e o axe (postVisit) media enquanto os elementos
+  ainda estavam em `opacity: 0` — daí `1.01 (#fdfdfd sobre #ffffff)`. Passava
+  por sorte, e por isso "não reproduzia": dependia do tempo de render das
+  páginas anteriores da suíte. Medido em par: árvore em `HEAD~1` 63/63, árvore
+  com a seção de leitor de tela 62/63, mesma máquina, falha determinística.
+  Corrigido em `256af081` com uma play `settled` que só devolve quando nenhum
+  elemento resta com `opacity` inline < 1. **Lição**: "não reproduz" sob uma
+  suíte compartilhada não é ausência de defeito — é ausência de controle sobre
+  o tempo. Teste racy fecha como corrigido, nunca como inexistente.
 - svelte: 15 falhas de interação em stories de pagination/navigation-menu/
   sidebar (backlog dos 50/180).
 - vanilla: `target-size` nos dots de 8px em `carousel-composicoes > Com Dots`.
@@ -611,3 +732,686 @@ docs pages renderizava com fundo primary. Corrigido em react e vue com
   `waitFor` na asserção, como foi feito no alert.
 - react `dropdown-menu-composicoes`: 4 falhas (Com Label, Com Checkbox Items,
   Com Radio Group) idênticas com o primitivo em stash.
+
+## AlertDialog: confirmar não fechava (2026-08-01)
+
+`8e2028af` react · `02a18c99` svelte. Vue e Vanilla nunca tiveram o bug.
+
+Causa diferente em cada stack, mesmo sintoma:
+- **react**: `AlertDialogAction` renderizava um `<Button>` puro, sem envolver
+  `AlertDialogPrimitive.Close` — o `AlertDialogCancel`, no mesmo arquivo, já
+  fazia certo. Corrigido espelhando o Cancel.
+- **svelte**: o `AlertDialogPrimitive.Action` do bits-ui **não fecha** — a
+  classe `DialogActionState` só expõe id e atributos; quem fecha é a
+  `DialogCloseState`. Corrigido renderizando `Dialog.Close` (e não
+  `AlertDialog.Cancel`, que sequestraria o `cancelNode` do root — marcação de
+  foco inicial de alert dialog).
+
+Em ambos, verificado na fonte da lib que o `onClick`/`onclick` do consumidor
+continua disparando ANTES do fechamento (mergeProps encadeia handlers), então
+o `track('dialog_confirm', …)` das docs pages segue intacto.
+
+### O que deixou o bug passar: dois testes que codificavam o defeito
+
+As duas stacks TINHAM story `Confirmed`, e as duas afirmavam o comportamento
+errado:
+- react: clicava e asseverava `toBeInTheDocument()` — ou seja, passava
+  justamente por o diálogo continuar aberto. O spy do callback era criado
+  dentro do `render`, inacessível ao `play`, então a confirmação nunca era
+  checada.
+- svelte: o comentário da story dizia explicitamente "bits-ui 2.18:
+  AlertDialogAction não fecha automaticamente… validamos apenas que o handler
+  foi disparado" — a limitação da lib foi documentada como se fosse contrato.
+
+**Regra**: quando uma story documenta uma limitação de lib, ela precisa vir
+com o item correspondente aqui no FIXES-NEEDED. Limitação aceita em silêncio
+vira contrato por omissão.
+
+Ambas reescritas: abrem, confirmam, e provam callback disparado + diálogo
+fora do DOM (com `waitFor`, por causa do congelamento de animação no headless).
+
+**Chromatic**: o snapshot da story `Confirmed` muda nas 2 stacks — o diálogo
+agora fecha. A cobertura visual do aberto continua na story `Open`.
+
+## Animação do alert-dialog + reduced-motion nos testes (2026-08-02)
+
+`8d0c279c` CSS compartilhado + vanilla · `25e4b0b2` react · `98156a01` vue ·
+`470d53c4` svelte.
+
+Overlay e painel do alert-dialog passam a animar com o mesmo movimento do
+alert dismissible (keyframes `nds-animate-in/out`, tokens `--duration-spring`
+/ `--ease-spring`). O overlay só faz **fade**: escalar um backdrop
+`fixed; inset: 0` encolheria a cortina e mostraria a página nas bordas — a
+escala pertence ao painel, como na referência adotada.
+
+Dois bugs encontrados no caminho:
+- A animação de saída que já existia **nunca rodou em 3 das 4 stacks**: o CSS
+  só tinha `[data-closed]` (convenção do base-ui), e Vue/Svelte/Vanilla usam
+  `data-state`. As três convenções agora estão cobertas.
+- O **Vanilla não emitia atributo de estado nenhum** e removia o nó direto.
+  Passou a emitir `data-state` e a esperar a animação antes de remover (com
+  timeout de segurança); sem animação ativa, remove na hora.
+
+### Infra: `reducedMotion: 'reduce'` no browser dos testes (4 stacks)
+
+`provider: playwright({ contextOptions: { reducedMotion: 'reduce' } })`.
+
+Motivo medido: em Chromium headless animações de **keyframes CSS** de
+`opacity`/`transform` não avançam — ficam presas no quadro zero com
+`playState: "running"`. Diferente do caso do alert (onde a classe era
+transitória e o JS a removia), aqui o `data-state="open"` **persiste**: o
+elemento ficaria invisível para sempre e nenhum `waitFor` resolveria. Emular
+reduced-motion aciona o `@media` que o CSS já tinha, o teste vira
+determinístico e ainda exercita o caminho de quem pede menos movimento.
+
+**Ganho colateral confirmado**: a falha pré-existente
+`react dialog-composicoes > Profile Edit` (input presente mas não visível)
+**sumiu** — era o `nds-dialog-zoom-in` congelado, como suspeitado.
+
+**Onde NÃO ajudou** (medido, não suposto):
+- vue: nada a ganhar — ver item do MotionDocs acima (animação por rAF avança).
+- svelte: o backlog de ~46 falhas em suítes com animação é de outra natureza —
+  26 são `Unable to find` e 15 `Timed out`, ou seja, o elemento não chega a
+  renderizar. Comparação antes/depois idêntica fora do alert-dialog.
+
+- [ ] **Icons sem folga de timeout**: 120s nas 4 stacks, e a página mede
+  ~75–112s sob carga concorrente. Falha de forma intermitente quando várias
+  stacks rodam em paralelo (é o caso do CI). Virtualizar/paginar o grid
+  resolveria de vez — e destravaria também o axe, hoje desligado nessa página
+  no react.
+
+## /quality alert-dialog (2026-08-02) — audit zerado, 4 stacks
+
+`867cc2a5` vanilla · `70d0cf6c` vue · `a6b801ea` react · `969aef01` svelte
+(auditoria) + `2888ffd3` `71369a7b` `3d5c4f39` (paridade das 2 stories novas).
+
+10 stories por stack (paridade), 100% com play, `audit.mjs --category
+quality` retorna `[]`. Asserções do componente: ~70 → ~180.
+
+### Bug real encontrado — teclado inoperante no Svelte
+
+`Enter` e `Espaço` **não ativavam** Action/Cancel: o `DialogCloseState` do
+bits-ui trata as teclas no próprio `onkeydown`, fecha direto e **nunca emite
+`click`** — o callback do consumidor só rodava com mouse. Confirmação
+inoperável por teclado (WCAG 2.1.1), invisível para o axe. Corrigido com
+ponte keydown→onclick nos dois primitivos. **Só apareceu porque a skill exige
+verificar tecla a tecla** — a lista documentada tinha 5 teclas e só `Escape`
+era testada nas 4 stacks.
+
+### Padrões que se repetiram nas 4
+
+- `fn()` criado dentro do `render`: invisível para a play E para a aba
+  Actions. Vira spy de módulo.
+- ARIA documentado mas verificado só por `toHaveAccessibleName` (indireto):
+  agora resolve os ids e compara com o texto real.
+- vue: a story `Open` **fechava o diálogo no fim da play** — o Chromatic
+  fotografava o estado fechado justamente na story do estado aberto.
+
+### PENDENTE — conteúdo compartilhado contradiz as 4 implementações
+
+Cada stack verificou na fonte da sua lib. Precisa de decisão (recomendação:
+**corrigir o texto, não o código** — a implementação está certa nos 4 casos):
+
+- [ ] **"Clique no overlay fecha"** (`functional.item6`, `accessibility.item5`,
+  `states.cancelled.trigger`) — falso nas 4. react:
+  `disablePointerDismissal = isAlertDialog || prop` · vue:
+  `withModifiers(..., ['prevent'])` · svelte: `interactOutsideBehavior =
+  "ignore"` · vanilla: decisão comentada na factory. É o comportamento
+  CORRETO por WAI-ARIA APG (alert dialog exige escolha explícita).
+- [ ] **`aria-modal` documentado** — o Base UI não emite; isola o fundo com
+  `aria-hidden` + `data-base-ui-inert` nos irmãos.
+- [ ] **"Foco inicial em Cancelar"** (`functional.item1`, `states.open.behavior`,
+  `accessibility.item3`, `notes.tip1`) — as libs focam o painel
+  (`tabindex=-1`); o primeiro Tab leva ao Cancelar.
+- [ ] **`defaultOpen` na tabela de props** — não existe no bits-ui
+  (`DialogRootProps` = open/onOpenChange/onOpenChangeComplete/children).
+
+Conduta a uniformizar junto: vanilla, react e svelte **codificaram** o
+comportamento real em asserção; o vue deixou sem, para não cristalizar a
+contradição antes da decisão.
+
+### Outras pendências levantadas (menores)
+
+- [ ] `docs/shared/styles/nds/alert-dialog.css` (cabeçalho) diz "sem
+  Escape-to-close" — obsoleto, a factory fecha com Escape.
+- [ ] Vanilla não emite `data-slot` na descrição (só header/footer/content):
+  seletor que funciona em 3 stacks falha na 4ª.
+- [ ] Rótulos das composições divergem entre stories e docs page nas 4
+  stacks (stories: "Excluir sua conta?" / "Publicar agora"; docs page:
+  "Excluir conta" / "Sair da conta"). O react alinhou os dele à docs page;
+  as outras 3 mantiveram os próprios. Mexe em baseline do Chromatic.
+- [ ] Tabela de tokens lista utilitários Tailwind mortos (`bg-black/80`,
+  `bg-background`, `border`, `sm:rounded-lg`) — resíduo da migração `.nds-*`,
+  idêntico nas 4.
+- [x] ~~`accessibility.aria.*` e `accessibility.screenReader.*` do JSON são
+  conteúdo morto~~ — RESOLVIDO (2026-08-02). `aria.*` já era renderizado como
+  `items`; o morto era `screenReader.*` (44 de 50 componentes) e `contrast`
+  (só accordion). `DocsAccessibility` ganhou `screenReaderTitle`,
+  `screenReaderItems` e `contrast` opcionais nas 4 stacks; 172 call sites
+  fiados por script com dry-run. As chaves de `screenReader` não têm formato
+  comum entre componentes, então o container recebe `Object.values(...)`.
+  Sem a chave no JSON: avatar, badge, dialog (4 stacks) e form (vanilla).
+
+## NVDA pulava para "Notas de Implementação" — RESOLVIDO (2026-08-02)
+
+`d38c0bd0` vanilla (+vue absorvido) · `16043e20` svelte · `afeee31d` react ·
+`fe26d0bf` conteúdo compartilhado.
+
+**Sintoma** (reportado pela dona): ao abrir qualquer docs page, o NVDA pula
+para a seção de Notas e fica preso ali.
+
+**Causa**: o `DocsNotes` renderiza `Alert`, e o primitivo marcava
+`role="alert"` FIXO na raiz nas 4 stacks. `role="alert"` é live region
+ASSERTIVA — o leitor de tela interrompe e anuncia no carregamento. Varredura
+confirmou que era a **única** live region das docs pages. Atingia **48 páginas
+× 4 stacks**.
+
+**O erro é semântico e valia além das docs**: por WAI-ARIA, `alert` é para
+mensagem urgente que SURGE em runtime. Qualquer consumidor do DS com um Alert
+estático na tela tinha a mesma interrupção.
+
+**Correção**: Alert ganhou `role?: 'alert' | 'status' | 'note'`, default
+`'alert'` (aditivo — nenhum call site muda de comportamento). `DocsNotes` usa
+`'note'`. Story `SemAnuncio` nas 4 trava o default e o novo caso.
+
+### O que quase deixou a correção invisível
+
+O conteúdo compartilhado afirmava em **8 lugares** que o `role="alert"` é
+automático. Eu corrigi primeiro `accessibility.aria.role` — e **nenhuma das 4
+docs pages consome `accessibility.aria.*`**; elas renderizam
+`accessibility.item1`. Sem a varredura completa, a página continuaria
+ensinando o padrão que causou o bug. Também estava no **SEO**
+(`seo.description`, `seo.aiSummary`), que é o que buscador e IA leem.
+
+**Regra**: ao corrigir texto compartilhado, varrer TODAS as chaves por
+ocorrência literal e conferir quais o container realmente renderiza — chave
+não consumida é correção que não chega ao usuário.
+
+### Achado lateral no Vue
+
+Antes da mudança, `role` NÃO era prop no Vue: um `role` passado pelo consumidor
+caía por fallthrough e **sobrescrevia silenciosamente** o `role="alert"` do
+template. Declarar como prop fechou esse comportamento acidental.
+
+### Hazard de processo — `git stash` com agents paralelos
+
+O agent do React empilhou um stash para provar que uma falha era pré-existente
+e **outro agent removeu a entrada**; as edições sumiram da árvore e da
+`git stash list` (voltaram intactas, por sorte). O stash é global. Também
+houve **absorção de commit**: o commit do Vue entrou dentro do commit do
+Vanilla porque os agents compartilham o índice.
+- [ ] Proibir `git stash` nos prompts de agent paralelo; comparar baseline
+  copiando o arquivo para o scratchpad.
+
+## Foco na navegação das docs pages — RESOLVIDO (2026-08-02)
+
+`67e09fe5` vanilla · `bcacf3c7` react · `b23ed990` vue · `ea685f3a` svelte.
+
+**Sintomas** (reportados pela dona, com NVDA): (1) "Ir para o conteúdo" não
+leva ao título; (2) Enter num item do menu rola até a seção mas a leitura não
+continua, e o Tab seguinte vai para o próximo item do menu.
+
+**Causa 1 — nenhuma docs page tinha `<main>`.** A sidebar era `<nav>` com
+rótulo, o conteúdo era um `<div>` sem landmark: não havia "conteúdo" para
+alcançar nem nome que dissesse de que página se trata. Agora
+`<main tabindex="-1" aria-labelledby="docs-page-title">`, com o `<h1>` do
+`DocsHeader` ganhando id estável. Ao cair no conteúdo o leitor anuncia
+"principal, <título>". Zero mudança visual (só a tag e dois atributos).
+
+**Causa 2 — o handler do menu só rolava.** `scrollIntoView` sem `focus()`: o
+foco ficava no botão, então o cursor de leitura não se movia e o Tab seguia a
+ordem do DOM a partir do menu. Agora `tabindex="-1"` no alvo (aplicado no
+clique, sem tocar no HTML das seções) + `focus({ preventScroll: true })` — o
+`preventScroll` deixa a rolagem suave acontecer com o foco já movido.
+
+**Efeito colateral previsto e tratado**: o `<main>` novo recriava
+`landmark-no-duplicate-main` na página do Sidebar em react, vue e svelte,
+porque os demos renderizavam `<main>`/`SidebarInset`. Os demos passaram a usar
+`<div>` pixel-idêntico; os snippets continuam ensinando `<SidebarInset>`, que
+é a API correta num app real. O vanilla não tinha o problema (o
+`createSidebarInset` já usava `div`).
+
+**Provas novas** (arquivo `docs-nav-foco.stories.*` por stack, `tags:['!dev']`):
+existe exatamente um `<main>` e ele tem o nome do `<h1>`; clicar num item do
+menu deixa `document.activeElement` DENTRO da seção alvo. O vanilla percorre
+os 16 itens; o react ainda prova que o Tab seguinte cai no conteúdo.
+
+docs-smoke com axe: vanilla 64/64 · react 66/66 (com as provas) · vue 63/63 ·
+svelte 62/62. svelte-check 351 (baseline).
+
+### PENDENTE — as 16 páginas Foundations continuam sem `<main>`
+
+As 4 stacks registraram isso independentemente. Elas não usam
+`DocsPageLayout` nem `DocsNav` (layout próprio em `FoundationPage`/
+`FoundationsRenderer`, sem menu de seções), então o bug 2 não existe lá — mas
+o bug 1 continua: "Ir para o conteúdo" não tem alvo nessas páginas.
+`IconsDocs` e `ThemeColorsDocs` estão na mesma situação.
+- [ ] Segundo passe nas 4 stacks para dar `<main>` nomeado às Foundations.
+
+### Backlog de analytics encontrado no caminho
+
+- [ ] `AccordionDocs` (vue, e provavelmente outras) não passa `componentSlug`
+  ao `DocsPageLayout` — os botões do nav ficam sem `data-track-id`, então a
+  navegação por seção não é rastreada nessas páginas.
+
+## Foundations com landmark + rastreio de navegação — RESOLVIDO (2026-08-02)
+
+`01c09bda` vanilla · `4b1bf502` svelte · `d97a44ea` vue · `4ee26e55` react.
+
+### A. `<main>` nas Foundations (16/16 por stack)
+
+Fecha a pendência do lote anterior. Descoberta comum às 4: as Foundations não
+são um caminho só — o renderer cobre 14 páginas, e **`IconsDocs` e
+`ThemeColorsDocs` montam layout próprio**. Corrigir só o renderer deixaria 2
+páginas sem landmark; as 4 stacks varreram e pegaram as três formas.
+
+Diferença de árvore registrada pelo vanilla: nas Foundations o `<header>` fica
+DENTRO do `<main>` (no `DocsPageLayout` é irmão). Válido, e evita reordenar o
+DOM só para criar o landmark.
+
+### B. BUG DE ANALYTICS — `docs_nav_click` reportava sempre `section_id: 'nav'`
+
+Encontrado ao medir o escopo dos slugs, não pelo sintoma. O contrato do id é
+`{component}:{section}:{element}` e o exemplo canônico é `alert:nav:anatomia`
+— o destino está no 3º segmento. Mas o `docs-tracking.ts` das 4 fazia:
+
+```ts
+const section = parts[1] ?? '';           // 'nav'
+case 'nav': section_id: section || element
+```
+
+Ou seja, **todo evento de navegação reportava `'nav'`**. O evento disparava,
+nada falhava, e o relatório era inútil: não dava para saber para qual seção o
+usuário foi. Corrigido para `element || section` nas 4.
+
+### B2. Nav sem `data-track-id` — corrigido SEM editar 108 páginas
+
+Medição: 24 páginas em react, 20 em vue, 21 em svelte e 44 em vanilla não
+passam `componentSlug` ao `DocsPageLayout`. A correção mecânica (editar as
+108) seria ERRADA: a arquitetura define o slug como opcional e derivado do
+`?id=` do iframe. O `DocsNav` passou a usar a mesma derivação
+(`deriveSlugFromUrl`, agora exportada) como fallback e emite `data-track-id`
+sempre.
+
+**Armadilha de medição** (errei e corrijo aqui): o agent do react reportou "só
+4 páginas sem slug" — falso. `componentSlug` aparece em quase toda página, mas
+no `useSeoEffect` e nos section components (`DocsVariants`,
+`DocsCompositions`), **não** no layout. O vue achou o mesmo na `AccordionDocs`.
+Contar ocorrência no arquivo dá número errado; é preciso olhar a invocação do
+layout.
+
+### Provas novas (por stack, em `docs-nav-foco/focus.stories.*`)
+
+As 4 chegaram independentemente à mesma ideia: **substituir o `gtag` por um
+coletor** e provar que o `docs_nav_click` sai com o destino real, não com
+`'nav'`. Não é asserção de atributo — é do evento que chegaria ao GA4. Como
+nenhuma stack tem teste unitário de `docs-tracking`, essa é a única trava.
+Também cobrem: um `<main>` nomeado nas Foundations e nas 2 de layout próprio,
+e id de 3 partes em página que NÃO passa slug.
+
+docs-smoke: vanilla 64/64 · react 63/63 · svelte 62/62 · vue 62/63 (Icons por
+timeout sob carga — passa isolada em 64,7s). svelte-check 351 (baseline).
+
+## Stories verdes no CI e vermelhas no Storybook — RESOLVIDO no alert-dialog (2026-08-02)
+
+`04361284` vanilla · `999f2d80` svelte · vue e react abaixo.
+
+**Sintoma** (dona): stories do alert-dialog com erro no painel Interactions,
+enquanto `vitest` dava 10/10 nas 4 stacks.
+
+**Causa**: as `play` afirmavam `toBeVisible()` logo após abrir o diálogo. O
+alert-dialog passou a ter animação de entrada (opacidade 0 → 1 em 400ms); no
+Storybook a asserção roda no primeiro quadro e reprova. No CI não aparece
+porque o browser dos testes emula `prefers-reduced-motion`.
+
+**A emulação que eu adicionei para estabilizar o CI mascarou o defeito.**
+
+Corrigido com `waitFor` nas asserções sensíveis (visibilidade, foco
+pós-abertura, remoção). Afetava as **4** stacks, não 3 — vanilla também tinha,
+só não tinha sido aberta. React já era imune: tem `waitForPortal()`
+(`src/lib/wait-for-portal.ts`), um `waitFor` que espera a opacidade passar de
+0.9 antes de qualquer asserção. É o padrão que as outras 3 deveriam adotar.
+
+### CORREÇÃO DE DIAGNÓSTICO MEU
+
+Eu afirmei aqui e nas skills que "em Chromium headless animações de
+`opacity`/`transform` não avançam, ficam presas no quadro zero". **Errado.**
+Medido no ambiente real (não na sonda sintética que me induziu ao erro): a
+animação avança e completa. Prova — depois do fix com `waitFor`, o detector
+sem reduced-motion passa 10/10 no vue; e o react mediu `getAnimations()`
+rodando e a story concluindo.
+
+O problema nunca foi congelamento: era **asserção racy no quadro zero**.
+Consequência: `waitFor` é a correção certa, e a emulação de reduced-motion é
+instrumento cego — deixa o CI verde escondendo o que o usuário vê.
+
+- [ ] **Decisão pendente: manter ou remover a emulação de reduced-motion.**
+  Medido no vue (com → sem): dialog 2 → 12 falhas · sheet 2 → 2 · popover
+  4 → 4 · tooltip 10 → 10. Ou seja, ela não causa falha; **esconde ~10
+  asserções racy no dialog**. Manter = CI estável e Storybook com erro.
+  Remover = testes batem com o que a dona vê, ao custo de corrigir essas
+  asserções (dialog primeiro). As falhas de sheet/popover/tooltip são do
+  backlog pré-existente do vue, sem relação com animação.
+
+## Emulação de motion REMOVIDA dos testes (2026-08-02, decisão da dona)
+
+`beedec2e` svelte · `5a55a8c8` react · `ad7ba55d` vanilla · `48c3dead` +
+`0168c78f` vue.
+
+Os testes voltam a rodar com animação, como o Storybook. Verificado por mim
+depois dos 4 agents (o scratchpad compartilhado corrompeu um baseline —
+ver abaixo): **alert-dialog 10/10 e alert 26/26 nas 4**; `dialog` falha 2 no
+vue e 1 no svelte, iguais aos baselines → backlog, não regressão.
+
+### O que fechou o problema NÃO foi remover a emulação
+
+Foi o `wait-for-portal.ts`: um `waitFor` que gateia na **opacidade computada**
+(> 0.9) antes de qualquer asserção, na abertura de todo portal — em vez de
+`findBy*` (que resolve na montagem) ou sleep fixo. React e svelte já tinham; o
+vanilla criou; o vue **tinha mas sem o gate de opacidade**, e por isso
+retornava no meio da animação.
+
+Delta por stack: **vue 10** (todas em `dialog`, fechadas por UMA correção na
+lib — nenhuma story editada) · **react 1** (`dialog > Profile Edit`, a falha
+antiga que a emulação mascarava, agora corrigida na causa) · **svelte 0** ·
+**vanilla 0**.
+
+Melhoria do vue sobre o modelo do react: ele percorre a cadeia de ancestrais
+até o `<body>` e usa a **menor** opacidade — `toBeVisible()` reprova se
+qualquer ancestral estiver em 0, e gatear só no nó deixava brecha com
+overlay + wrappers de portal. Vale portar para as outras 3.
+
+### A emulação estava quebrando um teste
+
+`skeleton > Playground` no svelte depende do pulse, que o reduced-motion
+desligava. Passou a passar.
+
+### Nuance que explica por que o CI não acusava
+
+`toBeVisible()` do jest-dom só reprova em opacidade **exatamente** 0. As
+asserções eram racy de verdade — apareciam no painel Interactions — mas quase
+nunca reprovavam no vitest. Delta zero numa stack não significava ausência de
+risco.
+
+### Paridade do Playground do alert-dialog — vue
+
+12 `expect()` / 7 `step()` → **33 / 10** (react 21/9, vanilla 20/9,
+svelte 18/9). Achado no caminho: os spies `onConfirm`/`onCancel` existiam no
+`setup()` e **nunca eram asseverados** — spies mortos.
+
+- [ ] **Gap do auditor**: `coverage_divergence` compara story a story e não
+  pegou 12 vs 21 no Playground. Reforçar a regra para comparar também o
+  Playground entre stacks.
+
+### BACKLOG GRANDE exposto pela medição
+
+Falhas pré-existentes, sem relação com animação (falham com e sem emulação):
+- **svelte**: 33 das 36 falhas do baseline estão em `tooltip`, `popover` e
+  `drawer` — essas três famílias estão hoje praticamente sem cobertura
+  funcional efetiva.
+- **vue**: tooltip 10, popover 4, dialog 2, sheet 2, drawer 2.
+- **vanilla**: 12, sobretudo `drawer` ("multiple elements with role dialog" —
+  overlay vazando entre stories) e `target-size`.
+- **react**: 8 (tooltip 7 + drawer axe).
+- [ ] Priorizar: `tooltip` e `drawer` são os piores em 3 das 4 stacks.
+
+### Processo
+
+Os 4 agents compartilham o mesmo diretório de scratchpad: um baseline foi
+sobrescrito por outro agent e houve stdout interleaved. Exigir nome de arquivo
+por stack e conferir o cabeçalho `RUN … /<stack>` antes de concluir número.
+
+## /quality button — 2026-08-04
+
+Os quatro itens abertos aqui foram resolvidos em seguida: `xs`/`icon-xs`
+implementados e documentados, rótulo do link saindo do `translations.json`,
+rótulos dos snippets alinhados aos das stories e spy do Vanilla movido para o
+`meta`. Ficou um achado novo, de outra natureza:
+
+### Escape de entidades em superfície de texto — RESOLVIDO
+
+`stripHtml` virou helper compartilhado (`src/lib/strip-html.ts` por stack) e as
+179 docs pages passaram a importá-lo. As cópias locais sumiram.
+
+O helper exporta **duas** funções, porque os destinos são dois e confundi-los
+quebra em direções opostas:
+
+- `toPlainText` tira tags **e** decodifica entidades — para quem escreve
+  textNode (testes, tabela de props, tokens, estados, teclado, cenários,
+  analytics). Sem isso a tabela mostrava "Elemento &lt;button&gt; nativo".
+- `stripHtml` tira só as tags — para quem renderiza HTML sanitizado. Decodificar
+  ali transforma texto em markup vivo: `&lt;img&gt;` virou um `<img>` real sem
+  `alt` e o axe reprovou Avatar e Card. Foi assim que o erro apareceu.
+
+### Markup literal em superfície de texto — 264 chaves ainda
+
+A correção do `stripHtml` cobriu os containers que eu tinha verificado. Depois o
+`DocsDoDont` apareceu na tela com `<code>default</code>` cru — e ele não estava
+na minha lista, porque eu tinha classificado o bloco do/dont do `DocsWhenToUse`
+(que renderiza HTML) e assumido que era o mesmo container. Não é.
+
+Rodei então a classificação por container de verdade (contando
+`dangerouslySetInnerHTML` em cada seção compartilhada):
+
+| renderiza HTML | escreve textNode |
+|---|---|
+| DocsAccessibility (summary, items, contrast, screenReader), DocsWhenToUse (guidelines/do/dont), DocsVariants, DocsCompositions, DocsNotes, DocsProps (extensibilidade), DocsAnatomy | DocsTestes, DocsTokens, DocsStates, DocsRelated, DocsDoDont, DocsAnalytics, DocsImport, DocsHeader, DocsDemonstration, e as tabelas do DocsProps e do DocsWhenToUse |
+
+`doDont.*` e `related.*` foram corrigidos. Sobram **264 chaves** com tag ou
+entidade caindo em superfície de texto nas docs pages de componente:
+
+```
+188  accessibility.aria      19  props.items         14  analytics.description
+  8  tokens.items             5  props.menuButton     3  props.sidebar
+ 26  cauda longa (aria.*, keyboard.*, screenReader.*, brand/axes, …)
+```
+
+`accessibility.aria` é o grosso e **não passa pelo `DocsAccessibility`** — o
+container não tem prop `aria`. Cada docs page monta essa tabela por conta, então
+o destino precisa ser conferido caso a caso antes de converter.
+
+- [ ] Verificar container por container antes de aplicar `toPlainText`.
+  Converter por prefixo sem conferir foi o que transformou `&lt;img&gt;` num
+  `<img>` sem alt no Avatar e no Card.
+- [x] Regra  criada — ver secao abaixo.
+
+
+### Cobertura de código: a suíte inteira não mede
+
+O vitest não emite relatório de cobertura nenhum quando algum teste falha.
+Verificado em par: fatia de 4 arquivos com 2 falhas (13s) não gera nada; a mesma
+fatia verde gera. Como as 4 stacks têm o backlog aberto de tooltip/drawer/sheet,
+`npm run test:coverage` volta vazio em todas.
+
+Enquanto isso, a medição útil é por componente
+(`npx vitest run --coverage <slug>`), que é o recorte que o `/quality` usa.
+
+- [ ] Fechar o backlog de tooltip/drawer/sheet destrava a cobertura agregada.
+- [ ] Só então faz sentido pôr `test:coverage` em CI — hoje ele passaria vazio
+  ou falharia por threshold sem produzir número.
+
+### Ramos declarados como não testáveis
+
+Inventário do que tem `c8 ignore` com motivo, para revisitar se a API mudar:
+
+- `svelte/button.svelte` — `if (!url)` do `isSafeUrl`: inalcançável porque
+  `safeHref` é `$derived` e só é lido dentro de `{#if href}`, com o ternário de
+  `disabled` curto-circuitando antes.
+- `svelte/button.svelte` — lados verdadeiros de
+  `url.startsWith('#') || url.startsWith('/')` no `catch`: exigiriam uma string
+  que estoure o `new URL` E comece com `#` ou `/`. Nenhum `#…` estoura.
+### Args genéricos nas stories do Svelte — resíduo do fix de `Meta`
+
+`Meta<typeof Componente>` fixava o renderer no primitivo e obrigava o `render` a
+devolver `Component<PropsDoPrimitivo>` (455 props de HTML). Como essas stories
+devolvem wrappers `*Story.svelte` de 10–15 props, toda story do arquivo errava:
+178 erros, metade do baseline do svelte-check. Resolvido — a forma agora é
+`const meta: Meta` + `type Story = StoryObj`, mantendo `component:`.
+
+Custo assumido: nos ~25 arquivos que usam `args`, eles ficam com o tipo genérico
+`Args` em vez das props do wrapper. Tentei três formas de preservar a tipagem e
+nenhuma funciona com o `component:` no lugar:
+
+- `satisfies Meta<Args>` — o `typeof meta` continua carregando `component`, e é
+  dele que o `StoryObj` deriva os args; o parâmetro é ignorado.
+- `const meta: Meta<Args> = …` — o `typeof meta` vira o próprio
+  `ComponentAnnotations` e o `StoryObj` passa a tratá-lo como tipo de args.
+- `satisfies` sem `component` — piora: os args passam a ser inferidos do
+  literal de `meta.args`.
+
+- [ ] Investigar se uma versão mais nova do `@storybook/svelte` separa
+  `component` do tipo de args. Enquanto isso, `args` nesses arquivos não é
+  verificado — e antes o arquivo inteiro não era.
+
+Exceção correta: `code-block.stories.ts` renderiza o componente direto, sem
+wrapper. Ali `Meta<typeof CodeBlock>` é o tipo certo e foi mantido.
+
+### Suíte do Svelte: 101 falhas em famílias de portal
+
+Medido depois do fix de tipos (que é só de tipo — 3 linhas por arquivo, e as
+falhas são "portal nunca abriu", não erro de compilação ou indexação):
+tooltip 13, popover 10, pagination 10, hover-card 10, drawer 10, menubar 9,
+dropdown-menu 9, select 6, scroll-area 5, e cauda. Nenhuma em button, accordion
+ou badge.
+
+- [ ] É o mesmo backlog já registrado, agora com número atual e por família.
+  Enquanto ele existir, `npm run test:coverage` não emite cobertura no Svelte.
+
+## Backlog de portais no Svelte — 2026-08-05
+
+Três causas raiz encontradas e corrigidas. A suíte foi de **101 para 74 falhas**.
+
+### 1. `defaultOpen` não existe (drawer, dropdown-menu, hover-card, popover)
+
+Os wrappers `*Story.svelte` tinham `{#if open !== undefined} <X bind:open>
+{:else} <X {defaultOpen}>`, com os **dois ramos idênticos** fora do `open`. Só
+que `defaultOpen` não é prop nem do bits-ui nem do vaul-svelte: era passada,
+ignorada, e o overlay nunca abria. Toda story que dependia dela falhava.
+
+Corrigido colapsando para um ramo só, com `open = $bindable(defaultOpen)`.
+Drawer 10 → 1, dropdown-menu 9 → 0.
+
+### 2. Popover sem `role` e sem nome acessível
+
+O bits-ui não emite role no conteúdo, mas põe `aria-haspopup="dialog"` no
+trigger — o leitor anunciava "abre diálogo" e o que abria não era diálogo. O
+Vanilla, que é a referência cross-stack, já definia `role="dialog"`.
+
+Ao corrigir, o axe cobrou o passo seguinte: `role="dialog"` exige nome
+acessível. Replicado o critério do Vanilla (heading interno vira
+`aria-labelledby`, senão o texto do trigger vira `aria-label`), e o
+`PopoverTitle` — que era um `<div>` sem semântica — virou heading, como já é no
+React via `Popover.Title` do base-ui. Popover 10 → 0.
+
+### 3. Classe morta escondendo defeito real
+
+`max-h-[50vh]` no scroll do drawer é Tailwind, não existe: sem altura máxima
+nada rolava, e por isso o axe nunca aplicava `scrollable-region-focusable`. Com
+a altura de volta, a regra apareceu — a região rolável não tinha acesso por
+teclado. Corrigido com `tabindex`, `role` e rótulo.
+
+### Segunda rodada — 74 para 29 falhas
+
+Mais causas raiz, todas do mesmo tipo: o teste estava certo e o componente
+incompleto.
+
+- **tooltip 13 → 0** — o bits-ui não emite `role="tooltip"` no conteúdo. O
+  Vanilla já define. Sem ele o painel é um `<div>` qualquer, e o
+  `aria-describedby` do trigger aponta para algo sem papel.
+- **hover-card 10 → 0** — mesmo caso do popover (`role="dialog"` + nome
+  acessível derivado). E o bits-ui força `role="button"` num trigger que é um
+  `<a>` que navega; o Vanilla não mexe no role do trigger, então o `role="link"`
+  foi restaurado depois do spread.
+- **pagination 10 → 0** — o bits-ui **fixa** `aria-label="Page N"`, em inglês, e
+  vence o que o consumidor passa. A paginação inteira era anunciada em inglês e
+  a página atual não se distinguia. Resolvido pelo snippet `child`, única forma
+  de escrever depois do merge da lib.
+- **menubar 9 → 0** — `defaultValue` não existe no bits-ui (a API é `value`
+  bindable). Mesma família do `defaultOpen`: prop ignorada, nenhum menu abria.
+- **sheet 3 → 0** — o mesmo `max-h-[…]` morto do drawer, e o `waitForClose`
+  liberava em `data-state="closed"` enquanto o overlay ainda segurava
+  `pointer-events`. A espera passou a ser pela interação devolvida.
+
+### Terceira rodada — 29 para 12 falhas
+
+- **scroll-area 5 → 0** — as demos usavam `type="hover"`, em que a scrollbar só
+  se materializa sob o ponteiro: a story existia para MOSTRAR a barra e não
+  mostrava nada, nem no Chromatic. E a faixa horizontal usava `nds-cluster`
+  (`flex-wrap: wrap`), então os itens quebravam linha em vez de transbordar —
+  sem transbordo não há scrollbar. Passou a `nds-row`.
+- **command 4 → 0** — três defeitos distintos: `aria-label="Abrir command
+  palette"` num botão cujo texto visível é "Buscar..." (WCAG 2.5.3, Label in
+  Name — quem usa voz fala o que vê e não aciona); `role="progressbar"` do
+  Loading dentro de um `role="listbox"`, que não é filho permitido; e o estado
+  vazio deixando o listbox sem nenhuma `option`.
+- **navigation-menu 4 → 0** e **menubar** — `defaultValue` não existe no
+  bits-ui (a API é `value` bindable). Mesma família do `defaultOpen`.
+- **skeleton 2 → 0** — asserções contra `motion-reduce:animate-none` e `h-full`,
+  ambas Tailwind morto; e o próprio componente usava `inset-0` inerte.
+- **slider 4 → 1** — `let current = $derived(...)`: derivado é somente leitura e
+  se recalcula, então `bind:value` nunca segurava a mudança e o slider não podia
+  mudar de valor. Também um `text-primary-foreground` sem prefixo `nds-`, que
+  dava contraste **1.1:1** no botão de submit.
+
+### O que continua aberto — 12 falhas
+
+```
+select 5 · slider 1 · sidebar 1 · popover 1 · drawer 1
+dialog 1 · data-table 1 · aspect-ratio 1
+```
+
+- [ ] **slider (1)** — o thumb tem 16×16 e o axe cobra 24×24 (WCAG 2.5.8). O
+  CSS compartilhado tenta resolver com um `::after` de hit-area, mas o axe mede
+  a caixa do elemento, não o pseudo. O arranjo atual presume um
+  `<input type="range">` por baixo (modelo do Vanilla); no bits-ui o thumb **é**
+  o alvo. Corrigir mexe em CSS compartilhado pelas 4 stacks e desloca o thumb —
+  precisa de verificação visual no Chromatic, não de um ajuste às cegas.
+- [ ] **drawer (1)** — foco não entra no drawer ao abrir; medido, defeito real.
+- [ ] **popover (1)** — passa isolado, falha na suíte: portal vazando.
+- [ ] sidebar, dialog, data-table, aspect-ratio: 1 cada, não diagnosticadas.
+
+## Regras de audit novas — 2026-08-05
+
+### `markup_in_text_surface` (medium) — 214 achados em 25 componentes
+
+Chave do `translations.json` com `<tag>` ou `&lt;` chegando a container que
+escreve textNode, sem passar por `toPlainText()`. Nada mais pega isso: nem
+teste, nem axe — só olhando a página, que foi como apareceu duas vezes.
+
+O button foi zerado (12 achados, incluindo dois que a varredura manual anterior
+tinha deixado passar: um com `stripHtml`, que resolve tags mas não entidades, e
+um cru). Os outros 24 componentes seguem abertos.
+
+### `nonexistent_lib_prop` (high) — 0 achados
+
+`defaultOpen`/`defaultValue` indo para componente da lib no Svelte. Prop que não
+existe é aceita e ignorada em silêncio; foi o que deixou overlays e menus
+fechados em 40+ testes. Provada reintroduzindo o defeito e revertendo.
+
+### Bug do próprio auditor: caminho no Windows
+
+`filesForSlug` testava `caminho.includes('/slug/')`, mas no Windows os caminhos
+vêm com `\`. **Todo arquivo aninhado na pasta do componente ficava invisível**
+para todas as regras que usam essa função — o que atinge sobretudo Svelte e Vue,
+que organizam por pasta. Corrigido normalizando a barra; o audit foi de 1070
+para 1295, dos quais 214 são a regra nova e **11 estavam escondidos por isso**.
+
+### `dead_class_in_component` (low) — 21 achados em 5 componentes
+
+Eu tinha decidido não criar esta regra, com a justificativa de que
+`legacy_class_in_story` já dispara 421 vezes e o que falta é triagem. Medi: os
+três componentes que passaram pelo `/quality` estão em **zero**, e os 421 são os
+45 componentes que nunca rodaram a skill. A fila é backlog, não desinteresse — a
+justificativa estava errada.
+
+O buraco real era outro: a regra existente varre stories e wrappers
+`*Story.svelte`, e deixava de fora os arquivos de componente sem `Story` no nome
+— sobretudo as fixtures do Svelte (`TableVarianteBasica.svelte` e irmãs) e os
+primitivos. Medindo só literais (`class="…"`, sem expressão), são 21 achados.
+
+Não é cosmético: `sr-only` estava entre eles, o que deixava **visível** uma
+caption que só deveria existir para o leitor de tela — e o teste assertava
+`toHaveClass('sr-only')`, passando justamente por causa do defeito. Ambos
+corrigidos.
+
+Restam: table 15, sonner 2, calendar 1, chart 1, select 1.

@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Popover/Composicoes',
   component: PopoverStory,
   tags: ['overlay'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof PopoverStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 const waitOpen = async () => {
   const dialog = await waitForPortal('dialog', { timeout: 2000 });
@@ -94,9 +94,11 @@ export const FormularioInline: Story = {
     submitLabel: 'Atualizar',
   },
   play: async () => {
-    await waitOpen();
-    const body = within(document.body);
-    await expect(body.getByText(/Editar perfil/)).toBeInTheDocument();
+    const dialog = await waitForPortal('dialog', { timeout: 2000 });
+    // Escopo no diálogo: o rótulo do trigger e o título são o mesmo texto, e
+    // desde que o painel ganhou nome acessível a busca solta casava com os dois.
+    await expect(dialog).toHaveAccessibleName('Editar perfil');
+    const body = within(dialog);
     await expect(body.getByDisplayValue('maria@exemplo.com')).toBeInTheDocument();
   },
 };

@@ -24,17 +24,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(alertDialogTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (alertDialogTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -110,8 +118,6 @@ const allSectionIds = computed(() =>
   navGroups.value.flatMap((g) => g.sections.map((s) => s.id))
 );
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -169,7 +175,7 @@ const codeDestructive = `<AlertDialog>
 
 const codeDefault = `<AlertDialog>
   <AlertDialogTrigger as-child>
-    <Button>Sair da conta</Button>
+    <Button variant="outline">Sair da conta</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
@@ -225,6 +231,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item7'),
   tContent('anatomy.item8'),
   tContent('anatomy.item9'),
+  tContent('anatomy.item10'),
 ]);
 
 const variantItems = computed(() => [
@@ -241,11 +248,11 @@ const variantItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.closed.label'),     trigger: stripHtml(tContent('states.closed.trigger')),     behavior: tContent('states.closed.behavior')     },
-  { label: tContent('states.open.label'),       trigger: stripHtml(tContent('states.open.trigger')),       behavior: tContent('states.open.behavior')       },
-  { label: tContent('states.confirmed.label'),  trigger: stripHtml(tContent('states.confirmed.trigger')),  behavior: tContent('states.confirmed.behavior')  },
-  { label: tContent('states.cancelled.label'),  trigger: stripHtml(tContent('states.cancelled.trigger')),  behavior: tContent('states.cancelled.behavior') },
-  { label: tContent('states.controlled.label'), trigger: stripHtml(tContent('states.controlled.trigger')), behavior: tContent('states.controlled.behavior') },
+  { label: tContent('states.closed.label'),     trigger: toPlainText(tContent('states.closed.trigger')),     behavior: toPlainText(tContent('states.closed.behavior'))},
+  { label: tContent('states.open.label'),       trigger: toPlainText(tContent('states.open.trigger')),       behavior: toPlainText(tContent('states.open.behavior'))},
+  { label: tContent('states.confirmed.label'),  trigger: toPlainText(tContent('states.confirmed.trigger')),  behavior: toPlainText(tContent('states.confirmed.behavior'))},
+  { label: tContent('states.cancelled.label'),  trigger: toPlainText(tContent('states.cancelled.trigger')),  behavior: toPlainText(tContent('states.cancelled.behavior'))},
+  { label: tContent('states.controlled.label'), trigger: toPlainText(tContent('states.controlled.trigger')), behavior: toPlainText(tContent('states.controlled.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -255,44 +262,49 @@ const propCols = computed(() => ({
 }));
 
 const rootProps = computed(() => [
-  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.open'))         },
-  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: 'Não', description: stripHtml(tContent('props.table.defaultOpen')) },
-  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: 'Não', description: stripHtml(tContent('props.table.onOpenChange'))},
-  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: 'Sim', description: stripHtml(tContent('props.table.children'))    },
+  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.open'))         },
+  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: 'Não', description: toPlainText(tContent('props.table.defaultOpen')) },
+  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.onOpenChange'))},
+  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: 'Sim', description: toPlainText(tContent('props.table.children'))    },
 ]);
 
 const triggerProps = computed(() => [
-  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml(tContent('props.table.asChild'))  },
+  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.asChild'))  },
   { name: 'class',        type: 'string',  defaultValue: '—',     required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const contentProps = computed(() => [
   { name: 'class',        type: 'string', defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const actionProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onClick'))  },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
   { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const cancelProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.table.onClick'))  },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
   { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: stripHtml(tContent('props.table.children')) },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--background',             value: 'bg-black/80',                           description: tContent('tokens.table.overlayBg')             },
-  { token: '--background',             value: 'bg-background',                         description: tContent('tokens.table.contentBg')             },
-  { token: '--foreground',             value: 'text-foreground',                       description: tContent('tokens.table.contentForeground')     },
-  { token: '--border',                 value: 'border',                                description: tContent('tokens.table.border')                },
-  { token: '--muted-foreground',       value: 'nds-text-muted-foreground',                 description: tContent('tokens.table.mutedForeground')       },
-  { token: '--destructive',            value: 'bg-destructive',                        description: tContent('tokens.table.destructive')           },
-  { token: '--destructive-foreground', value: 'text-destructive-foreground',           description: tContent('tokens.table.destructiveForeground') },
-  { token: '--radius',                 value: 'sm:rounded-lg',                         description: tContent('tokens.table.radius')                },
+  // O overlay é a única parte sem token: o CSS escreve hsl(0 0% 0% / 0.8) literal.
+  { token: '—',                        value: '.nds-alert-dialog-overlay',     description: tContent('tokens.table.overlayBg')             },
+  { token: '--background',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentBg')             },
+  { token: '--foreground',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentForeground')     },
+  { token: '--border',                 value: '.nds-alert-dialog-content',     description: tContent('tokens.table.border')                },
+  { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: tContent('tokens.table.radius')                },
+  { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: tContent('tokens.table.elevation')             },
+  { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: tContent('tokens.table.padding')               },
+  { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: tContent('tokens.table.mutedForeground')       },
+  { token: '--muted',                  value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaBg')               },
+  // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
+  { token: '--destructive',            value: '.nds-button-destructive',       description: tContent('tokens.table.destructive')           },
+  { token: '--destructive-foreground', value: '.nds-button-destructive',       description: tContent('tokens.table.destructiveForeground') },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -313,10 +325,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Dialog', description: tContent('related.dialog'), path: '?path=/docs/ui-dialog--docs' },
-  { name: 'Sonner', description: tContent('related.sonner'), path: '?path=/docs/ui-sonner--docs' },
-  { name: 'Alert',  description: tContent('related.alert'),  path: '?path=/docs/ui-alert--docs'  },
-  { name: 'Button', description: tContent('related.button'), path: '?path=/docs/ui-button--docs' },
+  { name: 'Dialog', description: toPlainText(tContent('related.dialog')), path: '?path=/docs/ui-dialog--docs' },
+  { name: 'Sonner', description: toPlainText(tContent('related.sonner')), path: '?path=/docs/ui-sonner--docs' },
+  { name: 'Alert',  description: toPlainText(tContent('related.alert')),  path: '?path=/docs/ui-alert--docs'  },
+  { name: 'Button', description: toPlainText(tContent('related.button')), path: '?path=/docs/ui-button--docs' },
 ]);
 
 const noteItems = computed(() => [
@@ -327,12 +339,12 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.open'),          trigger: tContent('analytics.table.openTrigger'),          payload: tContent('analytics.table.openPayload')          },
-  { event: tContent('analytics.table.confirm'),       trigger: tContent('analytics.table.confirmTrigger'),       payload: tContent('analytics.table.confirmPayload')       },
-  { event: tContent('analytics.table.close'),         trigger: tContent('analytics.table.closeTrigger'),         payload: tContent('analytics.table.closePayload')         },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.open'),          trigger: toPlainText(tContent('analytics.table.openTrigger')),          payload: tContent('analytics.table.openPayload')          },
+  { event: tContent('analytics.table.confirm'),       trigger: toPlainText(tContent('analytics.table.confirmTrigger')),       payload: tContent('analytics.table.confirmPayload')       },
+  { event: tContent('analytics.table.close'),         trigger: toPlainText(tContent('analytics.table.closeTrigger')),         payload: tContent('analytics.table.closePayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
@@ -347,7 +359,7 @@ const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
   how: tContent(`testes.accessibility.item${i}.how`),
 })));
 
-const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
+const visualTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
   story: tContent(`testes.visual.item${i}.story`),
   priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
 })));
@@ -379,7 +391,6 @@ const a11yCritCols = computed(() => ({
         class="nds-cluster nds-w-full"
         data-justify="center"
         data-spacing="md"
-        style="flex-wrap: wrap"
       >
         <AlertDialogDemo
           :trigger-label="tContent('demonstration.labels.triggerLabel')"
@@ -393,7 +404,7 @@ const a11yCritCols = computed(() => ({
 
         <AlertDialogDemo
           :trigger-label="tContent('demonstration.labels.neutralTriggerLabel')"
-          trigger-variant="default"
+          trigger-variant="outline"
           :title="tContent('demonstration.labels.neutralTitle')"
           :description="tContent('demonstration.labels.neutralDescription')"
           :cancel-label="tContent('demonstration.labels.cancel')"
@@ -477,18 +488,18 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
         <AlertDialogDemo
-          trigger-label="Excluir conta"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir conta"
-          description="Todos os dados serão removidos. Esta ação não pode ser desfeita."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
@@ -504,12 +515,12 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <AlertDialogDemo
-          trigger-label="Excluir"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir projeto"
-          description="O projeto será removido permanentemente."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
@@ -542,23 +553,23 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <AlertDialogDemo
-          trigger-label="Excluir conta"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir conta"
-          description="Esta ação não pode ser desfeita."
-          cancel-label="Cancelar"
-          action-label="Excluir"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
         />
       </template>
       <template #variant-preview-1>
         <AlertDialogDemo
-          trigger-label="Sair da conta"
-          trigger-variant="default"
-          title="Sair da conta"
-          description="Você precisará entrar novamente."
-          cancel-label="Cancelar"
-          action-label="Sair"
+          :trigger-label="tContent('demonstration.labels.neutralTriggerLabel')"
+          trigger-variant="outline"
+          :title="tContent('demonstration.labels.neutralTitle')"
+          :description="tContent('demonstration.labels.neutralDescription')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.neutralAction')"
         />
       </template>
     </DocsVariants>
@@ -568,8 +579,8 @@ const a11yCritCols = computed(() => ({
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -604,6 +615,8 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Acessibilidade ───────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="stripHtml(tContent('accessibility.summary'))"
       :items="accessibilityItems"
@@ -628,7 +641,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

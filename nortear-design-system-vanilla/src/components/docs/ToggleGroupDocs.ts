@@ -37,17 +37,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (toggleGroupTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(toggleGroupTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -475,16 +482,16 @@ export function createToggleGroupDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: buildDoSingle,
               dontPreviewFactory: buildDontLooseToggles,
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: buildDoNamed,
               dontPreviewFactory: buildDontNoAriaLabel,
             },
@@ -768,16 +775,16 @@ wrapper.appendChild(group);`,
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'),      trigger: t('states.default.trigger'),      behavior: stripHtml(t('states.default.behavior')) },
-            { label: t('states.selected.label'),     trigger: t('states.selected.trigger'),     behavior: stripHtml(t('states.selected.behavior')) },
-            { label: t('states.hover.label'),        trigger: t('states.hover.trigger'),        behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),        trigger: t('states.focus.trigger'),        behavior: stripHtml(t('states.focus.behavior')) },
-            { label: t('states.disabled.label'),     trigger: t('states.disabled.trigger'),     behavior: stripHtml(t('states.disabled.behavior')) },
-            { label: t('states.disabledItem.label'), trigger: t('states.disabledItem.trigger'), behavior: stripHtml(t('states.disabledItem.behavior')) },
+            { label: t('states.default.label'),      trigger: toPlainText(t('states.default.trigger')),      behavior: toPlainText(t('states.default.behavior')) },
+            { label: t('states.selected.label'),     trigger: toPlainText(t('states.selected.trigger')),     behavior: toPlainText(t('states.selected.behavior')) },
+            { label: t('states.hover.label'),        trigger: toPlainText(t('states.hover.trigger')),        behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),        trigger: toPlainText(t('states.focus.trigger')),        behavior: toPlainText(t('states.focus.behavior')) },
+            { label: t('states.disabled.label'),     trigger: toPlainText(t('states.disabled.trigger')),     behavior: toPlainText(t('states.disabled.behavior')) },
+            { label: t('states.disabledItem.label'), trigger: toPlainText(t('states.disabledItem.trigger')), behavior: toPlainText(t('states.disabledItem.behavior')) },
           ],
         });
 
@@ -823,7 +830,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: '"single" | "multiple"',
                   defaultValue: '"single"',
                   required: 'Não',
-                  description: stripHtml(t('props.table.type_prop.description')),
+                  description: toPlainText(t('props.table.type_prop.description')),
                 },
                 {
                   name: 'items',
@@ -837,21 +844,21 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: 'string | string[]',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.defaultValue.description')) + ' Nortear: factory é não-controlado — não há prop `value`.',
+                  description: toPlainText(t('props.table.defaultValue.description')) + ' Nortear: factory é não-controlado — não há prop `value`.',
                 },
                 {
                   name: 'onValueChange',
                   type: '(value: string | string[]) => void',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.onValueChange.description')),
+                  description: toPlainText(t('props.table.onValueChange.description')),
                 },
                 {
                   name: 'variant',
                   type: '"default" | "outline"',
                   defaultValue: '"default"',
                   required: 'Não',
-                  description: stripHtml(t('props.table.variant.description')) + ' Aplicado uniformemente a todos os items (não há Context por item).',
+                  description: toPlainText(t('props.table.variant.description')) + ' Aplicado uniformemente a todos os items (não há Context por item).',
                 },
                 {
                   name: 'class',
@@ -865,35 +872,35 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: 'string | string[]',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.value.description')) + DIVERGENCE,
+                  description: toPlainText(t('props.table.value.description')) + DIVERGENCE,
                 },
                 {
                   name: 'disabled',
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: stripHtml(t('props.table.disabled.description')) + DIVERGENCE + ' Use `item.disabled` por item.',
+                  description: toPlainText(t('props.table.disabled.description')) + DIVERGENCE + ' Use `item.disabled` por item.',
                 },
                 {
                   name: 'orientation',
                   type: '"horizontal" | "vertical"',
                   defaultValue: '"horizontal"',
                   required: 'Não',
-                  description: stripHtml(t('props.table.orientation.description')) + DIVERGENCE,
+                  description: toPlainText(t('props.table.orientation.description')) + DIVERGENCE,
                 },
                 {
                   name: 'size',
                   type: '"default" | "sm" | "lg"',
                   defaultValue: '"default"',
                   required: 'Não',
-                  description: stripHtml(t('props.table.size.description')) + DIVERGENCE + ' Items usam tamanho padrão do Toggle.',
+                  description: toPlainText(t('props.table.size.description')) + DIVERGENCE + ' Items usam tamanho padrão do Toggle.',
                 },
                 {
                   name: 'spacing',
                   type: 'number',
                   defaultValue: '0',
                   required: 'Não',
-                  description: stripHtml(t('props.table.spacing.description')) + DIVERGENCE + ' Use `gap-*` via prop `class`.',
+                  description: toPlainText(t('props.table.spacing.description')) + DIVERGENCE + ' Use `gap-*` via prop `class`.',
                 },
                 {
                   name: 'aria-label',
@@ -932,12 +939,12 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--muted',         value: stripHtml(t('tokens.table.muted.class')),       description: stripHtml(t('tokens.table.muted.part'))       },
-            { token: '--foreground',    value: stripHtml(t('tokens.table.foreground.class')),  description: stripHtml(t('tokens.table.foreground.part'))  },
-            { token: '--input',         value: stripHtml(t('tokens.table.input.class')),       description: stripHtml(t('tokens.table.input.part'))       },
-            { token: '--ring',          value: stripHtml(t('tokens.table.ring.class')),        description: stripHtml(t('tokens.table.ring.part'))        },
-            { token: '--destructive',   value: stripHtml(t('tokens.table.destructive.class')), description: stripHtml(t('tokens.table.destructive.part')) },
-            { token: '--radius-button', value: stripHtml(t('tokens.table.radius.class')),      description: stripHtml(t('tokens.table.radius.part'))      },
+            { token: '--muted',         value: toPlainText(t('tokens.table.muted.class')),       description: toPlainText(t('tokens.table.muted.part'))       },
+            { token: '--foreground',    value: toPlainText(t('tokens.table.foreground.class')),  description: toPlainText(t('tokens.table.foreground.part'))  },
+            { token: '--input',         value: toPlainText(t('tokens.table.input.class')),       description: toPlainText(t('tokens.table.input.part'))       },
+            { token: '--ring',          value: toPlainText(t('tokens.table.ring.class')),        description: toPlainText(t('tokens.table.ring.part'))        },
+            { token: '--destructive',   value: toPlainText(t('tokens.table.destructive.class')), description: toPlainText(t('tokens.table.destructive.part')) },
+            { token: '--radius-button', value: toPlainText(t('tokens.table.radius.class')),      description: toPlainText(t('tokens.table.radius.part'))      },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -946,6 +953,8 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
@@ -999,11 +1008,11 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'field_change',         trigger: t('analytics.table.field_change.trigger'), payload: t('analytics.table.field_change.payload') },
+            { event: 'field_change',         trigger: toPlainText(t('analytics.table.field_change.trigger')), payload: t('analytics.table.field_change.payload') },
             { event: 'docs_page_view',       trigger: 'Carregamento da docs page',                payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed',  trigger: 'Seção visível no viewport',                payload: '{ section_id, component_name, locale }' },
           ],
@@ -1020,8 +1029,8 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -1033,7 +1042,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
             })),
@@ -1045,7 +1054,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

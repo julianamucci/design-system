@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (collapsibleTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(collapsibleTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -349,8 +356,8 @@ export function createCollapsibleDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir filtros avançados',
                 content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
@@ -365,8 +372,8 @@ export function createCollapsibleDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createCollapsible({
                 trigger: 'Exibir detalhes adicionais',
                 content: makeContent(['Detalhe 1', 'Detalhe 2']),
@@ -600,14 +607,14 @@ export function createCollapsibleDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.closed.label'),      trigger: stripHtml(t('states.closed.trigger')),      behavior: t('states.closed.behavior')      },
-            { label: t('states.open.label'),         trigger: stripHtml(t('states.open.trigger')),         behavior: t('states.open.behavior')         },
-            { label: t('states.defaultOpen.label'),  trigger: stripHtml(t('states.defaultOpen.trigger')),  behavior: t('states.defaultOpen.behavior')  },
-            { label: t('states.disabled.label'),     trigger: stripHtml(t('states.disabled.trigger')),     behavior: stripHtml(t('states.disabled.behavior'))     },
+            { label: t('states.closed.label'),      trigger: toPlainText(t('states.closed.trigger')),      behavior: toPlainText(t('states.closed.behavior'))},
+            { label: t('states.open.label'),         trigger: toPlainText(t('states.open.trigger')),         behavior: toPlainText(t('states.open.behavior'))},
+            { label: t('states.defaultOpen.label'),  trigger: toPlainText(t('states.defaultOpen.trigger')),  behavior: toPlainText(t('states.defaultOpen.behavior'))},
+            { label: t('states.disabled.label'),     trigger: toPlainText(t('states.disabled.trigger')),     behavior: toPlainText(t('states.disabled.behavior'))     },
           ],
         });
 
@@ -632,10 +639,10 @@ export function createCollapsibleDocs(): HTMLElement {
               items: [
                 { name: 'trigger',      type: 'string | HTMLElement', defaultValue: '—',     required: 'Sim', description: 'Texto ou elemento HTML usado como botão trigger.'           },
                 { name: 'content',      type: 'HTMLElement',          defaultValue: '—',     required: 'Sim', description: 'Elemento HTML do painel expansível.'                        },
-                { name: 'defaultOpen',  type: 'boolean',              defaultValue: 'false', required: 'Não', description: stripHtml(t('props.table.defaultOpen'))                      },
+                { name: 'defaultOpen',  type: 'boolean',              defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen'))                      },
                 { name: 'disabled',     type: 'boolean',              defaultValue: 'false', required: 'Não', description: t('props.table.disabled')                                   },
-                { name: 'onOpenChange', type: '(open: boolean) => void', defaultValue: '—',  required: 'Não', description: stripHtml(t('props.table.onOpenChange'))                    },
-                { name: 'class',        type: 'string',               defaultValue: '—',     required: 'Não', description: stripHtml(t('props.table.className'))                       },
+                { name: 'onOpenChange', type: '(open: boolean) => void', defaultValue: '—',  required: 'Não', description: toPlainText(t('props.table.onOpenChange'))                    },
+                { name: 'class',        type: 'string',               defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.className'))                       },
               ],
             },
           ],
@@ -669,6 +676,8 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Acessibilidade ─────────────────────────────────────────────────
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
@@ -692,10 +701,10 @@ export function createCollapsibleDocs(): HTMLElement {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Accordion',  description: t('related.accordion'), path: '?path=/docs/ui-accordion--docs'  },
-            { name: 'Sheet',      description: t('related.sheet'),     path: '?path=/docs/ui-sheet--docs'      },
-            { name: 'Button',     description: t('related.button'),    path: '?path=/docs/ui-button--docs'     },
-            { name: 'Tabs',       description: t('related.tabs'),      path: '?path=/docs/ui-tabs--docs'       },
+            { name: 'Accordion',  description: toPlainText(t('related.accordion')), path: '?path=/docs/ui-accordion--docs'  },
+            { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/ui-sheet--docs'      },
+            { name: 'Button',     description: toPlainText(t('related.button')),    path: '?path=/docs/ui-button--docs'     },
+            { name: 'Tabs',       description: toPlainText(t('related.tabs')),      path: '?path=/docs/ui-tabs--docs'       },
           ],
         });
 
@@ -716,14 +725,14 @@ export function createCollapsibleDocs(): HTMLElement {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.toggle'),    trigger: t('analytics.table.toggleTrigger'),    payload: t('analytics.table.togglePayload')    },
-            { event: t('analytics.table.pageView'),  trigger: t('analytics.table.pageViewTrigger'),  payload: t('analytics.table.pageViewPayload')  },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'), trigger: t('analytics.table.langSwitchTrigger'), payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.toggle'),    trigger: toPlainText(t('analytics.table.toggleTrigger')),    payload: t('analytics.table.togglePayload')    },
+            { event: t('analytics.table.pageView'),  trigger: toPlainText(t('analytics.table.pageViewTrigger')),  payload: t('analytics.table.pageViewPayload')  },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'), trigger: toPlainText(t('analytics.table.langSwitchTrigger')), payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 
@@ -739,8 +748,8 @@ export function createCollapsibleDocs(): HTMLElement {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -748,7 +757,7 @@ export function createCollapsibleDocs(): HTMLElement {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
             })),

@@ -52,7 +52,9 @@
       "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> com <code>p-2</code> e <code>align-middle</code>.",
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> com <code>text-muted-foreground</code>; pode ser <code>sr-only</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Table>\n  <TableCaption>Descrição da tabela</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Coluna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dado</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      "structureCode": {
+        "react": "<Table>\n  <TableCaption>Descrição da tabela</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Coluna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dado</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -496,7 +498,9 @@
       "item7": "<strong>TableCell</strong> — <code>&lt;td&gt;</code> element with <code>p-2</code> and <code>align-middle</code>.",
       "item8": "<strong>TableCaption</strong> — <code>&lt;caption&gt;</code> element with <code>text-muted-foreground</code>; can be <code>sr-only</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Table>\n  <TableCaption>Table description</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      "structureCode": {
+        "react": "<Table>\n  <TableCaption>Table description</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -940,7 +944,9 @@
       "item7": "<strong>TableCell</strong> — elemento <code>&lt;td&gt;</code> con <code>p-2</code> y <code>align-middle</code>.",
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> con <code>text-muted-foreground</code>; puede ser <code>sr-only</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Table>\n  <TableCaption>Descripción de la tabla</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Columna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dato</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      "structureCode": {
+        "react": "<Table>\n  <TableCaption>Descripción de la tabla</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Columna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dato</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

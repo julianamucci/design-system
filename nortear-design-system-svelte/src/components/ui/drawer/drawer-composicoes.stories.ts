@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Drawer/Composicoes',
   component: DrawerStory,
   tags: ['disclosure'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof DrawerStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 async function expectOpen() {
   const dialog = await waitForPortal('dialog');
@@ -83,7 +83,7 @@ export const ComScroll: Story = {
   },
   play: async () => {
     const dialog = await expectOpen();
-    const scrollArea = dialog.querySelector('.overflow-y-auto');
+    const scrollArea = dialog.querySelector('.nds-overflow-y');
     await expect(scrollArea).not.toBeNull();
   },
 };

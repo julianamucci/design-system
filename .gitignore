@@ -47,6 +47,9 @@ Thumbs.db
 # Storybook
 .storybook-static/
 
+# Tarball do @nortear/ds-core (npm run core:pack)
+nortear-ds-core-*.tgz
+
 # AI/Cache
 .gemini/
 .claude/settings.local.json

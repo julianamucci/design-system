@@ -25,7 +25,9 @@
       "item2": "<strong>className</strong> — define largura, altura e arredondamento (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
       "item3": "<strong>Container</strong> — wrapper externo recebe <code>aria-busy</code> e <code>aria-label</code>; Skeleton recebe <code>aria-hidden</code>.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<div aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      "structureCode": {
+        "react": "<div aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -191,7 +193,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// Customizar forma e dimensão via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      "extensibilityCode": {
+        "react": "// Customizar forma e dimensão via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -217,7 +221,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de cor para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduz duração da animação */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      "customizationCode": {
+        "web": "/* Override de cor para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduz duração da animação */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -393,7 +399,9 @@
       "item2": "<strong>className</strong> — defines width, height, and corner radius (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
       "item3": "<strong>Container</strong> — outer wrapper holds <code>aria-busy</code> and <code>aria-label</code>; Skeleton holds <code>aria-hidden</code>.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<div aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      "structureCode": {
+        "react": "<div aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -559,7 +567,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// Customize shape and dimension via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      "extensibilityCode": {
+        "react": "// Customize shape and dimension via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -585,7 +595,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Color override for custom theme */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce animation duration */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      "customizationCode": {
+        "web": "/* Color override for custom theme */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce animation duration */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -761,7 +773,9 @@
       "item2": "<strong>className</strong> — define ancho, alto y radio de borde (<code>h-4 w-[200px]</code>, <code>rounded-full</code>).",
       "item3": "<strong>Container</strong> — wrapper externo recibe <code>aria-busy</code> y <code>aria-label</code>; Skeleton recibe <code>aria-hidden</code>.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<div aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      "structureCode": {
+        "react": "<div aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -927,7 +941,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// Personalizar forma y dimensión vía className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      "extensibilityCode": {
+        "react": "// Personalizar forma y dimensión vía className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -953,7 +969,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de color para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce duración de la animación */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      "customizationCode": {
+        "web": "/* Override de color para tema custom */\n[data-slot='skeleton'] {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Reduce duración de la animación */\n[data-slot='skeleton'] {\n  animation-duration: 1.5s;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

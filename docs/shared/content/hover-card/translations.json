@@ -25,7 +25,9 @@
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      "structureCode": {
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -232,7 +234,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>"
+      "extensibilityCode": {
+        "react": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -270,7 +274,9 @@
         }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* Override de largura para previews maiores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animação custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      "customizationCode": {
+        "web": "/* Override de largura para previews maiores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animação custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -455,7 +461,9 @@
       "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Compose with a child element to inherit its styles.",
       "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      "structureCode": {
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -662,7 +670,9 @@
         }
       },
       "extensibilityTitle": "Extensibility",
-      "extensibilityCode": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>"
+      "extensibilityCode": {
+        "react": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -700,7 +710,9 @@
         }
       },
       "customizationTitle": "Customization",
-      "customizationCode": "/* Width override for larger previews */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Custom animation */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      "customizationCode": {
+        "web": "/* Width override for larger previews */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Custom animation */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -885,7 +897,9 @@
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      "structureCode": {
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -1092,7 +1106,9 @@
         }
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibilityCode": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>"
+      "extensibilityCode": {
+        "react": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>"
+      }
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1130,7 +1146,9 @@
         }
       },
       "customizationTitle": "Personalización",
-      "customizationCode": "/* Override de ancho para previews mayores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animación custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      "customizationCode": {
+        "web": "/* Override de ancho para previews mayores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animación custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",

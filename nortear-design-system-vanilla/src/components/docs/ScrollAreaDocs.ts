@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (scrollAreaTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(scrollAreaTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -320,10 +327,10 @@ export function createScrollAreaDocs(): HTMLElement {
               dont: t('usage.uxWriting.table.avoid'),
             },
             items: ['container', 'scrollArea', 'orientation'].map(key => ({
-              element: stripHtml(t(`usage.uxWriting.table.${key}.name`)),
-              rules: stripHtml(t(`usage.uxWriting.table.${key}.format`)),
-              do: stripHtml(t(`usage.uxWriting.table.${key}.good`)),
-              dont: stripHtml(t(`usage.uxWriting.table.${key}.bad`)),
+              element: toPlainText(t(`usage.uxWriting.table.${key}.name`)),
+              rules: toPlainText(t(`usage.uxWriting.table.${key}.format`)),
+              do: toPlainText(t(`usage.uxWriting.table.${key}.good`)),
+              dont: toPlainText(t(`usage.uxWriting.table.${key}.bad`)),
             })),
           },
           do: {
@@ -353,8 +360,8 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
@@ -376,8 +383,8 @@ export function createScrollAreaDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createScrollArea({
                 height: '160px',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
@@ -484,14 +491,14 @@ export function createScrollAreaDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.idle.label'),      trigger: t('states.idle.trigger'),      behavior: stripHtml(t('states.idle.behavior')) },
-            { label: t('states.scrolling.label'), trigger: t('states.scrolling.trigger'), behavior: stripHtml(t('states.scrolling.behavior')) },
-            { label: t('states.hover.label'),     trigger: t('states.hover.trigger'),     behavior: stripHtml(t('states.hover.behavior')) },
-            { label: t('states.focus.label'),     trigger: t('states.focus.trigger'),     behavior: stripHtml(t('states.focus.behavior')) },
+            { label: t('states.idle.label'),      trigger: toPlainText(t('states.idle.trigger')),      behavior: toPlainText(t('states.idle.behavior')) },
+            { label: t('states.scrolling.label'), trigger: toPlainText(t('states.scrolling.trigger')), behavior: toPlainText(t('states.scrolling.behavior')) },
+            { label: t('states.hover.label'),     trigger: toPlainText(t('states.hover.trigger')),     behavior: toPlainText(t('states.hover.behavior')) },
+            { label: t('states.focus.label'),     trigger: toPlainText(t('states.focus.trigger')),     behavior: toPlainText(t('states.focus.behavior')) },
           ],
         });
 
@@ -543,12 +550,12 @@ export interface ScrollAreaOptions {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--border',     value: 'bg-border',              description: stripHtml(t('tokens.table.border.part')) },
-            { token: '--ring',       value: 'ring-ring',              description: stripHtml(t('tokens.table.ring.part')) },
-            { token: '--background', value: 'bg-background',          description: stripHtml(t('tokens.table.background.part')) },
-            { token: '--foreground', value: 'text-foreground',        description: stripHtml(t('tokens.table.foreground.part')) },
-            { token: '--muted',      value: 'bg-muted',               description: stripHtml(t('tokens.table.muted.part')) },
-            { token: '—',            value: 'ring-offset-background', description: stripHtml(t('tokens.table.ringOffset.part')) },
+            { token: '--border',     value: 'bg-border',              description: toPlainText(t('tokens.table.border.part')) },
+            { token: '--ring',       value: 'ring-ring',              description: toPlainText(t('tokens.table.ring.part')) },
+            { token: '--background', value: 'bg-background',          description: toPlainText(t('tokens.table.background.part')) },
+            { token: '--foreground', value: 'text-foreground',        description: toPlainText(t('tokens.table.foreground.part')) },
+            { token: '--muted',      value: 'bg-muted',               description: toPlainText(t('tokens.table.muted.part')) },
+            { token: '—',            value: 'ring-offset-background', description: toPlainText(t('tokens.table.ringOffset.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -557,6 +564,8 @@ export interface ScrollAreaOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -613,7 +622,7 @@ export interface ScrollAreaOptions {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
@@ -641,8 +650,8 @@ export interface ScrollAreaOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -650,7 +659,7 @@ export interface ScrollAreaOptions {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
             items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}`)),
               level: 'AA',
               how: '—',
             })),
@@ -662,7 +671,7 @@ export interface ScrollAreaOptions {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map(i => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

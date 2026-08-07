@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Pagination/Composicoes',
   component: PaginationStory,
   tags: ['navigation'],
@@ -17,10 +17,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof PaginationStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Simples: Story = {
   args: {

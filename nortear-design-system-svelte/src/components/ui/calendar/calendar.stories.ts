@@ -6,7 +6,7 @@ import CalendarStory from './CalendarStory.svelte';
 import CalendarDocs from '@/components/docs/CalendarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Calendar',
   component: Calendar,
   tags: ['autodocs', 'form'],
@@ -19,10 +19,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Calendar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: () => ({

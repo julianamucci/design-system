@@ -6,7 +6,7 @@ import SliderStory from './SliderStory.svelte';
 import SliderDocs from '@/components/docs/SliderDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Slider',
   component: Slider,
   tags: ['autodocs', 'form'],
@@ -54,15 +54,15 @@ const meta = {
     orientation: 'horizontal',
     disabled: false,
   },
-} satisfies Meta<typeof Slider>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   args: {
     value: [50],
-  } as never,
+  },
   render: (args) => ({
     Component: SliderStory,
     props: {

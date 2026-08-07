@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
@@ -10,6 +11,7 @@ const meta = {
   component: Alert,
   tags: ['autodocs', 'feedback'],
   parameters: {
+    design: figmaDesign('alert'),
     docs: { page: withAutoDocsTab(AlertDocs) },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. O slot default
@@ -20,6 +22,13 @@ const meta = {
       options: ['default', 'destructive', 'success', 'warning', 'info'],
       description: 'Variante semântica do alert.',
       table: { type: { summary: "'default' | 'destructive' | 'success' | 'warning' | 'info'" }, defaultValue: { summary: "'default'" } },
+    },
+    role: {
+      control: 'select',
+      options: ['alert', 'status', 'note'],
+      description:
+        'Semântica de anúncio para leitores de tela. alert (padrão) interrompe e anuncia na hora — só para mensagem urgente que surge em tempo de execução. status anuncia sem interromper. note não é live region: use em conteúdo estático já presente ao carregar a página.',
+      table: { type: { summary: "'alert' | 'status' | 'note'" }, defaultValue: { summary: "'alert'" } },
     },
     class: {
       control: false,
@@ -49,6 +58,7 @@ const meta = {
   },
   args: {
     variant: 'default',
+    role: 'alert',
     dismissible: false,
     onDismiss: fn(),
   },
@@ -58,12 +68,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'] },
   render: (args) => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return { args }; },
     template: `
       <Alert v-bind="args">
-        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <Info class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>

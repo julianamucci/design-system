@@ -36,10 +36,7 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 import { mapCloseReason }    from "@/components/docs/shared/close-reason";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -84,7 +81,6 @@ const getNavGroups = (t: (key: string) => string) => [
     ],
   },
 ];
-
 
 type DemoProps = {
   triggerLabel: string;
@@ -799,15 +795,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
-          trigger: tContent("states.cols.trigger"),
-          behavior: tContent("states.cols.behavior"),
+          trigger: toPlainText(tContent("states.cols.trigger")),
+          behavior: toPlainText(tContent("states.cols.behavior")),
         }}
         items={[
-          { label: tContent("states.closed.label"),                trigger: stripHtml(tContent("states.closed.trigger")),                behavior: tContent("states.closed.behavior") },
-          { label: tContent("states.opening.label"),               trigger: tContent("states.opening.trigger"),                          behavior: stripHtml(tContent("states.opening.behavior")) },
-          { label: tContent("states.open.label"),                  trigger: stripHtml(tContent("states.open.trigger")),                  behavior: tContent("states.open.behavior") },
-          { label: tContent("states.closing.label"),               trigger: tContent("states.closing.trigger"),                          behavior: stripHtml(tContent("states.closing.behavior")) },
-          { label: tContent("states.withCloseButtonHidden.label"), trigger: stripHtml(tContent("states.withCloseButtonHidden.trigger")), behavior: tContent("states.withCloseButtonHidden.behavior") },
+          { label: tContent("states.closed.label"),                trigger: toPlainText(tContent("states.closed.trigger")),                behavior: toPlainText(tContent("states.closed.behavior"))},
+          { label: tContent("states.opening.label"),               trigger: toPlainText(tContent("states.opening.trigger")),                          behavior: toPlainText(tContent("states.opening.behavior")) },
+          { label: tContent("states.open.label"),                  trigger: toPlainText(tContent("states.open.trigger")),                  behavior: toPlainText(tContent("states.open.behavior"))},
+          { label: tContent("states.closing.label"),               trigger: toPlainText(tContent("states.closing.trigger")),                          behavior: toPlainText(tContent("states.closing.behavior")) },
+          { label: tContent("states.withCloseButtonHidden.label"), trigger: toPlainText(tContent("states.withCloseButtonHidden.trigger")), behavior: toPlainText(tContent("states.withCloseButtonHidden.behavior"))},
         ]}
       />
 
@@ -824,7 +820,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "open",         type: "boolean",                  defaultValue: "—",     required: "Não", description: stripHtml(tContent("props.table.open")) },
+              { name: "open",         type: "boolean",                  defaultValue: "—",     required: "Não", description: toPlainText(tContent("props.table.open")) },
               { name: "defaultOpen",  type: "boolean",                  defaultValue: "false", required: "Não", description: tContent("props.table.defaultOpen") },
               { name: "onOpenChange", type: "(open: boolean) => void",  defaultValue: "—",     required: "Não", description: tContent("props.table.onOpenChange") },
               { name: "children",     type: "React.ReactNode",          defaultValue: "—",     required: "Sim", description: tContent("props.table.children") },
@@ -840,7 +836,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "showCloseButton", type: "boolean",         defaultValue: "true", required: "Não", description: stripHtml(tContent("props.table.showCloseButtonContent")) },
+              { name: "showCloseButton", type: "boolean",         defaultValue: "true", required: "Não", description: toPlainText(tContent("props.table.showCloseButtonContent")) },
               { name: "className",       type: "string",          defaultValue: "—",    required: "Não", description: tContent("props.table.className") },
               { name: "children",        type: "React.ReactNode", defaultValue: "—",    required: "Sim", description: tContent("props.table.children") },
             ],
@@ -855,7 +851,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "showCloseButton", type: "boolean", defaultValue: "false", required: "Não", description: stripHtml(tContent("props.table.showCloseButtonFooter")) },
+              { name: "showCloseButton", type: "boolean", defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.showCloseButtonFooter")) },
               { name: "className",       type: "string", defaultValue: "—",    required: "Não", description: tContent("props.table.className") },
             ],
           },
@@ -924,10 +920,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         title={tContent("related.title")}
         items={[
           { name: "AlertDialog", description: stripHtml(tContent("related.alertDialog")), path: "?path=/docs/ui-alertdialog--docs" },
-          { name: "Sheet",       description: tContent("related.sheet"),                  path: "?path=/docs/ui-sheet--docs" },
-          { name: "Popover",     description: tContent("related.popover"),                path: "?path=/docs/ui-popover--docs" },
-          { name: "Form",        description: tContent("related.form"),                   path: "?path=/docs/ui-form--docs" },
-          { name: "Drawer",      description: tContent("related.drawer"),                 path: "?path=/docs/ui-drawer--docs" },
+          { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/ui-sheet--docs" },
+          { name: "Popover",     description: toPlainText(tContent("related.popover")),                path: "?path=/docs/ui-popover--docs" },
+          { name: "Form",        description: toPlainText(tContent("related.form")),                   path: "?path=/docs/ui-form--docs" },
+          { name: "Drawer",      description: toPlainText(tContent("related.drawer")),                 path: "?path=/docs/ui-drawer--docs" },
         ]}
       />
 
@@ -945,16 +941,16 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
-          trigger: tContent("analytics.table.trigger"),
+          trigger: toPlainText(tContent("analytics.table.trigger")),
           payload: tContent("analytics.table.payload"),
         }}
         items={[
-          { event: tContent("analytics.table.open"),          trigger: tContent("analytics.table.openTrigger"),          payload: tContent("analytics.table.openPayload") },
-          { event: tContent("analytics.table.close"),         trigger: tContent("analytics.table.closeTrigger"),         payload: tContent("analytics.table.closePayload") },
-          { event: tContent("analytics.table.action"),        trigger: tContent("analytics.table.actionTrigger"),        payload: tContent("analytics.table.actionPayload") },
-          { event: tContent("analytics.table.pageView"),      trigger: tContent("analytics.table.pageViewTrigger"),      payload: tContent("analytics.table.pageViewPayload") },
-          { event: tContent("analytics.table.sectionViewed"), trigger: tContent("analytics.table.sectionViewedTrigger"), payload: tContent("analytics.table.sectionViewedPayload") },
-          { event: tContent("analytics.table.langSwitch"),    trigger: tContent("analytics.table.langSwitchTrigger"),    payload: tContent("analytics.table.langSwitchPayload") },
+          { event: tContent("analytics.table.open"),          trigger: toPlainText(tContent("analytics.table.openTrigger")),          payload: tContent("analytics.table.openPayload") },
+          { event: tContent("analytics.table.close"),         trigger: toPlainText(tContent("analytics.table.closeTrigger")),         payload: tContent("analytics.table.closePayload") },
+          { event: tContent("analytics.table.action"),        trigger: toPlainText(tContent("analytics.table.actionTrigger")),        payload: tContent("analytics.table.actionPayload") },
+          { event: tContent("analytics.table.pageView"),      trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),      payload: tContent("analytics.table.pageViewPayload") },
+          { event: tContent("analytics.table.sectionViewed"), trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")), payload: tContent("analytics.table.sectionViewedPayload") },
+          { event: tContent("analytics.table.langSwitch"),    trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),    payload: tContent("analytics.table.langSwitchPayload") },
         ]}
       />
 

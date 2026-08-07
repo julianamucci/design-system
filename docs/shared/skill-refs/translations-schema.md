@@ -28,7 +28,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
       "item1": "<strong>Parte</strong> — descrição funcional",
       "item2": "...",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "/* snippet de estrutura JSX/HTML */"
+      "structureCode": { "react": "…", "vue": "…" }   // uma variante por stack — ver seção abaixo
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -91,7 +91,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
         }
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibilityCode": "// snippet de código mostrando uso avançado"
+      "extensibilityCode": { "react": "…" }   // uma variante por stack
     },
     "tokens": {
       "title": "Design Tokens",
@@ -100,7 +100,7 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
         "<tokenKey>": { "class": "bg-popover", "part": "Descrição da aplicação" }
       },
       "customizationTitle": "Customização",
-      "customizationCode": "/* CSS de customização */"
+      "customizationCode": { "web": "/* CSS de customização */" }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -179,6 +179,43 @@ Referência usada por `/ux-writer` e validada pelas dev-skills. **Leia apenas se
 - **`doDont`** é seção de primeiro nível — **separada** de `usage.do`/`usage.dont`. Contém pares de previews visuais.
 - **`testes.functional.priority`**: `"high"` ou `"medium"` — **NUNCA** localizar, sempre string literal em inglês.
 - **`anatomy.structureCode`**: snippet multiline com `\n` mostrando composição. As dev-skills lerão isso direto via `t('anatomy.structureCode')` — **sem** hardcode duplicado nas docs pages.
+
+### Chaves de código (`*Code`) — uma variante por stack
+
+Toda chave terminada em `Code` aceita duas formas:
+
+```jsonc
+// string — mesmo snippet em qualquer stack
+"structureCode": "npm i @nortear/ds"
+
+// objeto — um snippet por stack
+"structureCode": {
+  "react":   "<Button>Salvar</Button>",
+  "vue":     "<Button>Salvar</Button>",
+  "svelte":  "<Button>Salvar</Button>",
+  "vanilla": "<button class=\"nds-button\">Salvar</button>",
+  "flutter": "NdsButton(child: Text('Salvar'))",
+  "web":     "/* CSS — cobre os 4 stacks de navegador de uma vez */"
+}
+```
+
+Chaves aceitas: `react`, `vue`, `svelte`, `vanilla`, `flutter` e o grupo `web`
+(= os quatro de navegador). A lista canônica vive em
+`docs/shared/primitives/code-variants.ts`.
+
+Regras ao escrever:
+
+- **CSS vai em `web`**, nunca replicado nos quatro stacks.
+- **Markup e chamada de API vão no stack específico** — JSX em `react`,
+  `<template>` em `vue`, factory `createX()` em `vanilla`, Dart em `flutter`.
+- **Não misture CSS e markup no mesmo snippet.** Sem variante possível, o
+  snippet fica preso na forma de string e serve o stack errado a todo mundo.
+- **Nunca coloque snippet em `override` de `useTranslation`** — o código some do
+  conteúdo compartilhado. Override é para nome de prop e rótulo.
+
+Sem variante para o stack que lê, o fallback é `web` → `react` → primeira
+definida. Ninguém vê bloco vazio, mas a lacuna é contada por
+`node scripts/audit-translation-literals.mjs --only cobertura`.
 
 ---
 

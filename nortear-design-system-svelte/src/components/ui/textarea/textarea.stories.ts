@@ -6,7 +6,7 @@ import TextareaStory from './TextareaStory.svelte';
 import TextareaDocs from '@/components/docs/TextareaDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Textarea',
   component: Textarea,
   tags: ['autodocs', 'form'],
@@ -38,10 +38,10 @@ const meta = {
     disabled: false,
     readonly: false,
   },
-} satisfies Meta<typeof Textarea>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

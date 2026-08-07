@@ -7,8 +7,8 @@
     "seo": {
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
-      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamanhos, composição com elemento filho via Radix Slot, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
+      "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamanhos, composição com elemento filho, foco visível e suporte a ícones decorativos.",
+      "aiEntities": "Button, botão, design system, componente de formulário, WCAG 2.2, acessibilidade, foco visível, ícone"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -28,9 +28,11 @@
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Aceita todos os atributos HTML de botão (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícone (opcional)</strong> — filho do Button com <code>aria-hidden=\"true\"</code>. Posicionado automaticamente via gap interno.",
       "item3": "<strong>Label</strong> — texto visível do botão. Verbo no infinitivo, máximo 3 palavras, sem pontuação.",
-      "item4": "<strong>Slot de composição</strong> — via Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> ou componente de link mantendo os estilos.",
+      "item4": "<strong>Slot de composição</strong> — permite renderizar como <code>&lt;a&gt;</code> ou componente de link mantendo os estilos do botão.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícone (opcional) */}\n  Label                     {/* Texto da ação */}\n</Button>"
+      "structureCode": {
+        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícone (opcional) */}\n  Label                     {/* Texto da ação */}\n</Button>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -38,7 +40,7 @@
         "title": "Guidelines Obrigatórias",
         "item1": "Use <code>variant=\"default\"</code> apenas uma vez por seção — a ação primária deve ser única.",
         "item2": "Ações destrutivas (excluir, remover) sempre usam <code>variant=\"destructive\"</code> e exigem confirmação via AlertDialog.",
-        "item3": "Para navegação (links), componha o Button com o elemento filho de link do framework (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "Para navegação (links), componha o Button com um elemento de link como filho (<code>&lt;a&gt;</code> nativo ou o componente de link do seu roteador).",
         "item4": "Botões icon-only exigem <code>aria-label</code> descritivo com verbo + objeto."
       },
       "scenarios": {
@@ -150,16 +152,19 @@
         "ghost": "Ação discreta em toolbars e menus. Sem borda, hover com <code>accent</code>.",
         "asLink": {
           "name": "Como link",
-          "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes via <code>btnClass()</code>. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
-          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa."
+          "description": "Elemento <code>&lt;a&gt;</code> recebendo as classes do botão. Preserva semântica de link nativo (href, target, navegação do navegador) mas com aparência de botão.",
+          "use": "Navegação para outra página/rota que precisa parecer ação primária. Mantém o <code>&lt;a&gt;</code> para SEO, abertura em nova aba (middle-click) e acessibilidade nativa.",
+          "linkLabel": "Ver documentação"
         }
       },
       "sizesTitle": "Tamanhos",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamanho padrão para a maioria dos contextos.",
+        "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro e ações dentro de linha de tabela.",
         "sm": "Texto 12px, padding vertical 4px. Para toolbars densos ou áreas compactas.",
         "lg": "Texto 16px, padding vertical 8px. Para CTAs principais em landing pages.",
         "icon": "Quadrado 36px. Para botões icon-only padrão.",
+        "icon-xs": "Quadrado 24px. Para ações de ícone em linhas de tabela e listas densas.",
         "icon-sm": "Quadrado 32px. Para toolbars compactos com ícone.",
         "icon-lg": "Quadrado 40px. Para ações de ícone com destaque."
       },
@@ -231,19 +236,20 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Propriedade",
-        "type": "Tipo HTML do botão. Use <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fora.",
+        "type": "Tipo",
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
         "variant": "Variante visual do botão. Define cor de fundo, texto e borda.",
         "size": "Tamanho do botão. Altura, padding e proporção icon-only.",
-        "asChild": "Se <code>true</code>, renderiza o filho (via Radix Slot) e repassa os estilos — útil para links.",
+        "asChild": "Compõe o botão com um elemento filho: renderiza o filho no lugar do <code>&lt;button&gt;</code> e repassa os estilos — útil para links.",
         "disabled": "Desabilita o botão: bloqueia eventos de ponteiro e reduz a opacidade pela metade.",
         "onClick": "Callback disparado ao clique. Não dispara quando <code>disabled</code>.",
-        "className": "Classes CSS adicionais — mescladas com as classes da variante pelo utilitário <code>cn()</code>."
+        "className": "Classes CSS adicionais — mescladas com as classes da variante, permitindo override pontual.",
+        "htmlType": "Tipo HTML do botão. Use <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fora."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todas as classes são mescladas com segurança via <code>cn()</code>, permitindo override de qualquer aspecto visual do componente. <code>asChild</code> — composição com Link do Next.js/React Router mantendo semântica de navegação."
+      "extensibility": "Classes adicionais são mescladas com as da variante, permitindo override de qualquer aspecto visual do componente. A composição com elemento filho preserva a semântica de navegação ao usar um link no lugar do botão."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -302,7 +308,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Para integrar com Link do Next.js ou React Router, componha o Button com o componente de link como elemento filho — mantém a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
+      "tip1": "Para integrar com o roteador da aplicação, componha o Button com o componente de link como elemento filho — mantém a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
       "tip2": "Em formulários com submit assíncrono, bloqueie o botão com <code>disabled={form.formState.isSubmitting}</code> e troque o label para gerúndio (\"Salvando...\"). Evita duplo envio.",
       "tip3": "Ícones devem ter <code>aria-hidden=\"true\"</code> e tamanho 16px — o CSS do Button já dimensiona SVGs filhos automaticamente quando não há override."
     },
@@ -448,8 +454,8 @@
     "seo": {
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
-      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 6 sizes, child element composition via Radix Slot, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
+      "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 8 sizes, child element composition, visible focus ring, and support for decorative icons.",
+      "aiEntities": "Button, design system, form component, WCAG 2.2, accessibility, focus ring, icon button"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -469,9 +475,11 @@
       "item1": "<strong>Button</strong> — native <code>&lt;button&gt;</code> element. Accepts all HTML button attributes (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Icon (optional)</strong> — Button child with <code>aria-hidden=\"true\"</code>. Positioned automatically via internal gap.",
       "item3": "<strong>Label</strong> — visible button text. Infinitive verb, max 3 words, no punctuation.",
-      "item4": "<strong>Composition slot</strong> — via Radix Slot. Allows rendering as <code>&lt;a&gt;</code> or link component while keeping styles.",
+      "item4": "<strong>Composition slot</strong> — allows rendering as <code>&lt;a&gt;</code> or a link component while keeping the button styles.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Button>                    {/* <button> element */}\n  <Icon aria-hidden />      {/* Icon (optional) */}\n  Label                     {/* Action text */}\n</Button>"
+      "structureCode": {
+        "react": "<Button>                    {/* <button> element */}\n  <Icon aria-hidden />      {/* Icon (optional) */}\n  Label                     {/* Action text */}\n</Button>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -479,7 +487,7 @@
         "title": "Required Guidelines",
         "item1": "Use <code>variant=\"default\"</code> only once per section — the primary action must be unique.",
         "item2": "Destructive actions (delete, remove) always use <code>variant=\"destructive\"</code> and require AlertDialog confirmation.",
-        "item3": "For navigation (links), compose the Button with your framework's link element as a child (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "For navigation (links), compose the Button with a link element as a child (native <code>&lt;a&gt;</code> or your router's link component).",
         "item4": "Icon-only buttons require a descriptive <code>aria-label</code> with verb + object."
       },
       "scenarios": {
@@ -591,16 +599,19 @@
         "ghost": "Discreet action in toolbars and menus. No border, hover with <code>accent</code>.",
         "asLink": {
           "name": "As link",
-          "description": "<code>&lt;a&gt;</code> element receiving the classes via <code>btnClass()</code>. Preserves native link semantics (href, target, browser navigation) with button appearance.",
-          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility."
+          "description": "<code>&lt;a&gt;</code> element receiving the button classes. Preserves native link semantics (href, target, browser navigation) with button appearance.",
+          "use": "Navigation to another page/route that needs to look like a primary action. Keeps the <code>&lt;a&gt;</code> for SEO, new-tab opening (middle-click) and native accessibility.",
+          "linkLabel": "View documentation"
         }
       },
       "sizesTitle": "Sizes",
       "sizes": {
         "default": "Text 14px, vertical padding 8px. Standard size for most contexts.",
+        "xs": "12px text, 2px vertical padding. For maximum density: filter chips and inline table row actions.",
         "sm": "Text 12px, vertical padding 4px. For dense toolbars or compact areas.",
         "lg": "Text 16px, vertical padding 8px. For primary CTAs on landing pages.",
         "icon": "Square 36px. For standard icon-only buttons.",
+        "icon-xs": "24px square. For icon actions in table rows and dense lists.",
         "icon-sm": "Square 32px. For compact toolbars with icons.",
         "icon-lg": "Square 40px. For emphasized icon actions."
       },
@@ -672,19 +683,20 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Property",
-        "type": "HTML button type. Use <code>\"submit\"</code> inside forms, <code>\"button\"</code> outside.",
+        "type": "Type",
         "default": "Default",
         "required": "Required",
         "description": "Description",
         "variant": "Visual button variant. Sets background color, text, and border.",
         "size": "Button size. Height, padding, and icon-only proportion.",
-        "asChild": "If <code>true</code>, renders the child (via Radix Slot) and forwards styles — useful for links.",
+        "asChild": "Composes the button with a child element: renders the child in place of the <code>&lt;button&gt;</code> and forwards the styles — useful for links.",
         "disabled": "Disables the button: blocks pointer events and reduces opacity by half.",
         "onClick": "Callback fired on click. Doesn't fire when <code>disabled</code>.",
-        "className": "Additional CSS classes — merged with variant classes via the <code>cn()</code> utility."
+        "className": "Additional CSS classes — merged with the variant classes, allowing targeted overrides.",
+        "htmlType": "HTML button type. Use <code>\"submit\"</code> inside forms, <code>\"button\"</code> outside."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all classes are safely merged via <code>cn()</code>, allowing override of any visual aspect of the component. <code>asChild</code> — composition with Next.js/React Router Link while keeping navigation semantics."
+      "extensibility": "Additional classes are merged with the variant classes, allowing override of any visual aspect of the component. Child element composition keeps navigation semantics when a link replaces the button."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -743,7 +755,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "To integrate with Next.js or React Router Link, compose the Button with the link component as a child — keeps navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
+      "tip1": "To integrate with the application router, compose the Button with the link component as a child — keeps navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
       "tip2": "In forms with async submit, block the button with <code>disabled={form.formState.isSubmitting}</code> and change the label to gerund (\"Saving...\"). Prevents double submission.",
       "tip3": "Icons must have <code>aria-hidden=\"true\"</code> and a default size of 16px — the Button CSS already sizes child SVGs automatically when no override is present."
     },
@@ -889,8 +901,8 @@
     "seo": {
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
-      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 6 tamaños, composición con elemento hijo vía Radix Slot, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, React, Vue, Svelte, Radix Slot, WCAG 2.2, class-variance-authority"
+      "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamaños, composición con elemento hijo, foco visible y soporte para íconos decorativos.",
+      "aiEntities": "Button, botón, design system, componente de formulario, WCAG 2.2, accesibilidad, foco visible, ícono"
     },
     "demonstration": {
       "title": "Demostración",
@@ -910,9 +922,11 @@
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Acepta todos los atributos HTML de botón (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícono (opcional)</strong> — hijo del Button con <code>aria-hidden=\"true\"</code>. Posicionado automáticamente vía gap interno.",
       "item3": "<strong>Label</strong> — texto visible del botón. Verbo en infinitivo, máximo 3 palabras, sin puntuación.",
-      "item4": "<strong>Slot de composición</strong> — vía Radix Slot. Permite renderizar como <code>&lt;a&gt;</code> o componente de enlace manteniendo los estilos.",
+      "item4": "<strong>Slot de composición</strong> — permite renderizar como <code>&lt;a&gt;</code> o componente de enlace manteniendo los estilos del botón.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícono (opcional) */}\n  Label                     {/* Texto de la acción */}\n</Button>"
+      "structureCode": {
+        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícono (opcional) */}\n  Label                     {/* Texto de la acción */}\n</Button>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
@@ -920,7 +934,7 @@
         "title": "Guías Obligatorias",
         "item1": "Usa <code>variant=\"default\"</code> solo una vez por sección — la acción primaria debe ser única.",
         "item2": "Acciones destructivas (eliminar, remover) siempre usan <code>variant=\"destructive\"</code> y requieren confirmación vía AlertDialog.",
-        "item3": "Para navegación (enlaces), compón el Button con el elemento de enlace del framework como hijo (<code>&lt;a&gt;</code>, Next Link, React Router Link).",
+        "item3": "Para navegación (enlaces), compón el Button con un elemento de enlace como hijo (<code>&lt;a&gt;</code> nativo o el componente de enlace de tu router).",
         "item4": "Botones icon-only requieren <code>aria-label</code> descriptivo con verbo + objeto."
       },
       "scenarios": {
@@ -1032,16 +1046,19 @@
         "ghost": "Acción discreta en toolbars y menús. Sin borde, hover con <code>accent</code>.",
         "asLink": {
           "name": "Como link",
-          "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases vía <code>btnClass()</code>. Preserva la semántica nativa de link (href, target, navegación del navegador) con apariencia de botón.",
-          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa."
+          "description": "Elemento <code>&lt;a&gt;</code> recibiendo las clases del botón. Preserva la semántica nativa de enlace (href, target, navegación del navegador) con apariencia de botón.",
+          "use": "Navegación a otra página/ruta que necesita parecer una acción primaria. Mantiene el <code>&lt;a&gt;</code> para SEO, apertura en nueva pestaña (clic medio) y accesibilidad nativa.",
+          "linkLabel": "Ver documentación"
         }
       },
       "sizesTitle": "Tamaños",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamaño estándar para la mayoría de contextos.",
+        "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro y acciones dentro de una fila de tabla.",
         "sm": "Texto 12px, padding vertical 4px. Para toolbars densos o áreas compactas.",
         "lg": "Texto 16px, padding vertical 8px. Para CTAs principales en landing pages.",
         "icon": "Cuadrado 36px. Para botones icon-only estándar.",
+        "icon-xs": "Cuadrado 24px. Para acciones de ícono en filas de tabla y listas densas.",
         "icon-sm": "Cuadrado 32px. Para toolbars compactos con ícono.",
         "icon-lg": "Cuadrado 40px. Para acciones de ícono con énfasis."
       },
@@ -1113,19 +1130,20 @@
       "buttonTitle": "Button",
       "table": {
         "prop": "Propiedad",
-        "type": "Tipo HTML del botón. Usa <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fuera.",
+        "type": "Tipo",
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
         "variant": "Variante visual del botón. Define color de fondo, texto y borde.",
         "size": "Tamaño del botón. Altura, padding y proporción icon-only.",
-        "asChild": "Si <code>true</code>, renderiza el hijo (vía Radix Slot) y reenvía los estilos — útil para enlaces.",
+        "asChild": "Compone el botón con un elemento hijo: renderiza el hijo en lugar del <code>&lt;button&gt;</code> y reenvía los estilos — útil para enlaces.",
         "disabled": "Deshabilita el botón: bloquea eventos de puntero y reduce la opacidad a la mitad.",
         "onClick": "Callback disparado al clic. No dispara cuando <code>disabled</code>.",
-        "className": "Clases CSS adicionales — se combinan con las clases de la variante vía el utilitario <code>cn()</code>."
+        "className": "Clases CSS adicionales — se combinan con las clases de la variante, permitiendo override puntual.",
+        "htmlType": "Tipo HTML del botón. Usa <code>\"submit\"</code> dentro de forms, <code>\"button\"</code> fuera."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todas las clases se combinan de forma segura vía <code>cn()</code>, permitiendo override de cualquier aspecto visual del componente. <code>asChild</code> — composición con Link de Next.js/React Router manteniendo semántica de navegación."
+      "extensibility": "Las clases adicionales se combinan con las de la variante, permitiendo override de cualquier aspecto visual del componente. La composición con elemento hijo preserva la semántica de navegación al usar un enlace en lugar del botón."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1184,7 +1202,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Para integrar con Link de Next.js o React Router, compón el Button con el componente de enlace como hijo — mantiene la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
+      "tip1": "Para integrar con el router de la aplicación, compón el Button con el componente de enlace como hijo — mantiene la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
       "tip2": "En formularios con submit asíncrono, bloquea el botón con <code>disabled={form.formState.isSubmitting}</code> y cambia el label a gerundio (\"Guardando...\"). Evita doble envío.",
       "tip3": "Los íconos deben tener <code>aria-hidden=\"true\"</code> y tamaño 16px — el CSS del Button ya dimensiona los SVG hijos automáticamente cuando no hay override."
     },

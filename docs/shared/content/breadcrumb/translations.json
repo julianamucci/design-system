@@ -32,7 +32,9 @@
       "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo com <code>aria-hidden=\"true\"</code>; padrão é <code>ChevronRight</code>.",
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de níveis ocultos quando a hierarquia é muito longa.",
       "structureLabel": "Estrutura básica:",
-      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      "structureCode": {
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      }
     },
     "usage": {
       "title": "Quando e Como Usar",
@@ -417,7 +419,9 @@
       "item6": "<strong>BreadcrumbSeparator</strong> — decorative separator with <code>aria-hidden=\"true\"</code>; default is <code>ChevronRight</code>.",
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicator for hidden levels when the hierarchy is too long.",
       "structureLabel": "Basic structure:",
-      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      "structureCode": {
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      }
     },
     "usage": {
       "title": "When and How to Use",
@@ -802,7 +806,9 @@
       "item6": "<strong>BreadcrumbSeparator</strong> — separador decorativo con <code>aria-hidden=\"true\"</code>; predeterminado es <code>ChevronRight</code>.",
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de niveles ocultos cuando la jerarquía es muy larga.",
       "structureLabel": "Estructura básica:",
-      "structureCode": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      "structureCode": {
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",

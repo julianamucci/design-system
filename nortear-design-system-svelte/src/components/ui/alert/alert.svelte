@@ -39,13 +39,24 @@
 		ref = $bindable(null),
 		class: className,
 		variant = "default",
+		role = "alert",
 		dismissible = false,
 		onDismiss,
 		dismissLabel = "Fechar alerta",
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+	}: WithElementRef<Omit<HTMLAttributes<HTMLDivElement>, "role">> & {
 		variant?: AlertVariant;
+		/**
+		 * Semântica de anúncio do elemento raiz.
+		 *
+		 * `alert` (padrão) é live region ASSERTIVA: o leitor de tela interrompe o
+		 * que estiver fazendo e anuncia na hora — correto só para mensagem urgente
+		 * que SURGE em tempo de execução. `status` é live region polida (anuncia
+		 * sem interromper). `note` não é live region — é o valor certo para alert
+		 * estático, já presente quando a página carrega.
+		 */
+		role?: "alert" | "status" | "note";
 		/** Exibe o botão de fechar; fechar remove o alert da tela. */
 		dismissible?: boolean;
 		/** Callback de fechamento — dispara uma vez ao acionar o botão. */
@@ -76,10 +87,14 @@
 		const el = ref;
 		if (!dismissible || !el) return;
 
-		const limparEntrada = () => {
+		// `animationend` borbulha: a animação de qualquer descendente (o botão de
+		// fechar, um ícone) chegaria aqui e limparia a entrada antes da hora — e
+		// com `once` ainda consumiria o listener. Só o próprio elemento conta.
+		const limparEntrada = (event?: Event) => {
+			if (event && event.target !== el) return;
 			if (classeAnimacao === "nds-animate-in") classeAnimacao = undefined;
 		};
-		el.addEventListener("animationend", limparEntrada, { once: true });
+		el.addEventListener("animationend", limparEntrada);
 		const timer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS);
 
 		return () => {
@@ -95,7 +110,12 @@
 		const el = ref;
 		let finalizado = false;
 		let timer = 0;
-		const finalizar = () => {
+		// Mesma guarda da entrada: animação de descendente não encerra a saída.
+		const finalizar = (event?: Event) => {
+			if (event && event.target !== el) return;
+			/* v8 ignore next -- guarda de dupla finalização: os dois caminhos que
+			   chamam (animationend e timeout) removem listener e timer antes de
+			   sair, então não há ordem de eventos que a alcance. */
 			if (finalizado) return;
 			finalizado = true;
 			window.clearTimeout(timer);
@@ -120,7 +140,7 @@
 	<div
 		bind:this={ref}
 		data-slot="alert"
-		role="alert"
+		{role}
 		class={cn(alertVariants({ variant }), classeAnimacao, className)}
 		{...restProps}
 	>

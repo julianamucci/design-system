@@ -36,17 +36,25 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations        from '@/i18n/ui.json';
 import componentTranslations from '@shared/content/select/translations.json';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 // IMPORTANTE: locale vem de useTranslation — NUNCA de useLocaleStore/Pinia
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(componentTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (componentTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -127,8 +135,6 @@ const navGroups = computed(() => [
 ]);
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
-
-
 
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
@@ -284,13 +290,13 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.default.label'),  trigger: tContent('states.default.trigger'),  behavior: stripHtml(tContent('states.default.behavior')) },
-  { label: tContent('states.open.label'),     trigger: tContent('states.open.trigger'),     behavior: stripHtml(tContent('states.open.behavior')) },
-  { label: tContent('states.selected.label'), trigger: tContent('states.selected.trigger'), behavior: stripHtml(tContent('states.selected.behavior')) },
-  { label: tContent('states.hover.label'),    trigger: tContent('states.hover.trigger'),    behavior: stripHtml(tContent('states.hover.behavior')) },
-  { label: tContent('states.focus.label'),    trigger: tContent('states.focus.trigger'),    behavior: stripHtml(tContent('states.focus.behavior')) },
-  { label: tContent('states.disabled.label'), trigger: tContent('states.disabled.trigger'), behavior: stripHtml(tContent('states.disabled.behavior')) },
-  { label: tContent('states.invalid.label'),  trigger: tContent('states.invalid.trigger'),  behavior: stripHtml(tContent('states.invalid.behavior')) },
+  { label: tContent('states.default.label'),  trigger: toPlainText(tContent('states.default.trigger')),  behavior: toPlainText(tContent('states.default.behavior')) },
+  { label: tContent('states.open.label'),     trigger: toPlainText(tContent('states.open.trigger')),     behavior: toPlainText(tContent('states.open.behavior')) },
+  { label: tContent('states.selected.label'), trigger: toPlainText(tContent('states.selected.trigger')), behavior: toPlainText(tContent('states.selected.behavior')) },
+  { label: tContent('states.hover.label'),    trigger: toPlainText(tContent('states.hover.trigger')),    behavior: toPlainText(tContent('states.hover.behavior')) },
+  { label: tContent('states.focus.label'),    trigger: toPlainText(tContent('states.focus.trigger')),    behavior: toPlainText(tContent('states.focus.behavior')) },
+  { label: tContent('states.disabled.label'), trigger: toPlainText(tContent('states.disabled.trigger')), behavior: toPlainText(tContent('states.disabled.behavior')) },
+  { label: tContent('states.invalid.label'),  trigger: toPlainText(tContent('states.invalid.trigger')),  behavior: toPlainText(tContent('states.invalid.behavior')) },
 ]);
 
 const propCols = computed(() => ({
@@ -302,21 +308,21 @@ const propCols = computed(() => ({
 }));
 
 const selectPropItems = computed(() => [
-  { name: 'modelValue',         type: tContent('props.table.value.type'),         defaultValue: tContent('props.table.value.default'),         required: tContent('props.table.value.required'),         description: stripHtml(tContent('props.table.value.description'))         },
-  { name: 'defaultValue',       type: tContent('props.table.defaultValue.type'),  defaultValue: tContent('props.table.defaultValue.default'),  required: tContent('props.table.defaultValue.required'),  description: stripHtml(tContent('props.table.defaultValue.description'))  },
-  { name: '@update:modelValue', type: tContent('props.table.onValueChange.type'), defaultValue: tContent('props.table.onValueChange.default'), required: tContent('props.table.onValueChange.required'), description: stripHtml(tContent('props.table.onValueChange.description')) },
-  { name: 'disabled',           type: tContent('props.table.disabled.type'),      defaultValue: tContent('props.table.disabled.default'),      required: tContent('props.table.disabled.required'),      description: stripHtml(tContent('props.table.disabled.description'))      },
-  { name: 'name',               type: tContent('props.table.name.type'),          defaultValue: tContent('props.table.name.default'),          required: tContent('props.table.name.required'),          description: stripHtml(tContent('props.table.name.description'))          },
+  { name: 'modelValue',         type: tContent('props.table.value.type'),         defaultValue: tContent('props.table.value.default'),         required: tContent('props.table.value.required'),         description: toPlainText(tContent('props.table.value.description'))         },
+  { name: 'defaultValue',       type: tContent('props.table.defaultValue.type'),  defaultValue: tContent('props.table.defaultValue.default'),  required: tContent('props.table.defaultValue.required'),  description: toPlainText(tContent('props.table.defaultValue.description'))  },
+  { name: '@update:modelValue', type: tContent('props.table.onValueChange.type'), defaultValue: tContent('props.table.onValueChange.default'), required: tContent('props.table.onValueChange.required'), description: toPlainText(tContent('props.table.onValueChange.description')) },
+  { name: 'disabled',           type: tContent('props.table.disabled.type'),      defaultValue: tContent('props.table.disabled.default'),      required: tContent('props.table.disabled.required'),      description: toPlainText(tContent('props.table.disabled.description'))      },
+  { name: 'name',               type: tContent('props.table.name.type'),          defaultValue: tContent('props.table.name.default'),          required: tContent('props.table.name.required'),          description: toPlainText(tContent('props.table.name.description'))          },
 ]);
 
 const selectTriggerPropItems = computed(() => [
-  { name: 'size',     type: tContent('props.table.size.type'),    defaultValue: tContent('props.table.size.default'),    required: tContent('props.table.size.required'),    description: stripHtml(tContent('props.table.size.description'))    },
+  { name: 'size',     type: tContent('props.table.size.type'),    defaultValue: tContent('props.table.size.default'),    required: tContent('props.table.size.required'),    description: toPlainText(tContent('props.table.size.description'))    },
   { name: 'disabled', type: 'boolean',                            defaultValue: 'false',                                 required: 'Não',                                     description: 'Desabilita apenas o trigger.'                          },
   { name: 'class',    type: 'string',                             defaultValue: '—',                                     required: 'Não',                                     description: 'Classes utilitárias .nds-* adicionais.'                          },
 ]);
 
 const selectValuePropItems = computed(() => [
-  { name: 'placeholder', type: tContent('props.table.placeholder.type'), defaultValue: tContent('props.table.placeholder.default'), required: tContent('props.table.placeholder.required'), description: stripHtml(tContent('props.table.placeholder.description')) },
+  { name: 'placeholder', type: tContent('props.table.placeholder.type'), defaultValue: tContent('props.table.placeholder.default'), required: tContent('props.table.placeholder.required'), description: toPlainText(tContent('props.table.placeholder.description')) },
 ]);
 
 const selectItemPropItems = computed(() => [
@@ -358,10 +364,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: tContent('related.items.combobox.name'),     description: tContent('related.items.combobox.description'),     path: '?path=/docs/ui-combobox--docs'      },
-  { name: tContent('related.items.radioGroup.name'),   description: tContent('related.items.radioGroup.description'),   path: '?path=/docs/ui-radiogroup--docs'    },
-  { name: tContent('related.items.dropdownMenu.name'), description: tContent('related.items.dropdownMenu.description'), path: '?path=/docs/ui-dropdownmenu--docs'  },
-  { name: tContent('related.items.form.name'),         description: tContent('related.items.form.description'),         path: '?path=/docs/ui-form--docs'          },
+  { name: tContent('related.items.combobox.name'),     description: toPlainText(tContent('related.items.combobox.description')),     path: '?path=/docs/ui-combobox--docs'      },
+  { name: tContent('related.items.radioGroup.name'),   description: toPlainText(tContent('related.items.radioGroup.description')),   path: '?path=/docs/ui-radiogroup--docs'    },
+  { name: tContent('related.items.dropdownMenu.name'), description: toPlainText(tContent('related.items.dropdownMenu.description')), path: '?path=/docs/ui-dropdownmenu--docs'  },
+  { name: tContent('related.items.form.name'),         description: toPlainText(tContent('related.items.form.description')),         path: '?path=/docs/ui-form--docs'          },
 ]);
 
 const noteItems = computed(() => [
@@ -373,7 +379,7 @@ const noteItems = computed(() => [
 
 const analyticsItems = computed(() => [
   { event: 'option_select',
-    trigger: tContent('analytics.table.option_select.trigger'),
+    trigger: toPlainText(tContent('analytics.table.option_select.trigger')),
     payload: tContent('analytics.table.option_select.payload') },
 ]);
 
@@ -612,14 +618,14 @@ const visualTestItems = computed(() => [
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair1.do'),
-          dontCaption: tContent('doDont.pair1.dont'),
+          doCaption: toPlainText(tContent('doDont.pair1.do')),
+          dontCaption: toPlainText(tContent('doDont.pair1.dont')),
         },
         {
           doLabel: tNav('common.do'),
           dontLabel: tNav('common.dont'),
-          doCaption: tContent('doDont.pair2.do'),
-          dontCaption: tContent('doDont.pair2.dont'),
+          doCaption: toPlainText(tContent('doDont.pair2.do')),
+          dontCaption: toPlainText(tContent('doDont.pair2.dont')),
         },
       ]"
     >
@@ -885,8 +891,8 @@ const visualTestItems = computed(() => [
       :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
-        trigger: tContent('states.cols.trigger'),
-        behavior: tContent('states.cols.behavior'),
+        trigger: toPlainText(tContent('states.cols.trigger')),
+        behavior: toPlainText(tContent('states.cols.behavior')),
       }"
       :items="stateItems"
     />
@@ -920,6 +926,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -943,7 +951,7 @@ const visualTestItems = computed(() => [
       :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
-        trigger: tContent('analytics.table.trigger'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
         payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"

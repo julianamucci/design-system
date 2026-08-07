@@ -21,6 +21,12 @@
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
+  /* Tom base do gradiente animado da borda — as 4 variações saem daí.
+     É o mesmo em TODAS as variantes, de propósito: o gradiente é acabamento, e
+     acompanhar a cor semântica fazia o destructive girar vermelho e o success
+     verde, competindo com o significado que o ícone e o título já carregam.
+     Neutro, ele decora sem disputar leitura. */
+  --alert-glow: hsl(var(--border));
 
   position: relative;
   display: grid;
@@ -190,3 +196,100 @@
 /* A regra "descrição sempre foreground" vale para TODAS as variantes e vive na
    regra base da descrição — o bloco por-variante que existia aqui forçava o
    mesmo valor e saiu como redundância. */
+
+/* ── Gradiente animado na borda ───────────────────────────────────────────────
+ * Um gradiente de 4 tons neutros (dois mais claros, dois mais escuros, todos
+ * derivados da cor de borda do tema) gira ao redor do alert, dá duas voltas e
+ * desacelera até parar. É o MESMO gradiente em todas as variantes.
+ *
+ * Não entra na anatomia: um ::after absoluto, fora do fluxo do grid e sem
+ * ponteiro. Nenhum elemento novo no DOM, nenhuma classe nova para as stacks.
+ *
+ * O que gira é a PINTURA, não um elemento — é a técnica da referência (Ana
+ * Tudor, pen qEdRXjV): `conic-gradient` num anel mascarado, com o ângulo inicial
+ * animado por propriedade registrada. Como nada se desloca, o anel acompanha a
+ * curva das quinas por construção; as versões anteriores moviam um elemento pelo
+ * caminho da borda e ele saía reto nas curvas.
+ *
+ * A referência usa `in hsl longer hue` para varrer o círculo de matiz inteiro
+ * (arco-íris). Aqui os 4 tons saem todos de `--alert-glow`, deslocando só a
+ * lightness: o gradiente é monocromático e igual nas 5 variantes.
+ */
+
+/* O ângulo precisa ser propriedade REGISTRADA: custom property comum é string
+   para o motor de animação e não interpola — o gradiente ficaria parado. */
+@property --nds-alert-gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes nds-alert-gradient-giro {
+  from { --nds-alert-gradient-angle: 0deg; animation-timing-function: linear; }
+  /* Velocidade constante até 1,5 volta; daí em diante a freada.
+     A curva começa com inclinação 1,69 (= 0.54/0.32), que é a razão entre a
+     velocidade do trecho linear (540deg/64%) e a média deste (180deg/36%) — é o
+     que faz a junção não ter degrau. Termina em inclinação 0, que é a parada.
+     A freada precisa desse tanto de pista: cabendo só nos últimos 15% do tempo,
+     nenhuma curva cobre o que sobra sem primeiro ACELERAR. */
+  64%  { --nds-alert-gradient-angle: 540deg; animation-timing-function: cubic-bezier(0.32, 0.54, 0.5, 1); }
+  to   { --nds-alert-gradient-angle: 720deg; }
+}
+
+/* Separado do giro porque cada um tem seu perfil de tempo: o gradiente acende e
+   apaga em rampa (surgir e sumir em opacidade cheia entrega o corte) enquanto o
+   giro segue linear. Ao apagar, a borda volta ao estado normal. */
+@keyframes nds-alert-gradient-brilho {
+  from { opacity: 0; }
+  3%   { opacity: 1; }
+  86%  { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.nds-alert::after {
+  content: "";
+  position: absolute;
+  inset: 0;                                     /* mesma caixa da borda */
+  border-radius: inherit;
+  /* 2px cobrem a borda de 1px e avançam 1px para dentro, sobre o padding — o
+     anel fica mais visível sem que a caixa mude de tamanho nem o texto ande. */
+  padding: 2px;
+
+  /* 4 variações do tom da borda: duas mais claras, duas mais escuras. Os passos
+     são deslocamentos de LIGHTNESS em oklch, não mistura com branco/preto —
+     misturar comprime o lado claro quando a base já é clara: na variante default
+     (borda cinza) `color-mix ... white 15%` e `40%` davam L 0,935 e 0,954, dois
+     tons que ninguém distingue. Deslocando l, o passo é o mesmo em qualquer
+     variante. `c` e `h` intactos: é sempre o mesmo tom.
+     O 5º stop repete o 1º para o ciclo fechar sem emenda. */
+  background: conic-gradient(
+    from var(--nds-alert-gradient-angle),
+    oklch(from var(--alert-glow) calc(min(l, 0.84) + 0.16) c h)   0%,
+    oklch(from var(--alert-glow) calc(min(l, 0.84) + 0.08) c h)  25%,
+    oklch(from var(--alert-glow) calc(max(l, 0.16) - 0.08) c h)  50%,
+    oklch(from var(--alert-glow) calc(max(l, 0.16) - 0.16) c h)  75%,
+    oklch(from var(--alert-glow) calc(min(l, 0.84) + 0.16) c h) 100%
+  );
+  /* Recorta o miolo: pinta padding-box MENOS content-box, sobrando só o anel.
+     Sem isso o gradiente cobriria o alert inteiro. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+
+  pointer-events: none;
+  opacity: 0;                                   /* estado de repouso */
+  /* 2 voltas em 7,2s — o trecho de cruzeiro sai a ~3,1s por volta.
+     Duração derivada de token: sob prefers-reduced-motion as durações vão a 0ms
+     e o efeito se anula sozinho; a regra abaixo é a garantia explícita.
+     Delay de 3s é valor de produto — nenhuma duração da escala chega perto. */
+  animation:
+    nds-alert-gradient-giro    calc(var(--duration-stately) * 9) linear 3s forwards,
+    nds-alert-gradient-brilho  calc(var(--duration-stately) * 9) linear 3s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nds-alert::after {
+    animation: none;
+  }
+}

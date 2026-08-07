@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/AspectRatio/Variantes',
   component: AspectRatioStory,
   tags: ['layout'],
@@ -18,10 +18,10 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof AspectRatioStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const SixteenNine: Story = {
   args: {

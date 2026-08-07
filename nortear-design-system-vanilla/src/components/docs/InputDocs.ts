@@ -25,17 +25,24 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (inputTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(inputTranslations as Record<string, unknown>);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -308,8 +315,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair1.do'),
-              dontCaption: t('doDont.pair1.dont'),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'email',
                 labelText: 'Email',
@@ -324,8 +331,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair2.do'),
-              dontCaption: t('doDont.pair2.dont'),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'email',
                 labelText: 'Email',
@@ -340,8 +347,8 @@ export function createInputDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: t('doDont.pair3.do'),
-              dontCaption: t('doDont.pair3.dont'),
+              doCaption: toPlainText(t('doDont.pair3.do')),
+              dontCaption: toPlainText(t('doDont.pair3.dont')),
               doPreviewFactory: () => buildDemoInput({
                 type: 'text',
                 labelText: 'Nome completo',
@@ -594,15 +601,15 @@ export function createInputDocs(): HTMLElement {
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: [
-            { label: t('states.default.label'), trigger: stripHtml(t('states.default.trigger')), behavior: t('states.default.behavior') },
-            { label: t('states.focus.label'),   trigger: stripHtml(t('states.focus.trigger')),   behavior: t('states.focus.behavior') },
-            { label: t('states.disabled.label'),trigger: stripHtml(t('states.disabled.trigger')),behavior: t('states.disabled.behavior') },
-            { label: t('states.error.label'),   trigger: stripHtml(t('states.error.trigger')),   behavior: t('states.error.behavior') },
-            { label: t('states.file.label'),    trigger: stripHtml(t('states.file.trigger')),    behavior: t('states.file.behavior') },
+            { label: t('states.default.label'), trigger: toPlainText(t('states.default.trigger')), behavior: toPlainText(t('states.default.behavior'))},
+            { label: t('states.focus.label'),   trigger: toPlainText(t('states.focus.trigger')),   behavior: toPlainText(t('states.focus.behavior'))},
+            { label: t('states.disabled.label'),trigger: toPlainText(t('states.disabled.trigger')),behavior: toPlainText(t('states.disabled.behavior'))},
+            { label: t('states.error.label'),   trigger: toPlainText(t('states.error.trigger')),   behavior: toPlainText(t('states.error.behavior'))},
+            { label: t('states.file.label'),    trigger: toPlainText(t('states.file.trigger')),    behavior: toPlainText(t('states.file.behavior'))},
           ],
         });
 
@@ -633,7 +640,7 @@ export type InputOptions = {
               title: t('props.inputTitle'),
               cols: propsCols,
               items: [
-                { name: 'type',        type: 'string',  defaultValue: '"text"', required: 'Não', description: stripHtml(t('props.table.type_prop')) },
+                { name: 'type',        type: 'string',  defaultValue: '"text"', required: 'Não', description: toPlainText(t('props.table.type_prop')) },
                 { name: 'placeholder', type: 'string',  defaultValue: '—',     required: 'Não', description: t('props.table.placeholder') },
                 { name: 'disabled',    type: 'boolean', defaultValue: 'false', required: 'Não', description: t('props.table.disabled') },
                 { name: 'value',       type: 'string',  defaultValue: '—',     required: 'Não', description: 'Valor inicial do campo.' },
@@ -683,6 +690,8 @@ export type InputOptions = {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
@@ -705,11 +714,11 @@ export type InputOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Textarea',  description: t('related.textarea'),  path: '?path=/docs/ui-textarea--docs' },
-            { name: 'InputOTP',  description: t('related.inputOTP'),  path: '?path=/docs/ui-inputotp--docs' },
-            { name: 'Select',    description: t('related.select'),    path: '?path=/docs/ui-select--docs' },
-            { name: 'Form',      description: t('related.form'),      path: '?path=/docs/ui-form--docs' },
-            { name: 'Label',     description: t('related.label'),     path: '?path=/docs/ui-label--docs' },
+            { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/ui-textarea--docs' },
+            { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/ui-inputotp--docs' },
+            { name: 'Select',    description: toPlainText(t('related.select')),    path: '?path=/docs/ui-select--docs' },
+            { name: 'Form',      description: toPlainText(t('related.form')),      path: '?path=/docs/ui-form--docs' },
+            { name: 'Label',     description: toPlainText(t('related.label')),     path: '?path=/docs/ui-label--docs' },
           ],
         });
 
@@ -730,16 +739,16 @@ export type InputOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.fieldFocus'),    trigger: t('analytics.table.fieldFocusTrigger'),    payload: t('analytics.table.fieldFocusPayload') },
-            { event: t('analytics.table.fieldBlur'),     trigger: t('analytics.table.fieldBlurTrigger'),     payload: t('analytics.table.fieldBlurPayload') },
-            { event: t('analytics.table.fieldError'),    trigger: t('analytics.table.fieldErrorTrigger'),    payload: t('analytics.table.fieldErrorPayload') },
-            { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload') },
-            { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
-            { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload') },
+            { event: t('analytics.table.fieldFocus'),    trigger: toPlainText(t('analytics.table.fieldFocusTrigger')),    payload: t('analytics.table.fieldFocusPayload') },
+            { event: t('analytics.table.fieldBlur'),     trigger: toPlainText(t('analytics.table.fieldBlurTrigger')),     payload: t('analytics.table.fieldBlurPayload') },
+            { event: t('analytics.table.fieldError'),    trigger: toPlainText(t('analytics.table.fieldErrorTrigger')),    payload: t('analytics.table.fieldErrorPayload') },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload') },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload') },
           ],
         });
 

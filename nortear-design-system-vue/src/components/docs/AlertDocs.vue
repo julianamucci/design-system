@@ -26,17 +26,25 @@ import DocsRelated       from '@/components/docs/shared/sections/DocsRelated.vue
 import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
 const { t: tContent, locale } = useTranslation(alertTranslations);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+const screenReaderItems = computed(() =>
+  Object.values(
+    (alertTranslations as unknown as Record<
+      string,
+      { accessibility?: { screenReader?: Record<string, string> } }
+    >)[locale.value]?.accessibility?.screenReader ?? {},
+  ),
+);
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -111,8 +119,6 @@ const navGroups = computed(() => [
 
 const allSectionIds = computed(() => navGroups.value.flatMap(g => g.sections.map(s => s.id)));
 
-
-
 const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   track('docs_section_viewed', {
     section_id: id,
@@ -184,6 +190,7 @@ const codeDismissible = `<Alert dismissible dismiss-label="Fechar alerta" @dismi
 const interfaceCode = `// Alert
 interface AlertProps {
   variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  role?: 'alert' | 'status' | 'note';  // semântica de anúncio — padrão: 'alert'
   class?: string;
   dismissible?: boolean;   // exibe o botão de fechar
   dismissLabel?: string;   // rótulo acessível do botão — padrão: 'Fechar alerta'
@@ -257,11 +264,11 @@ const compositionItems = computed(() => [
 ]);
 
 const stateItems = computed(() => [
-  { label: tContent('states.complete.label'),      trigger: stripHtml(tContent('states.complete.trigger')),      behavior: tContent('states.complete.behavior')                     },
-  { label: tContent('states.withoutTitle.label'),  trigger: stripHtml(tContent('states.withoutTitle.trigger')),  behavior: tContent('states.withoutTitle.behavior')                 },
-  { label: tContent('states.withoutIcon.label'),   trigger: tContent('states.withoutIcon.trigger'),              behavior: tContent('states.withoutIcon.behavior')                  },
-  { label: tContent('states.dynamicInsert.label'), trigger: tContent('states.dynamicInsert.trigger'),            behavior: stripHtml(tContent('states.dynamicInsert.behavior'))    },
-  { label: tContent('states.dismissed.label'),     trigger: tContent('states.dismissed.trigger'),                behavior: tContent('states.dismissed.behavior')                    },
+  { label: tContent('states.complete.label'),      trigger: toPlainText(tContent('states.complete.trigger')),      behavior: toPlainText(tContent('states.complete.behavior'))},
+  { label: tContent('states.withoutTitle.label'),  trigger: toPlainText(tContent('states.withoutTitle.trigger')),  behavior: toPlainText(tContent('states.withoutTitle.behavior'))},
+  { label: tContent('states.withoutIcon.label'),   trigger: toPlainText(tContent('states.withoutIcon.trigger')),              behavior: toPlainText(tContent('states.withoutIcon.behavior'))},
+  { label: tContent('states.dynamicInsert.label'), trigger: toPlainText(tContent('states.dynamicInsert.trigger')),            behavior: toPlainText(tContent('states.dynamicInsert.behavior'))    },
+  { label: tContent('states.dismissed.label'),     trigger: toPlainText(tContent('states.dismissed.trigger')),                behavior: toPlainText(tContent('states.dismissed.behavior'))},
 ]);
 
 const propCols = computed(() => ({
@@ -271,11 +278,12 @@ const propCols = computed(() => ({
 }));
 
 const alertPropItems = computed(() => [
-  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: stripHtml(tContent('props.table.variant'))  },
-  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.table.className'))             },
-  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: stripHtml(tContent('props.table.dismissible'))  },
-  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: stripHtml(tContent('props.table.onDismiss'))    },
-  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: stripHtml(tContent('props.table.dismissLabel')) },
+  { name: 'variant', type: '"default" | "destructive" | "success" | "warning" | "info"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'role',    type: '"alert" | "status" | "note"', defaultValue: '"alert"', required: 'Não', description: toPlainText(tContent('props.table.role'))                  },
+  { name: 'class',   type: 'string',                    defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className'))             },
+  { name: 'dismissible',  type: 'boolean',           defaultValue: 'false',             required: 'Não', description: toPlainText(tContent('props.table.dismissible'))  },
+  { name: '@dismiss',     type: 'emit — () => void', defaultValue: '—',                 required: 'Não', description: toPlainText(tContent('props.table.onDismiss'))    },
+  { name: 'dismissLabel', type: 'string',            defaultValue: "'Fechar alerta'",   required: 'Não', description: toPlainText(tContent('props.table.dismissLabel')) },
 ]);
 
 const slotPropItems = computed(() => [
@@ -283,7 +291,7 @@ const slotPropItems = computed(() => [
 ]);
 
 const alertTitlePropItems = computed(() => [
-  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: stripHtml(tContent('props.table.titleAs')) },
+  { name: 'as', type: 'string', defaultValue: "'h5'", required: 'Não', description: toPlainText(tContent('props.table.titleAs')) },
   ...slotPropItems.value,
 ]);
 
@@ -313,10 +321,10 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'Sonner',      description: tContent('related.sonner'),      path: '?path=/docs/ui-sonner--docs'      },
-  { name: 'AlertDialog', description: tContent('related.alertDialog'), path: '?path=/docs/ui-alertdialog--docs' },
-  { name: 'Badge',       description: tContent('related.badge'),       path: '?path=/docs/ui-badge--docs'       },
-  { name: 'Progress',    description: tContent('related.progress'),    path: '?path=/docs/ui-progress--docs'    },
+  { name: 'Sonner',      description: toPlainText(tContent('related.sonner')),      path: '?path=/docs/ui-sonner--docs'      },
+  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: 'Badge',       description: toPlainText(tContent('related.badge')),       path: '?path=/docs/ui-badge--docs'       },
+  { name: 'Progress',    description: toPlainText(tContent('related.progress')),    path: '?path=/docs/ui-progress--docs'    },
 ]);
 
 const noteItems = computed(() => [
@@ -326,10 +334,10 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: tContent('analytics.table.dismiss'),       trigger: tContent('analytics.table.dismissTrigger'),       payload: tContent('analytics.table.dismissPayload')       },
-  { event: tContent('analytics.table.pageView'),      trigger: tContent('analytics.table.pageViewTrigger'),      payload: tContent('analytics.table.pageViewPayload')      },
-  { event: tContent('analytics.table.sectionViewed'), trigger: tContent('analytics.table.sectionViewedTrigger'), payload: tContent('analytics.table.sectionViewedPayload') },
-  { event: tContent('analytics.table.langSwitch'),    trigger: tContent('analytics.table.langSwitchTrigger'),    payload: tContent('analytics.table.langSwitchPayload')    },
+  { event: tContent('analytics.table.dismiss'),       trigger: toPlainText(tContent('analytics.table.dismissTrigger')),       payload: tContent('analytics.table.dismissPayload')       },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
 const a11yCritCols = computed(() => ({
@@ -345,6 +353,7 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
   { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -359,6 +368,7 @@ const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
   { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
   { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
+  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
 ]);
 </script>
 
@@ -474,8 +484,8 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair1.do'), dontCaption: tContent('doDont.pair1.dont') },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: tContent('doDont.pair2.do'), dontCaption: tContent('doDont.pair2.dont') },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -642,7 +652,7 @@ const visualTestItems = computed(() => [
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tContent('states.cols.state'), trigger: tContent('states.cols.trigger'), behavior: tContent('states.cols.behavior') }"
+      :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
@@ -670,6 +680,8 @@ const visualTestItems = computed(() => [
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
+      :screen-reader-title="tNav('common.screenReader')"
+      :screen-reader-items="screenReaderItems"
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
@@ -692,7 +704,7 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :cols="{ event: tContent('analytics.table.event'), trigger: tContent('analytics.table.trigger'), payload: tContent('analytics.table.payload') }"
+      :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 

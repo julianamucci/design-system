@@ -6,7 +6,7 @@ import ResizableStory from './ResizableStory.svelte';
 import ResizableDocs from '@/components/docs/ResizableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Resizable',
   component: PaneGroup,
   tags: ['autodocs', 'layout'],
@@ -30,10 +30,10 @@ const meta = {
   args: {
     direction: 'horizontal',
   },
-} satisfies Meta<typeof PaneGroup>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Playground: Story = {
   render: (args) => ({

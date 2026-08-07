@@ -110,7 +110,10 @@
 	     compilador ainda avisa a11y_no_noninteractive_tabindex porque a regra
 	     só aceita roles de widget — nem region nem group a dispensam. -->
 	<div class="nds-code-block-scroll" tabindex="0">
-		<pre class="nds-code-block-pre"><code class="nds-code-block-code">{#each lines as spans, i (i)}<span
+		<!-- lang="en": o conteúdo é código — identificador e palavra reservada.
+		     Sem isto, a voz do leitor de tela em pt-BR tenta pronunciá-lo como
+		     português. WCAG 3.1.2. -->
+		<pre class="nds-code-block-pre" lang="en"><code class="nds-code-block-code">{#each lines as spans, i (i)}<span
 			class="nds-code-block-line"
 			data-highlighted={highlighted.has(i + 1) ? "true" : undefined}
 		><span class="nds-code-block-gutter" aria-hidden="true">{i + 1}</span><span

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Select as SelectPrimitive } from "bits-ui";
+	import { getContext } from "svelte";
+	import { SELECT_LISTBOX_ID } from "./select-a11y.js";
 	import SelectPortal from "./select-portal.svelte";
 	import SelectScrollUpButton from "./select-scroll-up-button.svelte";
 	import SelectScrollDownButton from "./select-scroll-down-button.svelte";
@@ -18,14 +20,24 @@
 	}: WithoutChild<SelectPrimitive.ContentProps> & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SelectPortal>>;
 	} = $props();
+
+	// Id vindo da raiz por contexto — o trigger aponta para ele em aria-controls.
+	// Descobrir o painel pelo DOM não serve: ele é portalado e só existe aberto.
+	const contentId = getContext<string | undefined>(SELECT_LISTBOX_ID);
 </script>
 
 <SelectPortal {...portalProps}>
+	<!-- aria-label: o conteúdo do select é um listbox, e listbox sem nome
+	     acessível é violação de axe (aria-input-field-name). O React já nomeia
+	     a lista com "Opções"; aqui não havia nome nenhum. Consumidor que passar
+	     o seu continua vencendo, porque restProps vem depois. -->
 	<SelectPrimitive.Content
 		bind:ref
 		{sideOffset}
 		{preventScroll}
 		data-slot="select-content"
+		id={contentId}
+		aria-label="Opções"
 		class={cn(
 			"nds-select-content",
 			className

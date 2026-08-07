@@ -30,12 +30,9 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
+import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "");
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: "common.high",
@@ -83,12 +80,24 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
-
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export function AlertDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(alertTranslations);
+
+  // As chaves de `accessibility.screenReader` variam por componente, então só os
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  const screenReaderItems = useMemo(
+    () =>
+      Object.values(
+        (alertTranslations as unknown as Record<
+          string,
+          { accessibility?: { screenReader?: Record<string, string> } }
+        >)[locale]?.accessibility?.screenReader ?? {},
+      ),
+    [locale],
+  );
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -186,8 +195,10 @@ import { Info } from "lucide-react";`;
 </Alert>`;
 
   const interfaceCode = `// Alert
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
+interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "role">,
   VariantProps<typeof alertVariants> {
+  /** Semântica de anúncio da raiz. "note" não é live region. @default "alert" */
+  role?: "alert" | "status" | "note";
   /** Exibe o botão de fechar no canto superior direito. */
   dismissible?: boolean;
   /** Disparado uma única vez ao acionar o botão de fechar. */
@@ -378,8 +389,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <AlertDescription>Salvo!</AlertDescription>
                   </Alert>
                 ),
-                doCaption: tContent("doDont.pair1.do"),
-                dontCaption: tContent("doDont.pair1.dont"),
+                doCaption: toPlainText(tContent("doDont.pair1.do")),
+                dontCaption: toPlainText(tContent("doDont.pair1.dont")),
               },
               {
                 doLabel: tNav("common.do"),
@@ -397,8 +408,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     <AlertDescription>Verifique sua conexão.</AlertDescription>
                   </Alert>
                 ),
-                doCaption: tContent("doDont.pair2.do"),
-                dontCaption: tContent("doDont.pair2.dont"),
+                doCaption: toPlainText(tContent("doDont.pair2.do")),
+                dontCaption: toPlainText(tContent("doDont.pair2.dont")),
               },
             ]}
           />
@@ -563,34 +574,34 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
-              trigger: tContent("states.cols.trigger"),
-              behavior: tContent("states.cols.behavior"),
+              trigger: toPlainText(tContent("states.cols.trigger")),
+              behavior: toPlainText(tContent("states.cols.behavior")),
             }}
             items={[
               {
                 label: tContent("states.complete.label"),
-                trigger: stripHtml(tContent("states.complete.trigger")),
-                behavior: tContent("states.complete.behavior"),
+                trigger: toPlainText(tContent("states.complete.trigger")),
+                behavior: toPlainText(tContent("states.complete.behavior")),
               },
               {
                 label: tContent("states.withoutTitle.label"),
-                trigger: stripHtml(tContent("states.withoutTitle.trigger")),
-                behavior: tContent("states.withoutTitle.behavior"),
+                trigger: toPlainText(tContent("states.withoutTitle.trigger")),
+                behavior: toPlainText(tContent("states.withoutTitle.behavior")),
               },
               {
                 label: tContent("states.withoutIcon.label"),
-                trigger: tContent("states.withoutIcon.trigger"),
-                behavior: tContent("states.withoutIcon.behavior"),
+                trigger: toPlainText(tContent("states.withoutIcon.trigger")),
+                behavior: toPlainText(tContent("states.withoutIcon.behavior")),
               },
               {
                 label: tContent("states.dynamicInsert.label"),
-                trigger: tContent("states.dynamicInsert.trigger"),
-                behavior: stripHtml(tContent("states.dynamicInsert.behavior")),
+                trigger: toPlainText(tContent("states.dynamicInsert.trigger")),
+                behavior: toPlainText(tContent("states.dynamicInsert.behavior")),
               },
               {
                 label: tContent("states.dismissed.label"),
-                trigger: stripHtml(tContent("states.dismissed.trigger")),
-                behavior: tContent("states.dismissed.behavior"),
+                trigger: toPlainText(tContent("states.dismissed.trigger")),
+                behavior: toPlainText(tContent("states.dismissed.behavior")),
               },
             ]}
           />
@@ -614,14 +625,21 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: '"default" | "destructive" | "success" | "warning" | "info"',
                     defaultValue: '"default"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.variant")),
+                    description: toPlainText(tContent("props.table.variant")),
+                  },
+                  {
+                    name: "role",
+                    type: '"alert" | "status" | "note"',
+                    defaultValue: '"alert"',
+                    required: "Não",
+                    description: toPlainText(tContent("props.table.role")),
                   },
                   {
                     name: "className",
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -635,21 +653,21 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "boolean",
                     defaultValue: "false",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.dismissible")),
+                    description: toPlainText(tContent("props.table.dismissible")),
                   },
                   {
                     name: "onDismiss",
                     type: "() => void",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.onDismiss")),
+                    description: toPlainText(tContent("props.table.onDismiss")),
                   },
                   {
                     name: "dismissLabel",
                     type: "string",
                     defaultValue: '"Fechar alerta"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.dismissLabel")),
+                    description: toPlainText(tContent("props.table.dismissLabel")),
                   },
                 ],
               },
@@ -668,14 +686,14 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "React.ElementType",
                     defaultValue: '"h5"',
                     required: "Não",
-                    description: stripHtml(tContent("props.table.titleAs")),
+                    description: toPlainText(tContent("props.table.titleAs")),
                   },
                   {
                     name: "className",
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -701,7 +719,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
                     type: "string",
                     defaultValue: "—",
                     required: "Não",
-                    description: stripHtml(tContent("props.table.className")),
+                    description: toPlainText(tContent("props.table.className")),
                   },
                   {
                     name: "children",
@@ -745,6 +763,8 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Acessibilidade ────────────────────────────────────────── */}
           <DocsAccessibility
+            screenReaderTitle={tNav("common.screenReader")}
+            screenReaderItems={screenReaderItems}
             title={tContent("accessibility.title")}
             summary={tContent("accessibility.summary")}
             items={[
@@ -768,22 +788,22 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             items={[
               {
                 name: "Sonner",
-                description: tContent("related.sonner"),
+                description: toPlainText(tContent("related.sonner")),
                 path: "?path=/docs/ui-sonner--docs",
               },
               {
                 name: "AlertDialog",
-                description: tContent("related.alertDialog"),
+                description: toPlainText(tContent("related.alertDialog")),
                 path: "?path=/docs/ui-alertdialog--docs",
               },
               {
                 name: "Badge",
-                description: tContent("related.badge"),
+                description: toPlainText(tContent("related.badge")),
                 path: "?path=/docs/ui-badge--docs",
               },
               {
                 name: "Progress",
-                description: tContent("related.progress"),
+                description: toPlainText(tContent("related.progress")),
                 path: "?path=/docs/ui-progress--docs",
               },
             ]}
@@ -804,28 +824,28 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
             title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
-              trigger: tContent("analytics.table.trigger"),
+              trigger: toPlainText(tContent("analytics.table.trigger")),
               payload: tContent("analytics.table.payload"),
             }}
             items={[
               {
                 event: tContent("analytics.table.dismiss"),
-                trigger: tContent("analytics.table.dismissTrigger"),
+                trigger: toPlainText(tContent("analytics.table.dismissTrigger")),
                 payload: tContent("analytics.table.dismissPayload"),
               },
               {
                 event: tContent("analytics.table.pageView"),
-                trigger: tContent("analytics.table.pageViewTrigger"),
+                trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),
                 payload: tContent("analytics.table.pageViewPayload"),
               },
               {
                 event: tContent("analytics.table.sectionViewed"),
-                trigger: tContent("analytics.table.sectionViewedTrigger"),
+                trigger: toPlainText(tContent("analytics.table.sectionViewedTrigger")),
                 payload: tContent("analytics.table.sectionViewedPayload"),
               },
               {
                 event: tContent("analytics.table.langSwitch"),
-                trigger: tContent("analytics.table.langSwitchTrigger"),
+                trigger: toPlainText(tContent("analytics.table.langSwitchTrigger")),
                 payload: tContent("analytics.table.langSwitchPayload"),
               },
             ]}

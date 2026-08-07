@@ -25,10 +25,21 @@ import {
   createDocsTestes,
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
+
+// As chaves de `accessibility.screenReader` variam por componente, então só os
+// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+function screenReaderItems(): string[] {
+  const locale = getLocale();
+  return Object.values(
+    (chartTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
+      ?.accessibility?.screenReader ?? {},
+  );
+}
 const { t, subscribe } = createTranslation(chartTranslations as Record<string, unknown>);
 
 // ─── Shared data ──────────────────────────────────────────────────────────────
@@ -43,10 +54,6 @@ const chartData = [
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function stripHtml(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
-}
 
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
@@ -480,13 +487,13 @@ card.appendChild(content);`;
           title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
-            trigger: t('states.cols.trigger'),
-            behavior: t('states.cols.behavior'),
+            trigger: toPlainText(t('states.cols.trigger')),
+            behavior: toPlainText(t('states.cols.behavior')),
           },
           items: ['empty', 'loading', 'singleSeries', 'multiSeries', 'withEmptyState', 'multiSeriesWithLegend'].map((key) => ({
             label: t(`states.${key}.label`),
-            trigger: stripHtml(t(`states.${key}.trigger`)),
-            behavior: stripHtml(t(`states.${key}.behavior`)),
+            trigger: toPlainText(t(`states.${key}.trigger`)),
+            behavior: toPlainText(t(`states.${key}.behavior`)),
           })),
         });
 
@@ -530,35 +537,35 @@ export type ChartOptions = {
                   type: 'ChartDataPoint[]',
                   defaultValue: '—',
                   required: 'Sim',
-                  description: stripHtml(t('props.table.children')),
+                  description: toPlainText(t('props.table.children')),
                 },
                 {
                   name: 'type',
                   type: "'bar' | 'line'",
                   defaultValue: "'bar'",
                   required: 'Não',
-                  description: stripHtml(t('props.table.config')),
+                  description: toPlainText(t('props.table.config')),
                 },
                 {
                   name: 'height',
                   type: 'number',
                   defaultValue: '200',
                   required: 'Não',
-                  description: stripHtml(t('props.table.initialDimension')),
+                  description: toPlainText(t('props.table.initialDimension')),
                 },
                 {
                   name: 'colors',
                   type: 'string[]',
                   defaultValue: 'design system colors',
                   required: 'Não',
-                  description: stripHtml(t('props.table.colors')),
+                  description: toPlainText(t('props.table.colors')),
                 },
                 {
                   name: 'class',
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: stripHtml(t('props.table.className')),
+                  description: toPlainText(t('props.table.className')),
                 },
               ],
             },
@@ -619,6 +626,8 @@ export type ChartOptions = {
 
       case 'acessibilidade':
         return createDocsAccessibility({
+          screenReaderTitle: tNav('common.screenReader'),
+          screenReaderItems: screenReaderItems(),
           title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5, 6].map((i) => t(`accessibility.item${i}`)),
@@ -634,9 +643,9 @@ export type ChartOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Table', description: t('related.table'), path: '?path=/docs/ui-table--docs' },
-            { name: 'Card', description: t('related.card'), path: '?path=/docs/ui-card--docs' },
-            { name: 'DataTable', description: t('related.dataTable'), path: '?path=/docs/ui-datatable--docs' },
+            { name: 'Table', description: toPlainText(t('related.table')), path: '?path=/docs/ui-table--docs' },
+            { name: 'Card', description: toPlainText(t('related.card')), path: '?path=/docs/ui-card--docs' },
+            { name: 'DataTable', description: toPlainText(t('related.dataTable')), path: '?path=/docs/ui-datatable--docs' },
           ],
         });
 
@@ -657,23 +666,23 @@ export type ChartOptions = {
           title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
-            trigger: t('analytics.table.trigger'),
+            trigger: toPlainText(t('analytics.table.trigger')),
             payload: t('analytics.table.payload'),
           },
           items: [
             {
               event: t('analytics.table.pageView'),
-              trigger: t('analytics.table.pageViewTrigger'),
+              trigger: toPlainText(t('analytics.table.pageViewTrigger')),
               payload: t('analytics.table.pageViewPayload'),
             },
             {
               event: t('analytics.table.sectionViewed'),
-              trigger: t('analytics.table.sectionViewedTrigger'),
+              trigger: toPlainText(t('analytics.table.sectionViewedTrigger')),
               payload: t('analytics.table.sectionViewedPayload'),
             },
             {
               event: t('analytics.table.langSwitch'),
-              trigger: t('analytics.table.langSwitchTrigger'),
+              trigger: toPlainText(t('analytics.table.langSwitchTrigger')),
               payload: t('analytics.table.langSwitchPayload'),
             },
           ],
@@ -690,8 +699,8 @@ export type ChartOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
-              action: stripHtml(t(`testes.functional.item${i}.action`)),
-              result: stripHtml(t(`testes.functional.item${i}.result`)),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
@@ -703,9 +712,9 @@ export type ChartOptions = {
               how: tNav('common.howToVerify'),
             },
             items: [1, 2, 3, 4].map((i) => ({
-              criterion: stripHtml(t(`testes.accessibility.item${i}.criterion`)),
+              criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: stripHtml(t(`testes.accessibility.item${i}.how`)),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
@@ -715,7 +724,7 @@ export type ChartOptions = {
               priority: tNav('common.priority'),
             },
             items: [1, 2, 3, 4].map((i) => ({
-              story: stripHtml(t(`testes.visual.item${i}.story`)),
+              story: toPlainText(t(`testes.visual.item${i}.story`)),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),
           },

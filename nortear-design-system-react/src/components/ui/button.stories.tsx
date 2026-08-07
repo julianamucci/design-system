@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Button } from "./button";
@@ -9,6 +10,7 @@ const meta = {
   component: Button,
   tags: ["autodocs", "form"],
   parameters: {
+    design: figmaDesign("button"),
     docs: { page: withAutoDocsTab(ButtonDocs) },
   },
   argTypes: {
@@ -19,12 +21,40 @@ const meta = {
     },
     size: {
       control: "select",
-      options: ["default", "sm", "lg", "icon", "icon-sm", "icon-lg"],
+      options: ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
       description: "Tamanho do botão",
     },
     disabled: {
       control: "boolean",
       description: "Desabilita interação com o botão",
+    },
+    // Estavam em `args` sem argType: ficavam fora da aba API Reference.
+    children: {
+      control: "text",
+      description: "Conteúdo do botão — texto, ícone ou ambos.",
+      table: { type: { summary: "ReactNode" } },
+    },
+    // A aba "API Reference" documenta a API real; o Playground não encaminha
+    // estas três, então control ativo aqui seria controle morto.
+    render: {
+      control: false,
+      description: "Elemento que substitui o <button> mantendo os estilos — ex.: <a href=\"…\" />.",
+      table: { type: { summary: "ReactElement" } },
+    },
+    type: {
+      control: false,
+      description: "Tipo HTML do botão. Use \"submit\" dentro de forms.",
+      table: { type: { summary: '"button" | "submit" | "reset"' }, defaultValue: { summary: '"button"' } },
+    },
+    className: {
+      control: false,
+      description: "Classes adicionais, mescladas com as da variante.",
+      table: { type: { summary: "string" } },
+    },
+    onClick: {
+      control: false,
+      description: "Callback disparado ao clique. Não dispara quando desabilitado.",
+      table: { type: { summary: "(e: MouseEvent) => void" } },
     },
   },
   args: {
@@ -40,6 +70,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1",
+      "functional.item3",
+      "functional.item4",
+      "accessibility.item1",
+      "accessibility.item2",
+      "accessibility.item5",
+      "visual.item1",
+    ],
+  },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole("button");
@@ -54,8 +95,13 @@ export const Playground: Story = {
       await expect(args.onClick).toHaveBeenCalledTimes(1);
     });
 
-    await step("Focus via teclado", async () => {
-      button.focus();
+    await step("Tab leva o foco ao botão", async () => {
+      // userEvent.tab() e não button.focus(): o documentado é "recebe foco na
+      // ordem natural do DOM". Forçar o foco passaria até com tabindex="-1".
+      // O clique do passo anterior deixou o foco no botão; sem zerar, o Tab
+      // sairia dele e a asserção mediria o contrário do que promete.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(button).toHaveFocus();
     });
 
