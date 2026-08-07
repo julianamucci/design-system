@@ -956,6 +956,61 @@ function auditCssTokenUsage() {
   return violations;
 }
 
+// ─── SEO/a11y: idioma do documento (slug-independente) ──────────────────────
+//
+// Regra POSITIVA de instrumentação, no mesmo espírito das de analytics: grep não
+// encontra o que nunca foi escrito. `useSeoEffect` resolve o alvo das metatags
+// como `isIframe ? window.parent.document : document` — correto para title, OG e
+// JSON-LD, que pertencem à página hospedeira, e errado para `lang`, que pertence
+// ao documento que o leitor de tela lê. Dentro do Storybook esse documento é o
+// `iframe.html`, servido como <html lang="en">, e nada o atualiza: a prosa em
+// português sai com pronúncia inglesa. WCAG 3.1.1, nível A.
+//
+// A regra passa quando existe pelo menos UMA escrita de `documentElement.lang`
+// fora do alvo do iframe — normalmente `document.documentElement.lang`, ao lado
+// da do pai.
+function auditDocumentLang() {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const file = join(ROOT, stackDir(stack), 'src', 'lib', 'use-seo.ts');
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    const linhas = content.split('\n');
+
+    const escritas = linhas
+      .map((l, i) => ({ l, i }))
+      .filter(({ l }) => /\.documentElement\.lang\s*=/.test(l));
+
+    if (escritas.length === 0) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: rel, line: 1, rule: 'document_lang_ausente',
+        message: 'useSeoEffect não escreve documentElement.lang — sem idioma, o leitor de tela pronuncia o conteúdo pelas regras do idioma do documento hospedeiro (WCAG 3.1.1, nível A)',
+      });
+      continue;
+    }
+
+    // O identificador que recebe o documento do iframe: `const targetDoc = isIframe ? window.parent.document : document`
+    const alvo = content.match(/const\s+(\w+)\s*=\s*[^;\n]*window\.parent\.document[^;\n]*/);
+    if (!alvo) continue; // sem resolução condicional, a escrita é no próprio documento
+
+    const soNoPai = escritas.every(({ l }) =>
+      new RegExp(`\\b${alvo[1]}\\.documentElement\\.lang\\s*=`).test(l),
+    );
+    if (soNoPai) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: rel, line: escritas[0].i + 1, rule: 'document_lang_so_no_pai',
+        message: `documentElement.lang só é escrito em ${alvo[1]} (o manager do Storybook). O leitor de tela lê o iframe, que continua no idioma do template — escreva nos dois documentos (WCAG 3.1.1, nível A)`,
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -1924,7 +1979,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditDocumentLang()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

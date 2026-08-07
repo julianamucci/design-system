@@ -61,6 +61,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `document_lang_so_no_pai` · `document_lang_ausente` | `useSeoEffect` escreve `documentElement.lang` só no documento pai (ou não escreve). Sai sob `_infra`: é regra de presença, e o alvo é o hook, não a página. O leitor de tela lê o iframe — sem isso, o idioma anunciado é o do template do Storybook |
 | `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
 | `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |
@@ -365,6 +366,14 @@ Inspecione cada stack em **uma única passagem** por arquivo (não releia).
 - Clicar num item do `DocsNav` move o foco para a seção, não só rola.
 - Snippet renderizado como HTML não pode virar controle real: procure
   `<select>`/`<textarea>`/`<input>` vindos de string de código ou de prosa.
+- **Idioma do documento QUE O LEITOR LÊ.** Dentro do Storybook é o `iframe.html`,
+  não o manager. `useSeoEffect` escreve metatag no documento pai — correto para
+  SEO, insuficiente para `lang`: o iframe fica no `lang="en"` do template e a
+  prosa em português sai com pronúncia inglesa (WCAG 3.1.1, **nível A**).
+  A regra `document_lang_so_no_pai` cobre o mecanismo; aqui julgue o resto —
+  trecho em outro idioma marcado com `lang` (3.1.2, AA) onde a voz erra de fato,
+  e **não** em empréstimo já absorvido (`menu`, `link`, `card`), que só deixa a
+  fala picotada. Ver `01-acessibilidade.md` §"Idioma do documento".
 
 **3f. Tokenização** (do Grep do Passo 1): zero `h-5` a `h-12` / `size-5` a `size-10` em UI primitives. Exceções: `[&_svg]:size-4`, `min-h-16`, `px/gap/py-*`. Ver `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
