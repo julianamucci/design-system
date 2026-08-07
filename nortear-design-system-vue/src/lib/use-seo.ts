@@ -58,10 +58,16 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
     const fullTitle = `${title} · Design System`;
 
     const prevTitle = targetDoc.title;
-    const prevLang = targetDoc.documentElement.lang;
+    // ── Idioma: nos DOIS documentos ───────────────────────────────────────
+    // Metatag descreve a página hospedeira e fica no pai. O lang descreve o
+    // documento em que o texto está, e quem o lê é o leitor de tela — dentro
+    // do Storybook, o iframe, que o template serve como lang="en". Escrever só
+    // no pai deixava a prosa em português com pronúncia inglesa (WCAG 3.1.1).
+    const langDocs = isIframe ? [targetDoc, document] : [document];
+    const prevLangs = langDocs.map((doc) => doc.documentElement.lang);
 
     targetDoc.title = fullTitle;
-    targetDoc.documentElement.lang = locale;
+    langDocs.forEach((doc) => { doc.documentElement.lang = locale; });
 
     // Meta tags
     const metas: Array<{ name?: string; property?: string; content: string }> = [
@@ -165,7 +171,7 @@ export function useSeoEffect(propsOrRef: SeoProps | ComputedRef<SeoProps> | Ref<
 
     onCleanup(() => {
       targetDoc.title = prevTitle;
-      targetDoc.documentElement.lang = prevLang;
+      langDocs.forEach((doc, i) => { doc.documentElement.lang = prevLangs[i]; });
       managed.forEach(({ el, prev, isNew }) => {
         if (isNew) el.remove(); else if (prev !== null) el.setAttribute('content', prev);
       });

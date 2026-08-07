@@ -88,6 +88,14 @@ type Story = StoryObj<typeof meta>;
 // relaxado para cobrir todas sem perder a prova de mount (crash = 0 sections).
 const mounted: Story['play'] = async ({ canvasElement }) => {
   await expect(canvasElement.querySelector('section')).not.toBeNull();
+
+  // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
+  // preview, servido como <html lang="en"> pelo template do Storybook: se o
+  // useSeoEffect voltar a escrever o lang só no documento pai, a prosa em
+  // português volta a ser anunciada em inglês e ninguém percebe. WCAG 3.1.1.
+  // 'pt-BR' e não a lista de locales: 'en' é justamente o valor que o template
+  // do Storybook deixa no iframe, e uma asserção que o aceita passa com o bug.
+  await waitFor(() => expect(document.documentElement.lang).toBe('pt-BR'));
 };
 
 // Página que anima a entrada (opacity 0 → 1 via style inline, rAF) precisa

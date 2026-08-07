@@ -77,10 +77,16 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
 
   const fullTitle = `${title} · Design System`;
   const prevTitle = targetDoc.title;
-  const prevLang = targetDoc.documentElement.lang;
+  // ── Idioma: nos DOIS documentos ───────────────────────────────────────
+  // Metatag descreve a página hospedeira e fica no pai. O lang descreve o
+  // documento em que o texto está, e quem o lê é o leitor de tela — dentro
+  // do Storybook, o iframe, que o template serve como lang="en". Escrever só
+  // no pai deixava a prosa em português com pronúncia inglesa (WCAG 3.1.1).
+  const langDocs = isIframe ? [targetDoc, document] : [document];
+  const prevLangs = langDocs.map((doc) => doc.documentElement.lang);
 
   targetDoc.title = fullTitle;
-  targetDoc.documentElement.lang = locale;
+  langDocs.forEach((doc) => { doc.documentElement.lang = locale; });
 
   const managedMeta = [
     upsertMeta(targetDoc, { name: 'description' }, description),
@@ -180,7 +186,7 @@ export function applySeo({ title, description, locale, componentSlug, breadcrumb
 
   return () => {
     targetDoc.title = prevTitle;
-    targetDoc.documentElement.lang = prevLang;
+    langDocs.forEach((doc, i) => { doc.documentElement.lang = prevLangs[i]; });
     managedMeta.forEach(({ el, prevContent, isNew }) => {
       if (isNew) el.remove();
       else if (prevContent !== null) el.setAttribute('content', prevContent);

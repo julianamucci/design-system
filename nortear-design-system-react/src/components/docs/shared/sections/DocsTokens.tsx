@@ -44,8 +44,9 @@ export function DocsTokens({ title, cols, items, customizationTitle, customizati
               <TableBody>
                 {items.map((item, i) => (
                   <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
-                    <TableCell className="nds-p-2 nds-font-mono nds-text-primary">{item.token}</TableCell>
-                    <TableCell className="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.value}</TableCell>
+                    {/* lang="en": token e seletor são identificadores CSS. WCAG 3.1.2. */}
+                    <TableCell lang="en" className="nds-p-2 nds-font-mono nds-text-primary">{item.token}</TableCell>
+                    <TableCell lang="en" className="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.value}</TableCell>
                     <TableCell className="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>
                   </TableRow>
                 ))}

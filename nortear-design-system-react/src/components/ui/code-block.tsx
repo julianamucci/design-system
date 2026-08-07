@@ -106,7 +106,10 @@ function CodeBlock({
       </span>
 
       <div className="nds-code-block-scroll" tabIndex={0}>
-        <pre className="nds-code-block-pre">
+        {/* lang="en": o conteúdo é código — identificador e palavra reservada.
+            Sem isto, a voz do leitor de tela em pt-BR tenta pronunciá-lo como
+            português. WCAG 3.1.2. */}
+        <pre className="nds-code-block-pre" lang="en">
           <code className="nds-code-block-code">
             {lines.map((spans, i) => (
               <span

@@ -49,8 +49,10 @@
               <TableBody>
                 {#each def.items as item, i (i)}
                   <TableRow class="nds-border-b nds-hover-bg-muted-faint">
-                    <TableCell class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
-                    <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
+                    <!-- lang="en": nome de prop e tipo são identificadores, não
+                         português — a célula monoespaçada é o sinal. WCAG 3.1.2. -->
+                    <TableCell lang="en" class="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
+                    <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
                     <TableCell class="nds-p-2 nds-text-muted-foreground">{item.defaultValue}</TableCell>
                     <TableCell class="nds-p-2 nds-text-muted-foreground">{item.required}</TableCell>
                     <TableCell class="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>

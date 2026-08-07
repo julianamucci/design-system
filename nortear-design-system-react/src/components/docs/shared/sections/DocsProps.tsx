@@ -56,8 +56,10 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
             <TableBody>
               {def.items.map((item, i) => (
                 <TableRow key={i} className="nds-border-b nds-hover-bg-muted-faint">
-                  <TableCell className="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
-                  <TableCell className="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
+                  {/* lang="en": nome de prop e tipo são identificadores, não
+                      português — a célula monoespaçada é o sinal. WCAG 3.1.2. */}
+                  <TableCell lang="en" className="nds-p-2 nds-font-mono nds-font-bold nds-text-primary">{item.name}</TableCell>
+                  <TableCell lang="en" className="nds-p-2 nds-font-mono nds-text-muted-foreground">{item.type}</TableCell>
                   <TableCell className="nds-p-2 nds-text-muted-foreground">{item.defaultValue}</TableCell>
                   <TableCell className="nds-p-2 nds-text-muted-foreground">{item.required}</TableCell>
                   <TableCell className="nds-p-2 nds-text-muted-foreground">{item.description}</TableCell>

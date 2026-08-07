@@ -474,6 +474,17 @@ Marque por **estrutura** antes de marcar por palavra: bloco de código, coluna d
 nome de prop, nome de token — lugares onde o conteúdo é inglês por construção.
 Cobre mais com menos edição e não toca conteúdo.
 
+Já aplicado nas 4 stacks, não repetir por página:
+
+| Onde | O quê |
+|---|---|
+| `CodeBlock` → `<pre lang="en">` | todo snippet do design system, docs e consumidor |
+| `DocsProps` | células monoespaçadas de nome de prop e tipo |
+| `DocsTokens` | células monoespaçadas de token e seletor |
+
+A célula monoespaçada é o sinal: `nds-font-mono` na tabela quer dizer
+identificador, não prosa.
+
 Na prosa, marque só o termo que a voz em português realmente erra
 (`tooltip`, `hover`, `placeholder`, `skeleton`, `breadcrumb`). Empréstimo já
 absorvido — `menu`, `link`, `card`, `mobile`, `design` — **não** se marca:

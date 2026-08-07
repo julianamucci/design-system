@@ -50,10 +50,11 @@ withDefaults(defineProps<{
               :key="i"
               class="nds-border-b nds-hover-bg-muted-faint"
             >
-              <TableCell class="nds-p-2 nds-font-mono nds-text-primary">
+              <!-- lang="en": token e seletor são identificadores CSS. WCAG 3.1.2. -->
+              <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-primary">
                 {{ item.token }}
               </TableCell>
-              <TableCell class="nds-p-2 nds-font-mono nds-text-muted-foreground">
+              <TableCell lang="en" class="nds-p-2 nds-font-mono nds-text-muted-foreground">
                 {{ item.value }}
               </TableCell>
               <TableCell class="nds-p-2 nds-text-muted-foreground">

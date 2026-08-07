@@ -44,8 +44,9 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
   const tbody = createTableBody();
   props.items.forEach(item => {
     const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
-    row.appendChild(createTableCell(item.token, 'nds-p-2 nds-font-mono nds-text-primary'));
-    row.appendChild(createTableCell(item.value, 'nds-p-2 nds-font-mono nds-text-muted-foreground'));
+    // 'en': token e seletor são identificadores CSS.
+    row.appendChild(createTableCell(item.token, 'nds-p-2 nds-font-mono nds-text-primary', 'en'));
+    row.appendChild(createTableCell(item.value, 'nds-p-2 nds-font-mono nds-text-muted-foreground', 'en'));
     row.appendChild(createTableCell(item.description, 'nds-p-2 nds-text-muted-foreground'));
     tbody.appendChild(row);
   });

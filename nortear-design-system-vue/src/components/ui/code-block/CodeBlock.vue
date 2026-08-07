@@ -111,7 +111,10 @@ async function handleCopy() {
       class="nds-code-block-scroll"
       tabindex="0"
     >
-      <pre class="nds-code-block-pre"><code class="nds-code-block-code"><span
+      <!-- lang="en": o conteúdo é código — identificador e palavra reservada.
+           Sem isto, a voz do leitor de tela em pt-BR tenta pronunciá-lo como
+           português. WCAG 3.1.2. -->
+      <pre class="nds-code-block-pre" lang="en"><code class="nds-code-block-code"><span
         v-for="(spans, i) in lines"
         :key="i"
         class="nds-code-block-line"

@@ -969,6 +969,11 @@ function auditCssTokenUsage() {
 // A regra passa quando existe pelo menos UMA escrita de `documentElement.lang`
 // fora do alvo do iframe — normalmente `document.documentElement.lang`, ao lado
 // da do pai.
+//
+// Isto é reconhecimento de padrão, e padrão se burla: `[targetDoc]` numa lista
+// passaria. A prova de comportamento é a asserção na suíte de fumaça, que roda
+// DENTRO do iframe e compara o valor real. Por isso a segunda metade da regra
+// cobra que essa asserção exista — apagar o teste vira violação.
 function auditDocumentLang() {
   const violations = [];
 
@@ -1004,6 +1009,22 @@ function auditDocumentLang() {
         category: 'quality', severity: 'high', slug: '_infra', stack,
         file: rel, line: escritas[0].i + 1, rule: 'document_lang_so_no_pai',
         message: `documentElement.lang só é escrito em ${alvo[1]} (o manager do Storybook). O leitor de tela lê o iframe, que continua no idioma do template — escreva nos dois documentos (WCAG 3.1.1, nível A)`,
+      });
+    }
+  }
+
+  // A prova de comportamento: a fumaça monta toda docs page dentro do iframe,
+  // então é lá que o valor real do idioma pode ser conferido.
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    const smoke = walkDir(dir, ['.ts', '.tsx']).find((f) => /docs-smoke\.stories\./.test(f.replace(/\\/g, '/')));
+    if (!smoke) continue;
+    const content = readFile(smoke);
+    if (content && !/documentElement\.lang/.test(content)) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, smoke), line: 1, rule: 'document_lang_sem_prova',
+        message: 'a suíte de fumaça não confere documentElement.lang — sem essa asserção, o idioma do iframe volta a quebrar sem teste vermelho (WCAG 3.1.1, nível A)',
       });
     }
   }
