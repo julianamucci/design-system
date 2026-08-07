@@ -136,7 +136,11 @@ export const Confirmed: Story = {
     onConfirmSpy.mockClear();
 
     await step('Trigger abre o diálogo', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i }));
+      // Só clica se ainda não houver diálogo: no replay do painel a rodada
+      // anterior pode ter deixado um aberto, e o clique cego o fecharia.
+      if (!document.querySelector('[role="alertdialog"]')) {
+        await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i }));
+      }
       const dialog = await body.findByRole('alertdialog');
       // Entrada animada: espera a opacidade chegar em 1 antes de afirmar visível.
       await waitFor(() => expect(dialog).toBeVisible());

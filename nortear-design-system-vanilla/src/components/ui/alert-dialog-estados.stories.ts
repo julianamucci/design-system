@@ -84,6 +84,23 @@ function buildDemo(opts: DemoOptions): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
+/**
+ * Garante o diálogo aberto sem depender do estado de montagem.
+ *
+ * `defaultOpen` só vale na primeira montagem, e o painel Interactions
+ * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
+ * pelos passos anteriores e o passo de abertura media o vazio.
+ */
+async function garantirAberto(canvas: ReturnType<typeof within>, rotuloTrigger: RegExp) {
+  // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
+  // portal da story anterior por alguns quadros, e queryByRole estoura em
+  // "multiple elements" antes de a limpeza acontecer.
+  if (!document.querySelector('[role="alertdialog"]')) {
+    await userEvent.click(canvas.getByRole('button', { name: rotuloTrigger }));
+  }
+  return waitForPortal('alertdialog');
+}
+
 export const Closed: Story = {
   parameters: {
     docs: {
@@ -177,7 +194,7 @@ export const Confirmed: Story = {
 
     await step('Clique em Excluir dispara a ação e fecha o diálogo', async () => {
       // Trigger e action têm rótulo "Excluir" — desambigua via scope do dialog.
-      const dialog = await waitForPortal('alertdialog');
+      const dialog = await garantirAberto(canvas, /^Excluir$/i);
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
       await expect(onConfirmSpy).toHaveBeenCalledTimes(1);
@@ -231,6 +248,7 @@ export const Cancelled: Story = {
     onConfirmSpy.mockClear();
 
     await step('Clique em Cancelar fecha sem executar a ação', async () => {
+      await garantirAberto(canvas, /^Excluir$/i);
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
       await expect(onCancelSpy).toHaveBeenCalledTimes(1);

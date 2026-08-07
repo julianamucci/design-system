@@ -36,6 +36,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Garante o diálogo aberto sem depender do estado de montagem.
+ *
+ * `defaultOpen` só vale na primeira montagem, e o painel Interactions
+ * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
+ * pelos passos anteriores e o passo de abertura media o vazio.
+ */
+async function garantirAberto(canvas: ReturnType<typeof within>) {
+  const body = within(document.body);
+  // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
+  // portal da story anterior por alguns quadros, e queryByRole estoura em
+  // "multiple elements" antes de a limpeza acontecer.
+  if (!document.querySelector('[role="alertdialog"]')) {
+    await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i, hidden: true }));
+  }
+  return body.findByRole('alertdialog');
+}
+
 const sharedComponents = {
   AlertDialog,
   AlertDialogAction,
@@ -241,7 +259,7 @@ export const Confirmed: Story = {
     const trigger = canvas.getByRole('button', { name: /Excluir item/i, hidden: true });
 
     await step('Diálogo começa aberto', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await garantirAberto(canvas);
       // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
       // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
       await waitFor(() => expect(dialog).toBeVisible());
@@ -296,11 +314,12 @@ export const Cancelled: Story = {
       </AlertDialog>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
 
     await step('Diálogo começa aberto', async () => {
-      const dialog = await body.findByRole('alertdialog');
+      const dialog = await garantirAberto(canvas);
       // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
       // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
       await waitFor(() => expect(dialog).toBeVisible());

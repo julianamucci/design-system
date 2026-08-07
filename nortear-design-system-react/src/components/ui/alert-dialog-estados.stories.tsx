@@ -37,6 +37,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Garante o diálogo aberto sem depender do estado de montagem.
+ *
+ * `defaultOpen` só vale na primeira montagem, e o painel Interactions
+ * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
+ * pelos passos anteriores e o passo de abertura media o vazio.
+ */
+async function garantirAberto(canvas: ReturnType<typeof within>) {
+    // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
+  // portal da story anterior por alguns quadros, e queryByRole estoura em
+  // "multiple elements" antes de a limpeza acontecer.
+  if (!document.querySelector('[role="alertdialog"]')) {
+    await userEvent.click(canvas.getByRole("button", { name: /^Excluir$/i }));
+  }
+  return waitForPortal("alertdialog");
+}
+
 /** Espera o portal do alert dialog sumir (ou ficar com data-state=closed). */
 async function waitForClosed(timeout = 1000) {
   await waitFor(
@@ -197,7 +214,7 @@ export const Confirmed: Story = {
     const canvas = within(canvasElement);
 
     await step("Diálogo está aberto", async () => {
-      const dialog = await waitForPortal("alertdialog");
+      const dialog = await garantirAberto(canvas);
       await expect(dialog).toBeVisible();
     });
 
@@ -286,6 +303,7 @@ export const Cancelled: Story = {
     const canvas = within(canvasElement);
 
     await step("Cancel é clicado, dispara o callback e o diálogo fecha", async () => {
+      await garantirAberto(canvas);
       const cancel = await waitForPortal("button", { name: /Cancelar/i });
       await userEvent.click(cancel);
       await waitFor(() => expect(onCancel).toHaveBeenCalledTimes(1), {
