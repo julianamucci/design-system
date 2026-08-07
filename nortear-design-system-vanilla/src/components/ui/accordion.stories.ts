@@ -90,7 +90,7 @@ export const Playground: Story = {
   // a ser a chamada real, montada a partir dos args.
   parameters: {
     covers: [
-      'functional.item1', 'functional.item3', 'functional.item6',
+      'functional.item1', 'functional.item3',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
       'visual.item1',
     ],
@@ -153,16 +153,22 @@ document.querySelector('#app')?.append(accordion);`;
       await expect(root).toHaveAttribute('data-collapsible', String(args.collapsible));
     });
 
-    await step('Item 1 começa aberto (defaultValue)', async () => {
-      await waitFor(() => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'));
+    // O painel Interactions reexecuta a play no MESMO DOM: o estado inicial da
+    // segunda rodada é o que a primeira deixou. Por isso o passo leva ao estado
+    // que quer provar em vez de assumir o de montagem — e o defaultValue, que só
+    // vale na montagem, é provado pela story DefaultOpen, com DOM limpo.
+    await step('Modo único mantém um item aberto por vez', async () => {
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no trigger fechado abre o item, e o modo single fecha o anterior', async () => {
-      await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      // fecha antes de abrir: garante que o clique aconteça de verdade nesta
+      // rodada — é ele que popula a aba Actions.
+      await fechar(triggers[1]);
+      await abrir(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
-      // A aba Actions só se popula se o callback chegar à factory.
       await expect(args.onValueChange).toHaveBeenCalled();
     });
 
@@ -184,18 +190,17 @@ document.querySelector('#app')?.append(accordion);`;
     });
 
     await step('Enter expande um item fechado', async () => {
-      // triggers[2] está fechado (single-mode fechou ao abrir triggers[1]).
-      // Focamos e pressionamos Enter — deve abrir (não clicar+Enter, que toggla duas vezes).
+      await fechar(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard('{Enter}');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
     await step('Space colapsa um item aberto (collapsible=true)', async () => {
-      // triggers[2] está aberto do step anterior — Space toggla para fechado.
+      await abrir(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
     });
 
     await step('Reabrir antes do timer não deixa o painel ser escondido depois', async () => {
@@ -204,8 +209,7 @@ document.querySelector('#app')?.append(accordion);`;
       // clearTimeout do updateItemState, o painel reaberto seria escondido
       // meio segundo depois. Só se vê esperando o timer passar.
       const painel = canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]')[2];
-      await userEvent.click(triggers[2]);
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      await abrir(triggers[2]);
       await new Promise((r) => setTimeout(r, 500));
       await expect(painel).not.toHaveAttribute('hidden');
       await expect(painel).toHaveAttribute('data-state', 'open');

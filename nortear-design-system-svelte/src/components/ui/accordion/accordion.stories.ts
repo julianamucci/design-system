@@ -88,7 +88,7 @@ export const Playground: Story = {
   // controls (trocar type para multiple não mudaria nada na caixa de código).
   parameters: {
     covers: [
-      'functional.item1', 'functional.item3', 'functional.item6',
+      'functional.item1', 'functional.item3',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
       'visual.item1',
     ],
@@ -159,20 +159,24 @@ export const Playground: Story = {
       await expect(root).toHaveAttribute('data-type', args.type);
     });
 
-    await step('Item 1 começa aberto', async () => {
+    // O painel Interactions reexecuta a play no MESMO DOM: o estado inicial da
+    // segunda rodada é o que a primeira deixou. Por isso o passo leva ao estado
+    // que quer provar em vez de assumir o de montagem — e o defaultValue, que só
+    // vale na montagem, é provado pela story DefaultOpen, com DOM limpo.
+    await step('Modo único mantém um item aberto por vez', async () => {
       const triggers = canvas.getAllByRole('button');
-      await waitFor(
-        () => expect(triggers[0]).toHaveAttribute('aria-expanded', 'true'),
-        { timeout: 500 }
-      );
+      await abrir(triggers[0]);
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Clicar no trigger fechado abre o item', async () => {
       const triggers = canvas.getAllByRole('button');
-      await userEvent.click(triggers[1]);
-      await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
-      // A aba Actions só se popula se o callback chegar ao componente.
+      // fecha antes de abrir: garante que o clique aconteça de verdade nesta
+      // rodada — é ele que popula a aba Actions.
+      await fechar(triggers[1]);
+      await abrir(triggers[1]);
+      await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
       await expect(args.onValueChange).toHaveBeenCalled();
     });
 
@@ -202,17 +206,19 @@ export const Playground: Story = {
 
     await step('Enter expande item focado', async () => {
       const triggers = canvas.getAllByRole('button');
+      await fechar(triggers[2]);
       triggers[2].focus();
       await expect(triggers[2]).toHaveFocus();
       await userEvent.keyboard('{Enter}');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
     await step('Space colapsa item aberto', async () => {
       const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');
-      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'false'));
     });
     await step('Trigger aponta para o painel por aria-controls, e o painel NAO e landmark', async () => {
       // Documentado em accessibility.aria.* como automático. Nesta stack NÃO é:
