@@ -1,6 +1,6 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect , waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 import DOMPurify from 'dompurify';
 
@@ -16,6 +16,10 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// O payload do callback é montado pela própria factory nesta stack — nas outras
+// três quem monta é a lib headless. Por isso a asserção de formato vive aqui.
+const onMultipleChange = fn();
 
 // ─── Items ────────────────────────────────────────────────────────────────────
 
@@ -66,7 +70,8 @@ export const Single: Story = {
 };
 
 export const Multiple: Story = {
-  render: () => createAccordion({ type: 'multiple', items: SPEC_ITEMS }),
+  render: () => createAccordion({ type: 'multiple', items: SPEC_ITEMS, onValueChange: onMultipleChange }),
+  beforeEach: () => { onMultipleChange.mockClear(); },
   parameters: {
     covers: ['functional.item4'],
     docs: {
@@ -84,6 +89,15 @@ export const Multiple: Story = {
       await userEvent.click(triggers[1]);
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
       await expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('O callback recebe a lista de abertos, não um valor só', async () => {
+      // Modo múltiplo devolve array; o modo único devolve string. É o contrato
+      // documentado em props.accordion.items.value (string | string[]) e o
+      // único lugar onde a forma do payload é verificada.
+      const ultimo = onMultipleChange.mock.calls.at(-1)?.[0];
+      await expect(Array.isArray(ultimo)).toBe(true);
+      await expect(ultimo).toEqual(['especificacoes', 'compatibilidade']);
     });
 
     await step('Clicar em trigger aberto fecha individualmente (modo múltiplo)', async () => {

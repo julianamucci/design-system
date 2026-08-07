@@ -42,6 +42,24 @@ decisão sua — não é trabalho parado por falta de tempo.
   forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
   ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
 
+- [ ] **`collapsible: false` no accordion não tem story em stack nenhuma (2026-08-07).**
+  A prop está documentada na tabela compartilhada (`props.accordion.items.collapsible`,
+  "Permite fechar o item ativo clicando nele novamente") e existe em Vue (reka),
+  Svelte (bits) e Vanilla. **O React não tem**: o `AccordionRoot` do base-ui expõe
+  `value`, `defaultValue`, `disabled` e `multiple`, e mais nada — conferido no
+  `.d.ts`. Nenhuma das quatro stacks tem story com `collapsible: false`.
+
+  Duas coisas a decidir juntas, porque uma depende da outra:
+  1. A story nasce só nas três que suportam (e o React declara
+     `coversNotApplicable`), ou a prop sai da tabela compartilhada por não ser
+     contrato das quatro?
+  2. O **default documentado está errado**: a tabela diz `false`, a factory do
+     Vanilla usa `true`. Uma das duas precisa ceder, e a escolha muda o
+     comportamento padrão de quem já consome.
+
+  Enquanto isso o ramo está declarado com `v8 ignore` e motivo em
+  `nortear-design-system-vanilla/src/components/ui/accordion.ts`.
+
 - [ ] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**
   A região de scroll do CodeBlock tem `tabindex="0"` de propósito: é o que
   permite rolar o bloco sem mouse (WCAG 2.1.1), e está documentado na própria

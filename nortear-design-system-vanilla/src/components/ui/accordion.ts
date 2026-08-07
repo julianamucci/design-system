@@ -76,6 +76,9 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
     if (type === 'single') {
       if (currentlyOpen) {
+        /* v8 ignore next 2 -- o caminho collapsible: false não tem story: o
+           React (base-ui) não expõe a prop, e criar a story só nas outras três
+           quebraria a paridade. Registrado no FIXES-NEEDED. */
         if (collapsible) openValues.delete(value);
         else return;
       } else {
@@ -135,10 +138,12 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
 
     // Estado inicial (defaultValue): aplica direto e suprime a animação por um
     // frame, para o item já aberto não "expandir" durante o carregamento.
+    // Só o caminho aberto: o único chamador com immediate é a montagem do item
+    // já aberto por defaultValue, e o fechado nasce com hidden + data-state no
+    // próprio createElement. Um else aqui era ramo que ninguém alcançava.
     if (immediate) {
-      if (open) contentEl.removeAttribute('hidden');
-      else contentEl.setAttribute('hidden', 'until-found');
-      contentEl.dataset.state = open ? 'open' : 'closed';
+      contentEl.removeAttribute('hidden');
+      contentEl.dataset.state = 'open';
       contentEl.style.animation = 'none';
       requestAnimationFrame(() => { contentEl.style.animation = ''; });
       return;
@@ -154,6 +159,10 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     // Timer em vez de transitionend: com prefers-reduced-motion (ou display
     // none herdado) o evento pode não disparar e o conteúdo ficaria acessível.
     const timer = window.setTimeout(() => {
+      /* v8 ignore next -- rede de segurança: reabrir dentro da janela já cancela
+         este timer no updateItemState, então o caminho "estado mudou antes de
+         disparar" não é alcançável pela interação — só por mudança externa de
+         data-state, como a do beforematch. */
       if (contentEl.dataset.state === 'closed') contentEl.setAttribute('hidden', 'until-found');
       closeTimers.delete(contentEl);
     }, CLOSE_HIDE_DELAY);

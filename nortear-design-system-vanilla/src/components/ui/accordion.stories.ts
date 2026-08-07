@@ -106,7 +106,8 @@ export const Playground: Story = {
 const accordion = createAccordion({
   type: '${type}',
   collapsible: ${collapsible},
-  defaultValue: 'item-1',
+  defaultValue: ['item-1'],
+  class: 'nds-max-w-lg',
   items: [
 ${items}
   ],
@@ -121,7 +122,10 @@ document.querySelector('#app')?.append(accordion);`;
     createAccordion({
       type: args.type,
       collapsible: args.collapsible,
-      defaultValue: 'item-1',
+      // Array, como o defaultValue={["item-1"]} do Playground do React. A forma
+      // em string continua exercitada nas stories de variantes e estados.
+      defaultValue: ['item-1'],
+      class: 'nds-max-w-lg',
       onValueChange: args.onValueChange,
       items: DEMO_ITEMS,
     }),
@@ -192,6 +196,19 @@ document.querySelector('#app')?.append(accordion);`;
       triggers[2].focus();
       await userEvent.keyboard(' ');
       await expect(triggers[2]).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('Reabrir antes do timer não deixa o painel ser escondido depois', async () => {
+      // O fechamento agenda o `hidden` para depois da animação (360ms).
+      // Reabrir dentro da janela precisa cancelar esse timer: sem o
+      // clearTimeout do updateItemState, o painel reaberto seria escondido
+      // meio segundo depois. Só se vê esperando o timer passar.
+      const painel = canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]')[2];
+      await userEvent.click(triggers[2]);
+      await expect(triggers[2]).toHaveAttribute('aria-expanded', 'true');
+      await new Promise((r) => setTimeout(r, 500));
+      await expect(painel).not.toHaveAttribute('hidden');
+      await expect(painel).toHaveAttribute('data-state', 'open');
     });
     await step('Trigger aponta para o painel por aria-controls, e o painel NAO e landmark', async () => {
       // Documentado em accessibility.aria.* como automático — esta asserção é o
