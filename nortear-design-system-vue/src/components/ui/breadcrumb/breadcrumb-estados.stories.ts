@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { Slash } from 'lucide-vue-next';
@@ -16,6 +17,7 @@ const meta = {
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {
+    design: [figmaDesign('breadcrumb', 'Trilha'), figmaDesign('breadcrumbLink', 'Link')],
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },

@@ -1,3 +1,4 @@
+import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import {
@@ -21,6 +22,7 @@ const meta = {
   tags: ["navigation"],
   component: Breadcrumb,
   parameters: {
+    design: figmaDesign("breadcrumb"),
     layout: "padded",
     controls: { disable: true },
     actions: { disable: true },

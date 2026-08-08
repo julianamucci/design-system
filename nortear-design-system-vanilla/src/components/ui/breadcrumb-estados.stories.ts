@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import {
@@ -14,6 +15,7 @@ const meta: Meta = {
   tags: ['navigation'],
   title: 'UI/Breadcrumb/Estados',
   parameters: {
+    design: [figmaDesign('breadcrumb', 'Trilha'), figmaDesign('breadcrumbLink', 'Link')],
     controls: { disable: true },
     actions: { disable: true },
     layout: 'padded',

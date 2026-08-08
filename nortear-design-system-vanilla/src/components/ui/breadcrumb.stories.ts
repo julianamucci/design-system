@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import {
@@ -17,6 +18,7 @@ const meta: Meta = {
   title: 'UI/Breadcrumb',
   tags: ['autodocs', 'navigation'],
   parameters: {
+    design: figmaDesign('breadcrumb'),
     docs: { page: withAutoDocsTab(createBreadcrumbDocs) },
   },
 };

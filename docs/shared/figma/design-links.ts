@@ -98,6 +98,16 @@ export const figmaNodes = {
   /** Página de documentação do componente. */
   badgeDocs: '334-24',
 
+  /**
+   * Trilha montada: instâncias de Link, Separator e Page. Não é variant set —
+   * o breadcrumb é composição, e o que tem eixo é o link.
+   */
+  breadcrumb: '353-298',
+  /** Variant set do link — eixo `state` (default, hover, focus). */
+  breadcrumbLink: '353-12',
+  /** Página de documentação do componente. */
+  breadcrumbDocs: '354-38',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

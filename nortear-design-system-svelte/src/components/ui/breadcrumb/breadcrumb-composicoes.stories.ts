@@ -1,3 +1,4 @@
+import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
@@ -9,6 +10,7 @@ const meta: Meta = {
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {
+    design: figmaDesign('breadcrumb'),
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
