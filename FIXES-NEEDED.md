@@ -1525,3 +1525,26 @@ A API não foi podada: `className` continua em todas as peças, e agora sem cust
 As 21 falhas da suíte do Vanilla são anteriores e não têm relação: medidas em
 par nos cinco componentes envolvidos (carousel, drawer, dropdown-menu, popover,
 sheet), dão 21 falhas dos dois lados. São o backlog de overlay.
+
+---
+
+## `ComponentDemo` do Vue e do Svelte ainda com Tailwind inerte (2026-08-08)
+
+O React teve isso corrigido (seção acima). O Vue e o Svelte não:
+
+```
+<Card class="flex items-center justify-center p-4 mt-2 bg-background">
+```
+
+Nenhuma dessas classes existe desde a migração para `.nds-*` — o container da
+seção Demonstração renderiza **sem** centralização nessas duas stacks. O Vanilla
+usa `.nds-docs-demo`, que é a classe compartilhada feita para isso.
+
+Não apareceu no calendar porque as quatro docs pages do componente embrulham a
+demo num `nds-cluster data-justify="center"` por página, o que mascara o
+container. Toda docs page que não faz esse embrulho está com a demo à esquerda
+no Vue e no Svelte.
+
+Correção: trocar as duas linhas por `class="nds-docs-demo"`. Fica fora deste
+commit porque muda pixel em **todas** as docs pages dessas stacks, e o Chromatic
+precisa fotografar a mudança de uma vez — não junto de um fix de calendar.

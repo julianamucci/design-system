@@ -44,7 +44,12 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
         <span class="nds-pill" data-tone="success">✓</span>
         <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${DOMPurify.sanitize(pair.doLabel)}</span>
       </div>`;
-    const doBox = createCard({ className: 'nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4' });
+    // `nds-cluster` + `data-justify` é o mesmo par que centraliza o preview em
+    // DocsVariants e em ComponentDemo. Sem ele o Card herda a coluna do
+    // `.nds-card` e encosta tudo à esquerda — visível em qualquer componente
+    // de largura própria.
+    const doBox = createCard({ className: 'nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4' });
+    doBox.dataset.justify = 'center';
     doBox.appendChild(pair.doPreviewFactory());
     const doCaption = document.createElement('p');
     doCaption.className = 'nds-text-body nds-italic nds-px-1';
@@ -60,7 +65,8 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
         <span class="nds-pill" data-tone="destructive">✗</span>
         <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">${DOMPurify.sanitize(pair.dontLabel)}</span>
       </div>`;
-    const dontBox = createCard({ className: 'nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4' });
+    const dontBox = createCard({ className: 'nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4' });
+    dontBox.dataset.justify = 'center';
     dontBox.appendChild(pair.dontPreviewFactory());
     const dontCaption = document.createElement('p');
     dontCaption.className = 'nds-text-body nds-italic nds-px-1';

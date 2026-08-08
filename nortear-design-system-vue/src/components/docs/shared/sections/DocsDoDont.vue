@@ -46,7 +46,14 @@ defineProps<{
               >✓</span>
               <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.doLabel }}</span>
             </div>
-            <Card class="nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4">
+            <!-- `nds-cluster` + `data-justify` é o mesmo par que centraliza o
+                 preview em DocsVariants e em ComponentDemo. Sem ele o Card herda
+                 a coluna do `.nds-card` e encosta tudo à esquerda — visível em
+                 qualquer componente de largura própria. -->
+            <Card
+              class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4"
+              data-justify="center"
+            >
               <slot :name="`do-preview-${index}`" />
             </Card>
             <p class="nds-text-body nds-italic nds-px-1">
@@ -68,7 +75,10 @@ defineProps<{
               >✗</span>
               <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{{ pair.dontLabel }}</span>
             </div>
-            <Card class="nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4">
+            <Card
+              class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4"
+              data-justify="center"
+            >
               <slot :name="`dont-preview-${index}`" />
             </Card>
             <p class="nds-text-body nds-italic nds-px-1">
