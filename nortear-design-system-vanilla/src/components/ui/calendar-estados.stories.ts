@@ -4,13 +4,13 @@ import { createCalendar } from './calendar';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
-// Estados de célula que a factory produz: selecionada, bloqueada e hoje.
+// Estados de célula que a factory produz: escolhida, bloqueada, hoje, os dias
+// dos meses vizinhos e o miolo de um intervalo.
 //
-// `WithOutsideDays` e `RangeWithMiddle` existiam aqui como stories que
+// `WithOutsideDays` e `RangeWithMiddle` já existiram aqui como stories que
 // renderizavam um calendário comum e explicavam, no texto, que o recurso não
-// existe. O Chromatic fotografava o nome de um recurso ao lado da imagem de
-// outro, e a play não afirmava nada. Saíram: a lacuna está registrada no
-// FIXES-NEEDED.md, que é onde dívida de implementação mora.
+// existia — o Chromatic fotografava o nome de um recurso ao lado da imagem de
+// outro. Saíram e voltaram agora, com o recurso no lugar.
 
 const meta: Meta = {
   tags: ['form'],
@@ -272,6 +272,28 @@ export const WithOutsideDays: Story = {
       await expect(diasCom(':not([data-outside])').length).toBe(30);
     });
 
+    await step('Escolher um dia vizinho leva a visão para o mês dele', async () => {
+      // Sem isso a escolha some da tela no instante em que é feita: o dia fica
+      // marcado num mês que não está mais visível. Cada passo estabelece a
+      // própria precondição — o clique final devolve a visão para abril.
+      const canvas = within(canvasElement);
+      const legenda = () => canvasElement.querySelector('.nds-calendar-month-label');
+
+      await userEvent.click(canvas.getByRole('button', { name: /30 de março de 2026/i }));
+      await expect(legenda()).toHaveTextContent(/março 2026/i);
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day[data-day="2026-03-30"][data-selected]'),
+      ).not.toBeNull();
+
+      // A volta é por 1º de abril, que março mostra como dia vizinho: 12 de
+      // abril não está mais na grade — é justamente esse o ponto do passo.
+      // Nome completo: "1 de abril" sozinho também casaria com "21 de abril".
+      await userEvent.click(
+        canvas.getByRole('button', { name: /quarta-feira, 1 de abril de 2026/i }),
+      );
+      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+    });
+
     await step('Sem eles, a casa fica vazia em vez de emprestar um dia', async () => {
       // A alternativa é explícita na API, e é o que o grid fazia antes de
       // existirem: buraco no começo e no fim, sem dia nenhum.
@@ -282,6 +304,44 @@ export const WithOutsideDays: Story = {
       });
       await expect(semVizinhos.querySelectorAll('.nds-calendar-day').length).toBe(30);
       await expect(semVizinhos.querySelectorAll('td:empty').length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const RangeWithMiddle: Story = {
+  render: () =>
+    createCalendar({
+      mode: 'range',
+      locale: 'pt-BR',
+      value: { from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) },
+      class: 'nds-rounded-md nds-border-default',
+    }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Intervalo com miolo: os dias entre início e fim também ficam marcados.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('O intervalo é contínuo do início ao fim', async () => {
+      // Verificar só os extremos passaria com o meio vazio, que é exatamente o
+      // que esta story existe para mostrar.
+      const marcados = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day[data-selected="true"]'),
+      ).map((el) => el.dataset.day ?? '');
+      await expect(marcados).toEqual([
+        '2026-04-10', '2026-04-11', '2026-04-12', '2026-04-13', '2026-04-14',
+        '2026-04-15', '2026-04-16', '2026-04-17', '2026-04-18',
+      ]);
+    });
+
+    await step('O miolo se distingue dos extremos', async () => {
+      const dia = (iso: string) =>
+        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day[data-day="${iso}"]`)!;
+      await expect(dia('2026-04-10').dataset.range).toBe('start');
+      await expect(dia('2026-04-14').dataset.range).toBe('middle');
+      await expect(dia('2026-04-18').dataset.range).toBe('end');
     });
   },
 };

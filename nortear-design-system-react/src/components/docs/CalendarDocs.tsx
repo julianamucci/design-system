@@ -188,12 +188,6 @@ import { ptBR } from "react-day-picker/locale";
   locale={ptBR}
 />`;
 
-  const codeWithWeekNumber = `<Calendar
-  mode="single"
-  showWeekNumber
-  locale={ptBR}
-/>`;
-
   const codeNumberOfMonths = `<Calendar
   mode="range"
   numberOfMonths={2}
@@ -261,17 +255,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       mode="single"
       labels={{ labelNav: () => "captionDropdown" }}
       captionLayout="dropdown"
-      selected={singleDate}
-      onSelect={setSingleDate}
-      locale={ptBR}
-    />
-  );
-
-  const previewWithWeekNumber = (
-    <Calendar
-      mode="single"
-      labels={{ labelNav: () => "withWeekNumber" }}
-      showWeekNumber
       selected={singleDate}
       onSelect={setSingleDate}
       locale={ptBR}
@@ -505,12 +488,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             description: stripHtml(tContent("variants.items.captionDropdown")),
             code: codeCaptionDropdown,
             preview: previewCaptionDropdown,
-          },
-          {
-            name: "withWeekNumber",
-            description: stripHtml(tContent("variants.items.withWeekNumber")),
-            code: codeWithWeekNumber,
-            preview: previewWithWeekNumber,
           },
           {
             name: "numberOfMonths",

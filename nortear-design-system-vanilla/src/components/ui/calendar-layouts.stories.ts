@@ -190,3 +190,64 @@ export const CaptionDropdown: Story = {
     });
   },
 };
+
+export const TwoMonths: Story = {
+  render: () =>
+    createCalendar({
+      locale: 'pt-BR',
+      numberOfMonths: 2,
+      value: new Date(2026, 3, 28),
+      class: 'nds-rounded-md nds-border-default',
+    }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('São dois grids, de meses consecutivos', async () => {
+      // Contar células passaria com dois meses iguais; o que a story mostra é a
+      // virada, então a asserção é sobre QUAIS meses aparecem.
+      await expect(canvasElement.querySelectorAll('[role="grid"]').length).toBe(2);
+      await expect(canvasElement.querySelector('[data-day="2026-04-30"]')).not.toBeNull();
+      await expect(canvasElement.querySelector('[data-day="2026-05-01"]')).not.toBeNull();
+    });
+
+    await step('Cada mês diz o próprio nome, e a legenda diz a janela', async () => {
+      // Sem o rótulo por mês, a segunda grade fica sem identificação e a pessoa
+      // tem que contar os dias para descobrir de que mês ela é.
+      const rotulos = Array.from(
+        canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-month-label'),
+      ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
+      await expect(rotulos).toEqual(['abril 2026', 'maio 2026']);
+      await expect(canvasElement.querySelector('.nds-calendar-nav .nds-calendar-month-label'))
+        .toHaveTextContent(/abril – maio 2026/i);
+    });
+
+    await step('Escolher no segundo mês não move a janela', async () => {
+      // Com um mês só, escolher um dia vizinho traz a visão junto — senão a
+      // escolha sumiria da tela. Com dois, o dia já está visível, e mover faria
+      // o grid pular embaixo do cursor. Cada passo estabelece a própria
+      // precondição: o clique final devolve a escolha para 28 de abril.
+      const rotulos = () =>
+        Array.from(
+          canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-month-label'),
+        ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
+      // Busca dentro do bloco do mês, e não no canvas: um dia da virada aparece
+      // nos DOIS grids — 28 de abril é dia real em abril e vizinho em maio.
+      const bloco = (i: number) =>
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-month')[i];
+      const diaNoBloco = (i: number, iso: string) =>
+        bloco(i).querySelector<HTMLButtonElement>(`.nds-calendar-day[data-day="${iso}"]`)!;
+
+      await userEvent.click(diaNoBloco(1, '2026-05-05'));
+      await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);
+      await expect(diaNoBloco(1, '2026-05-05')).toHaveAttribute('data-selected', 'true');
+
+      await userEvent.click(diaNoBloco(0, '2026-04-28'));
+      await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);
+    });
+  },
+};

@@ -154,7 +154,6 @@
         "multiple": "<code>mode=\"multiple\"</code> — várias datas independentes. Valor: <code>Date[]</code>.",
         "range": "<code>mode=\"range\"</code> — intervalo contínuo com início e fim. Valor: <code>{ from, to }</code>.",
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mês e ano viram selects rápidos para navegação longa.",
-        "withWeekNumber": "<code>showWeekNumber</code> — adiciona coluna com o número da semana ISO.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — exibe 2 meses lado a lado em <code>range</code>.",
         "inlineBordered": {
           "name": "Calendar inline com borda",
@@ -597,7 +596,6 @@
         "multiple": "<code>mode=\"multiple\"</code> — several independent dates. Value: <code>Date[]</code>.",
         "range": "<code>mode=\"range\"</code> — continuous range with start and end. Value: <code>{ from, to }</code>.",
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — month and year become quick-jump selects.",
-        "withWeekNumber": "<code>showWeekNumber</code> — adds a column with the ISO week number.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — displays 2 months side by side in <code>range</code>.",
         "inlineBordered": {
           "name": "Inline Calendar with border",
@@ -1040,7 +1038,6 @@
         "multiple": "<code>mode=\"multiple\"</code> — varias fechas independientes. Valor: <code>Date[]</code>.",
         "range": "<code>mode=\"range\"</code> — intervalo continuo con inicio y fin. Valor: <code>{ from, to }</code>.",
         "captionDropdown": "<code>captionLayout=\"dropdown\"</code> — mes y año se vuelven selects de acceso rápido.",
-        "withWeekNumber": "<code>showWeekNumber</code> — agrega una columna con el número de semana ISO.",
         "numberOfMonths": "<code>numberOfMonths={2}</code> — muestra 2 meses lado a lado en <code>range</code>.",
         "inlineBordered": {
           "name": "Calendar inline con borde",

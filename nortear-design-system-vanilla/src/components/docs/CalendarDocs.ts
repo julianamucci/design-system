@@ -58,13 +58,6 @@ function referenceDate(): Date {
   return new Date(2026, 3, 12); // 2026-04-12
 }
 
-function withDisabledWeekends(): (date: Date) => boolean {
-  return (date) => {
-    const d = date.getDay();
-    return d === 0 || d === 6;
-  };
-}
-
 // ─── createCalendarDocs ───────────────────────────────────────────────────────
 
 export function createCalendarDocs(): HTMLElement {
@@ -331,13 +324,27 @@ document.body.appendChild(el);`,
   value: new Date(),
   onSelect: (date) => console.log(date),
 });`;
-        const codeDisabled = `const el = createCalendar({ locale: 'pt-BR',
-  value: new Date(),
-  disabled: (d) => d.getDay() === 0 || d.getDay() === 6,
+        const codeMultiple = `const el = createCalendar({
+  mode: 'multiple',
+  locale: 'pt-BR',
+  value: [new Date(2026, 3, 8), new Date(2026, 3, 12)],
+  onSelect: (datas) => console.log(datas),
 });`;
-        const codeCustomClass = `const el = createCalendar({ locale: 'pt-BR',
+        const codeRange = `const el = createCalendar({
+  mode: 'range',
+  locale: 'pt-BR',
+  value: { from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) },
+  onSelect: (intervalo) => console.log(intervalo),
+});`;
+        const codeCaptionDropdown = `const el = createCalendar({
+  locale: 'pt-BR',
+  captionLayout: 'dropdown',
   value: new Date(),
-  class: 'nds-rounded-md nds-border-default nds-shadow-sm',
+});`;
+        const codeNumberOfMonths = `const el = createCalendar({
+  locale: 'pt-BR',
+  numberOfMonths: 2,
+  value: new Date(),
 });`;
         const codeInlineBordered = `const el = createCalendar({
   locale: 'pt-BR',
@@ -367,24 +374,62 @@ const el = createCalendar({
                 createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
             },
             {
-              name: 'withDisabledDates',
-              description: toPlainText(t('states.disabled.behavior')),
-              code: codeDisabled,
+              name: 'multiple',
+              description: stripHtml(t('variants.items.multiple')),
+              code: codeMultiple,
+              previewFactory: () => {
+                const base = referenceDate();
+                return createCalendar({
+                  mode: 'multiple',
+                  locale: 'pt-BR',
+                  value: [
+                    new Date(base.getFullYear(), base.getMonth(), 8),
+                    new Date(base.getFullYear(), base.getMonth(), 12),
+                    new Date(base.getFullYear(), base.getMonth(), 16),
+                  ],
+                  class: 'nds-rounded-md nds-border-default',
+                });
+              },
+            },
+            {
+              name: 'range',
+              description: stripHtml(t('variants.items.range')),
+              code: codeRange,
+              previewFactory: () => {
+                const base = referenceDate();
+                return createCalendar({
+                  mode: 'range',
+                  locale: 'pt-BR',
+                  value: {
+                    from: new Date(base.getFullYear(), base.getMonth(), 10),
+                    to: new Date(base.getFullYear(), base.getMonth(), 18),
+                  },
+                  class: 'nds-rounded-md nds-border-default',
+                });
+              },
+            },
+            {
+              name: 'captionDropdown',
+              description: stripHtml(t('variants.items.captionDropdown')),
+              code: codeCaptionDropdown,
               previewFactory: () =>
-                createCalendar({ locale: 'pt-BR',
+                createCalendar({
+                  locale: 'pt-BR',
+                  captionLayout: 'dropdown',
                   value: referenceDate(),
-                  disabled: withDisabledWeekends(),
                   class: 'nds-rounded-md nds-border-default',
                 }),
             },
             {
-              name: 'customStyled',
-              description: toPlainText(t('props.table.className')),
-              code: codeCustomClass,
+              name: 'numberOfMonths',
+              description: stripHtml(t('variants.items.numberOfMonths')),
+              code: codeNumberOfMonths,
               previewFactory: () =>
-                createCalendar({ locale: 'pt-BR',
+                createCalendar({
+                  locale: 'pt-BR',
+                  numberOfMonths: 2,
                   value: referenceDate(),
-                  class: 'nds-rounded-md nds-border-default nds-shadow-sm',
+                  class: 'nds-rounded-md nds-border-default',
                 }),
             },
             {

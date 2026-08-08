@@ -9,11 +9,13 @@ import { cn } from '@/lib/utils';
 export type CalendarRange = { from?: Date; to?: Date };
 
 export type CalendarOptions = {
-  /** Uma data por vez (padrão) ou um intervalo contínuo. */
-  mode?: 'single' | 'range';
-  /** Data inicial no modo único; par de datas no modo intervalo. */
-  value?: Date | CalendarRange;
-  onSelect?: (value: Date | CalendarRange) => void;
+  /** Uma data (padrão), várias datas avulsas, ou um intervalo contínuo. */
+  mode?: 'single' | 'multiple' | 'range';
+  /** Data no modo único; lista no múltiplo; par de datas no intervalo. */
+  value?: Date | Date[] | CalendarRange;
+  onSelect?: (value: Date | Date[] | CalendarRange) => void;
+  /** Quantos meses exibir lado a lado. Padrão: 1. */
+  numberOfMonths?: number;
   disabled?: (date: Date) => boolean;
   /**
    * Completa a primeira e a última semana com os dias dos meses vizinhos, em
@@ -76,6 +78,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     locale = 'en-US',
     showOutsideDays = true,
     captionLayout = 'label',
+    numberOfMonths = 1,
   } = options;
 
   const dayNames = getDayNames(locale);
@@ -85,14 +88,32 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   });
 
   const ehIntervalo = mode === 'range';
+  const ehMultiplo = mode === 'multiple';
   const valorInicial = options.value;
+
   let selected: Date | null =
-    !ehIntervalo && valorInicial instanceof Date ? valorInicial : null;
+    mode === 'single' && valorInicial instanceof Date ? valorInicial : null;
+  let selecionadas: Date[] = ehMultiplo && Array.isArray(valorInicial) ? [...valorInicial] : [];
   let intervalo: CalendarRange =
-    ehIntervalo && valorInicial && !(valorInicial instanceof Date) ? { ...valorInicial } : {};
+    ehIntervalo && valorInicial && !(valorInicial instanceof Date) && !Array.isArray(valorInicial)
+      ? { ...valorInicial }
+      : {};
 
   /** A data que ancora o mês exibido, seja qual for o modo. */
-  const ancora = selected ?? intervalo.from ?? null;
+  const ancora = selected ?? selecionadas[0] ?? intervalo.from ?? null;
+
+  /** No modo múltiplo, escolher de novo tira da lista — é o que o diferencia. */
+  function alternarNaLista(date: Date): void {
+    const i = selecionadas.findIndex((d) => isSameDay(d, date));
+    if (i === -1) selecionadas = [...selecionadas, date].sort((a, b) => diaA(a) - diaA(b));
+    else selecionadas = selecionadas.filter((_, j) => j !== i);
+  }
+
+  const estaSelecionada = (date: Date): boolean => {
+    if (ehIntervalo) return estadoNoIntervalo(date) !== null;
+    if (ehMultiplo) return selecionadas.some((d) => isSameDay(d, date));
+    return selected ? isSameDay(date, selected) : false;
+  };
 
   const today = new Date();
   let viewYear = ancora ? ancora.getFullYear() : today.getFullYear();
@@ -208,52 +229,16 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     return wrap;
   }
 
-  function render(): void {
-    root.innerHTML = '';
-
-    // Month navigation
-    const nav = document.createElement('div');
-    nav.className = 'nds-calendar-nav';
-
-    const prevBtn = document.createElement('button');
-    prevBtn.type = 'button';
-    prevBtn.className = 'nds-calendar-nav-button';
-    prevBtn.setAttribute('aria-label', 'Go to previous month');
-    prevBtn.appendChild(buildChevron('left'));
-    prevBtn.addEventListener('click', () => {
-      viewMonth -= 1;
-      if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
-      render();
-    });
-
-    const nextBtn = document.createElement('button');
-    nextBtn.type = 'button';
-    nextBtn.className = 'nds-calendar-nav-button';
-    nextBtn.setAttribute('aria-label', 'Go to next month');
-    nextBtn.appendChild(buildChevron('right'));
-    nextBtn.addEventListener('click', () => {
-      viewMonth += 1;
-      if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
-      render();
-    });
-
-    let legenda: HTMLElement;
-    if (captionLayout === 'dropdown') {
-      legenda = buildDropdownCaption();
-    } else {
-      legenda = document.createElement('div');
-      legenda.className = 'nds-calendar-month-label';
-      legenda.textContent = `${monthNames[viewMonth]} ${viewYear}`;
-    }
-
-    nav.append(prevBtn, legenda, nextBtn);
-    root.appendChild(nav);
-
-    // Grid
+  /**
+   * Monta a tabela de UM mês. Com `numberOfMonths` maior que 1, o render a
+   * chama uma vez por mês da janela — a navegação continua sendo uma só, e é
+   * ela que move a janela inteira.
+   */
+  function buildGrid(anoDaGrade: number, mesDaGrade: number): HTMLTableElement {
     const table = document.createElement('table');
     table.className = 'nds-calendar-grid';
     table.setAttribute('role', 'grid');
-    table.setAttribute('aria-label', `${monthNames[viewMonth]} ${viewYear}`);
+    table.setAttribute('aria-label', `${monthNames[mesDaGrade]} ${anoDaGrade}`);
 
     // Header row
     const thead = document.createElement('thead');
@@ -271,10 +256,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     // datas reais de ponta a ponta. Os dias dos meses vizinhos ficam marcados
     // como externos; quando `showOutsideDays` é falso, a casa fica vazia.
     const tbody = document.createElement('tbody');
-    const primeiroDaGrade = new Date(viewYear, viewMonth, 1);
+    const primeiroDaGrade = new Date(anoDaGrade, mesDaGrade, 1);
     primeiroDaGrade.setDate(1 - primeiroDaGrade.getDay());
-    const diasNoMes = new Date(viewYear, viewMonth + 1, 0).getDate();
-    const semanas = Math.ceil((new Date(viewYear, viewMonth, 1).getDay() + diasNoMes) / 7);
+    const diasNoMes = new Date(anoDaGrade, mesDaGrade + 1, 0).getDate();
+    const semanas = Math.ceil((new Date(anoDaGrade, mesDaGrade, 1).getDay() + diasNoMes) / 7);
 
     for (let week = 0; week < semanas; week++) {
       const row = document.createElement('tr');
@@ -292,7 +277,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           primeiroDaGrade.getMonth(),
           primeiroDaGrade.getDate() + week * 7 + col,
         );
-        const foraDoMes = date.getMonth() !== viewMonth;
+        const foraDoMes = date.getMonth() !== mesDaGrade;
 
         if (foraDoMes && !showOutsideDays) {
           row.appendChild(td);
@@ -301,11 +286,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
         const isDisabled = disabled ? disabled(date) : false;
         const posicaoNoIntervalo = ehIntervalo ? estadoNoIntervalo(date) : null;
-        const isSelected = ehIntervalo
-          ? posicaoNoIntervalo !== null
-          : selected
-            ? isSameDay(date, selected)
-            : false;
+        const isSelected = estaSelecionada(date);
         const isTodayDate = isToday(date);
 
         const btn = document.createElement('button');
@@ -347,17 +328,26 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
         if (!isDisabled) {
           btn.addEventListener('click', () => {
-            if (ehIntervalo) {
-              escolherNoIntervalo(date);
-            } else {
-              selected = date;
-            }
+            if (ehIntervalo) escolherNoIntervalo(date);
+            else if (ehMultiplo) alternarNaLista(date);
+            else selected = date;
+
             focado = date;
             // Clicar num dia vizinho leva a visão para o mês dele: senão a
-            // escolha sumiria da tela no instante em que foi feita.
-            viewYear = date.getFullYear();
-            viewMonth = date.getMonth();
-            onSelect?.(ehIntervalo ? { ...intervalo } : date);
+            // escolha sumiria da tela no instante em que foi feita. Com mais de
+            // um mês na tela, o dia já está visível — mover a visão faria o
+            // grid pular embaixo do cursor.
+            // `viewYear`/`viewMonth`, e não os parâmetros da grade: estes dizem
+            // QUAL mês esta tabela desenha, e mudá-los não move visão nenhuma —
+            // some no próximo render. É a visão que precisa acompanhar.
+            if (numberOfMonths === 1) {
+              viewYear = date.getFullYear();
+              viewMonth = date.getMonth();
+            }
+
+            onSelect?.(
+              ehIntervalo ? { ...intervalo } : ehMultiplo ? [...selecionadas] : date,
+            );
             render();
           });
         }
@@ -373,7 +363,79 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       tbody.appendChild(row);
     }
     table.appendChild(tbody);
-    root.appendChild(table);
+    return table;
+  }
+
+  function render(): void {
+    root.innerHTML = '';
+
+    // Month navigation
+    const nav = document.createElement('div');
+    nav.className = 'nds-calendar-nav';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.className = 'nds-calendar-nav-button';
+    prevBtn.setAttribute('aria-label', 'Go to previous month');
+    prevBtn.appendChild(buildChevron('left'));
+    prevBtn.addEventListener('click', () => {
+      viewMonth -= 1;
+      if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
+      render();
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.className = 'nds-calendar-nav-button';
+    nextBtn.setAttribute('aria-label', 'Go to next month');
+    nextBtn.appendChild(buildChevron('right'));
+    nextBtn.addEventListener('click', () => {
+      viewMonth += 1;
+      if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
+      render();
+    });
+
+    let legenda: HTMLElement;
+    if (captionLayout === 'dropdown') {
+      legenda = buildDropdownCaption();
+    } else {
+      legenda = document.createElement('div');
+      legenda.className = 'nds-calendar-month-label';
+      // Com mais de um mês, a legenda diz a janela, não um mês só.
+      const ultimo = new Date(viewYear, viewMonth + numberOfMonths - 1, 1);
+      legenda.textContent =
+        numberOfMonths === 1
+          ? `${monthNames[viewMonth]} ${viewYear}`
+          : `${monthNames[viewMonth]} – ${monthNames[ultimo.getMonth()]} ${ultimo.getFullYear()}`;
+    }
+
+    nav.append(prevBtn, legenda, nextBtn);
+    root.appendChild(nav);
+
+    // Um mês: a tabela pendura direto na raiz, como sempre — nada muda no DOM
+    // de quem não pede janela maior. Vários: cada mês ganha o próprio rótulo,
+    // porque a legenda da nav já não dá conta de dizer qual é qual.
+    if (numberOfMonths === 1) {
+      root.appendChild(buildGrid(viewYear, viewMonth));
+    } else {
+      const meses = document.createElement('div');
+      meses.className = 'nds-calendar-months';
+
+      for (let i = 0; i < numberOfMonths; i++) {
+        const d = new Date(viewYear, viewMonth + i, 1);
+        const bloco = document.createElement('div');
+        bloco.className = 'nds-calendar-month';
+
+        const rotulo = document.createElement('div');
+        rotulo.className = 'nds-calendar-month-label';
+        rotulo.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+        bloco.append(rotulo, buildGrid(d.getFullYear(), d.getMonth()));
+        meses.appendChild(bloco);
+      }
+      root.appendChild(meses);
+    }
+
 
     // O render reconstrói o DOM inteiro, então o elemento que tinha o foco
     // deixou de existir: sem devolvê-lo, cada seta jogaria o foco no body e a

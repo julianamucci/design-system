@@ -4,8 +4,8 @@ import { fn, userEvent, within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
-// Modo de seleção do Calendar. A factory expõe seleção única: `value` define a
-// data inicial e `onSelect` recebe a data escolhida a cada clique.
+// Modo de seleção do Calendar: uma data, várias avulsas ou um intervalo. O
+// `value` define o estado inicial e `onSelect` reporta cada escolha.
 
 const meta: Meta = {
   tags: ['form'],
@@ -16,7 +16,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Modo de seleção do Calendar: uma data por vez.',
+        component: 'Modo de seleção: uma data, várias datas avulsas ou um intervalo contínuo.',
       },
     },
   },
@@ -162,6 +162,53 @@ export const Range: Story = {
       const dias = marcados();
       await expect(dias[0]).toBe('2026-04-10');
       await expect(dias[dias.length - 1]).toBe('2026-04-18');
+    });
+  },
+};
+
+export const Multiple: Story = {
+  render: () =>
+    createCalendar({
+      mode: 'multiple',
+      locale: 'pt-BR',
+      value: [new Date(2026, 3, 8), new Date(2026, 3, 12), new Date(2026, 3, 16)],
+      onSelect,
+      class: 'nds-rounded-md nds-border-default',
+    }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Várias datas avulsas: cada escolha soma à lista, e escolher de novo remove.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const marcadas = () =>
+      Array.from(canvasElement.querySelectorAll('.nds-calendar-day[data-selected="true"]')).map(
+        (el) => (el as HTMLElement).dataset.day ?? '',
+      );
+
+    await step('As três datas iniciais chegam marcadas', async () => {
+      await expect(marcadas()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+    });
+
+    await step('Uma nova escolha soma, e repetir remove', async () => {
+      // É esta a diferença para o modo único, e é a única asserção que a pega.
+      // Cada passo estabelece a própria precondição: o segundo clique devolve o
+      // grid ao estado inicial, para o replay no painel medir o mesmo.
+      const dia29 = () => canvas.getByRole('button', { name: /29 de abril de 2026/i });
+      onSelect.mockClear();
+      await userEvent.click(dia29());
+      await expect(marcadas()).toEqual([
+        '2026-04-08', '2026-04-12', '2026-04-16', '2026-04-29',
+      ]);
+      await expect(onSelect).toHaveBeenLastCalledWith([
+        new Date(2026, 3, 8), new Date(2026, 3, 12), new Date(2026, 3, 16), new Date(2026, 3, 29),
+      ]);
+
+      await userEvent.click(dia29());
+      await expect(marcadas()).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
     });
   },
 };

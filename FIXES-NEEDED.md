@@ -212,6 +212,28 @@ existiram; saíram, e voltaram só quando o recurso passou a existir.
 Resultado: `node scripts/audit.mjs calendar` zerado e contrato **18/18 nas
 quatro**.
 
+## Calendar: extras de stack que não são variante do sistema (2026-08-08)
+
+A revisão de paridade deixou três stories que existem numa stack só. Nenhuma é
+bug — são recursos que a lib daquela stack dá de graça e as outras não têm. O
+registro existe para ninguém as promover a variante do sistema sem antes
+entregá-las nas quatro.
+
+- **`WithWeekNumber` (React).** `showWeekNumber` é do react-day-picker. Vue e
+  Svelte não controlam a grade, então nem implementando no Vanilla chegaria a
+  4/4. A promessa saiu do `translations.json` e da tabela de variantes; a story
+  ficou, porque é ela que cobre o override do `WeekNumber` que corrige um
+  `scope-attr-valid` do axe.
+- **`WithFixedWeeks` (Vue).** Seis linhas de semana sempre, do reka-ui.
+- **`Bordered` / `Bare` / `NavegacaoPorTeclado` (Vanilla).** As duas primeiras
+  verificam a composição de classe da factory; a terceira prova a navegação por
+  teclado que o Vanilla ganhou nesta série — nas outras três a prova mora no
+  Playground.
+
+Falta de verdade só uma: **`Range` e `RangeWithMiddle` no Svelte**, porque o
+bits-ui não tem calendário de intervalo. Já está declarado com
+`coversNotApplicable` em `functional.item3`.
+
 ## Tipografia: 13 tamanhos fora da escada (2026-08-08)
 
 A escada de controle (`--text-control-xs…xl`) cobriu 155 das 168 declarações de
