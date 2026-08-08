@@ -13,3 +13,7 @@ const nortear = create({
 });
 
 addons.setConfig({ theme: nortear });
+
+// Botão "Chromatic" na toolbar — ver ./chromatic-link.ts para o porquê de não
+// ser o painel do addon oficial.
+import './chromatic-link';
