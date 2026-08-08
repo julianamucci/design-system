@@ -27,6 +27,7 @@ export const Playground: Story = {
       class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
+    covers: ['visual.item1', 'accessibility.item4', 'accessibility.item6', 'accessibility.item1', 'accessibility.item2'],
     docs: {
       description: {
         story:

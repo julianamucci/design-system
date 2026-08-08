@@ -64,6 +64,9 @@ export const Selected: Story = {
       // que mês nem de que ano.
       const celula = canvasElement.querySelector('[data-selected]')!;
       await expect(celula.getAttribute('aria-label')).toMatch(/12 de abril de 2026/i);
+      // O nome acessível não substitui o número visível: quem enxerga precisa
+      // achar o dia na grade sem depender do rótulo.
+      await expect(celula).toHaveTextContent('12');
     });
   },
 };
@@ -90,7 +93,7 @@ export const Disabled: Story = {
     `,
   }),
   parameters: {
-    covers: ['functional.item4'],
+    covers: ['functional.item4', 'visual.item4'],
     docs: { description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -235,6 +238,15 @@ export const RangeWithMiddle: Story = {
         '2026-04-10', '2026-04-11', '2026-04-12', '2026-04-13', '2026-04-14',
         '2026-04-15', '2026-04-16', '2026-04-17', '2026-04-18',
       ]);
+    });
+
+    await step('Os extremos são distinguíveis do miolo', async () => {
+      // Sem essa marcação o intervalo vira um bloco só, e a pessoa não vê onde
+      // ele começa nem onde termina.
+      const inicio = canvasElement.querySelector('[data-value="2026-04-10"]')!;
+      const fim = canvasElement.querySelector('[data-value="2026-04-18"]')!;
+      await expect(inicio).toHaveAttribute('data-selection-start');
+      await expect(fim).toHaveAttribute('data-selection-end');
     });
   },
 };

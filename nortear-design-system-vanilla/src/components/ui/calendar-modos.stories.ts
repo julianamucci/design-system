@@ -39,7 +39,13 @@ export const Single: Story = {
       class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
-    covers: ['functional.item2', 'accessibility.item3'],
+    covers: ['functional.item2', 'accessibility.item3', 'visual.item2'],
+    coversNotApplicable: {
+      'functional.item3':
+        'a factory seleciona uma data por vez; intervalo não faz parte da API dela',
+      'functional.item7':
+        'a legenda da factory é sempre texto: não há seletor de mês e ano para operar',
+    },
     docs: {
       description: {
         story:

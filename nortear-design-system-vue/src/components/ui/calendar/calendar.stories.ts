@@ -66,6 +66,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: { covers: ['visual.item1', 'accessibility.item4', 'accessibility.item6', 'functional.item5', 'accessibility.item5', 'accessibility.item1', 'accessibility.item2'] },
   render: (args) => ({
     components: { Calendar },
     setup() {

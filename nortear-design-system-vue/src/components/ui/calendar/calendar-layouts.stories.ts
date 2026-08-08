@@ -53,7 +53,7 @@ export const CaptionLabel: Story = {
     `,
   }),
   parameters: {
-    covers: ['functional.item6'],
+    covers: ['functional.item6', 'visual.item3'],
     docs: { description: { story: 'Legenda em texto com mês e ano no idioma configurado.' } },
   },
   play: async ({ canvasElement, step }) => {

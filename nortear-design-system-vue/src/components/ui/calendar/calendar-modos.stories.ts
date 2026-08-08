@@ -53,7 +53,7 @@ export const Single: Story = {
     `,
   }),
   parameters: {
-    covers: ['functional.item2', 'accessibility.item1', 'accessibility.item3'],
+    covers: ['functional.item2', 'accessibility.item1', 'accessibility.item3', 'visual.item2'],
     docs: {
       description: {
         story: 'Uma data por vez: escolher outra troca a marcação em vez de somar.',

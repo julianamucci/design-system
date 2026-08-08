@@ -177,6 +177,34 @@ Chromatic:
 
 ---
 
+## Calendar — dívida que a auditoria de qualidade deixou registrada (2026-08-08)
+
+Duas lacunas de implementação. Nenhuma delas vira story-fantasma: story que
+renderiza uma coisa e diz outra no texto é pior que story nenhuma — o Chromatic
+fotografa o nome de um recurso ao lado da imagem de outro, e a play não tem o
+que afirmar. Foi assim que `WithOutsideDays` e `RangeWithMiddle` no Vanilla e
+`RangeFallback` no Svelte existiram até aqui; foram removidas.
+
+- [ ] **Vanilla: dias de fora do mês e seleção de intervalo.** A factory
+  preenche com `<td>` vazio a primeira e a última semana, e seleciona uma data
+  por vez. As outras três stacks mostram os dias vizinhos apagados e têm modo de
+  intervalo, e o `translations.json` compartilhado documenta os dois. Enquanto
+  não existirem, `functional.item3` está declarado como não aplicável no
+  contrato do Vanilla, com o motivo — o auditor não mente, mas a promessa segue
+  aberta. Mesma situação de `functional.item7` (legenda com seletor de mês/ano).
+
+- [ ] **Composição Calendar dentro de Popover (DatePicker), nas 4 stacks.**
+  `testes.visual.item5` a documenta e nenhuma stack tem a story. Por isso
+  `contract_uncovered` continua acusando `visual.item5` nas quatro: é dívida
+  visível de propósito, e não deve ser silenciada com `coversNotApplicable` —
+  não é um caso que não se aplica, é um caso que falta.
+
+- [ ] **`coverage_divergence` em Selected, Disabled e Single.** As quatro stacks
+  afirmam comportamento de verdade agora (mínimo de 3 asserções por story), mas
+  o Vanilla afirma mais porque o DOM dele expõe mais (`aria-pressed` além de
+  `data-selected`). O script cobra proporção; igualar isso encheria as outras de
+  asserção decorativa. Fica como está, com o registro.
+
 ## Backlog anterior, não tocado aqui
 
 - `button`: 53 violações de audit (39 `noop_assertion`), pré-existentes.

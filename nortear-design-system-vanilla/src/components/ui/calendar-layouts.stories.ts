@@ -36,7 +36,7 @@ export const CaptionLabel: Story = {
       class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
-    covers: ['functional.item6'],
+    covers: ['functional.item6', 'visual.item3'],
     docs: {
       description: {
         story:

@@ -22,23 +22,30 @@
 
   let { variant = 'single', locale = 'pt-BR', onValueChange }: Props = $props();
 
-  // Reference date (today) used for stable stories. Reactive $state for interaction.
-  const today = new Date();
-  const refSingle = new CalendarDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
-  const refPrev = refSingle.subtract({ days: 1 });
-  const refNext = refSingle.add({ days: 1 });
+  // Mês fixo em abril de 2026, e não a data de hoje: o Chromatic fotografa
+  // estas stories e um calendário ancorado no relógio gera diferença visual
+  // todo dia, escondendo a regressão de verdade no meio do ruído. A exceção é
+  // a variante `today`, que existe justamente para mostrar o dia corrente.
+  const refSingle = new CalendarDate(2026, 4, 12);
+  const refPlaceholder = new CalendarDate(2026, 4, 15);
+  const refPrev = refSingle.subtract({ days: 4 });
+  const refNext = refSingle.add({ days: 4 });
 
   // Intentional: initial state captured once at mount (stories mount fresh per render)
   let single = $state<DateValue | undefined>(
-    untrack(() => (variant === 'selected' || variant === 'single' ? refSingle : undefined)),
+    untrack(() => (variant === 'today' ? undefined : refSingle)),
   );
   let multiple = $state<DateValue[]>(
     untrack(() => (variant === 'multiple' ? [refPrev, refSingle, refNext] : [])),
   );
+  let placeholder = $state<DateValue | undefined>(
+    untrack(() => (variant === 'today' ? undefined : refPlaceholder)),
+  );
 
-  // Disabled matcher for stories that need it.
+  /** Bloqueia tudo antes de 10/04/2026 — limite fixo, como o mês. */
+  const limite = new CalendarDate(2026, 4, 10);
   function isPast(date: DateValue): boolean {
-    return date.compare(refSingle) < 0;
+    return date.compare(limite) < 0;
   }
 </script>
 
@@ -46,6 +53,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     onValueChange={(v: DateValue | undefined) => {
       single = v;
@@ -56,6 +64,7 @@
   <Calendar
     type="multiple"
     bind:value={multiple}
+    bind:placeholder
     {locale}
     onValueChange={(v: DateValue[]) => {
       multiple = v;
@@ -66,6 +75,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     captionLayout="label"
   />
@@ -73,6 +83,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     captionLayout="dropdown"
   />
@@ -80,6 +91,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     numberOfMonths={2}
   />
@@ -87,6 +99,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     isDateDisabled={isPast}
   />
@@ -94,6 +107,7 @@
   <Calendar
     type="single"
     bind:value={single}
+    bind:placeholder
     {locale}
     fixedWeeks
   />

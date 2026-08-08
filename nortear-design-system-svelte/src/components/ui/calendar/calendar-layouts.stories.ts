@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 
@@ -14,8 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       description: {
-        component:
-          'Variações de layout do Calendar: CaptionLabel exibe o mês como texto fixo; CaptionDropdown transforma mês/ano em <select> usando calendar-month-select e calendar-year-select; TwoMonths exibe dois meses lado a lado via numberOfMonths={2}. A stack Svelte (bits-ui) não expõe showWeekNumber nativo.',
+        component: 'Formato da legenda do mês e quantidade de meses visíveis ao mesmo tempo.',
       },
     },
   },
@@ -29,9 +28,26 @@ export const CaptionLabel: Story = {
     Component: CalendarStory,
     props: { variant: 'captionLabel', locale: 'pt-BR' },
   }),
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { description: { story: 'Legenda em texto com mês e ano no idioma configurado.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('A legenda traz mês e ano no idioma pedido', async () => {
+      // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
+      // semana; verificar só um dos dois deixaria metade da tradução solta.
+      await expect(canvasElement).toHaveTextContent(/abril de 2026/i);
+      const dias = Array.from(canvasElement.querySelectorAll('.nds-calendar-weekday')).map(
+        (el) => el.textContent?.trim().toLowerCase() ?? '',
+      );
+      await expect(dias.length).toBe(7);
+      await expect(dias[0]).toMatch(/^d/);
+    });
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('A legenda é texto, e não controle', async () => {
+      // É o que separa esta story da seguinte: aqui não há nada para operar.
+      await expect(within(canvasElement).queryAllByRole('combobox').length).toBe(0);
+    });
   },
 };
 
@@ -40,9 +56,44 @@ export const CaptionDropdown: Story = {
     Component: CalendarStory,
     props: { variant: 'captionDropdown', locale: 'pt-BR' },
   }),
+  parameters: {
+    covers: ['functional.item7'],
+    docs: {
+      description: {
+        story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('Mês e ano viram controles operáveis', async () => {
+      // functional.item7 — a story existe pelo salto de período: verificar que
+      // o calendário renderizou não a distingue da legenda de texto.
+      await expect(canvas.getAllByRole('combobox').length).toBe(2);
+    });
+
+    await step('Trocar o mês no seletor leva o grid junto', async () => {
+      // O bloco do mês é recriado a cada troca, então o <select> anterior vira
+      // nó destacado: guardar a referência faria o segundo comando agir num
+      // elemento fora da tela, sem erro nenhum e sem efeito. Uma busca por vez.
+      const seletorDeMes = () => canvas.getAllByRole('combobox')[0];
+
+      await userEvent.selectOptions(seletorDeMes(), '6');
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-06-"]'),
+      ).not.toBeNull();
+
+      // Cada passo estabelece a própria precondição: volta para abril, porque o
+      // painel reexecuta a play no mesmo DOM.
+      await userEvent.selectOptions(seletorDeMes(), '4');
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-04-"]'),
+      ).not.toBeNull();
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-06-"]'),
+      ).toBeNull();
+    });
   },
 };
 
@@ -51,8 +102,24 @@ export const TwoMonths: Story = {
     Component: CalendarStory,
     props: { variant: 'twoMonths', locale: 'pt-BR' },
   }),
-
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+  parameters: {
+    docs: {
+      description: {
+        story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('São dois grids, de meses consecutivos', async () => {
+      // Contar células passaria com um único mês de sessenta dias; o que a
+      // story mostra é a virada, então a asserção é sobre QUAIS meses aparecem.
+      await expect(canvasElement.querySelectorAll('[role="grid"]').length).toBe(2);
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value="2026-04-30"]'),
+      ).not.toBeNull();
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value="2026-05-01"]'),
+      ).not.toBeNull();
+    });
   },
 };

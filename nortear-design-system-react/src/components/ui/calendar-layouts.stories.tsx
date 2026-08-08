@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect } from "storybook/test";
+import { userEvent, within, expect } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Layouts do Calendar: legenda como texto (padrão), como dropdown de mês/ano, com dois meses lado a lado e com coluna de número da semana ISO.",
+          "Formato da legenda do mês, quantidade de meses visíveis ao mesmo tempo e coluna com o número da semana.",
       },
     },
   },
@@ -24,13 +24,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Mês fixo, e não a data de hoje: o Chromatic fotografa estas stories, e um
+// calendário ancorado no relógio gera diferença visual todo dia.
+const ABRIL = () => new Date(2026, 3, 1);
+const DIA_12 = () => new Date(2026, 3, 12);
+
 export const CaptionLabel: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>(DIA_12());
     return (
       <Calendar
         mode="single"
         captionLayout="label"
+        defaultMonth={ABRIL()}
         selected={date}
         onSelect={setDate}
         locale={ptBR}
@@ -38,59 +44,97 @@ export const CaptionLabel: Story = {
     );
   },
   parameters: {
+    covers: ["functional.item6", "visual.item3"],
     docs: {
-      description: {
-        story:
-          "captionLayout=\"label\" — legenda em texto simples. Padrão do componente.",
-      },
+      description: { story: "Legenda em texto com mês e ano no idioma configurado." },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+
+    await step("A legenda traz mês e ano no idioma pedido", async () => {
+      // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
+      // semana; verificar só um dos dois deixaria metade da tradução solta.
+      // "de" opcional: o formato da legenda varia com o formatador de data, e
+      // o que a story promete é mês e ano no idioma certo, não a preposição.
+      await expect(canvasElement).toHaveTextContent(/abril\s+(de\s+)?2026/i);
+      // A linha dos dias da semana aparece na tela mas fica fora da árvore de
+      // acessibilidade: cada dia já anuncia a data inteira, e repetir a coluna
+      // a cada célula só encompridaria a leitura. Por isso a asserção é sobre o
+      // texto visível — pedir `columnheader` aqui reprovaria de propósito.
+      const cabecalho = canvasElement.querySelector("thead")!;
+      await expect(cabecalho).toHaveAttribute("aria-hidden", "true");
+      const dias = Array.from(cabecalho.querySelectorAll("th")).map(
+        (th) => th.textContent?.trim().toLowerCase() ?? "",
+      );
+      await expect(dias.length).toBe(7);
+      await expect(dias[0]).toMatch(/^d/);
+    });
+
+    await step("A legenda é texto, e não controle", async () => {
+      // É o que separa esta story da seguinte: aqui não há nada para operar.
+      await expect(canvas.queryAllByRole("combobox").length).toBe(0);
+    });
   },
 };
 
 export const CaptionDropdown: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>(DIA_12());
     return (
       <Calendar
         mode="single"
         captionLayout="dropdown"
+        defaultMonth={ABRIL()}
         selected={date}
         onSelect={setDate}
         locale={ptBR}
       />
     );
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // F7 — captionLayout="dropdown" renderiza dois <select> (mês e ano)
-    const comboboxes = canvas.getAllByRole("combobox");
-    await expect(comboboxes.length).toBe(2);
-  },
   parameters: {
+    covers: ["functional.item7"],
     docs: {
       description: {
-        story:
-          "captionLayout=\"dropdown\" — mês e ano viram `<select>` para navegação rápida entre anos.",
+        story: "Mês e ano viram seletores, para saltar de período sem passar mês a mês.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Mês e ano viram controles operáveis", async () => {
+      // functional.item7 — a story existe pelo salto de período: verificar que
+      // o calendário renderizou não a distingue da legenda de texto.
+      await expect(canvas.getAllByRole("combobox").length).toBe(2);
+    });
+
+    await step("Trocar o mês no seletor leva o grid junto", async () => {
+      // Busca a cada vez: a legenda é reconstruída na troca, e uma referência
+      // guardada agiria num nó fora da tela, sem erro e sem efeito.
+      const seletorDeMes = () => canvas.getAllByRole("combobox")[0];
+      await userEvent.selectOptions(seletorDeMes(), "5");
+      await expect(canvasElement.querySelector('[data-day="2026-06-01"]')).not.toBeNull();
+
+      // Cada passo estabelece a própria precondição: volta para abril, porque o
+      // painel reexecuta a play no mesmo DOM.
+      await userEvent.selectOptions(seletorDeMes(), "3");
+      await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
+    });
   },
 };
 
 export const TwoMonths: Story = {
   render: () => {
-    const today = new Date();
     const [range, setRange] = useState<{ from?: Date; to?: Date } | undefined>({
-      from: today,
-      to: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 9),
+      from: new Date(2026, 3, 28),
+      to: new Date(2026, 4, 3),
     });
     return (
       <Calendar
         mode="range"
         numberOfMonths={2}
+        defaultMonth={ABRIL()}
         selected={range as never}
         onSelect={setRange as never}
         locale={ptBR}
@@ -100,24 +144,32 @@ export const TwoMonths: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "numberOfMonths={2} — dois meses lado a lado. Reduz cliques de navegação em `mode=\"range\"`.",
+        story: "Dois meses lado a lado, para escolher datas que atravessam a virada.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getAllByRole("grid").length).toBeGreaterThanOrEqual(1);
+  play: async ({ canvasElement, step }) => {
+    await step("São dois meses consecutivos, e o intervalo atravessa a virada", async () => {
+      // Contar grids passaria com dois meses iguais; o que a story mostra é a
+      // travessia, então a asserção é sobre QUAIS dias estão marcados.
+      await expect(canvasElement.querySelectorAll('[role="grid"]').length).toBe(2);
+      const marcados = Array.from(
+        canvasElement.querySelectorAll("[role=gridcell][data-selected]"),
+      ).map((el) => el.getAttribute("data-day"));
+      await expect(marcados[0]).toBe("2026-04-28");
+      await expect(marcados[marcados.length - 1]).toBe("2026-05-03");
+    });
   },
 };
 
 export const WithWeekNumber: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>(DIA_12());
     return (
       <Calendar
         mode="single"
         showWeekNumber
+        defaultMonth={ABRIL()}
         selected={date}
         onSelect={setDate}
         locale={ptBR}
@@ -128,21 +180,18 @@ export const WithWeekNumber: Story = {
     docs: {
       description: {
         story:
-          "showWeekNumber — exibe coluna com o número da semana ISO à esquerda do grid.",
-      },
-    },
-    // react-day-picker v9 renderiza week numbers como <td role="rowheader" scope="row">.
-    // axe reporta scope-attr-valid (HTML5 só permite scope em <th>), mas é a estrutura
-    // que a lib usa para anunciar week number como cabeçalho de linha em leitores de tela.
-    // Ver PATCHES.md#calendar-week-number-scope.
-    a11y: {
-      config: {
-        rules: [{ id: 'scope-attr-valid', enabled: false }],
+          "Coluna com o número da semana à esquerda do grid, para quem organiza o trabalho por semana.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step("Cada linha do mês ganha o número da semana", async () => {
+      // O número é cabeçalho de linha, não um dia: sem o papel de rowheader ele
+      // seria lido como mais uma data e a semana ganharia oito colunas.
+      const numeros = Array.from(canvasElement.querySelectorAll('[role="rowheader"]'));
+      await expect(numeros.length).toBeGreaterThan(3);
+      // Abril de 2026 começa na semana ISO 14.
+      await expect(numeros[0].textContent?.trim()).toBe("14");
+    });
   },
 };

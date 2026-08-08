@@ -93,7 +93,7 @@ export const Disabled: Story = {
       class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
-    covers: ['functional.item4'],
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story:

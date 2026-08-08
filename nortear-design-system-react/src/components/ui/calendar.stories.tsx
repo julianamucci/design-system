@@ -64,17 +64,15 @@ function PlaygroundCalendar(args: ComponentProps<typeof Calendar>) {
     : args.mode === "range" ? { from: new Date(), to: undefined }
     : new Date(),
   );
-  return (
-    <Calendar
-      {...args}
-      selected={selected as never}
-      onSelect={setSelected as never}
-      locale={ptBR}
-    />
-  );
+  // O cast é no objeto inteiro, e não em `selected` sozinho: o tipo do Calendar
+  // é uma união discriminada por `mode`, e o TypeScript não consegue estreitá-la
+  // a partir de um `mode` que vem dos controls em tempo de execução.
+  const props = { ...args, selected, onSelect: setSelected, locale: ptBR };
+  return <Calendar {...(props as ComponentProps<typeof Calendar>)} />;
 }
 
 export const Playground: Story = {
+  parameters: { covers: ["visual.item1", "accessibility.item4", "accessibility.item6", "functional.item5", "accessibility.item5", "accessibility.item1", "accessibility.item2"] },
   render: (args) => <PlaygroundCalendar key={String(args.mode)} {...args} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, fn } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Estados do Calendar: selecionado, desabilitado, hoje destacado, dias fora do mês e intervalo com dias no meio.",
+          "Estados de célula: escolhida, bloqueada, o dia de hoje, os dias de fora do mês e o miolo de um intervalo.",
       },
     },
   },
@@ -24,120 +24,152 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Mês fixo, e não a data de hoje: o Chromatic fotografa estas stories, e um
+// calendário ancorado no relógio gera diferença visual todo dia. A exceção é a
+// story `Today`, que existe justamente para mostrar o dia corrente.
+const ABRIL = () => new Date(2026, 3, 1);
+
+/** O <td> carrega a data em ISO, que é comparável; o <button> traz a formatada. */
+const diasCom = (canvasElement: HTMLElement, seletor: string): string[] =>
+  Array.from(canvasElement.querySelectorAll(`[role=gridcell]${seletor}`)).map(
+    (el) => el.getAttribute("data-day") ?? "",
+  );
+
 export const Selected: Story = {
   render: () => {
-    const today = new Date();
-    const [date, setDate] = useState<Date | undefined>(today);
+    const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 12));
     return (
       <Calendar
         mode="single"
+        defaultMonth={ABRIL()}
         selected={date}
         onSelect={setDate}
         locale={ptBR}
       />
     );
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // F6 — locale ptBR: weekdays em português (dom/seg/ter/qua/qui/sex/sáb)
-    // react-day-picker abrevia com capitalização "seg." ou similar; usa regex case-insensitive.
-    // react-day-picker pode renderizar os headers como <th scope="col"> ou divs com role
-    const weekHeaders = canvasElement.querySelectorAll('thead th, [role="columnheader"]');
-    const weekdayTexts = Array.from(weekHeaders)
-      .map((h) => (h.textContent ?? "").toLowerCase())
-      .join(" ");
-    // Se nenhum header detectável, busca em qualquer elemento dentro do calendar
-    if (!weekdayTexts.trim()) {
-      const allText = (canvasElement.textContent ?? "").toLowerCase();
-      await expect(allText).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
-    } else {
-      await expect(weekdayTexts).toMatch(/seg|ter|qua|qui|sex|s[aá]b|dom/);
-    }
-
-    // A5 — focus ring visível via Tab até chegar numa célula (DayButton)
-    const dayButtons = canvasElement.querySelectorAll<HTMLButtonElement>(
-      'button[data-day]',
-    );
-    await expect(dayButtons.length).toBeGreaterThan(0);
-    // Tab até um DayButton. react-day-picker deixa apenas um dia com tabIndex=0.
-    await userEvent.tab();
-    let tries = 0;
-    while (
-      tries < 20 &&
-      !(document.activeElement as HTMLElement | null)?.hasAttribute("data-day")
-    ) {
-      await userEvent.tab();
-      tries += 1;
-    }
-    await expect(
-      (document.activeElement as HTMLElement | null)?.hasAttribute("data-day"),
-    ).toBe(true);
-    // Sanity: grid acessível
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
-  },
   parameters: {
+    covers: ["accessibility.item2", "accessibility.item3"],
     docs: {
       description: {
-        story:
-          "Estado selected — a célula recebe `bg-primary`, `text-primary-foreground` e `aria-selected=\"true\"`.",
+        story: "Data escolhida — a célula fica marcada e anuncia a data por extenso.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Só a data escolhida está marcada", async () => {
+      // accessibility.item3 — "existe alguma célula marcada" passaria com o mês
+      // inteiro marcado.
+      await expect(diasCom(canvasElement, "[data-selected]")).toEqual(["2026-04-12"]);
+    });
+
+    await step("A célula anuncia a data por extenso", async () => {
+      // accessibility.item2 — o texto visível é só "12"; sozinho ele não diz de
+      // que mês nem de que ano.
+      // O nome acessível mora no botão, não na célula: é ele que recebe o foco
+      // e é o nome dele que o leitor de tela anuncia ao chegar no dia.
+      const celula = canvasElement.querySelector("[role=gridcell][data-selected]")!;
+      const botao = celula.querySelector("button")!;
+      await expect(botao.getAttribute("aria-label")).toMatch(/12 de abril de 2026/i);
+      await expect(celula).toHaveAttribute("aria-selected", "true");
+    });
   },
 };
 
 export const Disabled: Story = {
-  render: () => {
-    const today = new Date();
-    const [date, setDate] = useState<Date | undefined>();
+  args: { onSelect: fn() },
+  render: (args) => {
+    const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 15));
     return (
       <Calendar
         mode="single"
+        defaultMonth={ABRIL()}
         selected={date}
-        onSelect={setDate}
-        disabled={{ before: today }}
+        onSelect={(d) => {
+          setDate(d);
+          (args as { onSelect?: (d: Date | undefined) => void }).onSelect?.(d);
+        }}
+        disabled={{ before: new Date(2026, 3, 10) }}
         locale={ptBR}
       />
     );
   },
   parameters: {
+    covers: ["functional.item4", "visual.item4"],
     docs: {
       description: {
-        story:
-          "disabled={{ before: new Date() }} — datas passadas ficam com `opacity-50`, `pointer-events-none` e `aria-disabled=\"true\"`.",
+        story: "Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+    const onSelect = (args as { onSelect?: ReturnType<typeof fn> }).onSelect!;
+
+    await step("A regra bloqueia exatamente o intervalo que ela descreve", async () => {
+      // functional.item4 — contar "há algum bloqueado" passaria com um só, e
+      // também com a regra invertida.
+      const bloqueados = diasCom(canvasElement, "[data-disabled]").filter((d) =>
+        d.startsWith("2026-04-"),
+      );
+      await expect(bloqueados).toEqual([
+        "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04",
+        "2026-04-05", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09",
+      ]);
+    });
+
+    await step("Clicar num dia bloqueado não escolhe nem reporta", async () => {
+      const bloqueado = canvasElement.querySelector<HTMLElement>(
+        '[role=gridcell][data-day="2026-04-03"] button',
+      )!;
+      onSelect.mockClear();
+      await userEvent.click(bloqueado, { pointerEventsCheck: 0 });
+      await expect(onSelect).not.toHaveBeenCalled();
+      await expect(diasCom(canvasElement, "[data-selected]")).toEqual(["2026-04-15"]);
+    });
+
+    await step("Um dia livre continua escolhível", async () => {
+      // Sem este passo, a story passaria com o mês inteiro bloqueado.
+      onSelect.mockClear();
+      await userEvent.click(canvas.getByRole("button", { name: /16 de abril de 2026/i }));
+      await expect(onSelect).toHaveBeenCalledTimes(1);
+    });
   },
 };
 
 export const Today: Story = {
-  render: () => (
-    <Calendar mode="single" locale={ptBR} />
-  ),
+  render: () => <Calendar mode="single" locale={ptBR} />,
   parameters: {
+    covers: ["functional.item1"],
     docs: {
       description: {
-        story:
-          "Sem data selecionada — apenas o dia de hoje ganha destaque com `bg-muted`.",
+        story: "Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step("O dia destacado é o de hoje mesmo", async () => {
+      // functional.item1 — `data-today` presente em alguma célula não basta: a
+      // regra é cair na data certa, e é isso que um erro de fuso quebraria.
+      const hoje = new Date();
+      const iso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+      await expect(diasCom(canvasElement, "[data-today]")).toContain(iso);
+    });
+
+    await step("Destacar hoje não é escolhê-lo", async () => {
+      await expect(diasCom(canvasElement, "[data-selected]").length).toBe(0);
+    });
   },
 };
 
 export const WithOutsideDays: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 12));
     return (
       <Calendar
         mode="single"
         showOutsideDays
+        defaultMonth={ABRIL()}
         selected={date}
         onSelect={setDate}
         locale={ptBR}
@@ -148,26 +180,39 @@ export const WithOutsideDays: Story = {
     docs: {
       description: {
         story:
-          "showOutsideDays (padrão) — dias do mês anterior/próximo aparecem apagados (`nds-text-muted-foreground`) nas bordas do grid.",
+          "Dias do mês anterior e do próximo completam a primeira e a última semana, apagados para não competirem com o mês em foco.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step("As bordas do grid trazem dias de fora do mês", async () => {
+      // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
+      const fora = diasCom(canvasElement, "[data-outside]");
+      await expect(fora).toContain("2026-03-30");
+      await expect(fora.length).toBeGreaterThan(0);
+    });
+
+    await step("Dia de fora do mês não conta como do mês", async () => {
+      // O contraste é o ponto da story: sem a marcação de externo, o mês
+      // pareceria ter mais dias do que tem.
+      const doMes = Array.from(
+        canvasElement.querySelectorAll('[role=gridcell][data-day^="2026-04-"]:not([data-outside])'),
+      );
+      await expect(doMes.length).toBe(30);
+    });
   },
 };
 
 export const RangeWithMiddle: Story = {
   render: () => {
-    const today = new Date();
     const [range, setRange] = useState<{ from?: Date; to?: Date } | undefined>({
-      from: today,
-      to: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 8),
+      from: new Date(2026, 3, 10),
+      to: new Date(2026, 3, 18),
     });
     return (
       <Calendar
         mode="range"
+        defaultMonth={ABRIL()}
         selected={range as never}
         onSelect={setRange as never}
         locale={ptBR}
@@ -177,13 +222,27 @@ export const RangeWithMiddle: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "mode=\"range\" com `from` e `to` — dias no meio recebem `bg-muted`; extremos mantêm `bg-primary`.",
+        story: "Intervalo com miolo: os dias entre início e fim também ficam marcados.",
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByRole("grid")).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step("O intervalo é contínuo do início ao fim", async () => {
+      // Verificar só os extremos passaria com o meio vazio, que é exatamente o
+      // que esta story existe para mostrar.
+      await expect(diasCom(canvasElement, "[data-selected]")).toEqual([
+        "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14",
+        "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18",
+      ]);
+    });
+
+    await step("Os extremos são distinguíveis do miolo", async () => {
+      // Sem essa marcação, o intervalo vira um bloco só e a pessoa não vê onde
+      // ele começa nem onde termina.
+      const inicio = canvasElement.querySelector('[role=gridcell][data-day="2026-04-10"] button')!;
+      const fim = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
+      await expect(inicio).toHaveAttribute("data-range-start", "true");
+      await expect(fim).toHaveAttribute("data-range-end", "true");
+    });
   },
 };
