@@ -13,7 +13,7 @@
 	bind:ref
 	role="presentation"
 	class={cn(
-		"nds-calendar-dropdowns",
+		"nds-calendar-caption-dropdown",
 		className
 	)}
 	{...restProps}

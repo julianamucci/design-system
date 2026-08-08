@@ -8,7 +8,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
 function Calendar({
   className,
@@ -52,15 +52,12 @@ function Calendar({
           defaultClassNames.button_next
         ),
         month_caption: cn("nds-calendar-caption", defaultClassNames.month_caption),
-        dropdowns: cn("nds-calendar-dropdowns", defaultClassNames.dropdowns),
-        dropdown_root: cn(
-          "nds-calendar-dropdown-root",
-          defaultClassNames.dropdown_root
+        dropdowns: cn(
+          "nds-calendar-caption-dropdown",
+          defaultClassNames.dropdowns
         ),
-        dropdown: cn("nds-calendar-dropdown", defaultClassNames.dropdown),
         caption_label: cn(
           "nds-calendar-caption-label",
-          captionLayout !== "label" && "nds-calendar-caption-label-button",
           defaultClassNames.caption_label
         ),
         month_grid: cn("nds-calendar-table", defaultClassNames.month_grid),
@@ -96,6 +93,19 @@ function Calendar({
         ...classNames,
       }}
       components={{
+        // A lib envolve o <select> num <span> e desenha ao lado um rótulo
+        // `aria-hidden` com chevron, deixando o select invisível por cima. O
+        // truque existia porque não dava para estilizar o nativo — hoje dá, e o
+        // contrato das quatro stacks é o <select> ser o próprio controle.
+        Dropdown: ({ options, className, ...selectProps }) => (
+          <select className={cn("nds-calendar-select", className)} {...selectProps}>
+            {options?.map(({ value, label, disabled }) => (
+              <option key={value} value={value} disabled={disabled}>
+                {label}
+              </option>
+            ))}
+          </select>
+        ),
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
@@ -106,23 +116,16 @@ function Calendar({
             />
           )
         },
-        Chevron: ({ className, orientation, ...props }) => {
-          if (orientation === "left") {
-            return (
-              <ChevronLeftIcon className={cn("nds-calendar-chevron", className)} {...props} />
-            )
-          }
-
-          if (orientation === "right") {
-            return (
-              <ChevronRightIcon className={cn("nds-calendar-chevron", className)} {...props} />
-            )
-          }
-
-          return (
-            <ChevronDownIcon className={cn("nds-calendar-chevron", className)} {...props} />
-          )
-        },
+        // Só os dois sentidos que o calendário usa: os botões de mês anterior e
+        // próximo. O chevron para baixo servia ao rótulo desenhado sobre o
+        // <select>, que deixou de existir quando a legenda passou a ser o
+        // próprio select — o nativo traz a seta dele.
+        Chevron: ({ className, orientation, ...props }) =>
+          orientation === "left" ? (
+            <ChevronLeftIcon className={cn("nds-calendar-chevron", className)} {...props} />
+          ) : (
+            <ChevronRightIcon className={cn("nds-calendar-chevron", className)} {...props} />
+          ),
         DayButton: ({ ...props }) => (
           <CalendarDayButton locale={locale} {...props} />
         ),

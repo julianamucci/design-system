@@ -8,7 +8,6 @@ import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { createYear, createYearRange, toDate } from 'reka-ui/date'
 import { computed } from 'vue'
 import { cn } from '@/lib/utils'
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes['class'], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
@@ -50,60 +49,51 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
+  <!-- <select> puro, e não o NativeSelect do stack: aquele traz wrapper e
+       chevron próprios, e a legenda do calendário é contrato compartilhado
+       entre as quatro stacks — o mesmo `.nds-calendar-select` em todas. É a
+       única exceção ao "prefira o componente existente" neste arquivo, e ela
+       existe porque a consistência entre stacks é a regra mais forte aqui. -->
   <DefineMonthTemplate v-slot="{ date }">
-    <div class="nds-calendar-select">
-      <div class="nds-calendar-select">
-        <div class="nds-calendar-select-value">
-          {{ formatter.custom(toDate(date), { month: 'short' }) }}
-        </div>
-        <NativeSelect
-          aria-label="Selecionar mês"
-          class="nds-calendar-select-input"
-          @change="(e: Event) => {
-            placeholder = placeholder.set({
-              month: Number((e?.target as any)?.value),
-            })
-          }"
-        >
-          <NativeSelectOption
-            v-for="(month) in createYear({ dateObj: date })"
-            :key="month.toString()"
-            :value="month.month"
-            :selected="date.month === month.month"
-          >
-            {{ formatter.custom(toDate(month), { month: 'short' }) }}
-          </NativeSelectOption>
-        </NativeSelect>
-      </div>
-    </div>
+    <select
+      aria-label="Selecionar mês"
+      class="nds-calendar-select"
+      @change="(e: Event) => {
+        placeholder = placeholder.set({
+          month: Number((e?.target as HTMLSelectElement)?.value),
+        })
+      }"
+    >
+      <option
+        v-for="(month) in createYear({ dateObj: date })"
+        :key="month.toString()"
+        :value="month.month"
+        :selected="date.month === month.month"
+      >
+        {{ formatter.custom(toDate(month), { month: 'short' }) }}
+      </option>
+    </select>
   </DefineMonthTemplate>
 
   <DefineYearTemplate v-slot="{ date }">
-    <div class="nds-calendar-select">
-      <div class="nds-calendar-select">
-        <div class="nds-calendar-select-value">
-          {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
-        </div>
-        <NativeSelect
-          aria-label="Selecionar ano"
-          class="nds-calendar-select-input"
-          @change="(e: Event) => {
-            placeholder = placeholder.set({
-              year: Number((e?.target as any)?.value),
-            })
-          }"
-        >
-          <NativeSelectOption
-            v-for="(year) in yearRange"
-            :key="year.toString()"
-            :value="year.year"
-            :selected="date.year === year.year"
-          >
-            {{ formatter.custom(toDate(year), { year: 'numeric' }) }}
-          </NativeSelectOption>
-        </NativeSelect>
-      </div>
-    </div>
+    <select
+      aria-label="Selecionar ano"
+      class="nds-calendar-select"
+      @change="(e: Event) => {
+        placeholder = placeholder.set({
+          year: Number((e?.target as HTMLSelectElement)?.value),
+        })
+      }"
+    >
+      <option
+        v-for="(year) in yearRange"
+        :key="year.toString()"
+        :value="year.year"
+        :selected="date.year === year.year"
+      >
+        {{ formatter.custom(toDate(year), { year: 'numeric' }) }}
+      </option>
+    </select>
   </DefineYearTemplate>
 
   <CalendarRoot
@@ -136,7 +126,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         :year="ReuseYearTemplate"
       >
         <template v-if="layout === 'month-and-year'">
-          <div class="nds-calendar-select-row">
+          <div class="nds-calendar-caption-dropdown">
             <ReuseMonthTemplate :date="date" />
             <ReuseYearTemplate :date="date" />
           </div>

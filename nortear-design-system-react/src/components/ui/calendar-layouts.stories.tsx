@@ -113,9 +113,7 @@ export const CaptionDropdown: Story = {
       // A legenda com seletores não tinha moldura nenhuma: lia-se como o nome do
       // mês com um chevron ao lado, e nada indicava que abria. Classe presente
       // não é moldura desenhada — a asserção é sobre a borda computada.
-      const molduras = canvasElement.querySelectorAll<HTMLElement>(
-        ".nds-calendar-dropdown-root",
-      );
+      const molduras = canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-select");
       await expect(molduras.length).toBe(2);
       for (const moldura of molduras) {
         await expect(parseFloat(getComputedStyle(moldura).borderTopWidth)).toBeGreaterThan(0);

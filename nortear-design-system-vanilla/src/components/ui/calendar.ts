@@ -172,7 +172,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     wrap.className = 'nds-calendar-caption-dropdown';
 
     const selMes = document.createElement('select');
-    selMes.className = 'nds-calendar-select-input';
+    selMes.className = 'nds-calendar-select';
     selMes.setAttribute('aria-label', 'Selecionar mês');
     monthNames.forEach((nome, i) => {
       const opt = document.createElement('option');
@@ -187,7 +187,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     });
 
     const selAno = document.createElement('select');
-    selAno.className = 'nds-calendar-select-input';
+    selAno.className = 'nds-calendar-select';
     selAno.setAttribute('aria-label', 'Selecionar ano');
     for (let ano = viewYear - 10; ano <= viewYear + 10; ano++) {
       const opt = document.createElement('option');

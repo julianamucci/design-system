@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
-	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 
 	let {
 		ref = $bindable(null),
@@ -16,39 +15,20 @@
 	} = $props();
 </script>
 
-<span
-	class={cn(
-		"nds-calendar-select-framed",
-		className
-	)}
->
-	<CalendarPrimitive.MonthSelect
-		bind:ref
-		class="nds-calendar-select-overlay"
-		{...restProps}
-	>
-		{#snippet child({ props, monthItems, selectedMonthItem })}
-			<select {...props} {value} {onchange}>
-				{#each monthItems as monthItem (monthItem.value)}
-					<option
-						value={monthItem.value}
-						selected={monthItem.value === value}
-					>
-						{monthItem.label}
-					</option>
-				{/each}
-			</select>
-			<span
-				class="nds-calendar-select-display"
-				aria-hidden="true"
-			>
-				<!-- O rótulo visível é o do item que a própria lib marca como escolhido.
-				     Antes procurávamos na lista pelo nosso `value` com fallback para ele —
-				     os dois vêm do mesmo placeholder, então a busca só acrescentava um
-				     caminho que nada percorria. A story afirma este texto. -->
-				{selectedMonthItem.label}
-				<ChevronDownIcon class={cn("nds-size-4", className)} />
-			</span>
-		{/snippet}
-	</CalendarPrimitive.MonthSelect>
-</span>
+<!--
+O <select> É o controle: nada de camada invisível sobre um rótulo desenhado à
+mão. O truque antigo existia porque não dava para estilizar o select nativo, e
+custava caro — o rótulo duplicava o texto para o leitor de tela e o contrato de
+classe divergia das outras três stacks.
+-->
+<CalendarPrimitive.MonthSelect bind:ref {...restProps}>
+	{#snippet child({ props, monthItems })}
+		<select {...props} {value} {onchange} class={cn("nds-calendar-select", className)}>
+			{#each monthItems as monthItem (monthItem.value)}
+				<option value={monthItem.value} selected={monthItem.value === value}>
+					{monthItem.label}
+				</option>
+			{/each}
+		</select>
+	{/snippet}
+</CalendarPrimitive.MonthSelect>
