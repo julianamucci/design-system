@@ -64,13 +64,9 @@ export const Large: Story = {
   },
 };
 
-const iconAriaLabelPlay: Story['play'] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
-  await step('Botão icon-only é acessível via aria-label', async () => {
-    const button = canvas.getByRole('button', { name: 'Adicionar item' });
-    await expect(button).toBeInTheDocument();
-  });
-};
+// Os quatro botões icon-only repetem a mesma play de propósito: cada story
+// afirma o próprio tamanho. Uma play compartilhada cobriria os quatro com uma
+// asserção só, e trocar icon-lg por icon-xs passaria em todas.
 
 export const Icon: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
@@ -78,23 +74,67 @@ export const Icon: Story = {
     covers: ['functional.item6', 'accessibility.item4'],
     docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
   },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+
+    await step('Botão icon-only é acessível via aria-label', async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step('O tamanho pedido é a classe aplicada', async () => {
+      await expect(button).toHaveClass('nds-button-icon');
+    });
+  },
 };
 
 export const IconExtraSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-xs', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' } } },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+
+    await step('Botão icon-only é acessível via aria-label', async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step('O tamanho pedido é a classe aplicada', async () => {
+      await expect(button).toHaveClass('nds-button-icon-xs');
+    });
+  },
 };
 
 export const IconSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-sm', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' } } },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+
+    await step('Botão icon-only é acessível via aria-label', async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step('O tamanho pedido é a classe aplicada', async () => {
+      await expect(button).toHaveClass('nds-button-icon-sm');
+    });
+  },
 };
 
 export const IconLarge: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-lg', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: { docs: { description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' } } },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Adicionar item' });
+
+    await step('Botão icon-only é acessível via aria-label', async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step('O tamanho pedido é a classe aplicada', async () => {
+      await expect(button).toHaveClass('nds-button-icon-lg');
+    });
+  },
 };

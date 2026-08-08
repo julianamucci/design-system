@@ -84,13 +84,9 @@ export const Large: Story = {
 
 // Os quatro botões icon-only provam a mesma coisa: o nome acessível vem do
 // aria-label, não do ícone. Uma função só, como nas outras stacks.
-const iconAriaLabelPlay: Story["play"] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
-  await step("Botão icon-only é acessível via aria-label", async () => {
-    const button = canvas.getByRole("button", { name: "Adicionar item" });
-    await expect(button).toBeInTheDocument();
-  });
-};
+// Os quatro botões icon-only repetem a mesma play de propósito: cada story
+// afirma o próprio tamanho. Uma play compartilhada cobriria os quatro com uma
+// asserção só, e trocar icon-lg por icon-xs passaria em todas.
 
 export const Icon: Story = {
   render: () => (
@@ -106,7 +102,18 @@ export const Icon: Story = {
       },
     },
   },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Adicionar item" });
+
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step("O tamanho pedido é a classe aplicada", async () => {
+      await expect(button).toHaveClass("nds-button-icon");
+    });
+  },
 };
 
 export const IconExtraSmall: Story = {
@@ -122,7 +129,18 @@ export const IconExtraSmall: Story = {
       },
     },
   },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Adicionar item" });
+
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step("O tamanho pedido é a classe aplicada", async () => {
+      await expect(button).toHaveClass("nds-button-icon-xs");
+    });
+  },
 };
 
 export const IconSmall: Story = {
@@ -138,7 +156,18 @@ export const IconSmall: Story = {
       },
     },
   },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Adicionar item" });
+
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step("O tamanho pedido é a classe aplicada", async () => {
+      await expect(button).toHaveClass("nds-button-icon-sm");
+    });
+  },
 };
 
 export const IconLarge: Story = {
@@ -154,5 +183,16 @@ export const IconLarge: Story = {
       },
     },
   },
-  play: iconAriaLabelPlay,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Adicionar item" });
+
+    await step("Botão icon-only é acessível via aria-label", async () => {
+      await expect(button).toBeInTheDocument();
+    });
+
+    await step("O tamanho pedido é a classe aplicada", async () => {
+      await expect(button).toHaveClass("nds-button-icon-lg");
+    });
+  },
 };

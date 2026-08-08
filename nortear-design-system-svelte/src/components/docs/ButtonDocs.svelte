@@ -20,7 +20,24 @@
   import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
-  const { tStore } = useTranslation(buttonTranslations);
+  // `href` só existe nesta stack — aqui o botão É a âncora, então ele é quem
+  // recebe o destino. A descrição fica no override e não no conteúdo
+  // compartilhado, mas passa pelos três idiomas como qualquer outra linha da
+  // tabela: presa em pt-BR, ela apareceria em português nas versões en e es.
+  const { tStore } = useTranslation(buttonTranslations, {
+    'pt-BR': {
+      'props.table.href':
+        'Destino da navegação. Com ele o componente renderiza como link, mantendo os estilos do botão.',
+    },
+    en: {
+      'props.table.href':
+        'Navigation target. With it the component renders as a link while keeping the button styles.',
+    },
+    es: {
+      'props.table.href':
+        'Destino de navegación. Con él el componente se renderiza como enlace y conserva los estilos del botón.',
+    },
+  });
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
@@ -505,7 +522,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
             items: [
               { name: 'variant',  type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
               { name: 'size',     type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.size')) },
-              { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Quando fornecido, renderiza como <a> mantendo os estilos e a semântica de link.' },
+              { name: 'href',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.href')) },
               { name: 'disabled', type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: toPlainText($tStore('props.table.disabled')) },
               { name: 'type',     type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: toPlainText($tStore('props.table.htmlType')) },
               { name: 'onclick',  type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: toPlainText($tStore('props.table.onClick')) },

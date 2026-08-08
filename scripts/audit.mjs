@@ -1687,6 +1687,16 @@ function auditI18nKeys(slug) {
       const content = readFile(file);
       if (!content) continue;
 
+      // Chaves declaradas no override de `useTranslation`/`createTranslation`
+      // existem em tempo de execução sem existir no translations.json — é o
+      // mecanismo previsto para prop que só uma stack expõe (`href` no Svelte,
+      // `ariaBusy` na factory do Vanilla), que não cabe no conteúdo
+      // compartilhado por não ser contrato das quatro. Sem reconhecê-las, a
+      // regra acusa justamente o uso correto do override.
+      const overrideKeys = new Set(
+        [...content.matchAll(/['"]([a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+)['"]\s*:/g)].map((m) => m[1]),
+      );
+
       // tNav/tUi leem ui.json; t/tContent/tStore leem o conteúdo do componente.
       const alvos = [
         [/\bt(?:Nav|Ui)\(\s*['"]([a-zA-Z0-9_.]+)['"]/g, uiKeys, 'ui.json'],
@@ -1699,7 +1709,7 @@ function auditI18nKeys(slug) {
           const key = m[1];
           if (!key.includes('.') || conhecidas.has(key)) continue;
           // tNav e t coexistem no mesmo arquivo; só acusa se não estiver em nenhum.
-          if (uiKeys.has(key) || contentKeys.has(key)) continue;
+          if (uiKeys.has(key) || contentKeys.has(key) || overrideKeys.has(key)) continue;
           faltando.add(key);
         }
         for (const key of faltando) {

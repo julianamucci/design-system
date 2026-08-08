@@ -410,7 +410,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Tamanhos — default, sm, lg, icon, icon-sm, icon-lg",
+          "story": "Tamanhos — default, xs, sm, lg e os quatro icon-only",
           "priority": "high"
         },
         "item4": {
@@ -857,7 +857,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Sizes — default, sm, lg, icon, icon-sm, icon-lg",
+          "story": "Sizes — default, xs, sm, lg and the four icon-only",
           "priority": "high"
         },
         "item4": {
@@ -1304,7 +1304,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Tamaños — default, sm, lg, icon, icon-sm, icon-lg",
+          "story": "Tamaños — default, xs, sm, lg y los cuatro icon-only",
           "priority": "high"
         },
         "item4": {

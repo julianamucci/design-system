@@ -91,7 +91,7 @@ export const FocusVisible: Story = {
     covers: ["accessibility.item3"],
     docs: {
       description: {
-        story: "Estado de foco via teclado. Use Tab para navegar e verificar o ring-[3px] de foco.",
+        story: "Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.",
       },
     },
   },
@@ -99,9 +99,19 @@ export const FocusVisible: Story = {
     const canvas = within(canvasElement);
     const button = canvas.getByRole("button");
 
-    await step("Botão recebe foco via teclado", async () => {
-      button.focus();
+    await step("Tab leva o foco ao botão", async () => {
+      // .focus() programático não é navegação por teclado: passaria até com
+      // tabindex="-1". E é o Tab que caracteriza a modalidade de entrada,
+      // sem a qual o :focus-visible desta story não existe.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(button).toHaveFocus();
+    });
+
+    await step("O anel de foco por teclado está aplicado", async () => {
+      // accessibility.item3 — o item promete anel VISÍVEL ao navegar por
+      // teclado; toHaveFocus sozinho não distingue foco de mouse.
+      await expect(button.matches(":focus-visible")).toBe(true);
     });
   },
 };

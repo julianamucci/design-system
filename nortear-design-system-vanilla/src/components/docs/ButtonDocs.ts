@@ -40,7 +40,34 @@ function screenReaderItems(): string[] {
       ?.accessibility?.screenReader ?? {},
   );
 }
-const { t, subscribe } = createTranslation(buttonTranslations as Record<string, unknown>);
+// A factory recebe conteúdo e estado por opção, não por filho JSX nem por
+// atributo solto — então `label`, `ariaLabel`, `ariaBusy`, `ariaInvalid` e
+// `children` são API desta stack e não do conteúdo compartilhado. Ficam no
+// override, e não em texto fixo: presas em pt-BR apareceriam em português nas
+// versões en e es da tabela.
+const { t, subscribe } = createTranslation(buttonTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.table.label': 'Texto visível do botão.',
+    'props.table.ariaLabel': 'Nome acessível. Obrigatório quando o botão só tem ícone.',
+    'props.table.ariaBusy': 'Marca o botão como ocupado durante uma operação em andamento.',
+    'props.table.ariaInvalid': 'Sinaliza que a ação está associada a dados inválidos.',
+    'props.table.children': 'Conteúdo do botão. Elemento é anexado direto; texto em marcação passa por sanitização.',
+  },
+  en: {
+    'props.table.label': 'Visible button text.',
+    'props.table.ariaLabel': 'Accessible name. Required when the button has only an icon.',
+    'props.table.ariaBusy': 'Marks the button as busy while an operation is in progress.',
+    'props.table.ariaInvalid': 'Signals that the action is tied to invalid data.',
+    'props.table.children': 'Button content. An element is appended as is; markup text is sanitized first.',
+  },
+  es: {
+    'props.table.label': 'Texto visible del botón.',
+    'props.table.ariaLabel': 'Nombre accesible. Obligatorio cuando el botón solo tiene icono.',
+    'props.table.ariaBusy': 'Marca el botón como ocupado mientras hay una operación en curso.',
+    'props.table.ariaInvalid': 'Indica que la acción está asociada a datos inválidos.',
+    'props.table.children': 'Contenido del botón. Un elemento se anexa directo; el texto con marcación se sanitiza.',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -559,13 +586,15 @@ export function createButtonDocs(): HTMLElement {
       case 'propriedades': {
         const interfaceCode = `// createButton(options)
 export type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-export type ButtonSize    = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+export type ButtonSize    = 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg';
 
 export interface ButtonOptions {
   variant?: ButtonVariant;
   size?: ButtonSize;
   label?: string;
   ariaLabel?: string;
+  ariaBusy?: boolean;
+  ariaInvalid?: boolean;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
   onClick?: (e: MouseEvent) => void;
@@ -590,9 +619,12 @@ export interface ButtonOptions {
               items: [
                 { name: 'variant',   type: '"default" | "destructive" | "outline" | "secondary" | "ghost" | "link"', defaultValue: '"default"', required: 'Não', description: stripHtml(toPlainText(t('props.table.variant'))) },
                 { name: 'size',      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',               defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.size')) },
-                { name: 'label',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: 'Texto visível do botão.' },
-                { name: 'ariaLabel', type: 'string',                                                                 defaultValue: '—',         required: 'Condicional', description: 'Obrigatório em botões icon-only.' },
+                { name: 'label',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.label'))) },
+                { name: 'children',  type: 'HTMLElement | string',                                                    defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.children'))) },
+                { name: 'ariaLabel', type: 'string',                                                                 defaultValue: '—',         required: 'Condicional', description: stripHtml(toPlainText(t('props.table.ariaLabel'))) },
                 { name: 'disabled',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(toPlainText(t('props.table.disabled'))) },
+                { name: 'ariaBusy',  type: 'boolean',                                                                defaultValue: 'false',     required: 'Não', description: stripHtml(toPlainText(t('props.table.ariaBusy'))) },
+                { name: 'ariaInvalid', type: 'boolean',                                                              defaultValue: 'false',     required: 'Não', description: stripHtml(toPlainText(t('props.table.ariaInvalid'))) },
                 { name: 'type',      type: '"button" | "submit" | "reset"',                                          defaultValue: '"button"',  required: 'Não', description: stripHtml(toPlainText(t('props.table.htmlType'))) },
                 { name: 'onClick',   type: '(e: MouseEvent) => void',                                                defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.onClick'))) },
                 { name: 'class',     type: 'string',                                                                 defaultValue: '—',         required: 'Não', description: stripHtml(toPlainText(t('props.table.className'))) },
