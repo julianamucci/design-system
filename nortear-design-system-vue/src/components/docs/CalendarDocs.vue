@@ -406,7 +406,7 @@ const a11yTestItems = computed(() => [
   { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
   { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
   { criterion: tContent('testes.accessibility.item4.criterion'),            level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
-  { criterion: tContent('testes.accessibility.item5.criterion'),            level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: tContent('testes.accessibility.item5.criterion'),            level: tContent('testes.accessibility.item5.level'), how: toPlainText(tContent('testes.accessibility.item5.how')) },
   { criterion: tContent('testes.accessibility.item6.criterion'),            level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
 ]);
 
@@ -490,7 +490,7 @@ const visualTestItems = computed(() => [
         items: [
           { element: tContent('usage.uxWriting.table.label.name'), rules: tContent('usage.uxWriting.table.label.format'), do: tContent('usage.uxWriting.table.label.good'), dont: tContent('usage.uxWriting.table.label.bad') },
           { element: tContent('usage.uxWriting.table.trigger.name'), rules: tContent('usage.uxWriting.table.trigger.format'), do: tContent('usage.uxWriting.table.trigger.good'), dont: tContent('usage.uxWriting.table.trigger.bad') },
-          { element: tContent('usage.uxWriting.table.disabled.name'), rules: tContent('usage.uxWriting.table.disabled.format'), do: tContent('usage.uxWriting.table.disabled.good'), dont: tContent('usage.uxWriting.table.disabled.bad') },
+          { element: tContent('usage.uxWriting.table.disabled.name'), rules: toPlainText(tContent('usage.uxWriting.table.disabled.format')), do: toPlainText(tContent('usage.uxWriting.table.disabled.good')), dont: tContent('usage.uxWriting.table.disabled.bad') },
           { element: tContent('usage.uxWriting.table.srOnly.name'), rules: tContent('usage.uxWriting.table.srOnly.format'), do: tContent('usage.uxWriting.table.srOnly.good'), dont: tContent('usage.uxWriting.table.srOnly.bad') },
         ],
       }"

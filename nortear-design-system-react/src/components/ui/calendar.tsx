@@ -175,6 +175,11 @@ function CalendarDayButton({
       data-range-middle={modifiers.range_middle}
       className={cn("nds-calendar-day-btn", defaultClassNames.day, className)}
       {...props}
+      // Sem isto o `ref` acima nunca aponta para nada e o efeito de foco vira
+      // no-op: a lib marca o próximo dia como focado e espera que o componente
+      // mova o foco do DOM: é assim que ArrowRight anda no grid. Ficou anos
+      // passando porque nenhuma play cobrava para onde o foco tinha ido.
+      ref={ref}
     />
   )
 }

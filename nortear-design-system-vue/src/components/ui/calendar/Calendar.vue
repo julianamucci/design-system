@@ -106,7 +106,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="calendar"
     :class="cn('nds-calendar-root', props.class)"
   >
-    <CalendarHeader class="pt-0">
+    <!-- `pt-0` saiu: era utilitário de uma lib que não existe mais no projeto,
+         então já não aplicava nada. O espaçamento do cabeçalho vem do
+         .nds-calendar-caption, igual nas outras stacks. -->
+    <CalendarHeader>
       <!-- div (não <nav>): paginação de mês não é landmark de navegação — o
            <nav> sem rótulo repetia um landmark por calendário (landmark-unique);
            a referência cross-stack (vanilla) também usa div. -->

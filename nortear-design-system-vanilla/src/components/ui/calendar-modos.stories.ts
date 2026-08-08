@@ -1,16 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
-import { within, expect } from 'storybook/test';
+import { fn, userEvent, within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
-// Modos de operação do Calendar.
-//
-// A implementação vanilla do Vanilla expõe apenas o modo "single" via a
-// factory `createCalendar`. Modos "multiple" e "range" existem nas stacks
-// React/Vue/Svelte (sobre react-day-picker / reka-ui / bits-ui) mas não
-// fazem parte da API atual desta factory — documentadas aqui apenas como
-// referência de comportamento esperado para quando forem adicionadas.
+// Modo de seleção do Calendar. A factory expõe seleção única: `value` define a
+// data inicial e `onSelect` recebe a data escolhida a cada clique.
 
 const meta: Meta = {
   tags: ['form'],
@@ -21,8 +16,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Modo de seleção do Calendar. Na API vanilla do Vanilla apenas **single** está disponível — `multiple` e `range` são cobertos pelas stacks React/Vue/Svelte.',
+        component: 'Modo de seleção do Calendar: uma data por vez.',
       },
     },
   },
@@ -31,25 +25,49 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/** Espião de escopo de módulo: dentro do render, a play não o alcança. */
+const onSelect = fn();
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Single: Story = {
   render: () =>
-    createCalendar({ locale: 'pt-BR',
+    createCalendar({
+      locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'rounded-md border',
+      onSelect,
+      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
+    covers: ['functional.item2', 'accessibility.item3'],
     docs: {
       description: {
         story:
-          'Seleção de uma única data. `value` define a data pré-selecionada; `onSelect` recebe um `Date` a cada clique em uma célula habilitada.',
+          'Seleção de uma única data. O valor inicial marca a célula; cada clique numa célula habilitada troca a marcação e reporta a data escolhida.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const marcado = () =>
+      canvasElement.querySelector<HTMLElement>('.nds-calendar-day[aria-pressed="true"]');
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('A data inicial chega marcada', async () => {
+      await expect(marcado()).toHaveTextContent('12');
+    });
+
+    await step('Clicar em outro dia move a marcação e reporta a data', async () => {
+      // functional.item2 — a marcação é exclusiva: o dia velho tem que perder o
+      // estado, senão a tela mostra duas seleções num modo que só admite uma.
+      onSelect.mockClear();
+      await userEvent.click(canvas.getByRole('button', { name: /20 de abril de 2026/i }));
+      await expect(onSelect).toHaveBeenCalledTimes(1);
+      const [data] = onSelect.mock.calls[0] as [Date];
+      await expect(data.getDate()).toBe(20);
+      await expect(marcado()).toHaveTextContent('20');
+      await expect(
+        canvasElement.querySelectorAll('.nds-calendar-day[aria-pressed="true"]').length,
+      ).toBe(1);
+    });
   },
 };

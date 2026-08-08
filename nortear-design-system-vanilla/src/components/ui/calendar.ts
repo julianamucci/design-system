@@ -62,6 +62,28 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   let viewMonth = options.value ? options.value.getMonth() : today.getMonth();
   let selected: Date | null = options.value ?? null;
 
+  // Um `role="grid"` promete navegação por setas, e o grid inteiro entra na
+  // tabulação como UM parada só: quem chega por Tab pousa no dia corrente e
+  // anda pelo mês com o teclado. Sem isto, o Tab visitava os 30 e poucos dias
+  // um a um e as setas não faziam nada.
+  const hojeEstaNaVisao = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
+  let focado: Date =
+    selected ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
+  let devolverFoco = false;
+
+  const isoDe = (d: Date): string =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  /** Move o dia focado e traz a visão junto quando ele cai em outro mês. */
+  function moverFoco(dias: number, meses = 0): void {
+    const alvo = new Date(focado.getFullYear(), focado.getMonth() + meses, focado.getDate() + dias);
+    focado = alvo;
+    viewYear = alvo.getFullYear();
+    viewMonth = alvo.getMonth();
+    devolverFoco = true;
+    render();
+  }
+
   const root = document.createElement('div');
   root.dataset.slot = 'calendar';
   root.className = cn('nds-calendar', options.class);
@@ -151,6 +173,11 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
       for (let col = 0; col < 7; col++) {
         const td = document.createElement('td');
+        // Explícito, não implícito: o mapeamento de <td> para gridcell depende
+        // do ancestral ter papel de grid, e nem toda árvore de acessibilidade
+        // faz essa conta. Sem o papel, a célula é lida como célula de tabela
+        // comum e o modo de navegação por grade não é oferecido.
+        td.setAttribute('role', 'gridcell');
 
         if ((week === 0 && col < firstDay) || dayCount > daysInMonth) {
           td.textContent = '';
@@ -164,15 +191,41 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
           btn.type = 'button';
           btn.className = 'nds-calendar-day';
           btn.textContent = String(dayCount);
+          btn.dataset.day = isoDe(date);
           btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
           btn.setAttribute('aria-pressed', String(isSelected));
+          // Tabulação móvel: só o dia focado é alcançável por Tab; os outros
+          // são alcançados pelas setas, dentro do grid.
+          btn.tabIndex = isSameDay(date, focado) ? 0 : -1;
           if (isSelected) btn.dataset.selected = 'true';
           if (isTodayDate) btn.dataset.today = 'true';
           if (isDisabled) btn.disabled = true;
 
+          btn.addEventListener('keydown', (e) => {
+            const passos: Record<string, [number, number]> = {
+              ArrowRight: [1, 0],
+              ArrowLeft: [-1, 0],
+              ArrowDown: [7, 0],
+              ArrowUp: [-7, 0],
+              PageDown: [0, 1],
+              PageUp: [0, -1],
+            };
+            if (e.key === 'Home' || e.key === 'End') {
+              e.preventDefault();
+              const alvo = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
+              moverFoco(alvo);
+              return;
+            }
+            const passo = passos[e.key];
+            if (!passo) return;
+            e.preventDefault();
+            moverFoco(passo[0], passo[1]);
+          });
+
           if (!isDisabled) {
             btn.addEventListener('click', () => {
               selected = date;
+              focado = date;
               onSelect?.(date);
               render();
             });
@@ -187,6 +240,14 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     }
     table.appendChild(tbody);
     root.appendChild(table);
+
+    // O render reconstrói o DOM inteiro, então o elemento que tinha o foco
+    // deixou de existir: sem devolvê-lo, cada seta jogaria o foco no body e a
+    // navegação pararia no primeiro passo.
+    if (devolverFoco) {
+      devolverFoco = false;
+      root.querySelector<HTMLButtonElement>(`.nds-calendar-day[data-day="${isoDe(focado)}"]`)?.focus();
+    }
   }
 
   render();

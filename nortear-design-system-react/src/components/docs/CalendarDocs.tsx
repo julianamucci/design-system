@@ -291,7 +291,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewDoLocale = (
     <Calendar
       mode="single"
-      labels={{ labelNav: () => stripHtml(tContent("doDont.pair1.do")) }}
+      labels={{ labelNav: () => toPlainText(tContent("doDont.pair1.do")) }}
       selected={today}
       locale={ptBR}
     />
@@ -300,7 +300,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewDontLocale = (
     <Calendar
       mode="single"
-      labels={{ labelNav: () => stripHtml(tContent("doDont.pair1.dont")) }}
+      labels={{ labelNav: () => toPlainText(tContent("doDont.pair1.dont")) }}
       selected={today}
     />
   );
@@ -308,7 +308,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewDoDisabled = (
     <Calendar
       mode="single"
-      labels={{ labelNav: () => stripHtml(tContent("doDont.pair2.do")) }}
+      labels={{ labelNav: () => toPlainText(tContent("doDont.pair2.do")) }}
       selected={today}
       disabled={{ before: today }}
       locale={ptBR}
@@ -318,7 +318,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
   const previewDontDisabled = (
     <Calendar
       mode="single"
-      labels={{ labelNav: () => stripHtml(tContent("doDont.pair2.dont")) }}
+      labels={{ labelNav: () => toPlainText(tContent("doDont.pair2.dont")) }}
       selected={today}
       locale={ptBR}
     />
@@ -452,16 +452,16 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
             dontLabel: tNav("common.dont"),
             doPreview: previewDoLocale,
             dontPreview: previewDontLocale,
-            doCaption: stripHtml(tContent("doDont.pair1.do")),
-            dontCaption: stripHtml(tContent("doDont.pair1.dont")),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: previewDoDisabled,
             dontPreview: previewDontDisabled,
-            doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: stripHtml(tContent("doDont.pair2.dont")),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -629,7 +629,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
               { name: "showOutsideDays", type: "boolean",                              defaultValue: "true",     required: "Não", description: tContent("props.table.showOutsideDays") },
               { name: "captionLayout",   type: '"label" | "dropdown"',                 defaultValue: '"label"',  required: "Não", description: toPlainText(tContent("props.table.captionLayout")) },
               { name: "buttonVariant",   type: "Button variant",                       defaultValue: '"ghost"',  required: "Não", description: toPlainText(tContent("props.table.buttonVariant")) },
-              { name: "numberOfMonths",  type: "number",                               defaultValue: "1",        required: "Não", description: tContent("props.table.numberOfMonths") },
+              { name: "numberOfMonths",  type: "number",                               defaultValue: "1",        required: "Não", description: toPlainText(tContent("props.table.numberOfMonths")) },
               { name: "className",       type: "string",                               defaultValue: "—",        required: "Não", description: tContent("props.table.className") },
               { name: "classNames",      type: "Partial<ClassNames>",                  defaultValue: "—",        required: "Não", description: toPlainText(tContent("props.table.classNames")) },
             ],

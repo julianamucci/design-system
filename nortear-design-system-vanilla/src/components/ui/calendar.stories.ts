@@ -24,7 +24,7 @@ export const Playground: Story = {
   render: () =>
     createCalendar({ locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'rounded-md border',
+      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     docs: {

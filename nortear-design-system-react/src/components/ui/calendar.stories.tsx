@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useState, type ComponentProps } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
@@ -18,42 +18,64 @@ const meta = {
       control: "select",
       options: ["single", "multiple", "range"],
       description: "Modo de seleção: uma data, várias ou intervalo.",
+      table: { type: { summary: '"single" | "multiple" | "range"' }, defaultValue: { summary: '"single"' } },
     },
     captionLayout: {
       control: "select",
       options: ["label", "dropdown"],
       description: "Layout da legenda do mês: texto ou selects.",
+      table: { type: { summary: '"label" | "dropdown"' }, defaultValue: { summary: '"label"' } },
     },
     showOutsideDays: {
       control: "boolean",
       description: "Exibe dias do mês anterior/próximo apagados nas bordas.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
     showWeekNumber: {
       control: "boolean",
       description: "Exibe coluna com o número da semana ISO.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
     numberOfMonths: {
       control: { type: "number", min: 1, max: 3 },
       description: "Quantidade de meses exibidos lado a lado.",
+      table: { type: { summary: "number" }, defaultValue: { summary: "1" } },
     },
+  },
+  args: {
+    mode: "single",
+    captionLayout: "label",
+    showOutsideDays: true,
+    showWeekNumber: false,
+    numberOfMonths: 1,
   },
 } satisfies Meta<typeof Calendar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// O `selected` muda de TIPO com o modo — Date, Date[] ou {from,to} — e a lib não
+// converte entre eles: trocar o control sem remontar deixaria o estado de um
+// modo sendo lido por outro. Por isso o estado mora num wrapper, e a `key` do
+// wrapper (não a do Calendar) é o que remonta e recria o valor inicial certo.
+function PlaygroundCalendar(args: ComponentProps<typeof Calendar>) {
+  const [selected, setSelected] = useState<unknown>(() =>
+    args.mode === "multiple" ? [new Date()]
+    : args.mode === "range" ? { from: new Date(), to: undefined }
+    : new Date(),
+  );
+  return (
+    <Calendar
+      {...args}
+      selected={selected as never}
+      onSelect={setSelected as never}
+      locale={ptBR}
+    />
+  );
+}
+
 export const Playground: Story = {
-  render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
-    return (
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        locale={ptBR}
-      />
-    );
-  },
+  render: (args) => <PlaygroundCalendar key={String(args.mode)} {...args} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -74,24 +96,36 @@ export const Playground: Story = {
       await expect(next).toBeInTheDocument();
     });
 
-    await step("DayButton recebe foco por teclado via Tab", async () => {
-      const dayButtons = canvasElement.querySelectorAll('button[data-day]');
-      await expect(dayButtons.length).toBeGreaterThan(0);
-      (dayButtons[0] as HTMLButtonElement).focus();
-      await expect(dayButtons[0]).toHaveFocus();
+    // A data de cada célula: o <td> carrega o ISO, que é comparável; o
+    // data-day do <button> é a data formatada no locale e não serve para
+    // aritmética.
+    const isoDoFoco = () =>
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)
+        ?.closest("[role=gridcell]")
+        ?.getAttribute("data-day") ?? null;
+
+    await step("DayButton entra na ordem de tabulação", async () => {
+      // Tab, não .focus(): o critério é o dia entrar na navegação por teclado.
+      // Forçar o foco passaria mesmo com o grid inteiro fora da ordem.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      for (let i = 0; i < 20 && !isoDoFoco(); i += 1) await userEvent.tab();
+      await expect(isoDoFoco()).not.toBeNull();
     });
 
-    await step("Arrow keys movem o foco entre células", async () => {
-      const dayButtons = canvasElement.querySelectorAll('button[data-day]');
-      // Usa um botão no meio do mês para garantir que ArrowRight não saia do calendar
-      const middleIndex = Math.floor(dayButtons.length / 2);
-      (dayButtons[middleIndex] as HTMLButtonElement).focus();
+    await step("Seta move o foco para o dia seguinte", async () => {
+      // functional.item5 — a asserção antiga aceitava BUTTON ou BODY, ou seja,
+      // passava mesmo quando a lib não movia foco nenhum. O que o item promete
+      // é percorrer o grid: então o teste compara a data de origem com a de
+      // destino, e só passa se ela andou exatamente um dia.
+      const origem = isoDoFoco();
+      await expect(origem).not.toBeNull();
       await userEvent.keyboard("{ArrowRight}");
-      // react-day-picker move foco internamente — confirmamos que ainda há um button focado
-      const focused = document.activeElement;
-      const focusedTag = focused?.tagName ?? "NONE";
-      // Aceita BUTTON (foco numa célula) — em casos extremos a lib pode não mover, validamos só que não quebrou
-      await expect(["BUTTON", "BODY"]).toContain(focusedTag);
+      const destino = isoDoFoco();
+      await expect(destino).not.toBe(origem);
+      const umDia = 24 * 60 * 60 * 1000;
+      await expect(
+        new Date(destino!).getTime() - new Date(origem!).getTime(),
+      ).toBe(umDia);
     });
   },
 };

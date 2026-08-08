@@ -11,23 +11,6 @@
 
 <CalendarPrimitive.Day
 	bind:ref
-	class={cn(
-		"nds-calendar-day-btn",
-		"",
-		"",
-		"",
-		"",
-		// Outside months
-		"",
-		// Disabled
-		"",
-		// Unavailable
-		"",
-		// focus
-		"",
-		// inner spans
-		"",
-		className
-	)}
 	{...restProps}
+	class={cn("nds-calendar-day-btn", className)}
 />

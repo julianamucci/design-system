@@ -1,19 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
-// Layouts do Calendar.
-//
-// A factory vanilla `createCalendar` do Vanilla não expõe `captionLayout`,
-// `showWeekNumber` ou `numberOfMonths`. Os layouts cobertos aqui são aqueles
-// realmente alcançáveis via a API atual:
-//  - CaptionLabel  → legenda em texto (padrão, única disponível)
-//  - Bordered      → card com borda + radius reforçando integração visual
-//
-// Quando a factory for estendida para captionLayout/numberOfMonths/weekNumber,
-// novas stories poderão ser adicionadas replicando as das stacks React/Vue/Svelte.
+// Layouts alcançáveis pela API da factory: a legenda em texto (com os botões de
+// mês) e o enquadramento do bloco, que é responsabilidade de quem monta a tela.
 
 const meta: Meta = {
   tags: ['form'],
@@ -25,7 +17,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Layouts disponíveis na API vanilla do Vanilla. `captionLayout="dropdown"`, `numberOfMonths` e `showWeekNumber` são exclusivos das stacks com react-day-picker/reka-ui/bits-ui.',
+          'Legenda do mês e enquadramento do bloco. O calendário não desenha a própria moldura: ela vem das classes de quem o posiciona.',
       },
     },
   },
@@ -38,43 +30,79 @@ type Story = StoryObj;
 
 export const CaptionLabel: Story = {
   render: () =>
-    createCalendar({ locale: 'pt-BR',
+    createCalendar({
+      locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'rounded-md border',
+      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
         story:
-          'Legenda padrão em texto: "April 2026". Navegação feita pelos botões Prev/Next (`aria-label="Go to previous/next month"`).',
+          'Legenda em texto com mês e ano no idioma configurado, entre os botões de mês anterior e próximo.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const legenda = () => canvasElement.querySelector('.nds-calendar-month-label');
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('A legenda traz mês e ano no idioma pedido', async () => {
+      // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
+      // semana; verificar só um dos dois deixaria metade da tradução solta.
+      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+      const diasDaSemana = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
+        th.textContent?.trim().toLowerCase(),
+      );
+      await expect(diasDaSemana[0]).toMatch(/^dom/);
+      await expect(diasDaSemana[6]).toMatch(/^s[áa]b/);
+    });
+
+    await step('Os botões de mês trocam a legenda', async () => {
+      // Cada passo estabelece a própria precondição: volta ao mês de partida
+      // antes de medir, porque o painel reexecuta a play no mesmo DOM.
+      const inicial = legenda()?.textContent;
+      await userEvent.click(canvas.getByRole('button', { name: 'Go to next month' }));
+      await expect(legenda()).toHaveTextContent(/maio 2026/i);
+      await userEvent.click(canvas.getByRole('button', { name: 'Go to previous month' }));
+      await expect(legenda()?.textContent).toBe(inicial);
+    });
   },
 };
 
 export const Bordered: Story = {
   render: () =>
-    createCalendar({ locale: 'pt-BR',
+    createCalendar({
+      locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'rounded-md border shadow-sm',
+      class: 'nds-rounded-md nds-border-default nds-shadow-sm',
     }),
   parameters: {
     docs: {
       description: {
         story:
-          'Layout com borda + sombra sutil — útil para isolar o Calendar de um fundo uniforme (ex: inline em página, fora de Popover).',
+          'Com borda e sombra — isola o calendário de um fundo uniforme, quando ele aparece direto na página.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    await step('As classes do consumidor somam às do componente', async () => {
+      // O ponto da story é a composição de classes: a moldura entra sem
+      // apagar a classe base, senão o calendário perderia o próprio estilo.
+      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
+      await expect(raiz).toHaveClass('nds-calendar');
+      await expect(raiz).toHaveClass('nds-border-default');
+      await expect(raiz).toHaveClass('nds-shadow-sm');
+    });
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('A borda é visível de fato', async () => {
+      // Classe presente não é borda desenhada: a utilitária poderia ter sido
+      // renomeada no CSS e a asserção de classe continuaria passando.
+      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
+      const borda = getComputedStyle(raiz).borderTopWidth;
+      await expect(parseFloat(borda)).toBeGreaterThan(0);
+    });
   },
 };
 
@@ -84,13 +112,16 @@ export const Bare: Story = {
     docs: {
       description: {
         story:
-          'Sem classes adicionais — apenas o `p-3 select-none` aplicado pela factory. Ideal para encaixar o Calendar dentro de Popover ou DropdownMenu, onde o wrapper pai já define borda/shadow.',
+          'Sem classes adicionais — para encaixar dentro de um contêiner que já tem borda e sombra, como um popover.',
       },
     },
   },
-
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    await step('Sem moldura própria quando nada é passado', async () => {
+      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
+      await expect(raiz).toHaveClass('nds-calendar');
+      await expect(raiz.className.trim()).toBe('nds-calendar');
+      await expect(parseFloat(getComputedStyle(raiz).borderTopWidth)).toBe(0);
+    });
   },
 };

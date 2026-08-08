@@ -310,16 +310,16 @@ interface CalendarProps {
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair1.do')),
-        dontCaption: stripHtml($tStore('doDont.pair1.dont')),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair2.do')),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
@@ -512,8 +512,8 @@ interface CalendarProps {
     items={[
       { name: 'Popover',  description: $tStore('related.popover'),  path: '?path=/docs/ui-popover--docs'  },
       { name: 'Button',   description: $tStore('related.datePicker'), path: '?path=/docs/ui-button--docs'   },
-      { name: 'Form',     description: $tStore('related.form'),     path: '?path=/docs/ui-form--docs'     },
-      { name: 'Input',    description: $tStore('related.input'),    path: '?path=/docs/ui-input--docs'    },
+      { name: 'Form',     description: toPlainText($tStore('related.form')),     path: '?path=/docs/ui-form--docs'     },
+      { name: 'Input',    description: toPlainText($tStore('related.input')),    path: '?path=/docs/ui-input--docs'    },
     ]}
   />
 

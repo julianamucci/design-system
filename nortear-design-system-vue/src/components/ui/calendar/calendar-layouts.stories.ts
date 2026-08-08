@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Layouts disponíveis no Calendar Vue. Diverge do React: `layout` substitui `captionLayout`, e não existe `showWeekNumber` — o reka-ui não expõe coluna de número da semana.',
+          'Formato da legenda do mês e quantidade de meses visíveis ao mesmo tempo.',
       },
     },
   },
@@ -27,15 +27,22 @@ type Story = StoryObj<typeof meta>;
 // Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
 // para evitar criar CalendarDate no import do módulo.
 
-// Heading textual (layout default — equivale a captionLayout="label" do React).
+const legenda = (el: HTMLElement) => el.querySelector('[data-slot="calendar-heading"]');
+
+/** Um mês fixo, para todas as stories partirem do mesmo lugar. */
+const abril2026 = () => ({
+  setup() {
+    const placeholder = new CalendarDate(2026, 4, 15);
+    const selected = ref(new CalendarDate(2026, 4, 12));
+    return { selected, placeholder };
+  },
+});
+
+// Legenda em texto (padrão).
 export const CaptionLabel: Story = {
   render: () => ({
     components: { Calendar },
-    setup() {
-      const placeholder = new CalendarDate(2026, 4, 15);
-      const selected = ref(new CalendarDate(2026, 4, 12));
-      return { selected, placeholder };
-    },
+    ...abril2026(),
     template: `
       <Calendar
         v-model="selected"
@@ -45,20 +52,34 @@ export const CaptionLabel: Story = {
       />
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  parameters: {
+    covers: ['functional.item6'],
+    docs: { description: { story: 'Legenda em texto com mês e ano no idioma configurado.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('A legenda traz mês e ano no idioma pedido', async () => {
+      // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
+      // semana; verificar só um dos dois deixaria metade da tradução solta.
+      await expect(legenda(canvasElement)).toHaveTextContent(/abril de 2026/i);
+      const dias = Array.from(
+        canvasElement.querySelectorAll('[data-slot="calendar-head-cell"]'),
+      ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
+      await expect(dias[0]).toMatch(/^d/);
+      await expect(dias.length).toBe(7);
+    });
+
+    await step('A legenda é texto, e não controle', async () => {
+      // É o que separa esta story da seguinte: aqui não há nada para operar.
+      await expect(within(canvasElement).queryAllByRole('combobox').length).toBe(0);
+    });
   },
 };
 
-// Dropdowns de mês e ano (equivale a captionLayout="dropdown" do React).
+// Legenda com seletores de mês e ano.
 export const CaptionDropdown: Story = {
   render: () => ({
     components: { Calendar },
-    setup() {
-      const placeholder = new CalendarDate(2026, 4, 15);
-      const selected = ref(new CalendarDate(2026, 4, 12));
-      return { selected, placeholder };
-    },
+    ...abril2026(),
     template: `
       <Calendar
         v-model="selected"
@@ -69,20 +90,41 @@ export const CaptionDropdown: Story = {
       />
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  parameters: {
+    covers: ['functional.item7'],
+    docs: {
+      description: {
+        story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Mês e ano viram controles operáveis', async () => {
+      // functional.item7 — a story existe pelo salto de período: verificar que
+      // o calendário renderizou não a distingue da legenda de texto.
+      await expect(canvas.getByRole('combobox', { name: 'Selecionar mês' })).toBeInTheDocument();
+      await expect(canvas.getByRole('combobox', { name: 'Selecionar ano' })).toBeInTheDocument();
+    });
+
+    await step('Trocar o mês no seletor leva o grid junto', async () => {
+      // Cada passo estabelece a própria precondição: volta para abril no fim,
+      // porque o painel reexecuta a play no mesmo DOM.
+      const mes = canvas.getByRole('combobox', { name: 'Selecionar mês' });
+      await userEvent.selectOptions(mes, '6');
+      await expect(canvasElement.querySelector('[data-value^="2026-06-"]')).not.toBeNull();
+      await userEvent.selectOptions(mes, '4');
+      await expect(canvasElement.querySelector('[data-value^="2026-04-"]')).not.toBeNull();
+    });
   },
 };
 
-// Dois meses lado a lado (útil para range ou visão ampliada).
+// Dois meses lado a lado.
 export const TwoMonths: Story = {
   render: () => ({
     components: { Calendar },
-    setup() {
-      const placeholder = new CalendarDate(2026, 4, 15);
-      const selected = ref(new CalendarDate(2026, 4, 12));
-      return { selected, placeholder };
-    },
+    ...abril2026(),
     template: `
       <Calendar
         v-model="selected"
@@ -93,30 +135,29 @@ export const TwoMonths: Story = {
       />
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
-};
-
-// OBS: O reka-ui Calendar não expõe `showWeekNumber` nem slot oficial para coluna ISO-week.
-// O mais próximo é `fixedWeeks` (força 6 linhas para altura estável). Documentamos essa
-// divergência em relação ao React e usamos `fixedWeeks` como substituto visual da variante.
-export const WithFixedWeeks: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'O Vue (reka-ui) não expõe `showWeekNumber` — essa prop existe apenas no react-day-picker. Como substituto mais próximo mostramos `fixedWeeks`, que força 6 linhas de semana para altura estável.',
+        story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    await step('São dois grids, de meses consecutivos', async () => {
+      // Contar células passaria com um único mês de sessenta dias; o que a
+      // story mostra é a virada, então a asserção é sobre QUAIS meses aparecem.
+      await expect(canvasElement.querySelectorAll('[data-slot="calendar-grid"]').length).toBe(2);
+      await expect(canvasElement.querySelector('[data-value="2026-04-30"]')).not.toBeNull();
+      await expect(canvasElement.querySelector('[data-value="2026-05-01"]')).not.toBeNull();
+    });
+  },
+};
+
+// Seis linhas de semana sempre.
+export const WithFixedWeeks: Story = {
   render: () => ({
     components: { Calendar },
-    setup() {
-      const placeholder = new CalendarDate(2026, 4, 15);
-      const selected = ref(new CalendarDate(2026, 4, 12));
-      return { selected, placeholder };
-    },
+    ...abril2026(),
     template: `
       <Calendar
         v-model="selected"
@@ -127,7 +168,20 @@ export const WithFixedWeeks: Story = {
       />
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Seis linhas de semana sempre: a altura do bloco não muda ao virar o mês, então nada abaixo dele salta.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('O mês é desenhado em seis linhas, qualquer que seja o tamanho dele', async () => {
+      // Abril de 2026 cabe em cinco linhas — são seis por causa do recurso.
+      // Sem esta contagem, a story não se distinguiria do layout padrão.
+      const linhas = canvasElement.querySelectorAll('[data-slot="calendar-grid-body"] tr');
+      await expect(linhas.length).toBe(6);
+    });
   },
 };

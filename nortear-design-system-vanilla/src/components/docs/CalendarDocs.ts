@@ -281,8 +281,8 @@ export function createCalendarDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair1.do')),
-              dontCaption: stripHtml(t('doDont.pair1.dont')),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
                 createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
               dontPreviewFactory: () =>
@@ -294,8 +294,8 @@ export function createCalendarDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair2.do')),
-              dontCaption: stripHtml(t('doDont.pair2.dont')),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
                 createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
@@ -646,7 +646,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
             items: [1, 2, 3, 4, 5, 6].map((i) => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
-              how: t(`testes.accessibility.item${i}.how`),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {
