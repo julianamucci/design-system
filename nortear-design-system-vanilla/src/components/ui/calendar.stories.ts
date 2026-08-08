@@ -84,6 +84,18 @@ export const Playground: Story = {
       ).toBeLessThan(2);
     });
 
+    await step('A paginação de mês é ghost: sem moldura própria', async () => {
+      // O Vue e o Vanilla desenhavam esses botões com borda e fundo, enquanto o
+      // React e o Svelte usavam ghost — o mesmo controle com dois pesos
+      // diferentes. Emoldurado, ele competia com o dia escolhido, que é o único
+      // elemento do calendário que deveria ter peso. Medida computada, porque
+      // classe presente não é borda ausente.
+      const anterior = canvas.getByRole('button', { name: 'Go to previous month' });
+      const cs = getComputedStyle(anterior);
+      await expect(parseFloat(cs.borderTopWidth)).toBe(0);
+      await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
+    });
+
     await step('O clique nos botões de mês chega neles', async () => {
       // `userEvent.click` acerta o elemento mesmo com outra coisa pintada
       // por cima: ele verifica `pointer-events`, não oclusão. Foi assim que a nav

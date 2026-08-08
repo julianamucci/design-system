@@ -40,6 +40,10 @@
   margin-bottom: var(--spacing-2);
 }
 
+/* Ghost, como nas outras três stacks: fundo transparente e sem borda, com o
+ * realce só no hover. A paginação de mês é ação secundária dentro do
+ * calendário — emoldurada, ela competia com o dia escolhido, que é o único
+ * elemento que deveria ter peso ali. */
 .nds-calendar-nav-button {
   display: inline-flex;
   align-items: center;
@@ -47,9 +51,9 @@
   width: 1.75rem;                                  /* 28px */
   height: 1.75rem;
 
-  background-color: hsl(var(--background));
+  background-color: transparent;
   color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--input, var(--border)));
+  border: 0;
   border-radius: var(--radius);
   font-family: inherit;
   font-size: var(--text-control);
