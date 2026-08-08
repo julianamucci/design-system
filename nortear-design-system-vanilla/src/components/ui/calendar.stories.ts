@@ -50,6 +50,36 @@ export const Playground: Story = {
       await expect(next).toBeInTheDocument();
     });
 
+    await step('O dia é um quadrado de célula, com o número no centro', async () => {
+      // Medida computada, e não classe presente: a classe estava lá nas quatro
+      // e mesmo assim o Vue desenhava 48×48, porque herdava o padding do botão
+      // que ele compõe por fora. E o Svelte, que não compõe botão nenhum,
+      // deixava o número no canto superior esquerdo.
+      const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day')!;
+      const cs = getComputedStyle(dia);
+      const caixa = dia.getBoundingClientRect();
+
+      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
+      await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
+      await expect(cs.alignItems).toBe('center');
+      await expect(cs.justifyContent).toBe('center');
+    });
+
+    await step('O clique nos botões de mês chega neles', async () => {
+      // `userEvent.click` acerta o elemento mesmo com outra coisa pintada
+      // por cima: ele verifica `pointer-events`, não oclusão. Foi assim que a nav
+      // ficou morta na tela com a suíte verde — a legenda, posicionada, pintava
+      // por cima e engolia o clique. `elementFromPoint` devolve QUEM está no
+      // topo naquele ponto, e é a única coisa aqui que enxerga isso.
+      const doc = canvasElement.ownerDocument;
+      for (const nome of ['Go to previous month', 'Go to next month']) {
+        const btn = canvas.getByRole('button', { name: nome });
+        const r = btn.getBoundingClientRect();
+        const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        await expect(btn.contains(noTopo)).toBe(true);
+      }
+    });
+
     await step('Célula selecionada com aria-pressed="true"', async () => {
       const selected = canvasElement.querySelector('.nds-calendar-day[aria-pressed="true"]');
       await expect(selected).not.toBeNull();

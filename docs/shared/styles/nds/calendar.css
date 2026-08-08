@@ -288,6 +288,11 @@
   position: absolute;
   inset-inline: 0;
   top: 0;
+  /* Empilhamento local: a legenda também é posicionada e vem DEPOIS no DOM
+   * onde o nav é irmão dos meses (React, Svelte), então ela pintava por cima e
+   * engolia o clique dos botões de mês — eles apareciam e não faziam nada.
+   * Número pequeno porque a disputa é entre irmãos, dentro do componente. */
+  z-index: 1;
   display: flex;
   width: 100%;
   align-items: center;
@@ -486,18 +491,28 @@
 
 /* ── Botão do dia ────────────────────────────────────────────────────────── */
 /* Compõe com .nds-button .nds-button-ghost .nds-button-icon */
+/* Auto-suficiente de propósito. Antes esta classe contava com o `.nds-button`
+ * que cada stack compunha por fora para centralizar e zerar o padding — e a
+ * composição diferia: o React usa `size="icon"` (padding 0, quadrado), o Vue
+ * usa a variante ghost crua e herdava o padding do botão (48×48 em vez de
+ * 32×32), e o Svelte não compõe botão nenhum, então o número do dia encostava
+ * no topo esquerdo. Contrato compartilhado que só funciona com ajuda de fora
+ * não é contrato. */
 .nds-calendar-day-btn {
   position: relative;
   isolation: isolate;
   z-index: 10;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: var(--spacing-1);
 
   aspect-ratio: 1;
   width: 100%;
   height: auto;
   min-width: var(--nds-cell-size);
+  padding: 0;
 
   border: 0;
   border-radius: var(--nds-cell-radius);

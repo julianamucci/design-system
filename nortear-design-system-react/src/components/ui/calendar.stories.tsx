@@ -94,6 +94,47 @@ export const Playground: Story = {
       await expect(next).toBeInTheDocument();
     });
 
+    await step("O dia é um quadrado de célula, com o número no centro", async () => {
+      // Medida computada, e não classe presente: a classe estava lá nas quatro
+      // e mesmo assim o Vue desenhava 48×48, porque herdava o padding do botão
+      // que ele compõe por fora. E o Svelte, que não compõe botão nenhum,
+      // deixava o número no canto superior esquerdo.
+      const dia = canvasElement.querySelector<HTMLElement>(".nds-calendar-day-btn")!;
+      const cs = getComputedStyle(dia);
+      const caixa = dia.getBoundingClientRect();
+
+      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
+      await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
+      await expect(cs.alignItems).toBe("center");
+      await expect(cs.justifyContent).toBe("center");
+    });
+
+    await step("O clique nos botões de mês chega neles", async () => {
+      // `userEvent.click` acerta o elemento mesmo com outra coisa pintada por
+      // cima: ele verifica `pointer-events`, não oclusão. Foi assim que a nav
+      // ficou morta na tela com a suíte verde — a legenda, posicionada, pintava
+      // por cima e engolia o clique. `elementFromPoint` devolve QUEM está no
+      // topo naquele ponto, e é a única coisa aqui que enxerga isso.
+      const doc = canvasElement.ownerDocument;
+      for (const nome of [/previous|anterior/i, /next|próximo|proximo/i]) {
+        const btn = canvas.getByRole("button", { name: nome });
+        const r = btn.getBoundingClientRect();
+        const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        await expect(btn.contains(noTopo)).toBe(true);
+      }
+    });
+
+    await step("Os botões de mês trocam o mês exibido", async () => {
+      // Cada passo estabelece a própria precondição: avança e volta, para o
+      // painel reexecutar a play no mesmo DOM e medir o mesmo.
+      const legenda = () => canvasElement.querySelector(".nds-calendar-caption")?.textContent ?? "";
+      const inicial = legenda();
+      await userEvent.click(canvas.getByRole("button", { name: /next|próximo|proximo/i }));
+      await expect(legenda()).not.toBe(inicial);
+      await userEvent.click(canvas.getByRole("button", { name: /previous|anterior/i }));
+      await expect(legenda()).toBe(inicial);
+    });
+
     // A data de cada célula: o <td> carrega o ISO, que é comparável; o
     // data-day do <button> é a data formatada no locale e não serve para
     // aritmética.
