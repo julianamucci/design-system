@@ -3,6 +3,8 @@
 // Visual: classes .nds-switch + .nds-switch-thumb (standalone).
 // Estado via data-state="checked|unchecked" + aria-checked.
 
+import { cn } from '@/lib/utils';
+
 export type SwitchOptions = {
   checked?: boolean;
   disabled?: boolean;
@@ -19,8 +21,7 @@ export function createSwitch(options: SwitchOptions = {}): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.dataset.slot = 'switch';
-  btn.className = 'nds-switch';
-  if (options.class) btn.classList.add(...options.class.split(' ').filter(Boolean));
+  btn.className = cn('nds-switch', options.class);
   btn.setAttribute('role', 'switch');
   btn.setAttribute('aria-checked', String(checked));
   btn.dataset.state = checked ? 'checked' : 'unchecked';

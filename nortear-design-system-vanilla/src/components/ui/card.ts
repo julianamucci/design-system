@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Card — Vanilla factories alinhadas ao primitive React  ───────
 //
 // Visual: classes .nds-card-* (standalone .nds-*).
@@ -54,8 +55,7 @@ export function createCard(options: CardOptions = {}): HTMLElement {
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card');
   el.setAttribute('data-size', size);
-  el.className = 'nds-card';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card', className);
 
   return el;
 }
@@ -65,8 +65,7 @@ export function createCardHeader(options: CardHeaderOptions = {}): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-header');
-  el.className = 'nds-card-header';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-header', className);
 
   return el;
 }
@@ -76,8 +75,7 @@ export function createCardTitle(options: CardTitleOptions = {}): HTMLElement {
 
   const el = document.createElement(`h${level}`);
   el.setAttribute('data-slot', 'card-title');
-  el.className = 'nds-card-title';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-title', className);
   if (text) el.textContent = text;
 
   return el;
@@ -88,8 +86,7 @@ export function createCardDescription(options: CardDescriptionOptions = {}): HTM
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-description');
-  el.className = 'nds-card-description';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-description', className);
   if (text) el.textContent = text;
 
   return el;
@@ -100,8 +97,7 @@ export function createCardAction(options: CardActionOptions = {}): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-action');
-  el.className = 'nds-card-action';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-action', className);
 
   return el;
 }
@@ -111,8 +107,7 @@ export function createCardContent(options: CardContentOptions = {}): HTMLElement
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-content');
-  el.className = 'nds-card-content';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-content', className);
 
   return el;
 }
@@ -122,8 +117,7 @@ export function createCardFooter(options: CardFooterOptions = {}): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('data-slot', 'card-footer');
-  el.className = 'nds-card-footer';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-card-footer', className);
 
   return el;
 }

@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type ContextMenuItemDef = {
   type?: 'item' | 'separator' | 'label';
   value?: string;
@@ -43,8 +45,7 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
     const menu = document.createElement('ul');
     menu.id = menuId;
     menu.setAttribute('role', 'menu');
-    menu.className = 'nds-dropdown-menu-content';
-    if (options.class) menu.classList.add(...options.class.split(' ').filter(Boolean));
+    menu.className = cn('nds-dropdown-menu-content', options.class);
     menu.dataset.slot = 'context-menu-content';
 
     items.forEach((item) => {

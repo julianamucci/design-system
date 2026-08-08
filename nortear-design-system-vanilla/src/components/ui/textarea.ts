@@ -2,6 +2,8 @@
 //
 // Visual: classe .nds-textarea (standalone).
 
+import { cn } from '@/lib/utils';
+
 export type TextareaOptions = {
   placeholder?: string;
   disabled?: boolean;
@@ -17,8 +19,7 @@ export function createTextarea(options: TextareaOptions = {}): HTMLTextAreaEleme
 
   const textarea = document.createElement('textarea');
   textarea.dataset.slot = 'textarea';
-  textarea.className = 'nds-textarea';
-  if (options.class) textarea.classList.add(...options.class.split(' ').filter(Boolean));
+  textarea.className = cn('nds-textarea', options.class);
 
   if (placeholder !== undefined) textarea.placeholder = placeholder;
   if (disabled) textarea.disabled = true;

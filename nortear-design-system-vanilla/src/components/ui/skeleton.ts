@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Skeleton — Vanilla factory standalone ──────────────────────────────────
 //
 // Visual: classe .nds-skeleton (standalone).
@@ -18,8 +19,7 @@ export function createSkeleton(options: SkeletonOptions = {}): HTMLElement {
   const el = document.createElement('div');
   el.dataset.slot = 'skeleton';
   el.setAttribute('aria-hidden', 'true');
-  el.className = 'nds-skeleton';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-skeleton', className);
   if (height) el.style.height = height;
   if (width) el.style.width = width;
 

@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type SliderOptions = {
   min?: number;
   max?: number;
@@ -21,8 +23,7 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   let value = options.value ?? min;
 
   const root = document.createElement('div');
-  root.className = 'nds-slider';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-slider', options.class);
   root.dataset.slot = 'slider';
 
   const track = document.createElement('div');

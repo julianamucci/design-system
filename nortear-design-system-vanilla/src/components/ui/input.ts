@@ -2,6 +2,8 @@
 //
 // Visual: classe .nds-input (standalone).
 
+import { cn } from '@/lib/utils';
+
 export type InputOptions = {
   type?: string;
   placeholder?: string;
@@ -18,8 +20,7 @@ export function createInput(options: InputOptions = {}): HTMLInputElement {
   const input = document.createElement('input');
   input.type = type;
   input.dataset.slot = 'input';
-  input.className = 'nds-input';
-  if (options.class) input.classList.add(...options.class.split(' ').filter(Boolean));
+  input.className = cn('nds-input', options.class);
 
   if (placeholder !== undefined) input.placeholder = placeholder;
   if (disabled) input.disabled = true;

@@ -3,6 +3,8 @@
 // Visual: classe .nds-toggle (standalone).
 // Variantes/tamanhos via data-variant/data-size.
 
+import { cn } from '@/lib/utils';
+
 export type ToggleVariant = 'default' | 'outline';
 export type ToggleSize = 'default' | 'sm' | 'lg';
 
@@ -23,8 +25,7 @@ export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.dataset.slot = 'toggle';
-  btn.className = 'nds-toggle';
-  if (options.class) btn.classList.add(...options.class.split(' ').filter(Boolean));
+  btn.className = cn('nds-toggle', options.class);
   if (variant !== 'default') btn.dataset.variant = variant;
   if (size !== 'default') btn.dataset.size = size;
   btn.setAttribute('role', 'button');

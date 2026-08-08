@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type ResizablePanel = {
   content: HTMLElement;
   defaultSize?: number;
@@ -26,8 +28,7 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
   const root = document.createElement('div');
   root.dataset.slot = 'resizable';
   root.dataset.direction = direction;
-  root.className = 'nds-resizable';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-resizable', options.class);
 
   // Distribute sizes
   const defaultSizes = panels.map((p) => p.defaultSize ?? 100 / count);

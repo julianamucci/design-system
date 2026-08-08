@@ -2,6 +2,8 @@
 //
 // Visual: classes .nds-pagination-* (standalone).
 
+import { cn } from '@/lib/utils';
+
 export type PaginationOptions = {
   total: number;
   current: number;
@@ -53,8 +55,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   nav.dataset.slot = 'pagination';
   nav.setAttribute('role', 'navigation');
   nav.setAttribute('aria-label', 'Pagination');
-  nav.className = 'nds-pagination';
-  if (options.class) nav.classList.add(...options.class.split(' ').filter(Boolean));
+  nav.className = cn('nds-pagination', options.class);
 
   const ul = document.createElement('ul');
   ul.className = 'nds-pagination-list';

@@ -3,6 +3,8 @@
 // Visual: classe .nds-tooltip-content (standalone).
 // Render via portal (body) com posicionamento absoluto via JS.
 
+import { cn } from '@/lib/utils';
+
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 export type TooltipOptions = {
@@ -77,8 +79,7 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
     panelEl = document.createElement('div');
     panelEl.id = tooltipId;
     panelEl.setAttribute('role', 'tooltip');
-    panelEl.className = 'nds-tooltip-content';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
+    panelEl.className = cn('nds-tooltip-content', options.class);
     panelEl.dataset.slot = 'tooltip-content';
     panelEl.textContent = content;
 

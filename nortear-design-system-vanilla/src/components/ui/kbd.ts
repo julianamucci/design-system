@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Kbd — Vanilla factories alinhadas ao primitive React ─────────────────────────────
 //
 // API:
@@ -28,8 +29,7 @@ export function createKbd(options: KbdOptions = {}): HTMLElement {
 
   const el = document.createElement('kbd');
   el.setAttribute('data-slot', 'kbd');
-  el.className = 'nds-kbd';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-kbd', className);
   if (label) el.setAttribute('aria-label', label);
 
   const content = children ?? text;
@@ -52,8 +52,7 @@ export function createKbdGroup(options: KbdGroupOptions = {}): HTMLElement {
 
   const el = document.createElement('kbd');
   el.setAttribute('data-slot', 'kbd-group');
-  el.className = 'nds-kbd-group';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-kbd-group', className);
 
   return el;
 }

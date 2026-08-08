@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Aspect Ratio — Vanilla factory standalone ───────────────────────────────
 //
 // Visual: classes .nds-aspect-ratio (standalone-css).
@@ -17,9 +18,8 @@ export function createAspectRatio(options: AspectRatioOptions = {}): HTMLElement
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'aspect-ratio';
-  wrapper.className = 'nds-aspect-ratio';
+  wrapper.className = cn('nds-aspect-ratio', className);
   wrapper.style.setProperty('--ratio', String(ratio));
-  if (className) wrapper.classList.add(...className.split(' ').filter(Boolean));
 
   if (content) wrapper.appendChild(content);
 

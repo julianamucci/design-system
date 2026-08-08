@@ -1,4 +1,5 @@
 import { Copy, Check } from 'lucide';
+import { cn } from '@/lib/utils';
 import { createButton } from './button';
 import { copyText } from '@shared/primitives/clipboard';
 import {
@@ -76,13 +77,12 @@ export function createCodeBlock(options: CodeBlockOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'code-block';
-  root.className = 'nds-code-block-root';
+  root.className = cn('nds-code-block-root', options.class);
   // Configuração registrada no DOM, não só no closure: é o que permite a CSS,
   // teste e devtools distinguirem as opções — e o que mantém o snippet da aba
   // API Reference acompanhando os controls (ver dev-vanilla.md).
   root.dataset.numbered = String(showLineNumbers);
   root.dataset.language = resolveLanguage(language);
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
 
   // ── Header ──────────────────────────────────────────────────────────────────
   // Sempre presente: o botão copiar precisa estar visível mesmo sem título.

@@ -2,6 +2,7 @@
 // Visual: classes .nds-carousel-* (standalone).
 // Comportamento: setas + ArrowLeft/Right + autoplay opcional (pausa no hover).
 
+import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -37,8 +38,7 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   root.dataset.slot = 'carousel';
   root.setAttribute('role', 'region');
   root.setAttribute('aria-roledescription', 'carousel');
-  root.className = 'nds-carousel';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-carousel', options.class);
 
   // Overflow wrapper
   const overflow = document.createElement('div');

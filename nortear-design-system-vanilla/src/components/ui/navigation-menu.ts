@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type NavigationMenuChild = {
   label: string;
   href: string;
@@ -49,8 +51,7 @@ export function createNavigationMenu(
   const nav = document.createElement('nav');
   nav.dataset.slot = 'navigation-menu';
   nav.setAttribute('aria-label', 'Main navigation');
-  nav.className = 'nds-navigation-menu';
-  if (options?.class) nav.classList.add(...options.class.split(' ').filter(Boolean));
+  nav.className = cn('nds-navigation-menu', options?.class);
 
   const ul = document.createElement('ul');
   ul.className = 'nds-navigation-menu-list';

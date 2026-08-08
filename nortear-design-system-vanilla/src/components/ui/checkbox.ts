@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+
 import DOMPurify from 'dompurify';
 
 // ─── Checkbox — Vanilla factory standalone ──────────────────────────────────
@@ -26,8 +28,7 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'checkbox';
   wrapper.dataset.state = checked ? 'checked' : 'unchecked';
-  wrapper.className = 'nds-checkbox';
-  if (options.class) wrapper.classList.add(...options.class.split(' ').filter(Boolean));
+  wrapper.className = cn('nds-checkbox', options.class);
   wrapper.setAttribute('role', 'checkbox');
   wrapper.setAttribute('aria-checked', String(checked));
   wrapper.setAttribute('tabindex', disabled ? '-1' : '0');

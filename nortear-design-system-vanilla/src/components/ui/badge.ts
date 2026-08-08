@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Badge ───────────────────────────────────────────────────────────────────
 
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
@@ -40,8 +41,7 @@ export function createBadge(options: BadgeOptions = {}): HTMLElement {
   // story, teste e ferramenta encontram o componente sem depender de classe.
   el.dataset.slot = 'badge';
   el.dataset.variant = variant;
-  el.className = badgeClass(variant);
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn(badgeClass(variant), className);
 
   // `children` tem precedência. Cai em `text` por compatibilidade.
   const content = children ?? text;

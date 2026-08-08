@@ -4,6 +4,7 @@
 // opcional. Suporta filtro global, filtros por coluna, seleção, paginação,
 // redimensionamento, reordenação, fixação, edição inline e virtualização.
 
+import { cn } from '@/lib/utils';
 import {
   createTable as createTanstackTable,
   type ColumnDef,
@@ -256,8 +257,7 @@ export function createDataTable<TData extends RowData>(
   // ── Root + Refs ──────────────────────────────────────────────────────────
   const root = document.createElement('div');
   root.dataset.slot = 'data-table';
-  root.className = 'nds-data-table';
-  if (className) root.classList.add(...className.split(' ').filter(Boolean));
+  root.className = cn('nds-data-table', className);
 
   // Toolbar
   const toolbar = document.createElement('div');

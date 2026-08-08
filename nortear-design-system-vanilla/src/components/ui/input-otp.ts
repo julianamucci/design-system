@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type InputOTPOptions = {
   length: number;
   /** Insert a separator after these indices (0-based). Pass a string for custom separator text, or an array of slot indices. */
@@ -26,8 +28,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'input-otp';
-  root.className = 'nds-input-otp';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-input-otp', options.class);
   root.setAttribute('role', 'group');
   root.setAttribute('aria-label', 'One-time password input');
 

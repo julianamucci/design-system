@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Progress — Vanilla factory standalone ──────────────────────────────────
 //
 // Visual: classes .nds-progress + .nds-progress-indicator (standalone).
@@ -23,8 +24,7 @@ export function createProgress(options: ProgressOptions = {}): HTMLElement {
   root.setAttribute('aria-valuemin', '0');
   root.setAttribute('aria-valuemax', String(max));
   root.setAttribute('aria-valuenow', String(clampedValue));
-  root.className = 'nds-progress';
-  if (className) root.classList.add(...className.split(' ').filter(Boolean));
+  root.className = cn('nds-progress', className);
 
   const indicator = document.createElement('div');
   indicator.dataset.slot = 'progress-indicator';

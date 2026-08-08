@@ -1,6 +1,7 @@
 // ─── Toast — Vanilla factory standalone ─────────────────────────────────────
 // Visual: classes .nds-toaster / .nds-toast (standalone).
 
+import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -37,8 +38,7 @@ export function createToaster(options: ToasterOptions = {}): HTMLElement {
   const toaster = document.createElement('div');
   toaster.dataset.slot = 'toaster';
   toaster.dataset.position = position;
-  toaster.className = 'nds-toaster';
-  if (options.class) toaster.classList.add(...options.class.split(' ').filter(Boolean));
+  toaster.className = cn('nds-toaster', options.class);
   toaster.setAttribute('role', 'region');
   toaster.setAttribute('aria-label', 'Notifications');
   toaster.setAttribute('aria-live', 'polite');

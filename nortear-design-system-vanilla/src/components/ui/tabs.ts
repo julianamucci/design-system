@@ -3,6 +3,8 @@
 // Visual: classes .nds-tabs-* (standalone).
 // Estado via data-state="active|inactive" no trigger; painéis usam hidden.
 
+import { cn } from '@/lib/utils';
+
 export type TabsItemDef = {
   value: string;
   label: string;
@@ -27,8 +29,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'tabs';
-  root.className = 'nds-tabs';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-tabs', options.class);
 
   // Tab list
   const listEl = document.createElement('div');

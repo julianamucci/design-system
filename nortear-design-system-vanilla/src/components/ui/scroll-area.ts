@@ -3,6 +3,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type ScrollAreaOptions = {
   height?: string;
   width?: string;
@@ -17,8 +19,7 @@ export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'scroll-area';
-  root.className = 'nds-scroll-area';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-scroll-area', options.class);
   if (height) root.style.height = height;
   if (width) root.style.width = width;
 

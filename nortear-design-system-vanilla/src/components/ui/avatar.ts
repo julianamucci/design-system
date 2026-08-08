@@ -7,6 +7,8 @@
 //   createAvatar({ src, alt, fallbackText, size })  // composto
 //   createAvatarRoot(), createAvatarImage(), createAvatarFallback()  // granular
 
+import { cn } from '@/lib/utils';
+
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export interface AvatarOptions {
@@ -49,9 +51,8 @@ export function createAvatarRoot(options: AvatarOptions = {}): HTMLElement {
 
   const el = document.createElement('span');
   el.dataset.slot = 'avatar';
-  el.className = 'nds-avatar';
+  el.className = cn('nds-avatar', className);
   if (size) el.dataset.size = size;
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
 }
@@ -69,8 +70,7 @@ export function createAvatarImage(options: AvatarImageOptions): HTMLImageElement
   // 24 a 64px não é o que pesa numa página; a correção é mais barata que o
   // adiamento.
   img.decoding = 'async';
-  img.className = 'nds-avatar-image';
-  if (className) img.classList.add(...className.split(' ').filter(Boolean));
+  img.className = cn('nds-avatar-image', className);
 
   return img;
 }
@@ -80,8 +80,7 @@ export function createAvatarFallback(options: AvatarFallbackOptions = {}): HTMLE
 
   const el = document.createElement('span');
   el.dataset.slot = 'avatar-fallback';
-  el.className = 'nds-avatar-fallback';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-avatar-fallback', className);
   if (text) el.textContent = text;
 
   return el;
@@ -121,12 +120,11 @@ export function createAvatarGroup(options: AvatarGroupOptions = {}): HTMLElement
 
   const el = document.createElement('div');
   el.dataset.slot = 'avatar-group';
-  el.className = 'nds-avatar-group';
+  el.className = cn('nds-avatar-group', className);
   if (label) {
     el.setAttribute('role', 'group');
     el.setAttribute('aria-label', label);
   }
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
 }
@@ -137,8 +135,7 @@ export function createAvatarGroupCount(options: AvatarGroupCountOptions = {}): H
 
   const el = document.createElement('div');
   el.dataset.slot = 'avatar-group-count';
-  el.className = 'nds-avatar-group-count';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-avatar-group-count', className);
   if (text) el.textContent = text;
 
   return el;
@@ -158,14 +155,13 @@ export function createAvatarBadge(options: AvatarBadgeOptions = {}): HTMLElement
 
   const el = document.createElement('span');
   el.dataset.slot = 'avatar-badge';
-  el.className = 'nds-avatar-badge';
+  el.className = cn('nds-avatar-badge', className);
   if (label) {
     el.setAttribute('role', 'img');
     el.setAttribute('aria-label', label);
   } else {
     el.setAttribute('aria-hidden', 'true');
   }
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
 }

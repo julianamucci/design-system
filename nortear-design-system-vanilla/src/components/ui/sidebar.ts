@@ -2,6 +2,7 @@
 // Visual: classes .nds-sidebar-* (standalone).
 // Shortcut: Ctrl/Cmd+B alterna expanded/collapsed.
 
+import { cn } from '@/lib/utils';
 import { createButton } from './button';
 
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
@@ -55,8 +56,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
   let isOpen = defaultOpen;
 
   const root = document.createElement('div');
-  root.className = 'nds-sidebar-root';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-sidebar-root', options.class);
   root.dataset.state = isOpen ? 'expanded' : 'collapsed';
   root.dataset.side = side;
   root.dataset.variant = variant;
@@ -137,24 +137,21 @@ export function createSidebarTrigger(
 
 export function createSidebarContent(options: { class?: string } = {}): HTMLElement {
   const el = document.createElement('div');
-  el.className = 'nds-sidebar-content';
-  if (options.class) el.classList.add(...options.class.split(' ').filter(Boolean));
+  el.className = cn('nds-sidebar-content', options.class);
   el.setAttribute('data-sidebar', 'content');
   return el;
 }
 
 export function createSidebarHeader(options: { class?: string } = {}): HTMLElement {
   const el = document.createElement('div');
-  el.className = 'nds-sidebar-header';
-  if (options.class) el.classList.add(...options.class.split(' ').filter(Boolean));
+  el.className = cn('nds-sidebar-header', options.class);
   el.setAttribute('data-sidebar', 'header');
   return el;
 }
 
 export function createSidebarFooter(options: { class?: string } = {}): HTMLElement {
   const el = document.createElement('div');
-  el.className = 'nds-sidebar-footer';
-  if (options.class) el.classList.add(...options.class.split(' ').filter(Boolean));
+  el.className = cn('nds-sidebar-footer', options.class);
   el.setAttribute('data-sidebar', 'footer');
   return el;
 }
@@ -218,8 +215,7 @@ export function createSidebarMenuItem(options: SidebarMenuItemOptions): HTMLElem
 
 export function createSidebarSeparator(options: { class?: string } = {}): HTMLElement {
   const el = document.createElement('div');
-  el.className = 'nds-sidebar-separator';
-  if (options.class) el.classList.add(...options.class.split(' ').filter(Boolean));
+  el.className = cn('nds-sidebar-separator', options.class);
   el.setAttribute('data-sidebar', 'separator');
   el.setAttribute('role', 'separator');
   return el;

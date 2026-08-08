@@ -3,6 +3,7 @@
 // Visual: classe .nds-toggle-group (standalone).
 // Tipo (single/multiple) via lógica TS; variante via data-variant.
 
+import { cn } from '@/lib/utils';
 import { createToggle, type ToggleVariant } from './toggle';
 
 export type ToggleGroupItem = {
@@ -31,9 +32,8 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'toggle-group';
-  root.className = 'nds-toggle-group';
+  root.className = cn('nds-toggle-group', options.class);
   if (variant !== 'default') root.dataset.variant = variant;
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
   root.setAttribute('role', 'toolbar');
 
   function notifyChange(): void {

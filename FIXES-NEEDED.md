@@ -1416,63 +1416,32 @@ corrigidos.
 
 Restam: table 15, sonner 2, calendar 1, chart 1, select 1.
 
-## avatar — `className` das factories-folha do Vanilla (baixo)
+## `className` das factories do Vanilla — RESOLVIDO
 
-Ramos abertos: 78,7% no Vanilla (37/47), abaixo do limiar de 80. Dez ramos, e a
-maioria é o mesmo caso: `if (className)` em `createAvatarImage`,
-`createAvatarFallback`, `createAvatarGroup`, `createAvatarGroupCount` e
-`createAvatarBadge`. Nenhuma story passa, nenhuma docs page passa — só o root
-recebe, e é por ele que o composto encaminha.
+Três componentes seguidos (avatar 78,7% de ramos, badge 90,9%, breadcrumb 71,9%)
+bateram no mesmo ponto: cada factory carregava o seu próprio
+`if (className) el.classList.add(...className.split(' ').filter(Boolean))`, e
+cada cópia era um ramo que só fechava com um exercitador próprio.
 
-Não fechei com story porque toda tentativa saía artificial: o design system
-manda usar a prop `size` para diâmetro e as próprias classes `.nds-*` do
-componente para o resto, então uma story que passa classe numa peça interna
-demonstraria o que a documentação desaconselha.
+Medido antes de decidir: 72 cópias do mesmo par de linhas em 45 arquivos, e
+`lib/utils.ts` já exportava o `cn` que React, Vue e Svelte usam para exatamente
+isso. Não era problema de teste — era duplicação.
 
-As duas saídas do §2e6 valem aqui, e a escolha é de produto:
+A troca é `el.className = cn('nds-x', className)`. O ramo não passou a ser
+testado: **deixou de existir**, porque a decisão saiu do componente e foi para
+uma função que o card exercita 52 vezes. 45 arquivos, 144 linhas trocadas por
+144, nenhuma mudança de comportamento — `cn` é clsx puro e ignora `undefined`.
 
-- **Remover** o `className` das cinco factories-folha, mantendo no
-  `createAvatarRoot` e no `createAvatar`. Fecha os ramos e tira superfície que
-  ninguém usa — mas contradiz `props.extensibility`, que promete `className` em
-  todos os subcomponentes, e nas outras três stacks a promessa é verdadeira
-  porque o `cn()` do wrapper aceita.
-- **Manter e exercitar** num caso real de customização por peça, se ele
-  aparecer.
+| | antes | depois |
+|---|---|---|
+| condicionais de classe no Vanilla | 72 | 0 |
+| avatar | 78,7% (37/47) | 85,7% (30/35) |
+| badge | 90,9% | 95,0% (19/20) |
+| breadcrumb | 71,9% (23/32) | 88,9% (16/18) |
 
-Os outros quatro ramos são de tempo, não de API: `if (img.complete)`,
-o guarda dentro do temporizador do atraso e o `if (text)` do contador. Só
-fecham com controle de rede que a suíte não tem.
+A API não foi podada: `className` continua em todas as peças, e agora sem custo
+— peça que ninguém customiza não cobra mais ramo, story nem nota aqui.
 
-## badge — `className` da factory do Vanilla (baixo)
-
-Mesmo caso já registrado no avatar, agora medido também aqui: ramos em 90,9%
-(acima do limiar de 80), com `if (className)` em `createBadge` sem story que o
-exercite. A prop é usada de verdade — o `DocsHeader` monta as duas etiquetas do
-cabeçalho com ela —, então remover não é opção; o que falta é uma story que
-demonstre customização por classe sem contrariar a orientação da própria página,
-que manda usar a variante e não a classe.
-
-## Vanilla — `className` das factories, agora medido em três componentes (médio)
-
-Terceira aparição do mesmo buraco: avatar (78,7% de ramos), badge (90,9%) e
-agora breadcrumb (**71,9%**, abaixo do limiar de 80). Toda factory do Vanilla
-aceita `className` e quase nenhuma story ou docs page passa — no breadcrumb são
-sete `if (className)` idênticos, um por peça, todos sem cobertura.
-
-Não fechei com story porque toda tentativa saía artificial: a orientação das
-próprias páginas é usar a variante e as classes `.nds-*` do componente, então uma
-story que passa classe numa peça interna demonstraria o que a documentação
-desaconselha. E a exceção que existiria — esconder níveis intermediários no
-mobile — depende de um par de breakpoints que o compat só oferece desencontrado
-(`nds-sm-block` em 640 e `nds-md-hidden` em 768).
-
-A decisão é de produto, e vale para as três (e para o resto do Vanilla):
-
-- **Manter e exercitar**: escrever a story de customização por classe que hoje
-  não existe em lugar nenhum, e alinhar a orientação das docs pages a ela.
-- **Enxugar**: manter `className` só onde há consumidor real — no breadcrumb,
-  isso é o root; nas outras peças, ninguém —, aceitando que `props.extensibility`
-  passe a valer para menos partes.
-
-Enquanto não se decide, o breadcrumb do Vanilla fica abaixo do limiar. Preferi
-reportar a inventar uso.
+As 21 falhas da suíte do Vanilla são anteriores e não têm relação: medidas em
+par nos cinco componentes envolvidos (carousel, drawer, dropdown-menu, popover,
+sheet), dão 21 falhas dos dois lados. São o backlog de overlay.

@@ -1,5 +1,6 @@
 // ─── Alert ───────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
 import { createButton } from './button';
 
 /**
@@ -90,8 +91,7 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
   // region assertiva mesmo estático, e o leitor de tela pulava para ele no
   // carregamento (ver PATCHES.md#alert-role).
   el.setAttribute('role', role);
-  el.className = variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`;
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn(variant === 'default' ? 'nds-alert' : `nds-alert nds-alert-${variant}`, className);
 
   // PATCH: api — variante dismissible: botão X remove o alert e chama onDismiss
   // uma única vez (ver PATCHES.md#alert-dismissible)
@@ -157,8 +157,7 @@ export function createAlertTitle(options: AlertTitleOptions = {}): HTMLElement {
   // (ver PATCHES.md#alert-title-desc-semantics)
   const el = document.createElement(as);
   el.dataset.slot = 'alert-title';
-  el.className = 'nds-alert-title';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-alert-title', className);
   /* v8 ignore next -- `text` tem default ''; o ramo falso é o título montado por
      appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
@@ -173,8 +172,7 @@ export function createAlertDescription(options: AlertDescriptionOptions = {}): H
   // section quanto qualquer elemento com class nds-alert-description.
   const el = document.createElement('section');
   el.dataset.slot = 'alert-description';
-  el.className = 'nds-alert-description';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-alert-description', className);
   /* v8 ignore next -- `text` tem default ''; o ramo falso é a descrição montada
      por appendChild, que nenhuma story exercita e a documentação não oferece. */
   if (text) el.textContent = text;
@@ -196,8 +194,7 @@ export function createAlertAction(options: AlertActionOptions = {}): HTMLElement
 
   const el = document.createElement('div');
   el.dataset.slot = 'alert-action';
-  el.className = 'nds-alert-action';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-alert-action', className);
 
   return el;
 }

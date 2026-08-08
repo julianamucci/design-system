@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverAlign = 'start' | 'center' | 'end';
 
@@ -95,8 +97,7 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   function open(): void {
     panelEl = document.createElement('div');
     panelEl.id = contentId;
-    panelEl.className = 'nds-popover-content';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
+    panelEl.className = cn('nds-popover-content', options.class);
     panelEl.dataset.slot = 'popover-content';
     panelEl.setAttribute('role', 'dialog');
     panelEl.style.position = 'absolute';

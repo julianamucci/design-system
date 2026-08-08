@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
 
 export type DialogOptions = {
@@ -87,8 +89,7 @@ export function createDialog(options: DialogOptions): HTMLElement {
     overlayEl.addEventListener('click', () => closeWithReason('overlay'));
 
     panelEl = document.createElement('div');
-    panelEl.className = 'nds-dialog-content';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
+    panelEl.className = cn('nds-dialog-content', options.class);
     panelEl.setAttribute('role', 'dialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);

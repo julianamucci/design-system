@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
 
@@ -96,8 +98,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
     panelEl = document.createElement('div');
     panelEl.id = cardId;
     panelEl.setAttribute('role', 'dialog');
-    panelEl.className = 'nds-hover-card-content';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
+    panelEl.className = cn('nds-hover-card-content', options.class);
     panelEl.dataset.slot = 'hover-card-content';
     panelEl.style.position = 'absolute';
     panelEl.appendChild(content);

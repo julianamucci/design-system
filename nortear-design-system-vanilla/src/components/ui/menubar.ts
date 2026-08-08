@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type MenubarItemType = 'item' | 'separator' | 'label';
 
 export type MenubarItem = {
@@ -29,8 +31,7 @@ export function createMenubar(menus: MenubarMenu[], options?: { class?: string }
   const root = document.createElement('div');
   root.dataset.slot = 'menubar';
   root.setAttribute('role', 'menubar');
-  root.className = 'nds-menubar';
-  if (options?.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-menubar', options?.class);
 
   let openMenu: { panel: HTMLElement; trigger: HTMLElement } | null = null;
 

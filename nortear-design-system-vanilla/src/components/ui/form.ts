@@ -5,6 +5,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type FormFieldOptions = {
   label?: string;
   input: HTMLElement;
@@ -25,8 +27,7 @@ export function createFormField(options: FormFieldOptions): HTMLElement {
   const { label, input, description, error } = options;
 
   const field = document.createElement('div');
-  field.className = 'nds-form-field';
-  if (options.class) field.classList.add(...options.class.split(' ').filter(Boolean));
+  field.className = cn('nds-form-field', options.class);
   field.dataset.slot = 'field';
 
   const inputId = input.id || `field-input-${Math.random().toString(36).slice(2, 8)}`;
@@ -69,8 +70,7 @@ export function createFieldset(options: FieldsetOptions = {}): HTMLElement {
   const { legend, children = [] } = options;
 
   const fieldset = document.createElement('fieldset');
-  fieldset.className = 'nds-form-fieldset';
-  if (options.class) fieldset.classList.add(...options.class.split(' ').filter(Boolean));
+  fieldset.className = cn('nds-form-fieldset', options.class);
   fieldset.dataset.slot = 'fieldset';
 
   if (legend) {

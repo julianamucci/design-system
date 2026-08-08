@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
 // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
@@ -81,8 +83,7 @@ export function createSheet(options: SheetOptions): HTMLElement {
     overlayEl.addEventListener('click', () => closeWithReason('overlay'));
 
     panelEl = document.createElement('div');
-    panelEl.className = 'nds-sheet-content';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
+    panelEl.className = cn('nds-sheet-content', options.class);
     panelEl.dataset.side = side;
     panelEl.setAttribute('role', 'dialog');
     panelEl.setAttribute('aria-modal', 'true');

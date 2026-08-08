@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Breadcrumb — Vanilla factories standalone ──────────────────────────────
 //
 // Visual: classes .nds-breadcrumb-* (standalone).
@@ -49,8 +50,7 @@ export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
   const nav = document.createElement('nav');
   nav.dataset.slot = 'breadcrumb';
   nav.setAttribute('aria-label', label);
-  nav.className = 'nds-breadcrumb';
-  if (className) nav.classList.add(...className.split(' ').filter(Boolean));
+  nav.className = cn('nds-breadcrumb', className);
 
   return nav;
 }
@@ -60,8 +60,7 @@ export function createBreadcrumbList(options: BreadcrumbListOptions = {}): HTMLE
 
   const ol = document.createElement('ol');
   ol.dataset.slot = 'breadcrumb-list';
-  ol.className = 'nds-breadcrumb-list';
-  if (className) ol.classList.add(...className.split(' ').filter(Boolean));
+  ol.className = cn('nds-breadcrumb-list', className);
 
   return ol;
 }
@@ -71,8 +70,7 @@ export function createBreadcrumbItem(options: BreadcrumbItemOptions = {}): HTMLE
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-item';
-  li.className = 'nds-breadcrumb-item';
-  if (className) li.classList.add(...className.split(' ').filter(Boolean));
+  li.className = cn('nds-breadcrumb-item', className);
 
   return li;
 }
@@ -83,8 +81,7 @@ export function createBreadcrumbLink(options: BreadcrumbLinkOptions): HTMLAnchor
   const a = document.createElement('a');
   a.dataset.slot = 'breadcrumb-link';
   a.href = href;
-  a.className = 'nds-breadcrumb-link';
-  if (className) a.classList.add(...className.split(' ').filter(Boolean));
+  a.className = cn('nds-breadcrumb-link', className);
   if (text) a.textContent = text;
 
   return a;
@@ -101,8 +98,7 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
   // navegável. Quem marca a página atual é o aria-current, e ele vale em
   // qualquer elemento.
   span.setAttribute('aria-current', 'page');
-  span.className = 'nds-breadcrumb-page';
-  if (className) span.classList.add(...className.split(' ').filter(Boolean));
+  span.className = cn('nds-breadcrumb-page', className);
   if (text) span.textContent = text;
 
   return span;
@@ -115,8 +111,7 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
   li.dataset.slot = 'breadcrumb-separator';
   li.setAttribute('role', 'presentation');
   li.setAttribute('aria-hidden', 'true');
-  li.className = 'nds-breadcrumb-separator';
-  if (className) li.classList.add(...className.split(' ').filter(Boolean));
+  li.className = cn('nds-breadcrumb-separator', className);
 
   if (typeof content === 'string') {
     li.textContent = content;
@@ -146,8 +141,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   } else {
     span.setAttribute('aria-hidden', 'true');
   }
-  span.className = 'nds-breadcrumb-ellipsis';
-  if (className) span.classList.add(...className.split(' ').filter(Boolean));
+  span.className = cn('nds-breadcrumb-ellipsis', className);
 
   // SVG MoreHorizontal — anexado via createElementNS (sem innerHTML em elemento de fluxo).
   const SVG_NS = 'http://www.w3.org/2000/svg';

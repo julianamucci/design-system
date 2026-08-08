@@ -8,6 +8,8 @@
 //   - keyboard: ArrowUp/Down, Home, End
 //   - disabled por item
 
+import { cn } from '@/lib/utils';
+
 const CHEVRON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nds-accordion-icon" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -64,8 +66,7 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
   // devtools e o gerador de snippet do Storybook viam exatamente o mesmo HTML.
   root.dataset.type = type;
   root.dataset.collapsible = String(collapsible);
-  root.className = 'nds-accordion';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-accordion', options.class);
 
   function isOpen(value: string): boolean {
     return openValues.has(value);

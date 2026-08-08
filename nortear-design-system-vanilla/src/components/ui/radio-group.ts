@@ -4,6 +4,7 @@
 // Estado controlado via aria-checked + display do .nds-radio-indicator.
 // Native <input type="radio"> presente em cada item para participação em forms.
 
+import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
 
 const RADIO_INDICATOR_SVG =
@@ -29,8 +30,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
 
   const fieldset = document.createElement('fieldset');
   fieldset.dataset.slot = 'radio-group';
-  fieldset.className = 'nds-radio-group';
-  if (options.class) fieldset.classList.add(...options.class.split(' ').filter(Boolean));
+  fieldset.className = cn('nds-radio-group', options.class);
 
   function selectItem(value: string): void {
     fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {

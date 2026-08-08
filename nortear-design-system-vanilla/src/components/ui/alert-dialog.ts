@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Alert Dialog — Vanilla factory (portal manual) ──────────────────────────
 //
 // Visual: classes .nds-alert-dialog-* (standalone .nds-*).
@@ -47,8 +48,7 @@ export function createAlertDialogMedia(options: AlertDialogMediaOptions = {}): H
   const { className } = options;
   const el = document.createElement('div');
   el.dataset.slot = 'alert-dialog-media';
-  el.className = 'nds-alert-dialog-media';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-alert-dialog-media', className);
   return el;
 }
 
@@ -112,9 +112,8 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     overlayEl.dataset.state = 'open';
 
     panelEl = document.createElement('div');
-    panelEl.className = 'nds-alert-dialog-content';
+    panelEl.className = cn('nds-alert-dialog-content', options.class);
     panelEl.dataset.state = 'open';
-    if (options.class) panelEl.classList.add(...options.class.split(' ').filter(Boolean));
     panelEl.setAttribute('role', 'alertdialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);

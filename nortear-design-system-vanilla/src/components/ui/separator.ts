@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Separator — Vanilla factory standalone ──────────────────────────────────
 //
 // Visual: classes .nds-separator (standalone).
@@ -18,7 +19,7 @@ export function createSeparator(options: SeparatorOptions = {}): HTMLElement {
   const el = document.createElement('div');
   el.dataset.slot = 'separator';
   el.dataset.orientation = orientation;
-  el.className = 'nds-separator';
+  el.className = cn('nds-separator', className);
 
   if (decorative) {
     el.setAttribute('role', 'none');
@@ -28,7 +29,6 @@ export function createSeparator(options: SeparatorOptions = {}): HTMLElement {
     el.setAttribute('aria-orientation', orientation);
   }
 
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
 
   return el;
 }

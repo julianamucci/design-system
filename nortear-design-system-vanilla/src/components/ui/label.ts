@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 // ─── Label — Vanilla factory standalone ──────────────────────────────────────
 //
 // Visual: classe .nds-label (standalone).
@@ -16,8 +17,7 @@ export function createLabel(options: LabelOptions = {}): HTMLLabelElement {
 
   const el = document.createElement('label');
   el.dataset.slot = 'label';
-  el.className = 'nds-label';
-  if (className) el.classList.add(...className.split(' ').filter(Boolean));
+  el.className = cn('nds-label', className);
   if (htmlFor) el.htmlFor = htmlFor;
   if (text) el.textContent = text;
 

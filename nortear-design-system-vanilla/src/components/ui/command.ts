@@ -3,6 +3,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type CommandItem = {
   value: string;
   label: string;
@@ -24,8 +26,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'command';
-  root.className = 'nds-command';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-command', options.class);
 
   const _cmdId = `cmd-${Math.random().toString(36).slice(2, 8)}`;
   const _listboxId = `${_cmdId}-listbox`;

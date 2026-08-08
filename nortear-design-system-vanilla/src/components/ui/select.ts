@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type SelectItem = {
   value: string;
   label: string;
@@ -25,8 +27,7 @@ export function createSelect(options: SelectOptions): HTMLSelectElement {
   const { items, placeholder, defaultValue, disabled = false, onValueChange } = options;
 
   const select = document.createElement('select');
-  select.className = 'nds-select';
-  if (options.class) select.classList.add(...options.class.split(' ').filter(Boolean));
+  select.className = cn('nds-select', options.class);
   select.dataset.slot = 'select';
 
   if (disabled) select.disabled = true;

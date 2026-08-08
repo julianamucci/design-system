@@ -4,6 +4,8 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+import { cn } from '@/lib/utils';
+
 export type CalendarOptions = {
   value?: Date;
   onSelect?: (date: Date) => void;
@@ -62,8 +64,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'calendar';
-  root.className = 'nds-calendar';
-  if (options.class) root.classList.add(...options.class.split(' ').filter(Boolean));
+  root.className = cn('nds-calendar', options.class);
 
   function buildChevron(direction: 'left' | 'right'): SVGSVGElement {
     const SVG_NS = 'http://www.w3.org/2000/svg';

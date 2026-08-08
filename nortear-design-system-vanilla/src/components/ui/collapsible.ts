@@ -4,6 +4,8 @@
 // Sem visual próprio para trigger/content — consumidor estiliza livremente.
 // Comportamento: aria-expanded/aria-hidden + data-state="open|closed" + hidden.
 
+import { cn } from '@/lib/utils';
+
 export type CollapsibleOptions = {
   trigger: string | HTMLElement;
   content: HTMLElement;
@@ -31,8 +33,7 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'collapsible';
-  wrapper.className = 'nds-collapsible';
-  if (options.class) wrapper.classList.add(...options.class.split(' ').filter(Boolean));
+  wrapper.className = cn('nds-collapsible', options.class);
 
   // Trigger button
   let triggerEl: HTMLButtonElement;
