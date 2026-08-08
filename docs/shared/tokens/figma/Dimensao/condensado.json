@@ -59,29 +59,9 @@
     "spacing-24": {
       "$type": "number",
       "$value": 76.8
-    },
-    "spacing-btn-x": {
-      "$type": "number",
-      "$value": 10
-    },
-    "spacing-btn-x-sm": {
-      "$type": "number",
-      "$value": 10
-    },
-    "spacing-btn-x-lg": {
-      "$type": "number",
-      "$value": 10
     }
   },
   "altura": {
-    "height-badge": {
-      "$type": "number",
-      "$value": 16
-    },
-    "height-xs": {
-      "$type": "number",
-      "$value": 20
-    },
     "height-sm": {
       "$type": "number",
       "$value": 24
@@ -89,14 +69,6 @@
     "height-default": {
       "$type": "number",
       "$value": 28
-    },
-    "height-lg": {
-      "$type": "number",
-      "$value": 32
-    },
-    "height-xl": {
-      "$type": "number",
-      "$value": 36
     }
   },
   "tamanho": {

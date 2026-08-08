@@ -205,7 +205,7 @@
       "file": {
         "label": "Arquivo",
         "trigger": "Prop <code>type=\"file\"</code>",
-        "behavior": "Botão nativo de seleção de arquivo. Altura ajustada via token <code>--height-xs</code>."
+        "behavior": "Botão nativo de seleção de arquivo. A altura sai do padding, como no resto do campo."
       }
     },
     "props": {
@@ -350,7 +350,7 @@
         },
         "item5": {
           "action": "type='file' renderizado",
-          "result": "Botão de seleção nativo, altura via token --height-xs, estilo file:*",
+          "result": "Botão de seleção nativo, altura vinda do padding, com estilo próprio",
           "priority": "medium"
         },
         "item6": {
@@ -631,7 +631,7 @@
       "file": {
         "label": "File",
         "trigger": "Prop <code>type=\"file\"</code>",
-        "behavior": "Native file picker button. Height adjusted via <code>--height-xs</code> token."
+        "behavior": "Native file picker button. Height comes from padding, like the rest of the field."
       }
     },
     "props": {
@@ -776,7 +776,7 @@
         },
         "item5": {
           "action": "type='file' rendered",
-          "result": "Native file picker button, height via --height-xs token, file:* styles",
+          "result": "Native file picker button, height from padding, with its own styling",
           "priority": "medium"
         },
         "item6": {
@@ -1057,7 +1057,7 @@
       "file": {
         "label": "Archivo",
         "trigger": "Prop <code>type=\"file\"</code>",
-        "behavior": "Botón nativo de selección de archivo. Altura ajustada vía token <code>--height-xs</code>."
+        "behavior": "Botón nativo de selección de archivo. La altura sale del padding, como en el resto del campo."
       }
     },
     "props": {
@@ -1202,7 +1202,7 @@
         },
         "item5": {
           "action": "type='file' renderizado",
-          "result": "Botón nativo de selección, altura vía token --height-xs, estilos file:*",
+          "result": "Botón nativo de selección, altura desde el padding, con estilo propio",
           "priority": "medium"
         },
         "item6": {

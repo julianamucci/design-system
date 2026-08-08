@@ -144,22 +144,26 @@
 .nds-button-icon-lg {
   padding: 0;
 }
+/* O quadrado lê a escada --size-*, que tem valor por densidade. Antes eram rem
+ * cravados: o botão de ícone era a única peça que não encolhia no tema
+ * condensado nem crescia no confortável, e ninguém via porque o número batia
+ * com o da densidade padrão. */
 .nds-button-icon-xs {
-  width: 1.5rem;                                /* 24px — paridade com --height-xs */
-  height: 1.5rem;
+  width: var(--size-xs);                        /* 24px no tema padrão */
+  height: var(--size-xs);
 }
 .nds-button-icon-xs > svg { width: 0.75rem; height: 0.75rem; }
 .nds-button-icon-sm {
-  width: 2rem;                                  /* 32px */
-  height: 2rem;
+  width: var(--size-default);                   /* 32px */
+  height: var(--size-default);
 }
 .nds-button-icon {
-  width: 2.25rem;                               /* 36px */
-  height: 2.25rem;
+  width: var(--size-lg);                        /* 36px */
+  height: var(--size-lg);
 }
 .nds-button-icon-lg {
-  width: 2.5rem;                                /* 40px */
-  height: 2.5rem;
+  width: var(--size-xl);                        /* 40px */
+  height: var(--size-xl);
 }
 
 /* ── Variantes ─────────────────────────────────────────────────────────────── */

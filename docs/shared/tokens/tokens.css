@@ -116,8 +116,8 @@
      O sufixo do token é o multiplicador, não o px — --spacing-10 resolve 40px
      (8×5) e é válido; o que não pode existir é um px fora do grid, como 12px,
      20px, 28px ou 36px. Valor assim em CSS é bug a corrigir. */
-  --spacing-0:   0;
-  --spacing-px:  1px;                               /* hairline / border */
+  --spacing-0:   0;  /* audit-ignore: orphan-token — degrau da régua; a escala precisa do zero mesmo sem consumidor */
+  --spacing-px:  1px;  /* audit-ignore: orphan-token — degrau da régua (hairline) */
   --spacing-0-5: calc(var(--spacing-base) * 0.5);   /* 2px  — divisor de 8 (8÷4) */
   --spacing-1:   calc(var(--spacing-base) * 1);     /* 4px  — divisor de 8 (8÷2) */
   --spacing-2:   calc(var(--spacing-base) * 2);     /* 8px  — base do grid */
@@ -126,7 +126,7 @@
   --spacing-8:   calc(var(--spacing-base) * 8);     /* 32px */
   --spacing-10:  calc(var(--spacing-base) * 10);    /* 40px */
   --spacing-12:  calc(var(--spacing-base) * 12);    /* 48px */
-  --spacing-14:  calc(var(--spacing-base) * 14);    /* 56px */
+  --spacing-14:  calc(var(--spacing-base) * 14);  /* 56px — audit-ignore: orphan-token — degrau da régua */
   --spacing-16:  calc(var(--spacing-base) * 16);    /* 64px */
   --spacing-20:  calc(var(--spacing-base) * 20);    /* 80px */
   --spacing-24:  calc(var(--spacing-base) * 24);    /* 96px */
@@ -170,29 +170,27 @@
   --radius-card: var(--radius-xl);   /* 14px */
   --radius-badge: var(--radius-full); /* pill */
 
-  /* Dimension tokens — altura default de interativos (Button, Input, Select, Toggle, Badge...)
-     Consumidos pelas classes .nds-* em height/min-height; nunca hardcode o px
-     no componente. --height-* para caixas retangulares, --size-* para quadradas
-     (icon-only). Ver guideline 12-tokenizacao-dimensoes. */
-  --height-badge: 1.25rem;    /* 20px — compacto, só para Badge */
-  --height-xs: 1.5rem;        /* 24px */
+  /* Dimension tokens — altura de interativos.
+     Sobraram os dois degraus que alguém consome. Os sete removidos
+     (--height-badge/xs/lg/xl e a família --spacing-btn-x*) prescreviam a
+     doutrina antiga de altura fixa no primitivo, e ninguém os referenciava. Hoje a altura de qualquer coisa com TEXTO sai de
+     padding-block + line-height, para o componente crescer junto com a fonte
+     do navegador (WCAG 1.4.4); medida fixa só nos icon-only, que não têm texto
+     a ser cortado e declaram o próprio quadrado em rem.
+     Ver guideline 12-tokenizacao-dimensoes. */
   --height-sm: 1.75rem;       /* 28px */
   --height-default: 2rem;     /* 32px */
-  --height-lg: 2.25rem;       /* 36px */
-  --height-xl: 2.5rem;        /* 40px */
 
+  /* Quadrados sem texto — icon-only, indicador, knob, thumb. Aqui medida fixa é
+     correta (não há frase a ser cortada), e a escada acompanha a densidade. */
   --size-xs: 1.5rem;          /* 24px */
-  --size-sm: 1.75rem;         /* 28px */
+  --size-sm: 1.75rem;         /* 28px — audit-ignore: orphan-token — degrau da escada; o botão de ícone pula de xs para default */
   --size-default: 2rem;       /* 32px */
   --size-lg: 2.25rem;         /* 36px */
   --size-xl: 2.5rem;          /* 40px */
 
-  --spacing-btn-x: 0.625rem;  /* 10px */
-  --spacing-btn-x-sm: 0.625rem;
-  --spacing-btn-x-lg: 0.625rem;
-
   /* Stroke (para variantes com borda visível) */
-  --border-width-default: 1px;
+  --border-width-default: 1px;  /* audit-ignore: orphan-token — largura de traço de referência; o CSS usa 1px direto */
 
 
   /* Z-index */

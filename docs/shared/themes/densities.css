@@ -18,13 +18,8 @@
  *    correto ao voltar de condensado/confortável. Mesmos números de tokens.css. */
 .densidade-default {
   --spacing-base: 0.25rem;         /* 4px */
-
-  --height-badge: 1.25rem;         /* 20px */
-  --height-xs: 1.5rem;             /* 24px */
   --height-sm: 1.75rem;            /* 28px */
   --height-default: 2rem;          /* 32px */
-  --height-lg: 2.25rem;            /* 36px */
-  --height-xl: 2.5rem;             /* 40px */
 
   --size-xs: 1.5rem;
   --size-sm: 1.75rem;
@@ -37,13 +32,9 @@
 .densidade-condensado {
   --spacing-base: 0.20rem;        /* 3.2px (80% do padrão) */
 
-  /* Heights/sizes escalonados proporcionalmente */
-  --height-badge: 1rem;            /* 16px */
-  --height-xs: 1.25rem;            /* 20px */
+  /* Escada de quadrado (icon-only) + os dois degraus de caixa sem texto */
   --height-sm: 1.5rem;             /* 24px */
   --height-default: 1.75rem;       /* 28px */
-  --height-lg: 2rem;               /* 32px */
-  --height-xl: 2.25rem;            /* 36px */
 
   --size-xs: 1.25rem;
   --size-sm: 1.5rem;
@@ -56,13 +47,9 @@
 .densidade-confortavel {
   --spacing-base: 0.3125rem;      /* 5px (125% do padrão) */
 
-  /* Heights/sizes escalonados proporcionalmente */
-  --height-badge: 1.5rem;          /* 24px */
-  --height-xs: 1.75rem;            /* 28px */
+  /* Escada de quadrado (icon-only) + os dois degraus de caixa sem texto */
   --height-sm: 2rem;               /* 32px */
   --height-default: 2.5rem;        /* 40px */
-  --height-lg: 2.75rem;            /* 44px */
-  --height-xl: 3rem;               /* 48px */
 
   --size-xs: 1.75rem;
   --size-sm: 2rem;

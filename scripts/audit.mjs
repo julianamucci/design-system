@@ -956,6 +956,64 @@ function auditCssTokenUsage() {
   return violations;
 }
 
+/**
+ * Token declarado em `tokens.css` que ninguém referencia.
+ *
+ * É o espelho de `undefined_token_in_css`, e pega o defeito oposto: a variável
+ * existe, aparece no export do Figma, é lida como promessa por quem porta o
+ * sistema para outra plataforma — e não move pixel nenhum. Foi assim que
+ * `--spacing-btn-x*` sobreviveu valendo 10px nas três densidades, e que a
+ * escada de altura fixa continuou publicada depois que a regra do projeto
+ * passou a proibir altura fixa em componente com texto.
+ *
+ * Órfão não é sempre resíduo: pode ser adoção pendente (o CSS crava o valor em
+ * vez de ler o token). A saída é sempre uma das duas — adotar ou remover. Para
+ * degrau de régua que existe para a escala ficar completa, declare o motivo:
+ *
+ *   --spacing-px: 1px;  \/* audit-ignore: orphan-token — degrau da régua *\/
+ */
+function auditOrphanTokens() {
+  const violations = [];
+  const arquivo = join(ROOT, 'docs', 'shared', 'tokens', 'tokens.css');
+  const fonte = readFile(arquivo);
+  if (!fonte) return violations;
+
+  // Corpus de consumo: todo CSS e todo código de stack que possa ler o token.
+  const consumidores = [
+    ...walkDir(join(ROOT, 'docs', 'shared'), ['.css', '.ts', '.tsx']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src'), ['.css', '.ts', '.tsx', '.vue', '.svelte'])),
+  ];
+  let corpus = '';
+  for (const f of consumidores) {
+    if (f === arquivo) continue;
+    corpus += readFile(f) || '';
+  }
+  // O próprio tokens.css conta como consumidor: um token pode alimentar outro
+  // (--text-h4 lê --text-p), e aí ele não é órfão.
+  const derivacoes = fonte;
+
+  const linhas = fonte.split('\n');
+  linhas.forEach((linha, i) => {
+    const m = /^\s*(--[a-z0-9-]+)\s*:/i.exec(linha);
+    if (!m) return;
+    if (/audit-ignore:\s*orphan-token\b/.test(linha)) return;
+    const token = m[1].toLowerCase();
+    const usado =
+      corpus.includes(`var(${token})`) ||
+      corpus.includes(`var(${token},`) ||
+      corpus.includes(`var( ${token}`) ||
+      derivacoes.split(`var(${token}`).length > 1;
+    if (usado) return;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, arquivo), line: i + 1, rule: 'orphan_token',
+      message: `${token} é declarado e nunca referenciado por var() — adote-o onde o CSS crava o valor, ou remova. Degrau de régua declara o motivo com audit-ignore: orphan-token`,
+    });
+  });
+
+  return violations;
+}
+
 // ─── Play idempotente ───────────────────────────────────────────────────────
 //
 // O painel Interactions REEXECUTA a play no mesmo DOM — não remonta. O vitest
@@ -2072,7 +2130,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditDocumentLang()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditDocumentLang()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

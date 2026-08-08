@@ -36,12 +36,29 @@ Para padrão de docs page, consulte `AlertDocs.<ext>` da mesma stack **só se pr
 
 ## Tokenização de Dimensões
 
-**Proibido** classes hardcoded de altura/size em UI, stories e docs:
+**Componente com texto não declara altura.** Ela sai de `padding-block +
+line-height`, para o bloco crescer junto quando a pessoa aumenta a fonte do
+navegador — com altura fixa, o texto cresce e é cortado dentro da caixa (WCAG
+1.4.4, nível AA).
 
-- ❌ `h-8`, `h-9`, `h-10`, `size-6`, `size-8`
-- ✅ `h-(--height-default)`, `h-(--height-sm)`, `h-(--height-lg)`, `size-(--size-default)`
+- ❌ `h-8`, `h-9`, `h-10`, `size-6`, `size-8` — e também `h-(--height-default)`
+  ou qualquer token de altura num elemento que renderiza frase
+- ✅ `padding-block` + `line-height`, com o degrau de tamanho mudando padding e
+  fonte
 
-Exceções: `px-*`/`gap-*`/`py-*` (spacing), `[&_svg]:size-4` (ícones decorativos), `min-h-16` (Textarea). Tabela completa em `docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
+Medida fixa em `rem` só onde não há texto a cortar: quadrado de botão icon-only,
+indicador de checkbox/radio, knob do switch, thumb do slider, círculo do avatar.
+
+Medida de quadrado sai da escada `--size-xs…xl`, que tem valor por densidade —
+cravar o `rem` compila e passa em todo teste, só não responde ao tema.
+
+`--height-badge/xs/lg/xl` e a família `--spacing-btn-x*` **não existem mais**:
+eram resíduo da doutrina antiga e ninguém as consumia. Sobraram `--height-sm` e
+`--height-default`, para caixa sem fluxo de texto.
+
+Exceções de spacing: `px-*`/`gap-*`/`py-*`, `[&_svg]:size-4` (ícone decorativo),
+`min-h-16` (Textarea). Tabela completa em
+`docs/shared/guidelines/12-tokenizacao-dimensoes.md`.
 
 ---
 

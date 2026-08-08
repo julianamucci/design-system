@@ -12,26 +12,45 @@ O design system suporta 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma
 
 Definidos em [`docs/shared/tokens/tokens.css`](../tokens/tokens.css) e consumidos pelo CSS standalone `.nds-*` via `var()`.
 
-### Alturas de interativos
+### Altura de quem tem texto: não é medida, é resultado
+
+**Componente com texto não recebe `height`.** A altura sai de
+`padding-block + line-height`, para o bloco crescer junto quando a pessoa
+aumenta a fonte do navegador — com altura fixa, o texto cresce e o corte
+acontece dentro do botão (WCAG 1.4.4, *Resize Text*, nível AA).
+
+Por isso `--height-badge`, `--height-xs`, `--height-lg`, `--height-xl` e a
+família `--spacing-btn-x*` **foram removidas**: prescreviam o oposto disso e
+ninguém as consumia. Se encontrar referência a elas em algum lugar, é resíduo.
 
 | Token | Default | Para que serve |
 |-------|---------|----------------|
-| `--height-badge` | 20px | Badge, tags compactos |
-| `--height-xs` | 24px | Button size=xs, icon-xs |
-| `--height-sm` | 28px | Button/Select/Toggle size=sm |
-| `--height-default` | 32px | Button/Input/Select/Toggle/Textarea default |
-| `--height-lg` | 36px | Button/Toggle size=lg |
-| `--height-xl` | 40px | Alturas folgadas |
+| `--height-sm` | 28px | Caixa sem fluxo de texto, degrau compacto |
+| `--height-default` | 32px | Caixa sem fluxo de texto (ex.: `min-block-size` de barra de código) |
 
-### Sizes de ícones / componentes quadrados
+Repare no "sem fluxo de texto": estes dois sobraram porque servem a caixas cuja
+altura não depende de tipografia. Para qualquer coisa que renderiza uma frase,
+a resposta é padding.
 
-| Token | Default | Para que serve |
-|-------|---------|----------------|
-| `--size-xs` | 24px | icon-xs |
-| `--size-sm` | 28px | icon-sm |
-| `--size-default` | 32px | icon (Button size=icon), Avatar default |
-| `--size-lg` | 36px | icon-lg |
-| `--size-xl` | 40px | Alturas folgadas |
+### Quadrados sem texto
+
+Peça sem texto **tem** medida: botão icon-only, indicador de checkbox e radio,
+knob do switch, thumb do slider, círculo do avatar. Não há frase a ser cortada,
+e o tamanho precisa ser previsível em qualquer contexto.
+
+Aqui a medida vem da escada `--size-*`, que tem valor por densidade:
+
+| Token | Default | Condensado | Confortável |
+|-------|---------|-----------|-------------|
+| `--size-xs` | 24px | 20px | 28px |
+| `--size-sm` | 28px | 24px | 32px |
+| `--size-default` | 32px | 28px | 40px |
+| `--size-lg` | 36px | 32px | 44px |
+| `--size-xl` | 40px | 36px | 48px |
+
+Cravar o `rem` no lugar do token compila e passa em todo teste — só não
+responde ao tema. Era o caso do botão de ícone, que era a única peça do sistema
+a ignorar a densidade, e ninguém via porque o número batia com o do tema padrão.
 
 ### Radius, shadows, fonts — já tokenizados
 
@@ -48,32 +67,28 @@ As dimensões são aplicadas no CSS `.nds-*` do componente via `var()`, lendo o 
 ### ✅ CORRETO
 
 ```css
-/* Button */
+/* Button — a altura é consequência do padding e da entrelinha */
 .nds-button {
-  block-size: var(--height-default);
-  padding-inline: var(--spacing-2);
+  padding-inline: var(--spacing-4);
+  padding-block: var(--spacing-2);
+  line-height: 1.25;
   border-radius: var(--radius-button);
 }
 
-/* Icon-only button */
-.nds-button[data-shape="icon"] { inline-size: var(--size-default); }
+/* Degrau de tamanho: muda padding e fonte, nunca height */
+.nds-button-sm { padding-inline: var(--spacing-4); padding-block: var(--spacing-1); }
+.nds-button-lg { padding-inline: var(--spacing-6); padding-block: var(--spacing-2); }
 
-/* Input */
-.nds-input { block-size: var(--height-default); }
-
-/* Select trigger com size variants */
-.nds-select-trigger[data-size="default"] { block-size: var(--height-default); }
-.nds-select-trigger[data-size="sm"]      { block-size: var(--height-sm); }
-
-/* Toggle com min-width acompanhando altura */
-.nds-toggle { block-size: var(--height-default); min-inline-size: var(--height-default); }
+/* Icon-only: quadrado explícito, porque não há texto a ser cortado */
+.nds-button-icon { width: 2.25rem; height: 2.25rem; padding: 0; }
 ```
 
 ### ❌ ERRADO
 
 ```css
-/* Hardcoded — não respeita temas */
-.nds-button { block-size: 32px; }
+/* Altura fixa em componente com texto: a 200% de zoom de fonte, a frase é
+   cortada dentro da própria caixa. */
+.nds-button { block-size: var(--height-default); }
 .nds-input  { height: 36px; }
 .nds-badge  { height: 20px; }
 ```
@@ -94,18 +109,15 @@ Dúvida-chave para decidir: **"Se o usuário trocar de tema, essa medida precisa
 
 ### Componentes UI primitivos (`src/components/ui/<comp>.tsx`)
 
-Sempre use tokens para altura/size de:
-- Button (todos os sizes)
-- Input, Textarea (altura principal)
-- Select trigger
-- Toggle, ToggleGroup
-- Badge
-- Switch (knob width/height)
-- RadioGroup, Checkbox (size do indicador)
-- Slider thumb
-- Avatar (size default/sm/lg)
+Nada com texto declara altura — Button, Input, Textarea, Select, Toggle, Badge e
+os degraus de tamanho de todos eles saem de `padding-block + line-height`.
 
-Se criar um componente novo que tem altura interativa, siga o padrão — consulte [PATCHES.md](../../../PATCHES.md#button-dimension-tokens) para ver exemplo.
+Medida fixa entra só onde não há texto para cortar, e sempre em `rem`:
+- botão icon-only (o quadrado do componente)
+- indicador de Checkbox e RadioGroup
+- knob do Switch
+- thumb do Slider
+- Avatar (o círculo é a peça inteira)
 
 ### Stories (`*.stories.*`)
 
