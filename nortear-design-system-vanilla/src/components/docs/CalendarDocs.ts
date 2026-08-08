@@ -53,9 +53,14 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// Fixed reference date to keep previews stable across Chromatic builds.
+/**
+ * Hoje. As demos da docs page abrem no mês corrente com o dia de hoje marcado —
+ * é o que se espera ao abrir um calendário, e é o que o React e o Svelte já
+ * faziam. As STORIES seguem em data fixa: lá o Chromatic fotografa, e um
+ * calendário preso ao relógio geraria diferença visual todo dia.
+ */
 function referenceDate(): Date {
-  return new Date(2026, 3, 12); // 2026-04-12
+  return new Date();
 }
 
 // ─── createCalendarDocs ───────────────────────────────────────────────────────

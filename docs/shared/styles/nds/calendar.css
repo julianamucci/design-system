@@ -37,7 +37,10 @@
   align-items: center;
   justify-content: space-between;
   padding-top: var(--spacing-1);
-  margin-bottom: var(--spacing-2);
+  /* 16px, como nas outras stacks: lá o respiro vem do gap entre a legenda e a
+   * grade dentro de .nds-calendar-month. Aqui a estrutura é mais simples e
+   * quem separa é esta margem. */
+  margin-bottom: var(--spacing-4);
 }
 
 /* Ghost, como nas outras três stacks: fundo transparente e sem borda, com o
@@ -271,6 +274,13 @@
 [data-slot="card-content"] .nds-calendar-root,
 [data-slot="popover-content"] .nds-calendar-root {
   background-color: transparent;
+}
+
+/* Onde o cabeçalho é irmão dos meses — o arranjo do Vue —, o gap interno de
+ * .nds-calendar-month não o alcança e a semana encostava na legenda. Onde ele
+ * mora DENTRO do mês (React, Svelte), este seletor não casa e nada muda. */
+.nds-calendar-caption + .nds-calendar-months {
+  margin-block-start: var(--spacing-4);
 }
 
 .nds-calendar-months {
@@ -580,7 +590,9 @@
   color: hsl(var(--accent-foreground));
 }
 
-.nds-calendar-day-btn[data-outside-view] {
+.nds-calendar-day-btn[data-outside-view],
+.nds-calendar-day-btn[data-outside-month],
+.nds-calendar-outside .nds-calendar-day-btn {
   color: hsl(var(--muted-foreground));
 }
 

@@ -143,6 +143,22 @@ export const Playground: Story = {
       await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
     });
 
+    await step('A semana respira longe da legenda, e o dia vizinho é apagado', async () => {
+      // Os dois eram divergência entre stacks: o respiro era 16px no React e no
+      // Svelte, 8 no Vanilla e ZERO no Vue (lá o cabeçalho é irmão dos meses,
+      // então o gap interno não o alcançava). E o dia de fora do mês só ficava
+      // apagado no Vue e no Vanilla — no React a regra mirava a célula, e o
+      // botão dentro dela repunha a própria cor; no Svelte não havia regra.
+      const legenda = canvasElement.querySelector<HTMLElement>('.nds-calendar-caption')!;
+      const semana = canvasElement.querySelector<HTMLElement>('thead')!;
+      const respiro = semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom;
+      await expect(Math.round(respiro)).toBe(16);
+
+      const vizinho = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-view]')!;
+      const doMes = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn:not([data-outside-view])')!;
+      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(doMes).color);
+    });
+
     await step('O clique nos botões de mês chega neles', async () => {
       // `userEvent.click` acerta o elemento mesmo com outra coisa pintada
       // por cima: ele verifica `pointer-events`, não oclusão. Foi assim que a nav

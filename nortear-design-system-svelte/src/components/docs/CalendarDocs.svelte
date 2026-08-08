@@ -199,20 +199,18 @@ interface CalendarProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-stack" data-spacing="sm" data-align="center">
+    <!-- `nds-cluster` com `data-justify`, e não `nds-stack` com `data-align`:
+         a pilha não tem esse atributo, então a centralização era inerte e a
+         demo ficava encostada à esquerda enquanto as outras três centralizavam.
+         A legenda "Data selecionada" saiu — nenhuma outra stack a tem, e ela
+         duplica na prosa o que o próprio calendário já mostra marcado. -->
+    <div class="nds-cluster nds-w-full" data-justify="center">
       <Calendar
         type="single"
         bind:value={demoValue}
         onValueChange={(v: DateValue | undefined) => track('field_change', { component: 'calendar', field_name: 'date', value: v ? v.toString() : '', location: 'docs_demo' })}
         locale={previewLocale}
       />
-      <p class="nds-text-caption nds-text-muted-foreground">
-        {#if demoValue}
-          {$tStore('demonstration.labels.singleLabel')}: {demoValue.toString()}
-        {:else}
-          {$tStore('demonstration.labels.noDate')}
-        {/if}
-      </p>
     </div>
   </DocsDemonstration>
 

@@ -139,17 +139,19 @@ const rekaLocale = computed(() => {
   }
 });
 
-// ─── Fixed demo dates (determinístico para Chromatic) ─────────────────────────
-// Usamos datas fixas em vez de `today()` para evitar instabilidade em screenshots
-const demoAnchor = new CalendarDate(2026, 4, 15) as any;
-const demoSelectedSingle = ref<any>(new CalendarDate(2026, 4, 12));
-const demoSelectedMultiple = ref<any[]>([
-  new CalendarDate(2026, 4, 8),
-  new CalendarDate(2026, 4, 15),
-  new CalendarDate(2026, 4, 22),
-]);
-const demoRangeStart = new CalendarDate(2026, 4, 10);
-const demoRangeEnd = new CalendarDate(2026, 4, 18);
+// ─── Datas das demos ──────────────────────────────────────────────────────────
+// Ancoradas em HOJE: a docs page abre no mês corrente com o dia de hoje
+// marcado, que é o que se espera ao abrir um calendário — e é o que o React e o
+// Svelte já faziam. As STORIES seguem em data fixa, porque lá o Chromatic
+// fotografa e um calendário preso ao relógio geraria diferença todo dia.
+const hoje = new Date();
+const dv = (dia: number) => new CalendarDate(hoje.getFullYear(), hoje.getMonth() + 1, dia) as any;
+
+const demoAnchor = dv(hoje.getDate());
+const demoSelectedSingle = ref<any>(dv(hoje.getDate()));
+const demoSelectedMultiple = ref<any[]>([dv(8), dv(15), dv(22)]);
+const demoRangeStart = dv(10);
+const demoRangeEnd = dv(18);
 
 // `isDateDisabled` matcher — bloqueia datas passadas (antes do anchor)
 function disablePastDates(date: any) {
