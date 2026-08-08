@@ -302,9 +302,23 @@
   font-weight: var(--font-weight-medium, 500);
 }
 
+/* A legenda com seletores é um CONTROLE, e precisa parecer um: sem moldura ela
+ * se lê como o texto do mês com um chevron ao lado, e ninguém descobre que
+ * clica. Mesmo enquadramento do `-select-framed`, para as stacks convergirem. */
 .nds-calendar-dropdown-root {
   position: relative;
-  border-radius: var(--nds-cell-radius);
+  display: flex;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius-md);
+}
+
+.nds-calendar-dropdown-root:hover {
+  background-color: hsl(var(--accent));
+}
+
+.nds-calendar-dropdown-root:has(select:focus-visible) {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
 .nds-calendar-dropdown {
@@ -324,7 +338,9 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-1);
-  border-radius: var(--nds-cell-radius);
+  padding-inline-start: var(--spacing-2);
+  padding-inline-end: var(--spacing-1);
+  border-radius: var(--radius-md);
 }
 
 .nds-calendar-caption-label-button > svg {
@@ -589,6 +605,24 @@
 
 .nds-calendar-select {
   position: relative;
+  display: flex;
+  border: 1px solid hsl(var(--input, var(--border)));
+  border-radius: var(--radius-md);
+}
+
+/* O wrapper externo repete a classe do interno; a moldura é do que encosta no
+ * <select>, senão sai borda dupla. */
+.nds-calendar-select:has(> .nds-calendar-select) {
+  border: 0;
+}
+
+.nds-calendar-select:hover {
+  background-color: hsl(var(--accent));
+}
+
+.nds-calendar-select:has(select:focus-visible) {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
 .nds-calendar-select [data-slot="native-select-icon"] {
@@ -650,4 +684,88 @@
   width: 0.875rem;
   height: 0.875rem;
   color: hsl(var(--muted-foreground));
+}
+
+/* ── Popup do seletor de mês e ano ──────────────────────────────────────────
+ *
+ * O painel que abre num <select> é desenhado pelo sistema operacional, e CSS
+ * clássico não o alcança: é por isso que ele aparece sem raio e sem elevação
+ * enquanto o gatilho segue o tema. `appearance: base-select` troca o desenho
+ * nativo pelo do documento e libera o `::picker(select)`.
+ *
+ * Vem dentro de @supports de propósito. O recurso está em Chrome, Edge e
+ * Safari 27, e ainda não no Firefox — onde não houver, o <select> continua
+ * nativo, funcional e acessível, só sem a moldura do tema. Enhancement, não
+ * dependência.
+ *
+ * Dentro do bloco o <select> deixa de ser a camada invisível sobre um rótulo
+ * falso: com o desenho do documento ele PODE ser o controle visível, então o
+ * rótulo duplicado sai. Esse truque existia justamente porque não dava para
+ * estilizar o nativo. */
+@supports (appearance: base-select) {
+  .nds-calendar-dropdown,
+  .nds-calendar-select-input,
+  .nds-calendar-select-overlay,
+  .nds-calendar-caption-dropdown .nds-calendar-select-input {
+    appearance: base-select;
+
+    position: static;
+    inset: auto;
+    opacity: 1;
+    color: inherit;
+    background-color: transparent;
+    border: 0;
+    padding-inline: var(--spacing-2) var(--spacing-1);
+    font-size: var(--text-control);
+    font-weight: var(--font-weight-medium, 500);
+  }
+
+  /* Rótulo falso e chevron desenhado à mão: o select agora traz os seus. */
+  .nds-calendar-caption-label-button,
+  .nds-calendar-select-value,
+  .nds-calendar-select-display {
+    display: none;
+  }
+
+  .nds-calendar-dropdown::picker-icon,
+  .nds-calendar-select-input::picker-icon,
+  .nds-calendar-select-overlay::picker-icon {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .nds-calendar-dropdown::picker(select),
+  .nds-calendar-select-input::picker(select),
+  .nds-calendar-select-overlay::picker(select) {
+    appearance: base-select;
+
+    padding: var(--spacing-1);
+    background-color: hsl(var(--popover));
+    color: hsl(var(--popover-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-md);
+    box-shadow: var(--elevation-md);
+  }
+
+  .nds-calendar-dropdown option,
+  .nds-calendar-select-input option,
+  .nds-calendar-select-overlay option {
+    padding-block: var(--spacing-1);
+    padding-inline: var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-control);
+  }
+
+  .nds-calendar-dropdown option:hover,
+  .nds-calendar-select-input option:hover,
+  .nds-calendar-select-overlay option:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  .nds-calendar-dropdown option:checked,
+  .nds-calendar-select-input option:checked,
+  .nds-calendar-select-overlay option:checked {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
 }

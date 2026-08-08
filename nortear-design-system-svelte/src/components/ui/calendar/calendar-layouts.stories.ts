@@ -109,15 +109,14 @@ export const CaptionDropdown: Story = {
       ).not.toBeNull();
     });
 
-    await step('A legenda mostra o que está escolhido', async () => {
-      // O texto visível do seletor vem do item que a lib marca como escolhido.
-      // Sem esta asserção, ele poderia ficar preso no valor anterior e só o
-      // grid se mover — o controle mentiria sobre o próprio estado.
-      const rotulos = Array.from(
-        canvasElement.querySelectorAll('.nds-calendar-select-display'),
-      ).map((el) => el.textContent?.trim() ?? '');
-      await expect(rotulos[0]).toMatch(/abr/i);
-      await expect(rotulos[1]).toContain('2026');
+    await step('O controle mostra o que está escolhido', async () => {
+      // Lê a opção selecionada do próprio <select>, e não o rótulo desenhado ao
+      // lado: onde o navegador permite estilizar o select nativo, o rótulo
+      // duplicado é escondido e quem aparece é o controle. Asserção sobre
+      // elemento oculto não protege nada.
+      const [mes, ano] = canvas.getAllByRole('combobox') as HTMLSelectElement[];
+      await expect(mes.selectedOptions[0].textContent?.trim()).toMatch(/abr/i);
+      await expect(ano.selectedOptions[0].textContent?.trim()).toBe('2026');
     });
   },
 };

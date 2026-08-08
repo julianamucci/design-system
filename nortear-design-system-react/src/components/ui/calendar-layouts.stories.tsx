@@ -109,6 +109,19 @@ export const CaptionDropdown: Story = {
       await expect(canvas.getAllByRole("combobox").length).toBe(2);
     });
 
+    await step("Cada seletor é enquadrado como controle", async () => {
+      // A legenda com seletores não tinha moldura nenhuma: lia-se como o nome do
+      // mês com um chevron ao lado, e nada indicava que abria. Classe presente
+      // não é moldura desenhada — a asserção é sobre a borda computada.
+      const molduras = canvasElement.querySelectorAll<HTMLElement>(
+        ".nds-calendar-dropdown-root",
+      );
+      await expect(molduras.length).toBe(2);
+      for (const moldura of molduras) {
+        await expect(parseFloat(getComputedStyle(moldura).borderTopWidth)).toBeGreaterThan(0);
+      }
+    });
+
     await step("Trocar o mês no seletor leva o grid junto", async () => {
       // Busca a cada vez: a legenda é reconstruída na troca, e uma referência
       // guardada agiria num nó fora da tela, sem erro e sem efeito.
