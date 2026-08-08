@@ -125,3 +125,44 @@ export const Bare: Story = {
     });
   },
 };
+
+export const CaptionDropdown: Story = {
+  render: () =>
+    createCalendar({
+      locale: 'pt-BR',
+      captionLayout: 'dropdown',
+      value: new Date(2026, 3, 12),
+      class: 'nds-rounded-md nds-border-default',
+    }),
+  parameters: {
+    covers: ['functional.item7'],
+    docs: {
+      description: {
+        story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Mês e ano viram controles operáveis', async () => {
+      // functional.item7 — a story existe pelo salto de período: verificar que
+      // o calendário renderizou não a distingue da legenda de texto.
+      await expect(canvas.getByRole('combobox', { name: 'Selecionar mês' })).toBeInTheDocument();
+      await expect(canvas.getByRole('combobox', { name: 'Selecionar ano' })).toBeInTheDocument();
+    });
+
+    await step('Trocar o mês no seletor leva o grid junto', async () => {
+      // Busca a cada vez: a legenda é reconstruída na troca, e uma referência
+      // guardada agiria num nó fora da tela, sem erro e sem efeito.
+      const seletorDeMes = () => canvas.getByRole('combobox', { name: 'Selecionar mês' });
+      await userEvent.selectOptions(seletorDeMes(), '5');
+      await expect(canvasElement.querySelector('[data-day="2026-06-01"]')).not.toBeNull();
+
+      // Cada passo estabelece a própria precondição: volta para abril, porque o
+      // painel reexecuta a play no mesmo DOM.
+      await userEvent.selectOptions(seletorDeMes(), '3');
+      await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
+    });
+  },
+};

@@ -6,10 +6,22 @@
 
 import { cn } from '@/lib/utils';
 
+export type CalendarRange = { from?: Date; to?: Date };
+
 export type CalendarOptions = {
-  value?: Date;
-  onSelect?: (date: Date) => void;
+  /** Uma data por vez (padrão) ou um intervalo contínuo. */
+  mode?: 'single' | 'range';
+  /** Data inicial no modo único; par de datas no modo intervalo. */
+  value?: Date | CalendarRange;
+  onSelect?: (value: Date | CalendarRange) => void;
   disabled?: (date: Date) => boolean;
+  /**
+   * Completa a primeira e a última semana com os dias dos meses vizinhos, em
+   * vez de deixar buracos. Padrão: `true`.
+   */
+  showOutsideDays?: boolean;
+  /** Legenda em texto (padrão) ou com seletores de mês e ano. */
+  captionLayout?: 'label' | 'dropdown';
   /** BCP 47 locale tag (ex: "pt-BR", "en-US", "es-ES"). Default: "en-US". */
   locale?: string;
   class?: string;
@@ -46,10 +58,22 @@ function isToday(date: Date): boolean {
   return isSameDay(date, new Date());
 }
 
+/** Compara só a data, ignorando hora — é o que interessa num calendário. */
+function diaA(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
 // ─── createCalendar ───────────────────────────────────────────────────────────
 
 export function createCalendar(options: CalendarOptions = {}): HTMLElement {
-  const { onSelect, disabled, locale = 'en-US' } = options;
+  const {
+    mode = 'single',
+    onSelect,
+    disabled,
+    locale = 'en-US',
+    showOutsideDays = true,
+    captionLayout = 'label',
+  } = options;
 
   const dayNames = getDayNames(locale);
   const monthNames = getMonthNames(locale);
@@ -57,18 +81,26 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
+  const ehIntervalo = mode === 'range';
+  const valorInicial = options.value;
+  let selected: Date | null =
+    !ehIntervalo && valorInicial instanceof Date ? valorInicial : null;
+  let intervalo: CalendarRange =
+    ehIntervalo && valorInicial && !(valorInicial instanceof Date) ? { ...valorInicial } : {};
+
+  /** A data que ancora o mês exibido, seja qual for o modo. */
+  const ancora = selected ?? intervalo.from ?? null;
+
   const today = new Date();
-  let viewYear = options.value ? options.value.getFullYear() : today.getFullYear();
-  let viewMonth = options.value ? options.value.getMonth() : today.getMonth();
-  let selected: Date | null = options.value ?? null;
+  let viewYear = ancora ? ancora.getFullYear() : today.getFullYear();
+  let viewMonth = ancora ? ancora.getMonth() : today.getMonth();
 
   // Um `role="grid"` promete navegação por setas, e o grid inteiro entra na
   // tabulação como UM parada só: quem chega por Tab pousa no dia corrente e
   // anda pelo mês com o teclado. Sem isto, o Tab visitava os 30 e poucos dias
   // um a um e as setas não faziam nada.
   const hojeEstaNaVisao = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
-  let focado: Date =
-    selected ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
+  let focado: Date = ancora ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
   let devolverFoco = false;
 
   const isoDe = (d: Date): string =>
@@ -83,6 +115,31 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     devolverFoco = true;
     render();
   }
+
+  /**
+   * Um clique no modo intervalo tem três desfechos: abre um intervalo novo,
+   * fecha o que estava aberto ou recomeça. Datas fora de ordem são trocadas —
+   * quem clica no fim antes do início quis o mesmo intervalo.
+   */
+  function escolherNoIntervalo(date: Date): void {
+    if (!intervalo.from || intervalo.to) {
+      intervalo = { from: date };
+    } else if (diaA(date) < diaA(intervalo.from)) {
+      intervalo = { from: date, to: intervalo.from };
+    } else {
+      intervalo = { from: intervalo.from, to: date };
+    }
+  }
+
+  const estadoNoIntervalo = (date: Date): 'start' | 'middle' | 'end' | null => {
+    const { from, to } = intervalo;
+    if (!from) return null;
+    if (!to) return isSameDay(date, from) ? 'start' : null;
+    const d = diaA(date);
+    if (d === diaA(from)) return 'start';
+    if (d === diaA(to)) return 'end';
+    return d > diaA(from) && d < diaA(to) ? 'middle' : null;
+  };
 
   const root = document.createElement('div');
   root.dataset.slot = 'calendar';
@@ -105,6 +162,45 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     return svg;
   }
 
+  /** Legenda com seletores: salta de período sem passar mês a mês. */
+  function buildDropdownCaption(): HTMLElement {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-calendar-caption-dropdown';
+
+    const selMes = document.createElement('select');
+    selMes.className = 'nds-calendar-select-input';
+    selMes.setAttribute('aria-label', 'Selecionar mês');
+    monthNames.forEach((nome, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = nome;
+      if (i === viewMonth) opt.selected = true;
+      selMes.appendChild(opt);
+    });
+    selMes.addEventListener('change', () => {
+      viewMonth = Number(selMes.value);
+      render();
+    });
+
+    const selAno = document.createElement('select');
+    selAno.className = 'nds-calendar-select-input';
+    selAno.setAttribute('aria-label', 'Selecionar ano');
+    for (let ano = viewYear - 10; ano <= viewYear + 10; ano++) {
+      const opt = document.createElement('option');
+      opt.value = String(ano);
+      opt.textContent = String(ano);
+      if (ano === viewYear) opt.selected = true;
+      selAno.appendChild(opt);
+    }
+    selAno.addEventListener('change', () => {
+      viewYear = Number(selAno.value);
+      render();
+    });
+
+    wrap.append(selMes, selAno);
+    return wrap;
+  }
+
   function render(): void {
     root.innerHTML = '';
 
@@ -123,10 +219,6 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       render();
     });
 
-    const monthLabel = document.createElement('div');
-    monthLabel.className = 'nds-calendar-month-label';
-    monthLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
-
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
     nextBtn.className = 'nds-calendar-nav-button';
@@ -138,9 +230,16 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       render();
     });
 
-    nav.appendChild(prevBtn);
-    nav.appendChild(monthLabel);
-    nav.appendChild(nextBtn);
+    let legenda: HTMLElement;
+    if (captionLayout === 'dropdown') {
+      legenda = buildDropdownCaption();
+    } else {
+      legenda = document.createElement('div');
+      legenda.className = 'nds-calendar-month-label';
+      legenda.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+    }
+
+    nav.append(prevBtn, legenda, nextBtn);
     root.appendChild(nav);
 
     // Grid
@@ -161,14 +260,16 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Body
+    // Body — a grade começa no domingo anterior ao dia 1º e é preenchida com
+    // datas reais de ponta a ponta. Os dias dos meses vizinhos ficam marcados
+    // como externos; quando `showOutsideDays` é falso, a casa fica vazia.
     const tbody = document.createElement('tbody');
-    const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const primeiroDaGrade = new Date(viewYear, viewMonth, 1);
+    primeiroDaGrade.setDate(1 - primeiroDaGrade.getDay());
+    const diasNoMes = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const semanas = Math.ceil((new Date(viewYear, viewMonth, 1).getDay() + diasNoMes) / 7);
 
-    let dayCount = 1;
-    for (let week = 0; week < 6; week++) {
-      if (dayCount > daysInMonth) break;
+    for (let week = 0; week < semanas; week++) {
       const row = document.createElement('tr');
 
       for (let col = 0; col < 7; col++) {
@@ -179,61 +280,87 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         // comum e o modo de navegação por grade não é oferecido.
         td.setAttribute('role', 'gridcell');
 
-        if ((week === 0 && col < firstDay) || dayCount > daysInMonth) {
-          td.textContent = '';
-        } else {
-          const date = new Date(viewYear, viewMonth, dayCount);
-          const isDisabled = disabled ? disabled(date) : false;
-          const isSelected = selected ? isSameDay(date, selected) : false;
-          const isTodayDate = isToday(date);
+        const date = new Date(
+          primeiroDaGrade.getFullYear(),
+          primeiroDaGrade.getMonth(),
+          primeiroDaGrade.getDate() + week * 7 + col,
+        );
+        const foraDoMes = date.getMonth() !== viewMonth;
 
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'nds-calendar-day';
-          btn.textContent = String(dayCount);
-          btn.dataset.day = isoDe(date);
-          btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
-          btn.setAttribute('aria-pressed', String(isSelected));
-          // Tabulação móvel: só o dia focado é alcançável por Tab; os outros
-          // são alcançados pelas setas, dentro do grid.
-          btn.tabIndex = isSameDay(date, focado) ? 0 : -1;
-          if (isSelected) btn.dataset.selected = 'true';
-          if (isTodayDate) btn.dataset.today = 'true';
-          if (isDisabled) btn.disabled = true;
-
-          btn.addEventListener('keydown', (e) => {
-            const passos: Record<string, [number, number]> = {
-              ArrowRight: [1, 0],
-              ArrowLeft: [-1, 0],
-              ArrowDown: [7, 0],
-              ArrowUp: [-7, 0],
-              PageDown: [0, 1],
-              PageUp: [0, -1],
-            };
-            if (e.key === 'Home' || e.key === 'End') {
-              e.preventDefault();
-              const alvo = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
-              moverFoco(alvo);
-              return;
-            }
-            const passo = passos[e.key];
-            if (!passo) return;
-            e.preventDefault();
-            moverFoco(passo[0], passo[1]);
-          });
-
-          if (!isDisabled) {
-            btn.addEventListener('click', () => {
-              selected = date;
-              focado = date;
-              onSelect?.(date);
-              render();
-            });
-          }
-
-          td.appendChild(btn);
-          dayCount++;
+        if (foraDoMes && !showOutsideDays) {
+          row.appendChild(td);
+          continue;
         }
+
+        const isDisabled = disabled ? disabled(date) : false;
+        const posicaoNoIntervalo = ehIntervalo ? estadoNoIntervalo(date) : null;
+        const isSelected = ehIntervalo
+          ? posicaoNoIntervalo !== null
+          : selected
+            ? isSameDay(date, selected)
+            : false;
+        const isTodayDate = isToday(date);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nds-calendar-day';
+        btn.textContent = String(date.getDate());
+        btn.dataset.day = isoDe(date);
+        btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
+        btn.setAttribute('aria-pressed', String(isSelected));
+        // Tabulação móvel: só o dia focado é alcançável por Tab; os outros
+        // são alcançados pelas setas, dentro do grid.
+        btn.tabIndex = isSameDay(date, focado) ? 0 : -1;
+        if (isSelected) btn.dataset.selected = 'true';
+        if (isTodayDate) btn.dataset.today = 'true';
+        if (foraDoMes) btn.dataset.outside = 'true';
+        if (posicaoNoIntervalo) btn.dataset.range = posicaoNoIntervalo;
+        if (isDisabled) btn.disabled = true;
+
+        btn.addEventListener('keydown', (e) => {
+          const passos: Record<string, [number, number]> = {
+            ArrowRight: [1, 0],
+            ArrowLeft: [-1, 0],
+            ArrowDown: [7, 0],
+            ArrowUp: [-7, 0],
+            PageDown: [0, 1],
+            PageUp: [0, -1],
+          };
+          if (e.key === 'Home' || e.key === 'End') {
+            e.preventDefault();
+            const alvo = e.key === 'Home' ? -date.getDay() : 6 - date.getDay();
+            moverFoco(alvo);
+            return;
+          }
+          const passo = passos[e.key];
+          if (!passo) return;
+          e.preventDefault();
+          moverFoco(passo[0], passo[1]);
+        });
+
+        if (!isDisabled) {
+          btn.addEventListener('click', () => {
+            if (ehIntervalo) {
+              escolherNoIntervalo(date);
+            } else {
+              selected = date;
+            }
+            focado = date;
+            // Clicar num dia vizinho leva a visão para o mês dele: senão a
+            // escolha sumiria da tela no instante em que foi feita.
+            viewYear = date.getFullYear();
+            viewMonth = date.getMonth();
+            onSelect?.(ehIntervalo ? { ...intervalo } : date);
+            render();
+          });
+        }
+
+        // `aria-selected` na célula, e não no botão: quem tem papel de
+        // `gridcell` é ela, e é do gridcell que o leitor de tela lê o estado de
+        // seleção ao percorrer a grade.
+        if (isSelected) td.setAttribute('aria-selected', 'true');
+
+        td.appendChild(btn);
         row.appendChild(td);
       }
       tbody.appendChild(row);

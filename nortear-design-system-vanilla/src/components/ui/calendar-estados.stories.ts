@@ -108,7 +108,9 @@ export const Disabled: Story = {
       // functional.item4 — contar "há algum desabilitado" passaria com um só, e
       // com a regra invertida. Abril de 2026 tem 8 dias de fim de semana.
       const bloqueados = Array.from(
-        canvasElement.querySelectorAll<HTMLButtonElement>('.nds-calendar-day[disabled]'),
+        canvasElement.querySelectorAll<HTMLButtonElement>(
+          '.nds-calendar-day[disabled]:not([data-outside])',
+        ),
       );
       await expect(bloqueados.length).toBe(8);
       for (const b of bloqueados) {
@@ -218,6 +220,54 @@ export const NavegacaoPorTeclado: Story = {
       await expect(canvasElement.querySelector('.nds-calendar-month-label')).toHaveTextContent(
         /maio 2026/i,
       );
+    });
+  },
+};
+
+export const WithOutsideDays: Story = {
+  render: () =>
+    createCalendar({
+      locale: 'pt-BR',
+      value: new Date(2026, 3, 12),
+      class: 'nds-rounded-md nds-border-default',
+    }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Dias do mês anterior e do próximo completam a primeira e a última semana, apagados para não competirem com o mês em foco.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const diasCom = (seletor: string) =>
+      Array.from(canvasElement.querySelectorAll<HTMLElement>(`.nds-calendar-day${seletor}`)).map(
+        (el) => el.dataset.day ?? '',
+      );
+
+    await step('As bordas do grid trazem dias de fora do mês', async () => {
+      // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
+      const fora = diasCom('[data-outside="true"]');
+      await expect(fora).toContain('2026-03-30');
+      await expect(fora.length).toBeGreaterThan(0);
+    });
+
+    await step('Dia de fora do mês não conta como do mês', async () => {
+      // O contraste é o ponto da story: sem a marcação de externo, o mês
+      // pareceria ter mais dias do que tem.
+      await expect(diasCom(':not([data-outside])').length).toBe(30);
+    });
+
+    await step('Sem eles, a casa fica vazia em vez de emprestar um dia', async () => {
+      // A alternativa é explícita na API, e é o que o grid fazia antes de
+      // existirem: buraco no começo e no fim, sem dia nenhum.
+      const semVizinhos = createCalendar({
+        locale: 'pt-BR',
+        value: new Date(2026, 3, 12),
+        showOutsideDays: false,
+      });
+      await expect(semVizinhos.querySelectorAll('.nds-calendar-day').length).toBe(30);
+      await expect(semVizinhos.querySelectorAll('td:empty').length).toBeGreaterThan(0);
     });
   },
 };

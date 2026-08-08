@@ -124,7 +124,7 @@
   transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
-.nds-calendar-day:hover:not(:disabled):not([aria-selected="true"]) {
+.nds-calendar-day:hover:not(:disabled):not([data-selected="true"]) {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
@@ -134,21 +134,68 @@
 }
 
 /* Estado: hoje (sem seleção) — fundo accent suave */
-.nds-calendar-day[data-today="true"]:not([aria-selected="true"]) {
+.nds-calendar-day[data-today="true"]:not([data-selected="true"]) {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
 
-/* Estado: selecionado — fundo primary */
-.nds-calendar-day[aria-selected="true"] {
+/* Estado: selecionado — fundo primary.
+ *
+ * A chave é `data-selected`, e não `aria-selected`: o atributo ARIA de seleção
+ * mora na CÉLULA (é ela que tem papel de gridcell), então nenhuma destas regras
+ * pegava o botão e o dia escolhido ficava sem destaque nenhum. */
+.nds-calendar-day[data-selected="true"] {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
+}
+
+/* Miolo do intervalo: fica visível, mas abaixo dos extremos na hierarquia —
+ * quem olha precisa ver onde o intervalo começa e onde termina. */
+.nds-calendar-day[data-range="middle"] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-radius: 0;
+}
+.nds-calendar-day[data-range="start"] {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.nds-calendar-day[data-range="end"] {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+/* Dias dos meses vizinhos: presentes para fechar a semana, apagados para não
+ * competirem com o mês em foco. */
+.nds-calendar-day[data-outside="true"]:not([data-selected="true"]) {
+  color: hsl(var(--muted-foreground));
 }
 
 .nds-calendar-day:disabled {
   opacity: 0.5;
   pointer-events: none;
   cursor: not-allowed;
+}
+
+/* Legenda com seletores de mês e ano. */
+.nds-calendar-caption-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1, 0.25rem);
+}
+.nds-calendar-caption-dropdown .nds-calendar-select-input {
+  padding-block: var(--spacing-1, 0.25rem);
+  padding-inline: var(--spacing-2, 0.5rem);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.875rem;
+}
+.nds-calendar-caption-dropdown .nds-calendar-select-input:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px hsl(var(--ring));
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -177,33 +177,40 @@ Chromatic:
 
 ---
 
-## Calendar — dívida que a auditoria de qualidade deixou registrada (2026-08-08)
+## Calendar — RESOLVIDO (2026-08-08)
 
-Duas lacunas de implementação. Nenhuma delas vira story-fantasma: story que
-renderiza uma coisa e diz outra no texto é pior que story nenhuma — o Chromatic
-fotografa o nome de um recurso ao lado da imagem de outro, e a play não tem o
-que afirmar. Foi assim que `WithOutsideDays` e `RangeWithMiddle` no Vanilla e
-`RangeFallback` no Svelte existiram até aqui; foram removidas.
+A auditoria de qualidade deixou três itens registrados e eles foram fechados na
+mesma data. Nenhum virou story-fantasma: story que renderiza uma coisa e diz
+outra no texto é pior que story nenhuma — o Chromatic fotografa o nome de um
+recurso ao lado da imagem de outro, e a play não tem o que afirmar. Foi assim
+que `WithOutsideDays` e `RangeWithMiddle` no Vanilla e `RangeFallback` no Svelte
+existiram; saíram, e voltaram só quando o recurso passou a existir.
 
-- [ ] **Vanilla: dias de fora do mês e seleção de intervalo.** A factory
-  preenche com `<td>` vazio a primeira e a última semana, e seleciona uma data
-  por vez. As outras três stacks mostram os dias vizinhos apagados e têm modo de
-  intervalo, e o `translations.json` compartilhado documenta os dois. Enquanto
-  não existirem, `functional.item3` está declarado como não aplicável no
-  contrato do Vanilla, com o motivo — o auditor não mente, mas a promessa segue
-  aberta. Mesma situação de `functional.item7` (legenda com seletor de mês/ano).
+- [x] **Vanilla: dias de fora do mês, intervalo e legenda com seletores.** A
+  factory ganhou `showOutsideDays` (padrão ligado), `mode: 'single' | 'range'`
+  com `data-range="start|middle|end"`, e `captionLayout: 'label' | 'dropdown'`.
+  `functional.item3` e `item7` deixaram de ser "não aplicável" e passaram a ser
+  verificados — a declaração de não-aplicável foi removida, porque com o
+  recurso no lugar ela viraria mentira.
 
-- [ ] **Composição Calendar dentro de Popover (DatePicker), nas 4 stacks.**
-  `testes.visual.item5` a documenta e nenhuma stack tem a story. Por isso
-  `contract_uncovered` continua acusando `visual.item5` nas quatro: é dívida
-  visível de propósito, e não deve ser silenciada com `coversNotApplicable` —
-  não é um caso que não se aplica, é um caso que falta.
+  De quebra: o CSS estilizava o dia escolhido por `[aria-selected="true"]`, e a
+  factory nunca setou esse atributo. **O dia selecionado nunca teve destaque
+  visual no Vanilla.** A chave passou a ser `data-selected` no botão, e o
+  `aria-selected` foi para a célula, que é quem tem papel de `gridcell`.
 
-- [ ] **`coverage_divergence` em Selected, Disabled e Single.** As quatro stacks
-  afirmam comportamento de verdade agora (mínimo de 3 asserções por story), mas
-  o Vanilla afirma mais porque o DOM dele expõe mais (`aria-pressed` além de
-  `data-selected`). O script cobra proporção; igualar isso encheria as outras de
-  asserção decorativa. Fica como está, com o registro.
+- [x] **Composição Calendar dentro de Popover (DatePicker), nas 4 stacks.**
+  `calendar-composicoes.stories.*` em react, vue, svelte e vanilla: botão que
+  mostra a data escolhida, abre o calendário no popover, e fecha ao escolher.
+  Cobre `visual.item5`, que estava documentado e sem story em stack nenhuma.
+
+  A story do Vue pegou um erro de fuso na escrita: `toDate('UTC')` formatado no
+  fuso de quem lê devolve o dia anterior a oeste de Greenwich.
+
+- [x] **`coverage_divergence` em Selected, Disabled e Single.** Fechou junto: as
+  asserções acrescentadas nas stacks mais magras equilibraram a proporção.
+
+Resultado: `node scripts/audit.mjs calendar` zerado e contrato **18/18 nas
+quatro**.
 
 ## Backlog anterior, não tocado aqui
 
