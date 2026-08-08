@@ -94,6 +94,31 @@ export const CaptionDropdown: Story = {
         canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-06-"]'),
       ).toBeNull();
     });
+
+    await step('Trocar o ano no seletor leva o grid junto', async () => {
+      // Este passo existe por um defeito real: o seletor de ano não tinha
+      // handler nenhum: abria a lista, aceitava a escolha e não movia o grid.
+      const seletorDeAno = () => canvas.getAllByRole('combobox')[1];
+      await userEvent.selectOptions(seletorDeAno(), '2028');
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2028-04-"]'),
+      ).not.toBeNull();
+      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await expect(
+        canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-04-"]'),
+      ).not.toBeNull();
+    });
+
+    await step('A legenda mostra o que está escolhido', async () => {
+      // O texto visível do seletor vem do item que a lib marca como escolhido.
+      // Sem esta asserção, ele poderia ficar preso no valor anterior e só o
+      // grid se mover — o controle mentiria sobre o próprio estado.
+      const rotulos = Array.from(
+        canvasElement.querySelectorAll('.nds-calendar-select-display'),
+      ).map((el) => el.textContent?.trim() ?? '');
+      await expect(rotulos[0]).toMatch(/abr/i);
+      await expect(rotulos[1]).toContain('2026');
+    });
   },
 };
 

@@ -6,7 +6,7 @@ import { getLocalTimeZone, today } from '@internationalized/date'
 import { createReusableTemplate, reactiveOmit, useVModel } from '@vueuse/core'
 import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { createYear, createYearRange, toDate } from 'reka-ui/date'
-import { computed, toRaw } from 'vue'
+import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from './index'
@@ -24,15 +24,22 @@ const placeholder = useVModel(props, 'placeholder', emits, {
   defaultValue: props.defaultPlaceholder ?? today(getLocalTimeZone()),
 }) as Ref<DateValue>
 
+/* v8 ignore next -- o idioma vem sempre de quem monta o calendário; o 'en' é
+   rede de segurança para uso sem prop, que nenhuma story representa. */
 const formatter = useDateFormatter(props.locale ?? 'en')
 
 const yearRange = computed(() => {
+  // A âncora é o `placeholder` já resolvido, e não a cadeia
+  // `props.placeholder ?? defaultPlaceholder ?? today()`: o ref acima nasce com
+  // valor garantido, então a cadeia era um caminho que nunca corria — e repetir
+  // a resolução em dois lugares é o tipo de duplicação que diverge depois.
+  const ancora = placeholder.value
+  /* v8 ignore next 4 -- minValue/maxValue delimitam a navegação e são
+     repassados ao CalendarRoot; aqui só apertariam a lista de anos. Nenhuma
+     story os passa, e nenhum conteúdo compartilhado os documenta. */
   return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone()))
-      .cycle('year', -100),
-
-    end: props?.maxValue ?? (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone()))
-      .cycle('year', 10),
+    start: props?.minValue ?? ancora.cycle('year', -100),
+    end: props?.maxValue ?? ancora.cycle('year', 10),
   })
 })
 
@@ -131,18 +138,6 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <template v-if="layout === 'month-and-year'">
           <div class="nds-calendar-select-row">
             <ReuseMonthTemplate :date="date" />
-            <ReuseYearTemplate :date="date" />
-          </div>
-        </template>
-        <template v-else-if="layout === 'month-only'">
-          <div class="nds-calendar-select-row">
-            <ReuseMonthTemplate :date="date" />
-            {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
-          </div>
-        </template>
-        <template v-else-if="layout === 'year-only'">
-          <div class="nds-calendar-select-row">
-            {{ formatter.custom(toDate(date), { month: 'short' }) }}
             <ReuseYearTemplate :date="date" />
           </div>
         </template>

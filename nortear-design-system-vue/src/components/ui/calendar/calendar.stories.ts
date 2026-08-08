@@ -47,7 +47,7 @@ const meta = {
     },
     layout: {
       control: 'select',
-      options: [undefined, 'month-and-year', 'month-only', 'year-only'],
+      options: [undefined, 'month-and-year'],
       description: 'Formato da legenda: texto, ou seletores de mês e ano.',
     },
   },

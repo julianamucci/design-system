@@ -68,6 +68,20 @@ export const CaptionLabel: Story = {
       await userEvent.click(canvas.getByRole('button', { name: 'Go to previous month' }));
       await expect(legenda()?.textContent).toBe(inicial);
     });
+
+    await step('Voltar antes de janeiro vira o ano', async () => {
+      // O mês é um contador de 0 a 11: sem a virada, voltar de janeiro daria
+      // um mês inexistente e o ano ficaria parado. É o caminho que nenhuma
+      // navegação de um mês só alcança.
+      const anterior = canvas.getByRole('button', { name: 'Go to previous month' });
+      for (let i = 0; i < 4; i += 1) await userEvent.click(anterior);
+      await expect(legenda()).toHaveTextContent(/dezembro 2025/i);
+
+      // Cada passo estabelece a própria precondição: volta para abril de 2026.
+      const proximo = canvas.getByRole('button', { name: 'Go to next month' });
+      for (let i = 0; i < 4; i += 1) await userEvent.click(proximo);
+      await expect(legenda()).toHaveTextContent(/abril 2026/i);
+    });
   },
 };
 
@@ -162,6 +176,14 @@ export const CaptionDropdown: Story = {
       // Cada passo estabelece a própria precondição: volta para abril, porque o
       // painel reexecuta a play no mesmo DOM.
       await userEvent.selectOptions(seletorDeMes(), '3');
+      await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
+    });
+
+    await step('Trocar o ano no seletor leva o grid junto', async () => {
+      const seletorDeAno = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
+      await userEvent.selectOptions(seletorDeAno(), '2028');
+      await expect(canvasElement.querySelector('[data-day^="2028-04-"]')).not.toBeNull();
+      await userEvent.selectOptions(seletorDeAno(), '2026');
       await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
     });
   },

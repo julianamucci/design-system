@@ -221,6 +221,20 @@ export const NavegacaoPorTeclado: Story = {
         /maio 2026/i,
       );
     });
+
+    await step('Home e End vão às pontas da semana', async () => {
+      // Semana começa no domingo: de 1º de maio (sexta), Home leva ao domingo
+      // 26 de abril e End ao sábado 2 de maio. Sem eles, atravessar uma semana
+      // custa seis setas.
+      await userEvent.keyboard('{Home}');
+      await expect(focado()).toBe('2026-04-26');
+      await userEvent.keyboard('{End}');
+      await expect(focado()).toBe('2026-05-02');
+
+      // Tecla sem mapeamento não mexe no foco nem engole o evento.
+      await userEvent.keyboard('{a}');
+      await expect(focado()).toBe('2026-05-02');
+    });
   },
 };
 

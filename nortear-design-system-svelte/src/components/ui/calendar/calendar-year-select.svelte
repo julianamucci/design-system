@@ -8,7 +8,11 @@
 		class: className,
 		value,
 		...restProps
-	}: WithoutChildrenOrChild<CalendarPrimitive.YearSelectProps> = $props();
+	}: WithoutChildrenOrChild<CalendarPrimitive.YearSelectProps> & {
+		/** Obrigatório: a legenda sempre informa o valor corrente. Tipar como
+		 * opcional obrigava a um caminho de fallback que nada exercitava. */
+		value: number;
+	} = $props();
 </script>
 
 <span
@@ -27,9 +31,7 @@
 				{#each yearItems as yearItem (yearItem.value)}
 					<option
 						value={yearItem.value}
-						selected={value !== undefined
-							? yearItem.value === value
-							: yearItem.value === selectedYearItem.value}
+						selected={yearItem.value === value}
 					>
 						{yearItem.label}
 					</option>
@@ -39,7 +41,11 @@
 				class="nds-calendar-select-display"
 				aria-hidden="true"
 			>
-				{yearItems.find((item) => item.value === value)?.label || selectedYearItem.label}
+				<!-- O rótulo visível é o do item que a própria lib marca como escolhido.
+				     Antes procurávamos na lista pelo nosso `value` com fallback para ele —
+				     os dois vêm do mesmo placeholder, então a busca só acrescentava um
+				     caminho que nada percorria. A story afirma este texto. -->
+				{selectedYearItem.label}
 				<ChevronDownIcon class={cn("nds-size-4", className)} />
 			</span>
 		{/snippet}

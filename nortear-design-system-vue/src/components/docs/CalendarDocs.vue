@@ -235,7 +235,7 @@ interface CalendarProps {
   placeholder?: DateValue;
   defaultPlaceholder?: DateValue;
   disableDaysOutsideCurrentView?: boolean;
-  layout?: 'month-and-year' | 'month-only' | 'year-only';  // específico do projeto
+  layout?: 'month-and-year';  // específico do projeto
   yearRange?: DateValue[];
   class?: string;
 }
@@ -323,7 +323,7 @@ const calendarPropItems = computed(() => [
   { name: 'pagedNavigation', type: 'boolean',                                  defaultValue: 'false',        required: 'Não', description: 'Navegação pelos botões avança pelo número de meses exibidos.' },
   { name: 'preventDeselect', type: 'boolean',                                  defaultValue: 'false',        required: 'Não', description: 'Impede desselecionar sem escolher outra data.' },
   { name: 'disableDaysOutsideCurrentView', type: 'boolean',                    defaultValue: 'false',        required: 'Não', description: 'Equivalente inverso ao showOutsideDays do React — desabilita dias fora do mês.' },
-  { name: 'layout',          type: '"month-and-year" | "month-only" | "year-only"', defaultValue: 'undefined', required: 'Não', description: 'Controla a legenda (texto padrão vs NativeSelect). Equivalente ao captionLayout do React.' },
+  { name: 'layout',          type: '"month-and-year"',                                  defaultValue: 'undefined', required: 'Não', description: 'Formato da legenda: sem valor, texto; com ele, seletores de mês e ano.' },
   { name: 'yearRange',       type: 'DateValue[]',                              defaultValue: '-100..+10',    required: 'Não', description: 'Lista de anos disponíveis no dropdown (quando layout expõe ano).' },
   { name: 'dir',             type: '"ltr" | "rtl"',                            defaultValue: '"ltr"',        required: 'Não', description: 'Direção de leitura.' },
   { name: 'class',           type: 'string',                                   defaultValue: '—',            required: 'Não', description: toPlainText(tContent('props.table.className')) },
@@ -440,7 +440,6 @@ const visualTestItems = computed(() => [
         data-justify="center"
         data-align="start"
         data-spacing="lg"
-        style="flex-wrap: wrap"
       >
         <Calendar
           v-model="demoSelectedSingle"

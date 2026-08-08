@@ -100,6 +100,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
   // anda pelo mês com o teclado. Sem isto, o Tab visitava os 30 e poucos dias
   // um a um e as setas não faziam nada.
   const hojeEstaNaVisao = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
+  /* v8 ignore next -- o lado falso do ternário é inalcançável: sem data inicial
+     a visão abre no mês de hoje (linhas acima), então `hojeEstaNaVisao` é
+     verdadeiro sempre que `ancora` é nula. Fica como rede se a origem da visão
+     deixar de ser o relógio. */
   let focado: Date = ancora ?? (hojeEstaNaVisao ? today : new Date(viewYear, viewMonth, 1));
   let devolverFoco = false;
 

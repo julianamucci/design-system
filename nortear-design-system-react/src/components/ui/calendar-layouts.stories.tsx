@@ -121,6 +121,22 @@ export const CaptionDropdown: Story = {
       await userEvent.selectOptions(seletorDeMes(), "3");
       await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
     });
+
+    await step("Trocar o ano no seletor leva o grid junto", async () => {
+      // O ano de destino sai da própria lista, e não fixo: a lib deriva o
+      // intervalo de anos do período navegável, então cravar 2028 amarraria o
+      // teste a uma janela que o componente pode mudar.
+      const seletorDeAno = () => canvas.getAllByRole("combobox")[1] as HTMLSelectElement;
+      const outroAno = Array.from(seletorDeAno().options)
+        .map((o) => o.value)
+        .find((v) => v !== "2026")!;
+      await expect(outroAno).toBeDefined();
+
+      await userEvent.selectOptions(seletorDeAno(), outroAno);
+      await expect(canvasElement.querySelector(`[data-day^="${outroAno}-04-"]`)).not.toBeNull();
+      await userEvent.selectOptions(seletorDeAno(), "2026");
+      await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
+    });
   },
 };
 

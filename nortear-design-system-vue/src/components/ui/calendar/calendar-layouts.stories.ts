@@ -117,6 +117,14 @@ export const CaptionDropdown: Story = {
       await userEvent.selectOptions(mes, '4');
       await expect(canvasElement.querySelector('[data-value^="2026-04-"]')).not.toBeNull();
     });
+
+    await step('Trocar o ano no seletor leva o grid junto', async () => {
+      const seletorDeAno = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
+      await userEvent.selectOptions(seletorDeAno(), '2028');
+      await expect(canvasElement.querySelector('[data-value^="2028-04-"]')).not.toBeNull();
+      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await expect(canvasElement.querySelector('[data-value^="2026-04-"]')).not.toBeNull();
+    });
   },
 };
 

@@ -175,12 +175,10 @@ interface CalendarProps {
   weekdayFormat?: 'long' | 'short' | 'narrow'; // default "short"
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   fixedWeeks?: boolean;                  // exibe sempre 6 semanas
-  captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
+  captionLayout?: 'label' | 'dropdown';
   buttonVariant?: 'default' | 'ghost' | 'outline' | 'secondary' | 'link';
   months?: number[];                     // 1-12 subset p/ dropdown
   years?: number[];                      // subset p/ dropdown
-  monthFormat?: 'long' | 'short' | 'narrow' | 'numeric' | '2-digit';
-  yearFormat?: 'numeric' | '2-digit';
   disableDaysOutsideMonth?: boolean;
   initialFocus?: boolean;
   pagedNavigation?: boolean;
@@ -444,7 +442,7 @@ interface CalendarProps {
           { name: 'isDateUnavailable', type: '(d: DateValue) => boolean',                defaultValue: '—',        required: 'Não', description: 'Datas marcadas como indisponíveis — focáveis mas marcam o calendar como inválido.' },
           { name: 'minValue',        type: 'DateValue',                                  defaultValue: '—',        required: 'Não', description: 'Data mínima selecionável.' },
           { name: 'maxValue',        type: 'DateValue',                                  defaultValue: '—',        required: 'Não', description: 'Data máxima selecionável.' },
-          { name: 'captionLayout',   type: '"label" | "dropdown" | "dropdown-months" | "dropdown-years"', defaultValue: '"label"', required: 'Não', description: toPlainText($tStore('props.table.captionLayout')) },
+          { name: 'captionLayout',   type: '"label" | "dropdown"', defaultValue: '"label"', required: 'Não', description: toPlainText($tStore('props.table.captionLayout')) },
           { name: 'buttonVariant',   type: 'ButtonVariant',                              defaultValue: '"ghost"',   required: 'Não', description: toPlainText($tStore('props.table.buttonVariant')) },
           { name: 'numberOfMonths',  type: 'number',                                     defaultValue: '1',        required: 'Não', description: toPlainText($tStore('props.table.numberOfMonths')) },
           { name: 'weekdayFormat',   type: '"long" | "short" | "narrow"',                defaultValue: '"short"',   required: 'Não', description: 'Formato dos rótulos dos dias da semana no cabeçalho.' },

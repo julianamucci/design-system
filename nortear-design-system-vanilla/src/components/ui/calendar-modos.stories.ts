@@ -96,6 +96,8 @@ export const Range: Story = {
       Array.from(canvasElement.querySelectorAll('.nds-calendar-day[data-selected="true"]')).map(
         (el) => (el as HTMLElement).dataset.day ?? '',
       );
+    const dia = (n: number) =>
+      canvas.getByRole('button', { name: new RegExp(`${n} de abril de 2026`, 'i') });
 
     await step('O intervalo é contínuo do início ao fim', async () => {
       // functional.item3 — verificar só os extremos passaria com o meio vazio,
@@ -119,8 +121,6 @@ export const Range: Story = {
     await step('Abrir, fechar e recomeçar o intervalo', async () => {
       // Um intervalo fechado não cresce com o próximo clique: ele reabre. Sem
       // este passo, um componente que só ACRESCENTASSE dias passaria.
-      const dia = (n: number) =>
-        canvas.getByRole('button', { name: new RegExp(`${n} de abril de 2026`, 'i') });
       onSelect.mockClear();
 
       // Com o intervalo fechado, o clique reabre num dia só.
@@ -140,6 +140,28 @@ export const Range: Story = {
       await expect(marcados()).toEqual(['2026-04-10']);
       await userEvent.click(dia(18));
       await expect(marcados().length).toBe(9);
+    });
+
+    await step('Intervalo sem valor inicial não marca nada', async () => {
+      // É o estado de partida de qualquer seletor de período: antes do primeiro
+      // clique não há intervalo, e nenhuma célula pode aparecer marcada.
+      const vazio = createCalendar({ mode: 'range', locale: 'pt-BR' });
+      await expect(vazio.querySelectorAll('.nds-calendar-day[data-selected="true"]').length).toBe(0);
+      await expect(vazio.querySelectorAll('.nds-calendar-day[data-range]').length).toBe(0);
+    });
+
+    await step('Escolher o fim antes do início dá no mesmo intervalo', async () => {
+      // Quem clica 18 e depois 10 quis o mesmo intervalo de quem clicou na
+      // ordem: o componente troca as pontas em vez de devolver algo vazio ou
+      // invertido. Cada passo estabelece a própria precondição — os cliques
+      // finais devolvem o intervalo de partida, para o replay medir o mesmo.
+      await userEvent.click(dia(18));
+      await expect(marcados()).toEqual(['2026-04-18']);
+      await userEvent.click(dia(10));
+      await expect(marcados().length).toBe(9);
+      const dias = marcados();
+      await expect(dias[0]).toBe('2026-04-10');
+      await expect(dias[dias.length - 1]).toBe('2026-04-18');
     });
   },
 };

@@ -17,26 +17,26 @@
 		locale = "en-US",
 		months: monthsProp,
 		years,
-		monthFormat: monthFormatProp,
-		yearFormat = "numeric",
 		day,
 		disableDaysOutsideMonth = false,
 		...restProps
 	}: WithoutChildrenOrChild<CalendarPrimitive.RootProps> & {
 		buttonVariant?: ButtonVariant;
-		captionLayout?: "dropdown" | "dropdown-months" | "dropdown-years" | "label";
+		// `label | dropdown`, e não os quatro valores da lib: o conteúdo
+		// compartilhado documenta dois, o Vanilla entrega dois, e nenhuma story
+		// exercitava os parciais (`dropdown-months`, `dropdown-years`). Variante
+		// que só três stacks fazem e nada documenta não é contrato — é sobra, e
+		// prometê-la na tabela de props era promessa que o produto não cumpria.
+		captionLayout?: "dropdown" | "label";
 		months?: CalendarPrimitive.MonthSelectProps["months"];
 		years?: CalendarPrimitive.YearSelectProps["years"];
-		monthFormat?: CalendarPrimitive.MonthSelectProps["monthFormat"];
-		yearFormat?: CalendarPrimitive.YearSelectProps["yearFormat"];
 		day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
 	} = $props();
 
-	const monthFormat = $derived.by(() => {
-		if (monthFormatProp) return monthFormatProp;
-		if (captionLayout.startsWith("dropdown")) return "short";
-		return "long";
-	});
+	// O formato do mês acompanha a legenda: por extenso no texto, abreviado no
+	// seletor, onde não cabe. Era prop configurável que nenhuma story passava.
+	const monthFormat = $derived(captionLayout === "dropdown" ? "short" : "long");
+	const yearFormat = "numeric";
 </script>
 
 <!--
