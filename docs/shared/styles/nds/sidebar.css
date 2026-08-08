@@ -65,7 +65,7 @@
 .nds-sidebar-panel {
   position: fixed;
   inset-block: 0;
-  z-index: 10;
+  z-index: var(--z-fixed);
   height: 100svh;
   width: var(--sidebar-width);
 
@@ -328,7 +328,7 @@
 .nds-sidebar-rail {
   position: absolute;
   inset-block: 0;
-  z-index: 20;
+  z-index: calc(var(--z-fixed) + 1);   /* acima do painel, que é --z-fixed */
   display: none;
   width: var(--spacing-4);
   background: transparent;

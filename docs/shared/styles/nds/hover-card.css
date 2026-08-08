@@ -16,7 +16,7 @@
 
 .nds-hover-card-content {
   position: absolute;
-  z-index: 50;
+  z-index: var(--z-popover);
   width: 20rem;                                  /* 320px — w-80 */
 
   padding: var(--spacing-4);                     /* 16px */
@@ -36,7 +36,7 @@
 
 .nds-hover-card-positioner {
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-popover);
 }
 
 /* Entrada aparece direto; saída animada (evita corrida com toBeVisible). */

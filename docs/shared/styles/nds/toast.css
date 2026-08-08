@@ -21,7 +21,7 @@
 /* ── Toaster (container fixed posicionado) ───────────────────────────────── */
 .nds-toaster {
   position: fixed;
-  z-index: 9999;
+  z-index: var(--z-toast);
 
   display: flex;
   flex-direction: column;

@@ -60,6 +60,33 @@ a ignorar a densidade, e ninguém via porque o número batia com o do tema padr�
 
 Use esses utilitários `.nds-*` normalmente — **eles já seguem o tema**.
 
+### Empilhamento: a escada é para camada, não para vizinho
+
+Duas coisas usam `z-index` e só uma delas é do sistema.
+
+**Camada global** — elemento que escapa do fluxo (portal, `position: fixed`) e
+precisa se ordenar contra os outros overlays da página. Usa a escada:
+
+| Token | Valor | Para que serve |
+|-------|-------|----------------|
+| `--z-dropdown` | 1000 | Superfície flutuante **não** portalizada, presa ao próprio contexto |
+| `--z-sticky` | 1020 | Cabeçalho fixo de aplicação |
+| `--z-fixed` | 1030 | Cromo fixo à viewport (painel de sidebar) |
+| `--z-modal-backdrop` | 1040 | Véu atrás do diálogo |
+| `--z-modal` | 1050 | Diálogo, alerta modal, sheet, drawer |
+| `--z-popover` | 1060 | Popover, dropdown, select, menubar, hover-card — **acima** do modal, porque abrem de dentro dele |
+| `--z-tooltip` | 1070 | Dica sobre qualquer superfície |
+| `--z-toast` | 1080 | Aviso e atalho de navegação: nada pode cobri-los |
+
+**Empilhamento local** — ordem entre irmãos dentro de uma peça só: o selo sobre
+o avatar, a seta sobre o slide do carrossel, o preenchimento atrás do dia no
+calendário. Continua em número pequeno (`-1`, `0`, `1`, `10`), e **não** deve
+usar a escada: um `1060` no meio de um componente mente sobre o alcance, e o
+número global não ajuda em nada num contexto de empilhamento próprio.
+
+A pergunta que separa os dois: **"esse elemento precisa ficar acima de algo que
+está fora do componente?"** Sim → escada. Não → número pequeno.
+
 ## Como usar os tokens
 
 As dimensões são aplicadas no CSS `.nds-*` do componente via `var()`, lendo o token — nunca cravando um valor fixo:

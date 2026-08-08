@@ -26,7 +26,7 @@
 .nds-alert-dialog-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: var(--z-modal-backdrop);
   background-color: hsl(0 0% 0% / 0.8);
 }
 
@@ -35,7 +35,7 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  z-index: 50;
+  z-index: var(--z-modal);
 
   display: grid;
   gap: var(--spacing-4);                          /* 16px entre header e footer */

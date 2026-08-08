@@ -180,7 +180,7 @@
 
 .nds-select-positioner {
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-popover);
 }
 
 .nds-select-trigger:focus-visible {
@@ -229,7 +229,7 @@
 .nds-select-content {
   position: relative;
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-popover);
   min-width: 9rem;                                /* 144px — min-w-36 */
   /* Fallback em cadeia: base-ui usa --available-height/--anchor-width;
    * reka-ui usa --reka-select-content-available-height/--reka-select-trigger-width */

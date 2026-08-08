@@ -208,7 +208,7 @@
 
 .nds-combobox-list {
   position: relative;
-  z-index: 50;
+  z-index: var(--z-popover);
   min-width: 9rem;
   max-height: 18rem;                              /* 288px — max-h-72 */
   width: var(--reka-combobox-trigger-width, auto);

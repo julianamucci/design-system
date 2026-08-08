@@ -17,7 +17,7 @@
 
 .nds-dropdown-menu-content {
   position: absolute;
-  z-index: 50;
+  z-index: var(--z-popover);
   min-width: 8rem;                                /* 128px */
 
   margin: 0;
@@ -89,7 +89,7 @@
 
 .nds-dropdown-menu-positioner {
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-popover);
   outline: 0;
 }
 

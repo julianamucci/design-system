@@ -11,7 +11,7 @@
 
 .nds-tooltip-content {
   position: absolute;
-  z-index: 50;
+  z-index: var(--z-tooltip);
 
   display: inline-flex;
   align-items: center;
@@ -48,12 +48,12 @@
 
 .nds-tooltip-positioner {
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-tooltip);
 }
 
 /* ── Arrow (setinha apontando pro trigger) ───────────────────────────────── */
 .nds-tooltip-arrow {
-  z-index: 50;
+  z-index: var(--z-tooltip);
   width: 0.625rem;                               /* 10px */
   height: 0.625rem;
   transform: rotate(45deg);

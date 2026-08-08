@@ -20,7 +20,7 @@
 .nds-sheet-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: var(--z-modal-backdrop);
   background-color: hsl(0 0% 0% / 0.8);
   animation: nds-sheet-fade-in var(--duration-base) var(--ease-entrance);
 }
@@ -28,7 +28,7 @@
 /* ── Content panel ───────────────────────────────────────────────────────── */
 .nds-sheet-content {
   position: fixed;
-  z-index: 50;
+  z-index: var(--z-modal);
 
   display: flex;
   flex-direction: column;
@@ -249,7 +249,7 @@
 
 .nds-drawer-content {
   position: fixed;
-  z-index: 50;
+  z-index: var(--z-modal);
   display: flex;
   height: auto;
   flex-direction: column;

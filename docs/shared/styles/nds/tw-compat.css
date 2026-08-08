@@ -218,7 +218,7 @@
 .nds-skip-link:focus {
   position: fixed;
   top: 1rem; left: 1rem;
-  z-index: 50;
+  z-index: var(--z-toast);
   width: auto; height: auto;
   margin: 0; overflow: visible; clip: auto;
   padding: 0.5rem 1rem;

@@ -23,7 +23,7 @@
 .nds-dialog-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: var(--z-modal-backdrop);
   isolation: isolate;
   background-color: hsl(0 0% 0% / 0.1);
   /* entrada instantânea — anima só a saída (evita corrida de opacity:0 com toBeVisible) */
@@ -40,7 +40,7 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  z-index: 50;
+  z-index: var(--z-modal);
   translate: -50% -50%;
 
   display: grid;

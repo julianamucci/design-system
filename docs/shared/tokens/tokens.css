@@ -195,12 +195,14 @@
 
   /* Z-index */
   --z-dropdown: 1000;
-  --z-sticky: 1020;
+  --z-sticky: 1020;  /* audit-ignore: orphan-token — degrau para cabeçalho fixo de aplicação; nenhum componente do sistema tem um */
   --z-fixed: 1030;
   --z-modal-backdrop: 1040;
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+  /* Topo da escada: nada pode cobrir aviso nem atalho de navegação. */
+  --z-toast: 1080;
 
   /* Sidebar */
   --sidebar: 0 0% 98%;

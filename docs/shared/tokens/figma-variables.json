@@ -5351,6 +5351,10 @@
         "z-tooltip": {
           "$type": "number",
           "$value": 1070
+        },
+        "z-toast": {
+          "$type": "number",
+          "$value": 1080
         }
       }
     }

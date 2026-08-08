@@ -14,7 +14,7 @@
 
 .nds-popover-content {
   position: absolute;
-  z-index: 50;
+  z-index: var(--z-popover);
   width: 18rem;                                  /* 288px — w-72 */
 
   display: flex;
@@ -37,7 +37,7 @@
 
 .nds-popover-positioner {
   isolation: isolate;
-  z-index: 50;
+  z-index: var(--z-popover);
 }
 
 .nds-popover-content {
