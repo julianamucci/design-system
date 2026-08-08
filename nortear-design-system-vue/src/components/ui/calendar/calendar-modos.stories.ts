@@ -174,5 +174,27 @@ export const Range: Story = {
       await expect(dias[dias.length - 1]).toBe('2026-04-18');
       await expect(dias.length).toBe(9);
     });
+
+    await step('A ponta pesa e o miolo é faixa', async () => {
+      // A lib marca `data-selected` em TODOS os dias do intervalo, ponta e
+      // miolo, e a regra de seleção pintava os dois com o mesmo primary: o
+      // período virava um bloco escuro só, sem começo nem fim visíveis. A
+      // asserção anterior contava dias marcados e passava exatamente assim.
+      // A referência é o Vanilla, onde a ponta tem peso e o miolo é faixa.
+      const dia = (iso: string) =>
+        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day-btn[data-value="${iso}"]`)!;
+      const ponta = getComputedStyle(dia('2026-04-10'));
+      const miolo = getComputedStyle(dia('2026-04-14'));
+      await expect(miolo.backgroundColor).not.toBe(ponta.backgroundColor);
+      await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(miolo.backgroundColor);
+
+      // Reto por dentro, redondo por fora: é o que fecha a faixa nas pontas.
+      await expect(parseFloat(ponta.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(ponta.borderTopRightRadius)).toBe(0);
+      const fim = getComputedStyle(dia('2026-04-18'));
+      await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
+      await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
+    });
   },
 };

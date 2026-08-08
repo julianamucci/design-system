@@ -132,6 +132,19 @@
 
 <Calendar type="multiple" bind:value={values} locale="pt-BR" />`;
 
+  const codeRange = `<script lang="ts">
+  import { RangeCalendar } from '@/components/ui/range-calendar';
+  import { CalendarDate } from '@internationalized/date';
+  import type { DateRange } from 'bits-ui';
+
+  let range = $state<DateRange>({
+    start: new CalendarDate(2026, 4, 10),
+    end: new CalendarDate(2026, 4, 18),
+  });
+<\/script>
+
+<RangeCalendar bind:value={range} locale="pt-BR" />`;
+
   const codeCaptionDropdown = `<Calendar
   type="single"
   bind:value
@@ -184,6 +197,14 @@ interface CalendarProps {
   pagedNavigation?: boolean;
   class?: string;
   day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
+}
+
+// RangeCalendar — mesma superfície, menos o \`type\`, e o valor é o par
+interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day'> {
+  value?: DateRange;                     // { start?: DateValue; end?: DateValue }
+  onValueChange?: (v: DateRange) => void;
+  minDays?: number;
+  maxDays?: number;
 }`;
 </script>
 
@@ -353,6 +374,7 @@ interface CalendarProps {
     items={[
       { name: 'type="single"',              description: stripHtml($tStore('variants.items.single')),          code: codeSingle,          preview: variantSingle          },
       { name: 'type="multiple"',            description: stripHtml($tStore('variants.items.multiple')),        code: codeMultiple,        preview: variantMultiple        },
+      { name: 'range',                      description: stripHtml($tStore('variants.items.range')),           code: codeRange,           preview: variantRange           },
       { name: 'captionLayout="dropdown"',   description: stripHtml($tStore('variants.items.captionDropdown')), code: codeCaptionDropdown, preview: variantCaptionDropdown },
       { name: 'numberOfMonths={2}',         description: stripHtml($tStore('variants.items.numberOfMonths')),  code: codeTwoMonths,       preview: variantTwoMonths       },
       {
@@ -384,6 +406,9 @@ interface CalendarProps {
   {/snippet}
   {#snippet variantMultiple()}
     <CalendarStory variant="multiple" locale={previewLocale} />
+  {/snippet}
+  {#snippet variantRange()}
+    <CalendarStory variant="range" locale={previewLocale} />
   {/snippet}
   {#snippet variantCaptionDropdown()}
     <CalendarStory variant="captionDropdown" locale={previewLocale} />
@@ -432,7 +457,7 @@ interface CalendarProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'type',            type: '"single" | "multiple"',                      defaultValue: '—',        required: 'Sim', description: 'Modo de seleção. bits-ui não expõe "range" nativo — componha dois selects ou use `multiple`.' },
+          { name: 'type',            type: '"single" | "multiple"',                      defaultValue: '—',        required: 'Sim', description: 'Modo de seleção. Para intervalo contínuo, use o RangeCalendar, que é um componente próprio.' },
           { name: 'value',           type: 'DateValue | DateValue[]',                    defaultValue: 'undefined', required: 'Não', description: 'Valor selecionado. Use `bind:value` para two-way binding. Tipo depende de `type`.' },
           { name: 'onValueChange',   type: '(v) => void',                                defaultValue: '—',        required: 'Não', description: toPlainText($tStore('props.table.onSelect')) },
           { name: 'locale',          type: 'string',                                     defaultValue: '"en-US"',   required: 'Não', description: 'String de locale BCP-47 (ex: "pt-BR", "en-US"). Controla nomes de meses e dias.' },
@@ -520,7 +545,7 @@ interface CalendarProps {
       { title: '', content: 'Na stack Svelte (bits-ui), o <code>locale</code> é uma <strong>string BCP-47</strong> (ex: <code>"pt-BR"</code>) — não o objeto <code>Locale</code> do <code>date-fns</code> que o React utiliza.' },
       { title: '', content: 'Valores são instâncias de <code>DateValue</code> do <code>@internationalized/date</code> — use <code>CalendarDate</code> para criar e <code>.toString()</code> para serializar como ISO (YYYY-MM-DD).' },
       { title: '', content: $tStore('notes.tip3') },
-      { title: '', content: 'bits-ui não expõe <code>type="range"</code> nativamente. Para seleção de período, componha com dois calendários ou use <code>isDateDisabled</code> + <code>type="multiple"</code>.' },
+      { title: '', content: 'A seleção de período tem componente próprio: <code>RangeCalendar</code>, com <code>value</code> no formato <code>{ start, end }</code>. O <code>Calendar</code> cobre data única e datas avulsas.' },
     ]}
   />
 

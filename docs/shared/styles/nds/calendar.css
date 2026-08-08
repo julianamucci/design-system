@@ -630,6 +630,39 @@
   border-end-end-radius: var(--nds-cell-radius, var(--radius-md));
 }
 
+/* Miolo do intervalo.
+ *
+ * Estas libs marcam `data-selected` em TODOS os dias do intervalo — ponta e
+ * miolo — e a regra de seleção acima pinta os dois com o mesmo primary: o
+ * intervalo virava um bloco escuro só, sem começo nem fim visíveis. A
+ * referência é o Vanilla, onde a ponta tem peso e o miolo é faixa.
+ *
+ * O gatilho é a classe `.nds-calendar-range` da raiz, e não a ausência de
+ * `data-selection-start/end`: numa seleção de data única o dia escolhido
+ * também não tem essas pontas, e a regra o despintaria junto.
+ *
+ * O miolo fica TRANSPARENTE em vez de receber a cor: a faixa é pintada pela
+ * célula, que encosta na vizinha, então não sobra falha entre as colunas. */
+.nds-calendar-range
+  .nds-calendar-day-btn[data-selected]:not([data-selection-start]):not([data-selection-end]) {
+  background-color: transparent;
+  color: hsl(var(--accent-foreground));
+  border-radius: var(--radius-none);
+}
+
+/* Cantos retos por dentro, arredondados por fora — o par de pontas fecha a
+ * faixa. O `:not()` cruzado preserva o intervalo de um dia só, em que a mesma
+ * data é começo e fim e precisa continuar redonda dos dois lados. */
+.nds-calendar-range .nds-calendar-day-btn[data-selection-start]:not([data-selection-end]) {
+  border-start-end-radius: var(--radius-none);
+  border-end-end-radius: var(--radius-none);
+}
+
+.nds-calendar-range .nds-calendar-day-btn[data-selection-end]:not([data-selection-start]) {
+  border-start-start-radius: var(--radius-none);
+  border-end-start-radius: var(--radius-none);
+}
+
 
 
 

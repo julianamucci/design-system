@@ -1,11 +1,14 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { Calendar } from './index';
+  import { RangeCalendar } from '../range-calendar';
+  import type { DateRange } from 'bits-ui';
   import { CalendarDate, type DateValue } from '@internationalized/date';
 
   type Variant =
     | 'single'
     | 'multiple'
+    | 'range'
     | 'captionLabel'
     | 'captionDropdown'
     | 'twoMonths'
@@ -42,6 +45,12 @@
     untrack(() => (variant === 'today' ? undefined : refPlaceholder)),
   );
 
+  // O intervalo é o mesmo par de datas que o Vanilla mostra (10 a 18), para as
+  // stacks fotografarem o mesmo exemplo.
+  let range = $state<DateRange>(
+    untrack(() => ({ start: new CalendarDate(2026, 4, 10), end: new CalendarDate(2026, 4, 18) })),
+  );
+
   /** Bloqueia tudo antes de 10/04/2026 — limite fixo, como o mês. */
   const limite = new CalendarDate(2026, 4, 10);
   function isPast(date: DateValue): boolean {
@@ -68,6 +77,16 @@
     {locale}
     onValueChange={(v: DateValue[]) => {
       multiple = v;
+      onValueChange?.(v);
+    }}
+  />
+{:else if variant === 'range'}
+  <RangeCalendar
+    bind:value={range}
+    bind:placeholder
+    {locale}
+    onValueChange={(v: DateRange) => {
+      range = v;
       onValueChange?.(v);
     }}
   />

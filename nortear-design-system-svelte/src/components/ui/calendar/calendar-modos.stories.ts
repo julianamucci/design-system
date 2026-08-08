@@ -14,7 +14,8 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'Modos de seleção: uma data por vez, ou várias datas avulsas.',
+        component:
+          'Modos de seleção: uma data por vez, várias datas avulsas, ou um intervalo contínuo.',
       },
     },
   },
@@ -37,10 +38,6 @@ export const Single: Story = {
   }),
   parameters: {
     covers: ['functional.item2', 'visual.item2'],
-    coversNotApplicable: {
-      'functional.item3':
-        'a lib desta stack não expõe seleção de intervalo; o par de datas seria estado do consumidor, não do componente',
-    },
     docs: {
       description: { story: 'Uma data por vez: escolher outra troca a marcação em vez de somar.' },
     },
@@ -99,6 +96,77 @@ export const Multiple: Story = {
       ]);
       await userEvent.click(dia29);
       await expect(marcadas(canvasElement)).toEqual(['2026-04-08', '2026-04-12', '2026-04-16']);
+    });
+  },
+};
+
+export const Range: Story = {
+  render: () => ({
+    Component: CalendarStory,
+    props: { variant: 'range', locale: 'pt-BR' },
+  }),
+  parameters: {
+    covers: ['functional.item3', 'visual.item2'],
+    docs: {
+      description: {
+        story:
+          'Intervalo contínuo: a primeira escolha abre o período, a segunda o fecha, e os dias entre as duas ficam marcados junto.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dia = (iso: string) =>
+      canvasElement.querySelector<HTMLElement>(`.nds-calendar-day-btn[data-value="${iso}"]`)!;
+
+    await step('O intervalo inicial vai de ponta a ponta', async () => {
+      await expect(dia('2026-04-10')).toHaveAttribute('data-selection-start');
+      await expect(dia('2026-04-18')).toHaveAttribute('data-selection-end');
+      // O miolo é o que separa intervalo de "duas datas avulsas": sem ele, o
+      // modo múltiplo passaria por aqui.
+      await expect(marcadas(canvasElement)).toEqual([
+        '2026-04-10',
+        '2026-04-11',
+        '2026-04-12',
+        '2026-04-13',
+        '2026-04-14',
+        '2026-04-15',
+        '2026-04-16',
+        '2026-04-17',
+        '2026-04-18',
+      ]);
+    });
+
+    await step('A ponta pesa e o miolo é faixa', async () => {
+      // A referência é o Vanilla. A lib marca `data-selected` em TODOS os dias
+      // do intervalo, então sem regra própria o miolo saía com o mesmo primary
+      // da ponta e o período virava um bloco escuro só — foi o que aconteceu.
+      const ponta = getComputedStyle(dia('2026-04-10'));
+      const miolo = getComputedStyle(dia('2026-04-14'));
+      await expect(miolo.backgroundColor).not.toBe(ponta.backgroundColor);
+      await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(miolo.backgroundColor);
+
+      // Reto por dentro, redondo por fora: é o que fecha a faixa nas pontas.
+      await expect(parseFloat(ponta.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(ponta.borderTopRightRadius)).toBe(0);
+      const fim = getComputedStyle(dia('2026-04-18'));
+      await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
+      await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
+    });
+
+    await step('Escolher duas datas redesenha o período', async () => {
+      // Cada passo estabelece a própria precondição: o par de cliques leva a um
+      // intervalo novo a partir de qualquer estado, então o replay no painel
+      // mede o mesmo que a primeira rodada.
+      await userEvent.click(canvas.getByRole('button', { name: /22 de abril de 2026/i }));
+      await userEvent.click(canvas.getByRole('button', { name: /25 de abril de 2026/i }));
+      await expect(marcadas(canvasElement)).toEqual([
+        '2026-04-22',
+        '2026-04-23',
+        '2026-04-24',
+        '2026-04-25',
+      ]);
     });
   },
 };

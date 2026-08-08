@@ -1548,3 +1548,18 @@ no Vue e no Svelte.
 Correção: trocar as duas linhas por `class="nds-docs-demo"`. Fica fora deste
 commit porque muda pixel em **todas** as docs pages dessas stacks, e o Chromatic
 precisa fotografar a mudança de uma vez — não junto de um fix de calendar.
+
+---
+
+## `calendar-heading.svelte` não é renderizado por ninguém (2026-08-08)
+
+Medido na cobertura do calendar no Svelte: `calendar-heading.svelte` fica em
+**0% de linhas**. Não é média baixa — é peça que nenhuma story, nenhum
+componente e nenhuma docs page monta. O `Calendar` e o `RangeCalendar` usam
+`Calendar.Caption`, que faz o mesmo trabalho e ainda oferece o layout de
+dropdown.
+
+Saída: entregar (algum consumidor real) ou remover do `index.ts` junto do
+arquivo. Fica registrado em vez de resolvido aqui porque é anterior ao
+`RangeCalendar` e o `export_sem_story` não o pega — ele é exportado pelo
+barril, então o auditor o vê referenciado.
