@@ -36,7 +36,6 @@ export const Single: Story = {
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
       onSelect,
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item2', 'accessibility.item3', 'visual.item2'],
@@ -79,7 +78,6 @@ export const Range: Story = {
       locale: 'pt-BR',
       value: { from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) },
       onSelect,
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item3'],
@@ -173,7 +171,6 @@ export const Multiple: Story = {
       locale: 'pt-BR',
       value: [new Date(2026, 3, 8), new Date(2026, 3, 12), new Date(2026, 3, 16)],
       onSelect,
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     docs: {

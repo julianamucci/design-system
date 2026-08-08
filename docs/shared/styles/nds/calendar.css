@@ -20,6 +20,12 @@
  */
 
 .nds-calendar {
+  /* Encolhe até o conteúdo, como o .nds-calendar-root das outras stacks. Sem
+   * isto o calendário se esticava para a largura do contêiner: as colunas se
+   * afastavam e o cabeçalho abria de ponta a ponta, com as setas nas bordas do
+   * bloco em vez de ao lado do mês. Também é o que faz o `justify-content:
+   * center` do contêiner ter efeito — item esticado não tem o que centralizar. */
+  width: fit-content;
   padding: var(--spacing-3, 0.75rem);             /* 12px */
   user-select: none;
 }

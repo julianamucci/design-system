@@ -445,7 +445,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           :locale="rekaLocale"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </div>
     </DocsDemonstration>
@@ -510,7 +510,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #dont-preview-0>
@@ -518,7 +518,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="en-US"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #do-preview-1>
@@ -527,7 +527,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :is-date-disabled="disablePastDates"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #dont-preview-1>
@@ -535,7 +535,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
     </DocsDoDont>
@@ -562,7 +562,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-1>
@@ -571,7 +571,7 @@ const visualTestItems = computed(() => [
           multiple
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-2>
@@ -579,7 +579,7 @@ const visualTestItems = computed(() => [
           :default-value="{ start: demoRangeStart, end: demoRangeEnd }"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-3>
@@ -588,7 +588,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           layout="month-and-year"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-4>
@@ -597,7 +597,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :number-of-months="2"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-5>
@@ -605,7 +605,7 @@ const visualTestItems = computed(() => [
           v-model="demoSelectedSingle"
           locale="pt-BR"
           :placeholder="demoAnchor"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
       <template #variant-preview-6>
@@ -614,7 +614,7 @@ const visualTestItems = computed(() => [
           locale="pt-BR"
           :placeholder="demoAnchor"
           :is-date-disabled="disablePastDates"
-          class="nds-rounded-md nds-border-default"
+          class=""
         />
       </template>
     </DocsCompositions>

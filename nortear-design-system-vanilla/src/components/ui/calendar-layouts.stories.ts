@@ -33,7 +33,6 @@ export const CaptionLabel: Story = {
     createCalendar({
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
@@ -148,7 +147,6 @@ export const CaptionDropdown: Story = {
       locale: 'pt-BR',
       captionLayout: 'dropdown',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item7'],
@@ -197,7 +195,6 @@ export const TwoMonths: Story = {
       locale: 'pt-BR',
       numberOfMonths: 2,
       value: new Date(2026, 3, 28),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     docs: {

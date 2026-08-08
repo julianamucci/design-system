@@ -24,7 +24,6 @@ export const Playground: Story = {
   render: () =>
     createCalendar({ locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['visual.item1', 'accessibility.item4', 'accessibility.item6', 'accessibility.item1', 'accessibility.item2'],
@@ -63,6 +62,26 @@ export const Playground: Story = {
       await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
       await expect(cs.alignItems).toBe('center');
       await expect(cs.justifyContent).toBe('center');
+    });
+
+    await step('O calendário encolhe até o conteúdo, e não até o contêiner', async () => {
+      // Sem `width: fit-content` ele esticava para a largura do bloco: as
+      // colunas se afastavam e o cabeçalho abria de ponta a ponta, com as setas
+      // nas bordas do card em vez de ao lado do mês. E item esticado não tem o
+      // que centralizar, então o `justify-content: center` do contêiner das
+      // docs pages não fazia efeito.
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
+      const largo = document.createElement('div');
+      largo.style.width = '900px';
+      canvasElement.appendChild(largo);
+      largo.appendChild(raiz);
+
+      await expect(raiz.getBoundingClientRect().width).toBeLessThan(400);
+      const nav = raiz.querySelector<HTMLElement>('.nds-calendar-nav')!;
+      const grade = raiz.querySelector<HTMLElement>('.nds-calendar-grid')!;
+      await expect(
+        Math.abs(nav.getBoundingClientRect().width - grade.getBoundingClientRect().width),
+      ).toBeLessThan(2);
     });
 
     await step('O clique nos botões de mês chega neles', async () => {

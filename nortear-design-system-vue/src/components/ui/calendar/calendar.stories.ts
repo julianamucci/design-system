@@ -80,7 +80,7 @@ export const Playground: Story = {
         v-bind="args"
         v-model="selected"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),

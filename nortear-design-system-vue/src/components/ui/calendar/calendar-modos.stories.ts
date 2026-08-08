@@ -48,7 +48,7 @@ export const Single: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),
@@ -102,7 +102,7 @@ export const Multiple: Story = {
         multiple
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),
@@ -153,7 +153,7 @@ export const Range: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),

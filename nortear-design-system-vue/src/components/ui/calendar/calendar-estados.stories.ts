@@ -45,7 +45,7 @@ export const Selected: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),
@@ -88,7 +88,7 @@ export const Disabled: Story = {
         locale="pt-BR"
         :placeholder="placeholder"
         :is-date-disabled="isDateDisabled"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),
@@ -132,7 +132,7 @@ export const Disabled: Story = {
 export const Today: Story = {
   render: () => ({
     components: { Calendar },
-    template: '<Calendar locale="pt-BR" class="nds-rounded-md nds-border-default" />',
+    template: '<Calendar locale="pt-BR" class="" />',
   }),
   parameters: {
     covers: ['functional.item1'],
@@ -171,7 +171,7 @@ export const WithOutsideDays: Story = {
         v-model="selected"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),
@@ -217,7 +217,7 @@ export const RangeWithMiddle: Story = {
         v-model="range"
         locale="pt-BR"
         :placeholder="placeholder"
-        class="nds-rounded-md nds-border-default"
+        class=""
       />
     `,
   }),

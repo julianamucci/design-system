@@ -40,7 +40,6 @@ export const Selected: Story = {
     createCalendar({
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item2', 'accessibility.item3'],
@@ -90,7 +89,6 @@ export const Disabled: Story = {
         const d = date.getDay();
         return d === 0 || d === 6; // bloqueia finais de semana
       },
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
@@ -142,7 +140,7 @@ export const Disabled: Story = {
 };
 
 export const Today: Story = {
-  render: () => createCalendar({ locale: 'pt-BR', class: 'nds-rounded-md nds-border-default' }),
+  render: () => createCalendar({ locale: 'pt-BR' }),
   parameters: {
     covers: ['functional.item1'],
     docs: {
@@ -174,7 +172,6 @@ export const NavegacaoPorTeclado: Story = {
     createCalendar({
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     covers: ['functional.item5', 'accessibility.item5'],
@@ -243,7 +240,6 @@ export const WithOutsideDays: Story = {
     createCalendar({
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     docs: {
@@ -314,7 +310,6 @@ export const RangeWithMiddle: Story = {
       mode: 'range',
       locale: 'pt-BR',
       value: { from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) },
-      class: 'nds-rounded-md nds-border-default',
     }),
   parameters: {
     docs: {

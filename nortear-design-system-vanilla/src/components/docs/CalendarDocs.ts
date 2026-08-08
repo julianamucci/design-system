@@ -192,7 +192,6 @@ export function createCalendarDocs(): HTMLElement {
             wrap.appendChild(
               createCalendar({ locale: 'pt-BR',
                 value: referenceDate(),
-                class: 'nds-rounded-md nds-border-default',
                 onSelect: (value) => {
                   // A demo é de seleção única, então o valor é sempre uma data;
                   // a guarda existe porque a assinatura agora cobre os dois
@@ -281,12 +280,12 @@ export function createCalendarDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate() }),
               dontPreviewFactory: () =>
                 // sem opacity no calendário: o dim rebaixava os <th> de dia da
                 // semana (muted-foreground) para 3.69:1 — o card destructive-soft
                 // já sinaliza o don't (axe: color-contrast)
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate() }),
             },
             {
               doLabel: tNav('common.do'),
@@ -297,10 +296,9 @@ export function createCalendarDocs(): HTMLElement {
                 createCalendar({ locale: 'pt-BR',
                   value: referenceDate(),
                   disabled: (d) => d < new Date(2026, 3, 1),
-                  class: 'nds-rounded-md nds-border-default',
                 }),
               dontPreviewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: new Date(2020, 0, 15), class: 'nds-rounded-md nds-border-default' }),
+                createCalendar({ locale: 'pt-BR', value: new Date(2020, 0, 15) }),
             },
           ],
         });
@@ -357,7 +355,6 @@ const el = createCalendar({
   locale: 'pt-BR',
   value: today,
   disabled: (d) => d < new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-  class: 'nds-rounded-md nds-border-default',
 });`;
 
         return createDocsCompositions({
@@ -371,7 +368,7 @@ const el = createCalendar({
               description: stripHtml(t('variants.items.single')),
               code: codeSingle,
               previewFactory: () =>
-                createCalendar({ locale: 'pt-BR', value: referenceDate(), class: 'nds-rounded-md nds-border-default' }),
+                createCalendar({ locale: 'pt-BR', value: referenceDate() }),
             },
             {
               name: 'multiple',
@@ -387,7 +384,6 @@ const el = createCalendar({
                     new Date(base.getFullYear(), base.getMonth(), 12),
                     new Date(base.getFullYear(), base.getMonth(), 16),
                   ],
-                  class: 'nds-rounded-md nds-border-default',
                 });
               },
             },
@@ -404,7 +400,6 @@ const el = createCalendar({
                     from: new Date(base.getFullYear(), base.getMonth(), 10),
                     to: new Date(base.getFullYear(), base.getMonth(), 18),
                   },
-                  class: 'nds-rounded-md nds-border-default',
                 });
               },
             },
@@ -417,7 +412,6 @@ const el = createCalendar({
                   locale: 'pt-BR',
                   captionLayout: 'dropdown',
                   value: referenceDate(),
-                  class: 'nds-rounded-md nds-border-default',
                 }),
             },
             {
@@ -429,7 +423,6 @@ const el = createCalendar({
                   locale: 'pt-BR',
                   numberOfMonths: 2,
                   value: referenceDate(),
-                  class: 'nds-rounded-md nds-border-default',
                 }),
             },
             {
@@ -458,7 +451,6 @@ const el = createCalendar({
                   value: anchor,
                   disabled: (d) =>
                     d < new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate()),
-                  class: 'nds-rounded-md nds-border-default',
                 });
               },
             },
