@@ -22,7 +22,7 @@
 .nds-tracking-wider  { letter-spacing: 0.05em; }
 .nds-tracking-tight  { letter-spacing: -0.025em; }
 .nds-uppercase       { text-transform: uppercase; }
-.nds-text-2xs        { font-size: 0.625rem; line-height: 0.875rem; }  /* 10px */
+.nds-text-2xs        { font-size: var(--text-control-xs); line-height: 0.875rem; }  /* 10px */
 
 /* ── transições ──────────────────────────────────────────────────────────── */
 .nds-transition-transform { transition: transform var(--duration-fast, 150ms) ease; }

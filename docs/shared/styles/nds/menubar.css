@@ -52,7 +52,7 @@
   border: 0;
   border-radius: var(--radius-sm); /* Ri = Re − inset (p-1) */
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   color: inherit;
   cursor: default;
@@ -96,7 +96,7 @@
   padding-block: var(--spacing-1-5, 0.375rem);
 
   border-radius: var(--radius-sm); /* Ri = Re − inset (p-1) */
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   cursor: pointer;
   user-select: none;
   outline: 0;
@@ -118,7 +118,7 @@
 .nds-menubar-shortcut {
   margin-left: auto;
   padding-left: var(--spacing-2);
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   letter-spacing: 0.1em;
   color: hsl(var(--muted-foreground));
   opacity: 0.6;
@@ -128,7 +128,7 @@
 .nds-menubar-label {
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-semi-bold, 600);
   color: hsl(var(--muted-foreground));
 }

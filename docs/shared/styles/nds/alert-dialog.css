@@ -69,7 +69,7 @@
 /* ── Title ───────────────────────────────────────────────────────────────── */
 .nds-alert-dialog-title {
   margin: 0;
-  font-size: 1.125rem;                            /* 18px — text-lg */
+  font-size: var(--text-control-xl);                            /* 18px — text-lg */
   font-weight: var(--font-weight-semi-bold, 600);
   line-height: 1;
   letter-spacing: -0.025em;
@@ -79,7 +79,7 @@
 /* ── Description ─────────────────────────────────────────────────────────── */
 .nds-alert-dialog-description {
   margin: 0;
-  font-size: 0.875rem;                            /* 14px */
+  font-size: var(--text-control);                            /* 14px */
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
 }

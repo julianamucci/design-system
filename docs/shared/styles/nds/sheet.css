@@ -94,7 +94,7 @@
 
 .nds-sheet-title {
   margin: 0;
-  font-size: 1.125rem;                             /* 18px — text-lg */
+  font-size: var(--text-control-xl);                             /* 18px — text-lg */
   font-weight: var(--font-weight-semi-bold, 600);
   line-height: 1;
   letter-spacing: -0.025em;
@@ -103,7 +103,7 @@
 
 .nds-sheet-description {
   margin: 0;
-  font-size: 0.875rem;                             /* 14px */
+  font-size: var(--text-control);                             /* 14px */
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
 }
@@ -256,7 +256,7 @@
 
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-size: 0.875rem;
+  font-size: var(--text-control);
 }
 
 .nds-drawer-content[data-vaul-drawer-direction="bottom"] {

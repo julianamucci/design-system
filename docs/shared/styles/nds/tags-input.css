@@ -22,7 +22,7 @@
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1, 0.25rem);
 
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   background-color: hsl(var(--background));
   border: 1px solid hsl(var(--input, var(--border)));
   border-radius: var(--radius);
@@ -43,7 +43,7 @@
   background: transparent;
   border: 0;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: inherit;
   outline: 0;
 }
@@ -67,7 +67,7 @@
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-0-5);
   border-radius: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
 }
 
 .nds-tags-input-item-delete {

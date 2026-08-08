@@ -63,7 +63,7 @@
   background-color: hsl(var(--muted));
   border: 1px solid hsl(var(--input, var(--border)));
   border-radius: var(--radius);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
 }
 

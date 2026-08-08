@@ -19,7 +19,7 @@
 /* Bloco de código standalone — snippet de import/uso, structure code, etc. */
 .nds-code-block {
   font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   line-height: 1.5;
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));
@@ -33,7 +33,7 @@
  * Usado quando o bloco já está dentro de um createCard. */
 .nds-code-block-embedded {
   font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   line-height: 1.5;
   overflow-x: auto;
   white-space: pre;

@@ -106,7 +106,7 @@
 /* ── Label ───────────────────────────────────────────────────────────────── */
 .nds-radio-label {
   font-family: inherit;
-  font-size: 0.875rem;                            /* 14px */
+  font-size: var(--text-control);                            /* 14px */
   font-weight: var(--font-weight-medium, 500);
   line-height: 1;
   color: hsl(var(--foreground));

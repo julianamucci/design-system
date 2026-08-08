@@ -60,6 +60,33 @@ a ignorar a densidade, e ninguém via porque o número batia com o do tema padr�
 
 Use esses utilitários `.nds-*` normalmente — **eles já seguem o tema**.
 
+### Tamanho de texto: prosa e controle são escadas diferentes
+
+O sistema tem duas, e confundi-las quebra dos dois lados.
+
+**Prosa** — `--text-h1…h4`, `--text-p`, `--text-label`. Derivam da base **e da
+razão** (`--type-scale`), porque é a razão que cria a hierarquia entre títulos.
+Quem escolhe a razão áurea na toolbar quer o h1 grande.
+
+**Controle** — `--text-control-xs/sm/(padrão)/lg/xl`, para botão, campo, célula,
+rótulo de interface. Derivam da base e **ignoram a razão**: um controle precisa
+de tamanho previsível, e seguir a escala mandaria o texto do botão para 26px na
+razão áurea.
+
+| Token | Base 16px | Onde |
+|-------|-----------|------|
+| `--text-control-xs` | 10px | Indicador, contador, rótulo mínimo |
+| `--text-control-sm` | 12px | Badge, kbd, texto auxiliar |
+| `--text-control` | 14px | O padrão de interface — botão, campo, célula |
+| `--text-control-lg` | 16px | Botão grande, campo grande |
+| `--text-control-xl` | 18px | Título de diálogo e de sheet |
+
+Antes desta escada existir, o CSS de componente cravava `0.875rem` e afins em
+168 lugares, e **nenhum** lia `--text-*`. O efeito: quem escolhia base 18px na
+toolbar via os títulos crescerem e todo controle ficar onde estava. Continuava
+respeitando o zoom de fonte do navegador (tudo em `rem`), mas a base do design
+system parava na prosa.
+
 ### Empilhamento: a escada é para camada, não para vizinho
 
 Duas coisas usam `z-index` e só uma delas é do sistema.

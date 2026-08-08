@@ -23,7 +23,7 @@
   padding-inline: var(--spacing-8, 2rem);          /* espaço pros botões */
 
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   text-align: center;
   color: hsl(var(--foreground));
   background-color: transparent;

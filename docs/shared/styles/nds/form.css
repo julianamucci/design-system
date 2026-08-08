@@ -33,7 +33,7 @@
 
 .nds-form-label {
   font-family: inherit;
-  font-size: 0.875rem;                            /* 14px */
+  font-size: var(--text-control);                            /* 14px */
   font-weight: var(--font-weight-medium, 500);
   line-height: 1;
   color: hsl(var(--foreground));
@@ -41,13 +41,13 @@
 
 .nds-form-description {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }
 
 .nds-form-error {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--destructive));
 }
@@ -64,7 +64,7 @@
 
 .nds-form-legend {
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   line-height: 1;
   color: hsl(var(--foreground));

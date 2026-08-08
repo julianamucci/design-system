@@ -17,7 +17,7 @@
   padding-inline: var(--spacing-3, 0.75rem);    /* 12px */
 
   font-family: inherit;
-  font-size: 0.875rem;                          /* 14px */
+  font-size: var(--text-control);                          /* 14px */
   line-height: 1.5;
   color: hsl(var(--foreground));
 
@@ -67,7 +67,7 @@
   padding-block: var(--spacing-1, 0.25rem);
   padding-inline: var(--spacing-2);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--foreground));
   background-color: hsl(var(--muted));

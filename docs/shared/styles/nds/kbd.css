@@ -75,7 +75,7 @@
 
 .nds-kbd-group > span {
   font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   color: hsl(var(--muted-foreground));
   user-select: none;
 }

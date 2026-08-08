@@ -212,6 +212,29 @@ existiram; saíram, e voltaram só quando o recurso passou a existir.
 Resultado: `node scripts/audit.mjs calendar` zerado e contrato **18/18 nas
 quatro**.
 
+## Tipografia: 13 tamanhos fora da escada (2026-08-08)
+
+A escada de controle (`--text-control-xs…xl`) cobriu 155 das 168 declarações de
+`font-size` do CSS compartilhado, sem mudar um pixel. Sobraram 13 valores que
+não são degrau de nada, e snapá-los mudaria o desenho — por isso ficam aqui, e
+não numa troca silenciosa:
+
+| Valor | Onde | Degrau mais perto |
+|---|---|---|
+| `0.8125rem` (13px) | code-block, docs-swatches, select (6×) | 12 ou 14 |
+| `0.8rem` (12.8px) | calendar (3×) | 12 |
+| `1.875rem` (30px) | app-shell, tw-compat (2×) | prosa, não controle |
+| `1.75rem` (28px) | docs-swatches (1×) | prosa, não controle |
+| `0.6875rem` (11px) | kbd (1×) | 10 ou 12 |
+
+Os dois de 28–30px são tamanho de display: provavelmente devem ler a escada de
+**prosa** (`--text-h2`/`--text-h3`), não a de controle. Os outros três grupos
+são off-grid de tipografia, o equivalente ao "px fora do grid de 8" que o
+comentário do spacing já proíbe.
+
+A regra `type_ramp_literal` do audit **não** acusa nenhum deles de propósito:
+ela só pega literal que é exatamente um degrau, que é a regressão de verdade.
+
 ## Backlog anterior, não tocado aqui
 
 - `button`: 53 violações de audit (39 `noop_assertion`), pré-existentes.

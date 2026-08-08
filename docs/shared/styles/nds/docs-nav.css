@@ -24,7 +24,7 @@
 }
 
 .nds-docs-nav-label {
-  font-size: 0.75rem;                               /* text-xs */
+  font-size: var(--text-control-sm);                               /* text-xs */
   font-weight: var(--font-weight-semi-bold, 600);
   color: hsl(var(--muted-foreground));
   text-transform: uppercase;
@@ -49,7 +49,7 @@
   padding-inline: var(--spacing-2);                 /* 8px */
   padding-block: 6px;                                /* py-1.5 */
   font-family: var(--font-family, inherit);
-  font-size: 0.875rem;                              /* text-sm */
+  font-size: var(--text-control);                              /* text-sm */
   line-height: 1.25;
   background: transparent;
   border: 0;

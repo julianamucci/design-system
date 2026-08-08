@@ -141,7 +141,7 @@
   border: 2px solid hsl(var(--background));
   background-color: hsl(var(--muted));
   color: hsl(var(--muted-foreground));
-  font-size: 0.875rem;
+  font-size: var(--text-control);
 }
 
 .nds-avatar-group-count > svg {
@@ -152,7 +152,7 @@
 .nds-avatar-group:has(.nds-avatar[data-size="sm"]) .nds-avatar-group-count {
   width: var(--spacing-6);
   height: var(--spacing-6);
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
 }
 
 .nds-avatar-group:has(.nds-avatar[data-size="sm"]) .nds-avatar-group-count > svg {
@@ -175,11 +175,11 @@
 .nds-avatar-group:has(.nds-avatar[data-size="xl"]) .nds-avatar-group-count {
   width: var(--spacing-12);
   height: var(--spacing-12);
-  font-size: 1rem;
+  font-size: var(--text-control-lg);
 }
 
 .nds-avatar-group:has(.nds-avatar[data-size="2xl"]) .nds-avatar-group-count {
   width: var(--spacing-16);
   height: var(--spacing-16);
-  font-size: 1.125rem;
+  font-size: var(--text-control-xl);
 }

@@ -27,7 +27,7 @@
 
   border: 1px solid transparent;
   border-radius: var(--radius);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   outline: 0;
   transition: background-color var(--duration-fast), border-color var(--duration-fast);
 }
@@ -113,7 +113,7 @@ a.nds-item:hover {
   width: fit-content;
   align-items: center;
   gap: var(--spacing-2);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   line-height: 1.375;
   text-underline-offset: 4px;
@@ -126,7 +126,7 @@ a.nds-item:hover {
 .nds-item-description {
   margin: 0;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
   display: -webkit-box;

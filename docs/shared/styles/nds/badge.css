@@ -35,7 +35,7 @@
   background-color: var(--badge-bg);
   color: var(--badge-fg);
   font-family: var(--font-family, inherit);
-  font-size: 0.75rem;                           /* 12px — text-xs */
+  font-size: var(--text-control-sm);                           /* 12px — text-xs */
   line-height: 1.5;
   font-weight: var(--font-weight-medium, 500);
   white-space: nowrap;

@@ -20,7 +20,7 @@
   gap: var(--spacing-2);                    /* 8px entre texto e ícone */
 
   font-family: inherit;
-  font-size: 0.875rem;                      /* 14px — text-sm */
+  font-size: var(--text-control);                      /* 14px — text-sm */
   font-weight: var(--font-weight-medium, 500);
   line-height: 1;
   color: hsl(var(--foreground));

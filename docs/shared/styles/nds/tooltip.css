@@ -25,7 +25,7 @@
   color: hsl(var(--primary-foreground));
   border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: 0.75rem;                            /* 12px */
+  font-size: var(--text-control-sm);                            /* 12px */
   line-height: 1.4;
   pointer-events: none;
   box-shadow: var(--elevation-xl);

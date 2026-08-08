@@ -305,9 +305,23 @@ for (const escala of ESCALAS) {
     h2: base * ratio ** 3,
     h1: base * ratio ** 4,
   };
+  // A escada de CONTROLE deriva da base e ignora a razão de propósito: um botão
+  // precisa de tamanho previsível, e acompanhar a escala mandaria o texto dele
+  // para 26px na razão áurea. Por isso é multiplicador fixo, não potência.
+  const controles = {
+    'control-xs': base * 0.625,
+    'control-sm': base * 0.75,
+    control: base * 0.875,
+    'control-lg': base * 1,
+    'control-xl': base * 1.125,
+  };
+
   const tree = {};
   for (const [nome, px] of Object.entries(passos)) {
     put(tree, `tamanho/text-${nome}`, { $type: 'number', $value: round(px) });
+  }
+  for (const [nome, px] of Object.entries(controles)) {
+    put(tree, `controle/text-${nome}`, { $type: 'number', $value: round(px) });
   }
   put(tree, 'escala/type-base', { $type: 'number', $value: round(base) });
   put(tree, 'escala/type-scale', { $type: 'number', $value: ratio });

@@ -23,7 +23,7 @@
   border-radius: var(--radius-full);
   background-color: var(--pill-bg);
   color: var(--pill-fg);
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   font-weight: 700;
   line-height: 1;
   flex-shrink: 0;
@@ -50,5 +50,5 @@
   --pill-fg: hsl(var(--info));
 }
 
-.nds-pill[data-size="sm"] { --pill-size: 1rem; font-size: 0.625rem; }
-.nds-pill[data-size="lg"] { --pill-size: 1.5rem; font-size: 0.875rem; }
+.nds-pill[data-size="sm"] { --pill-size: 1rem; font-size: var(--text-control-xs); }
+.nds-pill[data-size="lg"] { --pill-size: 1.5rem; font-size: var(--text-control); }

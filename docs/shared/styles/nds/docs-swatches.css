@@ -80,7 +80,7 @@
 }
 .nds-swatch-token {
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  font-size: 0.75rem;                          /* 12px */
+  font-size: var(--text-control-sm);                          /* 12px */
   font-weight: 500;
   color: hsl(var(--foreground));
   overflow: hidden;
@@ -89,7 +89,7 @@
 }
 .nds-swatch-value {
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  font-size: 0.625rem;                         /* 10px */
+  font-size: var(--text-control-xs);                         /* 10px */
   color: hsl(var(--muted-foreground));
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,7 +151,7 @@
 }
 .nds-miniswatch-name {
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  font-size: 0.625rem;                          /* 10px */
+  font-size: var(--text-control-xs);                          /* 10px */
   color: hsl(var(--muted-foreground));
 }
 

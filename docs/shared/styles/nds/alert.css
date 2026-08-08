@@ -43,7 +43,7 @@
 
   background-color: var(--alert-bg);
   color: var(--alert-fg);
-  font-size: 0.875rem;                          /* 14px — text-sm */
+  font-size: var(--text-control);                          /* 14px — text-sm */
   line-height: 1.5;
 }
 

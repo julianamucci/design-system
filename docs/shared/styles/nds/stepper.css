@@ -77,13 +77,13 @@
 }
 
 .nds-stepper-title {
-  font-size: 1rem;
+  font-size: var(--text-control-lg);
   font-weight: var(--font-weight-semi-bold, 600);
   white-space: nowrap;
 }
 
 .nds-stepper-description {
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   color: hsl(var(--muted-foreground));
 }
 

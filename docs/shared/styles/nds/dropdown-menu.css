@@ -43,7 +43,7 @@
   padding-block: var(--spacing-1-5, 0.375rem);    /* 6px */
 
   border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
-  font-size: 0.875rem;                             /* 14px */
+  font-size: var(--text-control);                             /* 14px */
   color: inherit;
   cursor: default;
   user-select: none;
@@ -66,7 +66,7 @@
 .nds-dropdown-menu-label {
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
-  font-size: 0.75rem;                              /* 12px */
+  font-size: var(--text-control-sm);                              /* 12px */
   font-weight: var(--font-weight-semi-bold, 600);
   color: hsl(var(--muted-foreground));
 }
@@ -171,7 +171,7 @@
   padding-block: var(--spacing-1-5, 0.375rem);
 
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   cursor: default;
   user-select: none;
   outline: 0;
@@ -212,7 +212,7 @@
   padding-inline-end: var(--spacing-8);           /* espaço pro indicador */
 
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   cursor: default;
   user-select: none;
   outline: 0;
@@ -250,7 +250,7 @@
 .nds-dropdown-menu-shortcut {
   margin-left: auto;
   padding-left: var(--spacing-2);
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   letter-spacing: 0.1em;
   color: hsl(var(--muted-foreground));
 }

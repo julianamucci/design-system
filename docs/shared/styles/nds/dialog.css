@@ -80,7 +80,7 @@
 /* ── Title ───────────────────────────────────────────────────────────────── */
 .nds-dialog-title {
   margin: 0;
-  font-size: 1rem;                                 /* 16px — text-base */
+  font-size: var(--text-control-lg);                                 /* 16px — text-base */
   font-weight: var(--font-weight-medium, 500);
   line-height: 1;
   color: hsl(var(--foreground));
@@ -89,7 +89,7 @@
 /* ── Description ─────────────────────────────────────────────────────────── */
 .nds-dialog-description {
   margin: 0;
-  font-size: 0.875rem;                             /* 14px */
+  font-size: var(--text-control);                             /* 14px */
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
 }

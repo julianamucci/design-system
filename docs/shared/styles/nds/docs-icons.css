@@ -28,7 +28,7 @@
   padding-block: var(--spacing-1);          /* 4px */
   height: 2.25rem;                          /* 36px */
   font-family: var(--font-family, inherit);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--foreground));
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   outline: none;
@@ -125,7 +125,7 @@
 .nds-icon-tile-name {
   width: 100%;
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  font-size: 10px;
+  font-size: var(--text-control-xs);
   line-height: 1.2;
   color: hsl(var(--muted-foreground));
   text-align: center;
@@ -153,7 +153,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-4);                /* 16px */
   font-family: ui-monospace, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  font-size: 0.75rem;                       /* 12px */
+  font-size: var(--text-control-sm);                       /* 12px */
   line-height: 1.625;
   color: hsl(var(--foreground));
   overflow-x: auto;
@@ -202,7 +202,7 @@
   color: hsl(var(--background));
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--radius-sm);
-  font-size: 10px;
+  font-size: var(--text-control-xs);
   white-space: nowrap;
   z-index: 10;
   opacity: 0;

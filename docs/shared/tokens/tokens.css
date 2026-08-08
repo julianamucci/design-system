@@ -42,6 +42,20 @@
   --text-h1: calc(var(--text-h2) * var(--type-scale));
   --text-label: calc(var(--text-p) / var(--type-scale));
 
+  /* Typography — escada de CONTROLE (botão, campo, célula, rótulo de interface)
+     Deriva de --type-base, e não da razão: a razão espaça títulos, e um
+     controle precisa de tamanho previsível — se ele acompanhasse a escala,
+     escolher "golden" mandaria o texto do botão para 26px.
+     Os multiplicadores dão exatamente os valores que o CSS já cravava com a
+     base padrão de 16px, então nada muda de tamanho hoje; o que passa a
+     funcionar é a base do usuário alcançar os componentes, que antes paravam
+     nos títulos e na prosa. */
+  --text-control-xs: calc(var(--type-base) * 0.625);  /* 10px @ base 16 */
+  --text-control-sm: calc(var(--type-base) * 0.75);   /* 12px */
+  --text-control:    calc(var(--type-base) * 0.875);  /* 14px — o padrão */
+  --text-control-lg: calc(var(--type-base) * 1);      /* 16px */
+  --text-control-xl: calc(var(--type-base) * 1.125);  /* 18px — título de overlay */
+
   /* Typography — font family
      --font-family-active é trocado pelas classes .fonte-* no <html>.
      --font-family aponta sempre para o active para que consumidores existentes

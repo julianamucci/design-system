@@ -53,7 +53,7 @@
   border: 0;
   border-radius: var(--radius);
   font-family: inherit;
-  font-size: 0.875rem;                          /* 14px */
+  font-size: var(--text-control);                          /* 14px */
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--foreground));
   white-space: nowrap;
@@ -124,7 +124,7 @@
   justify-content: center;
   width: var(--spacing-9, 2.25rem);
   height: var(--spacing-9, 2.25rem);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }
 

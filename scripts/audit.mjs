@@ -1014,6 +1014,63 @@ function auditOrphanTokens() {
   return violations;
 }
 
+/**
+ * `font-size` literal cujo valor É um degrau da escada de controle.
+ *
+ * A regra é deliberadamente estreita. Ela não persegue todo literal — valor
+ * fora da escada (13px, 12.8px) é decisão de design, não regressão. O que ela
+ * pega é o caso em que alguém escreve `0.875rem` tendo `--text-control` ali do
+ * lado: compila, renderiza igual, e silenciosamente tira aquele componente da
+ * base de tipografia que o usuário escolhe na toolbar. Foi assim que 168
+ * declarações ficaram fora da escada sem ninguém notar.
+ *
+ * Exceção legítima declara o motivo na própria linha:
+ *   font-size: 0.875rem;  \/* audit-ignore: type-ramp — motivo *\/
+ */
+function auditTypeRamp() {
+  const violations = [];
+  // px @ base 16 → token
+  const DEGRAUS = {
+    '0.625rem': '--text-control-xs',
+    '10px': '--text-control-xs',
+    '0.75rem': '--text-control-sm',
+    '12px': '--text-control-sm',
+    '0.875rem': '--text-control',
+    '14px': '--text-control',
+    '1rem': '--text-control-lg',
+    '16px': '--text-control-lg',
+    '1.125rem': '--text-control-xl',
+    '18px': '--text-control-xl',
+  };
+
+  const arquivos = [
+    ...walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ];
+
+  for (const file of arquivos) {
+    // typography.css É a escada de prosa: os literais dela são a definição.
+    if (basename(file) === 'typography.css') continue;
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    content.split('\n').forEach((linha, i) => {
+      if (/audit-ignore:\s*type-ramp\b/.test(linha)) return;
+      const m = /font-size:\s*([0-9.]+(?:rem|px))\s*;/.exec(linha);
+      if (!m) return;
+      const token = DEGRAUS[m[1]];
+      if (!token) return;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: rel, line: i + 1, rule: 'type_ramp_literal',
+        message: `font-size: ${m[1]} é exatamente ${token} — use o token, senão o componente para de acompanhar a base de tipografia escolhida`,
+      });
+    });
+  }
+
+  return violations;
+}
+
 // ─── Play idempotente ───────────────────────────────────────────────────────
 //
 // O painel Interactions REEXECUTA a play no mesmo DOM — não remonta. O vitest
@@ -2130,7 +2187,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditDocumentLang()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

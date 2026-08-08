@@ -32,7 +32,7 @@
   padding: 0;
   list-style: none;
   word-break: break-word;
-  font-size: 0.875rem;                           /* 14px */
+  font-size: var(--text-control);                           /* 14px */
   color: hsl(var(--muted-foreground));
 }
 

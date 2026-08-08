@@ -58,7 +58,7 @@
   background: transparent;
   border: 0;
   font-family: inherit;
-  font-size: 0.875rem;                             /* 14px */
+  font-size: var(--text-control);                             /* 14px */
   color: inherit;
   outline: 0;
 }
@@ -89,7 +89,7 @@
 .nds-command-group-heading {
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
-  font-size: 0.75rem;                              /* 12px */
+  font-size: var(--text-control-sm);                              /* 12px */
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
 }
@@ -105,7 +105,7 @@
   padding-block: var(--spacing-1-5, 0.375rem);
 
   border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
-  font-size: 0.875rem;                             /* 14px */
+  font-size: var(--text-control);                             /* 14px */
   cursor: pointer;
   user-select: none;
   outline: 0;
@@ -140,7 +140,7 @@
 .nds-command-empty {
   padding-block: var(--spacing-6);                 /* 24px */
   text-align: center;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }
 
@@ -154,7 +154,7 @@
 .nds-command-group [cmdk-group-heading] {
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5, 0.375rem);
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
 }
@@ -183,7 +183,7 @@
 /* Atalho à direita */
 .nds-command-shortcut {
   margin-left: auto;
-  font-size: 0.75rem;
+  font-size: var(--text-control-sm);
   letter-spacing: 0.1em;
   color: hsl(var(--muted-foreground));
 }
@@ -228,7 +228,7 @@
   background: transparent;
   border: 0;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: inherit;
 }
 
@@ -260,7 +260,7 @@
   justify-content: center;
   padding-block: var(--spacing-2);
   text-align: center;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
 }
 

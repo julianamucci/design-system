@@ -21,7 +21,7 @@
   padding-inline: var(--spacing-3, 0.75rem);    /* 12px */
 
   font-family: inherit;
-  font-size: 0.875rem;                          /* 14px */
+  font-size: var(--text-control);                          /* 14px */
   line-height: 1.5;
   color: hsl(var(--foreground));
 

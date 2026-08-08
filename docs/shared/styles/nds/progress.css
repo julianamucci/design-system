@@ -54,13 +54,13 @@
 }
 
 .nds-progress-label {
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
 }
 
 .nds-progress-value {
   margin-inline-start: auto;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
   font-variant-numeric: tabular-nums;
 }

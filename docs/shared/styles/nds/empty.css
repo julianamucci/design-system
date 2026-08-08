@@ -48,19 +48,19 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-2-5, 0.625rem);
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   text-wrap: balance;
 }
 
 .nds-empty-title {
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   letter-spacing: -0.01em;
 }
 
 .nds-empty-description {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-control);
   line-height: 1.625;
   color: hsl(var(--muted-foreground));
 }

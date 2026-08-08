@@ -37,7 +37,7 @@
   border-inline-end: 1px solid hsl(var(--input, var(--border)));
   border-inline-start: 0;
   font-family: inherit;
-  font-size: 0.875rem;                            /* 14px */
+  font-size: var(--text-control);                            /* 14px */
   text-align: center;
   outline: 0;
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);

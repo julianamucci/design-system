@@ -48,7 +48,7 @@
   border: 0;
   border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
   font-family: inherit;
-  font-size: 0.875rem;                          /* 14px */
+  font-size: var(--text-control);                          /* 14px */
   font-weight: var(--font-weight-medium, 500);
   color: inherit;
   cursor: pointer;

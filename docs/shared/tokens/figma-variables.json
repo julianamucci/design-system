@@ -4486,6 +4486,28 @@
             "$value": 20.739
           }
         },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
+          }
+        },
         "escala": {
           "type-base": {
             "$type": "number",
@@ -4572,6 +4594,28 @@
           "text-h1": {
             "$type": "number",
             "$value": 33.178
+          }
+        },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
           }
         },
         "escala": {
@@ -4662,6 +4706,28 @@
             "$value": 25.629
           }
         },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
+          }
+        },
         "escala": {
           "type-base": {
             "$type": "number",
@@ -4748,6 +4814,28 @@
           "text-h1": {
             "$type": "number",
             "$value": 39.063
+          }
+        },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
           }
         },
         "escala": {
@@ -4838,6 +4926,28 @@
             "$value": 50.517
           }
         },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
+          }
+        },
         "escala": {
           "type-base": {
             "$type": "number",
@@ -4924,6 +5034,28 @@
           "text-h1": {
             "$type": "number",
             "$value": 63.961
+          }
+        },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
           }
         },
         "escala": {
@@ -5014,6 +5146,28 @@
             "$value": 81
           }
         },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
+          }
+        },
         "escala": {
           "type-base": {
             "$type": "number",
@@ -5100,6 +5254,28 @@
           "text-h1": {
             "$type": "number",
             "$value": 109.656
+          }
+        },
+        "controle": {
+          "text-control-xs": {
+            "$type": "number",
+            "$value": 10
+          },
+          "text-control-sm": {
+            "$type": "number",
+            "$value": 12
+          },
+          "text-control": {
+            "$type": "number",
+            "$value": 14
+          },
+          "text-control-lg": {
+            "$type": "number",
+            "$value": 16
+          },
+          "text-control-xl": {
+            "$type": "number",
+            "$value": 18
           }
         },
         "escala": {

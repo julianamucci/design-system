@@ -45,14 +45,14 @@
 
 /* Conteúdo */
 .nds-related-card-title {
-  font-size: 0.875rem;                          /* 14px */
+  font-size: var(--text-control);                          /* 14px */
   line-height: 1.25;
   font-weight: 600;
   color: hsl(var(--primary));
 }
 
 .nds-related-card-description {
-  font-size: 0.75rem;                           /* 12px */
+  font-size: var(--text-control-sm);                           /* 12px */
   line-height: 1.6;
   color: hsl(var(--muted-foreground));
 }

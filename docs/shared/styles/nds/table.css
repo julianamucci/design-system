@@ -31,14 +31,14 @@
   caption-side: bottom;
   border-collapse: collapse;
   font-family: inherit;
-  font-size: 0.875rem;                            /* 14px */
+  font-size: var(--text-control);                            /* 14px */
 }
 
 /* Caption — alinha legenda da tabela */
 .nds-table > caption {
   margin-top: var(--spacing-4);                   /* 16px */
   color: hsl(var(--muted-foreground));
-  font-size: 0.875rem;
+  font-size: var(--text-control);
 }
 
 /* ── Linhas ──────────────────────────────────────────────────────────────── */

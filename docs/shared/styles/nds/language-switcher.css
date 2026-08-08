@@ -18,7 +18,7 @@
   padding-inline: var(--spacing-2);               /* 8px */
   padding-block: var(--spacing-0-5);              /* 2px */
   font-family: var(--font-family, inherit);
-  font-size: 0.625rem;                            /* 10px — bem compacto */
+  font-size: var(--text-control-xs);                            /* 10px — bem compacto */
   font-weight: var(--font-weight-bold, 700);
   line-height: 1.5;
   letter-spacing: 0.02em;
