@@ -13,6 +13,10 @@ import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, Cale
 const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes['class'], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
   modelValue: undefined,
   layout: undefined,
+  // A lib abrevia em UMA letra por padrão ('narrow'), e em pt-BR isso dá
+  // 'D S T Q Q S S' — duas quartas e duas quintas indistinguíveis. As outras
+  // três stacks mostram a forma curta; esta passa a mostrar também.
+  weekdayFormat: 'short',
 })
 const emits = defineEmits<CalendarRootEmits>()
 
@@ -148,7 +152,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
               v-for="day in weekDays"
               :key="day"
             >
-              {{ day }}
+              {{ day.replace(/\.$/, '') }}
             </CalendarHeadCell>
           </CalendarGridRow>
         </CalendarGridHead>

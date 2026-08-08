@@ -96,6 +96,26 @@ export const Playground: Story = {
       await expect(canvas.getAllByRole('gridcell').length).toBeGreaterThan(27);
     });
 
+    await step('Os botões de mês ficam dentro do calendário', async () => {
+      // Eles são posicionados de forma absoluta sobre a legenda, e absoluto sem
+      // ancestral posicionado sobe até achar um — no caso, a página: os dois
+      // botões apareciam nos cantos superiores da tela, longe do calendário.
+      // Conferir que existem não pega isso; conferir ONDE estão, sim.
+      const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
+      const anterior = canvas.getByRole('button', { name: /previous|anterior/i });
+      await expect(raiz.contains(anterior)).toBe(true);
+
+      // O `offsetParent` que importa é o do OVERLAY, não o do botão: o botão
+      // está dentro do overlay, que é absoluto, então ele mesmo é o
+      // offsetParent do botão e a conta não diz nada. Quem procura ancestral
+      // posicionado é o overlay — e é aí que a âncora aparece ou falta.
+      // Comparar coordenadas também não serve: numa story isolada o ancestral
+      // escapado calha de ficar perto, e a asserção passa com o defeito.
+      const overlay = anterior.closest<HTMLElement>('.nds-calendar-nav-overlay')!;
+      await expect(overlay.offsetParent).not.toBeNull();
+      await expect(raiz.contains(overlay.offsetParent as Element)).toBe(true);
+    });
+
     await step('A linha dos dias da semana é decorativa', async () => {
       // Ela aparece na tela, mas fica fora da árvore de acessibilidade: cada
       // dia já anuncia a data inteira, e repetir a coluna a cada célula só

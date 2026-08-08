@@ -34,6 +34,13 @@ function Calendar({
       formatters={{
         formatMonthDropdown: (date) =>
           date.toLocaleString(locale?.code, { month: "short" }),
+        // Pelo Intl, e não pelos dados de locale da lib: ela devolve "sab" sem
+        // acento, e as outras três stacks mostram "sáb". Mesma fonte nas
+        // quatro, e sem o ponto que o pt-BR acrescenta em "dom.".
+        formatWeekdayName: (date) =>
+          date
+            .toLocaleDateString(locale?.code, { weekday: "short" })
+            .replace(/\.$/, ""),
         ...formatters,
       }}
       classNames={{

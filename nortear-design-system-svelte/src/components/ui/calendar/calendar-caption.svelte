@@ -77,8 +77,10 @@
 {/snippet}
 
 {#if captionLayout === "dropdown"}
-	{@render MonthSelect()}
-	{@render YearSelect()}
+	<div class="nds-calendar-caption-dropdown">
+		{@render MonthSelect()}
+		{@render YearSelect()}
+	</div>
 {:else}
 	{formatMonth(month)} {formatYear(month)}
 {/if}

@@ -32,10 +32,13 @@ export type CalendarOptions = {
 /** Derives short weekday initials (2 letters) starting from Sunday. */
 function getDayNames(locale: string): string[] {
   const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+  // Sem o ponto: em pt-BR o formato curto sai 'dom.', e o ponto numa coluna de
+  // uma palavra só vira ruído. As quatro stacks mostram a mesma abreviação.
+  const semPonto = (s: string) => s.replace(/\.$/, '');
   // Sunday = 2020-01-05 (known Sunday as anchor)
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(2020, 0, 5 + i);
-    return fmt.format(d);
+    return semPonto(fmt.format(d));
   });
 }
 

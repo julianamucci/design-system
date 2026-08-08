@@ -318,6 +318,14 @@
 
 /* ── Caption / dropdowns ─────────────────────────────────────────────────── */
 .nds-calendar-caption {
+  /* Âncora do `.nds-calendar-nav-overlay`, que é absoluto. Sem ela, o overlay
+   * sobe até o primeiro ancestral posicionado — e onde o nav mora DENTRO do
+   * cabeçalho, como no Vue, esse ancestral acaba sendo a própria página: os
+   * botões de mês iam parar nos cantos superiores da tela.
+   * Onde o nav é irmão dos meses (React, Svelte), quem ancora é
+   * `.nds-calendar-months`; esta regra não muda nada lá e cobre os dois casos. */
+  position: relative;
+
   display: flex;
   width: 100%;
   align-items: center;

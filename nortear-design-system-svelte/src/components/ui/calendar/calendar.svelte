@@ -84,7 +84,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 							<Calendar.GridRow class="nds-calendar-row">
 								{#each weekdays as weekday, i (i)}
 									<Calendar.HeadCell>
-										{weekday.slice(0, 2)}
+										{weekday.replace(/\.$/, "")}
 									</Calendar.HeadCell>
 								{/each}
 							</Calendar.GridRow>

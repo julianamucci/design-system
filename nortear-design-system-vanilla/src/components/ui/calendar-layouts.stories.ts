@@ -55,8 +55,10 @@ export const CaptionLabel: Story = {
       const diasDaSemana = Array.from(canvasElement.querySelectorAll('th[scope="col"]')).map((th) =>
         th.textContent?.trim().toLowerCase(),
       );
-      await expect(diasDaSemana[0]).toMatch(/^dom/);
-      await expect(diasDaSemana[6]).toMatch(/^s[áa]b/);
+      // A forma curta, e a mesma nas quatro: 'narrow' dá "D S T Q Q S S", com
+      // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
+      // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
+      await expect(diasDaSemana).toEqual(['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']);
     });
 
     await step('Os botões de mês trocam a legenda', async () => {

@@ -67,8 +67,10 @@ export const CaptionLabel: Story = {
       const dias = Array.from(cabecalho.querySelectorAll("th")).map(
         (th) => th.textContent?.trim().toLowerCase() ?? "",
       );
-      await expect(dias.length).toBe(7);
-      await expect(dias[0]).toMatch(/^d/);
+      // A forma curta, e a mesma nas quatro: "narrow" dá "D S T Q Q S S", com
+      // duas quartas e duas quintas indistinguíveis, e o ponto de "dom." é
+      // ruído numa coluna de uma palavra. Conferir só a inicial aceitava tudo.
+      await expect(dias).toEqual(["dom", "seg", "ter", "qua", "qui", "sex", "sáb"]);
     });
 
     await step("A legenda é texto, e não controle", async () => {
