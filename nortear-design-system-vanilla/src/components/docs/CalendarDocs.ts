@@ -346,8 +346,9 @@ document.body.appendChild(el);`,
 });`;
         const codeNumberOfMonths = `const el = createCalendar({
   locale: 'pt-BR',
+  mode: 'range',
   numberOfMonths: 2,
-  value: new Date(),
+  value: { from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) },
 });`;
         const codeInlineBordered = `const el = createCalendar({
   locale: 'pt-BR',
@@ -423,12 +424,22 @@ const el = createCalendar({
               name: 'numberOfMonths',
               description: stripHtml(t('variants.items.numberOfMonths')),
               code: codeNumberOfMonths,
-              previewFactory: () =>
-                createCalendar({
+              // Intervalo, e não data única: o texto compartilhado diz "2 meses
+              // lado a lado em range", e dois meses só ganham sentido quando a
+              // escolha atravessa a virada do mês. Três das quatro stacks
+              // mostravam seleção simples aqui, contrariando a própria legenda.
+              previewFactory: () => {
+                const base = referenceDate();
+                return createCalendar({
                   locale: 'pt-BR',
+                  mode: 'range',
                   numberOfMonths: 2,
-                  value: referenceDate(),
-                }),
+                  value: {
+                    from: new Date(base.getFullYear(), base.getMonth(), 10),
+                    to: new Date(base.getFullYear(), base.getMonth(), 18),
+                  },
+                });
+              },
             },
             {
               name: stripHtml(t('variants.items.inlineBordered.name')),

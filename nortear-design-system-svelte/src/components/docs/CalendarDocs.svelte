@@ -1,8 +1,9 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { Calendar } from '@/components/ui/calendar';
-  import CalendarStory from '@/components/ui/calendar/CalendarStory.svelte';
+  import { RangeCalendar } from '@/components/ui/range-calendar';
   import { CalendarDate, type DateValue } from '@internationalized/date';
+  import type { DateRange } from 'bits-ui';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -152,9 +153,8 @@
   captionLayout="dropdown"
 />`;
 
-  const codeTwoMonths = `<Calendar
-  type="single"
-  bind:value
+  const codeTwoMonths = `<RangeCalendar
+  bind:value={range}
   locale="pt-BR"
   numberOfMonths={2}
 />`;
@@ -206,6 +206,31 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   minDays?: number;
   maxDays?: number;
 }`;
+
+  // ─── Estado das demonstrações ─────────────────────────────────────────────
+  //
+  // Ancorado em HOJE, e construído AQUI em vez de reusar o componente das
+  // stories: aquele fixa abril de 2026 de propósito, porque é dele que o
+  // Chromatic tira foto e um calendário preso ao relógio geraria diferença todo
+  // dia. A docs page tem a necessidade oposta — quem abre espera o mês corrente
+  // —, e reusar o componente da story trazia abril para cá.
+  const dv = (dia: number) =>
+    new CalendarDate(today.getFullYear(), today.getMonth() + 1, dia);
+
+  let demoMultiplo = $state<DateValue[]>([dv(8), dv(15), dv(22)]);
+  let demoDropdown = $state<DateValue | undefined>(todayDV);
+  let demoComBorda = $state<DateValue | undefined>(todayDV);
+  let demoSemPassado = $state<DateValue | undefined>(todayDV);
+  let demoIntervalo = $state<DateRange>({ start: dv(10), end: dv(18) });
+  let demoDoisMeses = $state<DateRange>({ start: dv(10), end: dv(18) });
+
+  // Do & Don't: o par 1 compara o idioma, o par 2 compara o bloqueio de datas.
+  let demoDoLocale = $state<DateValue | undefined>(todayDV);
+  let demoDontLocale = $state<DateValue | undefined>(todayDV);
+  let demoDoBloqueio = $state<DateValue | undefined>(todayDV);
+  let demoDontBloqueio = $state<DateValue | undefined>(todayDV);
+
+  const bloquearPassado = (d: DateValue) => d.compare(todayDV) < 0;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -344,16 +369,21 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   />
 
   {#snippet doPair1()}
-    <CalendarStory variant="single" locale={previewLocale} />
+    <Calendar type="single" bind:value={demoDoLocale} locale={previewLocale} />
   {/snippet}
   {#snippet dontPair1()}
-    <CalendarStory variant="single" locale="en-US" />
+    <Calendar type="single" bind:value={demoDontLocale} locale="en-US" />
   {/snippet}
   {#snippet doPair2()}
-    <CalendarStory variant="disabled" locale={previewLocale} />
+    <Calendar
+      type="single"
+      bind:value={demoDoBloqueio}
+      locale={previewLocale}
+      isDateDisabled={bloquearPassado}
+    />
   {/snippet}
   {#snippet dontPair2()}
-    <CalendarStory variant="single" locale={previewLocale} />
+    <Calendar type="single" bind:value={demoDontBloqueio} locale={previewLocale} />
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
@@ -402,27 +432,41 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   />
 
   {#snippet variantSingle()}
-    <CalendarStory variant="single" locale={previewLocale} />
+    <Calendar type="single" bind:value={demoValue} locale={previewLocale} />
   {/snippet}
   {#snippet variantMultiple()}
-    <CalendarStory variant="multiple" locale={previewLocale} />
+    <Calendar type="multiple" bind:value={demoMultiplo} locale={previewLocale} />
   {/snippet}
   {#snippet variantRange()}
-    <CalendarStory variant="range" locale={previewLocale} />
+    <RangeCalendar bind:value={demoIntervalo} locale={previewLocale} />
   {/snippet}
   {#snippet variantCaptionDropdown()}
-    <CalendarStory variant="captionDropdown" locale={previewLocale} />
+    <Calendar
+      type="single"
+      bind:value={demoDropdown}
+      locale={previewLocale}
+      captionLayout="dropdown"
+    />
   {/snippet}
   {#snippet variantTwoMonths()}
-    <CalendarStory variant="twoMonths" locale={previewLocale} />
+    <!-- Intervalo, e não data única: o texto compartilhado diz "2 meses lado a
+         lado em range", e dois meses só ganham sentido quando a escolha
+         atravessa a virada do mês. Três das quatro stacks mostravam seleção
+         simples aqui, contrariando a própria legenda. -->
+    <RangeCalendar bind:value={demoDoisMeses} locale={previewLocale} numberOfMonths={2} />
   {/snippet}
   {#snippet variantInlineBordered()}
     <div class="nds-rounded-md nds-border-default">
-      <CalendarStory variant="single" locale={previewLocale} />
+      <Calendar type="single" bind:value={demoComBorda} locale={previewLocale} />
     </div>
   {/snippet}
   {#snippet variantDisabledPast()}
-    <CalendarStory variant="disabled" locale={previewLocale} />
+    <Calendar
+      type="single"
+      bind:value={demoSemPassado}
+      locale={previewLocale}
+      isDateDisabled={bloquearPassado}
+    />
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

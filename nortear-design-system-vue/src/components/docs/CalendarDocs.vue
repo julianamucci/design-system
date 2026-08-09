@@ -206,7 +206,7 @@ const codeRange = `<!-- Para intervalos, use RangeCalendar (componente dedicado)
 const codeLayoutDropdown = `<!-- O Calendar Vue usa \`layout\` em vez de \`captionLayout\` -->
 <Calendar layout="month-and-year" locale="pt-BR" v-model="date" />`;
 
-const codeNumberOfMonths = `<Calendar :number-of-months="2" locale="pt-BR" v-model="date" />`;
+const codeNumberOfMonths = `<RangeCalendar v-model="range" :number-of-months="2" locale="pt-BR" />`;
 
 const codeDisabled = `<Calendar
   locale="pt-BR"
@@ -595,8 +595,12 @@ const visualTestItems = computed(() => [
         />
       </template>
       <template #variant-preview-4>
-        <Calendar
-          v-model="demoSelectedSingle"
+        <!-- Intervalo, e não data única: o texto compartilhado diz "2 meses lado
+             a lado em range", e dois meses só ganham sentido quando a escolha
+             atravessa a virada do mês. Três das quatro stacks mostravam seleção
+             simples aqui, contrariando a própria legenda. -->
+        <RangeCalendar
+          :default-value="{ start: demoRangeStart, end: demoRangeEnd }"
           locale="pt-BR"
           :number-of-months="2"
           :placeholder="demoAnchor"

@@ -134,10 +134,13 @@ export function CalendarDocs() {
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
   ]);
+  // Dia 10 ao 18 do mês corrente, como nas outras três stacks: o exemplo tem que
+  // ser o MESMO nas quatro para a comparação lado a lado dizer alguma coisa.
+  // Aqui era hoje..hoje+6, que muda de forma conforme o dia da semana.
   const defaultRange = useMemo(
     () => ({
-      from: today,
-      to: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 6),
+      from: new Date(today.getFullYear(), today.getMonth(), 10),
+      to: new Date(today.getFullYear(), today.getMonth(), 18),
     }),
     [today]
   );
