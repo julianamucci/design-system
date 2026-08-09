@@ -1689,3 +1689,35 @@ auditar o Angular, todo componente acusa `contract_divergent` para essa stack
 passou a acusar "Radix" na infra, mas agora é menção legítima: o Angular usa
 Radix NG, que É a lib atual daquela stack. As duas regras precisam saber do
 quinto stack.
+
+---
+
+## Sonda em tema escuro: técnica ainda não confiável (2026-08-09)
+
+O passo 2f1c manda medir contraste no tema escuro. No **alert** funcionou — os
+números mudaram por variante e o defeito do `info` (3.19:1) era real, porque
+aquele componente pinta o próprio fundo.
+
+No **button** não funcionou, e o problema é a SUPERFÍCIE, não a conta. Variante
+transparente (`ghost`, `link`, `outline`) precisa do fundo do app, e o colhedor
+não consegue lê-lo no escuro: as razões voltam idênticas nos dois temas, o que é
+impossível se a paleta virou.
+
+O que já foi estabelecido, para quem retomar não refazer:
+
+- **O tema VIRA de fato.** Medido direto na story:
+  `getComputedStyle(canvasElement).getPropertyValue('--background')` vai de
+  `0 0% 100%` para `0 0% 9%` ao acrescentar `dark` no `documentElement`. O
+  ambiente está certo.
+- **Três hipóteses testadas e ELIMINADAS:** (1) o fallback lia branco cravado —
+  corrigido, sem efeito; (2) o tema de marca re-declararia os tokens numa classe
+  mais baixa — o `tema-default` está no PRÓPRIO `<html>`, então não há conflito
+  de nível; (3) `style.backgroundColor = 'hsl(var(--background))'` seria
+  descartado pelo CSSOM — passou a resolver o token antes de pintar, sem efeito.
+- **Portanto:** o elemento-sonda de `superficieDoApp` ainda devolve a cor clara
+  nos dois temas, por um motivo que não foi encontrado. Próximo passo é medir o
+  que ELE retorna (não o que se espera dele) dentro do ciclo escuro.
+
+Enquanto isso não fechar, **não trate número de contraste em tema escuro de
+componente transparente como defeito** — só o de componente que pinta o próprio
+fundo. O texto do 2f1c precisa dessa ressalva.

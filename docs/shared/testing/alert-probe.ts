@@ -47,6 +47,55 @@ export function contraste(frente: string, fundo: string): number {
 }
 
 /**
+ * Liga o tema escuro NO LUGAR CERTO e devolve como desfazer.
+ *
+ * Marcar só o `documentElement` não bastava: os tokens escuros vivem em `.dark`,
+ * mas o tema de marca RE-DECLARA os mesmos tokens em `.tema-default` — e essa
+ * classe mora mais abaixo na árvore, então vence para tudo que está dentro. O
+ * resultado era um escuro que não escurecia: `--background` voltava claro nos
+ * dois temas, e toda variante transparente acusava contraste ~1:1.
+ *
+ * Por isso a classe entra também em quem carrega `tema-*`.
+ */
+export function ligarTemaEscuro(doc: Document): () => void {
+  const alvos = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
+  const postos = alvos.filter((el) => !el.classList.contains('dark'));
+  postos.forEach((el) => el.classList.add('dark'));
+  return () => postos.forEach((el) => el.classList.remove('dark'));
+}
+
+/**
+ * Cor da superfície do app (`--background`), resolvida pelo navegador.
+ *
+ * O elemento-sonda entra ao lado do medido para herdar as mesmas custom
+ * properties: se o tema mudou, `--background` mudou junto, e a cor volta em rgb
+ * sem que ninguém precise interpretar HSL aqui. Sai do DOM no `finally`.
+ */
+export function superficieDoApp(perto: HTMLElement): string {
+  const doc = perto.ownerDocument;
+  const sonda = doc.createElement('div');
+  // O token é RESOLVIDO antes de pintar: `style.backgroundColor = 'hsl(var(…))'`
+  // é descartado pelo CSSOM (não parseia como <color> na atribuição), e o
+  // computado voltava transparente — caindo no branco em qualquer tema. Com o
+  // valor já substituído a declaração é uma cor comum, e o navegador converte
+  // para rgb sem que ninguém precise interpretar HSL aqui.
+  const canais = getComputedStyle(perto).getPropertyValue('--background').trim();
+  if (!canais) return 'rgb(255, 255, 255)';
+  sonda.style.backgroundColor = `hsl(${canais})`;
+  sonda.style.position = 'absolute';
+  sonda.style.pointerEvents = 'none';
+  (perto.parentElement ?? doc.body).appendChild(sonda);
+  try {
+    const cor = getComputedStyle(sonda).backgroundColor;
+    // `--background` ausente faz o navegador descartar a declaração; aí o
+    // computado volta transparente e o branco é a última rede.
+    return cor && cor !== 'rgba(0, 0, 0, 0)' ? cor : 'rgb(255, 255, 255)';
+  } finally {
+    sonda.remove();
+  }
+}
+
+/**
  * Fundo efetivo: sobe a árvore até achar quem realmente pinta.
  *
  * `--alert-bg` costuma ter alfa, e `backgroundColor` devolve a cor declarada,
@@ -63,7 +112,11 @@ function fundoEfetivo(el: HTMLElement): string {
     if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) break;
     atual = atual.parentElement;
   }
-  if (camadas.length === 0) return 'rgb(255, 255, 255)';
+  // Nada opaco acima: a superfície é a do app, `--background`. Resolvida por um
+  // elemento-sonda montado no mesmo ponto da árvore, para herdar o tema vigente
+  // — subir até o body devolvia a cor clara também no escuro, porque o harness
+  // não o repinta, e aí toda variante transparente acusava contraste ~1:1.
+  if (camadas.length === 0) return superficieDoApp(el);
   // Composição de trás para frente (source-over).
   return camadas.reduce((base, camada) => {
     const [r, g, b, a = 1] = (camada.match(/-?[\d.]+/g) ?? []).map(Number);
@@ -155,15 +208,12 @@ function falhas(raiz: HTMLElement, minimo: number, tema: string): FalhaDeContras
  * envenenaria a story seguinte e a foto do Chromatic.
  */
 export function contrasteNosDoisTemas(raiz: HTMLElement, minimo = 4.5): FalhaDeContraste[] {
-  const html = raiz.ownerDocument.documentElement;
-  const jaEstavaEscuro = html.classList.contains('dark');
+  const claro = falhas(raiz, minimo, 'claro');
+  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
   try {
-    const claro = falhas(raiz, minimo, 'claro');
-    html.classList.add('dark');
-    const escuro = falhas(raiz, minimo, 'escuro');
-    return [...claro, ...escuro];
+    return [...claro, ...falhas(raiz, minimo, 'escuro')];
   } finally {
-    if (!jaEstavaEscuro) html.classList.remove('dark');
+    desfazer();
   }
 }
 

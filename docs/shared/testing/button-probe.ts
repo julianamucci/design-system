@@ -10,26 +10,19 @@
  * cada um pela classe de variante, então uma story só cobre a matriz inteira.
  */
 
-import { contraste } from './alert-probe';
+import { contraste, ligarTemaEscuro, superficieDoApp } from './alert-probe';
 
 const VARIANTES = ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] as const;
 
-/** Fundo composto: variante fantasma é transparente sobre a superfície. */
-function fundoEfetivo(el: HTMLElement): string {
-  let atual: HTMLElement | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
-    const alfa = Number((cor.match(/-?[\d.]+/g) ?? [])[3] ?? 1);
-    if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) return cor;
-    atual = atual.parentElement;
-  }
-  // Nada pinta acima: cai no fundo do DOCUMENTO, não num branco cravado. O
-  // literal mentia no tema escuro — variante transparente media texto claro
-  // sobre branco imaginário e acusava 1.1:1 onde não há defeito.
-  const doDoc = getComputedStyle(el.ownerDocument.body).backgroundColor;
-  if (doDoc && doDoc !== 'rgba(0, 0, 0, 0)') return doDoc;
-  const daRaiz = getComputedStyle(el.ownerDocument.documentElement).backgroundColor;
-  return daRaiz && daRaiz !== 'rgba(0, 0, 0, 0)' ? daRaiz : 'rgb(255, 255, 255)';
+/**
+ * O botão ou pinta o próprio fundo, ou é transparente sobre a superfície do app.
+ * Não há terceira hipótese, e por isso aqui não precisa da composição em camadas
+ * do alert — precisa saber qual dos dois casos é.
+ */
+function fundoDoBotao(el: HTMLElement): string {
+  const propria = getComputedStyle(el).backgroundColor;
+  const alfa = Number((propria.match(/-?[\d.]+/g) ?? [])[3] ?? 1);
+  return propria !== 'rgba(0, 0, 0, 0)' && alfa >= 1 ? propria : superficieDoApp(el);
 }
 
 function varianteDe(el: HTMLElement): string {
@@ -44,7 +37,7 @@ function varianteDe(el: HTMLElement): string {
 export function medirBotao(el: HTMLElement) {
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
-  const fundo = fundoEfetivo(el);
+  const fundo = fundoDoBotao(el);
   const icone = el.querySelector<HTMLElement>('svg');
 
   return {
@@ -84,17 +77,14 @@ export function medirBotoes(raiz: HTMLElement) {
 
 /** Contraste de cada variante nos DOIS temas. O `.dark` sai no `finally`. */
 export function contrasteDosBotoes(raiz: HTMLElement) {
-  const html = raiz.ownerDocument.documentElement;
-  const jaEscuro = html.classList.contains('dark');
   const razao = (m: Record<string, ReturnType<typeof medirBotao>>) =>
     Object.fromEntries(Object.entries(m).map(([v, d]) => [v, d.contraste]));
+  const claro = razao(medirBotoes(raiz));
+  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
   try {
-    const claro = razao(medirBotoes(raiz));
-    html.classList.add('dark');
-    const escuro = razao(medirBotoes(raiz));
-    return { claro, escuro };
+    return { claro, escuro: razao(medirBotoes(raiz)) };
   } finally {
-    if (!jaEscuro) html.classList.remove('dark');
+    desfazer();
   }
 }
 
