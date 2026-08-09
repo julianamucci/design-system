@@ -5,13 +5,14 @@
  *
  *   <span class="nds-badge nds-badge-secondary">5</span>
  *
- * Variantes: default (primary), secondary, destructive, outline
+ * Variantes: default (primary), secondary, destructive, warning, success,
+ *            info, outline
  *
  * Acessibilidade: badge não tem semântica nativa. Use texto descritivo
  * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
  *
- * Tokens: --primary, --secondary, --destructive, --foreground, --background,
- *         --border, --ring, --accent, --spacing-*
+ * Tokens: --primary, --secondary, --destructive, --warning, --success, --info,
+ *         --foreground, --background, --border, --ring, --accent, --spacing-*
  */
 
 .nds-badge {

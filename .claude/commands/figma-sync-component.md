@@ -121,17 +121,48 @@ fixa.
 
 ## Etapa 4b — Texto do componente vem de variável, nunca digitado
 
-Nenhuma camada de texto dentro de um component set carrega string literal. Toda
-uma vai vinculada a uma variável `STRING` da coleção **`Texto`**, que tem um modo
-por idioma (`pt-BR`, `en`, `es`). Quem consome troca o idioma setando o modo no
-frame; o arquivo inteiro acompanha.
+Nenhum texto de component set é string literal. O idioma vem de uma variável
+`STRING` da coleção **`Texto`**, que tem um modo por idioma (`pt-BR`, `en`, `es`).
+Quem consome troca o modo no frame; o arquivo inteiro acompanha.
+
+**Vincule a PROPRIEDADE, não a camada.** Camada de texto que expõe uma
+propriedade de componente (`Rótulo`, `Título`, `Descrição`) usa
+`componentPropertyReferences.characters` — e `setBoundVariable('characters', v)`
+**apaga essa referência**: as duas disputam o mesmo slot. A propriedade some do
+painel, a instância para de aceitar texto do consumidor, e nada avisa. Foi assim
+que 9 propriedades morreram de uma vez em 6 páginas, com o arquivo parecendo
+correto.
+
+O vínculo vai no `defaultValue` da propriedade:
+
+```js
+conjunto.editComponentProperty('Rótulo#333:0', {
+  defaultValue: figma.variables.createVariableAlias(textos['badge/defaultLabel']),
+});
+```
+
+Assim a camada continua ligada à propriedade, a propriedade segue o idioma, e a
+instância ainda sobrescreve — com literal ou com outra variável:
+
+```js
+instancia.setProperties({
+  'Rótulo#333:0': figma.variables.createVariableAlias(textos['badge/destructiveLabel']),
+});
+```
+
+`setBoundVariable('characters', v)` na camada só é correto onde **não existe**
+propriedade de texto — conteúdo fixo de composição, como o corpo do Accordion.
+
+**Consequência para a grade de variantes:** a propriedade é uma só para o set
+inteiro, então todas as colunas mostram o mesmo rótulo. Isso é o certo — ali se
+compara estilo, não conteúdo. O rótulo específico de cada variante mora nos
+frames de exemplo, uma instância por variante, cada uma com sua variável.
 
 **A fonte é `demonstration.labels` do `translations.json`** — os três idiomas já
-estão lá, completos e auditados. Não invente rótulo para o Figma, e não crie
-placeholder genérico: a variante **é** o exemplo, e ela mostra o mesmo texto que
-as 5 stacks renderizam. Digitar "Botão" nas 24 variantes do Button foi
-exatamente o que deixou o Figma divergir do código — e a divergência só apareceu
-quando alguém foi medir, meses depois.
+estão lá, completos e auditados. Não invente rótulo para o Figma e não crie
+placeholder genérico: o texto tem que ser o mesmo que as 5 stacks renderizam.
+Digitar "Botão" nas 24 variantes do Button foi o que deixou o Figma divergir do
+código, e a divergência só apareceu quando alguém foi medir, meses depois.
 
 ```js
 // A coleção Texto guarda o caminho no JSON em codeSyntax.WEB, do mesmo jeito
@@ -144,11 +175,12 @@ for (const id of colTexto.variableIds) {
   if (v) textos[v.name] = v;            // textos['button/primary']
 }
 
-// A fonte precisa estar carregada antes de vincular, não só antes de escrever.
+// Camada SEM propriedade de texto: aí sim o vínculo é nela. A fonte precisa
+// estar carregada antes de vincular, não só antes de escrever.
 for (const seg of no.getStyledTextSegments(['fontName'])) {
   await figma.loadFontAsync(seg.fontName);
 }
-no.setBoundVariable('characters', textos['button/primary']);
+no.setBoundVariable('characters', textos['accordion/a1']);
 ```
 
 Regras:
@@ -159,16 +191,31 @@ Regras:
 - **Chave que falta no JSON não se resolve no Figma.** Se a variante existe no
   produto e não tem par de rótulo, acrescente ao `translations.json` nos três
   idiomas — foi o caso do `variant=default` do Alert. O Figma nunca é a fonte.
-- **Vincule o nó de origem, não a instância.** Instâncias herdam. A exceção é
-  override de instância com conteúdo próprio (os botões Cancelar/Excluir dentro
-  do AlertDialog): esse nó precisa de vínculo explícito, senão fica preso ao
-  idioma em que foi digitado enquanto o resto da tela troca.
+- **Instância com conteúdo próprio usa `setProperties`, não vínculo na camada.**
+  Os botões Cancelar/Excluir do AlertDialog e o "Componentes" da trilha do
+  Breadcrumb são override de instância: sem vínculo próprio ficam presos ao
+  idioma em que foram digitados enquanto o resto da tela troca. Instância sem
+  conteúdo próprio não precisa de nada — herda.
 - **Texto que não é traduzível não vira variável de idioma**: iniciais de avatar,
   contadores (`+3`), siglas. Deixe literal e reporte na Etapa 6.
 - Só texto **dentro** de component set. Frame de documentação da página fica de
   fora — a coleção é do componente, não da doc.
 
-Para conferir, troque o modo num nó e leia de volta, em vez de confiar na
+Antes de fechar, rode o detector de propriedade órfã. Ele é barato e pega
+exatamente o defeito que não aparece na tela:
+
+```js
+const defs = conjunto.componentPropertyDefinitions;
+const usadas = new Set();
+for (const t of conjunto.query('TEXT')) {
+  const r = t.componentPropertyReferences && t.componentPropertyReferences.characters;
+  if (r) usadas.add(r);
+}
+const orfas = Object.keys(defs)
+  .filter(k => defs[k].type === 'TEXT' && !usadas.has(k));   // tem que sair vazio
+```
+
+E confira o idioma trocando o modo e lendo de volta, em vez de confiar na
 aparência:
 
 ```js
@@ -210,7 +257,12 @@ foram vinculadas e quais estados foram modelados.
 - **Nunca invente token** — só variável existente nas coleções. Sem coleção, pare.
 - **Nunca digite texto dentro de component set** — string literal numa camada de
   componente é o mesmo defeito que hex solto num fill: sai do tema. Vincule à
-  coleção `Texto` (Etapa 4b).
+  coleção `Texto` (Etapa 4b) — na **propriedade** quando a camada expõe uma,
+  porque vincular a camada mata a propriedade em silêncio.
+- **`clone()` não preserva `componentPropertyReferences` dos filhos.** Variante
+  criada a partir de outra fica surda às propriedades booleanas e de troca de
+  instância — o ícone não liga, e nada acusa até alguém olhar. Reatribua as
+  referências no clone e confira ligando a propriedade.
 - **Nunca use nome de camada genérico** — sempre o `data-slot` do código.
 - Componente com sub-componentes (`Card`, `Dialog`) → um component set por
   sub-componente.
