@@ -658,10 +658,10 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
           { name: 'variant',  type: 'ButtonVariant', defaultValue: "'default'", required: req, description: t('props.table.variant')   },
           { name: 'size',     type: 'ButtonSize',    defaultValue: "'default'", required: req, description: t('props.table.size')      },
           { name: 'disabled', type: 'boolean',       defaultValue: 'false',     required: req, description: t('props.table.disabled')  },
-          { name: 'type',     type: "'button' | 'submit' | 'reset'", defaultValue: "'button'", required: req, description: t('props.table.htmlType') },
+          { name: 'type',     type: "'button' | 'submit' | 'reset'", defaultValue: "'button'", required: req, description: toPlainText(t('props.table.htmlType')) },
           { name: 'class',    type: 'string',        defaultValue: "''",        required: req, description: t('props.table.className') },
           { name: 'aria-label', type: 'string',      defaultValue: '—',         required: req, description: t('props.table.ariaLabel') },
-          { name: '(click)',  type: '(e: MouseEvent) => void', defaultValue: '—', required: req, description: t('props.table.onClick') },
+          { name: '(click)',  type: '(e: MouseEvent) => void', defaultValue: '—', required: req, description: toPlainText(t('props.table.onClick')) },
           { name: '<ng-content>', type: 'TemplateRef', defaultValue: '—',       required: req, description: t('props.table.children') },
         ],
       },
@@ -704,10 +704,10 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
   protected readonly keyboardItems = computed(() => {
     dict();
     return [
-      { key: 'Tab',       description: t('accessibility.keyboard.tab')      },
-      { key: 'Enter',     description: t('accessibility.keyboard.enter')    },
-      { key: 'Space',     description: t('accessibility.keyboard.space')    },
-      { key: 'disabled',  description: t('accessibility.keyboard.disabled') },
+      { key: 'Tab',      description: toPlainText(t('accessibility.keyboard.tab'))      },
+      { key: 'Enter',    description: toPlainText(t('accessibility.keyboard.enter'))    },
+      { key: 'Space',    description: toPlainText(t('accessibility.keyboard.space'))    },
+      { key: 'disabled', description: toPlainText(t('accessibility.keyboard.disabled')) },
     ];
   });
 
@@ -729,7 +729,7 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { name: 'Toggle',       description: t('related.toggle'),      path: '?path=/docs/ui-toggle--docs'       },
+      { name: 'Toggle',       description: toPlainText(t('related.toggle')),      path: '?path=/docs/ui-toggle--docs'       },
       { name: 'Switch',       description: t('related.switch'),      path: '?path=/docs/ui-switch--docs'       },
       { name: 'Dialog',       description: t('related.dialog'),      path: '?path=/docs/ui-dialog--docs'       },
       { name: 'Alert Dialog', description: t('related.alertDialog'), path: '?path=/docs/ui-alert-dialog--docs' },
@@ -761,7 +761,7 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { event: t('analytics.table.pageView'),      trigger: t('analytics.table.pageViewTrigger'),      payload: t('analytics.table.pageViewPayload')      },
-      { event: t('analytics.table.click'),         trigger: t('analytics.table.clickTrigger'),         payload: t('analytics.table.clickPayload')         },
+      { event: t('analytics.table.click'),         trigger: toPlainText(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload')         },
       { event: t('analytics.table.sectionViewed'), trigger: t('analytics.table.sectionViewedTrigger'), payload: t('analytics.table.sectionViewedPayload') },
       { event: t('analytics.table.langSwitch'),    trigger: t('analytics.table.langSwitchTrigger'),    payload: t('analytics.table.langSwitchPayload')    },
     ];

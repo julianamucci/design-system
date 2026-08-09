@@ -84,6 +84,13 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
   `withAutoDocsTab`. O Radix NG é signals-first; não introduza dependência de zone.
 - **Ícones vêm do pacote `lucide`** (agnóstico), não de `lucide-angular` — este
   declara peer `@angular/core: 13.x - 21.x` e conflita com o Angular 22.
+- **`DOMPurify.sanitize()` vai no próprio binding `[innerHTML]`**, com
+  `protected readonly DOMPurify = DOMPurify` expondo o módulo ao template.
+  O `[innerHTML]` do Angular já passa pelo DomSanitizer do framework — a
+  exigência não é redundância defensiva, é a guideline 09: Qwiet/CodeQL só
+  reconhecem o sanitizador de taint quando a chamada está no call site. Um
+  `computed` `safe*` esconderia a chamada e viraria falso positivo permanente
+  de XSS. `node scripts/audit.mjs <slug> --category security` é o portão.
 
 ## Pendências conhecidas
 
@@ -91,7 +98,10 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
 - Variantes `angular` das chaves `*Code` do conteúdo compartilhado: 72 das 101
   chaves ainda caem em fallback (`node scripts/audit-translation-literals.mjs
   --only cobertura`). Template Angular ≠ JSX, então o fallback renderiza React.
-- `scripts/audit.mjs` ainda não conhece o stack (`STACKS` e `PAGE_EXT`).
+- `node scripts/audit.mjs button` acusa **9 `contract_divergent`**: critérios de
+  teste cobertos nas outras quatro e não aqui. Não é ruído — o stack tem duas
+  stories (Playground, Variantes) contra as cinco das outras. Fecha sozinho
+  quando as stories de tamanhos/estados/composições existirem.
 - Não há skill `dev-angular.md`; `pipeline`/`cross-stack`/`quality` não incluem
   o stack.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
