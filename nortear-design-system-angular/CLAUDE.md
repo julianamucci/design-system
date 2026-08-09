@@ -94,16 +94,17 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
 
 ## Pendências conhecidas
 
-- `chromatic.config.json` tem `projectId` placeholder — criar o projeto Chromatic.
-- Variantes `angular` das chaves `*Code` do conteúdo compartilhado: 72 das 101
-  chaves ainda caem em fallback (`node scripts/audit-translation-literals.mjs
-  --only cobertura`). Template Angular ≠ JSX, então o fallback renderiza React.
+- As 101 chaves `*Code` já têm variante `angular` (cobertura 101/0), mas **46
+  delas descrevem componentes que ainda não existem neste stack** — foram
+  escritas a partir dos seletores reais do `@radix-ng/primitives` e valem como
+  contrato a cumprir, não como registro do que está implementado. Ao criar um
+  componente, confira o snippet contra o que você implementou e corrija o
+  conteúdo compartilhado se divergir.
 - `node scripts/audit.mjs button` acusa **9 `contract_divergent`**: critérios de
   teste cobertos nas outras quatro e não aqui. Não é ruído — o stack tem duas
   stories (Playground, Variantes) contra as cinco das outras. Fecha sozinho
   quando as stories de tamanhos/estados/composições existirem.
-- Não há skill `dev-angular.md`; `pipeline`/`cross-stack`/`quality` não incluem
-  o stack.
+- Os 46 componentes restantes não existem — só o `button` está implementado.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.
