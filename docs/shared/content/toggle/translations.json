@@ -28,7 +28,8 @@
       "item3": "<strong>aria-label</strong> — OBRIGATÓRIO em toggles icon-only.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "{/* Toggle simples icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle com label visível */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+        "react": "{/* Toggle simples icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle com label visível */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>",
+        "angular": "<!-- Toggle simples icon-only -->\n<button ndsToggle [(pressed)]=\"isBold\" aria-label=\"Negrito\">\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n<!-- Toggle com label visível -->\n<button ndsToggle [(pressed)]=\"showHidden\">\n  <svg ndsIcon kind=\"eye\" aria-hidden=\"true\"></svg>\n  Mostrar ocultos\n</button>"
       }
     },
     "usage": {
@@ -251,7 +252,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Toggle de formatação com tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+        "react": "// Toggle de formatação com tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrito\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>",
+        "angular": "<!-- Toggle de formatação com tracking -->\n<!-- isBold = signal(false) -->\n<button\n  ndsToggle\n  [pressed]=\"isBold()\"\n  (pressedChange)=\"onBoldChange($event)\"\n  aria-label=\"Negrito\"\n>\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n// no componente\nonBoldChange(next: boolean) {\n  track('field_change', { component: 'toggle', field_name: 'bold', value: String(next) });\n  this.isBold.set(next);\n}"
       }
     },
     "tokens": {
@@ -469,7 +471,8 @@
       "item3": "<strong>aria-label</strong> — REQUIRED on icon-only toggles.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "{/* Simple icon-only Toggle */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle with visible label */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Show hidden\n</Toggle>"
+        "react": "{/* Simple icon-only Toggle */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle with visible label */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Show hidden\n</Toggle>",
+        "angular": "<!-- Simple icon-only Toggle -->\n<button ndsToggle [(pressed)]=\"isBold\" aria-label=\"Negrito\">\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n<!-- Toggle with visible label -->\n<button ndsToggle [(pressed)]=\"showHidden\">\n  <svg ndsIcon kind=\"eye\" aria-hidden=\"true\"></svg>\n  Mostrar ocultos\n</button>"
       }
     },
     "usage": {
@@ -692,7 +695,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Formatting Toggle with tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+        "react": "// Formatting Toggle with tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Bold\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>",
+        "angular": "<!-- Formatting toggle with tracking -->\n<!-- isBold = signal(false) -->\n<button\n  ndsToggle\n  [pressed]=\"isBold()\"\n  (pressedChange)=\"onBoldChange($event)\"\n  aria-label=\"Negrito\"\n>\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n// in the component\nonBoldChange(next: boolean) {\n  track('field_change', { component: 'toggle', field_name: 'bold', value: String(next) });\n  this.isBold.set(next);\n}"
       }
     },
     "tokens": {
@@ -910,7 +914,8 @@
       "item3": "<strong>aria-label</strong> — OBLIGATORIO en toggles icon-only.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "{/* Toggle simple icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle con label visible */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>"
+        "react": "{/* Toggle simple icon-only */}\n<Toggle\n  pressed={isBold}\n  onPressedChange={setIsBold}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>\n\n{/* Toggle con label visible */}\n<Toggle pressed={showHidden} onPressedChange={setShowHidden}>\n  <Eye aria-hidden=\"true\" />\n  Mostrar ocultos\n</Toggle>",
+        "angular": "<!-- Toggle simple icon-only -->\n<button ndsToggle [(pressed)]=\"isBold\" aria-label=\"Negrito\">\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n<!-- Toggle con label visible -->\n<button ndsToggle [(pressed)]=\"showHidden\">\n  <svg ndsIcon kind=\"eye\" aria-hidden=\"true\"></svg>\n  Mostrar ocultos\n</button>"
       }
     },
     "usage": {
@@ -1133,7 +1138,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Toggle de formato con tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>"
+        "react": "// Toggle de formato con tracking\nconst [isBold, setIsBold] = useState(false);\n\n<Toggle\n  pressed={isBold}\n  onPressedChange={(next) => {\n    track('field_change', {\n      component: 'toggle',\n      field_name: 'bold',\n      value: String(next),\n    });\n    setIsBold(next);\n  }}\n  aria-label=\"Negrita\"\n>\n  <Bold aria-hidden=\"true\" />\n</Toggle>",
+        "angular": "<!-- Toggle de formato con tracking -->\n<!-- isBold = signal(false) -->\n<button\n  ndsToggle\n  [pressed]=\"isBold()\"\n  (pressedChange)=\"onBoldChange($event)\"\n  aria-label=\"Negrito\"\n>\n  <svg ndsIcon kind=\"bold\" aria-hidden=\"true\"></svg>\n</button>\n\n// en el componente\nonBoldChange(next: boolean) {\n  track('field_change', { component: 'toggle', field_name: 'bold', value: String(next) });\n  this.isBold.set(next);\n}"
       }
     },
     "tokens": {

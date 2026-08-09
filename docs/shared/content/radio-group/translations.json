@@ -31,7 +31,8 @@
       "item4": "<strong>Label</strong> — rótulo externo obrigatório, associado via <code>htmlFor</code> ao <code>id</code> do item.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pagamento\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"cartao\" id=\"cartao\" />\n    <Label htmlFor=\"cartao\">Cartão de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pagamento\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"cartao\" id=\"cartao\" />\n    <Label htmlFor=\"cartao\">Cartão de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
+        "angular": "<nds-radio-group [(value)]=\"value\" aria-label=\"Forma de pagamento\">\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"cartao\" id=\"cartao\" />\n    <label ndsLabel for=\"cartao\">Cartão de crédito</label>\n  </div>\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"pix\" id=\"pix\" />\n    <label ndsLabel for=\"pix\">Pix</label>\n  </div>\n</nds-radio-group>"
       }
     },
     "usage": {
@@ -244,7 +245,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pagamento</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pagamento</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integração com Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Forma de pagamento</label>\n  <nds-radio-group formControlName=\"payment\">\n    @for (opt of options; track opt.value) {\n      <div class=\"nds-cluster\" data-spacing=\"sm\">\n        <nds-radio-group-item [value]=\"opt.value\" [id]=\"opt.value\" />\n        <label ndsLabel [for]=\"opt.value\">{{ opt.label }}</label>\n      </div>\n    }\n  </nds-radio-group>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {
@@ -468,7 +470,8 @@
       "item4": "<strong>Label</strong> — required external label, associated via <code>htmlFor</code> to item's <code>id</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Payment method\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"card\" id=\"card\" />\n    <Label htmlFor=\"card\">Credit card</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Payment method\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"card\" id=\"card\" />\n    <Label htmlFor=\"card\">Credit card</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
+        "angular": "<nds-radio-group [(value)]=\"value\" aria-label=\"Forma de pagamento\">\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"cartao\" id=\"cartao\" />\n    <label ndsLabel for=\"cartao\">Cartão de crédito</label>\n  </div>\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"pix\" id=\"pix\" />\n    <label ndsLabel for=\"pix\">Pix</label>\n  </div>\n</nds-radio-group>"
       }
     },
     "usage": {
@@ -681,7 +684,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Payment method</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Payment method</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Reactive Forms integration -->\n<nds-form-field>\n  <label ndsFormLabel>Forma de pagamento</label>\n  <nds-radio-group formControlName=\"payment\">\n    @for (opt of options; track opt.value) {\n      <div class=\"nds-cluster\" data-spacing=\"sm\">\n        <nds-radio-group-item [value]=\"opt.value\" [id]=\"opt.value\" />\n        <label ndsLabel [for]=\"opt.value\">{{ opt.label }}</label>\n      </div>\n    }\n  </nds-radio-group>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {
@@ -905,7 +909,8 @@
       "item4": "<strong>Label</strong> — etiqueta externa obligatoria, asociada vía <code>htmlFor</code> al <code>id</code> del ítem.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pago\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"tarjeta\" id=\"tarjeta\" />\n    <Label htmlFor=\"tarjeta\">Tarjeta de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>"
+        "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pago\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"tarjeta\" id=\"tarjeta\" />\n    <Label htmlFor=\"tarjeta\">Tarjeta de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
+        "angular": "<nds-radio-group [(value)]=\"value\" aria-label=\"Forma de pagamento\">\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"cartao\" id=\"cartao\" />\n    <label ndsLabel for=\"cartao\">Cartão de crédito</label>\n  </div>\n  <div class=\"nds-cluster\" data-spacing=\"sm\">\n    <nds-radio-group-item value=\"pix\" id=\"pix\" />\n    <label ndsLabel for=\"pix\">Pix</label>\n  </div>\n</nds-radio-group>"
       }
     },
     "usage": {
@@ -1118,7 +1123,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pago</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"payment\"\n  render={({ field }) => (\n    <FormItem className=\"space-y-3\">\n      <FormLabel>Forma de pago</FormLabel>\n      <FormControl>\n        <RadioGroup\n          value={field.value}\n          onValueChange={field.onChange}\n        >\n          {options.map((opt) => (\n            <div key={opt.value} className=\"flex items-center space-x-2\">\n              <RadioGroupItem value={opt.value} id={opt.value} />\n              <Label htmlFor={opt.value}>{opt.label}</Label>\n            </div>\n          ))}\n        </RadioGroup>\n      </FormControl>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integración con Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Forma de pagamento</label>\n  <nds-radio-group formControlName=\"payment\">\n    @for (opt of options; track opt.value) {\n      <div class=\"nds-cluster\" data-spacing=\"sm\">\n        <nds-radio-group-item [value]=\"opt.value\" [id]=\"opt.value\" />\n        <label ndsLabel [for]=\"opt.value\">{{ opt.label }}</label>\n      </div>\n    }\n  </nds-radio-group>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {

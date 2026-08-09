@@ -31,7 +31,8 @@
       "item3": "<strong>ResizableHandle</strong> — divisor focável entre painéis; aceita <code>withHandle</code> para mostrar pegador visual.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Painel esquerdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Painel direito */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Painel esquerdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Painel direito */}\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- Sem primitivo no Radix NG: angular-split fornece o comportamento -->\n<nds-resizable-panel-group direction=\"horizontal\">\n  <nds-resizable-panel [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <!-- Painel esquerdo -->\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis\" />\n  <nds-resizable-panel [defaultSize]=\"70\" [minSize]=\"50\" [maxSize]=\"80\">\n    <!-- Painel direito -->\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "usage": {
@@ -231,7 +232,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Persistir tamanhos via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis — use setas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "// Persistir tamanhos via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar painéis — use setas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- Persistir tamanhos via autoSaveId -->\n<nds-resizable-panel-group direction=\"horizontal\" autoSaveId=\"editor-layout\">\n  <nds-resizable-panel id=\"sidebar\" [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <nds-sidebar />\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis — use setas\" />\n  <nds-resizable-panel id=\"editor\" [defaultSize]=\"70\" [minSize]=\"50\">\n    <nds-editor />\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "tokens": {
@@ -457,7 +459,8 @@
       "item3": "<strong>ResizableHandle</strong> — focusable divider between panels; accepts <code>withHandle</code> to show visual grabber.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Left panel */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Right panel */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Left panel */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Right panel */}\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- No Radix NG primitive: angular-split provides the behavior -->\n<nds-resizable-panel-group direction=\"horizontal\">\n  <nds-resizable-panel [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <!-- Left panel -->\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis\" />\n  <nds-resizable-panel [defaultSize]=\"70\" [minSize]=\"50\" [maxSize]=\"80\">\n    <!-- Right panel -->\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "usage": {
@@ -657,7 +660,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Persist sizes via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels — use arrow keys\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "// Persist sizes via autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Resize panels — use arrow keys\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- Persist sizes via autoSaveId -->\n<nds-resizable-panel-group direction=\"horizontal\" autoSaveId=\"editor-layout\">\n  <nds-resizable-panel id=\"sidebar\" [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <nds-sidebar />\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis — use setas\" />\n  <nds-resizable-panel id=\"editor\" [defaultSize]=\"70\" [minSize]=\"50\">\n    <nds-editor />\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "tokens": {
@@ -883,7 +887,8 @@
       "item3": "<strong>ResizableHandle</strong> — divisor focalizable entre paneles; acepta <code>withHandle</code> para mostrar agarre visual.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Panel izquierdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Panel derecho */}\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>\n    {/* Panel izquierdo */}\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles\" />\n  <ResizablePanel defaultSize={70} minSize={50} maxSize={80}>\n    {/* Panel derecho */}\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- Sin primitivo en Radix NG: angular-split aporta el comportamiento -->\n<nds-resizable-panel-group direction=\"horizontal\">\n  <nds-resizable-panel [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <!-- Panel izquierdo -->\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis\" />\n  <nds-resizable-panel [defaultSize]=\"70\" [minSize]=\"50\" [maxSize]=\"80\">\n    <!-- Panel derecho -->\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "usage": {
@@ -1083,7 +1088,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Persistir tamaños vía autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles — usa flechas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>"
+        "react": "// Persistir tamaños vía autoSaveId\n<ResizablePanelGroup\n  direction=\"horizontal\"\n  autoSaveId=\"editor-layout\"\n>\n  <ResizablePanel id=\"sidebar\" defaultSize={30} minSize={20} maxSize={50}>\n    <Sidebar />\n  </ResizablePanel>\n  <ResizableHandle withHandle aria-label=\"Redimensionar paneles — usa flechas\" />\n  <ResizablePanel id=\"editor\" defaultSize={70} minSize={50}>\n    <Editor />\n  </ResizablePanel>\n</ResizablePanelGroup>",
+        "angular": "<!-- Persistir tamaños con autoSaveId -->\n<nds-resizable-panel-group direction=\"horizontal\" autoSaveId=\"editor-layout\">\n  <nds-resizable-panel id=\"sidebar\" [defaultSize]=\"30\" [minSize]=\"20\" [maxSize]=\"50\">\n    <nds-sidebar />\n  </nds-resizable-panel>\n  <nds-resizable-handle [withHandle]=\"true\" aria-label=\"Redimensionar painéis — use setas\" />\n  <nds-resizable-panel id=\"editor\" [defaultSize]=\"70\" [minSize]=\"50\">\n    <nds-editor />\n  </nds-resizable-panel>\n</nds-resizable-panel-group>"
       }
     },
     "tokens": {

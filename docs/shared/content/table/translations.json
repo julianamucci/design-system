@@ -53,7 +53,8 @@
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> com <code>text-muted-foreground</code>; pode ser <code>sr-only</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Table>\n  <TableCaption>Descrição da tabela</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Coluna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dado</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+        "react": "<Table>\n  <TableCaption>Descrição da tabela</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Coluna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dado</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>",
+        "angular": "<div ndsTableWrapper tabindex=\"0\">\n  <table ndsTable>\n    <caption ndsTableCaption>Descrição da tabela</caption>\n    <thead ndsTableHeader>\n      <tr ndsTableRow>\n        <th ndsTableHead scope=\"col\">Coluna</th>\n      </tr>\n    </thead>\n    <tbody ndsTableBody>\n      <tr ndsTableRow>\n        <td ndsTableCell>Dado</td>\n      </tr>\n    </tbody>\n    <tfoot ndsTableFooter>\n      <tr ndsTableRow>\n        <td ndsTableCell>Total</td>\n      </tr>\n    </tfoot>\n  </table>\n</div>"
       }
     },
     "usage": {
@@ -499,7 +500,8 @@
       "item8": "<strong>TableCaption</strong> — <code>&lt;caption&gt;</code> element with <code>text-muted-foreground</code>; can be <code>sr-only</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Table>\n  <TableCaption>Table description</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+        "react": "<Table>\n  <TableCaption>Table description</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>",
+        "angular": "<div ndsTableWrapper tabindex=\"0\">\n  <table ndsTable>\n    <caption ndsTableCaption>Description da tabela</caption>\n    <thead ndsTableHeader>\n      <tr ndsTableRow>\n        <th ndsTableHead scope=\"col\">Coluna</th>\n      </tr>\n    </thead>\n    <tbody ndsTableBody>\n      <tr ndsTableRow>\n        <td ndsTableCell>Dado</td>\n      </tr>\n    </tbody>\n    <tfoot ndsTableFooter>\n      <tr ndsTableRow>\n        <td ndsTableCell>Total</td>\n      </tr>\n    </tfoot>\n  </table>\n</div>"
       }
     },
     "usage": {
@@ -945,7 +947,8 @@
       "item8": "<strong>TableCaption</strong> — elemento <code>&lt;caption&gt;</code> con <code>text-muted-foreground</code>; puede ser <code>sr-only</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Table>\n  <TableCaption>Descripción de la tabla</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Columna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dato</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+        "react": "<Table>\n  <TableCaption>Descripción de la tabla</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead scope=\"col\">Columna</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Dato</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell>Total</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>",
+        "angular": "<div ndsTableWrapper tabindex=\"0\">\n  <table ndsTable>\n    <caption ndsTableCaption>Descripción da tabela</caption>\n    <thead ndsTableHeader>\n      <tr ndsTableRow>\n        <th ndsTableHead scope=\"col\">Coluna</th>\n      </tr>\n    </thead>\n    <tbody ndsTableBody>\n      <tr ndsTableRow>\n        <td ndsTableCell>Dado</td>\n      </tr>\n    </tbody>\n    <tfoot ndsTableFooter>\n      <tr ndsTableRow>\n        <td ndsTableCell>Total</td>\n      </tr>\n    </tfoot>\n  </table>\n</div>"
       }
     },
     "usage": {

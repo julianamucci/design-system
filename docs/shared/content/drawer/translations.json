@@ -31,7 +31,8 @@
       "item8": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descrição complementar.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* conteúdo */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descrição complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- conteúdo --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
       }
     },
     "usage": {
@@ -242,7 +243,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>"
+        "react": "// Drawer controlado com direção customizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* conteúdo */}\n  </DrawerContent>\n</Drawer>",
+        "angular": "<!-- Drawer controlado com direção customizada -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {
@@ -471,7 +473,8 @@
       "item8": "<strong>DrawerClose</strong> — close button; compose with Button as a child element.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Title</DrawerTitle>\n      <DrawerDescription>Complementary description.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* content */}</div>\n    <DrawerFooter>\n      <Button>Confirm</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Description complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- content --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
       }
     },
     "usage": {
@@ -682,7 +685,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>"
+        "react": "// Controlled Drawer with custom direction\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* content */}\n  </DrawerContent>\n</Drawer>",
+        "angular": "<!-- Controlled Drawer with custom direction -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- content -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {
@@ -911,7 +915,8 @@
       "item8": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+        "react": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Título</DrawerTitle>\n      <DrawerDescription>Descripción complementaria.</DrawerDescription>\n    </DrawerHeader>\n    <div className=\"px-4\">{/* contenido */}</div>\n    <DrawerFooter>\n      <Button>Confirmar</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>",
+        "angular": "<nds-drawer>\n  <button ndsDrawerTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDrawerContent>\n    <div ndsDrawerHeader>\n      <h2 ndsDrawerTitle>Título</h2>\n      <p ndsDrawerDescription>Descripción complementar.</p>\n    </div>\n    <div class=\"nds-px-4\"><!-- contenido --></div>\n    <div ndsDrawerFooter>\n      <button ndsButton>Confirmar</button>\n      <button ndsDrawerClose ndsButton variant=\"outline\">Cancelar</button>\n    </div>\n  </ng-template>\n</nds-drawer>"
       }
     },
     "usage": {
@@ -1122,7 +1127,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>"
+        "react": "// Drawer controlado con dirección personalizada\n<Drawer open={open} onOpenChange={setOpen} direction=\"right\">\n  <DrawerContent className=\"max-w-md\">\n    {/* contenido */}\n  </DrawerContent>\n</Drawer>",
+        "angular": "<!-- Drawer controlado con dirección personalizada -->\n<nds-drawer [(open)]=\"open\" direction=\"right\">\n  <ng-template ndsDrawerContent class=\"nds-max-w-md\">\n    <!-- contenido -->\n  </ng-template>\n</nds-drawer>"
       }
     },
     "tokens": {

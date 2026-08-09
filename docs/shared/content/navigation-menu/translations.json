@@ -31,7 +31,8 @@
       "item8": "<strong>NavigationMenuIndicator</strong> — seta visual que aponta para o Trigger ativo (opcional).",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Início</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/produtos/a\">Produto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/produtos/b\">Produto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Início</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/produtos/a\">Produto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/produtos/b\">Produto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<nds-navigation-menu>\n  <ul ndsNavigationMenuList>\n    <li ndsNavigationMenuItem>\n      <a ndsNavigationMenuLink href=\"/\">Início</a>\n    </li>\n    <li ndsNavigationMenuItem>\n      <button ndsNavigationMenuTrigger>Produtos</button>\n      <ng-template ndsNavigationMenuContent>\n        <ul class=\"nds-grid\" data-cols=\"1\" data-spacing=\"sm\">\n          <li><a ndsNavigationMenuLink href=\"/produtos/a\">Produto A</a></li>\n          <li><a ndsNavigationMenuLink href=\"/produtos/b\">Produto B</a></li>\n        </ul>\n      </ng-template>\n    </li>\n  </ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "usage": {
@@ -240,7 +241,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// NavigationMenu controlado com delays customizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegação principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "// NavigationMenu controlado com delays customizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegação principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<!-- NavigationMenu controlado com delays customizados -->\n<nds-navigation-menu\n  [(value)]=\"active\"\n  [delayDuration]=\"150\"\n  [skipDelayDuration]=\"250\"\n  aria-label=\"Navegação principal\"\n>\n  <ul ndsNavigationMenuList>...</ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "tokens": {
@@ -485,7 +487,8 @@
       "item8": "<strong>NavigationMenuIndicator</strong> — visual arrow pointing to active Trigger (optional).",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Home</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/products/a\">Product A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/products/b\">Product B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Home</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/products/a\">Product A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/products/b\">Product B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<nds-navigation-menu>\n  <ul ndsNavigationMenuList>\n    <li ndsNavigationMenuItem>\n      <a ndsNavigationMenuLink href=\"/\">Início</a>\n    </li>\n    <li ndsNavigationMenuItem>\n      <button ndsNavigationMenuTrigger>Produtos</button>\n      <ng-template ndsNavigationMenuContent>\n        <ul class=\"nds-grid\" data-cols=\"1\" data-spacing=\"sm\">\n          <li><a ndsNavigationMenuLink href=\"/produtos/a\">Produto A</a></li>\n          <li><a ndsNavigationMenuLink href=\"/produtos/b\">Produto B</a></li>\n        </ul>\n      </ng-template>\n    </li>\n  </ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "usage": {
@@ -694,7 +697,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled NavigationMenu with custom delays\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Main navigation\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "// Controlled NavigationMenu with custom delays\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Main navigation\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<!-- Controlled NavigationMenu with custom delays -->\n<nds-navigation-menu\n  [(value)]=\"active\"\n  [delayDuration]=\"150\"\n  [skipDelayDuration]=\"250\"\n  aria-label=\"Navegação principal\"\n>\n  <ul ndsNavigationMenuList>...</ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "tokens": {
@@ -939,7 +943,8 @@
       "item8": "<strong>NavigationMenuIndicator</strong> — flecha visual que apunta al Trigger activo (opcional).",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Inicio</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Productos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/productos/a\">Producto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/productos/b\">Producto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuLink href=\"/\">Inicio</NavigationMenuLink>\n    </NavigationMenuItem>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Productos</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li><NavigationMenuLink href=\"/productos/a\">Producto A</NavigationMenuLink></li>\n          <li><NavigationMenuLink href=\"/productos/b\">Producto B</NavigationMenuLink></li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<nds-navigation-menu>\n  <ul ndsNavigationMenuList>\n    <li ndsNavigationMenuItem>\n      <a ndsNavigationMenuLink href=\"/\">Início</a>\n    </li>\n    <li ndsNavigationMenuItem>\n      <button ndsNavigationMenuTrigger>Produtos</button>\n      <ng-template ndsNavigationMenuContent>\n        <ul class=\"nds-grid\" data-cols=\"1\" data-spacing=\"sm\">\n          <li><a ndsNavigationMenuLink href=\"/produtos/a\">Produto A</a></li>\n          <li><a ndsNavigationMenuLink href=\"/produtos/b\">Produto B</a></li>\n        </ul>\n      </ng-template>\n    </li>\n  </ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "usage": {
@@ -1148,7 +1153,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// NavigationMenu controlado con delays personalizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegación principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>"
+        "react": "// NavigationMenu controlado con delays personalizados\n<NavigationMenu\n  value={active}\n  onValueChange={setActive}\n  delayDuration={150}\n  skipDelayDuration={250}\n  aria-label=\"Navegación principal\"\n>\n  <NavigationMenuList>...</NavigationMenuList>\n  <NavigationMenuViewport />\n</NavigationMenu>",
+        "angular": "<!-- NavigationMenu controlado con delays personalizados -->\n<nds-navigation-menu\n  [(value)]=\"active\"\n  [delayDuration]=\"150\"\n  [skipDelayDuration]=\"250\"\n  aria-label=\"Navegação principal\"\n>\n  <ul ndsNavigationMenuList>...</ul>\n  <div ndsNavigationMenuViewport></div>\n</nds-navigation-menu>"
       }
     },
     "tokens": {

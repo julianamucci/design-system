@@ -39,7 +39,8 @@
       "item7": "<strong>CardFooter</strong> — rodapé com borda superior e fundo soft (<code>--muted</code>); ideal para ações.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com fundo soft */}\n</Card>"
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundário */}\n    <CardAction />       {/* slot à direita */}\n  </CardHeader>\n  <CardContent />        {/* corpo */}\n  <CardFooter />         {/* rodapé com fundo soft */}\n</Card>",
+        "angular": "<nds-card>                   <!-- div[data-slot=\"card\"] -->\n  <nds-card-header>          <!-- grid opcional -->\n    <h3 ndsCardTitle></h3>   <!-- heading visual -->\n    <p ndsCardDescription></p>  <!-- texto secundário -->\n    <div ndsCardAction></div>   <!-- slot à direita -->\n  </nds-card-header>\n  <nds-card-content />       <!-- corpo -->\n  <nds-card-footer />        <!-- rodapé com fundo soft -->\n</nds-card>"
       }
     },
     "usage": {
@@ -458,7 +459,8 @@
       "item7": "<strong>CardFooter</strong> — footer with top border and soft background (<code>--muted</code>); ideal for actions.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with soft background */}\n</Card>"
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* optional grid */}\n    <CardTitle />        {/* visual heading */}\n    <CardDescription />  {/* secondary text */}\n    <CardAction />       {/* right-aligned slot */}\n  </CardHeader>\n  <CardContent />        {/* body */}\n  <CardFooter />         {/* footer with soft background */}\n</Card>",
+        "angular": "<nds-card>                   <!-- div[data-slot=\"card\"] -->\n  <nds-card-header>          <!-- optional grid -->\n    <h3 ndsCardTitle></h3>   <!-- visual heading -->\n    <p ndsCardDescription></p>  <!-- secondary text -->\n    <div ndsCardAction></div>   <!-- slot on the right -->\n  </nds-card-header>\n  <nds-card-content />       <!-- body -->\n  <nds-card-footer />        <!-- footer with soft background -->\n</nds-card>"
       }
     },
     "usage": {
@@ -877,7 +879,8 @@
       "item7": "<strong>CardFooter</strong> — pie con borde superior y fondo soft (<code>--muted</code>); ideal para acciones.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con fondo soft */}\n</Card>"
+        "react": "<Card>                     {/* div[data-slot=\"card\"] */}\n  <CardHeader>           {/* grid opcional */}\n    <CardTitle />        {/* heading visual */}\n    <CardDescription />  {/* texto secundario */}\n    <CardAction />       {/* slot a la derecha */}\n  </CardHeader>\n  <CardContent />        {/* cuerpo */}\n  <CardFooter />         {/* pie con fondo soft */}\n</Card>",
+        "angular": "<nds-card>                   <!-- div[data-slot=\"card\"] -->\n  <nds-card-header>          <!-- grid opcional -->\n    <h3 ndsCardTitle></h3>   <!-- heading visual -->\n    <p ndsCardDescription></p>  <!-- texto secundario -->\n    <div ndsCardAction></div>   <!-- slot a la derecha -->\n  </nds-card-header>\n  <nds-card-content />       <!-- cuerpo -->\n  <nds-card-footer />        <!-- pie con fondo soft -->\n</nds-card>"
       }
     },
     "usage": {

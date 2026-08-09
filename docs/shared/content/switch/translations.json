@@ -28,7 +28,8 @@
       "item3": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do Switch.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receber notificações</Label>\n</div>"
+        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receber notificações</Label>\n</div>",
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
@@ -251,7 +252,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Switch com descrição em painel de configurações\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+        "react": "// Switch com descrição em painel de configurações\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "angular": "<!-- Switch com descrição em painel de configurações -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },
     "tokens": {
@@ -474,7 +476,8 @@
       "item3": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the Switch <code>id</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receive notifications</Label>\n</div>"
+        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receive notifications</Label>\n</div>",
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
@@ -697,7 +700,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Switch with description in settings panel\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Marketing emails</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+        "react": "// Switch with description in settings panel\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Marketing emails</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "angular": "<!-- Switch with description in a settings panel -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },
     "tokens": {
@@ -920,7 +924,8 @@
       "item3": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del Switch.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Recibir notificaciones</Label>\n</div>"
+        "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Recibir notificaciones</Label>\n</div>",
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
@@ -1143,7 +1148,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Switch con descripción en panel de configuración\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>"
+        "react": "// Switch con descripción en panel de configuración\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "angular": "<!-- Switch con descripción en panel de configuración -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },
     "tokens": {

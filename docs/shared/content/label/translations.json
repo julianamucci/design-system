@@ -27,7 +27,8 @@
       "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> adicionado pelo código consumidor quando o campo é obrigatório.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "{/* Fora de FormField — htmlFor obrigatório */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obrigatório */}\n<Label htmlFor=\"nome\">\n  Nome completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nome\" aria-required=\"true\" />"
+        "react": "{/* Fora de FormField — htmlFor obrigatório */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obrigatório */}\n<Label htmlFor=\"nome\">\n  Nome completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nome\" aria-required=\"true\" />",
+        "angular": "<!-- Fora de nds-form-field — for obrigatório -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Campo obrigatório -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
       }
     },
     "usage": {
@@ -302,7 +303,8 @@
       "item3": "<strong>Required marker (optional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> added by the consumer when the field is required.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "{/* Outside FormField — htmlFor required */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Required field */}\n<Label htmlFor=\"name\">\n  Full name\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"name\" aria-required=\"true\" />"
+        "react": "{/* Outside FormField — htmlFor required */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Required field */}\n<Label htmlFor=\"name\">\n  Full name\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"name\" aria-required=\"true\" />",
+        "angular": "<!-- Outside nds-form-field — for is required -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Required field -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
       }
     },
     "usage": {
@@ -577,7 +579,8 @@
       "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> agregado por el código consumidor cuando el campo es obligatorio.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "{/* Fuera de FormField — htmlFor obligatorio */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obligatorio */}\n<Label htmlFor=\"nombre\">\n  Nombre completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nombre\" aria-required=\"true\" />"
+        "react": "{/* Fuera de FormField — htmlFor obligatorio */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obligatorio */}\n<Label htmlFor=\"nombre\">\n  Nombre completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nombre\" aria-required=\"true\" />",
+        "angular": "<!-- Fuera de nds-form-field — for obligatorio -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Campo obligatorio -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
       }
     },
     "usage": {

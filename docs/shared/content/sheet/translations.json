@@ -37,7 +37,8 @@
       "item8": "<strong>SheetClose</strong> — botão de fechar; um já vem embutido no canto superior direito.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descrição obrigatória.</SheetDescription>\n    </SheetHeader>\n    {/* conteúdo principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descrição obrigatória.</SheetDescription>\n    </SheetHeader>\n    {/* conteúdo principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<nds-sheet>\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsSheetContent side=\"right\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Título</h2>\n      <p ndsSheetDescription>Descrição obrigatória.</p>\n    </div>\n    <!-- conteúdo principal -->\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton>Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "usage": {
@@ -257,7 +258,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Sheet controlado com onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avançados</SheetTitle>\n      <SheetDescription>Refine os resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "// Sheet controlado com onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avançados</SheetTitle>\n      <SheetDescription>Refine os resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<!-- Sheet controlado -->\n<nds-sheet [(open)]=\"open\">\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Filtros</button>\n  <ng-template ndsSheetContent side=\"right\" class=\"nds-sheet-lg\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Filtros avançados</h2>\n      <p ndsSheetDescription>Refine os resultados.</p>\n    </div>\n    <nds-filters-form (apply)=\"open.set(false)\" />\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton (click)=\"handleApply()\">Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "tokens": {
@@ -499,7 +501,8 @@
       "item8": "<strong>SheetClose</strong> — close button; one already comes embedded in the top right corner.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Title</SheetTitle>\n      <SheetDescription>Required description.</SheetDescription>\n    </SheetHeader>\n    {/* main content */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Title</SheetTitle>\n      <SheetDescription>Required description.</SheetDescription>\n    </SheetHeader>\n    {/* main content */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<nds-sheet>\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsSheetContent side=\"right\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Título</h2>\n      <p ndsSheetDescription>Description obrigatória.</p>\n    </div>\n    <!-- main content -->\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton>Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "usage": {
@@ -719,7 +722,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled Sheet with onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filters</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Advanced filters</SheetTitle>\n      <SheetDescription>Refine the results.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "// Controlled Sheet with onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filters</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Advanced filters</SheetTitle>\n      <SheetDescription>Refine the results.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Apply</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<!-- Controlled Sheet -->\n<nds-sheet [(open)]=\"open\">\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Filtros</button>\n  <ng-template ndsSheetContent side=\"right\" class=\"nds-sheet-lg\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Filtros avançados</h2>\n      <p ndsSheetDescription>Refine os resultados.</p>\n    </div>\n    <nds-filters-form (apply)=\"open.set(false)\" />\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton (click)=\"handleApply()\">Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "tokens": {
@@ -961,7 +965,8 @@
       "item8": "<strong>SheetClose</strong> — botón de cerrar; uno ya viene embebido en la esquina superior derecha.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descripción obligatoria.</SheetDescription>\n    </SheetHeader>\n    {/* contenido principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "<Sheet>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\">\n    <SheetHeader>\n      <SheetTitle>Título</SheetTitle>\n      <SheetDescription>Descripción obligatoria.</SheetDescription>\n    </SheetHeader>\n    {/* contenido principal */}\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<nds-sheet>\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsSheetContent side=\"right\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Título</h2>\n      <p ndsSheetDescription>Descripción obrigatória.</p>\n    </div>\n    <!-- contenido principal -->\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton>Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "usage": {
@@ -1181,7 +1186,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Sheet controlado con onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avanzados</SheetTitle>\n      <SheetDescription>Refina los resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+        "react": "// Sheet controlado con onOpenChange\n<Sheet open={open} onOpenChange={setOpen}>\n  <SheetTrigger asChild>\n    <Button variant=\"outline\">Filtros</Button>\n  </SheetTrigger>\n  <SheetContent side=\"right\" className=\"w-[400px] sm:w-[540px]\">\n    <SheetHeader>\n      <SheetTitle>Filtros avanzados</SheetTitle>\n      <SheetDescription>Refina los resultados.</SheetDescription>\n    </SheetHeader>\n    <FiltersForm onApply={() => setOpen(false)} />\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button variant=\"outline\">Cancelar</Button>\n      </SheetClose>\n      <Button onClick={handleApply}>Aplicar</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>",
+        "angular": "<!-- Sheet controlado -->\n<nds-sheet [(open)]=\"open\">\n  <button ndsSheetTrigger ndsButton variant=\"outline\">Filtros</button>\n  <ng-template ndsSheetContent side=\"right\" class=\"nds-sheet-lg\">\n    <div ndsSheetHeader>\n      <h2 ndsSheetTitle>Filtros avançados</h2>\n      <p ndsSheetDescription>Refine os resultados.</p>\n    </div>\n    <nds-filters-form (apply)=\"open.set(false)\" />\n    <div ndsSheetFooter>\n      <button ndsSheetClose ndsButton variant=\"outline\">Cancelar</button>\n      <button ndsButton (click)=\"handleApply()\">Aplicar</button>\n    </div>\n  </ng-template>\n</nds-sheet>"
       }
     },
     "tokens": {

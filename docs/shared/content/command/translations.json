@@ -42,7 +42,8 @@
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> com <code>Dialog</code> para o padrão command palette.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Nenhum resultado.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Rótulo do item\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Outro grupo\">\n      <CommandItem value=\"outro\">Outro item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- Sobre rdxAutocomplete: o Radix NG não tem primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>"
       }
     },
     "usage": {
@@ -426,7 +427,8 @@
       "item9": "<strong>CommandDialog</strong> — wrapper combining <code>Command</code> with <code>Dialog</code> for the command palette pattern.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+        "react": "<Command>\n  <CommandInput placeholder=\"Search...\" />\n  <CommandList>\n    <CommandEmpty>No results.</CommandEmpty>\n    <CommandGroup heading=\"Group\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Item label\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Another group\">\n      <CommandItem value=\"other\">Other item</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- On rdxAutocomplete: Radix NG has no \"command\" primitive -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>"
       }
     },
     "usage": {
@@ -810,7 +812,8 @@
       "item9": "<strong>CommandDialog</strong> — wrapper que combina <code>Command</code> con <code>Dialog</code> para el patrón command palette.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+        "react": "<Command>\n  <CommandInput placeholder=\"Buscar...\" />\n  <CommandList>\n    <CommandEmpty>Sin resultados.</CommandEmpty>\n    <CommandGroup heading=\"Grupo\">\n      <CommandItem value=\"item\" onSelect={handleSelect}>\n        Etiqueta del ítem\n        <CommandShortcut>⌘K</CommandShortcut>\n      </CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Otro grupo\">\n      <CommandItem value=\"otro\">Otro ítem</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>",
+        "angular": "<!-- Sobre rdxAutocomplete: Radix NG no tiene primitivo \"command\" -->\n<nds-command>\n  <input ndsCommandInput placeholder=\"Buscar...\" />\n  <div ndsCommandList>\n    <div ndsCommandEmpty>Nenhum resultado.</div>\n    <div ndsCommandGroup heading=\"Grupo\">\n      <button ndsCommandItem value=\"item\" (select)=\"handleSelect($event)\">\n        Rótulo do item\n        <span ndsCommandShortcut>⌘K</span>\n      </button>\n    </div>\n    <div ndsCommandSeparator></div>\n    <div ndsCommandGroup heading=\"Outro grupo\">\n      <button ndsCommandItem value=\"outro\">Outro item</button>\n    </div>\n  </div>\n</nds-command>"
       }
     },
     "usage": {

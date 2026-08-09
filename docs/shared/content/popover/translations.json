@@ -36,7 +36,8 @@
       "item6": "<strong>PopoverDescription</strong> — descrição opcional, vinculada via <code>aria-describedby</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>"
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>",
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n    <!-- conteúdo interativo -->\n  </ng-template>\n</nds-popover>"
       }
     },
     "usage": {
@@ -254,7 +255,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+        "react": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
+        "angular": "<!-- Controle externo do estado aberto/fechado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
       }
     },
     "tokens": {
@@ -487,7 +489,8 @@
       "item6": "<strong>PopoverDescription</strong> — optional description, linked via <code>aria-describedby</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>"
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>",
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Description opcional.</p>\n    </div>\n    <!-- interactive content -->\n  </ng-template>\n</nds-popover>"
       }
     },
     "usage": {
@@ -705,7 +708,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+        "react": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
+        "angular": "<!-- External control of the open/closed state -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
       }
     },
     "tokens": {
@@ -938,7 +942,8 @@
       "item6": "<strong>PopoverDescription</strong> — descripción opcional, vinculada vía <code>aria-describedby</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>"
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>",
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descripción opcional.</p>\n    </div>\n    <!-- contenido interactivo -->\n  </ng-template>\n</nds-popover>"
       }
     },
     "usage": {
@@ -1156,7 +1161,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>"
+        "react": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
+        "angular": "<!-- Control externo del estado abierto/cerrado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
       }
     },
     "tokens": {

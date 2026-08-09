@@ -27,7 +27,8 @@
       "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (ícone Minus por padrão); <code>role=\"separator\"</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>",
+        "angular": "<!-- Sem primitivo no Radix NG: composto sobre rdxComposite + rdxInput -->\n<nds-input-otp [maxLength]=\"6\" [(value)]=\"code\">\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"0\"></div>\n    <div ndsInputOtpSlot [index]=\"1\"></div>\n    <div ndsInputOtpSlot [index]=\"2\"></div>\n  </div>\n  <div ndsInputOtpSeparator></div>\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"3\"></div>\n    <div ndsInputOtpSlot [index]=\"4\"></div>\n    <div ndsInputOtpSlot [index]=\"5\"></div>\n  </div>\n</nds-input-otp>"
       }
     },
     "usage": {
@@ -259,7 +260,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// InputOTP com pattern alfanumérico e autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+        "react": "// InputOTP com pattern alfanumérico e autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>",
+        "angular": "<!-- InputOTP com pattern alfanumérico e autocomplete -->\n<nds-input-otp\n  [maxLength]=\"6\"\n  pattern=\"^[a-zA-Z0-9]+$\"\n  autocomplete=\"one-time-code\"\n  inputmode=\"text\"\n  [(value)]=\"code\"\n  (complete)=\"verify($event)\"\n>\n  <!-- slots -->\n</nds-input-otp>"
       }
     },
     "tokens": {
@@ -495,7 +497,8 @@
       "item4": "<strong>InputOTPSeparator</strong> — visual divider between groups (Minus icon by default); <code>role=\"separator\"</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>",
+        "angular": "<!-- No Radix NG primitive: composed on rdxComposite + rdxInput -->\n<nds-input-otp [maxLength]=\"6\" [(value)]=\"code\">\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"0\"></div>\n    <div ndsInputOtpSlot [index]=\"1\"></div>\n    <div ndsInputOtpSlot [index]=\"2\"></div>\n  </div>\n  <div ndsInputOtpSeparator></div>\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"3\"></div>\n    <div ndsInputOtpSlot [index]=\"4\"></div>\n    <div ndsInputOtpSlot [index]=\"5\"></div>\n  </div>\n</nds-input-otp>"
       }
     },
     "usage": {
@@ -727,7 +730,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// InputOTP with alphanumeric pattern and autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+        "react": "// InputOTP with alphanumeric pattern and autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>",
+        "angular": "<!-- InputOTP with alphanumeric pattern and autocomplete -->\n<nds-input-otp\n  [maxLength]=\"6\"\n  pattern=\"^[a-zA-Z0-9]+$\"\n  autocomplete=\"one-time-code\"\n  inputmode=\"text\"\n  [(value)]=\"code\"\n  (complete)=\"verify($event)\"\n>\n  <!-- slots -->\n</nds-input-otp>"
       }
     },
     "tokens": {
@@ -963,7 +967,8 @@
       "item4": "<strong>InputOTPSeparator</strong> — divisor visual entre grupos (icono Minus por defecto); <code>role=\"separator\"</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>"
+        "react": "<InputOTP maxLength={6} value={code} onChange={setCode}>\n  <InputOTPGroup>\n    <InputOTPSlot index={0} />\n    <InputOTPSlot index={1} />\n    <InputOTPSlot index={2} />\n  </InputOTPGroup>\n  <InputOTPSeparator />\n  <InputOTPGroup>\n    <InputOTPSlot index={3} />\n    <InputOTPSlot index={4} />\n    <InputOTPSlot index={5} />\n  </InputOTPGroup>\n</InputOTP>",
+        "angular": "<!-- Sin primitivo en Radix NG: compuesto sobre rdxComposite + rdxInput -->\n<nds-input-otp [maxLength]=\"6\" [(value)]=\"code\">\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"0\"></div>\n    <div ndsInputOtpSlot [index]=\"1\"></div>\n    <div ndsInputOtpSlot [index]=\"2\"></div>\n  </div>\n  <div ndsInputOtpSeparator></div>\n  <div ndsInputOtpGroup>\n    <div ndsInputOtpSlot [index]=\"3\"></div>\n    <div ndsInputOtpSlot [index]=\"4\"></div>\n    <div ndsInputOtpSlot [index]=\"5\"></div>\n  </div>\n</nds-input-otp>"
       }
     },
     "usage": {
@@ -1195,7 +1200,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// InputOTP con pattern alfanumérico y autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>"
+        "react": "// InputOTP con pattern alfanumérico y autoComplete\nimport { REGEXP_ONLY_DIGITS_AND_CHARS } from \"input-otp\";\n\n<InputOTP\n  maxLength={6}\n  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}\n  autoComplete=\"one-time-code\"\n  inputMode=\"text\"\n  value={code}\n  onChange={setCode}\n  onComplete={(v) => verify(v)}\n>\n  {/* slots */}\n</InputOTP>",
+        "angular": "<!-- InputOTP con patrón alfanumérico y autocomplete -->\n<nds-input-otp\n  [maxLength]=\"6\"\n  pattern=\"^[a-zA-Z0-9]+$\"\n  autocomplete=\"one-time-code\"\n  inputmode=\"text\"\n  [(value)]=\"code\"\n  (complete)=\"verify($event)\"\n>\n  <!-- slots -->\n</nds-input-otp>"
       }
     },
     "tokens": {

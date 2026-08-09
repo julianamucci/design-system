@@ -43,7 +43,8 @@
       "item6": "<strong>Paginação</strong> — rodapé com contagem, seletor de tamanho e navegação. Desativada automaticamente quando virtualizado.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
+        "angular": "<!-- @tanstack/angular-table sobre o mesmo table-core das outras stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
       }
     },
     "usage": {
@@ -531,7 +532,8 @@
       "item6": "<strong>Pagination</strong> — footer with count, page-size selector, and navigation. Automatically disabled when virtualized.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>"
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>",
+        "angular": "<!-- @tanstack/angular-table over the same table-core as the other stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
       }
     },
     "usage": {
@@ -1019,7 +1021,8 @@
       "item6": "<strong>Paginación</strong> — pie con conteo, selector de tamaño y navegación. Se desactiva automáticamente cuando está virtualizado.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+        "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
+        "angular": "<!-- @tanstack/angular-table sobre el mismo table-core de las otras stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
       }
     },
     "usage": {

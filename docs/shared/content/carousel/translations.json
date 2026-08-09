@@ -28,7 +28,8 @@
       "item4": "<strong>CarouselPrevious / CarouselNext</strong> — botões de navegação com estado <code>disabled</code> automático quando não há item anterior ou próximo.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport com overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botão voltar */}\n  <CarouselNext />           {/* Botão avançar */}\n</Carousel>"
+        "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport com overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botão voltar */}\n  <CarouselNext />           {/* Botão avançar */}\n</Carousel>",
+        "angular": "<!-- embla-carousel-angular fornece a diretiva emblaCarousel -->\n<nds-carousel>                 <!-- Container role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport com overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Botão voltar -->\n  <button ndsCarouselNext></button>       <!-- Botão avançar -->\n</nds-carousel>"
       }
     },
     "usage": {
@@ -433,7 +434,8 @@
       "item4": "<strong>CarouselPrevious / CarouselNext</strong> — navigation buttons with automatic <code>disabled</code> state when there is no previous or next item.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport with overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Back button */}\n  <CarouselNext />           {/* Forward button */}\n</Carousel>"
+        "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport with overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Back button */}\n  <CarouselNext />           {/* Forward button */}\n</Carousel>",
+        "angular": "<!-- embla-carousel-angular provides the emblaCarousel directive -->\n<nds-carousel>                 <!-- Container role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport with overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Previous button -->\n  <button ndsCarouselNext></button>       <!-- Next button -->\n</nds-carousel>"
       }
     },
     "usage": {
@@ -838,7 +840,8 @@
       "item4": "<strong>CarouselPrevious / CarouselNext</strong> — botones de navegación con estado <code>disabled</code> automático cuando no hay ítem anterior o siguiente.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Carousel>                   {/* Contenedor role=\"region\" */}\n  <CarouselContent>          {/* Viewport con overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botón volver */}\n  <CarouselNext />           {/* Botón avanzar */}\n</Carousel>"
+        "react": "<Carousel>                   {/* Contenedor role=\"region\" */}\n  <CarouselContent>          {/* Viewport con overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botón volver */}\n  <CarouselNext />           {/* Botón avanzar */}\n</Carousel>",
+        "angular": "<!-- embla-carousel-angular aporta la directiva emblaCarousel -->\n<nds-carousel>                 <!-- Contenedor role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport con overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Botón anterior -->\n  <button ndsCarouselNext></button>       <!-- Botón siguiente -->\n</nds-carousel>"
       }
     },
     "usage": {

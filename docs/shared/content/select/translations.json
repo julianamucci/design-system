@@ -37,7 +37,8 @@
       "item6": "<strong>SelectItem</strong> — opção individual com <code>role=\"option\"</code> e <code>aria-selected</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
       }
     },
     "usage": {
@@ -255,7 +256,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integração com Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {
@@ -502,7 +504,8 @@
       "item6": "<strong>SelectItem</strong> — individual option with <code>role=\"option\"</code> and <code>aria-selected</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
       }
     },
     "usage": {
@@ -720,7 +723,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Reactive Forms integration -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {
@@ -967,7 +971,8 @@
       "item6": "<strong>SelectItem</strong> — opción individual con <code>role=\"option\"</code> y <code>aria-selected</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>"
+        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
       }
     },
     "usage": {
@@ -1185,7 +1190,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>"
+        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integración con Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
       }
     },
     "tokens": {

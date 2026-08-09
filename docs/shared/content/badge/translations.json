@@ -34,7 +34,8 @@
       "item4": "<strong>Variante</strong> — definida via prop <code>variant</code>: default, secondary, destructive ou outline.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>"
+        "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>",
+        "angular": "<span ndsBadge variant=\"default\">  <!-- Container inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Ícone opcional, aria-hidden -->\n  Texto                            <!-- Rótulo curto -->\n</span>"
       }
     },
     "usage": {
@@ -437,7 +438,8 @@
       "item4": "<strong>Variant</strong> — set via the <code>variant</code> prop: default, secondary, destructive, or outline.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>"
+        "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>",
+        "angular": "<span ndsBadge variant=\"default\">  <!-- inline-flex container -->\n  <svg ndsBadgeIcon></svg>         <!-- Optional icon, aria-hidden -->\n  Texto                            <!-- Short label -->\n</span>"
       }
     },
     "usage": {
@@ -840,7 +842,8 @@
       "item4": "<strong>Variante</strong> — definida vía prop <code>variant</code>: default, secondary, destructive u outline.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>"
+        "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>",
+        "angular": "<span ndsBadge variant=\"default\">  <!-- Contenedor inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Icono opcional, aria-hidden -->\n  Texto                            <!-- Etiqueta corta -->\n</span>"
       }
     },
     "usage": {

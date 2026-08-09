@@ -30,7 +30,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Próxima -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -238,7 +239,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+        "react": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "angular": "<!-- routerLink no próprio host: o seletor é de atributo, então o link\n     do Angular Router convive com a diretiva sem wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
     "tokens": {
@@ -456,7 +458,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — decorative indicator (<code>aria-hidden</code>) of omitted pages.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Previous -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Next -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -664,7 +667,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+        "react": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "angular": "<!-- routerLink on the host itself: the selector is attribute-based, so the\n     Angular Router link coexists with the directive without a wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
     "tokens": {
@@ -882,7 +886,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Siguiente -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -1090,7 +1095,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>"
+        "react": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "angular": "<!-- routerLink en el propio host: el selector es de atributo, así que el\n     enlace del Angular Router convive con la directiva sin wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
     "tokens": {

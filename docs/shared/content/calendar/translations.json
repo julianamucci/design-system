@@ -30,7 +30,8 @@
       "item6": "<strong>DayButton</strong> — botão interno da célula; recebe foco por teclado e dispara <code>onSelect</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback com o valor novo */}\n  locale={ptBR}                  {/* react-day-picker/locale */}\n/>"
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback com o valor novo */}\n  locale={ptBR}                  {/* react-day-picker/locale */}\n/>",
+        "angular": "<nds-calendar                    <!-- div[data-slot=\"calendar\"] -->\n  mode=\"single\"                  <!-- single | multiple | range -->\n  [(value)]=\"date\"               <!-- model(): CalendarDate | CalendarDate[] -->\n  locale=\"pt-BR\"                 <!-- @internationalized/date -->\n/>"
       }
     },
     "usage": {
@@ -473,7 +474,8 @@
       "item6": "<strong>DayButton</strong> — cell inner button; receives keyboard focus and fires <code>onSelect</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback with new value */}\n  locale={enUS}                  {/* react-day-picker/locale */}\n/>"
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback with new value */}\n  locale={enUS}                  {/* react-day-picker/locale */}\n/>",
+        "angular": "<nds-calendar                    <!-- div[data-slot=\"calendar\"] -->\n  mode=\"single\"                  <!-- single | multiple | range -->\n  [(value)]=\"date\"               <!-- model(): CalendarDate | CalendarDate[] -->\n  locale=\"pt-BR\"                 <!-- @internationalized/date -->\n/>"
       }
     },
     "usage": {
@@ -916,7 +918,8 @@
       "item6": "<strong>DayButton</strong> — botón interno de la celda; recibe foco por teclado y dispara <code>onSelect</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback con el valor nuevo */}\n  locale={es}                    {/* react-day-picker/locale */}\n/>"
+        "react": "<Calendar                          {/* div[data-slot=\"calendar\"] */}\n  mode=\"single\"                  {/* single | multiple | range */}\n  selected={date}                {/* Date | Date[] | DateRange */}\n  onSelect={setDate}             {/* callback con el valor nuevo */}\n  locale={es}                    {/* react-day-picker/locale */}\n/>",
+        "angular": "<nds-calendar                    <!-- div[data-slot=\"calendar\"] -->\n  mode=\"single\"                  <!-- single | multiple | range -->\n  [(value)]=\"date\"               <!-- model(): CalendarDate | CalendarDate[] -->\n  locale=\"pt-BR\"                 <!-- @internationalized/date -->\n/>"
       }
     },
     "usage": {

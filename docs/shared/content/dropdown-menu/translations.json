@@ -32,7 +32,8 @@
       "item9": "<strong>DropdownMenuShortcut</strong> — exibe atalho de teclado (ex: \"⌘K\") alinhado à direita do item.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "usage": {
@@ -246,7 +247,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<!-- Menu controlado com posicionamento custom -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "tokens": {
@@ -494,7 +496,8 @@
       "item9": "<strong>DropdownMenuShortcut</strong> — displays keyboard shortcut (e.g., \"⌘K\") aligned to the right of the item.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "usage": {
@@ -708,7 +711,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<!-- Controlled menu with custom positioning -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "tokens": {
@@ -956,7 +960,8 @@
       "item9": "<strong>DropdownMenuShortcut</strong> — muestra atajo de teclado (ej: \"⌘K\") alineado a la derecha del item.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "usage": {
@@ -1170,7 +1175,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+        "react": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<!-- Menú controlado con posicionamiento personalizado -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>"
       }
     },
     "tokens": {

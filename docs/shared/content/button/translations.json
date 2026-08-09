@@ -31,7 +31,8 @@
       "item4": "<strong>Slot de composição</strong> — permite renderizar como <code>&lt;a&gt;</code> ou componente de link mantendo os estilos do botão.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícone (opcional) */}\n  Label                     {/* Texto da ação */}\n</Button>"
+        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícone (opcional) */}\n  Label                     {/* Texto da ação */}\n</Button>",
+        "angular": "<button ndsButton>              <!-- Elemento <button> nativo -->\n  <svg ndsButtonIcon kind=\"plus\"></svg>   <!-- Ícone (opcional) -->\n  Label                         <!-- Texto da ação -->\n</button>"
       }
     },
     "usage": {
@@ -478,7 +479,8 @@
       "item4": "<strong>Composition slot</strong> — allows rendering as <code>&lt;a&gt;</code> or a link component while keeping the button styles.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Button>                    {/* <button> element */}\n  <Icon aria-hidden />      {/* Icon (optional) */}\n  Label                     {/* Action text */}\n</Button>"
+        "react": "<Button>                    {/* <button> element */}\n  <Icon aria-hidden />      {/* Icon (optional) */}\n  Label                     {/* Action text */}\n</Button>",
+        "angular": "<button ndsButton>              <!-- Native <button> element -->\n  <svg ndsButtonIcon kind=\"plus\"></svg>   <!-- Icon (optional) -->\n  Label                         <!-- Action text -->\n</button>"
       }
     },
     "usage": {
@@ -925,7 +927,8 @@
       "item4": "<strong>Slot de composición</strong> — permite renderizar como <code>&lt;a&gt;</code> o componente de enlace manteniendo los estilos del botón.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícono (opcional) */}\n  Label                     {/* Texto de la acción */}\n</Button>"
+        "react": "<Button>                    {/* Elemento <button> */}\n  <Icon aria-hidden />      {/* Ícono (opcional) */}\n  Label                     {/* Texto de la acción */}\n</Button>",
+        "angular": "<button ndsButton>              <!-- Elemento <button> nativo -->\n  <svg ndsButtonIcon kind=\"plus\"></svg>   <!-- Icono (opcional) -->\n  Label                         <!-- Texto de la acción -->\n</button>"
       }
     },
     "usage": {

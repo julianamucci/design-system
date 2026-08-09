@@ -26,7 +26,8 @@
       "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- Sobre rdxPreviewCard, o nome do primitivo no Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "usage": {
@@ -235,7 +236,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>"
+        "react": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {
@@ -462,7 +464,8 @@
       "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 followers</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- On rdxPreviewCard, the primitive name in Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "usage": {
@@ -671,7 +674,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>"
+        "react": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- HoverCard with custom delay and positioning -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- content -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {
@@ -898,7 +902,8 @@
       "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+        "react": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"bottom\" align=\"start\">\n    <div className=\"flex gap-3\">\n      <Avatar src=\"/joana.jpg\" />\n      <div>\n        <p className=\"font-medium\">Joana Silva</p>\n        <p className=\"text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- Sobre rdxPreviewCard, el nombre del primitivo en Radix NG -->\n<nds-hover-card>\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"bottom\" align=\"start\">\n    <div class=\"nds-cluster\" data-spacing=\"sm\">\n      <nds-avatar src=\"/joana.jpg\" />\n      <div>\n        <p class=\"nds-font-medium\">Joana Silva</p>\n        <p class=\"nds-text-muted-foreground\">Designer · 142 seguidores</p>\n      </div>\n    </div>\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "usage": {
@@ -1107,7 +1112,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>"
+        "react": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>",
+        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- contenido -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {

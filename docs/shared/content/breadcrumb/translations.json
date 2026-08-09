@@ -33,7 +33,8 @@
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de níveis ocultos. Com rótulo, é anunciado; sem rótulo, fica decorativo — que é o certo quando um gatilho o envolve e já tem o próprio nome.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>",
+        "angular": "<nav ndsBreadcrumb>              <!-- nav aria-label=\"breadcrumb\" -->\n  <ol ndsBreadcrumbList>          <!-- ol -->\n    <li ndsBreadcrumbItem>        <!-- li -->\n      <a ndsBreadcrumbLink href=\"/\"></a>\n    </li>\n    <li ndsBreadcrumbSeparator></li>   <!-- li aria-hidden -->\n    <li ndsBreadcrumbItem>\n      <span ndsBreadcrumbPage></span>  <!-- aria-current=\"page\" -->\n    </li>\n  </ol>\n</nav>"
       }
     },
     "usage": {
@@ -420,7 +421,8 @@
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicator for hidden levels. With a label it is announced; without one it stays decorative — which is right when a trigger wraps it and already carries its own name.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>",
+        "angular": "<nav ndsBreadcrumb>              <!-- nav aria-label=\"breadcrumb\" -->\n  <ol ndsBreadcrumbList>          <!-- ol -->\n    <li ndsBreadcrumbItem>        <!-- li -->\n      <a ndsBreadcrumbLink href=\"/\"></a>\n    </li>\n    <li ndsBreadcrumbSeparator></li>   <!-- li aria-hidden -->\n    <li ndsBreadcrumbItem>\n      <span ndsBreadcrumbPage></span>  <!-- aria-current=\"page\" -->\n    </li>\n  </ol>\n</nav>"
       }
     },
     "usage": {
@@ -807,7 +809,8 @@
       "item7": "<strong>BreadcrumbEllipsis</strong> — indicador de niveles ocultos. Con etiqueta se anuncia; sin ella queda decorativo — que es lo correcto cuando un disparador lo envuelve y ya lleva su propio nombre.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+        "react": "<Breadcrumb>                      {/* nav aria-label=\"breadcrumb\" */}\n  <BreadcrumbList>                {/* ol */}\n    <BreadcrumbItem>              {/* li */}\n      <BreadcrumbLink />          {/* a */}\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />       {/* li aria-hidden */}\n    <BreadcrumbItem>\n      <BreadcrumbPage />          {/* aria-current=\"page\" */}\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>",
+        "angular": "<nav ndsBreadcrumb>              <!-- nav aria-label=\"breadcrumb\" -->\n  <ol ndsBreadcrumbList>          <!-- ol -->\n    <li ndsBreadcrumbItem>        <!-- li -->\n      <a ndsBreadcrumbLink href=\"/\"></a>\n    </li>\n    <li ndsBreadcrumbSeparator></li>   <!-- li aria-hidden -->\n    <li ndsBreadcrumbItem>\n      <span ndsBreadcrumbPage></span>  <!-- aria-current=\"page\" -->\n    </li>\n  </ol>\n</nav>"
       }
     },
     "usage": {

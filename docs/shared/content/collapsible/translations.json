@@ -28,7 +28,8 @@
       "item3": "<strong>CollapsibleContent</strong> — painel expansível. Renderizado como <code>Panel</code> do Base UI com animação de altura.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* conteúdo colapsável */}\n  </CollapsibleContent>\n</Collapsible>"
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* conteúdo colapsável */}\n  </CollapsibleContent>\n</Collapsible>",
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- conteúdo colapsável -->\n  </div>\n</nds-collapsible>"
       }
     },
     "usage": {
@@ -411,7 +412,8 @@
       "item3": "<strong>CollapsibleContent</strong> — expandable panel. Rendered as a Base UI <code>Panel</code> with height animation.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* collapsible content */}\n  </CollapsibleContent>\n</Collapsible>"
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* collapsible content */}\n  </CollapsibleContent>\n</Collapsible>",
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- collapsible content -->\n  </div>\n</nds-collapsible>"
       }
     },
     "usage": {
@@ -794,7 +796,8 @@
       "item3": "<strong>CollapsibleContent</strong> — panel expandible. Renderizado como <code>Panel</code> de Base UI con animación de altura.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* contenido colapsable */}\n  </CollapsibleContent>\n</Collapsible>"
+        "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* contenido colapsable */}\n  </CollapsibleContent>\n</Collapsible>",
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- contenido colapsable -->\n  </div>\n</nds-collapsible>"
       }
     },
     "usage": {

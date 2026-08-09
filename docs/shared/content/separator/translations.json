@@ -26,7 +26,8 @@
       "item3": "<strong>decorative</strong> — quando <code>true</code> aplica <code>role=\"none\"</code> e <code>aria-hidden</code>; quando <code>false</code> usa <code>role=\"separator\"</code> com <code>aria-orientation</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />",
+        "angular": "<div ndsSeparator orientation=\"horizontal\"></div>\n<div ndsSeparator orientation=\"vertical\" [decorative]=\"false\"></div>"
       }
     },
     "usage": {
@@ -192,7 +193,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Customizar cor ou espessura via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+        "react": "// Customizar cor ou espessura via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
+        "angular": "<!-- Customizar cor ou espessura via classe .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
       }
     },
     "tokens": {
@@ -401,7 +403,8 @@
       "item3": "<strong>decorative</strong> — when <code>true</code> applies <code>role=\"none\"</code> and <code>aria-hidden</code>; when <code>false</code> uses <code>role=\"separator\"</code> with <code>aria-orientation</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />",
+        "angular": "<div ndsSeparator orientation=\"horizontal\"></div>\n<div ndsSeparator orientation=\"vertical\" [decorative]=\"false\"></div>"
       }
     },
     "usage": {
@@ -567,7 +570,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Customize color or thickness via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+        "react": "// Customize color or thickness via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
+        "angular": "<!-- Customize color or thickness via .nds-* class -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
       }
     },
     "tokens": {
@@ -776,7 +780,8 @@
       "item3": "<strong>decorative</strong> — cuando es <code>true</code> aplica <code>role=\"none\"</code> y <code>aria-hidden</code>; cuando es <code>false</code> usa <code>role=\"separator\"</code> con <code>aria-orientation</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />"
+        "react": "<Separator orientation=\"horizontal\" />\n<Separator orientation=\"vertical\" decorative={false} />",
+        "angular": "<div ndsSeparator orientation=\"horizontal\"></div>\n<div ndsSeparator orientation=\"vertical\" [decorative]=\"false\"></div>"
       }
     },
     "usage": {
@@ -942,7 +947,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Personalizar color o grosor mediante className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />"
+        "react": "// Personalizar color o grosor mediante className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
+        "angular": "<!-- Personalizar color o grosor con clase .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
       }
     },
     "tokens": {

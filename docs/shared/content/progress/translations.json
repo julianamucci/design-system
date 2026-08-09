@@ -29,7 +29,8 @@
       "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ex: 42%), alinhado à direita.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+        "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
+        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
       }
     },
     "usage": {
@@ -211,7 +212,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>"
+        "react": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>",
+        "angular": "<!-- Cor customizada via classe .nds-* -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Texto acessível customizado -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
       }
     },
     "tokens": {
@@ -433,7 +435,8 @@
       "item5": "<strong>ProgressValue</strong> — optional numeric value (e.g. 42%), aligned to the right.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+        "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
+        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
       }
     },
     "usage": {
@@ -615,7 +618,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>"
+        "react": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>",
+        "angular": "<!-- Custom color via .nds-* class -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Custom accessible text -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
       }
     },
     "tokens": {
@@ -837,7 +841,8 @@
       "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ej. 42%), alineado a la derecha.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>"
+        "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
+        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
       }
     },
     "usage": {
@@ -1019,7 +1024,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>"
+        "react": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>",
+        "angular": "<!-- Color personalizado con clase .nds-* -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Texto accesible personalizado -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
       }
     },
     "tokens": {

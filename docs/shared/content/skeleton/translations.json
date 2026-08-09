@@ -26,7 +26,8 @@
       "item3": "<strong>Container</strong> — wrapper externo recebe <code>aria-busy</code> e <code>aria-label</code>; Skeleton recebe <code>aria-hidden</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<div aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+        "react": "<div aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>",
+        "angular": "<div [attr.aria-busy]=\"isLoading\" aria-label=\"Carregando lista\">\n  <div ndsSkeleton class=\"nds-skeleton-avatar\" aria-hidden=\"true\"></div>\n  <div ndsSkeleton class=\"nds-skeleton-line\" aria-hidden=\"true\"></div>\n</div>"
       }
     },
     "usage": {
@@ -194,7 +195,8 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Customizar forma e dimensão via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+        "react": "// Customizar forma e dimensão via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />",
+        "angular": "<!-- Customizar forma e dimensão via classe .nds-* -->\n<div ndsSkeleton class=\"nds-skeleton-avatar\"></div>\n<div ndsSkeleton class=\"nds-skeleton-line\"></div>\n<div ndsSkeleton class=\"nds-h-full nds-w-full\"></div>"
       }
     },
     "tokens": {
@@ -400,7 +402,8 @@
       "item3": "<strong>Container</strong> — outer wrapper holds <code>aria-busy</code> and <code>aria-label</code>; Skeleton holds <code>aria-hidden</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<div aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+        "react": "<div aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>",
+        "angular": "<div [attr.aria-busy]=\"isLoading\" aria-label=\"Carregando lista\">\n  <div ndsSkeleton class=\"nds-skeleton-avatar\" aria-hidden=\"true\"></div>\n  <div ndsSkeleton class=\"nds-skeleton-line\" aria-hidden=\"true\"></div>\n</div>"
       }
     },
     "usage": {
@@ -568,7 +571,8 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Customize shape and dimension via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+        "react": "// Customize shape and dimension via className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />",
+        "angular": "<!-- Customize shape and size via .nds-* class -->\n<div ndsSkeleton class=\"nds-skeleton-avatar\"></div>\n<div ndsSkeleton class=\"nds-skeleton-line\"></div>\n<div ndsSkeleton class=\"nds-h-full nds-w-full\"></div>"
       }
     },
     "tokens": {
@@ -774,7 +778,8 @@
       "item3": "<strong>Container</strong> — wrapper externo recibe <code>aria-busy</code> y <code>aria-label</code>; Skeleton recibe <code>aria-hidden</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<div aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>"
+        "react": "<div aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" aria-hidden=\"true\" />\n  <Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" aria-hidden=\"true\" />\n</div>",
+        "angular": "<div [attr.aria-busy]=\"isLoading\" aria-label=\"Carregando lista\">\n  <div ndsSkeleton class=\"nds-skeleton-avatar\" aria-hidden=\"true\"></div>\n  <div ndsSkeleton class=\"nds-skeleton-line\" aria-hidden=\"true\"></div>\n</div>"
       }
     },
     "usage": {
@@ -942,7 +947,8 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Personalizar forma y dimensión vía className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />"
+        "react": "// Personalizar forma y dimensión vía className\n<Skeleton className=\"h-12 w-12 rounded-full\" />\n<Skeleton className=\"h-4 w-[250px] motion-reduce:animate-none\" />\n<Skeleton className=\"h-full w-full bg-muted/50\" />",
+        "angular": "<!-- Personalizar forma y tamaño con clase .nds-* -->\n<div ndsSkeleton class=\"nds-skeleton-avatar\"></div>\n<div ndsSkeleton class=\"nds-skeleton-line\"></div>\n<div ndsSkeleton class=\"nds-h-full nds-w-full\"></div>"
       }
     },
     "tokens": {

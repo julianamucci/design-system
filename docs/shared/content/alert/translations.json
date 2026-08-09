@@ -32,7 +32,8 @@
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para o texto principal da mensagem.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>"
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Ícone (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descrição -->\n</div>"
       }
     },
     "usage": {
@@ -452,7 +453,8 @@
       "item4": "<strong>AlertDescription</strong> — <code>&lt;div&gt;</code> element for the primary message text.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>"
+        "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role via input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icon (optional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Title (optional) -->\n  <div ndsAlertDescription></div>  <!-- Description -->\n</div>"
       }
     },
     "usage": {
@@ -872,7 +874,8 @@
       "item4": "<strong>AlertDescription</strong> — elemento <code>&lt;div&gt;</code> para el texto principal del mensaje.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>"
+        "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>",
+        "angular": "<div ndsAlert role=\"status\">   <!-- Contenedor — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icono (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descripción -->\n</div>"
       }
     },
     "usage": {

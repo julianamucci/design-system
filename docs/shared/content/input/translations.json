@@ -37,7 +37,8 @@
       "item4": "<strong>Label (externo)</strong> — rótulo associado via <code>htmlFor</code> ou via <code>FormLabel</code> dentro de <code>FormField</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>"
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>",
+        "angular": "<nds-form-field>\n  <label ndsFormLabel for=\"email\">Email</label>   <!-- Label obrigatório -->\n  <input\n    ndsInput\n    id=\"email\"\n    type=\"email\"                                  <!-- type adequado -->\n    formControlName=\"email\"\n    placeholder=\"ex: joao@empresa.com\"\n  />\n  <p ndsFormDescription>Texto de apoio.</p>\n  <p ndsFormMessage></p>                          <!-- Erro do validador -->\n</nds-form-field>"
       }
     },
     "usage": {
@@ -463,7 +464,8 @@
       "item4": "<strong>Label (external)</strong> — associated via <code>htmlFor</code> or via <code>FormLabel</code> inside <code>FormField</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>"
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>",
+        "angular": "<nds-form-field>\n  <label ndsFormLabel for=\"email\">Email</label>   <!-- Label is required -->\n  <input\n    ndsInput\n    id=\"email\"\n    type=\"email\"                                  <!-- appropriate type -->\n    formControlName=\"email\"\n    placeholder=\"ex: joao@empresa.com\"\n  />\n  <p ndsFormDescription>Texto de apoio.</p>\n  <p ndsFormMessage></p>                          <!-- Validator error -->\n</nds-form-field>"
       }
     },
     "usage": {
@@ -889,7 +891,8 @@
       "item4": "<strong>Label (externo)</strong> — rótulo asociado vía <code>htmlFor</code> o vía <code>FormLabel</code> dentro de <code>FormField</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>"
+        "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>",
+        "angular": "<nds-form-field>\n  <label ndsFormLabel for=\"email\">Email</label>   <!-- Label obligatorio -->\n  <input\n    ndsInput\n    id=\"email\"\n    type=\"email\"                                  <!-- type adecuado -->\n    formControlName=\"email\"\n    placeholder=\"ex: joao@empresa.com\"\n  />\n  <p ndsFormDescription>Texto de apoio.</p>\n  <p ndsFormMessage></p>                          <!-- Error del validador -->\n</nds-form-field>"
       }
     },
     "usage": {
