@@ -93,10 +93,10 @@ armadilhas que o mapa detalha:
 
 ## Etapa 4 — Construir o component set
 
-O arquivo já tem um precedente: a página **Accordion**. Leia as convenções dela
-em [token-mapping.md](./figma-sync-component/token-mapping.md) e siga — uma
-página por componente, frame de documentação, eixo de variante único, movimento
-dentro dos componentes.
+O arquivo já tem um precedente: a página **Badge**. Leia as convenções em
+[token-mapping.md](./figma-sync-component/token-mapping.md) e siga — uma página
+por componente, spec em anotação ancorada (Etapa 5b), eixo de variante único,
+movimento dentro dos componentes.
 
 Em blocos de no máximo 10 operações por chamada de `mcp__claude_ai_Figma__use_figma`:
 
@@ -198,8 +198,8 @@ Regras:
   conteúdo próprio não precisa de nada — herda.
 - **Texto que não é traduzível não vira variável de idioma**: iniciais de avatar,
   contadores (`+3`), siglas. Deixe literal e reporte na Etapa 6.
-- Só texto **dentro** de component set. Frame de documentação da página fica de
-  fora — a coleção é do componente, não da doc.
+- Só texto **dentro** de component set. Texto de spec não entra na coleção: ele
+  vira anotação (Etapa 5b), e anotação não é conteúdo traduzível.
 
 Antes de fechar, rode o detector de propriedade órfã. Ele é barato e pega
 exatamente o defeito que não aparece na tela:
@@ -245,10 +245,58 @@ na variante correspondente.
 
 Não invente estado que o CSS não tem, e não deixe de fora estado que ele tem.
 
+## Etapa 5b — A spec vive em anotação, ancorada no nó
+
+Nada de frame de texto solto na página. A spec vai em **anotação de Dev Mode**
+(`no.annotations`), presa ao nó a que se refere — e, quando existir propriedade
+correspondente, presa também à propriedade (`opacity`, `fills`, `strokes`,
+`padding`, `cornerRadius`, `mainComponent`, `width`…).
+
+O motivo é de leitura por máquina: `get_design_context` devolve cada anotação
+como atributo **no elemento certo** do código de referência
+(`data-<categoria>-annotations`), e instrui explicitamente o leitor a não
+ignorá-la. Frame de texto vira um bloco solto que não se liga a nó nenhum — e
+que envelhece sem ninguém notar, como aconteceu com a lista de variantes do
+Badge.
+
+```js
+const cats = {};
+for (const c of await figma.annotations.getAnnotationCategoriesAsync()) cats[c.label] = c.id;
+
+no.annotations = [{
+  labelMarkdown: 'Soft surface. Alpha from `Opacidade/badge/fundo-semantica`…',
+  properties: [{ type: 'opacity' }, { type: 'fills' }],
+  categoryId: cats['Tokens'],
+}];
+```
+
+Regras:
+
+- **Escreva em inglês.** A anotação é superfície de máquina, lida por quem for
+  portar o componente. `description` de componente continua em pt-BR: essa é a
+  superfície do designer, no painel de assets.
+- **Categorias já criadas**, e o nome vira o nome do atributo no
+  `get_design_context`: `Contract` (azul), `Tokens` (violeta), `Accessibility`
+  (verde), `Authoring trap` (laranja). Reuse; não crie sinônimo.
+- **Sem negrito markdown.** `**x**` volta como `****x****` no atributo, e negrito
+  em volta de trecho em crase sai destruído. Crase sozinha passa limpa — use só
+  ela.
+- **`properties` é validado contra o nó.** `padding` num `COMPONENT_SET` sem
+  auto-layout é erro; esse texto pertence à variante, que tem. Na dúvida, omita
+  `properties`.
+- **Ancore no nó certo, não no set inteiro.** Regra de alfa vai no `badge-bg`;
+  regra do rótulo vai no `label`; eixo de variante vai no set. Quem lê o código
+  de referência recebe cada nota junto do elemento que ela governa.
+- **Anotação registra o "porquê", não o "o quê".** O que dá para ler do nó
+  (cor, raio, padding) já vem no design context. Anote a decisão e a armadilha:
+  por que existe camada em vez de fill, por que não há eixo de estado, o que
+  quebra se alguém vincular a camada em vez da propriedade.
+
 ## Etapa 6 — Confirmar
 
 Reporte: nome e posição do component set, número de variantes, quantas variáveis
-foram vinculadas e quais estados foram modelados.
+foram vinculadas, quais estados foram modelados e quantas anotações ficaram em
+cada categoria.
 
 ---
 
@@ -264,6 +312,9 @@ foram vinculadas e quais estados foram modelados.
   instância — o ícone não liga, e nada acusa até alguém olhar. Reatribua as
   referências no clone e confira ligando a propriedade.
 - **Nunca use nome de camada genérico** — sempre o `data-slot` do código.
+- **Nunca escreva spec em frame de texto** — a spec é anotação ancorada no nó
+  (Etapa 5b). Frame solto não se liga a nó nenhum e não chega a quem lê o
+  componente pelo MCP.
 - Componente com sub-componentes (`Card`, `Dialog`) → um component set por
   sub-componente.
 - Componente sem variantes (`Separator`) → um componente único.

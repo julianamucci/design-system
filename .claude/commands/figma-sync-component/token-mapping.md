@@ -192,8 +192,11 @@ literal.
 A página **Accordion** (`6:2`) é o precedente — siga o que está lá.
 
 - **Uma página por componente**, com o nome do componente.
-- Um frame `<Componente> / Documentação` com a spec em texto: estrutura, slots,
-  variantes, tipografia, medidas e movimento.
+- **A spec vive em anotação de Dev Mode, ancorada no nó a que se refere** — não
+  num frame de texto. Ver "Anotações" na skill (Etapa 5b). O frame
+  `<Componente> / Documentação` é o formato **antigo**: ainda existe em Accordion,
+  Alert, AlertDialog, AspectRatio, Avatar, Breadcrumb e Button, e deve ser
+  migrado quando a página for tocada. O Badge já está migrado e é o precedente.
 - Componentes nomeados por caminho: `Accordion`, `Accordion/Item`,
   `Accordion/Trigger`, `Accordion/Content`. Prefixo `.` marca componente privado
   (`.Accordion/Conteúdo padrão`), ícones em `Icon/*`.
