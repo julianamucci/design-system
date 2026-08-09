@@ -85,7 +85,7 @@ export const Destrutiva: Story = {
       actionLabel: 'Excluir',
       tone: 'destructive',
     }),
-  play: async () => {
+  play: async ({ canvasElement }) => {
     const dialog = await waitForPortal('alertdialog');
     // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
     // no DOM mas ainda conta como invisível. waitFor passa no primeiro tick
@@ -93,6 +93,24 @@ export const Destrutiva: Story = {
     await waitFor(() => expect(dialog).toBeVisible());
     const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
     await expect(action).toHaveClass('nds-button-destructive');
+
+    // O gatilho fica sob aria-hidden/inert com o diálogo aberto, então sai das
+    // queries por role — buscamos pelo slot. Sem esta parte a story verificava
+    // metade do que a própria descrição promete.
+    const trigger = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="alert-dialog-trigger"]',
+    );
+    await expect(trigger).not.toBeNull();
+    await expect(trigger).toHaveTextContent('Excluir conta');
+    await expect(trigger).toHaveClass('nds-button-destructive');
+
+    // O nome acessível do diálogo vem do título: sem ele o leitor anuncia
+    // "diálogo" e nada mais.
+    await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
+
+    // Cancel em outline é a hierarquia: uma ação destrutiva e uma saída neutra.
+    const cancel = within(dialog).getByRole('button', { name: /^Cancelar$/i });
+    await expect(cancel).toHaveClass('nds-button-outline');
   },
 };
 

@@ -398,6 +398,12 @@ export const Controlled: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toBeVisible();
+      // Sem asserção de callback na ABERTURA, e isso é decisão: aqui o gatilho
+      // externo chama `setOpen(true)` direto — o pai já sabe, porque foi ele que
+      // mandou. `onOpenChange` é o componente PEDINDO a mudança, e só dispara na
+      // saída (Escape, clique fora). Medido: exigir a chamada com `true` reprova.
+      // O demo do Vanilla roteia a abertura pelo callback e por isso cobra os
+      // dois sentidos — mesma story, fiação diferente. Catalogado no FIXES-NEEDED.
     });
 
     await step("Escape fecha o diálogo controlado e notifica o pai", async () => {

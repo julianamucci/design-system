@@ -1645,3 +1645,34 @@ nas quatro (`h3` em três, `role="heading" aria-level="3"` no Svelte — o leito
 anuncia igual), `aria-expanded` correto, chevron com `aria-hidden`, contraste do
 gatilho em 19.8:1 e do chevron em 5.74:1, e as oito teclas documentadas
 (Tab, Shift+Tab, Enter, Space, ↓, ↑, Home, End) exercitadas nas quatro.
+
+---
+
+## Alert-dialog — achados da auditoria (2026-08-09)
+
+**RESOLVIDO nesta rodada:** a story `Destrutiva` prometia na própria descrição
+que "Action E trigger usam a variante destructive" e três stacks verificavam só
+o Action — Vanilla com uma única asserção. Vue, Svelte e Vanilla passaram a
+cobrar também o gatilho, o nome acessível do diálogo e o Cancel em outline,
+nivelando pelo React, que era o único completo.
+
+**ABERTO — os demos de `Controlled` estão fiados de formas diferentes.** No
+React o gatilho externo chama `setOpen(true)` direto: o pai já sabe da abertura
+porque foi ele que mandou, e `onOpenChange` só dispara na saída (Escape, clique
+fora) — que é a semântica correta de um componente controlado. O demo do Vanilla
+roteia a ABERTURA pelo callback e por isso cobra os dois sentidos. Mesma story,
+mesmo nome, contratos diferentes. Medido: exigir `toHaveBeenCalledWith(true)` no
+React reprova. Decidir qual fiação é a do design system e alinhar as quatro.
+
+**ABERTO — quatro divergências de cobertura que sobraram** (`Open` 4/11/4/4,
+`Confirmed` 6/4/8/6, `Cancelled` 6/4/9/8, `Playground` 26/37/22/27). Diferente da
+`Destrutiva`, aqui nenhuma stack é placeholder óbvio: são profundidades
+diferentes sobre o mesmo comportamento. Precisa de leitura caso a caso para
+separar "asserção a mais" de "asserção que falta".
+
+**RUÍDO NOVO DO AUDITOR, não do componente:** desde que o `audit.mjs` passou a
+auditar o Angular, todo componente acusa `contract_divergent` para essa stack
+(`angular:0/20`) — o spike ainda não declara contrato. E `dead_lib_in_infra`
+passou a acusar "Radix" na infra, mas agora é menção legítima: o Angular usa
+Radix NG, que É a lib atual daquela stack. As duas regras precisam saber do
+quinto stack.
