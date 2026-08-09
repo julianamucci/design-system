@@ -5,6 +5,8 @@ import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDismissivelStory from './AlertDismissivelStory.svelte';
+import { contrasteNosDoisTemas, descreverFalhas } from '@shared/testing/alert-probe';
+import AlertContrasteStory from './AlertContrasteStory.svelte';
 
 const meta: Meta = {
   parameters: {
@@ -248,5 +250,38 @@ export const DismissibleTeclado: Story = {
     await step('Um alert novo volta ao canvas — a story não fica vazia', async () => {
       await waitFor(() => expect(canvas.getByRole('alert')).toBeVisible());
     });
+  },
+};
+
+/**
+ * As cinco variantes juntas, e a medição é de CONTRASTE.
+ *
+ * As stories por variante conferem a classe e a cor; nenhuma perguntava se o
+ * texto é legível sobre o fundo que a variante pinta. É a pergunta que importa
+ * num componente cuja função é chamar atenção — e a que estava sem resposta no
+ * tema escuro.
+ */
+export const Contraste: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      description: {
+        story:
+          'Título e texto de cada variante medidos contra o fundo composto, no tema claro e no escuro. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',
+      },
+    },
+  },
+  render: () => ({ Component: AlertContrasteStory }),
+  play: async ({ canvasElement }) => {
+    // Contraste é aritmética, não olhômetro: a play calcula a razão entre a cor
+    // do texto e o fundo COMPOSTO (o bg do alert tem alfa, então a cor declarada
+    // não é a que se vê). O tema escuro entra junto porque é metade do produto e
+    // não era medido em lugar nenhum — foi lá que o título do info estava em
+    // 3.19:1, enquanto no claro marcava 6.16.
+    const problemas = contrasteNosDoisTemas(canvasElement);
+    await expect(
+      problemas,
+      problemas.length ? `\n${descreverFalhas(problemas)}\n` : '',
+    ).toEqual([]);
   },
 };

@@ -6,6 +6,7 @@ import { within, expect, fn, userEvent, waitFor } from "storybook/test";
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
+import { contrasteNosDoisTemas, descreverFalhas } from "@shared/testing/alert-probe";
 
 const meta = {
   title: "UI/Alert/Variantes",
@@ -276,5 +277,61 @@ export const DismissibleTeclado: Story = {
     await step("Callback disparado uma única vez", async () => {
       await expect(args.onDismiss).toHaveBeenCalledTimes(1);
     });
+  },
+};
+
+/**
+ * As cinco variantes juntas, e a medição é de CONTRASTE.
+ *
+ * As stories por variante conferem a classe e a cor; nenhuma perguntava se o
+ * texto é legível sobre o fundo que a variante pinta. É a pergunta que importa
+ * num componente cuja função é chamar atenção — e a que estava sem resposta no
+ * tema escuro.
+ */
+export const Contraste: Story = {
+  parameters: {
+    covers: ["accessibility.item3"],
+    docs: {
+      description: {
+        story:
+          "Título e texto de cada variante medidos contra o fundo composto, no tema claro e no escuro. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.",
+      },
+    },
+  },
+  render: () => (
+    <div className="nds-stack" data-spacing="sm">
+      <Alert>
+        <AlertTitle>Título default</AlertTitle>
+        <AlertDescription>Texto corrido da variante default.</AlertDescription>
+      </Alert>
+      <Alert variant="destructive">
+        <AlertTitle>Título destructive</AlertTitle>
+        <AlertDescription>Texto corrido da variante destructive.</AlertDescription>
+      </Alert>
+      <Alert variant="success">
+        <AlertTitle>Título success</AlertTitle>
+        <AlertDescription>Texto corrido da variante success.</AlertDescription>
+      </Alert>
+      <Alert variant="warning">
+        <AlertTitle>Título warning</AlertTitle>
+        <AlertDescription>Texto corrido da variante warning.</AlertDescription>
+      </Alert>
+      <Alert variant="info">
+        <AlertTitle>Título info</AlertTitle>
+        <AlertDescription>Texto corrido da variante info.</AlertDescription>
+      </Alert>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    // Contraste é aritmética, não olhômetro: a play calcula a razão entre a cor
+    // do texto e o fundo COMPOSTO (o bg do alert tem alfa, então a cor declarada
+    // não é a que se vê). O tema escuro entra junto porque é metade do produto e
+    // não era medido em lugar nenhum — foi lá que o título do info estava em
+    // 3.19:1, enquanto no claro marcava 6.16.
+    const problemas = contrasteNosDoisTemas(canvasElement);
+    await expect(
+      problemas,
+      problemas.length ? `\n${descreverFalhas(problemas)}\n` : "",
+    ).toEqual([]);
   },
 };
