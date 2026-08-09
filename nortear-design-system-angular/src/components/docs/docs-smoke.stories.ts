@@ -14,11 +14,12 @@ import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-pa
 import { NdsButtonDocs } from './ButtonDocs';
 import { NdsSeparatorDocs } from './SeparatorDocs';
 import { NdsLabelDocs } from './LabelDocs';
+import { NdsCardDocs } from './CardDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -66,5 +67,10 @@ export const Separator: Story = {
 
 export const Label: Story = {
   render: () => ({ template: '<nds-label-docs />' }),
+  play,
+};
+
+export const Card: Story = {
+  render: () => ({ template: '<nds-card-docs />' }),
   play,
 };
