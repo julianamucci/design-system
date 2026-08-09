@@ -28,7 +28,7 @@ import { join, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
-const STACKS = ['react', 'vue', 'svelte', 'vanilla'];
+const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
 
 const stackDir = (stack) => `nortear-design-system-${stack}`;
 
@@ -151,6 +151,13 @@ function auditSecurity(slug) {
         { name: 'v-html', re: /v-html\s*=\s*"([^"]+)"/g, stacks: ['vue'] },
         { name: '{@html}', re: /\{@html\s+([^}]+)\}/g, stacks: ['svelte'] },
         { name: '.innerHTML=', re: /\.innerHTML\s*=\s*([^;]+);/g, stacks: ['vanilla'] },
+        // Angular: o binding [innerHTML] passa pelo DomSanitizer do framework,
+        // ao contrário dos quatro acima. Exigimos DOMPurify assim mesmo — a
+        // guideline 09 vale para as cinco stacks, e o SAST só reconhece o
+        // sanitizador de taint quando a chamada está no próprio call site.
+        // Sem isto, uma docs page Angular passaria no audit com a chamada
+        // escondida atrás de um computed `safe*` e o SAST reportaria XSS.
+        { name: '[innerHTML]', re: /\[innerHTML\]\s*=\s*"([^"]+)"/g, stacks: ['angular'] },
       ];
       for (const { name, re, stacks } of patterns) {
         if (!stacks.includes(stack)) continue;
@@ -394,7 +401,7 @@ function auditAnalyticsPayloads() {
 // o fix sistêmico (slug derivado da URL + observer sempre montado + demos
 // auto-instrumentadas). Estas regras impedem a regressão daquele fix.
 
-const PAGE_EXT = { react: 'tsx', vue: 'vue', svelte: 'svelte', vanilla: 'ts' };
+const PAGE_EXT = { react: 'tsx', vue: 'vue', svelte: 'svelte', vanilla: 'ts', angular: 'ts' };
 
 function auditAnalyticsInfra() {
   const violations = [];

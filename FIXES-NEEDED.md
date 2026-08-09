@@ -1593,3 +1593,50 @@ que é o que as outras stacks mostram.
 
 Nenhum destes é regressão desta rodada: são anteriores, e ficaram invisíveis
 porque a fumaça só provava que a página montava.
+
+---
+
+## Accordion — achados da sonda (2026-08-09)
+
+Auditoria `/quality accordion`. O determinístico saiu zerado, contrato 17/17 nas
+quatro, cobertura 100/100/100 e as quatro suítes verdes. O que a sonda achou não
+aparece em nenhum desses números.
+
+**1. O painel não é uma região rotulada — em nenhuma das quatro.** O cabeçalho do
+`docs/shared/styles/nds/accordion.css` documenta o contrato como
+`<div class="nds-accordion-content" role="region" aria-labelledby="…">`, e a
+medição diz `role: null` e `aria-labelledby: ausente` nas quatro stacks. O
+docblock promete o que nenhuma entrega.
+
+Decisão pendente, e ela é de produto: o ARIA APG trata `role="region"` no painel
+como OPCIONAL e desaconselha acima de ~6 painéis (proliferação de landmark).
+Ou se implementa nas quatro, ou o docblock deixa de prometer.
+
+**2. `aria-controls` divergente entre as quatro.**
+
+    vanilla  sim / sim      (fechado / aberto)
+    svelte   sim / sim
+    react    não / sim
+    vue      não / não
+
+O do React tem explicação: a lib desmonta o painel fechado, e apontar para um id
+inexistente é violação de ARIA. O do Vue não: os três painéis estão no DOM
+(`conteudos: 3`) e o atributo não aparece em nenhum estado — mesmo o
+`CollapsibleTrigger` do reka, que o `AccordionTrigger` compõe, emitindo
+`aria-controls: contentId`. Falta descobrir por que o id chega vazio; é uma
+medição a mais, não um palpite.
+
+**3. Altura do painel aberto: 24px no Vanilla e no React, 40px no Vue e no
+Svelte.** Mesmo conteúdo, mesma fonte, `padding: 0px` nos quatro — a diferença de
+16px vem de dentro do corpo. Divergência visual real, ainda não rastreada.
+
+**4. `data-state` no conteúdo: ausente no React** (`hidden`, que a lib usa) e
+presente nas outras três. O CSS cobre os dois caminhos e a animação funciona nas
+quatro, então não é defeito hoje — é armadilha para a próxima regra que se
+escrever mirando só `[data-state]`.
+
+**O que a sonda NÃO achou, e vale registrar:** semântica de heading equivalente
+nas quatro (`h3` em três, `role="heading" aria-level="3"` no Svelte — o leitor
+anuncia igual), `aria-expanded` correto, chevron com `aria-hidden`, contraste do
+gatilho em 19.8:1 e do chevron em 5.74:1, e as oito teclas documentadas
+(Tab, Shift+Tab, Enter, Space, ↓, ↑, Home, End) exercitadas nas quatro.
