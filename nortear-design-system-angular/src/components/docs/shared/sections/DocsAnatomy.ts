@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NdsComponentDemo } from '@/components/ComponentDemo';
 import { NdsCodeBlock } from '@/components/ui/code-block';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'nds-docs-anatomy',
@@ -21,10 +20,10 @@ import { sanitizeHtml } from '@/lib/utils';
       <nds-component-demo>
         <div class="nds-stack nds-w-full" data-spacing="md">
           <ol class="nds-stack nds-text-body nds-list-none" data-spacing="sm">
-            @for (item of safeItems(); track $index; let i = $index) {
+            @for (item of items(); track $index; let i = $index) {
               <li class="nds-row nds-list-none" data-spacing="sm" data-align="start">
                 <span class="nds-pill" data-tone="primary">{{ i + 1 }}</span>
-                <span [innerHTML]="item"></span>
+                <span [innerHTML]="DOMPurify.sanitize(item)"></span>
               </li>
             }
           </ol>
@@ -56,5 +55,8 @@ export class NdsDocsAnatomy {
   readonly copyLabel = input<string>('Copiar código');
   readonly copiedLabel = input<string>('Copiado!');
 
-  protected readonly safeItems = computed(() => this.items().map(sanitizeHtml));
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 }

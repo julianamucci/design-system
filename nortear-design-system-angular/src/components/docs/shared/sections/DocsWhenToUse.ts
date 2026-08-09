@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 export interface DocsWhenToUseScenario { s: string; u: string; a: string }
 export interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
@@ -45,8 +44,8 @@ export interface DocsWhenToUseList { title: string; items: string[] }
             class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground"
             data-spacing="sm"
           >
-            @for (item of safeGuidelines(); track $index) {
-              <li [innerHTML]="item"></li>
+            @for (item of guidelines().items; track $index) {
+              <li [innerHTML]="DOMPurify.sanitize(item)"></li>
             }
           </ul>
         </nds-card>
@@ -135,8 +134,8 @@ export interface DocsWhenToUseList { title: string; items: string[] }
               class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed"
               data-spacing="sm"
             >
-              @for (item of safeDo(); track $index) {
-                <li [innerHTML]="item"></li>
+              @for (item of do().items; track $index) {
+                <li [innerHTML]="DOMPurify.sanitize(item)"></li>
               }
             </ul>
           </nds-card>
@@ -152,8 +151,8 @@ export interface DocsWhenToUseList { title: string; items: string[] }
               class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground nds-leading-relaxed"
               data-spacing="sm"
             >
-              @for (item of safeDont(); track $index) {
-                <li [innerHTML]="item"></li>
+              @for (item of dont().items; track $index) {
+                <li [innerHTML]="DOMPurify.sanitize(item)"></li>
               }
             </ul>
           </nds-card>
@@ -170,7 +169,8 @@ export class NdsDocsWhenToUse {
   readonly do = input.required<DocsWhenToUseList>();
   readonly dont = input.required<DocsWhenToUseList>();
 
-  protected readonly safeGuidelines = computed(() => this.guidelines().items.map(sanitizeHtml));
-  protected readonly safeDo = computed(() => this.do().items.map(sanitizeHtml));
-  protected readonly safeDont = computed(() => this.dont().items.map(sanitizeHtml));
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 }

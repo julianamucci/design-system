@@ -11,7 +11,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NdsCard } from '@/components/ui/card';
 import { NdsButton } from '@/components/ui/button';
 import { NdsCodeBlock } from '@/components/ui/code-block';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 export interface DocsVariantItem {
   name: string;
@@ -37,10 +37,10 @@ export interface DocsVariantItem {
     <section [id]="id()">
       <h2 class="nds-section-title">{{ title() }}</h2>
 
-      @if (safeNote(); as n) {
+      @if (note(); as n) {
         <p
           class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-mb-4 nds-leading-relaxed"
-          [innerHTML]="n"
+          [innerHTML]="DOMPurify.sanitize(n)"
         ></p>
       }
 
@@ -48,10 +48,10 @@ export interface DocsVariantItem {
         @for (item of items(); track item.name) {
           <nds-card class="nds-p-4">
             <div>
-              <h3 class="nds-text-body nds-font-semibold nds-m-0" [innerHTML]="safe(item.name)"></h3>
+              <h3 class="nds-text-body nds-font-semibold nds-m-0" [innerHTML]="DOMPurify.sanitize(item.name)"></h3>
               <p
                 class="nds-text-body nds-text-muted-foreground nds-mt-1 nds-leading-relaxed"
-                [innerHTML]="safe(item.description)"
+                [innerHTML]="DOMPurify.sanitize(item.description)"
               ></p>
             </div>
 
@@ -103,13 +103,10 @@ export class NdsDocsVariants {
   // então não há onde guardar estado por item sem espelhar a lista.
   private readonly open = signal(new Set<string>());
 
-  protected readonly safeNote = computed(() =>
-    this.note() ? sanitizeHtml(this.note()) : '',
-  );
-
-  protected safe(html: string): string {
-    return sanitizeHtml(html);
-  }
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 
   protected isOpen(name: string): boolean {
     return this.open().has(name);

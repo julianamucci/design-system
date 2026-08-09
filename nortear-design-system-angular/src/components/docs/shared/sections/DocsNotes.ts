@@ -1,11 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 export interface DocsNoteItem { title: string; content: string }
 
@@ -19,7 +18,7 @@ export interface DocsNoteItem { title: string; content: string }
       <h2 class="nds-section-title">{{ title() }}</h2>
 
       <div class="nds-stack" data-spacing="md">
-        @for (item of safeItems(); track $index; let i = $index) {
+        @for (item of items(); track $index; let i = $index) {
           <!--
             O conteúdo da nota é HTML e pode conter links. Não marcamos cada um:
             o observer global usa .closest('[data-track]'), então o wrapper
@@ -37,7 +36,7 @@ export interface DocsNoteItem { title: string; content: string }
                 <h5 data-slot="alert-title" class="nds-alert-title">{{ item.title }}</h5>
               }
               <div data-slot="alert-description" class="nds-alert-description">
-                <p [innerHTML]="item.content"></p>
+                <p [innerHTML]="DOMPurify.sanitize(item.content)"></p>
               </div>
             </div>
           </div>
@@ -51,9 +50,10 @@ export class NdsDocsNotes {
   readonly items = input.required<DocsNoteItem[]>();
   readonly componentSlug = input<string | undefined>(undefined);
 
-  protected readonly safeItems = computed(() =>
-    this.items().map((item) => ({ title: item.title, content: sanitizeHtml(item.content) })),
-  );
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 
   protected trackId(index: number): string | null {
     const slug = this.componentSlug();

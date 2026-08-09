@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
 import { NdsCodeBlock } from '@/components/ui/code-block';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 export interface DocsPropItem {
   name: string;
@@ -82,10 +81,10 @@ export interface DocsPropsTableDef {
         @if (extensibilityTitle()) {
           <div class="nds-stack" data-spacing="sm">
             <h3 class="nds-text-base nds-font-semibold">{{ extensibilityTitle() }}</h3>
-            @if (safeExtensibilityNotes(); as notes) {
+            @if (extensibilityNotes(); as notes) {
               <div
                 class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
-                [innerHTML]="notes"
+                [innerHTML]="DOMPurify.sanitize(notes)"
               ></div>
             }
             @if (extensibilityCode()) {
@@ -114,7 +113,8 @@ export class NdsDocsProps {
   readonly copyLabel = input<string>('Copiar código');
   readonly copiedLabel = input<string>('Copiado!');
 
-  protected readonly safeExtensibilityNotes = computed(() =>
-    this.extensibilityNotes() ? sanitizeHtml(this.extensibilityNotes()) : '',
-  );
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 }

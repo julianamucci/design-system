@@ -217,9 +217,11 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
       </button>
     </ng-template>
     <ng-template #tplCompActionPair>
+      <!-- Rótulos literais como no Vanilla: são exemplo de composição, não
+           chrome da interface, então não vivem em ui.json. -->
       <span class="nds-cluster" data-spacing="sm">
-        <button ndsButton variant="ghost">{{ tNav('common.cancel') }}</button>
-        <button ndsButton variant="default">{{ tNav('common.save') }}</button>
+        <button ndsButton variant="outline">Cancelar</button>
+        <button ndsButton variant="default">Confirmar</button>
       </span>
     </ng-template>
     <ng-template #tplCompDestructiveIcon>

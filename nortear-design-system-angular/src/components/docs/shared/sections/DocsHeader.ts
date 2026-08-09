@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NdsBadge } from '@/components/ui/badge';
 import { NdsLanguageSwitcher } from '@/components/product/LanguageSwitcher';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 /**
  * Id determinístico do `<h1>` da docs page. O `<main>` do DocsPageLayout aponta
@@ -51,7 +50,7 @@ export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
       @if (installNote()) {
         <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm">
           <span class="nds-cluster" data-spacing="xs">
-            <code class="nds-code-inline" [innerHTML]="safeInstallNote()"></code>
+            <code class="nds-code-inline" [innerHTML]="DOMPurify.sanitize(installNote())"></code>
           </span>
         </div>
       }
@@ -66,5 +65,8 @@ export class NdsDocsHeader {
   readonly installNote = input<string>('');
 
   protected readonly titleId = DOCS_PAGE_TITLE_ID;
-  protected readonly safeInstallNote = computed(() => sanitizeHtml(this.installNote()));
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 }

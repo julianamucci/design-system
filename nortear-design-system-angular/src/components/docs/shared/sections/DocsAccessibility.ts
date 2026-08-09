@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NdsCard } from '@/components/ui/card';
-import { sanitizeHtml } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 
 export interface DocsKeyboardItem { key: string; description: string }
 
@@ -24,15 +23,15 @@ export interface DocsKeyboardItem { key: string; description: string }
         <div class="nds-stack" data-spacing="md">
           <p
             class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
-            [innerHTML]="safeSummary()"
+            [innerHTML]="DOMPurify.sanitize(summary())"
           ></p>
           <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
-            @for (item of safeItems(); track $index) {
-              <li class="nds-leading-relaxed" [innerHTML]="item"></li>
+            @for (item of items(); track $index) {
+              <li class="nds-leading-relaxed" [innerHTML]="DOMPurify.sanitize(item)"></li>
             }
           </ul>
-          @if (safeContrast(); as c) {
-            <p class="nds-text-body nds-leading-relaxed" [innerHTML]="c"></p>
+          @if (contrast(); as c) {
+            <p class="nds-text-body nds-leading-relaxed" [innerHTML]="DOMPurify.sanitize(c)"></p>
           }
         </div>
 
@@ -54,14 +53,14 @@ export interface DocsKeyboardItem { key: string; description: string }
           </div>
         </div>
 
-        @if (safeScreenReaderItems().length > 0) {
+        @if (screenReaderItems().length > 0) {
           <div>
             @if (screenReaderTitle()) {
               <h3 class="nds-text-base nds-font-semibold nds-mb-4">{{ screenReaderTitle() }}</h3>
             }
             <ul class="nds-stack nds-text-body nds-list-disc" data-spacing="sm">
-              @for (item of safeScreenReaderItems(); track $index) {
-                <li class="nds-leading-relaxed" [innerHTML]="item"></li>
+              @for (item of screenReaderItems(); track $index) {
+                <li class="nds-leading-relaxed" [innerHTML]="DOMPurify.sanitize(item)"></li>
               }
             </ul>
           </div>
@@ -86,12 +85,8 @@ export class NdsDocsAccessibility {
   /** Nota de contraste, quando o componente documenta uma. */
   readonly contrast = input<string>('');
 
-  protected readonly safeSummary = computed(() => sanitizeHtml(this.summary()));
-  protected readonly safeItems = computed(() => this.items().map(sanitizeHtml));
-  protected readonly safeContrast = computed(() =>
-    this.contrast() ? sanitizeHtml(this.contrast()) : '',
-  );
-  protected readonly safeScreenReaderItems = computed(() =>
-    this.screenReaderItems().map(sanitizeHtml),
-  );
+  // DOMPurify no escopo do template: a chamada precisa aparecer no próprio
+  // binding [innerHTML] para o SAST reconhecer o sanitizador de taint
+  // (guideline 09). Um computed `safe*` esconderia a chamada do fluxo.
+  protected readonly DOMPurify = DOMPurify;
 }
