@@ -71,6 +71,12 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 
 O script julga forma; esta skill julga **conteúdo**: se a asserção verifica o comportamento certo, se a story demonstra o mesmo caso da docs page, se o texto está correto. Passos abaixo assumem o scan já rodado — não re-detecte o que ele já achou.
 
+**Quando a invocação vem de divergência visual entre stacks** ("no React está
+assim e no Vue assado"), não vá direto ao defeito relatado: rode a SONDA do
+Passo 2f1 primeiro e traga a lista fechada. Corrigir de um em um custa quatro
+suítes por rodada e só revela o que foi apontado — foi assim que o calendar
+consumiu dezesseis commits.
+
 ### Passo 1 — Coletar arquivos em paralelo (1 turno)
 
 **Glob** (4 paralelos): stories de cada stack — `<slug>*.stories.*`
@@ -274,6 +280,57 @@ Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack tes
 | ConteudoRico | 5 | 1 | 1 | 1 | ← divergência: as 3 são placeholder |
 
 Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 4 — a verificação também deve ser.
+
+**2f1. SONDA: meça as quatro de uma vez, antes de corrigir qualquer uma.**
+
+Contar `expect()` (2f) acha teste placeholder, mas não acha o que NENHUMA das
+quatro verifica. Foi o buraco desta skill: no calendar, dezesseis commits
+seguidos corrigiram um defeito por rodada, cada um relatado a olho pelo usuário,
+e a suíte ficou verde o tempo todo. Rótulo de navegação em inglês em três
+stacks, cabeçalho de semana lido em duas e não em outras duas, raio do dia 10
+contra 8 — nada disso tinha asserção, e por isso nada disso aparecia.
+
+Antes de corrigir qualquer divergência relatada, **rode uma sonda**: uma medição
+única, igual nas quatro, cujo resultado é dado e não impressão.
+
+1. **Colhedor compartilhado** em `docs/shared/testing/<slug>-probe.ts`, buscando
+   os elementos pelo contrato `.nds-*`. Onde o contrato não é cumprido o campo
+   vem `null` — e isso É o achado, não falha da medição. Modelo pronto:
+   `docs/shared/testing/calendar-probe.ts`.
+2. **Story temporária por stack** (`<slug>-sonda.stories.*`) renderizando os
+   mesmos cenários com os mesmos dados fixos, e chamando o colhedor.
+3. **Diff campo a campo** entre as quatro. Só o que difere merece leitura.
+4. **Apague as stories da sonda** ao terminar — elas não são produto. O colhedor
+   fica, porque a próxima varredura o reusa.
+
+O que medir, no mínimo:
+
+| Eixo | Campos |
+|---|---|
+| Estrutura | quais classes do contrato existem e quantas; a tag e as classes da raiz e da tabela |
+| Semântica | `role` do container e das células, `aria-label` de cada controle sem texto, `aria-hidden`, o texto visível de rótulos |
+| Geometria | largura da raiz, caixa e raio de cada peça, distância entre blocos |
+| Estado | cor de fundo, cor do texto e raio de CADA estado (escolhido, hoje, fora, desabilitado, extremos e miolo de intervalo) |
+| Alcance do clique | `elementFromPoint` no centro de cada controle |
+
+**Três armadilhas, todas tropeçadas de verdade:**
+
+- **`console.log` não chega ao terminal** — o addon do Storybook instrumenta o
+  console dentro da `play`. O canal que funciona é a exceção:
+  `throw new Error('SONDA::' + stack + '::' + cenario + '::' + JSON.stringify(...))`.
+- **Atributo de presença casa valor `"false"`.** `[data-range-middle]` casa
+  `data-range-middle="false"`, que algumas libs emitem em TODOS os elementos —
+  a sonda mede o primeiro da grade e você relata um defeito que não existe.
+  Aconteceu. Use `[attr]:not([attr="false"])`.
+- **Divergência de nome de classe entre stacks** faz o seletor não casar e o
+  campo vir `null`. Aceite as duas formas no colhedor e registre qual casou:
+  a divergência de vocabulário é, ela própria, o achado mais valioso.
+
+**O que a sonda achou no calendar, e nenhum outro check acharia:** duas famílias
+de classes paralelas para o mesmo componente (logo, duas cópias do CSS, e uma
+sempre atrasada); `aria-label` em três idiomas; contraste 3.12:1 no dia que é ao
+mesmo tempo de fora do mês e escolhido — vivo em três stacks; e três classes
+compartilhadas que só funcionavam com `.nds-button` composto por fora.
 
 **2f2. Cobertura de código — mede o que o contrato não mede**:
 
