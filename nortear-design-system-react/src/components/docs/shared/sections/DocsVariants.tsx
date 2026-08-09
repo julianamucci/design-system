@@ -55,7 +55,7 @@ function VariantCard({ item, componentSlug, language, copyLabel, copiedLabel }: 
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.description) }}
         />
       </div>
-      <div className="nds-cluster" data-justify="center">
+      <div className="nds-cluster" data-justify="center" data-docs-preview="variante">
         {item.preview}
       </div>
       {item.code && (

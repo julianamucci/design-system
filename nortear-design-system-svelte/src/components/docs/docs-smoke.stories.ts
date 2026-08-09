@@ -6,6 +6,7 @@
 // FORA: Icons — catálogo lucide completo estoura o axe/timeout do runner (>4min); excluída por decisão da dona em 2026-07-31
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
+import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 
 import AboutDocs from './AboutDocs.svelte';
 import AccessibilityDocs from './AccessibilityDocs.svelte';
@@ -90,10 +91,25 @@ const page = (Page: unknown) => () => ({ Component: Page as never });
 // Prova mínima de mount: docs pages de componente renderizam <section id>;
 // páginas foundation (FoundationPage) renderizam <section> com o divider —
 // nesta stack elas não têm id, então o seletor cobre as duas anatomias.
-const mounted: Story['play'] = async ({ canvasElement }) => {
+const mounted: Story['play'] = async ({ canvasElement, parameters }) => {
   await expect(
     canvasElement.querySelector('section[id], section.nds-docs-section-divider'),
   ).not.toBeNull();
+
+
+  // Contrato de conteúdo, compartilhado pelas quatro stacks. Montar sem crashar
+  // e passar no axe não alcança o que se vê na tela: preview encostado à
+  // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
+  // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
+  // defeito por rodada, a olho, com a suíte verde.
+  const problemas = auditarPaginaDeDocs(canvasElement, {
+    ignorar: (parameters as { contratoDocs?: { ignorar?: Record<string, string> } }).contratoDocs
+      ?.ignorar,
+  });
+  await expect(
+    problemas,
+    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+  ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
   // preview, servido como <html lang="en"> pelo template do Storybook: se o
@@ -128,7 +144,16 @@ export const Breadcrumb: Story = { render: page(BreadcrumbDocs), play: mounted }
 
 export const Button: Story = { render: page(ButtonDocs), play: mounted };
 
-export const Calendar: Story = { render: page(CalendarDocs), play: mounted };
+export const Calendar: Story = { render: page(CalendarDocs), play: mounted,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      valor_indefinido_visivel:
+        'a coluna Padrão da tabela de props imprime a palavra "undefined" em vez de "—". FIXES-NEEDED.',
+      },
+    },
+  },
+};
 
 export const Card: Story = { render: page(CardDocs), play: mounted };
 
@@ -164,7 +189,16 @@ export const DataTable: Story = { render: page(DataTableDocs), play: mounted };
 export const Densities: Story = { render: page(DensitiesDocs), play: mounted };
 
 // axe: scrollable-region-focusable — catalogado no FIXES-NEEDED
-export const Dialog: Story = { render: page(DialogDocs), play: mounted, parameters: { a11y: { test: 'todo' } } };
+export const Dialog: Story = { render: page(DialogDocs), play: mounted, parameters: {
+    a11y: { test: 'todo' },
+    contratoDocs: {
+      ignorar: {
+        preview_vazio:
+          'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 
 export const Drawer: Story = { render: page(DrawerDocs), play: mounted };
 
@@ -185,7 +219,16 @@ export const InputOTP: Story = { render: page(InputOTPDocs), play: mounted };
 // label RESOLVIDA (2026-08-01): o Input do don't "sem associação" ficava sem
 // nome acessível — ganhou aria-label repetindo o texto visível (o anti-padrão
 // exibido, Label sem for/id, continua intacto). Axe é portão.
-export const Label: Story = { render: page(LabelDocs), play: mounted };
+export const Label: Story = { render: page(LabelDocs), play: mounted,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      chave_i18n_visivel:
+        'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 
 export const Menubar: Story = { render: page(MenubarDocs), play: mounted };
 
@@ -197,7 +240,16 @@ export const Pagination: Story = { render: page(PaginationDocs), play: mounted }
 
 // label RESOLVIDA (2026-08-01): o input do variantForm era o único fora de um
 // <label> envolvente — ganhou aria-label com a chave t() do bloco. Axe é portão.
-export const Popover: Story = { render: page(PopoverDocs), play: mounted };
+export const Popover: Story = { render: page(PopoverDocs), play: mounted,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      preview_vazio:
+        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 
 export const Progress: Story = { render: page(ProgressDocs), play: mounted };
 
@@ -230,7 +282,16 @@ export const Skeleton: Story = { render: page(SkeletonDocs), play: mounted };
 
 export const Slider: Story = { render: page(SliderDocs), play: mounted };
 
-export const Sonner: Story = { render: page(SonnerDocs), play: mounted };
+export const Sonner: Story = { render: page(SonnerDocs), play: mounted,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      chave_i18n_visivel:
+        'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 
 export const Spacing: Story = { render: page(SpacingDocs), play: mounted };
 

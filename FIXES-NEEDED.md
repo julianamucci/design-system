@@ -1563,3 +1563,33 @@ Saída: entregar (algum consumidor real) ou remover do `index.ts` junto do
 arquivo. Fica registrado em vez de resolvido aqui porque é anterior ao
 `RangeCalendar` e o `export_sem_story` não o pega — ele é exportado pelo
 barril, então o auditor o vê referenciado.
+
+---
+
+## Achados do contrato das docs pages (2026-08-09)
+
+O harness de fumaça ganhou uma camada de contrato de conteúdo
+(`docs/shared/testing/docs-page-contract.ts`), e a primeira rodada sobre as 252
+páginas achou 15 defeitos que a suíte não via. Cada um está declarado na story
+correspondente em `docs-smoke.stories.*` via `parameters.contratoDocs.ignorar`,
+com o motivo — some da lista quando for corrigido, não antes.
+
+**`preview_vazio` — 6 páginas** (Vue: Button, DataTable, Dialog, Sheet; Svelte:
+Dialog, Popover). O exemplo é um overlay que monta em portal, então o contêiner
+fica vazio no DOM da página: quem abre a doc vê uma caixa em branco onde deveria
+haver exemplo. Decisão pendente: a docs page mostra o GATILHO (e o overlay abre
+por cima) ou renderiza o conteúdo inline? As quatro stacks precisam da mesma
+resposta.
+
+**`chave_i18n_visivel` — 6 páginas** (Svelte: Label, Sonner; Vanilla: Carousel,
+Chart, CodeBlock, Sonner). A seção renderiza o CAMINHO da chave em vez do texto —
+`states.single.label`, `props.table.config`. Falta a entrada no
+`translations.json`, nos três idiomas. O Carousel do Vanilla tem a tabela de
+estados inteira assim, 12 células.
+
+**`valor_indefinido_visivel` — 2 páginas** (Vue: Sidebar; Svelte: Calendar). A
+coluna Padrão da tabela de props imprime a palavra `undefined` em vez de `—`,
+que é o que as outras stacks mostram.
+
+Nenhum destes é regressão desta rodada: são anteriores, e ficaram invisíveis
+porque a fumaça só provava que a página montava.

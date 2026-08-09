@@ -5,6 +5,6 @@
   const { children }: { children: Snippet } = $props();
 </script>
 
-<Card class="flex items-center justify-center p-4 mt-2 bg-background">
+<Card class="nds-docs-demo" data-docs-preview="demonstracao">
   {@render children()}
 </Card>

@@ -33,7 +33,7 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                       preview em DocsVariants e em ComponentDemo. Sem ele o Card
                       herda a coluna do `.nds-card` e encosta tudo à esquerda —
                       visível em qualquer componente de largura própria. */}
-                  <Card className="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4" data-justify="center">
+                  <Card className="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4" data-justify="center" data-docs-preview="do">
                     {pair.doPreview}
                   </Card>
                   <p className="nds-text-body nds-italic nds-px-1">{pair.doCaption}</p>
@@ -44,7 +44,7 @@ export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
                     <span className="nds-pill" data-tone="destructive">✗</span>
                     <span className="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{pair.dontLabel}</span>
                   </div>
-                  <Card className="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4" data-justify="center">
+                  <Card className="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4" data-justify="center" data-docs-preview="dont">
                     {pair.dontPreview}
                   </Card>
                   <p className="nds-text-body nds-italic nds-px-1">{pair.dontCaption}</p>

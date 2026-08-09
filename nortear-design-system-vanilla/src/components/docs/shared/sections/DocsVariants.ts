@@ -72,6 +72,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
     const previewWrap = document.createElement('div');
     previewWrap.className = 'nds-cluster';
     previewWrap.dataset.justify = 'center';
+    previewWrap.dataset.docsPreview = 'variante';
     previewWrap.appendChild(item.previewFactory());
 
     card.append(info, previewWrap);

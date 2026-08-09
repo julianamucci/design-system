@@ -50,6 +50,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
     // de largura própria.
     const doBox = createCard({ className: 'nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4' });
     doBox.dataset.justify = 'center';
+    doBox.dataset.docsPreview = 'do';
     doBox.appendChild(pair.doPreviewFactory());
     const doCaption = document.createElement('p');
     doCaption.className = 'nds-text-body nds-italic nds-px-1';
@@ -67,6 +68,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
       </div>`;
     const dontBox = createCard({ className: 'nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4' });
     dontBox.dataset.justify = 'center';
+    dontBox.dataset.docsPreview = 'dont';
     dontBox.appendChild(pair.dontPreviewFactory());
     const dontCaption = document.createElement('p');
     dontCaption.className = 'nds-text-body nds-italic nds-px-1';

@@ -2,6 +2,7 @@
 // Fumaça: prova que cada página monta (section[id] presente); axe roda após a play.
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
+import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 
 import AboutDocs from '@/components/docs/AboutDocs.vue';
 import AccessibilityDocs from '@/components/docs/AccessibilityDocs.vue';
@@ -82,8 +83,26 @@ type Story = StoryObj<typeof meta>;
 // Contrato pede section[id]; nesta stack as foundations (FoundationsRenderer,
 // IconsDocs, ThemeColorsDocs) montam <section> SEM id — o seletor cobre os
 // dois casos e continua provando o mount (crash = teste vermelho).
-const smokePlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+const smokePlay = async ({
+  canvasElement,
+  parameters,
+}: {
+  canvasElement: HTMLElement;
+  parameters: { contratoDocs?: { ignorar?: Record<string, string> } };
+}) => {
   await expect(canvasElement.querySelector('section[id], section')).not.toBeNull();
+
+
+  // Contrato de conteúdo, compartilhado pelas quatro stacks. Montar sem crashar
+  // e passar no axe não alcança o que se vê na tela: preview encostado à
+  // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
+  // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
+  // defeito por rodada, a olho, com a suíte verde.
+  const problemas = auditarPaginaDeDocs(canvasElement, { ignorar: parameters.contratoDocs?.ignorar });
+  await expect(
+    problemas,
+    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+  ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
   // preview, servido como <html lang="en"> pelo template do Storybook: se o
@@ -99,8 +118,12 @@ const smokePlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 // ele mede no quadro em que o texto ainda está invisível e reprova por
 // color-contrast: o "1.01 (#fdfdfd sobre #ffffff)" não é contraste ruim, é
 // corrida com a animação. Mesmo tratamento já aplicado no React.
-const settledPlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-  await smokePlay({ canvasElement });
+const settledPlay = async (ctx: {
+  canvasElement: HTMLElement;
+  parameters: { contratoDocs?: { ignorar?: Record<string, string> } };
+}) => {
+  const { canvasElement } = ctx;
+  await smokePlay(ctx);
   await waitFor(
     () => {
       const midFlight = Array.from(
@@ -170,11 +193,27 @@ export const Button: Story = {
   // do CodeBlock (WCAG 2.1.1). Axe é portão.
   render: () => ({ components: { ButtonDocs }, template: '<ButtonDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      preview_vazio:
+        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Calendar: Story = {
   render: () => ({ components: { CalendarDocs }, template: '<CalendarDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      valor_indefinido_visivel:
+        'a coluna Padrão da tabela de props imprime a palavra "undefined" em vez de "—". FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Card: Story = {
@@ -232,6 +271,14 @@ export const CrossStack: Story = {
 export const DataTable: Story = {
   render: () => ({ components: { DataTableDocs }, template: '<DataTableDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      preview_vazio:
+        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Densities: Story = {
@@ -242,6 +289,14 @@ export const Densities: Story = {
 export const Dialog: Story = {
   render: () => ({ components: { DialogDocs }, template: '<DialogDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      preview_vazio:
+        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Drawer: Story = {
@@ -364,11 +419,27 @@ export const Separator: Story = {
 export const Sheet: Story = {
   render: () => ({ components: { SheetDocs }, template: '<SheetDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      preview_vazio:
+        'o exemplo é um overlay que monta em portal — o contêiner fica vazio no DOM da página. Falta decidir se a docs page mostra o gatilho. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Sidebar: Story = {
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: smokePlay,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      valor_indefinido_visivel:
+        'a coluna Padrão da tabela de props imprime a palavra "undefined" em vez de "—". FIXES-NEEDED.',
+      },
+    },
+  },
 };
 
 export const Skeleton: Story = {

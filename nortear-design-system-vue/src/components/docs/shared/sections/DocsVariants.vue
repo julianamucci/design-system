@@ -85,6 +85,7 @@ function trackId(item: DocsVariantItem): string | undefined {
         <div
           class="nds-cluster"
           data-justify="center"
+          data-docs-preview="variante"
         >
           <slot :name="`variant-preview-${i}`" />
         </div>

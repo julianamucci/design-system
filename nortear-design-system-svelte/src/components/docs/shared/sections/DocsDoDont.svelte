@@ -30,7 +30,7 @@
                    preview em DocsVariants e em ComponentDemo. Sem ele o Card
                    herda a coluna do `.nds-card` e encosta tudo à esquerda —
                    visível em qualquer componente de largura própria. -->
-              <Card class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4" data-justify="center">
+              <Card class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4" data-justify="center" data-docs-preview="do">
                 {@render pair.doPreview()}
               </Card>
               <p class="nds-text-body nds-italic nds-px-1">{pair.doCaption}</p>
@@ -41,7 +41,7 @@
                 <span class="nds-pill" data-tone="destructive">✗</span>
                 <span class="nds-text-body nds-font-semibold nds-uppercase nds-tracking-wider">{pair.dontLabel}</span>
               </div>
-              <Card class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4" data-justify="center">
+              <Card class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4" data-justify="center" data-docs-preview="dont">
                 {@render pair.dontPreview()}
               </Card>
               <p class="nds-text-body nds-italic nds-px-1">{pair.dontCaption}</p>

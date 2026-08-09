@@ -60,7 +60,7 @@
           <p class="nds-text-body nds-font-semibold nds-m-0">{item.name}</p>
           <p class="nds-text-body nds-mt-1 nds-leading-relaxed">{@html DOMPurify.sanitize(item.description)}</p>
         </div>
-        <div class="nds-cluster" data-justify="center">
+        <div class="nds-cluster" data-justify="center" data-docs-preview="variante">
           {@render item.preview()}
         </div>
         {#if item.code}

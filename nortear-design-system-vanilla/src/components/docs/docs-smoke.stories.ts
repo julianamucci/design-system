@@ -7,6 +7,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
+import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 import { createAboutDocs } from './AboutDocs';
 import { createAccessibilityDocs } from './AccessibilityDocs';
 import { createAccordionDocs } from './AccordionDocs';
@@ -90,10 +91,25 @@ type Story = StoryObj;
 // rendem <section> SEM id em todas as stacks — só as docs de componente têm
 // section[id]. O fallback .nds-docs-section-divider mantém a prova de mount real
 // sem excluir foundations da fumaça.
-const play: Story['play'] = async ({ canvasElement }) => {
+const play: Story['play'] = async ({ canvasElement, parameters }) => {
   await expect(
     canvasElement.querySelector('section[id], section.nds-docs-section-divider'),
   ).not.toBeNull();
+
+
+  // Contrato de conteúdo, compartilhado pelas quatro stacks. Montar sem crashar
+  // e passar no axe não alcança o que se vê na tela: preview encostado à
+  // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
+  // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
+  // defeito por rodada, a olho, com a suíte verde.
+  const problemas = auditarPaginaDeDocs(canvasElement, {
+    ignorar: (parameters as { contratoDocs?: { ignorar?: Record<string, string> } }).contratoDocs
+      ?.ignorar,
+  });
+  await expect(
+    problemas,
+    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+  ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
   // preview, servido como <html lang="en"> pelo template do Storybook: se o
@@ -142,12 +158,28 @@ export const Card: Story = { render: () => createCardDocs(), play };
 export const Carousel: Story = {
   render: () => createCarouselDocs(),
   play,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+        chave_i18n_visivel:
+          'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 // aria-prohibited-attr RESOLVIDA (2026-08-01): containers de chart rotulados
 // ganharam role="img" — aria-label deixou de cair em <div> genérico. Axe é portão.
 export const Chart: Story = {
   render: () => createChartDocs(),
   play,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+        chave_i18n_visivel:
+          'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
 };
 // aria-toggle-field-name RESOLVIDA (2026-08-01): o checkbox do Nortear é um
 // <div role="checkbox"> — <label htmlFor> não nomeia elemento não-rotulável.
@@ -157,7 +189,16 @@ export const Checkbox: Story = {
   render: () => createCheckboxDocs(),
   play,
 };
-export const CodeBlock: Story = { render: () => createCodeBlockDocs(), play };
+export const CodeBlock: Story = { render: () => createCodeBlockDocs(), play,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      chave_i18n_visivel:
+        'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 export const Collapsible: Story = { render: () => createCollapsibleDocs(), play };
 export const Command: Story = { render: () => createCommandDocs(), play };
 // axe: aria-required-parent (lote de estrutura de menus) — catalogado no
@@ -250,7 +291,16 @@ export const Slider: Story = {
   render: () => createSliderDocs(),
   play,
 };
-export const Sonner: Story = { render: () => createSonnerDocs(), play };
+export const Sonner: Story = { render: () => createSonnerDocs(), play,
+  parameters: {
+    contratoDocs: {
+      ignorar: {
+      chave_i18n_visivel:
+        'a seção renderiza o caminho da chave: falta a entrada no translations.json. FIXES-NEEDED.',
+      },
+    },
+  },
+};
 export const Spacing: Story = { render: () => createSpacingDocs(), play };
 // button-name RESOLVIDA (2026-08-01): o Switch do don't "texto solto" ganhou
 // aria-label via option do factory (string traduzida existente). Axe é portão.

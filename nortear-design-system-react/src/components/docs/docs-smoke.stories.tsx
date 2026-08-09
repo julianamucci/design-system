@@ -5,6 +5,7 @@
 // rules em comentário; página que crasha fica FORA do arquivo, listada aqui.
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
+import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 
 import { AboutDocs } from './AboutDocs';
 import { AccessibilityDocs } from './AccessibilityDocs';
@@ -86,8 +87,22 @@ type Story = StoryObj<typeof meta>;
 // Nota: o contrato pede section[id], mas as 16 páginas Foundations (via
 // FoundationPage/ThemeColors/Icons) renderizam <section> SEM id — seletor
 // relaxado para cobrir todas sem perder a prova de mount (crash = 0 sections).
-const mounted: Story['play'] = async ({ canvasElement }) => {
+const mounted: Story['play'] = async ({ canvasElement, parameters }) => {
   await expect(canvasElement.querySelector('section')).not.toBeNull();
+
+  // Contrato de conteúdo, compartilhado pelas quatro stacks. Montar sem crashar
+  // e passar no axe não alcança o que se vê na tela: preview encostado à
+  // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
+  // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
+  // defeito por rodada, a olho, com a suíte verde.
+  const problemas = auditarPaginaDeDocs(canvasElement, {
+    ignorar: (parameters as { contratoDocs?: { ignorar?: Record<string, string> } }).contratoDocs
+      ?.ignorar,
+  });
+  await expect(
+    problemas,
+    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+  ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do
   // preview, servido como <html lang="en"> pelo template do Storybook: se o

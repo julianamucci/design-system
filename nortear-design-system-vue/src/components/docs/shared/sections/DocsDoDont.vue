@@ -53,6 +53,7 @@ defineProps<{
             <Card
               class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4"
               data-justify="center"
+              data-docs-preview="do"
             >
               <slot :name="`do-preview-${index}`" />
             </Card>
@@ -78,6 +79,7 @@ defineProps<{
             <Card
               class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4"
               data-justify="center"
+              data-docs-preview="dont"
             >
               <slot :name="`dont-preview-${index}`" />
             </Card>

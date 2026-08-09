@@ -332,6 +332,42 @@ sempre atrasada); `aria-label` em três idiomas; contraste 3.12:1 no dia que é 
 mesmo tempo de fora do mês e escolhido — vivo em três stacks; e três classes
 compartilhadas que só funcionavam com `.nds-button` composto por fora.
 
+**2f1b. O contrato das DOCS PAGES roda sozinho — não o reinvente.**
+
+A sonda do 2f1 mede o COMPONENTE nas stories. As docs pages têm harness próprio,
+já ligado nas quatro stacks: `docs/shared/testing/docs-page-contract.ts`, chamado
+pelo `play` de `src/components/docs/docs-smoke.stories.*` — 252 páginas, docs de
+componente e Foundations juntas.
+
+O que ele cobra em toda página: chave de tradução renderizada como texto,
+`undefined`/`NaN` impressos, bloco de código vazio, contêiner de exemplo vazio ou
+fora do centro, salto na hierarquia de títulos, tabela de contrato sem linhas.
+
+Ao mexer em docs page, **rode `npx vitest run docs-smoke`** na stack — é mais
+barato que a suíte do componente e pega o que o olho pegaria. Ao criar seção nova
+que renderiza exemplo, marque o contêiner com `data-docs-preview="<nome>"`: é a
+âncora que o contrato usa, e sem ela a seção nasce fora da verificação — foi o
+que aconteceu com o Do & Don't, que ficou sem centralizar nas quatro stacks ao
+mesmo tempo, com a fumaça verde.
+
+Duas armadilhas medidas na construção deste harness:
+
+- **Qual propriedade centraliza depende da direção do flex.** Em linha é
+  `justify-content`; em coluna é `align-items`. A primeira versão checava só a
+  primeira e aprovava o contêiner errado — o `.nds-card` é coluna.
+- **Regra com falso positivo é regra que alguém desliga.** Casar "palavra.palavra"
+  como chave de i18n pegava `exemplo.tsx` e `toast.error`; a versão boa exige que
+  o primeiro segmento seja um namespace real do `translations.json` e ignora o
+  que está dentro de `code`/`pre`.
+
+Antes de commitar regra nova, **prove que ela reprova quando o defeito volta**:
+remova a correção, rode, veja vermelho, restaure. Regra que nasce verde e nunca
+foi vista falhar não guarda nada.
+
+Dívida conhecida fica DECLARADA na story, com motivo, em
+`parameters.contratoDocs.ignorar` — mesma política do `a11y.test: 'todo'` que o
+arquivo já usava. Exceção sem motivo vira exceção permanente.
+
 **2f2. Cobertura de código — mede o que o contrato não mede**:
 
 Contrato e cobertura respondem perguntas diferentes. O contrato responde "o que
