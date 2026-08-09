@@ -12,12 +12,20 @@
  *           <svg class="nds-accordion-icon">...</svg>
  *         </button>
  *       </h3>
- *       <div class="nds-accordion-content" data-slot="accordion-content"
- *            role="region" aria-labelledby="..." hidden>
+ *       <div class="nds-accordion-content" data-slot="accordion-content" hidden>
  *         <div class="nds-accordion-content-body">Resposta</div>
  *       </div>
  *     </div>
  *   </div>
+ *
+ * SEM `role="region"` e SEM `aria-labelledby` no painel, de propósito. Com o
+ * painel sempre montado (exigência do `hidden="until-found"`, que faz o Ctrl+F
+ * do navegador achar a resposta dentro dele), o role transformaria TODO item
+ * fechado em landmark: medido na docs page, 41 painéis viraram 41 landmarks e os
+ * de mesmo rótulo colidiram no axe (landmark-unique). É a proliferação que a
+ * APG manda evitar — e é por isso que ela trata o role no painel como opcional.
+ * O docblock prometia os dois atributos enquanto nenhuma das quatro stacks os
+ * emitia; quem lesse daqui implementaria o defeito de novo.
  *
  * Tokens: --border, --foreground, --muted-foreground, --ring, --spacing-*
  */

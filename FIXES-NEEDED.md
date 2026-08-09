@@ -1602,15 +1602,13 @@ Auditoria `/quality accordion`. O determinístico saiu zerado, contrato 17/17 na
 quatro, cobertura 100/100/100 e as quatro suítes verdes. O que a sonda achou não
 aparece em nenhum desses números.
 
-**1. O painel não é uma região rotulada — em nenhuma das quatro.** O cabeçalho do
-`docs/shared/styles/nds/accordion.css` documenta o contrato como
-`<div class="nds-accordion-content" role="region" aria-labelledby="…">`, e a
-medição diz `role: null` e `aria-labelledby: ausente` nas quatro stacks. O
-docblock promete o que nenhuma entrega.
-
-Decisão pendente, e ela é de produto: o ARIA APG trata `role="region"` no painel
-como OPCIONAL e desaconselha acima de ~6 painéis (proliferação de landmark).
-Ou se implementa nas quatro, ou o docblock deixa de prometer.
+**1. RESOLVIDO — não era defeito, era o docblock.** As quatro stacks removem
+`role="region"` e `aria-labelledby` DE PROPÓSITO, e três delas já registravam o
+motivo no código: com o painel sempre montado (`hidden="until-found"`), o role
+transforma todo item fechado em landmark — 41 painéis viraram 41 landmarks na
+docs page, com colisão de axe landmark-unique. O defeito era o cabeçalho do
+`accordion.css`, que prometia os dois atributos; foi corrigido para descrever o
+que o produto faz e por quê.
 
 **2. `aria-controls` divergente entre as quatro.**
 
@@ -1623,17 +1621,24 @@ O do React tem explicação: a lib desmonta o painel fechado, e apontar para um 
 inexistente é violação de ARIA. O do Vue não: os três painéis estão no DOM
 (`conteudos: 3`) e o atributo não aparece em nenhum estado — mesmo o
 `CollapsibleTrigger` do reka, que o `AccordionTrigger` compõe, emitindo
-`aria-controls: contentId`. Falta descobrir por que o id chega vazio; é uma
-medição a mais, não um palpite.
+`aria-controls: contentId`.
+
+CAUSA ENCONTRADA: o reka provê `contentId: ''` no contexto do Collapsible e só o
+preenche quando o conteúdo se registra — depois de o gatilho já ter renderizado.
+Tentativa de contornar cunhando um id nosso no `AccordionItem` FALHOU e foi
+revertida: o painel do reka mantém o id próprio, então o `aria-controls` passou
+a apontar para elemento inexistente e o axe reprovou com aria-valid-attr-value —
+pior que não ter o atributo. A saída é fazer o painel aceitar o id de fora, o
+que exige mexer em como o wrapper compõe o `AccordionContent`.
 
 **3. Altura do painel aberto: 24px no Vanilla e no React, 40px no Vue e no
 Svelte.** Mesmo conteúdo, mesma fonte, `padding: 0px` nos quatro — a diferença de
 16px vem de dentro do corpo. Divergência visual real, ainda não rastreada.
 
-**4. `data-state` no conteúdo: ausente no React** (`hidden`, que a lib usa) e
-presente nas outras três. O CSS cobre os dois caminhos e a animação funciona nas
-quatro, então não é defeito hoje — é armadilha para a próxima regra que se
-escrever mirando só `[data-state]`.
+**4. RESOLVIDO — não era defeito, era a sonda.** O CSS compartilhado cobre as
+DUAS convenções explicitamente: `[data-open]`/`[data-closed]` do base-ui e
+`[data-state]` das outras três. A sonda media só `data-state` e por isso acusou
+o React. O colhedor passa a medir o estado de forma agnóstica.
 
 **O que a sonda NÃO achou, e vale registrar:** semântica de heading equivalente
 nas quatro (`h3` em três, `role="heading" aria-level="3"` no Svelte — o leitor

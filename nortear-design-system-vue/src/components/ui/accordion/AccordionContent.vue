@@ -17,8 +17,14 @@ const delegatedProps = reactiveOmit(props, 'class')
     do reka deixa TODO item fechado como landmark. Medido na docs page — 41
     painéis viraram 41 landmarks e os de mesmo rótulo colidiram (axe
     landmark-unique). É a "proliferação de landmarks" que a APG manda evitar, e
-    por isso ela trata o role no painel como opcional. A relação
-    trigger -> conteúdo continua pelo `aria-controls`.
+    por isso ela trata o role no painel como opcional.
+
+    ATENÇÃO: esta stack é a única SEM `aria-controls` no gatilho. O reka provê
+    `contentId: ''` no contexto do Collapsible e só o preenche quando o conteúdo
+    se registra — depois de o gatilho já ter renderizado. Passar um id nosso
+    daqui não resolve: o painel do reka mantém o id próprio, e o `aria-controls`
+    passa a apontar para elemento inexistente (medido: axe
+    aria-valid-attr-value). Catalogado no FIXES-NEEDED.
   -->
   <AccordionContent
     data-slot="accordion-content"

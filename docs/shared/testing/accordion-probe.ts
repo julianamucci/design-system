@@ -87,7 +87,19 @@ export function medirAccordion(raiz: HTMLElement) {
       /** O painel aponta de volta para o gatilho? */
       rotuladoPor: conteudos[0]?.getAttribute('aria-labelledby') ? 'sim' : 'não',
       papelDoConteudo: conteudos[0]?.getAttribute('role') ?? null,
-      estadoDoConteudo: conteudos[0]?.getAttribute('data-state') ?? null,
+      /**
+       * Estado do painel, agnóstico de lib: o base-ui marca `data-open` e
+       * `data-closed`; reka, bits e a factory usam `data-state`. O CSS cobre as
+       * duas convenções, e medir só uma acusava o React de não expor estado.
+       */
+      estadoDoConteudo: (() => {
+        const c = conteudos[0];
+        if (!c) return null;
+        if (c.hasAttribute('data-state')) return c.getAttribute('data-state');
+        if (c.hasAttribute('data-open')) return 'open';
+        if (c.hasAttribute('data-closed')) return 'closed';
+        return null;
+      })(),
       escondidoDoConteudo: conteudos[0]?.hasAttribute('hidden') ? 'sim' : 'não',
       corpoInterno: conteudos[0]?.querySelector('.nds-accordion-content-body') ? 'sim' : 'não',
       estadoDoItem: itens[0]?.getAttribute('data-state') ?? null,
