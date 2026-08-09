@@ -1,0 +1,31 @@
+<meta name="description" content="Nortear Design System - Documentação oficial dos componentes Vanilla TS construídos com Tailwind CSS e Vanilla CSS.">
+<meta name="author" content="Nortear">
+<meta name="keywords" content="design system, vanilla, tailwind, vanilla, components, ui">
+<meta property="og:title" content="Design System — Nortear (Vanilla)">
+<meta property="og:description" content="Documentação oficial dos componentes Vanilla TS do Design System Nortear.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+
+<!-- GA4: o Measurement ID vem de STORYBOOK_GA_MEASUREMENT_ID (substituição %VAR%
+     do Storybook), lida de .env.development / .env.production — arquivos locais,
+     fora do git. Copie .env.example e preencha com a SUA propriedade GA4; sem eles
+     o tracking é no-op (ver BRAND-CUSTOMIZATION.md, Etapa 7 — Analytics).
+     GA4 vive no manager, não no iframe — ver docs/shared/guidelines/07-analytics.md -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=%STORYBOOK_GA_MEASUREMENT_ID%"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '%STORYBOOK_GA_MEASUREMENT_ID%', {
+    send_page_view: false  /* page_view manual enviado por useSeoEffect a cada troca de story */
+  });
+</script>
+
+<!-- Logo da sidebar em largura total — o tema do Storybook limita o brandImage
+     a 150px de largura (max-width !important via emotion); override no manager. -->
+<style>
+  .sidebar-header img {
+    max-width: 100% !important;
+    max-height: none !important;
+  }
+</style>

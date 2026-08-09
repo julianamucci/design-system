@@ -1,0 +1,41 @@
+/*
+ * ─── .ds-docs: customizações pontuais do Storybook ───────────────────────────
+ *
+ * A neutralização do prose-style do emotion-css é feita pela classe oficial
+ * .sb-unstyled aplicada no root da docs page (ver DocsPageLayout.ts). Ela
+ * desliga as 84 regras `.css-XXXX :where(p|h1|table|li|span|...)` que o
+ * @storybook/blocks injeta — todas usam `:not(.sb-unstyled, .sb-unstyled <tag>)`
+ * como saída oficial.
+ *
+ * Por isso este arquivo é mínimo: cobre apenas o que está FORA da subárvore
+ * .sb-unstyled — wrappers do próprio Storybook (.sbdocs-*) no dark mode e
+ * CSS vars de tema internas.
+ */
+
+/* Dark mode: bg/cor que emotion hardcoda em branco nos wrappers externos. */
+.dark .sbdocs-wrapper,
+.dark .sbdocs-content,
+.dark .docs-story {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+.dark .sbdocs-preview {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+.dark .sbdocs-info {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+/* CSS vars internas do Storybook + reset de herança vinda dos wrappers do
+ * @storybook/blocks. Embora .sb-unstyled desligue as regras emotion na
+ * subárvore, os <div> wrappers ANTES do nosso root recebem font-family
+ * "Nunito Sans" e a herança propaga pra baixo. Aqui forçamos a fonte do
+ * projeto no próprio root para cortar essa herança. */
+.ds-docs {
+  font-family: var(--font-family);
+  color: hsl(var(--foreground));
+  --sb-docs-color-text: hsl(var(--foreground));
+  --sb-docs-color-secondary-text: hsl(var(--muted-foreground));
+}

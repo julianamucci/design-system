@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    // Sem `noEmit: true` aqui. O @analogjs/vite-plugin-angular compila cada
+    // arquivo pelo emissor do @angular/compiler-cli; com `noEmit` o emissor não
+    // devolve saída, o plugin considera o arquivo fora do programa e o Angular
+    // cai no fallback JIT — que compila o decorator mas ignora `input()`.
+    // Para checagem de tipos use `tsc --noEmit` na linha de comando.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    // jsx: withAutoDocsTab.ts usa React.createElement sem JSX (mesma decisão
+    // dos outros stacks) — mas `Meta`/blocks do addon-docs trazem tipos JSX.
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["../docs/shared/*"]
+    }
+  },
+  // Angular compiler: templates checados junto com o TS.
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
+  },
+  "include": ["src/**/*.ts", ".storybook/**/*.ts", "vite.config.ts"]
+}

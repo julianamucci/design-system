@@ -1,0 +1,7 @@
+{
+  "buildScriptName": "build-storybook:chromatic",
+  "onlyChanged": true,
+  "projectId": "Project:PENDENTE-CRIAR-PROJETO-CHROMATIC-ANGULAR",
+  "storybookBaseDir": "nortear-design-system-angular",
+  "zip": true
+}

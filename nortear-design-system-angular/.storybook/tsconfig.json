@@ -1,0 +1,13 @@
+{
+  // Tsconfig que o @storybook/angular-vite entrega ao compilador Angular — é o
+  // default do preset (`./.storybook/tsconfig.json`) e o que `main.ts` aponta
+  // explicitamente. `include` cobre `src/` porque é de lá que vêm os
+  // @Component; sem eles no programa, o Angular compilaria por JIT e perderia
+  // os inputs declarados com `input()`.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["../src/**/*.ts", "./**/*.ts"],
+  "exclude": ["../src/**/*.spec.ts"]
+}

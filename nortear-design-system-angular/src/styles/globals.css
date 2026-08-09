@@ -1,0 +1,28 @@
+/* ── Tokens e temas compartilhados entre todos os stacks ─────────────────── */
+@import "@shared/tokens/tokens.css";
+@import "@shared/themes/index.css";
+
+/* ── Componentes standalone .nds-* ───────────────────────────────────────── */
+@import "@shared/styles/nds/index.css";
+
+/* Customizações Storybook Docs */
+@import "./storybook-docs.css";
+
+/* ── Keyframes globais (antes em @theme inline) ──────────────────────────── */
+@keyframes progress-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ── Reset base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  border-color: hsl(var(--border));
+  outline-color: hsl(var(--ring) / 0.5);
+}
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
