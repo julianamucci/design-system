@@ -56,6 +56,8 @@ Se algum dia uma variável aparecer sem `codeSyntax`, o caminho continua servind
 | `z-index` | 7 | `default` |
 | `Elevation` | 4 | `light`, `dark` |
 | `Fonte` | 1 | `default`, `lexend`, `pt-serif`, `lxgw-wenkai` |
+| `Texto` | 54 | `pt-BR`, `en`, `es` |
+| `Opacidade` | 4 | `light`, `dark` |
 
 Os nomes **não** seguem as pastas do export: lá são `Cor`, `Dimensao`, `Raio`,
 `Movimento`, `Elevacao`, `Camada`; aqui são `Color`, `Spacing`, `Radius`,
@@ -73,6 +75,7 @@ não tem arquivo em `figma/Tipografia/`.
 | `Spacing` | `espacamento/`, `altura/`, `tamanho/`, `traco/` |
 | `Tipografia` | `tamanho/`, `escala/`, `peso/`, `entrelinha/`, `espacamento-letra/` |
 | `Motion` | `duracao/`, `curva/`, `deslocamento/` |
+| `Texto`, `Opacidade` | `<slug>/` — o conteúdo é por componente |
 | `Radius`, `Elevation`, `z-index`, `Fonte` | sem prefixo |
 
 `Spacing` guarda mais que espaçamento: `altura/height-*`, `tamanho/size-*` e
@@ -111,6 +114,24 @@ Quando o alfa é do FUNDO de um componente que tem conteúdo (o `destructive` do
 button, `hsl(var(--destructive) / 0.1)`), opacidade de nó no componente apagaria
 o texto junto. Aí o fundo vira uma **camada** absoluta com `STRETCH` nos dois
 eixos, ela leva a opacidade de nó, e o componente fica sem fill.
+
+**A camada de alfa fica ATRÁS do conteúdo.** Ela é o fundo: acima do texto, uma
+camada de 12% tinge o rótulo — e é o texto neutro que sustenta o 4.5:1 que a
+variante semântica promete. `insertChild(0, fundo)` depois de criá-la; a ordem
+correta é `badge-bg`, `badge-border`, ícone, texto.
+
+**Alfa que muda no tema escuro é VARIÁVEL, não número.** O CSS sobe o alfa do
+fundo no `.dark` (badge: 10%→15% e 12%→18%). Opacidade de nó é vinculável
+(`no.setBoundVariable('opacity', v)`), então isso mora na coleção `Opacidade`,
+modos `light`/`dark`, com o mesmo valor que o CSS guarda numa custom property de
+alfa — os dois lados leem o mesmo número em vez de dois números parecidos.
+
+**Variável de escopo `OPACITY` é PORCENTAGEM.** Guardar `0.1` dá 0,1% e apaga o
+fundo; o valor é `10`. Não confie na aparência — leia `no.opacity` de volta
+depois de vincular, porque um fundo quase invisível passa por "sutil".
+
+`Opacidade` é coleção separada de `Color`: para ver o componente no escuro é
+preciso trocar os dois modos. `Elevation` tem a mesma exigência.
 
 **Instância escondida não expõe filhos.** `instancia.children` devolve `[]`
 enquanto `visible === false`, então uma varredura que pinta ícones pula todos os

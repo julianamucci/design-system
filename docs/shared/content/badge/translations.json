@@ -222,11 +222,16 @@
         "background": "Offset do anel de foco",
         "badgeBg": "Fundo — var interna, re-apontada por cada variante",
         "badgeFg": "Texto — var interna",
-        "badgeBorder": "Borda — var interna"
+        "badgeBorder": "Borda — var interna",
+        "warning": "Fundo e borda (variante warning)",
+        "success": "Fundo e borda (variante success)",
+        "info": "Fundo e borda (variante info)",
+        "badgeAlphaBg": "Alfa do fundo nas variantes de fundo suave — sobe no tema escuro",
+        "badgeAlphaBorder": "Alfa da borda nas variantes de fundo suave"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
-        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+        "web": "/* Override escopado — as vars nascem no próprio .nds-badge. */\n.meu-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* Nas variantes de fundo suave o alfa é o knob: a cor vem do token semântico,\n   e a intensidade sai daqui. O tema escuro redeclara só o alfa do fundo. */\n.meu-tema .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
       }
     },
     "accessibility": {
@@ -626,11 +631,16 @@
         "background": "Focus ring offset",
         "badgeBg": "Background — internal var, re-pointed by each variant",
         "badgeFg": "Text — internal var",
-        "badgeBorder": "Border — internal var"
+        "badgeBorder": "Border — internal var",
+        "warning": "Background and border (warning variant)",
+        "success": "Background and border (success variant)",
+        "info": "Background and border (info variant)",
+        "badgeAlphaBg": "Background alpha on the soft-background variants — raised in dark theme",
+        "badgeAlphaBorder": "Border alpha on the soft-background variants"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
-        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+        "web": "/* Scoped override — the vars are born on .nds-badge itself. */\n.my-theme .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* On the soft-background variants the alpha is the knob: the colour comes from\n   the semantic token, the intensity from here. Dark theme redeclares only the\n   background alpha. */\n.my-theme .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
       }
     },
     "accessibility": {
@@ -1030,11 +1040,16 @@
         "background": "Offset del anillo de foco",
         "badgeBg": "Fondo — var interna, reasignada por cada variante",
         "badgeFg": "Texto — var interna",
-        "badgeBorder": "Borde — var interna"
+        "badgeBorder": "Borde — var interna",
+        "warning": "Fondo y borde (variante warning)",
+        "success": "Fondo y borde (variante success)",
+        "info": "Fondo y borde (variante info)",
+        "badgeAlphaBg": "Alfa del fondo en las variantes de fondo suave — sube en el tema oscuro",
+        "badgeAlphaBorder": "Alfa del borde en las variantes de fondo suave"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
-        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}"
+        "web": "/* Override con alcance — las vars nacen en el propio .nds-badge. */\n.mi-tema .nds-badge {\n  --badge-bg: hsl(var(--muted));\n  --badge-fg: hsl(var(--foreground));\n  --badge-border: hsl(var(--border));\n}\n\n/* En las variantes de fondo suave el alfa es la perilla: el color viene del\n   token semántico y la intensidad de aquí. El tema oscuro redeclara solo el\n   alfa del fondo. */\n.mi-tema .nds-badge-warning {\n  --badge-alpha-bg: 0.2;\n  --badge-alpha-border: 0.45;\n}"
       }
     },
     "accessibility": {

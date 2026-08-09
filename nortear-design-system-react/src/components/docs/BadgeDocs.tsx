@@ -510,12 +510,17 @@ const badgeVariants = cva(
           { token: "--secondary-foreground", value: "text-secondary-foreground", description: tContent("tokens.table.secondaryForeground") },
           { token: "--destructive", value: "bg-destructive", description: tContent("tokens.table.destructive") },
           { token: "--destructive-foreground", value: "text-destructive-foreground", description: tContent("tokens.table.destructiveForeground") },
+          { token: "--warning", value: "hsl(var(--warning) / var(--badge-alpha-bg))", description: tContent("tokens.table.warning") },
+          { token: "--success", value: "hsl(var(--success) / var(--badge-alpha-bg))", description: tContent("tokens.table.success") },
+          { token: "--info", value: "hsl(var(--info) / var(--badge-alpha-bg))", description: tContent("tokens.table.info") },
           { token: "--foreground", value: "text-foreground", description: tContent("tokens.table.foreground") },
           { token: "--ring", value: "focus:ring-ring", description: tContent("tokens.table.ring") },
           { token: "--background", value: "focus:ring-offset-background", description: tContent("tokens.table.background") },
           { token: "--badge-bg", value: "hsl(var(--primary))", description: tContent("tokens.table.badgeBg") },
           { token: "--badge-fg", value: "hsl(var(--primary-foreground))", description: tContent("tokens.table.badgeFg") },
           { token: "--badge-border", value: "transparent", description: tContent("tokens.table.badgeBorder") },
+          { token: "--badge-alpha-bg", value: "0.12 · 0.18 no escuro", description: tContent("tokens.table.badgeAlphaBg") },
+          { token: "--badge-alpha-border", value: "0.35", description: tContent("tokens.table.badgeAlphaBorder") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

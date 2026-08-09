@@ -78,14 +78,22 @@
 }
 
 /* Destructive (soft style alinhado ao restante do projeto)
- * WCAG: bg colorido + border colorida + texto foreground (contraste 4.5:1). */
+ * WCAG: bg colorido + border colorida + texto foreground (contraste 4.5:1).
+ *
+ * O alfa mora em `--badge-alpha-bg` / `--badge-alpha-border` porque muda no tema
+ * escuro E porque o Figma o vincula numa variável de opacidade. Com custom
+ * property os dois lados leem o mesmo número; com literal seriam dois números
+ * parecidos, que divergem sem ninguém notar. A substituição de var() acontece no
+ * uso, então redeclarar só o alfa no `.dark` já recalcula `--badge-bg`. */
 .nds-badge-destructive {
-  --badge-bg: hsl(var(--destructive) / 0.1);
+  --badge-alpha-bg: 0.1;
+  --badge-alpha-border: 0.3;
+  --badge-bg: hsl(var(--destructive) / var(--badge-alpha-bg));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--destructive) / 0.3);
+  --badge-border: hsl(var(--destructive) / var(--badge-alpha-border));
 }
 .dark .nds-badge-destructive {
-  --badge-bg: hsl(var(--destructive) / 0.15);
+  --badge-alpha-bg: 0.15;
 }
 .nds-badge-destructive:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
@@ -101,36 +109,42 @@
  * ninguém achava ao procurar por "warning" e que o componente não expunha como
  * variante. Agora são variantes de verdade, e a prioridade escolhe uma delas. */
 .nds-badge-warning {
-  --badge-bg: hsl(var(--warning) / 0.12);
+  --badge-alpha-bg: 0.12;
+  --badge-alpha-border: 0.35;
+  --badge-bg: hsl(var(--warning) / var(--badge-alpha-bg));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--warning) / 0.35);
+  --badge-border: hsl(var(--warning) / var(--badge-alpha-border));
 }
 .dark .nds-badge-warning {
-  --badge-bg: hsl(var(--warning) / 0.18);
+  --badge-alpha-bg: 0.18;
 }
 .nds-badge-warning:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--warning) / 0.4);
 }
 
 .nds-badge-success {
-  --badge-bg: hsl(var(--success) / 0.12);
+  --badge-alpha-bg: 0.12;
+  --badge-alpha-border: 0.35;
+  --badge-bg: hsl(var(--success) / var(--badge-alpha-bg));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--success) / 0.35);
+  --badge-border: hsl(var(--success) / var(--badge-alpha-border));
 }
 .dark .nds-badge-success {
-  --badge-bg: hsl(var(--success) / 0.18);
+  --badge-alpha-bg: 0.18;
 }
 .nds-badge-success:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--success) / 0.4);
 }
 
 .nds-badge-info {
-  --badge-bg: hsl(var(--info) / 0.12);
+  --badge-alpha-bg: 0.12;
+  --badge-alpha-border: 0.35;
+  --badge-bg: hsl(var(--info) / var(--badge-alpha-bg));
   --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--info) / 0.35);
+  --badge-border: hsl(var(--info) / var(--badge-alpha-border));
 }
 .dark .nds-badge-info {
-  --badge-bg: hsl(var(--info) / 0.18);
+  --badge-alpha-bg: 0.18;
 }
 .nds-badge-info:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--info) / 0.4);

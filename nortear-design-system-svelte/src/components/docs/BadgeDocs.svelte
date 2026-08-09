@@ -434,12 +434,17 @@ interface BadgeProps extends HTMLAnchorAttributes {
       { token: '--secondary-foreground',  value: 'text-secondary-foreground',description: $tStore('tokens.table.secondaryForeground')  },
       { token: '--destructive',           value: 'bg-destructive',           description: $tStore('tokens.table.destructive')          },
       { token: '--destructive-foreground',value: 'text-destructive-foreground', description: $tStore('tokens.table.destructiveForeground') },
+      { token: '--warning',               value: 'hsl(var(--warning) / var(--badge-alpha-bg))', description: $tStore('tokens.table.warning') },
+      { token: '--success',               value: 'hsl(var(--success) / var(--badge-alpha-bg))', description: $tStore('tokens.table.success') },
+      { token: '--info',                  value: 'hsl(var(--info) / var(--badge-alpha-bg))',    description: $tStore('tokens.table.info')    },
       { token: '--foreground',            value: 'text-foreground',          description: $tStore('tokens.table.foreground')           },
       { token: '--ring',                  value: 'focus:ring-ring',          description: $tStore('tokens.table.ring')                 },
       { token: '--background',            value: 'focus:ring-offset-background', description: $tStore('tokens.table.background')      },
       { token: '--badge-bg',              value: 'hsl(var(--primary))',      description: $tStore('tokens.table.badgeBg')              },
       { token: '--badge-fg',              value: 'hsl(var(--primary-foreground))', description: $tStore('tokens.table.badgeFg')        },
       { token: '--badge-border',          value: 'transparent',              description: $tStore('tokens.table.badgeBorder')          },
+      { token: '--badge-alpha-bg',        value: '0.12 · 0.18 no escuro',    description: $tStore('tokens.table.badgeAlphaBg')         },
+      { token: '--badge-alpha-border',    value: '0.35',                     description: $tStore('tokens.table.badgeAlphaBorder')     },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
