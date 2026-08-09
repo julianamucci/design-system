@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { NdsButton, NdsButtonIcon, type ButtonVariant, type ButtonSize } from './button';
+import { NdsButtonDocs } from '@/components/docs/ButtonDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -25,6 +27,7 @@ const meta: Meta<ButtonArgs> = {
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: {
     design: figmaDesign('button'),
+    docs: { page: withAutoDocsTab(NdsButtonDocs) },
   },
   argTypes: {
     variant: {

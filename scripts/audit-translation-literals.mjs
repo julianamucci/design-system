@@ -36,8 +36,8 @@ const wants = (section) => !ONLY || ONLY === section;
 
 // Espelha `STACKS` / `WEB_STACKS` de docs/shared/primitives/code-variants.ts.
 // Duplicado de propósito: este script é Node puro e não carrega TS.
-const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'flutter'];
-const WEB_STACKS = ['react', 'vue', 'svelte', 'vanilla'];
+const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular', 'flutter'];
+const WEB_STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
 
 // Chaves cujo valor é snippet de código. Só o sufixo `Code` — o regex antigo
 // era largo (`^structure[A-Z]|^extensibility|^customization`) e isentava prosa:

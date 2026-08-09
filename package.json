@@ -12,6 +12,7 @@
     "dev:vue": "npm run dev --prefix nortear-design-system-vue",
     "dev:svelte": "npm run dev --prefix nortear-design-system-svelte",
     "dev:vanilla": "npm run dev --prefix nortear-design-system-vanilla",
+    "storybook:angular": "npm run storybook --prefix nortear-design-system-angular",
     "storybook:react": "npm run storybook --prefix nortear-design-system-react",
     "storybook:vue": "npm run storybook --prefix nortear-design-system-vue",
     "storybook:svelte": "npm run storybook --prefix nortear-design-system-svelte",
@@ -20,6 +21,7 @@
     "chromatic:vue": "npm run chromatic --prefix nortear-design-system-vue",
     "chromatic:svelte": "npm run chromatic --prefix nortear-design-system-svelte",
     "chromatic:vanilla": "npm run chromatic --prefix nortear-design-system-vanilla",
+    "chromatic:angular": "npm run chromatic --prefix nortear-design-system-angular",
     "chromatic:all": "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla",
     "prepare": "husky"
   },

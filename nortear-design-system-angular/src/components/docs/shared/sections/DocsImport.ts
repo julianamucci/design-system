@@ -16,9 +16,9 @@ import { NdsCodeBlock } from '@/components/ui/code-block';
       }
 
       <!--
-        `data-track` no wrapper e não no CodeBlock: o observer resolve o clique
-        por `.closest('[data-track]')`, e assim só o botão de copiar dentro do
-        bloco conta como `docs_code_copy`.
+        data-track no wrapper e não no CodeBlock: o observer resolve o clique
+        por .closest('[data-track]'), e assim só o botão de copiar dentro do
+        bloco conta como docs_code_copy.
       -->
       <div
         data-track="code"

@@ -14,6 +14,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
+import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsButton, NdsButtonIcon, type ButtonVariant, type ButtonSize } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import buttonTranslations from '@shared/content/button/translations.json';
@@ -133,21 +134,30 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
       recebem TemplateRef, então os componentes demonstrados são reais (com
       bindings e change detection), não DOM montado à mão.
     -->
+    <!--
+      Os previews seguem o Vanilla, que é a referência cross-stack: par 1
+      contrasta rótulo de ação com rótulo genérico; par 2 contrasta hierarquia
+      num par de ações. Nenhum dos dois demonstra icon-only sem nome acessível
+      — um "não faça" desse tipo seria uma violação real de axe na página, e a
+      docs page precisa passar no próprio portão que documenta.
+    -->
     <ng-template #tplDoDont1Do>
-      <button ndsButton variant="default">{{ t('doDont.pair1.do') }}</button>
+      <button ndsButton variant="default">Salvar</button>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <button ndsButton variant="default">{{ t('doDont.pair1.dont') }}</button>
+      <button ndsButton variant="default">Clique aqui</button>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <button ndsButton variant="destructive" size="icon" [attr.aria-label]="t('doDont.pair2.do')">
-        <svg ndsButtonIcon kind="trash"></svg>
-      </button>
+      <span class="nds-cluster" data-spacing="xs">
+        <button ndsButton variant="outline">Cancelar</button>
+        <button ndsButton variant="default">Confirmar</button>
+      </span>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <button ndsButton variant="destructive" size="icon">
-        <svg ndsButtonIcon kind="trash"></svg>
-      </button>
+      <span class="nds-cluster" data-spacing="xs">
+        <button ndsButton variant="default">Salvar</button>
+        <button ndsButton variant="default">Enviar</button>
+      </span>
     </ng-template>
 
     <ng-template #tplVarDefault>
@@ -474,12 +484,14 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
         use: t('usage.scenarios.cols.use'),
         alternative: t('usage.scenarios.cols.alternative'),
       },
-      items: rowsFromDict(d, 'usage.scenarios.items', ['s', 'u', 'a']),
+      items: itemsFromDict(d, 'usage.scenarios', ['s', 'u', 'a']),
     };
   });
 
   protected readonly uxWriting = computed(() => {
-    const d = dict();
+    dict();
+    // Linhas nomeadas, não numeradas: esta tabela documenta quatro elementos
+    // fixos do Button, e o conteúdo compartilhado usa a chave do elemento.
     return {
       title: t('usage.uxWriting.title'),
       cols: {
@@ -488,7 +500,12 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
         do: t('usage.uxWriting.table.correct'),
         dont: t('usage.uxWriting.table.avoid'),
       },
-      items: rowsFromDict(d, 'usage.uxWriting.items', ['element', 'rules', 'do', 'dont']),
+      items: ['label', 'ariaLabel', 'iconOnly', 'loading'].map((key) => ({
+        element: t(`usage.uxWriting.table.${key}.name`),
+        rules: t(`usage.uxWriting.table.${key}.format`),
+        do: t(`usage.uxWriting.table.${key}.good`),
+        dont: t(`usage.uxWriting.table.${key}.bad`),
+      })),
     };
   });
 
@@ -518,16 +535,16 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
       {
         doLabel: tNav('common.do'),
         dontLabel: tNav('common.dont'),
-        doCaption: t('doDont.pair1.do'),
-        dontCaption: t('doDont.pair1.dont'),
+        doCaption: toPlainText(t('doDont.pair1.do')),
+        dontCaption: toPlainText(t('doDont.pair1.dont')),
         doPreview: this.tplDoDont1Do(),
         dontPreview: this.tplDoDont1Dont(),
       },
       {
         doLabel: tNav('common.do'),
         dontLabel: tNav('common.dont'),
-        doCaption: t('doDont.pair2.do'),
-        dontCaption: t('doDont.pair2.dont'),
+        doCaption: toPlainText(t('doDont.pair2.do')),
+        dontCaption: toPlainText(t('doDont.pair2.dont')),
         doPreview: this.tplDoDont2Do(),
         dontPreview: this.tplDoDont2Dont(),
       },
@@ -753,13 +770,19 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: t('testes.functional.title'),
+      description: t('testes.functional.description'),
       cols: {
-        action: tNav('common.action'),
-        result: tNav('common.expected'),
+        action: tNav('common.userAction'),
+        result: tNav('common.expectedResult'),
         priority: tNav('common.priority'),
       },
-      items: rowsFromDict(d, 'testes.functional.items', ['action', 'result', 'priority'])
-        .map((r) => ({ ...r, priority: priorityLabel(r.priority) })),
+      // toPlainText/stripHtml: as células são texto puro (interpolação), então
+      // o <code> do conteúdo apareceria como marcação literal na tabela.
+      items: itemsFromDict(d, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
+        action: toPlainText(r.action),
+        result: stripHtml(toPlainText(r.result)),
+        priority: priorityLabel(r.priority),
+      })),
     };
   });
 
@@ -767,12 +790,14 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: t('testes.accessibility.title'),
-      cols: {
-        criterion: tNav('common.criterion'),
-        level: tNav('common.level'),
-        how: tNav('common.how'),
-      },
-      items: rowsFromDict(d, 'testes.accessibility.items', ['criterion', 'level', 'how']),
+      description: t('testes.accessibility.description'),
+      // 'WCAG' literal: é o nome do padrão, não rótulo traduzível.
+      cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
+      items: itemsFromDict(d, 'testes.accessibility', ['criterion', 'level', 'how']).map((r) => ({
+        criterion: toPlainText(r.criterion),
+        level: r.level,
+        how: toPlainText(r.how),
+      })),
     };
   });
 
@@ -780,9 +805,12 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: t('testes.visual.title'),
-      cols: { story: tNav('common.story'), priority: tNav('common.priority') },
-      items: rowsFromDict(d, 'testes.visual.items', ['story', 'priority'])
-        .map((r) => ({ ...r, priority: priorityLabel(r.priority) })),
+      description: t('testes.visual.description'),
+      cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
+      items: itemsFromDict(d, 'testes.visual', ['story', 'priority']).map((r) => ({
+        story: toPlainText(r.story),
+        priority: priorityLabel(r.priority),
+      })),
     };
   });
 
@@ -816,7 +844,12 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
       [...SECTION_IDS],
       (id) => document.getElementById(id),
       (id) => this.activeSection.set(id),
-      (id) => track('docs_section_viewed', { component_name: 'button', section_id: id }),
+      (id) =>
+        track('docs_section_viewed', {
+          component_name: 'button',
+          section_id: id,
+          locale: getLocale(),
+        }),
     );
   }
 
@@ -829,22 +862,22 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
 /**
  * Reconstrói linhas de tabela a partir do dicionário achatado.
  *
- * O `flattenDict` transforma `usage.scenarios.items[0].s` em
- * `usage.scenarios.items.0.s`; `t()` só devolve folha, então uma lista de
- * tamanho variável não sai por chamada nomeada. Percorre por índice até a
- * primeira lacuna — mesma estratégia dos outros stacks para conteúdo em array.
+ * O conteúdo compartilhado numera as linhas como `item1`, `item2`… (chaves
+ * nomeadas, não array), e `t()` só devolve folha — então uma lista de tamanho
+ * variável não sai por chamada nomeada. Percorre até a primeira lacuna, o que
+ * evita repetir na docs page um `[1,2,3,4,5,6]` que envelhece quando o
+ * ux-writer acrescenta uma linha.
  */
-function rowsFromDict<K extends string>(
+function itemsFromDict<K extends string>(
   d: Record<string, string>,
   base: string,
   fields: readonly K[],
 ): Record<K, string>[] {
   const rows: Record<K, string>[] = [];
-  for (let i = 0; ; i++) {
-    const first = d[`${base}.${i}.${fields[0]}`];
-    if (first === undefined) break;
+  for (let i = 1; ; i++) {
+    if (d[`${base}.item${i}.${fields[0]}`] === undefined) break;
     const row = {} as Record<K, string>;
-    for (const f of fields) row[f] = d[`${base}.${i}.${f}`] ?? '';
+    for (const f of fields) row[f] = d[`${base}.item${i}.${f}`] ?? '';
     rows.push(row);
   }
   return rows;

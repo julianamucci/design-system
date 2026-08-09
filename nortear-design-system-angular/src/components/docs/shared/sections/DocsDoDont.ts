@@ -48,7 +48,7 @@ export interface DocsDoDontPair {
                   </span>
                 </div>
                 <!--
-                  `nds-cluster` + data-justify é o mesmo par que centraliza o
+                  nds-cluster + data-justify é o mesmo par que centraliza o
                   preview em DocsVariants e em ComponentDemo. Sem ele o Card
                   herda a coluna do .nds-card e encosta tudo à esquerda.
                 -->

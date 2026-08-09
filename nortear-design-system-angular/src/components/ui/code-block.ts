@@ -37,7 +37,9 @@ const COPIED_RESET_MS = 2000;
   encapsulation: ViewEncapsulation.None,
   host: {
     '[attr.data-slot]': '"code-block"',
-    '[attr.data-numbered]': 'String(showLineNumbers())',
+    // `numbered` e não `String(showLineNumbers())`: o contexto de expressão do
+    // template Angular não expõe globais como String.
+    '[attr.data-numbered]': 'numbered()',
     '[attr.data-language]': 'resolvedLanguage()',
     '[class]': 'hostClass()',
   },
@@ -98,6 +100,7 @@ export class NdsCodeBlock implements OnDestroy {
   protected readonly copied = signal(false);
   private timer: ReturnType<typeof setTimeout> | undefined;
 
+  protected readonly numbered = computed(() => (this.showLineNumbers() ? 'true' : 'false'));
   protected readonly resolvedLanguage = computed(() => resolveLanguage(this.language()));
   protected readonly lines = computed(() => highlightCode(this.code(), this.resolvedLanguage()));
   protected readonly highlighted = computed(() => parseLineRanges(this.highlightLines()));

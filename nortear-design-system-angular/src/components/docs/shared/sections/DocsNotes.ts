@@ -21,8 +21,8 @@ export interface DocsNoteItem { title: string; content: string }
       <div class="nds-stack" data-spacing="md">
         @for (item of safeItems(); track $index; let i = $index) {
           <!--
-            O conteúdo da nota é HTML e pode conter <a>. Não marcamos cada link:
-            o observer global usa `.closest('[data-track]')`, então o wrapper
+            O conteúdo da nota é HTML e pode conter links. Não marcamos cada um:
+            o observer global usa .closest('[data-track]'), então o wrapper
             captura o clique em qualquer link descendente.
           -->
           <div data-track="link" [attr.data-track-id]="trackId(i)">
