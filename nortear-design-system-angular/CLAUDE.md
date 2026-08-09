@@ -112,6 +112,13 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
   `withAutoDocsTab`. O Radix NG é signals-first; não introduza dependência de zone.
 - **Ícones vêm do pacote `lucide`** (agnóstico), não de `lucide-angular` — este
   declara peer `@angular/core: 13.x - 21.x` e conflita com o Angular 22.
+- **Nunca invente classe `.nds-*`.** Prefixo certo não quer dizer que a regra
+  existe: `nds-skeleton-line` e `nds-p-3` têm cara de válidas e não pintam nada.
+  Confira em `docs/shared/styles/nds/` antes de usar; se faltar a regra, crie no
+  CSS compartilhado seguindo o Vanilla. Dimensão que imita a caixa do conteúdo
+  (skeleton, scroll-area) vai em `style`, não em classe — é o que o próprio
+  `skeleton.css` documenta. Portão: `node scripts/audit.mjs <slug>`, regra
+  `unknown_class_reference`.
 - **`DOMPurify.sanitize()` vai no próprio binding `[innerHTML]`**, com
   `protected readonly DOMPurify = DOMPurify` expondo o módulo ao template.
   O `[innerHTML]` do Angular já passa pelo DomSanitizer do framework — a

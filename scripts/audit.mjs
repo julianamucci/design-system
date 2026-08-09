@@ -771,6 +771,7 @@ function auditStoryQuality(slug) {
   violations.push(...auditTextSurfaces(slug));
   violations.push(...auditNonexistentLibProps(slug));
   violations.push(...auditDeadClassInComponent(slug));
+  violations.push(...auditUnknownClass(slug));
   violations.push(...auditExportSemStory(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
@@ -921,6 +922,113 @@ function runtimeTokens() {
     }
   }
   return _runtimeTokens;
+}
+
+/**
+ * Classes `.nds-*` que algum CSS do projeto realmente define.
+ *
+ * `ALLOWED_CLASS_RX` valida só o PREFIXO: qualquer `nds-` passa, exista a regra
+ * ou não. Classe inexistente é no-op silencioso — o TypeScript não vê, o teste
+ * não vê, o axe não vê, e o elemento simplesmente não é pintado. Foi assim que
+ * `nds-skeleton-line` e `nds-skeleton-avatar` entraram em snippet de
+ * documentação: nomes plausíveis, nenhuma regra por trás.
+ *
+ * Lê o CSS compartilhado (fonte do vocabulário) e o de cada stack, porque uma
+ * stack pode definir regra própria antes de promovê-la ao compartilhado.
+ */
+let _ndsClasses = null;
+function ndsClasses() {
+  if (_ndsClasses) return _ndsClasses;
+  _ndsClasses = new Set();
+  const files = [
+    ...walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ];
+  for (const f of files) {
+    const c = readFile(f) || '';
+    for (const m of c.matchAll(/\.(nds-[a-z0-9-]+)/g)) _ndsClasses.add(m[1]);
+  }
+  return _ndsClasses;
+}
+
+/**
+ * Extrai classes `nds-*` de um trecho de código.
+ *
+ * Só o que está dentro de `class="…"` / `className="…"` / `class: '…'`. NOME DE
+ * TAG NÃO É CLASSE: `<nds-dialog>` é seletor de componente do Angular e apareceria
+ * como falso positivo numa varredura solta por `nds-[a-z-]+`.
+ *
+ * Interpolação (`${…}`, `{{ … }}`) é ignorada: o valor não é literal e a classe
+ * final não está no arquivo.
+ */
+function ndsClassesUsadas(content) {
+  const out = new Set();
+  for (const m of content.matchAll(/\bclass(?:Name)?\s*[:=]\s*["'`]([^"'`]+)["'`]/g)) {
+    if (m[1].includes('${') || m[1].includes('{{')) continue;
+    for (const cls of m[1].split(/\s+/)) {
+      if (cls.startsWith('nds-')) out.add(cls);
+    }
+  }
+  return out;
+}
+
+/** Todos os valores string de um JSON, já desescapados, em lista plana. */
+function stringsDoJson(content) {
+  let json;
+  try { json = JSON.parse(content); } catch { return []; }
+  const out = [];
+  const walk = (v) => {
+    if (typeof v === 'string') { out.push(v); return; }
+    if (v && typeof v === 'object') for (const x of Object.values(v)) walk(x);
+  };
+  walk(json);
+  return out;
+}
+
+/**
+ * Classe `nds-*` usada mas não definida em CSS nenhum.
+ *
+ * Varre o conteúdo COMPARTILHADO (os snippets `*Code` do translations.json, que
+ * o consumidor copia) e os arquivos de cada stack. O snippet é o caso mais caro:
+ * ninguém executa um bloco de código de documentação, então o erro só aparece
+ * quando alguém copia e não entende por que nada acontece.
+ */
+function auditUnknownClass(slug) {
+  const violations = [];
+  const conhecidas = ndsClasses();
+
+  const alvos = [
+    { file: join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'), stack: 'shared' },
+    ...STACKS.flatMap((s) => {
+      const { all } = filesForSlug(slug, s);
+      return all.map((file) => ({ file, stack: s }));
+    }),
+  ];
+
+  for (const { file, stack } of alvos) {
+    const content = readFile(file);
+    if (!content) continue;
+    const rel = relative(ROOT, file);
+    // JSON guarda o snippet com aspas escapadas (`class=\"nds-x\"`), então o
+    // regex de atributo não casa no texto cru. Parseia e varre os valores já
+    // desescapados — sem isto o alvo mais caro (o snippet que o consumidor
+    // copia) ficaria justamente de fora.
+    const trechos = rel.endsWith('.json') ? stringsDoJson(content) : [content];
+    const usadas = new Set();
+    for (const trecho of trechos) {
+      for (const cls of ndsClassesUsadas(trecho)) usadas.add(cls);
+    }
+    for (const cls of usadas) {
+      if (conhecidas.has(cls)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: rel, rule: 'unknown_class_reference',
+        message: `classe "${cls}" não é definida por nenhum CSS do projeto — não pinta nada em runtime`,
+      });
+    }
+  }
+
+  return violations;
 }
 
 function auditCssTokenUsage() {

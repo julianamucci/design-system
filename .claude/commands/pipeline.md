@@ -113,7 +113,9 @@ node scripts/audit.mjs --all --json > .pipeline-context/scans.json
 Categorias cobertas:
 - **security**: HTML dinâmico sem sanitize, href sem validação
 - **performance**: wildcard lucide imports, dimensões hardcoded em cva, top-level Date em stories
-- **quality**: seções obrigatórias faltando, a11y.disable, sub-stories sem play, `play_without_assertion`, `noop_assertion`, `coverage_divergence`, `legacy_class_in_story`, vocabulário de lib removida (`dead_lib_reference`), token/classe inexistente (`unknown_token_reference`)
+- **quality**: seções obrigatórias faltando, a11y.disable, sub-stories sem play, `play_without_assertion`, `noop_assertion`, `coverage_divergence`, `legacy_class_in_story`, vocabulário de lib removida (`dead_lib_reference`), token inexistente (`unknown_token_reference`), classe `.nds-*` inexistente (`unknown_class_reference`)
+
+> `legacy_class_in_story` e `unknown_class_reference` parecem a mesma coisa e não são. O primeiro acusa classe FORA do vocabulário `nds-` (resíduo do Tailwind). O segundo acusa classe COM o prefixo certo e sem regra por trás — `nds-p-3`, `nds-skeleton-line`. Prefixo válido passava no primeiro check e não pintava nada em runtime; o TypeScript não vê, o teste não vê, o axe não vê. Cobre também os snippets do `translations.json`, que é o caso mais caro: ninguém executa bloco de documentação, e o erro só aparece quando alguém copia.
 - **analytics**: eventos não tipados em AnalyticsEvents, `@/lib/analytics` importado em UI primitive, `_infra` (mount ausente/condicional, demo sem container), `i18n_text_in_payload`
 
 Exit codes: 0 = limpo, 1 = high, 2 = medium/low.
