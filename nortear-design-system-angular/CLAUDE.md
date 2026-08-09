@@ -31,7 +31,7 @@ npx tsc -p .storybook/tsconfig.json --noEmit   # checagem de tipos
 
 ## Armadilhas específicas deste stack
 
-Três coisas custaram tempo no spike. Nenhuma dá erro vermelho — todas falham
+Quatro coisas já custaram tempo aqui. Nenhuma dá erro vermelho — todas falham
 em silêncio.
 
 ### 1. `noEmit: true` mata o AOT (e o sintoma é NG0303)
@@ -59,7 +59,18 @@ e o compodoc atual não aceita mais `-e`. A etapa falha em todo run, inclusive
 dentro do vitest. Controls e aba API Reference saem de `argTypes` escritos à mão
 — mesma decisão do `docgen: false` no Svelte.
 
-### 3. O contexto de template não tem globais
+### 3. O painel Code mostra o andaime da story, não o uso
+
+O renderer Angular imprime no painel Code o `template` da story literalmente —
+com o `@if` que alterna exemplos e com `[orientation]="orientation"` ligado ao
+arg. É o que a pessoa copia, e não é o que ela deve escrever.
+
+Toda Playground precisa de `parameters.docs.source.transform` devolvendo o uso
+real a partir de `ctx.args` (ver `separator.stories.ts` e `button.stories.ts`).
+**Nenhum teste alcança esse painel**: o `play` roda no canvas, não no
+addon-docs. Só se vê abrindo a story.
+
+### 4. O contexto de template não tem globais
 
 `String(...)`, `Object.keys(...)` e afins não existem numa expressão de
 template Angular (erro em runtime: `ctx.String is not a function`). Exponha um

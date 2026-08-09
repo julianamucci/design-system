@@ -77,8 +77,46 @@ type Story = StoryObj<ButtonArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
+/**
+ * Ver a nota em separator.stories.ts: o painel Code mostra o `template` da
+ * story, com o `@if` que alterna texto e ícone e os bindings ligados aos args.
+ * O `transform` devolve o uso real, com os valores atuais dos controls.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<ButtonArgs> }): string {
+  const { variant = 'default', size = 'default', label = 'Salvar', disabled = false } =
+    ctx.args ?? {};
+  const isIcon = size.startsWith('icon');
+
+  // Só o que difere do default entra no snippet — documentação que repete
+  // valor padrão ensina ruído.
+  const attrs = [
+    variant === 'default' ? '' : `variant="${variant}"`,
+    size === 'default' ? '' : `size="${size}"`,
+    disabled ? '[disabled]="true"' : '',
+    isIcon ? `aria-label="${label || 'Ação'}"` : '',
+  ].filter(Boolean).join(' ');
+
+  const abre = attrs ? `<button ndsButton ${attrs}>` : '<button ndsButton>';
+  const conteudo = isIcon
+    ? '      <svg ndsButtonIcon kind="plus"></svg>'
+    : `      ${label}`;
+
+  return `import { NdsButton${isIcon ? ', NdsButtonIcon' : ''} } from '@/components/ui/button';
+
+@Component({
+  imports: [NdsButton${isIcon ? ', NdsButtonIcon' : ''}],
+  template: \`
+    ${abre}
+${conteudo}
+    </button>
+  \`,
+})
+export class Exemplo {}`;
+}
+
 export const Playground: Story = {
   parameters: {
+    docs: { source: { transform: playgroundSource } },
     covers: [
       'functional.item1',
       'functional.item3',

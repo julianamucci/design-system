@@ -43,9 +43,40 @@ type Story = StoryObj<SeparatorArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
+/**
+ * O painel Code mostra o `template` da story como está escrito — inclusive o
+ * `@if` que alterna os dois exemplos e os bindings ligados aos args
+ * (`[orientation]="orientation"`). Isso é o andaime da story, não o que alguém
+ * escreve para usar um Separator. O `transform` devolve o uso real, com os
+ * valores atuais dos controls resolvidos — mesma decisão do Vanilla, onde um
+ * dump de DOM também não era o que o consumidor escreve.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
+  const { orientation = 'horizontal', decorative = true } = ctx.args ?? {};
+  // `decorative` só aparece quando difere do default — snippet de documentação
+  // não deve ensinar a repetir o valor que já vem por padrão.
+  const attrs = [
+    `orientation="${orientation}"`,
+    decorative ? '' : '[decorative]="false"',
+  ].filter(Boolean).join(' ');
+
+  return `import { NdsSeparator } from '@/components/ui/separator';
+
+@Component({
+  imports: [NdsSeparator],
+  template: \`
+    <p>Seção superior</p>
+    <div ndsSeparator ${attrs}></div>
+    <p>Seção inferior</p>
+  \`,
+})
+export class Exemplo {}`;
+}
+
 export const Playground: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item2', 'accessibility.item1', 'accessibility.item2'],
+    docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
     props: { ...args, isHorizontal: args.orientation === 'horizontal' },

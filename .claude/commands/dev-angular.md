@@ -44,7 +44,7 @@ Sem primitivo no Radix NG: `input-otp` (compor sobre `composite` + `input`), `re
 
 ---
 
-## Três armadilhas que falham em SILÊNCIO
+## Quatro armadilhas que falham em SILÊNCIO
 
 Nenhuma dá erro vermelho. Leia antes de debugar qualquer coisa.
 
@@ -77,6 +77,7 @@ O preset roda `compodoc -p tsconfig.json -e json -d .` e o compodoc atual não a
 Seletor de **atributo** no elemento nativo, não elemento próprio — o markup fica idêntico ao do Vanilla e o CSS `.nds-*` casa sem wrapper:
 
 ```ts
+// Projeta conteúdo → @Component. Classe depende de input → host binding [class].
 @Component({
   selector: 'button[ndsButton], a[ndsButton]',
   standalone: true,
@@ -88,17 +89,28 @@ Seletor de **atributo** no elemento nativo, não elemento próprio — o markup 
 })
 export class NdsButton {
   readonly variant = input<ButtonVariant>('default');
-  readonly class = input<string>('');
-  protected readonly hostClass = computed(() => cn(btnClass(this.variant()), this.class()));
+  protected readonly hostClass = computed(() => btnClass(this.variant(), this.size()));
+}
+
+// Sem template e sem projeção → @Directive. Classe fixa → `class` estático.
+@Directive({
+  selector: 'div[ndsSeparator]',
+  standalone: true,
+  host: { class: 'nds-separator', '[attr.data-orientation]': 'orientation()' },
+})
+export class NdsSeparator {
+  readonly orientation = input<SeparatorOrientation>('horizontal');
 }
 ```
 
 **Regras:**
-1. **`ViewEncapsulation.None` sempre.** Nenhum componente de UI declara `styles` próprios — o visual inteiro vem de `@shared/styles/nds/`, que é global. Encapsulamento só emitiria `_ngcontent-*` inútil.
-2. **`hostDirectives`** aplica o primitivo do Radix NG sem exigir que o call site o importe.
-3. **`data-slot` na raiz** — é por ele que story, teste e ferramenta encontram o componente sem depender de classe.
-4. Classe sem prefixo `nds-` é resíduo do Tailwind (que saiu do projeto) — o audit acusa `legacy_class_in_story`.
-5. Falta uma classe → crie a regra no CSS compartilhado seguindo o **Vanilla**, não outra stack.
+1. **`@Directive` quando não há template.** Só aplica atributos/classes a um elemento existente, sem `<ng-content>` → diretiva. Um `@Component` com `template: ''` cria view e ciclo de detecção para renderizar nada.
+2. **Nunca crie um input `class`.** O Angular já mescla o `class` escrito no elemento com o do componente — nos dois modos (`host: { class }` estático e `[class]` dinâmico). Verificado em teste. Um input `class` + `cn()` é hábito de `className` do React, onde a prop sobrescreve. **Exceção: SVG** — `className` em SVG é `SVGAnimatedString` e não aceita binding de classe, então `[attr.class]` sobrescreve e ali o input é necessário (ver `NdsButtonIcon`).
+3. **`ViewEncapsulation.None` sempre** (em `@Component`). Nenhum componente de UI declara `styles` próprios — o visual inteiro vem de `@shared/styles/nds/`, que é global.
+4. **`hostDirectives` só quando o primitivo contribui.** Se o primitivo do Radix NG apenas guarda estado num signal, sem emitir ARIA nem `data-*`, não componha — dependência sem contribuição, e ainda constrange a API. Foi o caso de `RdxSeparatorRootDirective`. **Confira o `.d.ts` do primitivo antes de importar.**
+5. **`data-slot` na raiz** — é por ele que story, teste e ferramenta encontram o componente sem depender de classe.
+6. Classe sem prefixo `nds-` é resíduo do Tailwind (que saiu do projeto) — o audit acusa `legacy_class_in_story`.
+7. Falta uma classe → crie a regra no CSS compartilhado seguindo o **Vanilla**, não outra stack.
 
 ### Render de Story
 
@@ -124,6 +136,31 @@ export const Playground: Story = {
 ### API Reference sai só de `argTypes`
 
 Com `compodoc: false` não há introspecção. Toda prop precisa estar em `argTypes` — inclusive as sem control (`control: false` + `table.type.summary`). Ver as regras gerais em `_dev-shared.md`.
+
+### Painel Code: `docs.source.transform` é OBRIGATÓRIO na Playground
+
+O renderer Angular mostra no painel Code o `template` da story **como está escrito** — com o `@if` que alterna exemplos e com os bindings ligados aos args (`[orientation]="orientation"`). Isso é o andaime da story, não o que alguém escreve para usar o componente. O painel é o que a pessoa copia.
+
+Declare `parameters.docs.source.transform` na Playground devolvendo o uso real, montado a partir de `ctx.args`:
+
+```ts
+function playgroundSource(_gerado: string, ctx: { args?: Partial<Args> }): string {
+  const { variant = 'default' } = ctx.args ?? {};
+  // Só o que difere do default entra: snippet que repete valor padrão ensina ruído.
+  const attrs = variant === 'default' ? '' : ` variant="${variant}"`;
+  return `import { NdsX } from '@/components/ui/x';
+
+@Component({
+  imports: [NdsX],
+  template: \`<div ndsX${attrs}></div>\`,
+})
+export class Exemplo {}`;
+}
+```
+
+É o mesmo problema que o Vanilla resolve com `transform` (lá o gerado é um dump de DOM). **Nenhum teste alcança este painel** — o `play` roda no canvas, não no addon-docs. Confira abrindo a story e o painel Code, ou rode o verificador do scratchpad contra o `storybook-static`.
+
+Stories de variação não precisam de `transform` quando o template já é o exemplo literal, sem `@if` nem binding de arg.
 
 ### Preview de docs é `TemplateRef`, não factory
 
