@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Kbd } from '@/components/ui/kbd';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
 
 interface DocsTestItem { action: string; result: string; priority: string }
 interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -30,8 +31,9 @@ defineProps<{
   };
 }>();
 
-const priorityClass = (p: string) =>
-  ({ Alta: 'nds-badge-high', Média: 'nds-badge-medium', Baixa: 'nds-badge-low', High: 'nds-badge-high', Medium: 'nds-badge-medium', Low: 'nds-badge-low' } as Record<string, string>)[p] ?? 'nds-badge-outline';
+// A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
+// warning, baixa é info. O mapa antigo listava só português e inglês, então em
+// espanhol "Media" e "Baja" caíam no outline e a prioridade sumia da tabela.
 </script>
 
 <template>
@@ -85,7 +87,7 @@ const priorityClass = (p: string) =>
                   {{ item.result }}
                 </TableCell>
                 <TableCell class="nds-p-2 nds-font-medium">
-                  <Badge :class="priorityClass(item.priority)">
+                  <Badge :variant="varianteDaPrioridade(item.priority)">
                     {{ item.priority }}
                   </Badge>
                 </TableCell>
@@ -171,7 +173,7 @@ const priorityClass = (p: string) =>
                   {{ item.story }}
                 </TableCell>
                 <TableCell class="nds-p-2 nds-font-medium">
-                  <Badge :class="priorityClass(item.priority)">
+                  <Badge :variant="varianteDaPrioridade(item.priority)">
                     {{ item.priority }}
                   </Badge>
                 </TableCell>

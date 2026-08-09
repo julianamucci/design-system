@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
   import { Card } from '@/components/ui/card';
   import { Badge } from '@/components/ui/badge';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -14,8 +15,9 @@
     visual: { title: string; description?: string; cols: { story: string; priority: string }; items: DocsVisualTestItem[] };
   } = $props();
 
-  const priorityClass = (p: string) =>
-    ({ Alta: 'nds-badge-high', Média: 'nds-badge-medium', Baixa: 'nds-badge-low', High: 'nds-badge-high', Medium: 'nds-badge-medium', Low: 'nds-badge-low' } as Record<string, string>)[p] ?? 'nds-badge-outline';
+  // A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
+  // warning, baixa é info. O mapa antigo listava só português e inglês, então em
+  // espanhol "Media" e "Baja" caíam no outline e a prioridade sumia da tabela.
 </script>
 
 <section id="testes">
@@ -43,7 +45,7 @@
                   <TableCell class="nds-p-2">{item.action}</TableCell>
                   <TableCell class="nds-p-2 nds-text-muted-foreground">{item.result}</TableCell>
                   <TableCell class="nds-p-2 nds-font-medium">
-                    <Badge variant="outline" class={priorityClass(item.priority)}>{item.priority}</Badge>
+                    <Badge variant={varianteDaPrioridade(item.priority)}>{item.priority}</Badge>
                   </TableCell>
                 </TableRow>
               {/each}
@@ -90,7 +92,7 @@
                 <TableRow class="nds-border-b nds-hover-bg-muted-faint">
                   <TableCell class="nds-p-2">{item.story}</TableCell>
                   <TableCell class="nds-p-2 nds-font-medium">
-                    <Badge variant="outline" class={priorityClass(item.priority)}>{item.priority}</Badge>
+                    <Badge variant={varianteDaPrioridade(item.priority)}>{item.priority}</Badge>
                   </TableCell>
                 </TableRow>
               {/each}

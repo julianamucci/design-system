@@ -2,6 +2,7 @@ import { createCard } from '@/components/ui/card';
 import { createBadge } from '@/components/ui/badge';
 import { createKbd } from '@/components/ui/kbd';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
+import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
 
 export interface DocsTestItem { action: string; result: string; priority: string }
 export interface DocsA11yTestItem { criterion: string; level: string; how: string }
@@ -24,8 +25,9 @@ function createSubsectionDescription(text: string): HTMLParagraphElement {
   return p;
 }
 
-const priorityBadgeClass = (p: string): string =>
-  ({ Alta: 'nds-badge-high', Média: 'nds-badge-medium', Baixa: 'nds-badge-low', High: 'nds-badge-high', Medium: 'nds-badge-medium', Low: 'nds-badge-low' } as Record<string, string>)[p] ?? 'nds-badge-outline';
+// A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
+// warning, baixa é info. O mapa antigo listava só português e inglês, então em
+// espanhol "Media" e "Baja" caíam no outline e a prioridade sumia da tabela.
 
 export function createDocsTestes(props: DocsTestesProps): HTMLElement {
   const section = document.createElement('section');
@@ -69,7 +71,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     row.appendChild(createTableCell(item.action, 'nds-p-2'));
     row.appendChild(createTableCell(item.result, 'nds-p-2 nds-text-muted-foreground'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
-    priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
+    priorityCell.appendChild(createBadge({ text: item.priority, variant: varianteDaPrioridade(item.priority) }));
     row.appendChild(priorityCell);
     funcTbody.appendChild(row);
   });
@@ -142,7 +144,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
     const row = createTableRow('nds-border-b nds-hover-bg-muted-faint');
     row.appendChild(createTableCell(item.story, 'nds-p-2'));
     const priorityCell = createTableCell('', 'nds-p-2 nds-font-medium');
-    priorityCell.appendChild(createBadge({ text: item.priority, className: priorityBadgeClass(item.priority) }));
+    priorityCell.appendChild(createBadge({ text: item.priority, variant: varianteDaPrioridade(item.priority) }));
     row.appendChild(priorityCell);
     visualTbody.appendChild(row);
   });

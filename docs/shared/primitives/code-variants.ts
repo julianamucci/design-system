@@ -18,11 +18,11 @@
  * seu próprio `i18n.ts`.
  */
 
-export const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'flutter'] as const;
+export const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular', 'flutter'] as const;
 export type Stack = (typeof STACKS)[number];
 
 /** Stacks que rodam em navegador — o que o grupo `web` cobre. */
-export const WEB_STACKS: readonly Stack[] = ['react', 'vue', 'svelte', 'vanilla'];
+export const WEB_STACKS: readonly Stack[] = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
 
 /** Chave de agrupamento aceita além dos nomes de stack. */
 export const VARIANT_GROUPS = ['web'] as const;

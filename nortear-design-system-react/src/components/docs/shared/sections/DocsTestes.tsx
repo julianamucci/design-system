@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { varianteDaPrioridade } from '@shared/primitives/badge-priority';
 import {
   Table,
   TableHeader,
@@ -51,17 +52,12 @@ export interface DocsTestesProps {
   };
 }
 
+// A prioridade escolhe uma VARIANTE do badge, e não uma classe própria: alta é
+// destructive, média é warning e baixa é info. O trio `-high/-medium/-low` que
+// existia no CSS era cor semântica com nome de uso — invisível para quem
+// procurava "warning", e fora da API do componente.
 function PriorityBadge({ priority }: { priority: string }) {
-  if (priority === 'Alta' || priority === 'High') {
-    return <Badge className="nds-badge-high">{priority}</Badge>;
-  }
-  if (priority === 'Média' || priority === 'Medium') {
-    return <Badge className="nds-badge-medium">{priority}</Badge>;
-  }
-  if (priority === 'Baixa' || priority === 'Low') {
-    return <Badge className="nds-badge-low">{priority}</Badge>;
-  }
-  return <Badge className="nds-badge-outline">{priority}</Badge>;
+  return <Badge variant={varianteDaPrioridade(priority)}>{priority}</Badge>;
 }
 
 export function DocsTestes({ title, functional, accessibility, visual }: DocsTestesProps) {

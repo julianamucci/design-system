@@ -38,7 +38,7 @@ export type ButtonVariant =
   | 'ghost'
   | 'link';
 
-export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
+export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
 
 export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 

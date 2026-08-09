@@ -339,6 +339,9 @@ export function createBadgeDocs(): HTMLElement {
         const codeDefault = `const badge = createBadge({ variant: 'default', children: 'Novo' });`;
         const codeSecondary = `const badge = createBadge({ variant: 'secondary', children: 'Beta' });`;
         const codeDestructive = `const badge = createBadge({ variant: 'destructive', children: 'Urgente' });`;
+        const codeWarning = `const el = createBadge({ variant: 'warning', text: 'Vence hoje' });`;
+        const codeSuccess = `const el = createBadge({ variant: 'success', text: 'Aprovado' });`;
+        const codeInfo = `const el = createBadge({ variant: 'info', text: 'Novidade' });`;
         const codeOutline = `const badge = createBadge({ variant: 'outline', children: 'Rascunho' });`;
 
         return createDocsVariants({
@@ -361,6 +364,24 @@ export function createBadgeDocs(): HTMLElement {
               description: stripHtml(t('variants.items.destructive')),
               code: codeDestructive,
               previewFactory: () => buildLabelBadge('destructive', t('demonstration.labels.destructiveLabel')),
+            },
+            {
+              name: 'warning',
+              description: stripHtml(t('variants.items.warning')),
+              code: codeWarning,
+              previewFactory: () => buildLabelBadge('warning', t('demonstration.labels.warningLabel')),
+            },
+            {
+              name: 'success',
+              description: stripHtml(t('variants.items.success')),
+              code: codeSuccess,
+              previewFactory: () => buildLabelBadge('success', t('demonstration.labels.successLabel')),
+            },
+            {
+              name: 'info',
+              description: stripHtml(t('variants.items.info')),
+              code: codeInfo,
+              previewFactory: () => buildLabelBadge('info', t('demonstration.labels.infoLabel')),
             },
             {
               name: 'outline',
@@ -504,7 +525,7 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'propriedades': {
         const interfaceCode = `// createBadge(options)
-export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
+export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
 
 export interface BadgeOptions {
   variant?: BadgeVariant;
@@ -527,7 +548,7 @@ export interface BadgeOptions {
               title: t('props.badgeTitle'),
               cols: propsCols,
               items: [
-                { name: 'variant',   type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
+                { name: 'variant',   type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant')) },
                 { name: 'children',  type: 'string | HTMLElement | Array<string | HTMLElement>',  defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.children')) },
                 { name: 'className', type: 'string',                                               defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
               ],

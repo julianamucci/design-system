@@ -124,6 +124,9 @@ import { CheckCircle2 } from "lucide-react";`;
   const codeDefault = `<Badge variant="default">Novo</Badge>`;
   const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
   const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
+  const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
+  const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
+  const codeInfo = `<Badge variant="info">Novidade</Badge>`;
   const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
   const interfaceCode = `// Badge
@@ -326,6 +329,24 @@ const badgeVariants = cva(
             preview: <Badge variant="destructive">{tContent("demonstration.labels.destructiveLabel")}</Badge>,
           },
           {
+            name: "warning",
+            description: stripHtml(tContent("variants.items.warning")),
+            code: codeWarning,
+            preview: <Badge variant="warning">{tContent("demonstration.labels.warningLabel")}</Badge>,
+          },
+          {
+            name: "success",
+            description: stripHtml(tContent("variants.items.success")),
+            code: codeSuccess,
+            preview: <Badge variant="success">{tContent("demonstration.labels.successLabel")}</Badge>,
+          },
+          {
+            name: "info",
+            description: stripHtml(tContent("variants.items.info")),
+            code: codeInfo,
+            preview: <Badge variant="info">{tContent("demonstration.labels.infoLabel")}</Badge>,
+          },
+          {
             name: "outline",
             description: stripHtml(tContent("variants.items.outline")),
             code: codeOutline,
@@ -447,7 +468,7 @@ const badgeVariants = cva(
             items: [
               {
                 name: "variant",
-                type: '"default" | "secondary" | "destructive" | "outline"',
+                type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"',
                 defaultValue: '"default"',
                 required: "Não",
                 description: toPlainText(tContent("props.table.variant")),

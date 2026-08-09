@@ -94,6 +94,9 @@ import Check from '@lucide/svelte/icons/check';`;
   const codeDefault = `<Badge variant="default">Novo</Badge>`;
   const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
   const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
+  const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
+  const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
+  const codeInfo = `<Badge variant="info">Novidade</Badge>`;
   const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
   const codeWithIcon = `<Badge variant="default">
@@ -126,7 +129,7 @@ import Check from '@lucide/svelte/icons/check';`;
 
   const interfaceCode = `// Badge
 interface BadgeProps extends HTMLAnchorAttributes {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+  variant?: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
   href?: string;
   class?: string;
   children?: Snippet;
@@ -289,6 +292,9 @@ interface BadgeProps extends HTMLAnchorAttributes {
       { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: codeDefault,     preview: variantDefault     },
       { name: 'secondary',   description: stripHtml($tStore('variants.items.secondary')),   code: codeSecondary,   preview: variantSecondary   },
       { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
+      { name: 'warning',     description: stripHtml($tStore('variants.items.warning')),     code: codeWarning,     preview: variantWarning     },
+      { name: 'success',     description: stripHtml($tStore('variants.items.success')),     code: codeSuccess,     preview: variantSuccess     },
+      { name: 'info',        description: stripHtml($tStore('variants.items.info')),        code: codeInfo,        preview: variantInfo        },
       { name: 'outline',     description: stripHtml($tStore('variants.items.outline')),     code: codeOutline,     preview: variantOutline     },
     ]}
   />
@@ -301,6 +307,15 @@ interface BadgeProps extends HTMLAnchorAttributes {
   {/snippet}
   {#snippet variantDestructive()}
     <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
+  {/snippet}
+  {#snippet variantWarning()}
+    <Badge variant="warning">{$tStore('demonstration.labels.warningLabel')}</Badge>
+  {/snippet}
+  {#snippet variantSuccess()}
+    <Badge variant="success">{$tStore('demonstration.labels.successLabel')}</Badge>
+  {/snippet}
+  {#snippet variantInfo()}
+    <Badge variant="info">{$tStore('demonstration.labels.infoLabel')}</Badge>
   {/snippet}
   {#snippet variantOutline()}
     <Badge variant="outline">{$tStore('demonstration.labels.outlineLabel')}</Badge>
@@ -393,7 +408,7 @@ interface BadgeProps extends HTMLAnchorAttributes {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant',  type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
+          { name: 'variant',  type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText($tStore('props.table.variant')) },
           { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className') },
           { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Não', description: $tStore('props.table.children')  },
         ],

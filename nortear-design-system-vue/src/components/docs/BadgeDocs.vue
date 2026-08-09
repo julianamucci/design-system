@@ -124,11 +124,14 @@ import { Check } from "lucide-vue-next";`;
 const codeDefault = `<Badge>Novo</Badge>`;
 const codeSecondary = `<Badge variant="secondary">Beta</Badge>`;
 const codeDestructive = `<Badge variant="destructive">Urgente</Badge>`;
+const codeWarning = `<Badge variant="warning">Vence hoje</Badge>`;
+const codeSuccess = `<Badge variant="success">Aprovado</Badge>`;
+const codeInfo = `<Badge variant="info">Novidade</Badge>`;
 const codeOutline = `<Badge variant="outline">Rascunho</Badge>`;
 
 const interfaceCode = `// Badge
 interface BadgeProps {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+  variant?: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
   class?: string;
 }
 
@@ -147,6 +150,9 @@ const variantItems = computed(() => [
   { name: 'default',     description: stripHtml(tContent('variants.items.default')),     code: codeDefault     },
   { name: 'secondary',   description: stripHtml(tContent('variants.items.secondary')),   code: codeSecondary   },
   { name: 'destructive', description: stripHtml(tContent('variants.items.destructive')), code: codeDestructive },
+  { name: 'warning',     description: stripHtml(tContent('variants.items.warning')),     code: codeWarning     },
+  { name: 'success',     description: stripHtml(tContent('variants.items.success')),     code: codeSuccess     },
+  { name: 'info',        description: stripHtml(tContent('variants.items.info')),        code: codeInfo        },
   { name: 'outline',     description: stripHtml(tContent('variants.items.outline')),     code: codeOutline     },
 ]);
 
@@ -188,7 +194,7 @@ const propCols = computed(() => ({
 }));
 
 const badgePropItems = computed(() => [
-  { name: 'variant',      type: '"default" | "secondary" | "destructive" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
+  { name: 'variant',      type: '"default" | "secondary" | "destructive" | "warning" | "success" | "info" | "outline"', defaultValue: '"default"', required: 'Não', description: toPlainText(tContent('props.table.variant'))  },
   { name: 'class',        type: 'string',                                              defaultValue: '—',         required: 'Não', description: toPlainText(tContent('props.table.className')) },
   { name: 'default slot', type: 'VNode',                                               defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children')) },
 ]);
@@ -438,6 +444,21 @@ const visualTestItems = computed(() => [
         </Badge>
       </template>
       <template #variant-preview-3>
+        <Badge variant="warning">
+          {{ tContent('demonstration.labels.warningLabel') }}
+        </Badge>
+      </template>
+      <template #variant-preview-4>
+        <Badge variant="success">
+          {{ tContent('demonstration.labels.successLabel') }}
+        </Badge>
+      </template>
+      <template #variant-preview-5>
+        <Badge variant="info">
+          {{ tContent('demonstration.labels.infoLabel') }}
+        </Badge>
+      </template>
+      <template #variant-preview-6>
         <Badge variant="outline">
           {{ tContent('demonstration.labels.outlineLabel') }}
         </Badge>

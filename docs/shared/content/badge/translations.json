@@ -16,6 +16,9 @@
         "defaultLabel": "Novo",
         "secondaryLabel": "Beta",
         "destructiveLabel": "Urgente",
+        "warningLabel": "Vence hoje",
+        "successLabel": "Aprovado",
+        "infoLabel": "Novidade",
         "outlineLabel": "Rascunho",
         "countLabel": "12",
         "statusLabel": "Ativo",
@@ -142,6 +145,9 @@
         "default": "Destaque principal. Fundo <code>primary</code>, ideal para itens novos ou ações em evidência.",
         "secondary": "Neutro informativo. Fundo <code>secondary</code>, ideal para categorias e tags.",
         "destructive": "Alerta ou erro. Fundo <code>destructive</code>, uso restrito a estados críticos.",
+        "warning": "Atenção. Sinaliza pendência ou risco que ainda não é erro — prazo próximo, revisão necessária.",
+        "success": "Confirmação. Estado concluído ou aprovado, como pagamento compensado ou publicação no ar.",
+        "info": "Informativo. Contexto neutro que merece cor, como etiqueta de novidade ou nível baixo de prioridade.",
         "outline": "Baixa ênfase. Apenas borda e texto, sem fundo, ideal para rascunhos ou status secundários."
       },
       "compositionsTitle": "Composições",
@@ -319,6 +325,11 @@
           "action": "Badge envolto em button",
           "result": "Pai recebe foco e dispara onClick corretamente",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar as variantes semânticas warning, success e info",
+          "result": "Cada uma com fundo e borda na própria cor semântica e o texto em --foreground; as três diferentes entre si",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -363,6 +374,10 @@
         "item4": {
           "story": "Composições — envolvido em link e em botão",
           "priority": "medium"
+        },
+        "item5": {
+          "story": "Variantes — as três semânticas (warning, success, info)",
+          "priority": "high"
         }
       }
     },
@@ -404,6 +419,9 @@
         "defaultLabel": "New",
         "secondaryLabel": "Beta",
         "destructiveLabel": "Urgent",
+        "warningLabel": "Due today",
+        "successLabel": "Approved",
+        "infoLabel": "What's new",
         "outlineLabel": "Draft",
         "countLabel": "12",
         "statusLabel": "Active",
@@ -530,6 +548,9 @@
         "default": "Primary emphasis. <code>primary</code> background, ideal for new items or highlighted actions.",
         "secondary": "Neutral informational. <code>secondary</code> background, ideal for categories and tags.",
         "destructive": "Alert or error. <code>destructive</code> background, reserved for critical states only.",
+        "warning": "Attention. Flags something pending or risky that is not yet an error — an approaching deadline, a review due.",
+        "success": "Confirmation. A finished or approved state, such as a cleared payment or a published item.",
+        "info": "Informational. Neutral context that still deserves colour, such as a new tag or a low priority level.",
         "outline": "Low emphasis. Border and text only, no background, ideal for drafts or secondary statuses."
       },
       "compositionsTitle": "Compositions",
@@ -707,6 +728,11 @@
           "action": "Badge wrapped in button",
           "result": "Parent receives focus and fires onClick correctly",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Render the semantic variants warning, success and info",
+          "result": "Each with background and border in its own semantic colour and text in --foreground; the three distinct from one another",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -751,6 +777,10 @@
         "item4": {
           "story": "Compositions — wrapped in a link and in a button",
           "priority": "medium"
+        },
+        "item5": {
+          "story": "Variants — the three semantic ones (warning, success, info)",
+          "priority": "high"
         }
       }
     },
@@ -792,6 +822,9 @@
         "defaultLabel": "Nuevo",
         "secondaryLabel": "Beta",
         "destructiveLabel": "Urgente",
+        "warningLabel": "Vence hoy",
+        "successLabel": "Aprobado",
+        "infoLabel": "Novedad",
         "outlineLabel": "Borrador",
         "countLabel": "12",
         "statusLabel": "Activo",
@@ -918,6 +951,9 @@
         "default": "Énfasis principal. Fondo <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
         "secondary": "Neutro informativo. Fondo <code>secondary</code>, ideal para categorías y tags.",
         "destructive": "Alerta o error. Fondo <code>destructive</code>, reservado para estados críticos.",
+        "warning": "Atención. Señala algo pendiente o riesgoso que aún no es un error: un plazo cercano, una revisión necesaria.",
+        "success": "Confirmación. Estado concluido o aprobado, como un pago acreditado o una publicación en línea.",
+        "info": "Informativo. Contexto neutro que merece color, como una etiqueta de novedad o un nivel bajo de prioridad.",
         "outline": "Baja énfasis. Solo borde y texto, sin fondo, ideal para borradores o estados secundarios."
       },
       "compositionsTitle": "Composiciones",
@@ -1095,6 +1131,11 @@
           "action": "Badge envuelto en button",
           "result": "El padre recibe foco y dispara onClick correctamente",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Renderizar las variantes semánticas warning, success e info",
+          "result": "Cada una con fondo y borde en su propio color semántico y el texto en --foreground; las tres distintas entre sí",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1139,6 +1180,10 @@
         "item4": {
           "story": "Composiciones — envuelto en link y en botón",
           "priority": "medium"
+        },
+        "item5": {
+          "story": "Variantes — las tres semánticas (warning, success, info)",
+          "priority": "high"
         }
       }
     },

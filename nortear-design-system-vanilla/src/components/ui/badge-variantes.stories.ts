@@ -114,3 +114,64 @@ export const Outline: Story = {
     await expect(parseFloat(larguraBorda)).toBeGreaterThan(0);
   },
 };
+
+/**
+ * As três semânticas numa story só: o que elas prometem não é cada uma isolada,
+ * e sim serem DISTINGUÍVEIS entre si. Uma por story deixaria passar o erro mais
+ * provável — copiar o bloco do destructive e esquecer de trocar o token, que é
+ * como as três nasceriam iguais.
+ */
+export const Semanticas: Story = {
+  parameters: {
+    covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
+    docs: {
+      description: {
+        story:
+          'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',
+      },
+    },
+  },
+  render: () => {
+    const grupo = document.createElement('div');
+    grupo.className = 'nds-cluster';
+    grupo.dataset.spacing = 'sm';
+    grupo.append(
+      createBadge({ variant: 'warning', children: 'Vence hoje' }),
+      createBadge({ variant: 'success', children: 'Aprovado' }),
+      createBadge({ variant: 'info', children: 'Novidade' }),
+    );
+    return grupo;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const badges = {
+      warning: canvas.getByText('Vence hoje'),
+      success: canvas.getByText('Aprovado'),
+      info: canvas.getByText('Novidade'),
+    };
+
+    // O texto neutro é medido de uma referência viva, e não cravado em rgb():
+    // trocar o tema não pode reprovar o teste, mas trocar a REGRA pode.
+    const referencia = document.createElement('span');
+    referencia.className = 'nds-badge nds-badge-outline';
+    canvasElement.appendChild(referencia);
+    const textoNeutro = getComputedStyle(referencia).color;
+    referencia.remove();
+
+    const fundos: string[] = [];
+    for (const [nome, badge] of Object.entries(badges)) {
+      await expect(badge).toHaveAttribute('data-variant', nome);
+      const { fundo, texto, borda } = pintura(badge);
+      // functional.item7 — cor vem do fundo e da borda; o texto fica neutro,
+      // que é o que sustenta 4.5:1 sem depender da variante escolhida.
+      await expect(transparente(fundo)).toBe(false);
+      await expect(transparente(borda)).toBe(false);
+      await expect(texto).toBe(textoNeutro);
+      fundos.push(fundo);
+    }
+
+    // Três cores, e não três nomes para a mesma: sem isto, copiar o bloco do
+    // destructive nas três passaria.
+    await expect(new Set(fundos).size).toBe(3);
+  },
+};

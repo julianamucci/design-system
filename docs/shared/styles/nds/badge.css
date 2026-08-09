@@ -90,6 +90,51 @@
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
 }
 
+/* Warning, success e info — mesmo desenho do destructive: fundo e borda dão a
+ * cor, o texto fica em --foreground. Cor semântica no texto corrido não passa
+ * em 4.5:1 nas três, e a regra do projeto é que o contraste não dependa da
+ * variante escolhida.
+ *
+ * Existiam antes como `-high`, `-medium` e `-low`, um trio criado só para a
+ * tabela de prioridade das docs pages — cor semântica com nome de uso, que
+ * ninguém achava ao procurar por "warning" e que o componente não expunha como
+ * variante. Agora são variantes de verdade, e a prioridade escolhe uma delas. */
+.nds-badge-warning {
+  --badge-bg: hsl(var(--warning) / 0.12);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--warning) / 0.35);
+}
+.dark .nds-badge-warning {
+  --badge-bg: hsl(var(--warning) / 0.18);
+}
+.nds-badge-warning:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--warning) / 0.4);
+}
+
+.nds-badge-success {
+  --badge-bg: hsl(var(--success) / 0.12);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--success) / 0.35);
+}
+.dark .nds-badge-success {
+  --badge-bg: hsl(var(--success) / 0.18);
+}
+.nds-badge-success:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--success) / 0.4);
+}
+
+.nds-badge-info {
+  --badge-bg: hsl(var(--info) / 0.12);
+  --badge-fg: hsl(var(--foreground));
+  --badge-border: hsl(var(--info) / 0.35);
+}
+.dark .nds-badge-info {
+  --badge-bg: hsl(var(--info) / 0.18);
+}
+.nds-badge-info:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--info) / 0.4);
+}
+
 /* Outline */
 .nds-badge-outline {
   --badge-bg: transparent;
@@ -109,23 +154,11 @@
   padding-inline-end: var(--spacing-1-5, 0.375rem);
 }
 
-/* ── Prioridade (usado em DocsTestes — tabelas funcional/visual) ──────────────
- * WCAG: bg/border sinalizam a cor; texto sempre --foreground (contraste 4.5:1). */
-.nds-badge-high {
-  --badge-bg: hsl(var(--destructive) / 0.12);
-  --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--destructive) / 0.35);
-}
-.nds-badge-medium {
-  --badge-bg: hsl(var(--warning) / 0.15);
-  --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--warning) / 0.4);
-}
-.nds-badge-low {
-  --badge-bg: hsl(var(--success) / 0.12);
-  --badge-fg: hsl(var(--foreground));
-  --badge-border: hsl(var(--success) / 0.35);
-}
+/* A prioridade das tabelas de teste (alta/média/baixa) NÃO tem classe própria:
+ * ela escolhe uma variante semântica — destructive, warning e info. Ter um trio
+ * `-high/-medium/-low` era manter duas famílias para a mesma cor, e foi assim
+ * que o badge ficou sem `warning`, sem `success` e sem `info` como variante
+ * enquanto as três cores já estavam desenhadas ali dentro. */
 
 /* Hover em link wrapping badge */
 a > .nds-badge:hover,

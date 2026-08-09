@@ -1,7 +1,14 @@
 import { cn } from '@/lib/utils';
 // ─── Badge ───────────────────────────────────────────────────────────────────
 
-export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
+export type BadgeVariant =
+  | 'default'
+  | 'secondary'
+  | 'destructive'
+  | 'warning'
+  | 'success'
+  | 'info'
+  | 'outline';
 
 export interface BadgeOptions {
   /** Variante visual nativa do Badge. */
@@ -17,17 +24,24 @@ export interface BadgeOptions {
   className?: string;
 }
 
+/**
+ * Tabela em vez de cadeia de ternários: com sete variantes a cadeia vira sete
+ * ramos, e o último é sempre inalcançável (o tipo já esgotou os valores), o que
+ * obrigava a marcar `v8 ignore` na própria implementação. O mapa não tem ramo
+ * nenhum, então não há o que cobrir nem o que ignorar.
+ */
+const CLASSE_POR_VARIANTE: Record<BadgeVariant, string> = {
+  default: '',
+  secondary: 'nds-badge-secondary',
+  destructive: 'nds-badge-destructive',
+  warning: 'nds-badge-warning',
+  success: 'nds-badge-success',
+  info: 'nds-badge-info',
+  outline: 'nds-badge-outline',
+};
+
 function badgeClass(variant: BadgeVariant = 'default'): string {
-  const base = 'nds-badge';
-  const modifier =
-    variant === 'default'     ? '' :
-    variant === 'secondary'   ? 'nds-badge-secondary' :
-    variant === 'destructive' ? 'nds-badge-destructive' :
-    /* v8 ignore next 2 -- o último ramo é inalcançável: BadgeVariant tem
-       exatamente estes quatro valores, e os três anteriores já os esgotam. */
-    variant === 'outline'     ? 'nds-badge-outline' :
-                                '';
-  return [base, modifier].filter(Boolean).join(' ');
+  return ['nds-badge', CLASSE_POR_VARIANTE[variant]].filter(Boolean).join(' ');
 }
 
 export function createBadge(options: BadgeOptions = {}): HTMLElement {
