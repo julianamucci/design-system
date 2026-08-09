@@ -194,7 +194,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Customizar cor ou espessura via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
-        "angular": "<!-- Customizar cor ou espessura via classe .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
+        "angular": "<!-- Customizar cor ou espessura via classe .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted\" style=\"margin-block: var(--spacing-6)\"></div>\n<div ndsSeparator style=\"height: 2px; background: hsl(var(--primary) / 0.2)\"></div>"
       }
     },
     "tokens": {
@@ -571,7 +571,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// Customize color or thickness via className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
-        "angular": "<!-- Customize color or thickness via .nds-* class -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
+        "angular": "<!-- Customize color or thickness via .nds-* class -->\n<div ndsSeparator class=\"nds-bg-muted\" style=\"margin-block: var(--spacing-6)\"></div>\n<div ndsSeparator style=\"height: 2px; background: hsl(var(--primary) / 0.2)\"></div>"
       }
     },
     "tokens": {
@@ -948,7 +948,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Personalizar color o grosor mediante className\n<Separator className=\"bg-muted my-6\" />\n<Separator className=\"h-0.5 bg-primary/20\" />",
-        "angular": "<!-- Personalizar color o grosor con clase .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted nds-my-6\"></div>\n<div ndsSeparator class=\"nds-separator-strong\"></div>"
+        "angular": "<!-- Personalizar color o grosor con clase .nds-* -->\n<div ndsSeparator class=\"nds-bg-muted\" style=\"margin-block: var(--spacing-6)\"></div>\n<div ndsSeparator style=\"height: 2px; background: hsl(var(--primary) / 0.2)\"></div>"
       }
     },
     "tokens": {

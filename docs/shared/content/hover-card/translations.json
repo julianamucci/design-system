@@ -237,7 +237,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// HoverCard com delay customizado e posicionamento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* conteúdo */}\n  </HoverCardContent>\n</HoverCard>",
-        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- HoverCard com delay customizado e posicionamento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" style=\"width: 18rem\">\n    <!-- conteúdo -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {
@@ -675,7 +675,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// HoverCard with custom delay and positioning\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* content */}\n  </HoverCardContent>\n</HoverCard>",
-        "angular": "<!-- HoverCard with custom delay and positioning -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- content -->\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- HoverCard with custom delay and positioning -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" style=\"width: 18rem\">\n    <!-- content -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {
@@ -1113,7 +1113,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// HoverCard con delay personalizado y posicionamiento\n<HoverCard openDelay={500} closeDelay={200}>\n  <HoverCardTrigger asChild>\n    <a href=\"/users/joana\">@joana</a>\n  </HoverCardTrigger>\n  <HoverCardContent side=\"right\" align=\"start\" className=\"w-72\">\n    {/* contenido */}\n  </HoverCardContent>\n</HoverCard>",
-        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" class=\"nds-w-72\">\n    <!-- contenido -->\n  </ng-template>\n</nds-hover-card>"
+        "angular": "<!-- HoverCard con delay personalizado y posicionamiento -->\n<nds-hover-card [openDelay]=\"500\" [closeDelay]=\"200\">\n  <a ndsHoverCardTrigger href=\"/users/joana\">@joana</a>\n  <ng-template ndsHoverCardContent side=\"right\" align=\"start\" style=\"width: 18rem\">\n    <!-- contenido -->\n  </ng-template>\n</nds-hover-card>"
       }
     },
     "tokens": {
