@@ -43,7 +43,7 @@ export interface DocsTestesVisual {
           @if (functional().description) {
             <p class="nds-text-body nds-text-muted-foreground">{{ functional().description }}</p>
           }
-          <nds-card class="nds-p-4 nds-overflow-x">
+          <div ndsCard class="nds-p-4 nds-overflow-x">
             <div class="nds-table-wrapper" tabindex="0">
               <table class="nds-table nds-w-full nds-text-body">
                 <thead>
@@ -66,7 +66,7 @@ export interface DocsTestesVisual {
                 </tbody>
               </table>
             </div>
-          </nds-card>
+          </div>
         </div>
 
         <!-- Acessibilidade -->
@@ -75,7 +75,7 @@ export interface DocsTestesVisual {
           @if (accessibility().description) {
             <p class="nds-text-body nds-text-muted-foreground">{{ accessibility().description }}</p>
           }
-          <nds-card class="nds-p-4 nds-overflow-x">
+          <div ndsCard class="nds-p-4 nds-overflow-x">
             <div class="nds-table-wrapper" tabindex="0">
               <table class="nds-table nds-w-full nds-text-body">
                 <thead>
@@ -96,7 +96,7 @@ export interface DocsTestesVisual {
                 </tbody>
               </table>
             </div>
-          </nds-card>
+          </div>
         </div>
 
         <!-- Visuais -->
@@ -105,7 +105,7 @@ export interface DocsTestesVisual {
           @if (visual().description) {
             <p class="nds-text-body nds-text-muted-foreground">{{ visual().description }}</p>
           }
-          <nds-card class="nds-p-4 nds-overflow-x">
+          <div ndsCard class="nds-p-4 nds-overflow-x">
             <div class="nds-table-wrapper" tabindex="0">
               <table class="nds-table nds-w-full nds-text-body">
                 <thead>
@@ -126,7 +126,7 @@ export interface DocsTestesVisual {
                 </tbody>
               </table>
             </div>
-          </nds-card>
+          </div>
         </div>
       </div>
     </section>

@@ -37,7 +37,7 @@ export interface DocsPropsTableDef {
           @if (def.title) {
             <h3 class="nds-text-base nds-font-semibold">{{ def.title }}</h3>
           }
-          <nds-card class="nds-p-4 nds-overflow-x">
+          <div ndsCard class="nds-p-4 nds-overflow-x">
             <div class="nds-table-wrapper" tabindex="0">
               <table class="nds-table nds-w-full nds-text-body">
                 <thead>
@@ -65,7 +65,7 @@ export interface DocsPropsTableDef {
                 </tbody>
               </table>
             </div>
-          </nds-card>
+          </div>
         }
 
         @if (interfaceCode()) {

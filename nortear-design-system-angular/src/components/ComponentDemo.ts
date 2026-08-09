@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 /** Moldura padrão de preview usada por Demonstração e Anatomia. */
 @Component({
-  selector: 'nds-component-demo',
+  // Seletor de atributo em <div>: o Vanilla renderiza <div class="nds-card">,
+  // e tag própria seria divergência de markup. Segue @Component (não diretiva)
+  // porque projeta conteúdo.
+  selector: 'div[ndsComponentDemo]',
   standalone: true,
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -19,7 +19,7 @@ export interface DocsKeyboardItem { key: string; description: string }
     <section id="acessibilidade">
       <h2 class="nds-section-title">{{ title() }}</h2>
 
-      <nds-card class="nds-p-4 nds-stack" data-spacing="lg">
+      <div ndsCard class="nds-p-4 nds-stack" data-spacing="lg">
         <div class="nds-stack" data-spacing="md">
           <p
             class="nds-text-body nds-text-muted-foreground nds-leading-relaxed"
@@ -39,7 +39,7 @@ export interface DocsKeyboardItem { key: string; description: string }
           <h3 class="nds-text-base nds-font-semibold nds-mb-4">{{ keyboardTitle() }}</h3>
           <div class="nds-grid" data-cols="2" data-spacing="sm">
             @for (item of keyboardItems(); track item.key) {
-              <nds-card
+              <div ndsCard
                 class="nds-row nds-border-none nds-shadow-none nds-bg-muted-soft nds-p-4"
                 data-spacing="sm"
                 data-align="start"
@@ -48,7 +48,7 @@ export interface DocsKeyboardItem { key: string; description: string }
                 <span class="nds-text-body nds-text-muted-foreground nds-leading-relaxed">
                   {{ item.description }}
                 </span>
-              </nds-card>
+              </div>
             }
           </div>
         </div>
@@ -65,7 +65,7 @@ export interface DocsKeyboardItem { key: string; description: string }
             </ul>
           </div>
         }
-      </nds-card>
+      </div>
     </section>
   `,
 })

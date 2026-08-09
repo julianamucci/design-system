@@ -20,7 +20,7 @@ export const EmCard: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
     template: `
-      <nds-card class="nds-p-4 nds-max-w-md">
+      <div ndsCard class="nds-p-4 nds-max-w-md">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-semibold">Resumo do pedido</p>
           <div ndsSeparator></div>
@@ -28,7 +28,7 @@ export const EmCard: Story = {
             3 itens · entrega em 5 dias úteis
           </p>
         </div>
-      </nds-card>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {

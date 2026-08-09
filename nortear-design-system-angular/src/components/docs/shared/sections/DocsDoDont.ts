@@ -35,7 +35,7 @@ export interface DocsDoDontPair {
     <section id="do-dont">
       <h2 class="nds-section-title">{{ title() }}</h2>
 
-      <nds-card class="nds-cluster nds-p-4 nds-mt-2">
+      <div ndsCard class="nds-cluster nds-p-4 nds-mt-2">
         <div class="nds-stack nds-w-full" data-spacing="xl">
           @for (pair of pairs(); track $index) {
             <div class="nds-grid" data-cols="2" data-spacing="lg">
@@ -52,13 +52,13 @@ export interface DocsDoDontPair {
                   preview em DocsVariants e em ComponentDemo. Sem ele o Card
                   herda a coluna do .nds-card e encosta tudo à esquerda.
                 -->
-                <nds-card
+                <div ndsCard
                   class="nds-cluster nds-border-success-soft nds-bg-success-soft nds-shadow-none nds-p-4"
                   data-justify="center"
                   data-docs-preview="do"
                 >
                   <ng-container [ngTemplateOutlet]="pair.doPreview" />
-                </nds-card>
+                </div>
                 <p class="nds-text-body nds-italic nds-px-1">{{ pair.doCaption }}</p>
               </div>
 
@@ -70,19 +70,19 @@ export interface DocsDoDontPair {
                     {{ pair.dontLabel }}
                   </span>
                 </div>
-                <nds-card
+                <div ndsCard
                   class="nds-cluster nds-border-destructive-soft nds-bg-destructive-soft nds-shadow-none nds-p-4"
                   data-justify="center"
                   data-docs-preview="dont"
                 >
                   <ng-container [ngTemplateOutlet]="pair.dontPreview" />
-                </nds-card>
+                </div>
                 <p class="nds-text-body nds-italic nds-px-1">{{ pair.dontCaption }}</p>
               </div>
             </div>
           }
         </div>
-      </nds-card>
+      </div>
     </section>
   `,
 })

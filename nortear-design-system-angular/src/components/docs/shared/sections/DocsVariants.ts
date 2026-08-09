@@ -46,7 +46,7 @@ export interface DocsVariantItem {
 
       <div class="nds-stack" data-spacing="md">
         @for (item of items(); track item.name) {
-          <nds-card class="nds-p-4">
+          <div ndsCard class="nds-p-4">
             <div>
               <h3 class="nds-text-body nds-font-semibold nds-m-0" [innerHTML]="DOMPurify.sanitize(item.name)"></h3>
               <p
@@ -81,7 +81,7 @@ export interface DocsVariantItem {
                 />
               </div>
             }
-          </nds-card>
+          </div>
         }
       </div>
     </section>

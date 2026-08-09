@@ -15,7 +15,7 @@ export interface DocsTokenItem { token: string; value: string; description: stri
       <h2 class="nds-section-title">{{ title() }}</h2>
 
       <div class="nds-stack" data-spacing="lg">
-        <nds-card class="nds-p-4 nds-overflow-x">
+        <div ndsCard class="nds-p-4 nds-overflow-x">
           <div class="nds-table-wrapper" tabindex="0">
             <table class="nds-table nds-w-full nds-text-body">
               <thead>
@@ -37,7 +37,7 @@ export interface DocsTokenItem { token: string; value: string; description: stri
               </tbody>
             </table>
           </div>
-        </nds-card>
+        </div>
 
         @if (customizationTitle()) {
           <div class="nds-stack" data-spacing="sm">

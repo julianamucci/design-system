@@ -33,9 +33,9 @@ export interface DocsWhenToUseList { title: string; items: string[] }
     <section id="quando-usar">
       <h2 class="nds-section-title">{{ title() }}</h2>
 
-      <nds-card class="nds-p-4 nds-stack" data-spacing="lg">
+      <div ndsCard class="nds-p-4 nds-stack" data-spacing="lg">
         <!-- Guidelines -->
-        <nds-card
+        <div ndsCard
           class="nds-bg-muted-soft nds-border-soft nds-p-4 nds-stack"
           data-spacing="sm"
         >
@@ -48,10 +48,10 @@ export interface DocsWhenToUseList { title: string; items: string[] }
               <li [innerHTML]="DOMPurify.sanitize(item)"></li>
             }
           </ul>
-        </nds-card>
+        </div>
 
         <!-- Cenários -->
-        <nds-card class="nds-overflow-x nds-p-4">
+        <div ndsCard class="nds-overflow-x nds-p-4">
           <!-- tabindex="0": .nds-table-wrapper tem overflow-x auto, e região
                rolável precisa ser alcançável por teclado (WCAG 2.1.1). -->
           <div class="nds-table-wrapper" tabindex="0">
@@ -74,13 +74,13 @@ export interface DocsWhenToUseList { title: string; items: string[] }
               </tbody>
             </table>
           </div>
-        </nds-card>
+        </div>
 
         <!-- UX Writing (opcional) -->
         @if (uxWriting(); as ux) {
           <div class="nds-stack" data-spacing="sm">
             <h3 class="nds-font-medium nds-text-body">{{ ux.title }}</h3>
-            <nds-card class="nds-overflow-x nds-p-4">
+            <div ndsCard class="nds-overflow-x nds-p-4">
               <div class="nds-table-wrapper" tabindex="0">
                 <table class="nds-table nds-w-full nds-border-collapse nds-text-body">
                   <thead>
@@ -117,13 +117,13 @@ export interface DocsWhenToUseList { title: string; items: string[] }
                   </tbody>
                 </table>
               </div>
-            </nds-card>
+            </div>
           </div>
         }
 
         <!-- Do / Don't -->
         <div class="nds-grid" data-cols="2" data-spacing="md">
-          <nds-card class="nds-p-4">
+          <div ndsCard class="nds-p-4">
             <h3
               class="nds-mb-4 nds-text-body nds-font-semibold nds-text-success nds-cluster"
               data-spacing="sm"
@@ -138,9 +138,9 @@ export interface DocsWhenToUseList { title: string; items: string[] }
                 <li [innerHTML]="DOMPurify.sanitize(item)"></li>
               }
             </ul>
-          </nds-card>
+          </div>
 
-          <nds-card class="nds-p-4">
+          <div ndsCard class="nds-p-4">
             <h3
               class="nds-mb-4 nds-text-body nds-font-semibold nds-text-destructive nds-cluster"
               data-spacing="sm"
@@ -155,9 +155,9 @@ export interface DocsWhenToUseList { title: string; items: string[] }
                 <li [innerHTML]="DOMPurify.sanitize(item)"></li>
               }
             </ul>
-          </nds-card>
+          </div>
         </div>
-      </nds-card>
+      </div>
     </section>
   `,
 })

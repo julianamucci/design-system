@@ -13,7 +13,7 @@ export interface DocsAnalyticsEventItem { event: string; trigger: string; payloa
     <section id="analytics">
       <h2 class="nds-section-title">{{ title() }}</h2>
 
-      <nds-card class="nds-p-4 nds-overflow-x">
+      <div ndsCard class="nds-p-4 nds-overflow-x">
         <div class="nds-table-wrapper" tabindex="0">
           <table class="nds-table nds-w-full nds-text-body">
             <thead>
@@ -36,7 +36,7 @@ export interface DocsAnalyticsEventItem { event: string; trigger: string; payloa
             </tbody>
           </table>
         </div>
-      </nds-card>
+      </div>
     </section>
   `,
 })

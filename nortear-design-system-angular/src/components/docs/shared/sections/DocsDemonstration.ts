@@ -24,9 +24,9 @@ import { NdsComponentDemo } from '@/components/ComponentDemo';
       data-track-id="page:demonstracao:demo"
     >
       <h2 class="nds-section-title">{{ title() }}</h2>
-      <nds-component-demo>
+      <div ndsComponentDemo>
         <ng-content />
-      </nds-component-demo>
+      </div>
     </section>
   `,
 })

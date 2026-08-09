@@ -17,7 +17,7 @@ import DOMPurify from 'dompurify';
   template: `
     <section id="anatomia">
       <h2 class="nds-section-title">{{ title() }}</h2>
-      <nds-component-demo>
+      <div ndsComponentDemo>
         <div class="nds-stack nds-w-full" data-spacing="md">
           <ol class="nds-stack nds-text-body nds-list-none" data-spacing="sm">
             @for (item of items(); track $index; let i = $index) {
@@ -41,7 +41,7 @@ import DOMPurify from 'dompurify';
             />
           </div>
         </div>
-      </nds-component-demo>
+      </div>
     </section>
   `,
 })
