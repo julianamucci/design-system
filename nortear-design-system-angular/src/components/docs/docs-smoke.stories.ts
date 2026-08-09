@@ -11,11 +11,12 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
 import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 import { NdsButtonDocs } from './ButtonDocs';
+import { NdsSeparatorDocs } from './SeparatorDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -53,5 +54,10 @@ const play: Story['play'] = async ({ canvasElement, parameters }) => {
 
 export const Button: Story = {
   render: () => ({ template: '<nds-button-docs />' }),
+  play,
+};
+
+export const Separator: Story = {
+  render: () => ({ template: '<nds-separator-docs />' }),
   play,
 };
