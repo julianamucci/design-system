@@ -281,9 +281,25 @@ Regras:
 - **Sem negrito markdown.** `**x**` volta como `****x****` no atributo, e negrito
   em volta de trecho em crase sai destruído. Crase sozinha passa limpa — use só
   ela.
-- **`properties` é validado contra o nó.** `padding` num `COMPONENT_SET` sem
-  auto-layout é erro; esse texto pertence à variante, que tem. Na dúvida, omita
-  `properties`.
+- **`properties` é validado contra o tipo do nó E contra o que ele tem.** O
+  script é atômico: uma âncora inválida derruba a chamada inteira. Rejeições
+  medidas nesta migração:
+
+  | Âncora | Rejeitada em | Onde ela cabe |
+  |---|---|---|
+  | `padding`, `height` | `COMPONENT_SET` (sem auto-layout) | na variante |
+  | `opacity` | `RECTANGLE` | em `FRAME` |
+  | `mainComponent` | `COMPONENT` | em `INSTANCE` |
+  | `strokes` | moldura **sem traço** | moldura que tem traço |
+
+  Não adivinhe nó a nó — tente ancorado e caia para solto:
+
+  ```js
+  function anotar(no, base, props) {
+    try { no.annotations = [{ ...base, properties: props.map(t => ({ type: t })) }]; }
+    catch { no.annotations = [base]; }   // âncora rejeitada, texto preservado
+  }
+  ```
 - **Ancore no nó certo, não no set inteiro.** Regra de alfa vai no `badge-bg`;
   regra do rótulo vai no `label`; eixo de variante vai no set. Quem lê o código
   de referência recebe cada nota junto do elemento que ela governa.

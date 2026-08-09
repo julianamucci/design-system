@@ -1721,3 +1721,55 @@ O que já foi estabelecido, para quem retomar não refazer:
 Enquanto isso não fechar, **não trate número de contraste em tema escuro de
 componente transparente como defeito** — só o de componente que pinta o próprio
 fundo. O texto do 2f1c precisa dessa ressalva.
+
+---
+
+## Figma × CSS — divergências de tema escuro (2026-08-09)
+
+Achadas ao migrar as 7 páginas restantes do Figma para anotação ancorada. Todas
+já estão **anotadas no próprio nó** no arquivo, com a categoria `Authoring trap`
+ou `Tokens`, então quem ler pelo MCP recebe o aviso junto do elemento. Faltam
+ser corrigidas.
+
+O padrão é sempre o mesmo: o CSS muda alfa (ou token) no `.dark`, e o Figma
+carrega um valor único para os dois modos. É exatamente o que o Badge tinha
+antes da coleção `Opacidade`.
+
+### Resolvem com a coleção `Opacidade` (já existe, modos light/dark)
+
+- [ ] **button · `variant=destructive` › `bg`** — CSS: fundo `/0.1` no claro e
+  `/0.15` no escuro; hover `/0.15` → `/0.25`. Figma: alfa fixo. Mesmo conserto do
+  badge: vincular a opacidade do nó a `Opacidade/button/*`.
+- [ ] **button · hover de `ghost` e `outline`** — CSS: `--accent` cheio no claro,
+  `--accent / 0.5` no escuro. Figma: `hover-overlay` com um alfa só.
+
+### Precisam de decisão de token (não é alfa, é o token que troca)
+
+- [ ] **button · `variant=outline`** — CSS claro: fundo `--background`, borda
+  `--border`. CSS escuro: borda `--input` e fundo `--input / 0.3`. Trocar de
+  token por modo exige uma variável de cor mode-aware ou uma custom property
+  nova no CSS. Vinculado hoje a `superficie/background` + `estrutura/border`.
+- [ ] **alert · título de `variant=info`** — CSS: `.dark .nds-alert-info
+  .nds-alert-title` força `--foreground`, porque o azul info no fundo soft
+  escuro não segura o contraste. Figma: preso a `Color/feedback/info` nos dois
+  modos. Mesma classe de problema do outline do button.
+
+**Recomendação:** os dois primeiros são mecânicos e cabem numa rodada. Os dois
+últimos são a mesma pergunta de arquitetura — criar token derivado (ex.
+`--button-outline-bg`, `--alert-title-fg`) nos DOIS lados, ou aceitar a
+divergência e mantê-la anotada. Criar só no Figma inventaria token que o código
+não tem, que é o que a coleção `Texto` e a `Opacidade` foram desenhadas para
+evitar.
+
+### Verificado e SEM divergência
+
+- **alert** — alfas de fundo e borda (0.1 / 0.3) não mudam no escuro; o CSS não
+  tem `.dark` para eles. Os literais do Figma estão certos nos dois modos.
+- **button** — o set tem as 48 variantes (6 × 8), incluindo os quatro tamanhos
+  icon-only. Não havia o buraco que o badge tinha.
+- **avatar** — tamanhos 24/32/40/48/64 batem com `[data-size]`; `Status`, `Foto`
+  e `Iniciais` cobrem `avatar-badge`, `avatar-image` e `avatar-fallback`.
+- **alert-dialog** — `Mostrar mídia` e a camada `alert-dialog-media` existem e
+  batem com `.nds-alert-dialog-media`.
+- **accordion, aspect-ratio, breadcrumb** — CSS só tem partes, sem variante nem
+  regra `.dark`. Nada a alinhar.
