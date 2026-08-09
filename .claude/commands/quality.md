@@ -290,8 +290,12 @@ e a suíte ficou verde o tempo todo. Rótulo de navegação em inglês em três
 stacks, cabeçalho de semana lido em duas e não em outras duas, raio do dia 10
 contra 8 — nada disso tinha asserção, e por isso nada disso aparecia.
 
-Antes de corrigir qualquer divergência relatada, **rode uma sonda**: uma medição
-única, igual nas quatro, cujo resultado é dado e não impressão.
+**A sonda é passo padrão de toda auditoria de componente, não reação a relato.**
+Enquanto ela só rodava depois que alguém apontava o defeito, quem detectava era
+o usuário — e o custo era uma rodada de quatro suítes por defeito. Rode antes de
+corrigir qualquer coisa, e traga a lista fechada.
+
+Uma medição única, igual nas quatro, cujo resultado é dado e não impressão.
 
 1. **Colhedor compartilhado** em `docs/shared/testing/<slug>-probe.ts`, buscando
    os elementos pelo contrato `.nds-*`. Onde o contrato não é cumprido o campo
@@ -367,6 +371,30 @@ foi vista falhar não guarda nada.
 Dívida conhecida fica DECLARADA na story, com motivo, em
 `parameters.contratoDocs.ignorar` — mesma política do `a11y.test: 'todo'` que o
 arquivo já usava. Exceção sem motivo vira exceção permanente.
+
+**2f1c. Meça o TEMA ESCURO, e calcule o contraste em vez de confiar no axe.**
+
+Duas dimensões que passaram batido em auditoria após auditoria:
+
+- **O escuro é metade do produto e não era medido em lugar nenhum.** O axe do
+  test-runner mede o que está na tela, e a tela está sempre no tema claro. No
+  alert, o título do `info` marcava 6.16:1 no claro e **3.19:1 no escuro** — e o
+  item de contraste do contrato dizia, havia meses, "verificar por axe-core /
+  Lighthouse", uma verificação que ninguém rodava. Na sonda, meça com `.dark` no
+  `documentElement` e **remova a classe no `finally`**: deixá-la posta envenena a
+  story seguinte e a foto do Chromatic.
+
+- **Contraste é aritmética, não olhômetro.** Comparar nome de token não responde
+  a pergunta; a razão WCAG responde. Duas armadilhas na conta:
+  - o fundo do container costuma ter **alfa**, então `backgroundColor` devolve
+    uma cor que ninguém vê — componha com o ancestral opaco antes de dividir;
+  - o limite não é sempre 3:1. Texto grande pela WCAG é ≥24px, ou ≥18.66px em
+    negrito. Título de 14px semibold é **texto normal**, e o limite dele é 4.5.
+    Conferir isso é o que separa "reprova" de "passa" — e foi conferido no alert
+    antes de tratar 3.19 como defeito.
+
+  Colhedor pronto, com a composição de fundo e a conta já feitas:
+  `docs/shared/testing/alert-probe.ts`.
 
 **2f2. Cobertura de código — mede o que o contrato não mede**:
 
