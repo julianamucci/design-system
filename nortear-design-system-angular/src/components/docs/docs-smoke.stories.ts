@@ -15,11 +15,12 @@ import { NdsButtonDocs } from './ButtonDocs';
 import { NdsSeparatorDocs } from './SeparatorDocs';
 import { NdsLabelDocs } from './LabelDocs';
 import { NdsCardDocs } from './CardDocs';
+import { NdsBadgeDocs } from './BadgeDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -72,5 +73,10 @@ export const Label: Story = {
 
 export const Card: Story = {
   render: () => ({ template: '<nds-card-docs />' }),
+  play,
+};
+
+export const Badge: Story = {
+  render: () => ({ template: '<nds-badge-docs />' }),
   play,
 };
