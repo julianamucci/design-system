@@ -50,9 +50,10 @@ const CLASSE_POR_VARIANTE: Record<BadgeVariant, string> = {
 })
 export class NdsBadge {
   readonly variant = input<BadgeVariant>('default');
-  readonly class = input<string>('');
 
+  // `[class]` porque a variante é dinâmica; o `class` que o consumidor
+  // escreve no elemento é mesclado pelo Angular, sem input dedicado.
   protected readonly hostClass = computed(() =>
-    cn('nds-badge', CLASSE_POR_VARIANTE[this.variant()], this.class()),
+    cn('nds-badge', CLASSE_POR_VARIANTE[this.variant()]),
   );
 }

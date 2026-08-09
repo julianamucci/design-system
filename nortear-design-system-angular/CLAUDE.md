@@ -70,6 +70,23 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
   o host é o elemento nativo, então o markup fica idêntico ao do Vanilla e o CSS
   `.nds-*` casa sem wrapper.
+- **`@Directive` quando não há template.** Se o componente só aplica atributos e
+  classes a um elemento que já existe — sem `<ng-content>`, sem markup próprio —
+  use `@Directive`. Um `@Component` com `template: ''` cria view e ciclo de
+  detecção para renderizar nada. `NdsSeparator` é o modelo. Componentes que
+  projetam conteúdo (`NdsButton`, `NdsCard`, `NdsBadge`) seguem `@Component`.
+- **Nunca criar um input `class`.** O Angular já mescla o `class` que o
+  consumidor escreve no elemento com o que o componente declara — tanto com
+  `host: { class: '...' }` estático quanto com host binding `[class]` dinâmico.
+  Verificado em teste (`separator-composicoes` e `button-variantes` afirmam a
+  coexistência das duas classes). Um input `class` + `cn()` é hábito de
+  `className` do React, onde a prop sobrescreve; aqui só duplica o framework.
+  - Classe fixa → `host: { class: 'nds-x' }`, sem `computed`.
+  - Classe que depende de input (variante, tamanho) → `host: { '[class]': 'hostClass()' }`
+    com o `computed` montando **só** as classes do próprio componente.
+  - **Exceção: SVG.** `NdsButtonIcon` usa `[attr.class]` porque `className` em
+    SVG é `SVGAnimatedString` e não aceita binding de classe — ali o atributo
+    sobrescreve, então o input de classe é necessário.
 - **`ViewEncapsulation.None` em todo componente de UI.** Nenhum declara `styles`
   próprios — o visual inteiro vem de `@shared/styles/nds/`, que é global.
   Encapsulamento só emitiria atributos `_ngcontent-*` inúteis.

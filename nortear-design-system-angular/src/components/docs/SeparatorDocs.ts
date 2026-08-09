@@ -42,11 +42,23 @@ import {
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
-// A API do NdsSeparator é de signals com seletor de atributo — `class` em vez
-// de `className`, e o host é o próprio <div>. As descrições ficam no override
-// para não prender em pt-BR o que a tabela mostra nos três idiomas.
+// Não há input de classe nesta stack: classe extra vai no atributo `class` do
+// próprio elemento e o Angular mescla com a classe base do componente. A
+// descrição é sobrescrita por idioma para a tabela não afirmar uma prop que
+// aqui não existe — e para não prender em pt-BR o que sai nos três idiomas.
 const { t, dict } = useTranslation(separatorTranslations as Record<string, unknown>, {
-  '*': { 'props.table.className.name': 'class' },
+  'pt-BR': {
+    'props.table.className.description':
+      'Classes extras vão no atributo class do próprio elemento — o Angular mescla com a classe base do componente. Não existe input dedicado.',
+  },
+  en: {
+    'props.table.className.description':
+      'Extra classes go on the class attribute of the element itself — Angular merges them with the component base class. There is no dedicated input.',
+  },
+  es: {
+    'props.table.className.description':
+      'Las clases extra van en el atributo class del propio elemento — Angular las combina con la clase base del componente. No hay input dedicado.',
+  },
 });
 
 const SECTION_IDS = [
@@ -80,14 +92,16 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const INTERFACE_CODE = `// <div ndsSeparator> — seletor de atributo no próprio <div>
+const INTERFACE_CODE = `// <div ndsSeparator> — diretiva de atributo no próprio <div>
 export type SeparatorOrientation = 'horizontal' | 'vertical';
 
-@Component({ selector: 'div[ndsSeparator]' })
+@Directive({
+  selector: 'div[ndsSeparator]',
+  host: { class: 'nds-separator' },
+})
 export class NdsSeparator {
   readonly orientation = input<SeparatorOrientation>('horizontal');
   readonly decorative = input<boolean>(true);
-  readonly class = input<string>('');
 }`;
 
 @Component({
@@ -483,8 +497,8 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSeparator',
         cols,
         items: ['orientation', 'decorative', 'className'].map((p) => ({
-          // `class` é o nome real do input nesta stack; o conteúdo compartilhado
-          // ainda chama a chave de `className` (herança das outras stacks).
+          // A chave do conteúdo compartilhado é `className` (herança das outras
+          // stacks); aqui a linha documenta o atributo `class` nativo.
           name: p === 'className' ? 'class' : p,
           type: t(`props.table.${p}.type`),
           defaultValue: t(`props.table.${p}.default`),

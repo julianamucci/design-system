@@ -32,6 +32,7 @@ export const Variantes: Story = {
         @for (v of variantes; track v.variant) {
           <button ndsButton [variant]="v.variant">{{ v.label }}</button>
         }
+        <button ndsButton variant="outline" class="nds-w-full">Com classe extra</button>
       </div>
     `,
   }),
@@ -46,6 +47,16 @@ export const Variantes: Story = {
         const btn = canvas.getByRole('button', { name: label });
         await expect(btn).toHaveClass(`nds-button nds-button-${variant}`);
       }
+    });
+
+    await step('Classe do consumidor convive com a classe da variante', async () => {
+      // O Angular mescla o `class` estático escrito no elemento com o host
+      // binding `[class]` do componente. Sem esta asserção, um input `class`
+      // redundante (hábito de `className` do React) passaria despercebido —
+      // e um dia a mesclagem manual sobrescreveria a nativa.
+      const btn = canvas.getByRole('button', { name: 'Com classe extra' });
+      await expect(btn).toHaveClass(/nds-button-outline/);
+      await expect(btn).toHaveClass(/nds-w-full/);
     });
   },
 };

@@ -41,7 +41,7 @@ const COPIED_RESET_MS = 2000;
     // template Angular não expõe globais como String.
     '[attr.data-numbered]': 'numbered()',
     '[attr.data-language]': 'resolvedLanguage()',
-    '[class]': 'hostClass()',
+    class: 'nds-code-block-root',
   },
   template: `
     <!-- Header sempre presente: o botão copiar precisa aparecer mesmo sem título. -->
@@ -95,7 +95,6 @@ export class NdsCodeBlock implements OnDestroy {
   readonly highlightLines = input<LineRangeInput | undefined>(undefined);
   readonly copyLabel = input<string>('Copiar código');
   readonly copiedLabel = input<string>('Copiado!');
-  readonly class = input<string>('');
 
   protected readonly copied = signal(false);
   private timer: ReturnType<typeof setTimeout> | undefined;
@@ -105,7 +104,6 @@ export class NdsCodeBlock implements OnDestroy {
   protected readonly lines = computed(() => highlightCode(this.code(), this.resolvedLanguage()));
   protected readonly highlighted = computed(() => parseLineRanges(this.highlightLines()));
   protected readonly liveText = computed(() => (this.copied() ? this.copiedLabel() : ''));
-  protected readonly hostClass = computed(() => cn('nds-code-block-root', this.class()));
 
   protected onCopy(): void {
     // copyText já cobre o fallback fora de contexto seguro; false = não copiou,

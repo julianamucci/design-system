@@ -1,11 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   input,
   ViewEncapsulation,
 } from '@angular/core';
-import { cn } from '@/lib/utils';
 
 export type CardSize = 'default' | 'sm';
 
@@ -22,14 +20,13 @@ export type CardSize = 'default' | 'sm';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
+    // `class` estático: o Angular mescla com o que o consumidor escrever no
+    // elemento. Um input `class` refazendo a mesclagem seria hábito de React.
+    class: 'nds-card',
     '[attr.data-slot]': '"card"',
     '[attr.data-size]': 'size()',
-    '[class]': 'hostClass()',
   },
 })
 export class NdsCard {
   readonly size = input<CardSize>('default');
-  readonly class = input<string>('');
-
-  protected readonly hostClass = computed(() => cn('nds-card', this.class()));
 }

@@ -90,11 +90,8 @@ export class NdsButton {
   /** Tamanho do botão. Variantes `icon-*` são quadradas e exigem `ariaLabel`. */
   readonly size = input<ButtonSize>('default');
 
-  /** Classes adicionais, mescladas com as da variante. */
-  readonly class = input<string>('');
-
   protected readonly hostClass = computed(() =>
-    cn(btnClass(this.variant(), this.size()), this.class()),
+    btnClass(this.variant(), this.size()),
   );
 }
 
