@@ -4,7 +4,8 @@
 // falhando → parameters.a11y.test:'todo' com as rules no comentário; página
 // limpa → axe é portão.
 //
-// Neste stack só existe ButtonDocs — o spike cobre um componente ponta a ponta.
+// Um export por docs page implementada. O stack está em construção: a lista
+// cresce a cada componente do roteiro em .pipeline-context/_ordem.md.
 
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
@@ -12,11 +13,12 @@ import { expect, waitFor } from 'storybook/test';
 import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
 import { NdsButtonDocs } from './ButtonDocs';
 import { NdsSeparatorDocs } from './SeparatorDocs';
+import { NdsLabelDocs } from './LabelDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -59,5 +61,10 @@ export const Button: Story = {
 
 export const Separator: Story = {
   render: () => ({ template: '<nds-separator-docs />' }),
+  play,
+};
+
+export const Label: Story = {
+  render: () => ({ template: '<nds-label-docs />' }),
   play,
 };
