@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
+import AlertDialogControlledStory from './AlertDialogControlledStory.svelte';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Estados',
@@ -246,30 +247,27 @@ export const Controlled: Story = {
       },
     },
   },
+  // Gatilho FORA do diálogo, como no React e no Vue. Antes a story abria pelo
+  // trigger do próprio componente, e assim não provava nada: abrir por dentro é
+  // indistinguível de um diálogo não controlado.
   render: () => ({
-    Component: AlertDialogStory,
-    props: {
-      open: false,
-      triggerLabel: 'Abrir via estado externo',
-      title: 'Controlado pelo pai',
-      description: 'Este diálogo é comandado por estado externo via bind:open.',
-      cancelLabel: 'Fechar',
-      actionLabel: 'Confirmar',
-      onOpenChange: onOpenChangeSpy,
-    },
+    Component: AlertDialogControlledStory,
+    props: { onOpenChange: onOpenChangeSpy },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
     onOpenChangeSpy.mockClear();
 
-    await step('Clique no trigger externo abre e propaga o novo estado', async () => {
+    await step('Clique no trigger externo abre o diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
       // Entrada animada: espera a opacidade chegar em 1 antes de afirmar visível.
       await waitFor(() => expect(dialog).toBeVisible());
-      await expect(onOpenChangeSpy).toHaveBeenCalledWith(true);
+      // Sem asserção de callback aqui, e isso é o contrato: o botão externo
+      // escreve o estado direto, então o pai já sabe — foi ele que mandou.
+      // `onOpenChange` é o componente PEDINDO a mudança, e só dispara na saída.
     });
 
     await step('Escape fecha o diálogo controlado e propaga o novo estado', async () => {

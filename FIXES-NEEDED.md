@@ -1656,13 +1656,26 @@ o Action — Vanilla com uma única asserção. Vue, Svelte e Vanilla passaram a
 cobrar também o gatilho, o nome acessível do diálogo e o Cancel em outline,
 nivelando pelo React, que era o único completo.
 
-**ABERTO — os demos de `Controlled` estão fiados de formas diferentes.** No
-React o gatilho externo chama `setOpen(true)` direto: o pai já sabe da abertura
-porque foi ele que mandou, e `onOpenChange` só dispara na saída (Escape, clique
-fora) — que é a semântica correta de um componente controlado. O demo do Vanilla
-roteia a ABERTURA pelo callback e por isso cobra os dois sentidos. Mesma story,
-mesmo nome, contratos diferentes. Medido: exigir `toHaveBeenCalledWith(true)` no
-React reprova. Decidir qual fiação é a do design system e alinhar as quatro.
+**PARCIALMENTE RESOLVIDO — os demos de `Controlled`.** A medição deu 2×2, e não
+3×1: React e Vue abrem por um botão EXTERNO que escreve o estado direto, e o
+callback só dispara na saída; Svelte abria pelo gatilho DO PRÓPRIO componente e
+o Vanilla por um gatilho externo passado à factory — nos dois o callback
+reportava também a abertura.
+
+O Svelte foi alinhado ao modelo do React e do Vue, com componente de demo próprio
+(`AlertDialogControlledStory.svelte`). O motivo não é gosto: abrir pelo gatilho
+interno torna a story indistinguível de um diálogo NÃO controlado — ela não
+provava o que o próprio nome promete.
+
+O VANILLA FICA COMO ESTÁ, e não por escolha dele: `createAlertDialog` **não
+aceita `open`**. A factory é dona do estado de abertura e só o expõe por
+`onOpenChange`; o comentário na story já registrava isso como "o equivalente
+possível". Alinhá-lo exige ampliar a API, não reescrever a story:
+
+> **Pendência de API (decisão da dona):** dar à factory do Vanilla uma prop
+> `open` controlada. Custo: passam a existir dois donos possíveis do estado, com
+> o risco clássico de dessincronizar. Merece teste próprio e não deve entrar de
+> carona numa arrumação de story.
 
 **ABERTO — quatro divergências de cobertura que sobraram** (`Open` 4/11/4/4,
 `Confirmed` 6/4/8/6, `Cancelled` 6/4/9/8, `Playground` 26/37/22/27). Diferente da
