@@ -497,6 +497,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
       { token: '--foreground',       value: 'text-foreground',                description: $tStore('tokens.table.foreground')      },
       { token: '--ring',             value: 'focus:ring-ring/50',             description: $tStore('tokens.table.ring')            },
       { token: '--nds-cell-radius',  value: 'var(--radius-md)',               description: toPlainText($tStore('tokens.table.cellRadius')) },
+      { token: '--nds-picker-item',  value: '1.75rem',                        description: toPlainText($tStore('tokens.table.pickerItem')) },
       { token: '--nds-cell-size',    value: '2rem',                           description: toPlainText($tStore('tokens.table.cellSize')) },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}

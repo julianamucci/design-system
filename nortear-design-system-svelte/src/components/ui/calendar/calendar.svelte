@@ -37,6 +37,22 @@
 	// seletor, onde não cabe. Era prop configurável que nenhuma story passava.
 	const monthFormat = $derived(captionLayout === "dropdown" ? "short" : "long");
 	const yearFormat = "numeric";
+
+	/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
+	const JANELA_DE_ANOS = 10;
+
+	// A lista padrão da lib tem 111 entradas (o ano corrente menos 100, mais
+	// 10). Aberta, ela é mais alta que o calendário inteiro e a pessoa rola um
+	// século para achar o ano ao lado. A janela anda junto ao navegar, porque
+	// sai do ano em vista.
+	const anoEmVista = $derived(placeholder?.year ?? new Date().getFullYear());
+	const anosDaLista = $derived(
+		years ??
+			Array.from(
+				{ length: JANELA_DE_ANOS * 2 + 1 },
+				(_, i) => anoEmVista - JANELA_DE_ANOS + i,
+			),
+	);
 </script>
 
 <!--
@@ -71,7 +87,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 							{captionLayout}
 							months={monthsProp}
 							{monthFormat}
-							{years}
+							years={anosDaLista}
 							{yearFormat}
 							month={month.value}
 							bind:placeholder

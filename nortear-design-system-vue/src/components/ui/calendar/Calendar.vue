@@ -31,6 +31,9 @@ const placeholder = useVModel(props, 'placeholder', emits, {
    rede de segurança para uso sem prop, que nenhuma story representa. */
 const formatter = useDateFormatter(props.locale ?? 'en')
 
+/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
+const JANELA_DE_ANOS = 10
+
 const yearRange = computed(() => {
   // A âncora é o `placeholder` já resolvido, e não a cadeia
   // `props.placeholder ?? defaultPlaceholder ?? today()`: o ref acima nasce com
@@ -40,9 +43,13 @@ const yearRange = computed(() => {
   /* v8 ignore next 4 -- minValue/maxValue delimitam a navegação e são
      repassados ao CalendarRoot; aqui só apertariam a lista de anos. Nenhuma
      story os passa, e nenhum conteúdo compartilhado os documenta. */
+  // Uma janela em torno do ano em vista, e não os 111 anos que a lib oferece
+  // por padrão (o corrente menos 100, mais 10): aberta, aquela lista fica mais
+  // alta que o calendário inteiro e obriga a rolar um século para achar o ano
+  // ao lado. A janela é a mesma do Vanilla e anda junto ao navegar.
   return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? ancora.cycle('year', -100),
-    end: props?.maxValue ?? ancora.cycle('year', 10),
+    start: props?.minValue ?? ancora.cycle('year', -JANELA_DE_ANOS),
+    end: props?.maxValue ?? ancora.cycle('year', JANELA_DE_ANOS),
   })
 })
 

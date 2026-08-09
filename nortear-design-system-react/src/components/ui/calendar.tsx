@@ -3,12 +3,46 @@ import {
   DayPicker,
   getDefaultClassNames,
   type DayButton,
+  type DropdownOption,
   type Locale,
 } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+
+/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
+const JANELA_DE_ANOS = 10
+
+function janelaDeAnos(
+  options: DropdownOption[] | undefined,
+  atual: number | string | readonly string[] | undefined,
+) {
+  const ano = Number(atual)
+  if (!options || Number.isNaN(ano)) return options
+  return options.filter((o) => Math.abs(Number(o.value) - ano) <= JANELA_DE_ANOS)
+}
+
+// Um desenho só para os dois seletores da legenda. A lib envolve o <select> num
+// <span> e desenha ao lado um rótulo `aria-hidden` com chevron, deixando o
+// select invisível por cima. O truque existia porque não dava para estilizar o
+// nativo — hoje dá, e o contrato das quatro stacks é o <select> ser o próprio
+// controle.
+function SelectDaLegenda({
+  options,
+  className,
+  ...selectProps
+}: React.ComponentProps<"select"> & { options?: DropdownOption[] }) {
+  return (
+    <select className={cn("nds-calendar-select", className)} {...selectProps}>
+      {options?.map(({ value, label, disabled }) => (
+        <option key={value} value={value} disabled={disabled}>
+          {label}
+        </option>
+      ))}
+    </select>
+  )
+}
 
 function Calendar({
   className,
@@ -19,17 +53,33 @@ function Calendar({
   locale,
   formatters,
   components,
+  startMonth,
+  endMonth,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const defaultClassNames = getDefaultClassNames()
 
+  // Com a legenda em seletores, a lib fecha a navegação no FIM DO ANO CORRENTE
+  // e abre 100 anos para trás. Numa reserva isso é o avesso do necessário: não
+  // dava para escolher nada do ano que vem, e dava para escolher 1926. As
+  // outras três stacks navegam para os dois lados; o limite aqui é simétrico e
+  // largo o bastante para não aparecer, e existe só porque a lib precisa de um.
+  const temSeletorDeAno = captionLayout === "dropdown" || captionLayout === "dropdown-years"
+  const hoje = new Date()
+  const inicioPadrao =
+    startMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() - 100, 0, 1) : undefined)
+  const fimPadrao =
+    endMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() + 100, 11, 31) : undefined)
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("nds-calendar-root", className)}
       captionLayout={captionLayout}
+      startMonth={inicioPadrao}
+      endMonth={fimPadrao}
       locale={locale}
       formatters={{
         formatMonthDropdown: (date) =>
@@ -104,14 +154,16 @@ function Calendar({
         // `aria-hidden` com chevron, deixando o select invisível por cima. O
         // truque existia porque não dava para estilizar o nativo — hoje dá, e o
         // contrato das quatro stacks é o <select> ser o próprio controle.
-        Dropdown: ({ options, className, ...selectProps }) => (
-          <select className={cn("nds-calendar-select", className)} {...selectProps}>
-            {options?.map(({ value, label, disabled }) => (
-              <option key={value} value={value} disabled={disabled}>
-                {label}
-              </option>
-            ))}
-          </select>
+        Dropdown: SelectDaLegenda,
+        // A lista de anos da lib tem 111 entradas (o ano corrente menos 100,
+        // mais 10). Aberta, ela é mais alta que o calendário inteiro e a pessoa
+        // rola um século para achar o ano ao lado. A referência é o Vanilla:
+        // uma janela em torno do ano em vista, que anda junto quando se navega.
+        YearsDropdown: ({ options, ...selectProps }) => (
+          <SelectDaLegenda
+            {...selectProps}
+            options={janelaDeAnos(options, selectProps.value)}
+          />
         ),
         Root: ({ className, rootRef, ...props }) => {
           return (

@@ -313,11 +313,22 @@
    * engolia o clique dos botões de mês — eles apareciam e não faziam nada.
    * Número pequeno porque a disputa é entre irmãos, dentro do componente. */
   z-index: 1;
+  /* A faixa existe só para prender os dois botões nas pontas: o vão do meio é
+   * layout, não superfície. Sem isto ela ficava por cima da legenda e engolia o
+   * clique nos seletores de mês e ano — eles abriam no Vanilla, onde não há
+   * faixa nenhuma, e em mais lugar nenhum. Subir o z-index da legenda em vez
+   * disso devolveria o bug oposto: a legenda é larga e voltaria a cobrir os
+   * botões. */
+  pointer-events: none;
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-1);
+}
+
+.nds-calendar-nav-overlay > * {
+  pointer-events: auto;
 }
 
 /* Compõe com .nds-button .nds-button-ghost — só dimensiona pra célula */
@@ -695,6 +706,10 @@
 @supports (appearance: base-select) {
   .nds-calendar-select {
     appearance: base-select;
+
+    /* Altura de um item da lista, declarada para que o teto do painel seja
+     * conta e não chute: dez destes cabem antes de o resto rolar. */
+    --nds-picker-item: 1.75rem;
   }
 
   .nds-calendar-select::picker-icon {
@@ -710,6 +725,13 @@
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius-md);
     box-shadow: var(--elevation-md);
+
+    /* Dez itens à vista, o resto rola. Sem teto, o painel cresce com a lista e
+     * passa da altura do calendário — a lista de anos sozinha já o fazia. A
+     * conta é fechada porque a altura do item também é: line-height declarado
+     * mais o padding de cima e de baixo. */
+    max-height: calc(10 * var(--nds-picker-item) + 2 * var(--spacing-1));
+    overflow-y: auto;
   }
 
   .nds-calendar-select option {
@@ -717,6 +739,9 @@
     padding-inline: var(--spacing-2);
     border-radius: var(--radius-sm);
     font-size: var(--text-control);
+    /* Derivado da altura do item, e não um segundo número solto: os dois
+     * precisam fechar para o teto de dez itens ser exato. */
+    line-height: calc(var(--nds-picker-item) - 2 * var(--spacing-1));
   }
 
   .nds-calendar-select option:hover {

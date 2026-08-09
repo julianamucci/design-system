@@ -577,6 +577,7 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
             { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
             { token: '--nds-cell-size', value: '2rem', description: toPlainText(t('tokens.table.cellSize')) },
             { token: '--nds-cell-radius', value: 'var(--radius-md)', description: toPlainText(t('tokens.table.cellRadius')) },
+            { token: '--nds-picker-item', value: '1.75rem', description: toPlainText(t('tokens.table.pickerItem')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

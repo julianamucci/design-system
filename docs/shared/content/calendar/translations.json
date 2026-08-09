@@ -243,7 +243,8 @@
         "foreground": "Texto das datas padrão",
         "ring": "Focus ring no DayButton",
         "cellRadius": "Raio dos cantos das células (<code>--radius-md</code>)",
-        "cellSize": "Tamanho da célula (variável local <code>--nds-cell-size</code>)"
+        "cellSize": "Tamanho da célula (variável local <code>--nds-cell-size</code>)",
+        "pickerItem": "Altura de um item na lista de meses e anos (variável local <code>--nds-picker-item</code>); dez cabem antes de o painel rolar"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
@@ -685,7 +686,8 @@
         "foreground": "Text of default dates",
         "ring": "Focus ring on DayButton",
         "cellRadius": "Cell corner radius (<code>--radius-md</code>)",
-        "cellSize": "Cell size (local <code>--nds-cell-size</code> variable)"
+        "cellSize": "Cell size (local <code>--nds-cell-size</code> variable)",
+        "pickerItem": "Height of one item in the month and year list (local variable <code>--nds-picker-item</code>); ten fit before the panel scrolls"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
@@ -1127,7 +1129,8 @@
         "foreground": "Texto de las fechas predeterminadas",
         "ring": "Focus ring en DayButton",
         "cellRadius": "Radio de los cantos de las celdas (<code>--radius-md</code>)",
-        "cellSize": "Tamaño de celda (variable local <code>--nds-cell-size</code>)"
+        "cellSize": "Tamaño de celda (variable local <code>--nds-cell-size</code>)",
+        "pickerItem": "Altura de un elemento en la lista de meses y años (variable local <code>--nds-picker-item</code>); diez caben antes de que el panel se desplace"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {

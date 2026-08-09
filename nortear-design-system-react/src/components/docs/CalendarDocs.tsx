@@ -649,6 +649,7 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
           { token: "--ring",               value: "ring-ring",                          description: tContent("tokens.table.ring") },
           { token: "--nds-cell-size",      value: "2rem",                               description: toPlainText(tContent("tokens.table.cellSize")) },
           { token: "--nds-cell-radius",    value: "var(--radius-md)",                   description: toPlainText(tContent("tokens.table.cellRadius")) },
+          { token: "--nds-picker-item",    value: "1.75rem",                            description: toPlainText(tContent("tokens.table.pickerItem")) },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

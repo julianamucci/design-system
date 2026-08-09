@@ -110,6 +110,35 @@ export const CaptionDropdown: Story = {
       await expect(canvas.getByRole('combobox', { name: 'Selecionar ano' })).toBeInTheDocument();
     });
 
+    await step('O clique chega aos seletores', async () => {
+      // `selectOptions` escolhe a opção por API e passa mesmo com o controle
+      // coberto — foi assim que o seletor ficou inerte na tela com a suíte
+      // verde. A faixa que posiciona os botões de mês é absoluta e cobre a
+      // legenda inteira; `elementFromPoint` devolve QUEM está no topo do ponto,
+      // e é a única coisa aqui que enxerga isso.
+      const doc = canvasElement.ownerDocument;
+      for (const seletor of canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-select')) {
+        const r = seletor.getBoundingClientRect();
+        const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        await expect(seletor === noTopo || seletor.contains(noTopo)).toBe(true);
+      }
+    });
+
+    await step('A lista de anos é uma janela, não um século', async () => {
+      // A lib abre com 111 anos (o corrente menos 100, mais 10) em três das
+      // quatro stacks: o painel fica mais alto que o calendário e a pessoa rola
+      // um século para achar o ano ao lado. O Vanilla sempre ofereceu uma
+      // janela, e é ela o contrato. O teto de altura do painel é CSS do
+      // `::picker(select)` e não tem como ser medido daqui — o que dá para
+      // medir, e é o que causava o transbordo, é o tamanho da lista.
+      const anos = Array.from(
+        canvasElement.querySelectorAll<HTMLOptionElement>('.nds-calendar-select:last-of-type option'),
+      ).map((o) => Number(o.value));
+      await expect(anos.length).toBe(21);
+      await expect(Math.max(...anos) - Math.min(...anos)).toBe(20);
+      await expect(anos).toContain(2026);
+    });
+
     await step('Trocar o mês no seletor leva o grid junto', async () => {
       // Cada passo estabelece a própria precondição: volta para abril no fim,
       // porque o painel reexecuta a play no mesmo DOM.
