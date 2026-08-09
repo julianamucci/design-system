@@ -58,7 +58,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `noop_assertion` | asserção que não pode falhar (`length >= 0`, `toBeTruthy` no container) |
 | `coverage_divergence` | mesma story com cobertura desproporcional entre stacks |
 | `legacy_class_in_story` | classe sem prefixo `nds-` em story — resíduo inerte da migração |
-| `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto |
+| `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto. **Radix NG é exceção**: `@radix-ng/primitives` é a lib ATUAL do Angular, e a regra a distingue por lookahead. "Radix" solto continua sendo o morto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
 | `play_nao_idempotente` | clique seguido de asserção de estado no MESMO alvo. O painel Interactions reexecuta a play no mesmo DOM: na segunda rodada o clique parte do estado que a primeira deixou e inverte o resultado. O vitest remonta a cada teste, então a suíte fica verde enquanto o painel falha — é defeito que só regra pega |

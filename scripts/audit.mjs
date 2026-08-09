@@ -833,9 +833,23 @@ function auditStoryQuality(slug) {
 const NEGATED_MENTION_RX =
   /\bnunca\b|\bnão\s+(crie|recriar|recrie|usa|existe|use|confie)\b|\bnenhum[ao]?\b|proib|removid|saí?ram|saiu|deprecat|resíduo|herdad|inerte|em vez de|no lugar de/i;
 
-/** Libs e helpers que saíram do projeto e não devem mais ser ensinados. */
+/**
+ * Libs e helpers que saíram do projeto e não devem mais ser ensinados.
+ *
+ * "Radix" tem DOIS donos hoje, e a regra precisa saber distinguir:
+ *
+ * - `@radix-ui` e "Radix" solto → a lib que saiu das quatro stacks de
+ *   navegador. Ensinar isso faz componente novo nascer com API que ninguém
+ *   expõe.
+ * - **Radix NG** (`@radix-ng/primitives`) → a lib ATUAL do quinto stack, o
+ *   Angular. É dependência declarada no `package.json` dele, e a dev-skill
+ *   precisa ensiná-la.
+ *
+ * Sem o lookahead, a skill do Angular era acusada em toda auditoria de
+ * componente — e regra que acusa o certo é regra que alguém desliga.
+ */
 const DEAD_LIB_RX = [
-  { rx: /@radix-ui|\bradix\b/i, label: 'Radix' },
+  { rx: /@radix-ui\b|\bradix\b(?![-\s]ng\b)/i, label: 'Radix' },
   { rx: /\bshadcn\b/i, label: 'shadcn' },
   { rx: /\bbasecoat\b/i, label: 'Basecoat' },
   { rx: /\btailwind\b/i, label: 'Tailwind' },
@@ -870,8 +884,14 @@ const DEAD_LIB_RX = [
  * componentes fazem o mesmo via style.setProperty. Sem isto o check acusaria o
  * contrato público das libs como token inexistente.
  */
-// --radix- de propósito FORA: o Radix saiu do projeto, então ninguém escreve
-// essas variáveis e um var(--radix-*) sobrevivente é keyframe morto.
+// `--radix-` fica FORA de propósito, e a razão mudou de sentido: esta varredura
+// lê o CSS COMPARTILHADO, consumido pelas quatro stacks de navegador — nelas o
+// Radix saiu, e um `var(--radix-*)` sobrevivente ali é keyframe morto.
+//
+// O Angular usa Radix NG, que escreve variáveis próprias em runtime. Se o port
+// dele passar a consumi-las, elas entram numa lista ESCOPADA àquela stack, não
+// aqui: liberar o prefixo no compartilhado devolveria o silêncio ao keyframe
+// morto das outras quatro.
 const RUNTIME_TOKEN_PREFIXES = ['--reka-', '--bits-'];
 
 /** Contrato de CSS vars do base-ui, que não usa prefixo. */
