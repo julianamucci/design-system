@@ -31,8 +31,17 @@ const placeholder = useVModel(props, 'placeholder', emits, {
    rede de segurança para uso sem prop, que nenhuma story representa. */
 const formatter = useDateFormatter(props.locale ?? 'en')
 
-/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
-const JANELA_DE_ANOS = 10
+/**
+ * Anos oferecidos para cada lado do ano corrente.
+ *
+ * A lista é COMPLETA, e não uma janela que anda: o painel de um <select> é
+ * desenhado pelo navegador e não entrega evento de rolagem ao JS, então não há
+ * onde pendurar um "carregar mais ao chegar na ponta". Uma janela obrigava a
+ * escolher o último ano da lista e reabrir para andar mais. Quem limita o que
+ * aparece é a altura do painel (onze itens, no CSS): abre com o ano corrente no
+ * meio e rola livre para os dois lados.
+ */
+const ANOS_PARA_CADA_LADO = 100
 
 const yearRange = computed(() => {
   // A âncora é o `placeholder` já resolvido, e não a cadeia
@@ -43,13 +52,12 @@ const yearRange = computed(() => {
   /* v8 ignore next 4 -- minValue/maxValue delimitam a navegação e são
      repassados ao CalendarRoot; aqui só apertariam a lista de anos. Nenhuma
      story os passa, e nenhum conteúdo compartilhado os documenta. */
-  // Uma janela em torno do ano em vista, e não os 111 anos que a lib oferece
-  // por padrão (o corrente menos 100, mais 10): aberta, aquela lista fica mais
-  // alta que o calendário inteiro e obriga a rolar um século para achar o ano
-  // ao lado. A janela é a mesma do Vanilla e anda junto ao navegar.
+  // Simétrico, e não o que a lib oferece por padrão (cem anos para trás, dez
+  // para frente): a lista precisa correr para os dois lados, e não é para uma
+  // data no ano que vem ficar fora do alcance.
   return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? ancora.cycle('year', -JANELA_DE_ANOS),
-    end: props?.maxValue ?? ancora.cycle('year', JANELA_DE_ANOS),
+    start: props?.minValue ?? ancora.cycle('year', -ANOS_PARA_CADA_LADO),
+    end: props?.maxValue ?? ancora.cycle('year', ANOS_PARA_CADA_LADO),
   })
 })
 

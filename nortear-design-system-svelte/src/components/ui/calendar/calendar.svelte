@@ -38,19 +38,26 @@
 	const monthFormat = $derived(captionLayout === "dropdown" ? "short" : "long");
 	const yearFormat = "numeric";
 
-	/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
-	const JANELA_DE_ANOS = 10;
+	/**
+	 * Anos oferecidos para cada lado do ano em vista.
+	 *
+	 * A lista é COMPLETA, e não uma janela que anda: o painel de um <select> é
+	 * desenhado pelo navegador e não entrega evento de rolagem ao JS, então não
+	 * há onde pendurar um "carregar mais ao chegar na ponta". Uma janela
+	 * obrigava a escolher o último ano da lista e reabrir para andar mais. Quem
+	 * limita o que aparece é a altura do painel (onze itens, no CSS): abre com o
+	 * ano corrente no meio e rola livre para os dois lados.
+	 *
+	 * Simétrico, e não o padrão da lib (cem anos para trás, dez para frente).
+	 */
+	const ANOS_PARA_CADA_LADO = 100;
 
-	// A lista padrão da lib tem 111 entradas (o ano corrente menos 100, mais
-	// 10). Aberta, ela é mais alta que o calendário inteiro e a pessoa rola um
-	// século para achar o ano ao lado. A janela anda junto ao navegar, porque
-	// sai do ano em vista.
 	const anoEmVista = $derived(placeholder?.year ?? new Date().getFullYear());
 	const anosDaLista = $derived(
 		years ??
 			Array.from(
-				{ length: JANELA_DE_ANOS * 2 + 1 },
-				(_, i) => anoEmVista - JANELA_DE_ANOS + i,
+				{ length: ANOS_PARA_CADA_LADO * 2 + 1 },
+				(_, i) => anoEmVista - ANOS_PARA_CADA_LADO + i,
 			),
 	);
 </script>

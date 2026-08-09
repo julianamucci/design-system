@@ -68,6 +68,9 @@ function diaA(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }
 
+/** Anos oferecidos para cada lado do ano em vista, no seletor da legenda. */
+const ANOS_PARA_CADA_LADO = 100;
+
 // ─── createCalendar ───────────────────────────────────────────────────────────
 
 export function createCalendar(options: CalendarOptions = {}): HTMLElement {
@@ -213,7 +216,12 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const selAno = document.createElement('select');
     selAno.className = 'nds-calendar-select';
     selAno.setAttribute('aria-label', 'Selecionar ano');
-    for (let ano = viewYear - 10; ano <= viewYear + 10; ano++) {
+    // A lista é completa, e não uma janela em torno do ano em vista: o painel
+    // de um <select> é desenhado pelo navegador e não entrega evento de rolagem
+    // ao JS, então não há onde pendurar um "carregar mais ao chegar na ponta" —
+    // e a janela obrigava a escolher o último ano e reabrir para andar mais.
+    // Quem limita o que aparece é a altura do painel (onze itens, no CSS).
+    for (let ano = viewYear - ANOS_PARA_CADA_LADO; ano <= viewYear + ANOS_PARA_CADA_LADO; ano++) {
       const opt = document.createElement('option');
       opt.value = String(ano);
       opt.textContent = String(ano);

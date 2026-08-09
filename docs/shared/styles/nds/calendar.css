@@ -708,7 +708,7 @@
     appearance: base-select;
 
     /* Altura de um item da lista, declarada para que o teto do painel seja
-     * conta e não chute: dez destes cabem antes de o resto rolar. */
+     * conta e não chute: onze destes cabem no painel, e o resto rola. */
     --nds-picker-item: 1.75rem;
   }
 
@@ -726,11 +726,12 @@
     border-radius: var(--radius-md);
     box-shadow: var(--elevation-md);
 
-    /* Dez itens à vista, o resto rola. Sem teto, o painel cresce com a lista e
-     * passa da altura do calendário — a lista de anos sozinha já o fazia. A
-     * conta é fechada porque a altura do item também é: line-height declarado
-     * mais o padding de cima e de baixo. */
-    max-height: calc(10 * var(--nds-picker-item) + 2 * var(--spacing-1));
+    /* Onze itens à vista — o escolhido no meio, cinco de cada lado —, e o resto
+     * rola. É o teto que faz a lista completa caber: sem ele o painel cresce com
+     * o número de opções e passa da altura do calendário, que foi o que a lista
+     * de anos fez. A conta é fechada porque a altura do item também é:
+     * `--nds-picker-item` manda, e o line-height da opção deriva dela. */
+    max-height: calc(11 * var(--nds-picker-item) + 2 * var(--spacing-1));
     overflow-y: auto;
   }
 
@@ -740,7 +741,7 @@
     border-radius: var(--radius-sm);
     font-size: var(--text-control);
     /* Derivado da altura do item, e não um segundo número solto: os dois
-     * precisam fechar para o teto de dez itens ser exato. */
+     * precisam fechar para o teto de onze itens ser exato. */
     line-height: calc(var(--nds-picker-item) - 2 * var(--spacing-1));
   }
 

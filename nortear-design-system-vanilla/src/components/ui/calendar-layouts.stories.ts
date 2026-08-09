@@ -180,19 +180,22 @@ export const CaptionDropdown: Story = {
       }
     });
 
-    await step('A lista de anos é uma janela, não um século', async () => {
-      // A lib abre com 111 anos (o corrente menos 100, mais 10) em três das
-      // quatro stacks: o painel fica mais alto que o calendário e a pessoa rola
-      // um século para achar o ano ao lado. O Vanilla sempre ofereceu uma
-      // janela, e é ela o contrato. O teto de altura do painel é CSS do
-      // `::picker(select)` e não tem como ser medido daqui — o que dá para
-      // medir, e é o que causava o transbordo, é o tamanho da lista.
+    await step('A lista de anos corre livre para os dois lados', async () => {
+      // Uma janela curta em torno do ano em vista prendia a rolagem: para
+      // passar do último ano da lista era preciso escolhê-lo e reabrir o
+      // seletor. A lista agora é completa e simétrica — o que limita o que
+      // aparece é a altura do painel, onze itens no CSS, com o ano corrente no
+      // meio. O teto em si é desenhado pelo navegador e não é alcançável por
+      // getComputedStyle daqui; o que dá para medir é a lista.
       const anos = Array.from(
         canvasElement.querySelectorAll<HTMLOptionElement>('.nds-calendar-select:last-of-type option'),
       ).map((o) => Number(o.value));
-      await expect(anos.length).toBe(21);
-      await expect(Math.max(...anos) - Math.min(...anos)).toBe(20);
+      await expect(anos.length).toBe(201);
+      await expect(Math.max(...anos) - Math.min(...anos)).toBe(200);
       await expect(anos).toContain(2026);
+      // Simétrico: a lib abria cem anos para trás e dez para frente, e uma data
+      // no ano que vem ficava fora do alcance do seletor.
+      await expect(2026 - Math.min(...anos)).toBe(Math.max(...anos) - 2026);
     });
 
     await step('Trocar o mês no seletor leva o grid junto', async () => {

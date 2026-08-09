@@ -326,7 +326,7 @@ const calendarPropItems = computed(() => [
   { name: 'preventDeselect', type: 'boolean',                                  defaultValue: 'false',        required: 'Não', description: 'Impede desselecionar sem escolher outra data.' },
   { name: 'disableDaysOutsideCurrentView', type: 'boolean',                    defaultValue: 'false',        required: 'Não', description: 'Equivalente inverso ao showOutsideDays do React — desabilita dias fora do mês.' },
   { name: 'layout',          type: '"month-and-year"',                                  defaultValue: 'undefined', required: 'Não', description: 'Formato da legenda: sem valor, texto; com ele, seletores de mês e ano.' },
-  { name: 'yearRange',       type: 'DateValue[]',                              defaultValue: '±10 anos',     required: 'Não', description: 'Lista de anos disponíveis no dropdown (quando layout expõe ano). O padrão é uma janela em torno do ano em vista.' },
+  { name: 'yearRange',       type: 'DateValue[]',                              defaultValue: '±100 anos',    required: 'Não', description: 'Lista de anos disponíveis no dropdown (quando layout expõe ano). O padrão é simétrico em torno do ano em vista; o painel mostra onze por vez e rola.' },
   { name: 'dir',             type: '"ltr" | "rtl"',                            defaultValue: '"ltr"',        required: 'Não', description: 'Direção de leitura.' },
   { name: 'class',           type: 'string',                                   defaultValue: '—',            required: 'Não', description: toPlainText(tContent('props.table.className')) },
 ]);

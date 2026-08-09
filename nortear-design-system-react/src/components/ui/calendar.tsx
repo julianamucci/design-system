@@ -11,17 +11,18 @@ import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
-/** Anos oferecidos para cada lado do ano em vista, como no Vanilla. */
-const JANELA_DE_ANOS = 10
-
-function janelaDeAnos(
-  options: DropdownOption[] | undefined,
-  atual: number | string | readonly string[] | undefined,
-) {
-  const ano = Number(atual)
-  if (!options || Number.isNaN(ano)) return options
-  return options.filter((o) => Math.abs(Number(o.value) - ano) <= JANELA_DE_ANOS)
-}
+/**
+ * Anos oferecidos para cada lado do ano corrente.
+ *
+ * A lista é COMPLETA, e não uma janela que anda: o painel de um <select> é
+ * desenhado pelo navegador e não entrega evento de rolagem ao JS, então não há
+ * onde pendurar um "carregar mais ao chegar na ponta". Uma janela obrigava a
+ * escolher o último ano da lista e reabrir para andar mais — e é justamente a
+ * rolagem presa que se quer evitar. Quem limita o que aparece é a altura do
+ * painel (onze itens, no CSS): abre com o ano corrente no meio e rola livre
+ * para os dois lados.
+ */
+const ANOS_PARA_CADA_LADO = 100
 
 // Um desenho só para os dois seletores da legenda. A lib envolve o <select> num
 // <span> e desenha ao lado um rótulo `aria-hidden` com chevron, deixando o
@@ -69,9 +70,9 @@ function Calendar({
   const temSeletorDeAno = captionLayout === "dropdown" || captionLayout === "dropdown-years"
   const hoje = new Date()
   const inicioPadrao =
-    startMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() - 100, 0, 1) : undefined)
+    startMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() - ANOS_PARA_CADA_LADO, 0, 1) : undefined)
   const fimPadrao =
-    endMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() + 100, 11, 31) : undefined)
+    endMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() + ANOS_PARA_CADA_LADO, 11, 31) : undefined)
 
   return (
     <DayPicker
@@ -155,16 +156,6 @@ function Calendar({
         // truque existia porque não dava para estilizar o nativo — hoje dá, e o
         // contrato das quatro stacks é o <select> ser o próprio controle.
         Dropdown: SelectDaLegenda,
-        // A lista de anos da lib tem 111 entradas (o ano corrente menos 100,
-        // mais 10). Aberta, ela é mais alta que o calendário inteiro e a pessoa
-        // rola um século para achar o ano ao lado. A referência é o Vanilla:
-        // uma janela em torno do ano em vista, que anda junto quando se navega.
-        YearsDropdown: ({ options, ...selectProps }) => (
-          <SelectDaLegenda
-            {...selectProps}
-            options={janelaDeAnos(options, selectProps.value)}
-          />
-        ),
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
