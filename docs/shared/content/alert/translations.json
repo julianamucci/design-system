@@ -13,6 +13,8 @@
     "demonstration": {
       "title": "Demonstração",
       "labels": {
+        "defaultTitle": "Nova versão disponível",
+        "defaultDesc": "Atualize para receber as últimas melhorias.",
         "infoTitle": "Atenção",
         "infoDesc": "Suas alterações serão aplicadas na próxima sessão.",
         "errorTitle": "Erro ao salvar",
@@ -434,6 +436,8 @@
     "demonstration": {
       "title": "Demonstration",
       "labels": {
+        "defaultTitle": "New version available",
+        "defaultDesc": "Update to get the latest improvements.",
         "infoTitle": "Notice",
         "infoDesc": "Your changes will be applied in the next session.",
         "errorTitle": "Save failed",
@@ -855,6 +859,8 @@
     "demonstration": {
       "title": "Demostración",
       "labels": {
+        "defaultTitle": "Nueva versión disponible",
+        "defaultDesc": "Actualiza para recibir las últimas mejoras.",
         "infoTitle": "Atención",
         "infoDesc": "Tus cambios se aplicarán en la próxima sesión.",
         "errorTitle": "Error al guardar",
