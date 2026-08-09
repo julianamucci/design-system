@@ -92,6 +92,14 @@ export const Playground: Story = {
       await expect(button).toBeVisible();
     });
 
+    await step('O botão nativo declara type=button', async () => {
+      // Sem o atributo o navegador assume submit: dentro de um <form>, um
+      // "Cancelar" envia a página. Medido nas cinco stacks, o Vue era a única
+      // sem declarar — e nenhuma story monta form, então nada acusava.
+      await expect(button).toHaveAttribute('type', 'button');
+    });
+
+
     await step('Clique dispara onClick', async () => {
       await userEvent.click(button);
       await expect((args as { onClick: ReturnType<typeof fn> }).onClick).toHaveBeenCalledTimes(1);
