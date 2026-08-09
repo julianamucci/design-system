@@ -2,194 +2,47 @@
  * ─── nds-calendar ───────────────────────────────────────────────────────────
  * Date picker visual com grid mensal navegável.
  *
- *   <div class="nds-calendar">
- *     <div class="nds-calendar-nav">
- *       <button class="nds-calendar-nav-button">‹</button>
- *       <div class="nds-calendar-month-label">Janeiro 2026</div>
- *       <button class="nds-calendar-nav-button">›</button>
+ * UMA família de classes para as quatro stacks. Antes eram duas: a do Vanilla
+ * (.nds-calendar, -nav, -nav-button, -month-label, -grid, -day) e a das outras
+ * três (.nds-calendar-root, -nav-overlay, -nav-btn, -caption, -table,
+ * -day-btn). Elas desenhavam a mesma tela por caminhos diferentes, então toda
+ * correção precisava ser escrita duas vezes — e a segunda quase sempre ficava
+ * para trás. Foi a origem de metade das divergências entre stacks: raio do dia
+ * 10 contra 8, botão de mês 28 contra 32, respiro 22 contra 16.
+ *
+ *   <div class="nds-calendar-root">
+ *     <div class="nds-calendar-months">
+ *       <div class="nds-calendar-nav-overlay">
+ *         <button class="nds-calendar-nav-btn">‹</button>
+ *         <button class="nds-calendar-nav-btn">›</button>
+ *       </div>
+ *       <div class="nds-calendar-month">
+ *         <div class="nds-calendar-caption">Janeiro 2026</div>
+ *         <table class="nds-calendar-table">
+ *           <thead aria-hidden="true">
+ *             <tr class="nds-calendar-weekdays"><th class="nds-calendar-weekday">dom</th>…</tr>
+ *           </thead>
+ *           <tbody>
+ *             <tr class="nds-calendar-week">
+ *               <td class="nds-calendar-day-cell" role="gridcell">
+ *                 <button class="nds-calendar-day-btn" data-selected>1</button>
+ *               </td>…
+ *             </tr>
+ *           </tbody>
+ *         </table>
+ *       </div>
  *     </div>
- *     <table class="nds-calendar-grid" role="grid">
- *       <thead><tr><th>Dom</th>…</tr></thead>
- *       <tbody><tr><td><button class="nds-calendar-day">1</button></td>…</tr></tbody>
- *     </table>
  *   </div>
+ *
+ * Estados via atributos de PRESENÇA no botão do dia: data-selected, data-today,
+ * data-outside-month, data-disabled, data-selection-start/-end. A família de
+ * classes na CÉLULA (.nds-calendar-range-start/-middle/-end, .nds-calendar-today,
+ * .nds-calendar-outside) atende a lib que marca a célula em vez do botão.
  *
  * Tokens: --background, --foreground, --muted-foreground, --primary,
  *         --primary-foreground, --accent, --accent-foreground, --input,
  *         --ring, --radius, --spacing-*
  */
-
-.nds-calendar {
-  /* Encolhe até o conteúdo, como o .nds-calendar-root das outras stacks. Sem
-   * isto o calendário se esticava para a largura do contêiner: as colunas se
-   * afastavam e o cabeçalho abria de ponta a ponta, com as setas nas bordas do
-   * bloco em vez de ao lado do mês. Também é o que faz o `justify-content:
-   * center` do contêiner ter efeito — item esticado não tem o que centralizar. */
-  width: fit-content;
-  padding: var(--spacing-3, 0.75rem);             /* 12px */
-  user-select: none;
-}
-
-/* ── Nav (header com mês + setas) ────────────────────────────────────────── */
-.nds-calendar-nav {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: var(--spacing-1);
-  /* 16px, como nas outras stacks: lá o respiro vem do gap entre a legenda e a
-   * grade dentro de .nds-calendar-month. Aqui a estrutura é mais simples e
-   * quem separa é esta margem. */
-  margin-bottom: var(--spacing-4);
-}
-
-/* Ghost, como nas outras três stacks: fundo transparente e sem borda, com o
- * realce só no hover. A paginação de mês é ação secundária dentro do
- * calendário — emoldurada, ela competia com o dia escolhido, que é o único
- * elemento que deveria ter peso ali. */
-.nds-calendar-nav-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;                                  /* 28px */
-  height: 1.75rem;
-
-  background-color: transparent;
-  color: hsl(var(--foreground));
-  border: 0;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: var(--text-control);
-  cursor: pointer;
-  outline: 0;
-  transition: background-color var(--duration-fast), color var(--duration-fast);
-}
-
-.nds-calendar-nav-button:hover {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
-
-.nds-calendar-nav-button:focus-visible {
-  box-shadow: 0 0 0 1px hsl(var(--ring));
-}
-
-.nds-calendar-nav-button > svg {
-  width: var(--spacing-4);
-  height: var(--spacing-4);
-}
-
-.nds-calendar-month-label {
-  font-size: var(--text-control);
-  font-weight: var(--font-weight-medium, 500);
-  color: hsl(var(--foreground));
-}
-
-/* ── Grid (tabela com dias) ──────────────────────────────────────────────── */
-.nds-calendar-grid {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.nds-calendar-grid > thead > tr {
-  display: flex;
-}
-
-.nds-calendar-grid > thead > tr > th {
-  width: var(--spacing-8, 2rem);                  /* 32px */
-  text-align: center;
-  font-size: 0.8rem;                               /* 12.8px */
-  font-weight: var(--font-weight-normal, 400);
-  color: hsl(var(--muted-foreground));
-}
-
-.nds-calendar-grid > tbody > tr {
-  display: flex;
-  width: 100%;
-  margin-top: var(--spacing-2);
-}
-
-.nds-calendar-grid > tbody > tr > td {
-  position: relative;
-  padding: 0;
-  text-align: center;
-}
-
-/* ── Day button ──────────────────────────────────────────────────────────── */
-.nds-calendar-day {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: var(--spacing-8, 2rem);                   /* 32px */
-  height: var(--spacing-8, 2rem);
-  padding: 0;
-
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: var(--text-control);
-  font-weight: var(--font-weight-normal, 400);
-  color: inherit;
-  cursor: pointer;
-  outline: 0;
-  transition: background-color var(--duration-fast), color var(--duration-fast);
-}
-
-.nds-calendar-day:hover:not(:disabled):not([data-selected="true"]) {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
-
-.nds-calendar-day:focus-visible {
-  box-shadow: 0 0 0 1px hsl(var(--ring));
-}
-
-/* Estado: hoje (sem seleção) — fundo accent suave */
-.nds-calendar-day[data-today="true"]:not([data-selected="true"]) {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
-
-/* Estado: selecionado — fundo primary.
- *
- * A chave é `data-selected`, e não `aria-selected`: o atributo ARIA de seleção
- * mora na CÉLULA (é ela que tem papel de gridcell), então nenhuma destas regras
- * pegava o botão e o dia escolhido ficava sem destaque nenhum. */
-.nds-calendar-day[data-selected="true"] {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-}
-
-/* Miolo do intervalo: fica visível, mas abaixo dos extremos na hierarquia —
- * quem olha precisa ver onde o intervalo começa e onde termina. */
-.nds-calendar-day[data-range="middle"] {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-  border-radius: 0;
-}
-.nds-calendar-day[data-range="start"] {
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
-}
-.nds-calendar-day[data-range="end"] {
-  border-start-start-radius: 0;
-  border-end-start-radius: 0;
-}
-
-/* Dias dos meses vizinhos: presentes para fechar a semana, apagados para não
- * competirem com o mês em foco. */
-.nds-calendar-day[data-outside="true"]:not([data-selected="true"]) {
-  color: hsl(var(--muted-foreground));
-}
-
-.nds-calendar-day:disabled {
-  opacity: 0.5;
-  pointer-events: none;
-  cursor: not-allowed;
-}
-
 
 /* ── Legenda com seletores de mês e ano ─────────────────────────────────────
  *
@@ -247,8 +100,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nds-calendar-nav-button,
-  .nds-calendar-day {
+  .nds-calendar-nav-btn,
+  .nds-calendar-day-btn {
     transition: none;
   }
 }
@@ -331,12 +184,41 @@
   pointer-events: auto;
 }
 
-/* Compõe com .nds-button .nds-button-ghost — só dimensiona pra célula */
+/* Auto-suficiente, e não "dimensiona o que o .nds-button já desenhou".
+ *
+ * Três stacks compõem esta classe com `.nds-button .nds-button-ghost` por fora;
+ * o Vanilla não compõe botão nenhum, e o botão de mês aparecia com a moldura
+ * padrão do navegador — 2px de borda onde as outras três têm zero. É o mesmo
+ * defeito que o botão do dia teve: contrato compartilhado que só funciona com
+ * ajuda de fora não é contrato. As declarações abaixo coincidem com o que a
+ * variante ghost já dá, então nada muda onde ela existe. */
 .nds-calendar-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   width: var(--nds-cell-size);
   height: var(--nds-cell-size);
   padding: 0;
+
+  background-color: transparent;
+  color: hsl(var(--foreground));
+  border: 0;
+  border-radius: var(--nds-cell-radius);
+  font-family: inherit;
+  cursor: pointer;
+  outline: 0;
   user-select: none;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.nds-calendar-nav-btn:hover:not([aria-disabled="true"]) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-calendar-nav-btn:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
 .nds-calendar-nav-btn[aria-disabled="true"] {
@@ -559,10 +441,33 @@
   min-width: var(--nds-cell-size);
   padding: 0;
 
+  /* Fundo, cor, fonte e cursor declarados aqui, e não herdados da variante
+   * ghost que três stacks compõem por fora: sem eles o botão do dia aparecia
+   * com o cinza padrão do navegador (#f0f0f0) onde ninguém compõe. É a mesma
+   * armadilha do botão de mês — classe compartilhada que só funciona com ajuda
+   * externa não é contrato. Onde a variante ghost existe, os valores coincidem
+   * e nada muda. */
+  background-color: transparent;
+  color: inherit;
   border: 0;
   border-radius: var(--nds-cell-radius);
+  font-family: inherit;
+  font-size: var(--text-control);
   line-height: 1;
   font-weight: var(--font-weight-normal, 400);
+  cursor: pointer;
+  outline: 0;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.nds-calendar-day-btn:hover:not([data-selected]):not([data-disabled]):not(:disabled) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+.nds-calendar-day-btn:disabled,
+.nds-calendar-day-btn[data-disabled] {
+  cursor: not-allowed;
 }
 
 .nds-calendar-day-btn > span {
@@ -615,9 +520,17 @@
   color: hsl(var(--accent-foreground));
 }
 
-.nds-calendar-day-btn[data-outside-view],
-.nds-calendar-day-btn[data-outside-month],
-.nds-calendar-outside .nds-calendar-day-btn {
+/* Apagado só enquanto NÃO estiver escolhido.
+ *
+ * Sem a guarda, um dia de fora do mês que também está escolhido fica com o
+ * texto apagado sobre o fundo primary: medido pelo axe, 3.12:1 — reprova o
+ * mínimo de 4.5:1 e o número some. Acontece toda vez que a escolha cai na
+ * primeira ou na última semana, que é comum. A família de classes do Vanilla
+ * tinha essa guarda desde sempre; a compartilhada, não — e o defeito só
+ * apareceu quando as duas viraram uma. */
+.nds-calendar-day-btn[data-outside-view]:not([data-selected]),
+.nds-calendar-day-btn[data-outside-month]:not([data-selected]),
+.nds-calendar-outside:not([data-selected]) .nds-calendar-day-btn:not([data-selected]) {
   color: hsl(var(--muted-foreground));
 }
 

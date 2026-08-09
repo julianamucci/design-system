@@ -70,7 +70,7 @@ export const Playground: Story = {
       // e mesmo assim o Vue desenhava 48×48, porque herdava o padding do botão
       // que ele compõe por fora. E o Svelte, que não compõe botão nenhum,
       // deixava o número no canto superior esquerdo.
-      const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day')!;
+      const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn')!;
       const cs = getComputedStyle(dia);
       const caixa = dia.getBoundingClientRect();
 
@@ -93,8 +93,8 @@ export const Playground: Story = {
       largo.appendChild(raiz);
 
       await expect(raiz.getBoundingClientRect().width).toBeLessThan(400);
-      const nav = raiz.querySelector<HTMLElement>('.nds-calendar-nav')!;
-      const grade = raiz.querySelector<HTMLElement>('.nds-calendar-grid')!;
+      const nav = raiz.querySelector<HTMLElement>('.nds-calendar-nav-overlay')!;
+      const grade = raiz.querySelector<HTMLElement>('.nds-calendar-table')!;
       await expect(
         Math.abs(nav.getBoundingClientRect().width - grade.getBoundingClientRect().width),
       ).toBeLessThan(2);
@@ -118,13 +118,13 @@ export const Playground: Story = {
       // então o gap interno não o alcançava). E o dia de fora do mês só ficava
       // apagado no Vue e no Vanilla — no React a regra mirava a célula, e o
       // botão dentro dela repunha a própria cor; no Svelte não havia regra.
-      const legenda = canvasElement.querySelector<HTMLElement>('.nds-calendar-nav')!;
+      const legenda = canvasElement.querySelector<HTMLElement>('.nds-calendar-nav-overlay')!;
       const semana = canvasElement.querySelector<HTMLElement>('thead')!;
       const respiro = semana.getBoundingClientRect().top - legenda.getBoundingClientRect().bottom;
       await expect(Math.round(respiro)).toBe(16);
 
-      const vizinho = canvasElement.querySelector<HTMLElement>('.nds-calendar-day[data-outside]')!;
-      const doMes = canvasElement.querySelector<HTMLElement>('.nds-calendar-day:not([data-outside])')!;
+      const vizinho = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-month]')!;
+      const doMes = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn:not([data-outside-month])')!;
       await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(doMes).color);
     });
 
@@ -144,7 +144,7 @@ export const Playground: Story = {
     });
 
     await step('Célula selecionada com aria-pressed="true"', async () => {
-      const selected = canvasElement.querySelector('.nds-calendar-day[aria-pressed="true"]');
+      const selected = canvasElement.querySelector('.nds-calendar-day-btn[aria-pressed="true"]');
       await expect(selected).not.toBeNull();
       await expect(selected).toHaveTextContent('12');
     });

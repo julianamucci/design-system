@@ -45,7 +45,7 @@ export const CaptionLabel: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const legenda = () => canvasElement.querySelector('.nds-calendar-month-label');
+    const legenda = () => canvasElement.querySelector('.nds-calendar-caption');
 
     await step('A legenda traz mês e ano no idioma pedido', async () => {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
@@ -106,7 +106,7 @@ export const Bordered: Story = {
       // O ponto da story é a composição de classes: a moldura entra sem
       // apagar a classe base, senão o calendário perderia o próprio estilo.
       const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      await expect(raiz).toHaveClass('nds-calendar');
+      await expect(raiz).toHaveClass('nds-calendar-root');
       await expect(raiz).toHaveClass('nds-border-default');
       await expect(raiz).toHaveClass('nds-shadow-sm');
     });
@@ -134,8 +134,8 @@ export const Bare: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Sem moldura própria quando nada é passado', async () => {
       const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      await expect(raiz).toHaveClass('nds-calendar');
-      await expect(raiz.className.trim()).toBe('nds-calendar');
+      await expect(raiz).toHaveClass('nds-calendar-root');
+      await expect(raiz.className.trim()).toBe('nds-calendar-root');
       await expect(parseFloat(getComputedStyle(raiz).borderTopWidth)).toBe(0);
     });
   },
@@ -248,11 +248,16 @@ export const TwoMonths: Story = {
       // Sem o rótulo por mês, a segunda grade fica sem identificação e a pessoa
       // tem que contar os dias para descobrir de que mês ela é.
       const rotulos = Array.from(
-        canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-month-label'),
+        canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-caption'),
       ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
       await expect(rotulos).toEqual(['abril 2026', 'maio 2026']);
-      await expect(canvasElement.querySelector('.nds-calendar-nav .nds-calendar-month-label'))
-        .toHaveTextContent(/abril – maio 2026/i);
+      // A faixa de navegação não repete a janela: ela só prende os dois botões
+      // nas pontas, como nas outras três stacks. O rótulo "abril – maio 2026"
+      // que morava ali era invenção do Vanilla, e dizia em terceiro lugar o que
+      // as duas legendas já dizem.
+      await expect(
+        canvasElement.querySelectorAll('.nds-calendar-nav-overlay .nds-calendar-caption').length,
+      ).toBe(0);
     });
 
     await step('Escolher no segundo mês não move a janela', async () => {
@@ -262,18 +267,18 @@ export const TwoMonths: Story = {
       // precondição: o clique final devolve a escolha para 28 de abril.
       const rotulos = () =>
         Array.from(
-          canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-month-label'),
+          canvasElement.querySelectorAll('.nds-calendar-month .nds-calendar-caption'),
         ).map((el) => el.textContent?.trim().toLowerCase() ?? '');
       // Busca dentro do bloco do mês, e não no canvas: um dia da virada aparece
       // nos DOIS grids — 28 de abril é dia real em abril e vizinho em maio.
       const bloco = (i: number) =>
         canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-month')[i];
       const diaNoBloco = (i: number, iso: string) =>
-        bloco(i).querySelector<HTMLButtonElement>(`.nds-calendar-day[data-day="${iso}"]`)!;
+        bloco(i).querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
 
       await userEvent.click(diaNoBloco(1, '2026-05-05'));
       await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);
-      await expect(diaNoBloco(1, '2026-05-05')).toHaveAttribute('data-selected', 'true');
+      await expect(diaNoBloco(1, '2026-05-05')).toHaveAttribute('data-selected');
 
       await userEvent.click(diaNoBloco(0, '2026-04-28'));
       await expect(rotulos()).toEqual(['abril 2026', 'maio 2026']);

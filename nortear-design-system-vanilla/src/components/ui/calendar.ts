@@ -176,12 +176,20 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
   const root = document.createElement('div');
   root.dataset.slot = 'calendar';
-  root.className = cn('nds-calendar', options.class);
+  // A família de classes é a mesma das outras três stacks. Antes o Vanilla
+  // tinha vocabulário próprio — .nds-calendar, -nav, -day, -grid — e por isso a
+  // folha compartilhada carregava DOIS blocos para o mesmo componente: toda
+  // correção precisava ser feita duas vezes, e uma sempre ficava para trás.
+  root.className = cn('nds-calendar-root', ehIntervalo && 'nds-calendar-range', options.class);
 
   function buildChevron(direction: 'left' | 'right'): SVGSVGElement {
     const SVG_NS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('xmlns', SVG_NS);
+    // Mesma classe do ícone das outras stacks: é ela que dá o tamanho. Antes o
+    // tamanho vinha de uma regra própria do Vanilla, que saiu com o bloco
+    // duplicado.
+    svg.setAttribute('class', 'nds-calendar-chevron');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('fill', 'none');
     svg.setAttribute('stroke', 'currentColor');
@@ -246,7 +254,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
    */
   function buildGrid(anoDaGrade: number, mesDaGrade: number): HTMLTableElement {
     const table = document.createElement('table');
-    table.className = 'nds-calendar-grid';
+    table.className = 'nds-calendar-table';
     table.setAttribute('role', 'grid');
     table.setAttribute('aria-label', `${monthNames[mesDaGrade]} ${anoDaGrade}`);
 
@@ -260,8 +268,10 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const thead = document.createElement('thead');
     thead.setAttribute('aria-hidden', 'true');
     const headerRow = document.createElement('tr');
+    headerRow.className = 'nds-calendar-weekdays';
     dayNames.forEach((day) => {
       const th = document.createElement('th');
+      th.className = 'nds-calendar-weekday';
       th.setAttribute('scope', 'col');
       th.textContent = day;
       headerRow.appendChild(th);
@@ -280,9 +290,11 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     for (let week = 0; week < semanas; week++) {
       const row = document.createElement('tr');
+      row.className = 'nds-calendar-week';
 
       for (let col = 0; col < 7; col++) {
         const td = document.createElement('td');
+        td.className = 'nds-calendar-day-cell';
         // Explícito, não implícito: o mapeamento de <td> para gridcell depende
         // do ancestral ter papel de grid, e nem toda árvore de acessibilidade
         // faz essa conta. Sem o papel, a célula é lida como célula de tabela
@@ -308,7 +320,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'nds-calendar-day';
+        btn.className = 'nds-calendar-day-btn';
         btn.textContent = String(date.getDate());
         btn.dataset.day = isoDe(date);
         btn.setAttribute('aria-label', dayButtonLabelFmt.format(date));
@@ -316,11 +328,15 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         // Tabulação móvel: só o dia focado é alcançável por Tab; os outros
         // são alcançados pelas setas, dentro do grid.
         btn.tabIndex = isSameDay(date, focado) ? 0 : -1;
-        if (isSelected) btn.dataset.selected = 'true';
-        if (isTodayDate) btn.dataset.today = 'true';
-        if (foraDoMes) btn.dataset.outside = 'true';
-        if (posicaoNoIntervalo) btn.dataset.range = posicaoNoIntervalo;
-        if (isDisabled) btn.disabled = true;
+        // Atributos de PRESENÇA (sem valor), como as libs das outras stacks
+        // emitem: é o que a folha compartilhada lê. Com valor 'true' o Vanilla
+        // precisava de uma regra própria para cada estado.
+        if (isSelected) btn.dataset.selected = '';
+        if (isTodayDate) btn.dataset.today = '';
+        if (foraDoMes) btn.dataset.outsideMonth = '';
+        if (posicaoNoIntervalo === 'start') btn.dataset.selectionStart = '';
+        if (posicaoNoIntervalo === 'end') btn.dataset.selectionEnd = '';
+        if (isDisabled) { btn.disabled = true; btn.dataset.disabled = ''; }
 
         btn.addEventListener('keydown', (e) => {
           const passos: Record<string, [number, number]> = {
@@ -388,11 +404,11 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     // Month navigation
     const nav = document.createElement('div');
-    nav.className = 'nds-calendar-nav';
+    nav.className = 'nds-calendar-nav-overlay';
 
     const prevBtn = document.createElement('button');
     prevBtn.type = 'button';
-    prevBtn.className = 'nds-calendar-nav-button';
+    prevBtn.className = 'nds-calendar-nav-btn';
     prevBtn.setAttribute('aria-label', rotulos.mesAnterior);
     prevBtn.appendChild(buildChevron('left'));
     prevBtn.addEventListener('click', () => {
@@ -403,7 +419,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
-    nextBtn.className = 'nds-calendar-nav-button';
+    nextBtn.className = 'nds-calendar-nav-btn';
     nextBtn.setAttribute('aria-label', rotulos.proximoMes);
     nextBtn.appendChild(buildChevron('right'));
     nextBtn.addEventListener('click', () => {
@@ -412,46 +428,34 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
       render();
     });
 
-    let legenda: HTMLElement;
-    if (captionLayout === 'dropdown') {
-      legenda = buildDropdownCaption();
-    } else {
-      legenda = document.createElement('div');
-      legenda.className = 'nds-calendar-month-label';
-      // Com mais de um mês, a legenda diz a janela, não um mês só.
-      const ultimo = new Date(viewYear, viewMonth + numberOfMonths - 1, 1);
-      legenda.textContent =
-        numberOfMonths === 1
-          ? `${monthNames[viewMonth]} ${viewYear}`
-          : `${monthNames[viewMonth]} – ${monthNames[ultimo.getMonth()]} ${ultimo.getFullYear()}`;
-    }
+    nav.append(prevBtn, nextBtn);
 
-    nav.append(prevBtn, legenda, nextBtn);
-    root.appendChild(nav);
+    // Mesma árvore das outras três stacks: a faixa de navegação é irmã dos
+    // meses e fica POR CIMA deles, e cada mês traz a própria legenda no meio.
+    // Antes o Vanilla montava [‹] [legenda] [›] numa linha só — mesmo desenho
+    // por outro caminho, e era esse caminho que obrigava a folha compartilhada
+    // a manter um segundo conjunto de regras só para ele.
+    const meses = document.createElement('div');
+    meses.className = 'nds-calendar-months';
+    meses.appendChild(nav);
 
-    // Um mês: a tabela pendura direto na raiz, como sempre — nada muda no DOM
-    // de quem não pede janela maior. Vários: cada mês ganha o próprio rótulo,
-    // porque a legenda da nav já não dá conta de dizer qual é qual.
-    if (numberOfMonths === 1) {
-      root.appendChild(buildGrid(viewYear, viewMonth));
-    } else {
-      const meses = document.createElement('div');
-      meses.className = 'nds-calendar-months';
+    for (let i = 0; i < numberOfMonths; i++) {
+      const d = new Date(viewYear, viewMonth + i, 1);
+      const bloco = document.createElement('div');
+      bloco.className = 'nds-calendar-month';
 
-      for (let i = 0; i < numberOfMonths; i++) {
-        const d = new Date(viewYear, viewMonth + i, 1);
-        const bloco = document.createElement('div');
-        bloco.className = 'nds-calendar-month';
-
-        const rotulo = document.createElement('div');
-        rotulo.className = 'nds-calendar-month-label';
-        rotulo.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
-
-        bloco.append(rotulo, buildGrid(d.getFullYear(), d.getMonth()));
-        meses.appendChild(bloco);
+      const legenda = document.createElement('div');
+      legenda.className = 'nds-calendar-caption';
+      if (captionLayout === 'dropdown') {
+        legenda.appendChild(buildDropdownCaption());
+      } else {
+        legenda.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
       }
-      root.appendChild(meses);
+
+      bloco.append(legenda, buildGrid(d.getFullYear(), d.getMonth()));
+      meses.appendChild(bloco);
     }
+    root.appendChild(meses);
 
 
     // O render reconstrói o DOM inteiro, então o elemento que tinha o foco
@@ -459,7 +463,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     // navegação pararia no primeiro passo.
     if (devolverFoco) {
       devolverFoco = false;
-      root.querySelector<HTMLButtonElement>(`.nds-calendar-day[data-day="${isoDe(focado)}"]`)?.focus();
+      root.querySelector<HTMLButtonElement>(`.nds-calendar-day-btn[data-day="${isoDe(focado)}"]`)?.focus();
     }
   }
 

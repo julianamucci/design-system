@@ -63,16 +63,16 @@ export const Selected: Story = {
     await step('Cada dia anuncia a data por extenso', async () => {
       // accessibility.item2 — o texto da célula é só o número; sozinho ele não
       // diz de que mês nem de que ano.
-      const selecionado = canvasElement.querySelector('.nds-calendar-day[aria-pressed="true"]')!;
+      const selecionado = canvasElement.querySelector('.nds-calendar-day-btn[aria-pressed="true"]')!;
       await expect(selecionado).toHaveTextContent('12');
       await expect(selecionado.getAttribute('aria-label')).toMatch(/12 de abril de 2026/i);
     });
 
     await step('Só a data escolhida está marcada', async () => {
       // accessibility.item3
-      const marcados = canvasElement.querySelectorAll('.nds-calendar-day[aria-pressed="true"]');
+      const marcados = canvasElement.querySelectorAll('.nds-calendar-day-btn[aria-pressed="true"]');
       await expect(marcados.length).toBe(1);
-      await expect(marcados[0]).toHaveAttribute('data-selected', 'true');
+      await expect(marcados[0]).toHaveAttribute('data-selected');
     });
   },
 };
@@ -107,7 +107,7 @@ export const Disabled: Story = {
       // com a regra invertida. Abril de 2026 tem 8 dias de fim de semana.
       const bloqueados = Array.from(
         canvasElement.querySelectorAll<HTMLButtonElement>(
-          '.nds-calendar-day[disabled]:not([data-outside])',
+          '.nds-calendar-day-btn[disabled]:not([data-outside-month])',
         ),
       );
       await expect(bloqueados.length).toBe(8);
@@ -119,14 +119,14 @@ export const Disabled: Story = {
     });
 
     await step('Clicar num dia bloqueado não seleciona nem reporta', async () => {
-      const bloqueado = canvasElement.querySelector<HTMLButtonElement>('.nds-calendar-day[disabled]')!;
+      const bloqueado = canvasElement.querySelector<HTMLButtonElement>('.nds-calendar-day-btn[disabled]')!;
       onSelect.mockClear();
       await userEvent.click(bloqueado, { pointerEventsCheck: 0 });
       await expect(onSelect).not.toHaveBeenCalled();
       await expect(bloqueado).toHaveAttribute('aria-pressed', 'false');
       // A seleção de partida continua onde estava.
       await expect(
-        canvasElement.querySelector('.nds-calendar-day[aria-pressed="true"]'),
+        canvasElement.querySelector('.nds-calendar-day-btn[aria-pressed="true"]'),
       ).toHaveTextContent('15');
     });
 
@@ -154,14 +154,14 @@ export const Today: Story = {
     await step('O dia de hoje é destacado, e é o de hoje mesmo', async () => {
       // functional.item1 — `data-today` em alguma célula não basta: a regra é
       // que ele caia na data certa, e é isso que um erro de fuso quebraria.
-      const hoje = canvasElement.querySelector<HTMLElement>('.nds-calendar-day[data-today="true"]')!;
+      const hoje = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-today]')!;
       await expect(hoje).not.toBeNull();
       await expect(hoje.textContent).toBe(String(new Date().getDate()));
     });
 
     await step('Destacar hoje não é selecioná-lo', async () => {
       await expect(
-        canvasElement.querySelectorAll('.nds-calendar-day[aria-pressed="true"]').length,
+        canvasElement.querySelectorAll('.nds-calendar-day-btn[aria-pressed="true"]').length,
       ).toBe(0);
     });
   },
@@ -193,7 +193,7 @@ export const NavegacaoPorTeclado: Story = {
       for (let i = 0; i < 10 && !focado(); i += 1) await userEvent.tab();
       await expect(focado()).toBe('2026-04-12');
       await expect(
-        canvasElement.querySelectorAll('.nds-calendar-day[tabindex="0"]').length,
+        canvasElement.querySelectorAll('.nds-calendar-day-btn[tabindex="0"]').length,
       ).toBe(1);
     });
 
@@ -214,7 +214,7 @@ export const NavegacaoPorTeclado: Story = {
       await expect(focado()).toBe('2026-04-30');
       await userEvent.keyboard('{ArrowRight}');
       await expect(focado()).toBe('2026-05-01');
-      await expect(canvasElement.querySelector('.nds-calendar-month-label')).toHaveTextContent(
+      await expect(canvasElement.querySelector('.nds-calendar-caption')).toHaveTextContent(
         /maio 2026/i,
       );
     });
@@ -251,13 +251,13 @@ export const WithOutsideDays: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const diasCom = (seletor: string) =>
-      Array.from(canvasElement.querySelectorAll<HTMLElement>(`.nds-calendar-day${seletor}`)).map(
+      Array.from(canvasElement.querySelectorAll<HTMLElement>(`.nds-calendar-day-btn${seletor}`)).map(
         (el) => el.dataset.day ?? '',
       );
 
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = diasCom('[data-outside="true"]');
+      const fora = diasCom('[data-outside-month]');
       await expect(fora).toContain('2026-03-30');
       await expect(fora.length).toBeGreaterThan(0);
     });
@@ -265,7 +265,7 @@ export const WithOutsideDays: Story = {
     await step('Dia de fora do mês não conta como do mês', async () => {
       // O contraste é o ponto da story: sem a marcação de externo, o mês
       // pareceria ter mais dias do que tem.
-      await expect(diasCom(':not([data-outside])').length).toBe(30);
+      await expect(diasCom(':not([data-outside-month])').length).toBe(30);
     });
 
     await step('Escolher um dia vizinho leva a visão para o mês dele', async () => {
@@ -273,12 +273,12 @@ export const WithOutsideDays: Story = {
       // marcado num mês que não está mais visível. Cada passo estabelece a
       // própria precondição — o clique final devolve a visão para abril.
       const canvas = within(canvasElement);
-      const legenda = () => canvasElement.querySelector('.nds-calendar-month-label');
+      const legenda = () => canvasElement.querySelector('.nds-calendar-caption');
 
       await userEvent.click(canvas.getByRole('button', { name: /30 de março de 2026/i }));
       await expect(legenda()).toHaveTextContent(/março 2026/i);
       await expect(
-        canvasElement.querySelector('.nds-calendar-day[data-day="2026-03-30"][data-selected]'),
+        canvasElement.querySelector('.nds-calendar-day-btn[data-day="2026-03-30"][data-selected]'),
       ).not.toBeNull();
 
       // A volta é por 1º de abril, que março mostra como dia vizinho: 12 de
@@ -298,7 +298,7 @@ export const WithOutsideDays: Story = {
         value: new Date(2026, 3, 12),
         showOutsideDays: false,
       });
-      await expect(semVizinhos.querySelectorAll('.nds-calendar-day').length).toBe(30);
+      await expect(semVizinhos.querySelectorAll('.nds-calendar-day-btn').length).toBe(30);
       await expect(semVizinhos.querySelectorAll('td:empty').length).toBeGreaterThan(0);
     });
   },
@@ -323,7 +323,7 @@ export const RangeWithMiddle: Story = {
       // Verificar só os extremos passaria com o meio vazio, que é exatamente o
       // que esta story existe para mostrar.
       const marcados = Array.from(
-        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day[data-selected="true"]'),
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-selected]'),
       ).map((el) => el.dataset.day ?? '');
       await expect(marcados).toEqual([
         '2026-04-10', '2026-04-11', '2026-04-12', '2026-04-13', '2026-04-14',
@@ -333,10 +333,15 @@ export const RangeWithMiddle: Story = {
 
     await step('O miolo se distingue dos extremos', async () => {
       const dia = (iso: string) =>
-        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day[data-day="${iso}"]`)!;
-      await expect(dia('2026-04-10').dataset.range).toBe('start');
-      await expect(dia('2026-04-14').dataset.range).toBe('middle');
-      await expect(dia('2026-04-18').dataset.range).toBe('end');
+        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
+      // Atributos de presença, como as libs das outras stacks emitem: o miolo
+      // não tem marcador próprio, é o dia marcado que não é nenhuma das pontas.
+      await expect(dia('2026-04-10')).toHaveAttribute('data-selection-start');
+      await expect(dia('2026-04-18')).toHaveAttribute('data-selection-end');
+      const miolo = dia('2026-04-14');
+      await expect(miolo).toHaveAttribute('data-selected');
+      await expect(miolo.hasAttribute('data-selection-start')).toBe(false);
+      await expect(miolo.hasAttribute('data-selection-end')).toBe(false);
     });
   },
 };

@@ -49,7 +49,7 @@ export const Single: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const marcado = () =>
-      canvasElement.querySelector<HTMLElement>('.nds-calendar-day[aria-pressed="true"]');
+      canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[aria-pressed="true"]');
 
     await step('A data inicial chega marcada', async () => {
       await expect(marcado()).toHaveTextContent('12');
@@ -65,7 +65,7 @@ export const Single: Story = {
       await expect(data.getDate()).toBe(20);
       await expect(marcado()).toHaveTextContent('20');
       await expect(
-        canvasElement.querySelectorAll('.nds-calendar-day[aria-pressed="true"]').length,
+        canvasElement.querySelectorAll('.nds-calendar-day-btn[aria-pressed="true"]').length,
       ).toBe(1);
     });
   },
@@ -91,7 +91,7 @@ export const Range: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const marcados = () =>
-      Array.from(canvasElement.querySelectorAll('.nds-calendar-day[data-selected="true"]')).map(
+      Array.from(canvasElement.querySelectorAll('.nds-calendar-day-btn[data-selected]')).map(
         (el) => (el as HTMLElement).dataset.day ?? '',
       );
     const dia = (n: number) =>
@@ -110,10 +110,22 @@ export const Range: Story = {
       // Sem essa distinção o intervalo vira um bloco só, e a pessoa não vê onde
       // ele começa nem onde termina.
       const dia = (iso: string) =>
-        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day[data-day="${iso}"]`)!;
-      await expect(dia('2026-04-10').dataset.range).toBe('start');
-      await expect(dia('2026-04-14').dataset.range).toBe('middle');
-      await expect(dia('2026-04-18').dataset.range).toBe('end');
+        canvasElement.querySelector<HTMLElement>(`.nds-calendar-day-btn[data-day="${iso}"]`)!;
+      // Atributos de presença, como as libs das outras stacks emitem: o miolo
+      // não tem marcador próprio, é o dia marcado que não é nenhuma das pontas.
+      // Medir a COR, e não só o atributo, é o que garante que a distinção
+      // chegou à tela — foi assim que o intervalo do Vue passou meses saindo
+      // como um bloco escuro só com o teste verde.
+      await expect(dia('2026-04-10')).toHaveAttribute('data-selection-start');
+      await expect(dia('2026-04-18')).toHaveAttribute('data-selection-end');
+
+      const miolo = dia('2026-04-14');
+      await expect(miolo).toHaveAttribute('data-selected');
+      await expect(miolo.hasAttribute('data-selection-start')).toBe(false);
+      await expect(miolo.hasAttribute('data-selection-end')).toBe(false);
+      await expect(getComputedStyle(miolo).backgroundColor).not.toBe(
+        getComputedStyle(dia('2026-04-10')).backgroundColor,
+      );
     });
 
     await step('Abrir, fechar e recomeçar o intervalo', async () => {
@@ -144,8 +156,8 @@ export const Range: Story = {
       // É o estado de partida de qualquer seletor de período: antes do primeiro
       // clique não há intervalo, e nenhuma célula pode aparecer marcada.
       const vazio = createCalendar({ mode: 'range', locale: 'pt-BR' });
-      await expect(vazio.querySelectorAll('.nds-calendar-day[data-selected="true"]').length).toBe(0);
-      await expect(vazio.querySelectorAll('.nds-calendar-day[data-range]').length).toBe(0);
+      await expect(vazio.querySelectorAll('.nds-calendar-day-btn[data-selected]').length).toBe(0);
+      await expect(vazio.querySelectorAll('.nds-calendar-day-btn[data-range]').length).toBe(0);
     });
 
     await step('Escolher o fim antes do início dá no mesmo intervalo', async () => {
@@ -182,7 +194,7 @@ export const Multiple: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const marcadas = () =>
-      Array.from(canvasElement.querySelectorAll('.nds-calendar-day[data-selected="true"]')).map(
+      Array.from(canvasElement.querySelectorAll('.nds-calendar-day-btn[data-selected]')).map(
         (el) => (el as HTMLElement).dataset.day ?? '',
       );
 
