@@ -13,7 +13,12 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
+  <!-- role="grid" explícito, como no calendário de data única: a lib marca a
+       tabela como `application`, e aí as células com role="gridcell" ficam
+       órfãs — gridcell só existe dentro de um grid. Sem isto o leitor de tela
+       não oferece a navegação bidimensional. -->
   <RangeCalendarGrid
+    role="grid"
     data-slot="range-calendar-grid"
     :class="cn('nds-calendar-table', props.class)"
     v-bind="forwardedProps"

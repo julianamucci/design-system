@@ -8,7 +8,9 @@
     // isto, importar de @shared/primitives dá TS6307.
     "../docs/shared/primitives/**/*.ts",
     // Mesma razão: as stories importam @shared/figma/design-links.
-    "../docs/shared/figma/**/*.ts"
+    "../docs/shared/figma/**/*.ts",
+    // E as sondas de comparação cross-stack, que medem o mesmo nas quatro.
+    "../docs/shared/testing/**/*.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {

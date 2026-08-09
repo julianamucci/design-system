@@ -53,6 +53,22 @@ export const Playground: Story = {
       await expect(escolhida.getAttribute('aria-label')).toMatch(/12 de abril de 2026/i);
     });
 
+    await step('A paginação anuncia em português, e a semana não é lida duas vezes', async () => {
+      // Os botões de mês só têm ícone: o que o leitor de tela anuncia é o
+      // aria-label, e ele estava em três formas — "Go to previous month" cravado
+      // no Vanilla, "Previous page" vindo da lib no Vue (que nem fala de mês) e
+      // "Previous" no Svelte. Num calendário em português, três das quatro
+      // anunciavam em inglês. Nome exato, e não regex frouxa: era a regex que
+      // aceitava os dois idiomas e deixava a divergência passar.
+      await expect(canvas.getByRole('button', { name: 'Ir para o mês anterior' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'Ir para o próximo mês' })).toBeInTheDocument();
+
+      // A linha dos dias da semana fica fora da árvore de acessibilidade: cada
+      // dia já anuncia a data por extenso, e repetir a coluna a cada célula só
+      // encompridaria a leitura. Duas stacks faziam, duas não.
+      await expect(canvasElement.querySelector('thead')).toHaveAttribute('aria-hidden', 'true');
+    });
+
     await step('O dia é um quadrado de célula, com o número no centro', async () => {
       // Medida computada, e não classe presente: a classe estava lá nas quatro
       // e mesmo assim o Vue desenhava 48×48, porque herdava o padding do botão
@@ -114,9 +130,9 @@ export const Playground: Story = {
     await step('Os botões de mês trocam o mês exibido', async () => {
       // Cada passo estabelece a própria precondição: volta ao mês de partida no
       // fim, porque o painel reexecuta a play no mesmo DOM.
-      await userEvent.click(canvas.getByRole('button', { name: /next/i }));
+      await userEvent.click(canvas.getByRole('button', { name: /next|próximo|proximo/i }));
       await expect(canvasElement.querySelector('.nds-calendar-day-btn[data-value="2026-05-15"]')).not.toBeNull();
-      await userEvent.click(canvas.getByRole('button', { name: /previous/i }));
+      await userEvent.click(canvas.getByRole('button', { name: /previous|anterior/i }));
       await expect(canvasElement.querySelector('.nds-calendar-day-btn[data-value="2026-04-15"]')).not.toBeNull();
     });
 

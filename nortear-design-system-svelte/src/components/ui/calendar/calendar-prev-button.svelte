@@ -9,6 +9,7 @@
 		class: className,
 		children,
 		variant = "ghost",
+		"aria-label": ariaLabel,
 		...restProps
 	}: CalendarPrimitive.PrevButtonProps & {
 		variant?: ButtonVariant;
@@ -19,18 +20,24 @@
 	<ChevronLeftIcon class={cn("nds-size-4", className)} />
 {/snippet}
 
-<CalendarPrimitive.PrevButton
-	bind:ref
-	class={cn(
-		buttonVariants({ variant }),
-		"nds-calendar-nav-btn",
-		className
-	)}
-	{...restProps}
->
-	{#if children}
-		{@render children?.()}
-	{:else}
-		{@render Fallback()}
-	{/if}
+<!--
+Renderizado pelo snippet `child`, e não deixando a lib montar o botão: ela
+mescla os props DELA por último, então o `aria-label` que se passa de fora é
+descartado e o botão anuncia "Previous" — em inglês, e sem dizer do que é
+anterior. Com o `child` o elemento é nosso, e o rótulo traduzido chega.
+-->
+<CalendarPrimitive.PrevButton bind:ref {...restProps}>
+	{#snippet child({ props })}
+		<button
+			{...props}
+			aria-label={ariaLabel ?? props["aria-label"]}
+			class={cn(buttonVariants({ variant }), "nds-calendar-nav-btn", className)}
+		>
+			{#if children}
+				{@render children()}
+			{:else}
+				{@render Fallback()}
+			{/if}
+		</button>
+	{/snippet}
 </CalendarPrimitive.PrevButton>

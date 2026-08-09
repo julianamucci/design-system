@@ -8,6 +8,7 @@ import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { createYear, createYearRange, toDate } from 'reka-ui/date'
 import { computed } from 'vue'
 import { cn } from '@/lib/utils'
+import { rotulosDoCalendario } from '@shared/primitives/calendar-labels'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes['class'], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
@@ -30,6 +31,10 @@ const placeholder = useVModel(props, 'placeholder', emits, {
 /* v8 ignore next -- o idioma vem sempre de quem monta o calendário; o 'en' é
    rede de segurança para uso sem prop, que nenhuma story representa. */
 const formatter = useDateFormatter(props.locale ?? 'en')
+
+// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label, e o
+// da lib vinha "Previous page" — em inglês e descrevendo página, não mês.
+const rotulos = computed(() => rotulosDoCalendario(props.locale))
 
 /**
  * Anos oferecidos para cada lado do ano corrente.
@@ -75,7 +80,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
        existe porque a consistência entre stacks é a regra mais forte aqui. -->
   <DefineMonthTemplate v-slot="{ date }">
     <select
-      aria-label="Selecionar mês"
+      :aria-label="rotulos.selecionarMes"
       class="nds-calendar-select"
       @change="(e: Event) => {
         placeholder = placeholder.set({
@@ -96,7 +101,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
   <DefineYearTemplate v-slot="{ date }">
     <select
-      aria-label="Selecionar ano"
+      :aria-label="rotulos.selecionarAno"
       class="nds-calendar-select"
       @change="(e: Event) => {
         placeholder = placeholder.set({
@@ -130,10 +135,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
            <nav> sem rótulo repetia um landmark por calendário (landmark-unique);
            a referência cross-stack (vanilla) também usa div. -->
       <div class="nds-calendar-nav-overlay">
-        <CalendarPrevButton>
+        <CalendarPrevButton :aria-label="rotulos.mesAnterior">
           <slot name="calendar-prev-icon" />
         </CalendarPrevButton>
-        <CalendarNextButton>
+        <CalendarNextButton :aria-label="rotulos.proximoMes">
           <slot name="calendar-next-icon" />
         </CalendarNextButton>
       </div>
@@ -151,7 +156,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           </div>
         </template>
         <template v-else>
-          <CalendarHeading />
+          <!-- Mês e ano formatados SEPARADAMENTE e juntados por espaço, e não num
+               formato só: em pt-BR e es o Intl com month+year devolve "abril de
+               2026", enquanto as outras três stacks compõem "abril 2026". A
+               legenda é texto visível, e divergir nela é divergir na tela. -->
+          <CalendarHeading>
+            {{ formatter.custom(toDate(date), { month: 'long' }) }}
+            {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
+          </CalendarHeading>
         </template>
       </slot>
     </CalendarHeader>

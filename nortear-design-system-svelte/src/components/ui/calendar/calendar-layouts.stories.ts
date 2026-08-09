@@ -36,7 +36,7 @@ export const CaptionLabel: Story = {
     await step('A legenda traz mês e ano no idioma pedido', async () => {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
-      await expect(canvasElement).toHaveTextContent(/abril de 2026/i);
+      await expect(canvasElement).toHaveTextContent(/abril 2026/i);
       const dias = Array.from(canvasElement.querySelectorAll('.nds-calendar-weekday')).map(
         (el) => el.textContent?.trim().toLowerCase() ?? '',
       );

@@ -64,9 +64,9 @@ export const CaptionLabel: Story = {
       // Cada passo estabelece a própria precondição: volta ao mês de partida
       // antes de medir, porque o painel reexecuta a play no mesmo DOM.
       const inicial = legenda()?.textContent;
-      await userEvent.click(canvas.getByRole('button', { name: 'Go to next month' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Ir para o próximo mês' }));
       await expect(legenda()).toHaveTextContent(/maio 2026/i);
-      await userEvent.click(canvas.getByRole('button', { name: 'Go to previous month' }));
+      await userEvent.click(canvas.getByRole('button', { name: 'Ir para o mês anterior' }));
       await expect(legenda()?.textContent).toBe(inicial);
     });
 
@@ -74,12 +74,12 @@ export const CaptionLabel: Story = {
       // O mês é um contador de 0 a 11: sem a virada, voltar de janeiro daria
       // um mês inexistente e o ano ficaria parado. É o caminho que nenhuma
       // navegação de um mês só alcança.
-      const anterior = canvas.getByRole('button', { name: 'Go to previous month' });
+      const anterior = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
       for (let i = 0; i < 4; i += 1) await userEvent.click(anterior);
       await expect(legenda()).toHaveTextContent(/dezembro 2025/i);
 
       // Cada passo estabelece a própria precondição: volta para abril de 2026.
-      const proximo = canvas.getByRole('button', { name: 'Go to next month' });
+      const proximo = canvas.getByRole('button', { name: 'Ir para o próximo mês' });
       for (let i = 0; i < 4; i += 1) await userEvent.click(proximo);
       await expect(legenda()).toHaveTextContent(/abril 2026/i);
     });

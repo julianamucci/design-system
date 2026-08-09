@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { rotulosDoCalendario } from '@shared/primitives/calendar-labels';
 
 export type CalendarRange = { from?: Date; to?: Date };
 
@@ -86,6 +87,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
   const dayNames = getDayNames(locale);
   const monthNames = getMonthNames(locale);
+  const rotulos = rotulosDoCalendario(locale);
   const dayButtonLabelFmt = new Intl.DateTimeFormat(locale, {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
@@ -200,7 +202,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const selMes = document.createElement('select');
     selMes.className = 'nds-calendar-select';
-    selMes.setAttribute('aria-label', 'Selecionar mês');
+    selMes.setAttribute('aria-label', rotulos.selecionarMes);
     monthNames.forEach((nome, i) => {
       const opt = document.createElement('option');
       opt.value = String(i);
@@ -215,7 +217,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
 
     const selAno = document.createElement('select');
     selAno.className = 'nds-calendar-select';
-    selAno.setAttribute('aria-label', 'Selecionar ano');
+    selAno.setAttribute('aria-label', rotulos.selecionarAno);
     // A lista é completa, e não uma janela em torno do ano em vista: o painel
     // de um <select> é desenhado pelo navegador e não entrega evento de rolagem
     // ao JS, então não há onde pendurar um "carregar mais ao chegar na ponta" —
@@ -249,7 +251,14 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     table.setAttribute('aria-label', `${monthNames[mesDaGrade]} ${anoDaGrade}`);
 
     // Header row
+    //
+    // `aria-hidden`: a linha dos dias da semana aparece na tela mas fica fora da
+    // árvore de acessibilidade, porque cada dia já anuncia a data por extenso —
+    // repetir a coluna a cada célula só encompridaria a leitura. O React e o Vue
+    // já faziam isso; aqui e no Svelte o cabeçalho era lido, e a mesma tabela
+    // soava diferente dependendo da stack.
     const thead = document.createElement('thead');
+    thead.setAttribute('aria-hidden', 'true');
     const headerRow = document.createElement('tr');
     dayNames.forEach((day) => {
       const th = document.createElement('th');
@@ -384,7 +393,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const prevBtn = document.createElement('button');
     prevBtn.type = 'button';
     prevBtn.className = 'nds-calendar-nav-button';
-    prevBtn.setAttribute('aria-label', 'Go to previous month');
+    prevBtn.setAttribute('aria-label', rotulos.mesAnterior);
     prevBtn.appendChild(buildChevron('left'));
     prevBtn.addEventListener('click', () => {
       viewMonth -= 1;
@@ -395,7 +404,7 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
     nextBtn.className = 'nds-calendar-nav-button';
-    nextBtn.setAttribute('aria-label', 'Go to next month');
+    nextBtn.setAttribute('aria-label', rotulos.proximoMes);
     nextBtn.appendChild(buildChevron('right'));
     nextBtn.addEventListener('click', () => {
       viewMonth += 1;

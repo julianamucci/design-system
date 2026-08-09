@@ -42,9 +42,25 @@ export const Playground: Story = {
       await expect(grid).toBeInTheDocument();
     });
 
+    await step('A paginação anuncia em português, e a semana não é lida duas vezes', async () => {
+      // Os botões de mês só têm ícone: o que o leitor de tela anuncia é o
+      // aria-label, e ele estava em três formas — "Go to previous month" cravado
+      // no Vanilla, "Previous page" vindo da lib no Vue (que nem fala de mês) e
+      // "Previous" no Svelte. Num calendário em português, três das quatro
+      // anunciavam em inglês. Nome exato, e não regex frouxa: era a regex que
+      // aceitava os dois idiomas e deixava a divergência passar.
+      await expect(canvas.getByRole('button', { name: 'Ir para o mês anterior' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'Ir para o próximo mês' })).toBeInTheDocument();
+
+      // A linha dos dias da semana fica fora da árvore de acessibilidade: cada
+      // dia já anuncia a data por extenso, e repetir a coluna a cada célula só
+      // encompridaria a leitura. Duas stacks faziam, duas não.
+      await expect(canvasElement.querySelector('thead')).toHaveAttribute('aria-hidden', 'true');
+    });
+
     await step('Navegação com aria-label Previous/Next presente', async () => {
-      const prev = canvas.getByRole('button', { name: 'Go to previous month' });
-      const next = canvas.getByRole('button', { name: 'Go to next month' });
+      const prev = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
+      const next = canvas.getByRole('button', { name: 'Ir para o próximo mês' });
       await expect(prev).toBeInTheDocument();
       await expect(next).toBeInTheDocument();
     });
@@ -90,7 +106,7 @@ export const Playground: Story = {
       // diferentes. Emoldurado, ele competia com o dia escolhido, que é o único
       // elemento do calendário que deveria ter peso. Medida computada, porque
       // classe presente não é borda ausente.
-      const anterior = canvas.getByRole('button', { name: 'Go to previous month' });
+      const anterior = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
       const cs = getComputedStyle(anterior);
       await expect(parseFloat(cs.borderTopWidth)).toBe(0);
       await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
@@ -119,7 +135,7 @@ export const Playground: Story = {
       // por cima e engolia o clique. `elementFromPoint` devolve QUEM está no
       // topo naquele ponto, e é a única coisa aqui que enxerga isso.
       const doc = canvasElement.ownerDocument;
-      for (const nome of ['Go to previous month', 'Go to next month']) {
+      for (const nome of ['Ir para o mês anterior', 'Ir para o próximo mês']) {
         const btn = canvas.getByRole('button', { name: nome });
         const r = btn.getBoundingClientRect();
         const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);

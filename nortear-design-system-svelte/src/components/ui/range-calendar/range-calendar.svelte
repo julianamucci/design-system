@@ -5,6 +5,7 @@
 	import RangeCalendarDay from "./range-calendar-day.svelte";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
+	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
 
 	let {
 		ref = $bindable(null),
@@ -26,6 +27,10 @@
 	// dois layouts, que é onde a navegação longa faz sentido.
 	const monthFormat = "long";
 	const yearFormat = "numeric";
+
+	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
+	// e o da lib vinha "Previous", em inglês e sem dizer do que é anterior.
+	const rotulos = $derived(rotulosDoCalendario(locale));
 </script>
 
 <!--
@@ -49,8 +54,8 @@ o miolo diferente sem despintar também a seleção simples.
 	{#snippet children({ months, weekdays })}
 		<Calendar.Months>
 			<Calendar.Nav>
-				<Calendar.PrevButton variant={buttonVariant} />
-				<Calendar.NextButton variant={buttonVariant} />
+				<Calendar.PrevButton variant={buttonVariant} aria-label={rotulos.mesAnterior} />
+				<Calendar.NextButton variant={buttonVariant} aria-label={rotulos.proximoMes} />
 			</Calendar.Nav>
 			{#each months as month, monthIndex (month)}
 				<Calendar.Month>

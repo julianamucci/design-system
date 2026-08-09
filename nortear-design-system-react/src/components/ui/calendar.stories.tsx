@@ -87,6 +87,22 @@ export const Playground: Story = {
       await expect(selected.length).toBeGreaterThanOrEqual(1);
     });
 
+    await step("A paginação anuncia em português, e a semana não é lida duas vezes", async () => {
+      // Os botões de mês só têm ícone: o que o leitor de tela anuncia é o
+      // aria-label, e ele estava em três formas — "Go to previous month" cravado
+      // no Vanilla, "Previous page" vindo da lib no Vue (que nem fala de mês) e
+      // "Previous" no Svelte. Num calendário em português, três das quatro
+      // anunciavam em inglês. Nome exato, e não regex frouxa: era a regex que
+      // aceitava os dois idiomas e deixava a divergência passar.
+      await expect(canvas.getByRole("button", { name: "Ir para o mês anterior" })).toBeInTheDocument();
+      await expect(canvas.getByRole("button", { name: "Ir para o próximo mês" })).toBeInTheDocument();
+
+      // A linha dos dias da semana fica fora da árvore de acessibilidade: cada
+      // dia já anuncia a data por extenso, e repetir a coluna a cada célula só
+      // encompridaria a leitura. Duas stacks faziam, duas não.
+      await expect(canvasElement.querySelector("thead")).toHaveAttribute("aria-hidden", "true");
+    });
+
     await step("Botões de navegação possuem aria-label", async () => {
       const prev = canvas.getByRole("button", { name: /previous|anterior/i });
       const next = canvas.getByRole("button", { name: /next|próximo|proximo/i });

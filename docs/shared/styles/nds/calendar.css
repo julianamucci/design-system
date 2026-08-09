@@ -495,6 +495,20 @@
   border-radius: var(--radius-none);
 }
 
+/* Reto por dentro, redondo por fora — a ponta do intervalo mantinha o raio dos
+ * dois lados nesta família de classes, e a faixa terminava com uma emenda
+ * arredondada no meio dela. O `:not()` cruzado preserva o intervalo de um dia
+ * só, em que a mesma data é começo e fim. */
+.nds-calendar-range-start:not(.nds-calendar-range-end) .nds-calendar-day-btn {
+  border-start-end-radius: var(--radius-none);
+  border-end-end-radius: var(--radius-none);
+}
+
+.nds-calendar-range-end:not(.nds-calendar-range-start) .nds-calendar-day-btn {
+  border-start-start-radius: var(--radius-none);
+  border-end-start-radius: var(--radius-none);
+}
+
 /* ── Estados da célula ───────────────────────────────────────────────────── */
 .nds-calendar-today {
   border-radius: var(--nds-cell-radius);

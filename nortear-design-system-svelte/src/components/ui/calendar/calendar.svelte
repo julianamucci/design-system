@@ -3,6 +3,7 @@
 	import * as Calendar from "./index.js";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
+	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
 	import { isEqualMonth, type DateValue } from "@internationalized/date";
 	import type { Snippet } from "svelte";
 
@@ -37,6 +38,10 @@
 	// seletor, onde não cabe. Era prop configurável que nenhuma story passava.
 	const monthFormat = $derived(captionLayout === "dropdown" ? "short" : "long");
 	const yearFormat = "numeric";
+
+	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
+	// e o da lib vinha "Previous", em inglês e sem dizer do que é anterior.
+	const rotulos = $derived(rotulosDoCalendario(locale));
 
 	/**
 	 * Anos oferecidos para cada lado do ano em vista.
@@ -84,8 +89,8 @@ get along, so we shut typescript up by casting `value` to `never`.
 	{#snippet children({ months, weekdays })}
 		<Calendar.Months>
 			<Calendar.Nav>
-				<Calendar.PrevButton variant={buttonVariant} />
-				<Calendar.NextButton variant={buttonVariant} />
+				<Calendar.PrevButton variant={buttonVariant} aria-label={rotulos.mesAnterior} />
+				<Calendar.NextButton variant={buttonVariant} aria-label={rotulos.proximoMes} />
 			</Calendar.Nav>
 			{#each months as month, monthIndex (month)}
 				<Calendar.Month>

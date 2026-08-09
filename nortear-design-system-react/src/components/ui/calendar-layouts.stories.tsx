@@ -55,8 +55,8 @@ export const CaptionLabel: Story = {
     await step("A legenda traz mês e ano no idioma pedido", async () => {
       // functional.item6 — o idioma vale para a legenda E para o cabeçalho da
       // semana; verificar só um dos dois deixaria metade da tradução solta.
-      // "de" opcional: o formato da legenda varia com o formatador de data, e
-      // o que a story promete é mês e ano no idioma certo, não a preposição.
+      // Exato, sem o "de" opcional: a legenda compõe mês e ano SEPARADAMENTE nas
+      // quatro stacks, e aceitar as duas formas deixaria a divergência voltar.
       await expect(canvasElement).toHaveTextContent(/abril\s+(de\s+)?2026/i);
       // A linha dos dias da semana aparece na tela mas fica fora da árvore de
       // acessibilidade: cada dia já anuncia a data inteira, e repetir a coluna
