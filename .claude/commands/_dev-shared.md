@@ -1,10 +1,10 @@
 ---
-description: Padrões compartilhados pelas dev-skills (react/vue/svelte/vanilla). Não invoque diretamente — leia em conjunto com a dev-<stack>.md específica.
+description: Padrões compartilhados pelas dev-skills (react/vue/svelte/vanilla/angular). Não invoque diretamente — leia em conjunto com a dev-<stack>.md específica.
 ---
 
 # Padrões Compartilhados — Dev Skills
 
-> Este arquivo contém regras idênticas para todas as 4 stacks. Cada `dev-<stack>.md` complementa com o que é stack-specific (sintaxe, lib upstream, hooks idiomáticos).
+> Este arquivo contém regras idênticas para todas as 5 stacks. Cada `dev-<stack>.md` complementa com o que é stack-specific (sintaxe, lib upstream, hooks idiomáticos).
 
 ---
 

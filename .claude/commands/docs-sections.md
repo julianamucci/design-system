@@ -1,18 +1,18 @@
 ---
 description: Cria os 15 componentes genéricos de seção de documentação em cada stack — containers estruturais reutilizáveis que garantem layout consistente entre todas as doc pages
-argument-hint: [--stack react|vue|svelte|vanilla|all]
+argument-hint: [--stack react|vue|svelte|vanilla|angular|all]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
 
 # Docs Section Components — Stub
 
-> **Status atual**: os 15 section components já existem e estão estabilizados nas 4 stacks. Esta skill é mantida para o caso raro de precisar **recriar do zero** (nova stack, refactor de uma seção). Para mudanças pontuais, edite diretamente os arquivos em `nortear-design-system-{stack}/src/components/docs/shared/sections/`.
+> **Status atual**: os 15 section components já existem e estão estabilizados nas 5 stacks. Esta skill é mantida para o caso raro de precisar **recriar do zero** (nova stack, refactor de uma seção). Para mudanças pontuais, edite diretamente os arquivos em `nortear-design-system-{stack}/src/components/docs/shared/sections/`.
 
 ## Argumentos
 
 O usuário invocou o comando com: **$ARGUMENTS**
 
-- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
+- **`--stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla`, `angular` ou `all` (padrão: `all`)
 
 ---
 

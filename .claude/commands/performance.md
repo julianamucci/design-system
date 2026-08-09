@@ -13,7 +13,7 @@ Você é um especialista em performance frontend para design systems. Seu trabal
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente ou `all` para auditoria completa
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla`, `angular` ou `all` (padrão: `all`)
 
 ---
 
@@ -23,7 +23,7 @@ Dispare todos os `Grep` do mesmo check em paralelo no mesmo turno.
 
 ### 1. Imports Pesados
 
-Use `Grep` nativo em paralelo nas 4 stacks:
+Use `Grep` nativo em paralelo nas 5 stacks:
 
 - **Wildcard de ícones** (cada ícone ~200B, lib inteira ~200KB) — padrão `import \*.*from 'lucide-` em `nortear-design-system-<stack>/src/`
 - **Barrel imports** que puxam toda a lib UI — padrão `from '@/components/ui'` (sem subpath) em arquivos `.tsx`/`.ts`/`.vue`/`.svelte` dentro de `src/components/docs/`
@@ -39,7 +39,7 @@ Use `Grep` nativo em paralelo nas 4 stacks:
 
 ### 3. Classes montadas por interpolação
 
-Use `Grep` em paralelo nas 4 stacks para template literals construindo classes:
+Use `Grep` em paralelo nas 5 stacks para template literals construindo classes:
 - Padrão `` `nds-\${ `` em `nortear-design-system-<stack>/src/`
 - Padrão `` `nds-text-\${ `` / `` `nds-bg-\${ `` em `nortear-design-system-<stack>/src/`
 

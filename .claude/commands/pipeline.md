@@ -27,8 +27,8 @@ O usuário invocou o comando com: **$ARGUMENTS**
    - **Checks negativos** (código errado *presente*: XSS, wildcard import, evento não tipado) → scan limpo significa OK. Pode pular o agent.
    - **Checks de presença** (instrumentação, asserção real, paridade entre stacks) → **scan limpo não significa nada**: grep não encontra o que nunca foi escrito. Componente novo sem tracking e com asserção vazia gera scan limpo. Estes agents rodam SEMPRE em modo `new` (ver Fase D).
 2. **Inline checks nos dev-skills.** Cada `/dev-<stack>` roda `audit.mjs --category security,performance,analytics,quality` antes de commitar — elimina ~1 rodada inteira de auditoria em modo `new`.
-3. **Cross-stack por último.** Compara as 4 implementações pós-fix; rodá-lo antes gera cascata redundante.
-4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 4 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits.
+3. **Cross-stack por último.** Compara as 5 implementações pós-fix; rodá-lo antes gera cascata redundante.
+4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 5 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits.
 5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes.
 
    **A pasta é apagada no início de toda execução** (Fase A.0) e regenerada. Não existe reaproveitamento entre execuções: cache é contrato, e contrato velho é pior que contrato nenhum — descreve uma API que mudou, cita classe que não existe mais, e os dev-agents seguem literalmente. Caches de maio deste projeto ainda diziam "Basecoat" e mandavam alinhar overlays com `bg-black/80`. Como a pasta nasce vazia a cada rodada, ela também não precisa entrar nas varreduras de vocabulário morto do `audit.mjs`.
@@ -36,7 +36,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 7. **Glob e Grep nativos, não loops bash.** No Windows loops são lentos; tools do Claude já varrem em paralelo.
 8. **Prompts auto-contidos.** Passe slug, modo, caminho do context-cache, lista exata de arquivos. Nunca delegue "descubra o que fazer".
 9. **Nunca pule uma skill sem registrar.** Script limpo → registre `script-clean, agent skipped`. Erro em uma skill não bloqueia as próximas da mesma fase.
-10. **Mostre progresso fase a fase.** `✓ Fase B concluída (4 stacks paralelas, 3 min)`.
+10. **Mostre progresso fase a fase.** `✓ Fase B concluída (5 stacks paralelas, 3 min)`.
 11. **Vanilla é o teste de fumaça do contrato.** Toda divergência de comportamento encontrada até hoje tinha o Vanilla certo e as outras três com markup herdado do shadcn. Ele não tem lib headless para esconder o contrato: o que está lá é o que o design system realmente define. Ao comparar stacks, comece por ele.
 
 ---
@@ -136,17 +136,18 @@ Fase A (serial):
   2. Escrever .pipeline-context/<slug>.md — ver "Contrato do context-cache" abaixo
   3. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
 
-Fase B (4 agents em PARALELO — dev-skills):
+Fase B (5 agents em PARALELO — dev-skills):
   /dev-react <slug>
   /dev-vue <slug>
   /dev-svelte <slug>
   /dev-vanilla <slug>
+  /dev-angular <slug>
 
 Fase C (serial):
   node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json  (re-scan pós-dev)
 
 Fase C2 (serial — PORTÃO, bloqueia o avanço):
-  npm test -- <slug>   em cada uma das 4 stacks
+  npm test -- <slug>   em cada uma das 5 stacks
   Falha em qualquer stack → não avance. Corrija (dev-skill da stack) e repita.
 
 Fase D (até 5 agents em PARALELO):
@@ -165,7 +166,7 @@ Fase F (serial):
 
 ### Contrato do context-cache (Fase A.2)
 
-`.pipeline-context/<slug>.md` deve conter, além do inventário técnico (categoria, variantes, tamanhos, props, tokens, lista de arquivos das 4 stacks):
+`.pipeline-context/<slug>.md` deve conter, além do inventário técnico (categoria, variantes, tamanhos, props, tokens, lista de arquivos das 5 stacks):
 
 **Spec de exemplos — obrigatória.** Uma lista fechada de qual conteúdo cada demo, story e composição renderiza, derivada de `demonstration.*` e `variants.*` do `translations.json`:
 
@@ -176,7 +177,7 @@ Fase F (serial):
 **Cubra TODAS as seções que renderizam exemplo — não só Demonstração, Variantes e
 Composições.** O buraco recorrente é o **Do & Don't**: a seção é obrigatória, os
 previews são código como qualquer outro, e o `translations.json` só traz a legenda.
-Sem spec, cada stack inventa o próprio par e as 4 divergem. No code-block saíram
+Sem spec, cada stack inventa o próprio par e as 5 divergem. No code-block saíram
 três exemplos diferentes para o mesmo par, e um deles contradizia a legenda que
 ilustrava ("metade das linhas destacadas" com todas destacadas).
 
@@ -187,10 +188,10 @@ distintos. Especifique a chave estável.
 
 Quando o `translations.json` tiver formato que o container não comporta (ex.: tabela
 em N grupos contra um container de tabela única), **decida no contrato** e escreva a
-decisão. As 4 stacks batem na mesma parede ao mesmo tempo e, sem decisão, cada uma
+decisão. As 5 stacks batem na mesma parede ao mesmo tempo e, sem decisão, cada uma
 inventa a sua — inclusive traduções, que passam a viver em 4 arquivos.
 
-Os dev-skills consomem essa spec **literalmente**. É proibido inventar rótulo, valor ou estado inicial de exemplo — se faltar na spec, pare e reporte, não improvise. As 4 stacks precisam renderizar o mesmo exemplo com as mesmas classes; divergência aqui só é detectável tarde, na Fase E.
+Os dev-skills consomem essa spec **literalmente**. É proibido inventar rótulo, valor ou estado inicial de exemplo — se faltar na spec, pare e reporte, não improvise. As 5 stacks precisam renderizar o mesmo exemplo com as mesmas classes; divergência aqui só é detectável tarde, na Fase E.
 
 **Vocabulário proibido.** Nomeie explicitamente as libs que NÃO existem mais no projeto (Radix, shadcn, Tailwind utilitário fora do prefixo `nds-`) — elas não podem aparecer em `translations.json`, docs page nem story. Ver Princípio 11.
 
@@ -287,7 +288,7 @@ Foque em:
   (base-ui vs reka-ui vs bits-ui vs factory).
 - Divergências de docs page (seção presente numa stack e ausente em outra).
 - PARIDADE DE EXEMPLO: cada story e cada demo da docs page renderiza o MESMO
-  conteúdo nas 4 stacks — mesmos rótulos, mesmo estado inicial, mesma composição.
+  conteúdo nas 5 stacks — mesmos rótulos, mesmo estado inicial, mesma composição.
   Compare também story <-> docs page dentro da mesma stack: a story deve mostrar
   o exemplo da docs page, consumindo components/ui, com as mesmas classes .nds-*.
 - PARIDADE DE MARKUP dos wrappers de UI: mesma árvore de elementos e mesmas
@@ -317,7 +318,7 @@ de divergências reais que exigem alinhamento.
 
 | Componente | Script scan | Fase B dev | Fase C2 testes | Fase D audits | Fase E cross-stack |
 |------------|-------------|------------|----------------|---------------|--------------------|
-| calendar   | 4 high, 3 low | ✓ 4 stacks | ✓ 4/4 verdes | 2 agents disparados | 1 divergência |
+| calendar   | 4 high, 3 low | ✓ 5 stacks | ✓ 5/5 verdes | 2 agents disparados | 1 divergência |
 ```
 
 ### FIXES-NEEDED.md
@@ -347,7 +348,7 @@ Aprovado o batch, a aplicação é do **orquestrador**, não fica pendente esper
 |---|---|
 | Mecânico e localizado (classe errada, `controls.disable`, import) | Orquestrador, direto |
 | Exige julgamento de conteúdo (texto, exemplo, cobertura de teste) | Re-invoca a skill de origem em **fix-mode**, passando o item do FIXES-NEEDED |
-| Toca as 4 stacks (markup, classe compartilhada, `.nds-*` CSS) | Orquestrador, num único commit — nunca 4 agents paralelos no mesmo arquivo |
+| Toca as 5 stacks (markup, classe compartilhada, `.nds-*` CSS) | Orquestrador, num único commit — nunca 5 agents paralelos no mesmo arquivo |
 
 Depois de aplicar: re-rode `audit.mjs <slug>` e a Fase C2. Item aplicado sem re-verificação não conta como resolvido.
 

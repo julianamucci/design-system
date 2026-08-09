@@ -1,5 +1,5 @@
 ---
-description: Especialista em Consistência Cross-Stack — audita e corrige divergências visuais e comportamentais entre React, Vue, Svelte e Vanilla
+description: Especialista em Consistência Cross-Stack — audita e corrige divergências visuais e comportamentais entre React, Vue, Svelte, Vanilla e Angular
 argument-hint: <component-slug|all> [aspect]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent]
 ---
@@ -38,7 +38,7 @@ Exceção: quando a divergência for de **API de framework** (nome de prop, form
 
 ## Como executar — princípios
 
-1. **Paralelizar tudo**. Não faça loops bash. Use `Grep`/`Glob`/`Read` em paralelo no mesmo turno (4 stacks simultâneas).
+1. **Paralelizar tudo**. Não faça loops bash. Use `Grep`/`Glob`/`Read` em paralelo no mesmo turno (5 stacks simultâneas).
 2. **Coletar uma vez**. Após a coleta inicial, **não releia** arquivos nos passos seguintes — todos já estão em contexto.
 3. **Reportar tabela completa**. Cada célula com `✅`/`❌`/`⚠️` — nunca `?`.
 
@@ -50,18 +50,18 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 
 | # | Check | Tool | Severidade |
 |---|---|---|---|
-| 1 | Classes `cva()` / `.nds-*` | Grep × 4 | Bug |
-| 2 | Variantes e tamanhos | Grep × 4 | Bug |
-| 3 | Data attributes (`data-slot`) | Grep × 4 | Bug |
-| 4 | Acessibilidade (ARIA) | Grep × 4 | Bug |
+| 1 | Classes `cva()` / `.nds-*` | Grep × 5 | Bug |
+| 2 | Variantes e tamanhos | Grep × 5 | Bug |
+| 3 | Data attributes (`data-slot`) | Grep × 5 | Bug |
+| 4 | Acessibilidade (ARIA) | Grep × 5 | Bug |
 | 5 | Tokens CSS + tokenização de dimensões | Grep × 3 (sem Vanilla) | Bug |
-| 6 | Section containers (15 obrigatórios) | Glob × 4 | Bloqueante |
-| 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, DOMPurify no call site, structureCode, breadcrumb, SEO completo) | Read × 4 | Variável |
-| 8 | Cobertura de stories | Glob × 4 | Bug |
+| 6 | Section containers (15 obrigatórios) | Glob × 5 | Bloqueante |
+| 7 | Completude de docs pages (10 sub-checks: IDs, blocos, placeholders, t() count, props/tokens, DOMPurify no call site, structureCode, breadcrumb, SEO completo) | Read × 5 | Variável |
+| 8 | Cobertura de stories | Glob × 5 | Bug |
 | 9 | Do & Don't layout (bug recorrente) | inspeção visual após Read | Bloqueante |
 | 10 | Patches sobre libs primitivas/externas (markers + PATCHES.md) | Grep × 1 + leitura | Crítico |
 | 11 | Divergências idiomáticas Vanilla (3 camadas: notes, DocsProps, story) | inspeção após Read | Bug |
-| 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 4 | Bug |
+| 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 5 | Bug |
 
 ---
 

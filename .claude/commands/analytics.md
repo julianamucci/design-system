@@ -13,7 +13,7 @@ Garanta que toda docs page rastreie elementos interativos via **tracking automá
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug ou `all`
-- **`stack`** (opcional) — `react`/`vue`/`svelte`/`vanilla`/`all` (padrão `all`)
+- **`stack`** (opcional) — `react`/`vue`/`svelte`/`vanilla`/`angular`/`all` (padrão `all`)
 - **`--audit`** (opcional) — modo read-only; reporta gaps sem editar/commitar
 - **`--json`** (opcional, com `--audit`) — emite JSON consumível por `FIXES-NEEDED.md`
 
@@ -50,7 +50,7 @@ Qualquer violação em `_infra` tem prioridade sobre gaps por página: corrija a
 
 ### Passo 1 — Coletar arquivos em paralelo
 
-**Glob** (4 paralelos): docs pages — `nortear-design-system-{react,vue,svelte,vanilla}/src/components/docs/<Slug>Docs.*`
+**Glob** (5 paralelos): docs pages — `nortear-design-system-{react,vue,svelte,vanilla,angular}/src/components/docs/<Slug>Docs.*`
 
 **Read** (4 paralelos): cada docs page
 

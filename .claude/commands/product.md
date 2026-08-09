@@ -38,7 +38,7 @@ Modo `--from-content` NÃO altera padrões visuais (classes/tipografia/cores) �
 ## Fontes de Verdade
 
 ### Modo `--from-code`
-1. `nortear-design-system-{react,vue,svelte,vanilla}/src/components/docs/{Slug}Docs.*` — implementações
+1. `nortear-design-system-{react,vue,svelte,vanilla,angular}/src/components/docs/{Slug}Docs.*` — implementações
 2. `docs/shared/content/{slug}/translations.json` — chaves e locales
 3. **Guideline de categoria** (tabela abaixo)
 
@@ -50,7 +50,7 @@ Modo `--from-content` NÃO altera padrões visuais (classes/tipografia/cores) �
 
 ### Tabela de categorias
 
-As 4 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** para decisões de contrato (variantes, estados, regras de API, a11y) — ela não tem lib headless mascarando o que o design system define. Leia a da stack específica só quando a questão for de sintaxe do framework.
+As 5 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** para decisões de contrato (variantes, estados, regras de API, a11y) — ela não tem lib headless mascarando o que o design system define. Leia a da stack específica só quando a questão for de sintaxe do framework.
 
 | Categoria | Arquivo |
 |---|---|
@@ -66,7 +66,7 @@ As 4 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** 
 
 **Compartilhadas**: `docs/shared/guidelines/{08-docs-pages,01-acessibilidade,05-tom-de-voz,06-seo-geo,07-analytics,09-seguranca-xss,10-performance,11-consistencia-cross-stack}.md`
 
-**Por stack**: `nortear-design-system-{react,vue,svelte,vanilla}/guidelines/11-documentacao-componentes.md`
+**Por stack**: `nortear-design-system-{react,vue,svelte,vanilla,angular}/guidelines/11-documentacao-componentes.md`
 
 ---
 
@@ -95,7 +95,7 @@ As 4 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** 
    - `06-seo-geo.md` (formato divergente)
 
 ### `--from-code`
-1. Extrair padrões do código das 4 docs pages (tipografia, HTML, tabelas, badges, navegação)
+1. Extrair padrões do código das 5 docs pages (tipografia, HTML, tabelas, badges, navegação)
 2. Ler guidelines existentes
 3. Tabela de discrepâncias guideline ↔ código
 4. Atualizar guidelines (código é fonte de verdade)

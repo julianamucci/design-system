@@ -18,7 +18,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Leituras obrigatórias (antes de começar)
 
-1. **`_dev-shared.md`** — padrões compartilhados das 4 stacks. **Esta skill complementa com o que é específico de Svelte 5.**
+1. **`_dev-shared.md`** — padrões compartilhados das 5 stacks. **Esta skill complementa com o que é específico de Svelte 5.**
 2. UI primitive: `nortear-design-system-svelte/src/components/ui/<slug>/index.ts` (ou `<slug>/<slug>.svelte`)
 3. `docs/shared/content/<slug>/translations.json`
 4. `.pipeline-context/<slug>.md` (se existir)

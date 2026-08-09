@@ -13,7 +13,7 @@ Você é um especialista em SEO e GEO para design systems. Seu trabalho é garan
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente (ex: `button`, `alert-dialog`)
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla`, `angular` ou `all` (padrão: `all`)
 
 ---
 

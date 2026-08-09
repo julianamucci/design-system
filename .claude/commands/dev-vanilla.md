@@ -18,7 +18,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
 
 ## Leituras obrigatórias (antes de começar)
 
-1. **`_dev-shared.md`** — padrões compartilhados das 4 stacks. **Esta skill complementa com o que é específico de Vanilla (vanilla TS).**
+1. **`_dev-shared.md`** — padrões compartilhados das 5 stacks. **Esta skill complementa com o que é específico de Vanilla (vanilla TS).**
 2. UI primitive: `nortear-design-system-vanilla/src/components/ui/<slug>.ts`
 3. `docs/shared/content/<slug>/translations.json`
 4. `.pipeline-context/<slug>.md` (se existir)

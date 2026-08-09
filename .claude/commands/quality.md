@@ -13,7 +13,7 @@ Você é um especialista em qualidade para design systems. Garanta que casos de 
 O usuário invocou o comando com: **$ARGUMENTS**
 
 - **`component-slug`** (obrigatório) — slug do componente
-- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla` ou `all` (padrão: `all`)
+- **`stack`** (opcional) — `react`, `vue`, `svelte`, `vanilla`, `angular` ou `all` (padrão: `all`)
 
 ---
 
@@ -30,7 +30,7 @@ Não leia upfront. Consulte só se precisar.
 
 ## Tipos de Teste
 
-1. **Funcionais (play functions)** — `storybook/test` (within + userEvent + expect). API uniforme nas 4 stacks.
+1. **Funcionais (play functions)** — `storybook/test` (within + userEvent + expect). API uniforme nas 5 stacks.
 2. **A11y (axe-playwright)** — automático via `postVisit` em `.storybook/test-runner.ts`. `a11y: { test: 'error' }` em `preview.ts` faz violations falharem CI. Stories podem desabilitar via `parameters.a11y.disable: true` (exige justificativa documentada).
 3. **Visuais (Chromatic)** — automático. Basta a story existir.
 
@@ -195,7 +195,7 @@ e contamina o resultado. No `render`, encaminhe só o valor:
 o texto e a implementação divergirem, a implementação costuma estar certa e o
 texto desatualizado. Verifique no `node_modules` antes de "corrigir" o código —
 e antes de propor mudança no conteúdo compartilhado, confirme se a afirmação é
-falsa nas 4 stacks ou se é divergência idiomática de uma lib (aí o texto vira
+falsa nas 5 stacks ou se é divergência idiomática de uma lib (aí o texto vira
 API-neutro, não é apagado).
 
 **2e4. Animação nos testes.** O browser dos testes roda COM animação, como o
@@ -237,7 +237,7 @@ pega a peça que ninguém renderiza, mas não pega a PROP que ninguém passa: el
 mora dentro de um arquivo que outras stories cobrem. Para cada prop pública do
 componente, pergunte duas coisas:
 
-1. **As quatro stacks expõem?** Ausente no Vanilla é o sinal mais forte — ele é a
+1. **As cinco stacks expõem?** Ausente no Vanilla é o sinal mais forte — ele é a
    referência, e o que ele não tem não é contrato do design system.
 2. **Alguma story passa?** Prop que nenhuma story exercita e nenhum
    `translations.json` documenta está no mesmo estado da peça sem story.
@@ -272,19 +272,19 @@ Ao auditar um componente, **adote o contrato nele** — mapeie o que cada story
 realmente assere, cubra o que faltar e declare o resto com motivo. Declarar o
 que não é verificado é pior que não declarar: o auditor passa a mentir.
 
-**2f. Cobertura equivalente entre as 4 stacks**:
+**2f. Cobertura equivalente entre as 5 stacks**:
 Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack testa de verdade e as outras têm placeholder. Monte a matriz story × stack contando `expect()` por story e compare as linhas:
 
-| Story | react | vue | svelte | vanilla |
-|---|---|---|---|---|
-| ConteudoRico | 5 | 1 | 1 | 1 | ← divergência: as 3 são placeholder |
+| Story | react | vue | svelte | vanilla | angular |
+|---|---|---|---|---|---|
+| ConteudoRico | 5 | 1 | 1 | 1 | 1 | ← divergência: as 4 são placeholder |
 
-Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 4 — a verificação também deve ser.
+Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 5 — a verificação também deve ser.
 
-**2f1. SONDA: meça as quatro de uma vez, antes de corrigir qualquer uma.**
+**2f1. SONDA: meça as cinco de uma vez, antes de corrigir qualquer uma.**
 
 Contar `expect()` (2f) acha teste placeholder, mas não acha o que NENHUMA das
-quatro verifica. Foi o buraco desta skill: no calendar, dezesseis commits
+cinco verifica. Foi o buraco desta skill: no calendar, dezesseis commits
 seguidos corrigiram um defeito por rodada, cada um relatado a olho pelo usuário,
 e a suíte ficou verde o tempo todo. Rótulo de navegação em inglês em três
 stacks, cabeçalho de semana lido em duas e não em outras duas, raio do dia 10
@@ -339,7 +339,7 @@ compartilhadas que só funcionavam com `.nds-button` composto por fora.
 **2f1b. O contrato das DOCS PAGES roda sozinho — não o reinvente.**
 
 A sonda do 2f1 mede o COMPONENTE nas stories. As docs pages têm harness próprio,
-já ligado nas quatro stacks: `docs/shared/testing/docs-page-contract.ts`, chamado
+já ligado nas cinco stacks: `docs/shared/testing/docs-page-contract.ts`, chamado
 pelo `play` de `src/components/docs/docs-smoke.stories.*` — 252 páginas, docs de
 componente e Foundations juntas.
 
@@ -351,7 +351,7 @@ Ao mexer em docs page, **rode `npx vitest run docs-smoke`** na stack — é mais
 barato que a suíte do componente e pega o que o olho pegaria. Ao criar seção nova
 que renderiza exemplo, marque o contêiner com `data-docs-preview="<nome>"`: é a
 âncora que o contrato usa, e sem ela a seção nasce fora da verificação — foi o
-que aconteceu com o Do & Don't, que ficou sem centralizar nas quatro stacks ao
+que aconteceu com o Do & Don't, que ficou sem centralizar nas cinco stacks ao
 mesmo tempo, com a fumaça verde.
 
 Duas armadilhas medidas na construção deste harness:
@@ -404,7 +404,7 @@ caminhos do código as stories realmente percorrem?". Um componente pode estar
 16/16 no contrato e a 50% de ramos — foi o caso do button no Svelte, com 95% de
 linhas e 100% de funções.
 
-Rode por componente, nas 4 stacks:
+Rode por componente, nas 5 stacks:
 
 ```bash
 # de dentro de cada nortear-design-system-<stack>
@@ -440,7 +440,7 @@ return nunca disparado. Para cada ramo descoberto:
 1. Abra `coverage/<arquivo>.html` (ou o `coverage-final.json`) e identifique a
    condição.
 2. Se o caminho é alcançável pela API pública, **escreva a story ou o step que
-   o exercita** — nas 4 stacks, senão vira `coverage_divergence`.
+   o exercita** — nas 5 stacks, senão vira `coverage_divergence`.
 3. Se não é alcançável (guarda defensiva, branch de tipo que o TS já garante,
    ramo exclusivo de SSR), **declare o motivo** num comentário na linha, no
    mesmo espírito do `coversNotApplicable`:
@@ -557,7 +557,7 @@ errada e confira **quais o container realmente renderiza** — chave não
 consumida é correção que não chega ao usuário. Inclua `seo.*` na varredura.
 
 **Story nova quebra paridade**: criar story só numa stack gera
-`coverage_divergence`. Ou nasce nas 4, ou vira item do `FIXES-NEEDED.md`.
+`coverage_divergence`. Ou nasce nas 5, ou vira item do `FIXES-NEEDED.md`.
 
 ---
 
