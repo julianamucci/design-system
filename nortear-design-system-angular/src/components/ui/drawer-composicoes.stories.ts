@@ -1,0 +1,181 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect } from 'storybook/test';
+import { NDS_DRAWER } from './drawer';
+import { NdsButton } from './button';
+import { NdsInput } from './input';
+import { NdsLabel } from './label';
+import { esperarPortal } from '@/lib/wait-for-portal';
+import { useTranslation } from '@/lib/i18n';
+import { stripHtml } from '@/lib/strip-html';
+import drawerTranslations from '@shared/content/drawer/translations.json';
+import { ROTULOS_DRAWER } from '@/components/docs/DrawerDocs';
+
+// Os rótulos de ação vêm do mesmo lugar que a docs page usa — ver o comentário
+// sobre `ROTULOS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
+// textos divergirem na primeira revisão de conteúdo.
+const { t } = useTranslation(drawerTranslations as Record<string, unknown>, ROTULOS_DRAWER);
+
+// As duas composições que o conteúdo compartilhado documenta. Ambas nascem
+// ABERTAS: é o rodapé de ações que elas existem para mostrar, e ele só existe
+// com o painel montado.
+
+const meta: Meta = {
+  title: 'UI/Drawer/Compositions',
+  tags: ['disclosure'],
+  decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton, NdsInput, NdsLabel] })],
+  parameters: {
+    layout: 'centered',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          'Combinações canônicas: formulário curto com confirmar/cancelar e confirmação de ' +
+          'ação destrutiva. Em ambas o rodapé oferece uma saída explícita além de Escape.',
+      },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj;
+
+const ROTULO = {
+  gatilho: () => t('usage.uxWriting.table.trigger.good'),
+  titulo: () => t('usage.uxWriting.table.title.good'),
+  descricao: () => t('usage.uxWriting.table.description.good'),
+  fechar: () => t('usage.uxWriting.table.close.good'),
+  confirmar: () => t('demonstration.labels.confirm'),
+  destruir: () => t('demonstration.labels.destroy'),
+  campo: () => t('demonstration.labels.fieldName'),
+  aviso: () => t('demonstration.labels.destroyMessage'),
+};
+
+export const WithForm: Story = {
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      description: {
+        story:
+          'Formulário curto no corpo e par de ações no rodapé. O título diz o que está sendo ' +
+          'editado e a descrição dá o contexto — juntos formam o nome e a descrição acessíveis.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      rotuloGatilho: ROTULO.gatilho(),
+      tituloPainel: ROTULO.titulo(),
+      descricaoPainel: ROTULO.descricao(),
+      rotuloCampo: ROTULO.campo(),
+      rotuloFechar: ROTULO.fechar(),
+      rotuloConfirmar: ROTULO.confirmar(),
+    },
+    template: `
+      <nds-drawer [defaultOpen]="true">
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsDrawerContent>
+          <div ndsDrawerHeader>
+            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
+            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsDrawerBody class="nds-stack" data-spacing="sm">
+            <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
+            <input ndsInput id="drawer-comp-nome" name="nome" />
+          </div>
+
+          <div ndsDrawerFooter>
+            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsButton>{{ rotuloConfirmar }}</button>
+          </div>
+        </ng-template>
+      </nds-drawer>
+    `,
+  }),
+  play: async ({ step }) => {
+    const painel = await esperarPortal('dialog');
+    const dentro = within(painel);
+
+    await step('O painel carrega nome, descrição e o campo do formulário', async () => {
+      await expect(painel).toHaveAccessibleName(ROTULO.titulo());
+      await expect(painel).toHaveAccessibleDescription(ROTULO.descricao());
+      // O campo é achado pelo RÓTULO: se o `for`/`id` não casassem, o input
+      // ficaria sem nome acessível e esta busca falharia.
+      await expect(dentro.getByLabelText(ROTULO.campo())).toBeInTheDocument();
+    });
+
+    await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {
+      const botoes = dentro.getAllByRole('button');
+      const nomes = botoes.map((b) => b.textContent?.trim());
+      await expect(nomes).toContain(ROTULO.fechar());
+      await expect(nomes).toContain(ROTULO.confirmar());
+    });
+
+    await step('O corpo do formulário é a região rolável do painel', async () => {
+      const corpo = painel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+      await expect(corpo).toHaveClass(/nds-overflow-y/);
+    });
+  },
+};
+
+export const WithConfirmation: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para ' +
+          'confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      rotuloGatilho: ROTULO.gatilho(),
+      tituloPainel: stripHtml(t('variants.compositions.withConfirmation.name')),
+      descricaoPainel: ROTULO.aviso(),
+      rotuloFechar: ROTULO.fechar(),
+      rotuloDestruir: ROTULO.destruir(),
+    },
+    template: `
+      <nds-drawer [defaultOpen]="true">
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsDrawerContent>
+          <div ndsDrawerHeader>
+            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
+            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsDrawerFooter>
+            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+            <button ndsButton variant="destructive">{{ rotuloDestruir }}</button>
+          </div>
+        </ng-template>
+      </nds-drawer>
+    `,
+  }),
+  play: async ({ step }) => {
+    const painel = await esperarPortal('dialog');
+    const dentro = within(painel);
+
+    await step('A consequência está escrita, não subentendida', async () => {
+      await expect(painel).toHaveAccessibleDescription(ROTULO.aviso());
+    });
+
+    await step('A ação principal carrega a variante destrutiva', async () => {
+      // Afirma a CLASSE resultante: sob JIT o input `variant` seria ignorado e o
+      // botão sairia com a variante default, sem erro nenhum (armadilha 1).
+      const destrutivo = dentro.getByRole('button', { name: ROTULO.destruir() });
+      await expect(destrutivo).toHaveClass(/nds-button-destructive/);
+    });
+
+    await step('Cancelar continua sendo a saída de menor risco', async () => {
+      const cancelar = dentro.getByRole('button', { name: ROTULO.fechar() });
+      await expect(cancelar).toHaveClass(/nds-button-outline/);
+    });
+  },
+};

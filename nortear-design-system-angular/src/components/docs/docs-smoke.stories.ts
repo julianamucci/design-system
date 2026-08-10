@@ -45,11 +45,16 @@ import { NdsHoverCardDocs } from './HoverCardDocs';
 import { NdsDropdownMenuDocs } from './DropdownMenuDocs';
 import { NdsAlertDialogDocs } from './AlertDialogDocs';
 import { NdsContextMenuDocs } from './ContextMenuDocs';
+import { NdsMenubarDocs } from './MenubarDocs';
+import { NdsSelectDocs } from './SelectDocs';
+import { NdsDrawerDocs } from './DrawerDocs';
+import { NdsNavigationMenuDocs } from './NavigationMenuDocs';
+import { NdsCommandDocs } from './CommandDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -252,5 +257,30 @@ export const AlertDialog: Story = {
 
 export const ContextMenu: Story = {
   render: () => ({ template: '<nds-context-menu-docs />' }),
+  play,
+};
+
+export const Menubar: Story = {
+  render: () => ({ template: '<nds-menubar-docs />' }),
+  play,
+};
+
+export const Select: Story = {
+  render: () => ({ template: '<nds-select-docs />' }),
+  play,
+};
+
+export const Drawer: Story = {
+  render: () => ({ template: '<nds-drawer-docs />' }),
+  play,
+};
+
+export const NavigationMenu: Story = {
+  render: () => ({ template: '<nds-navigation-menu-docs />' }),
+  play,
+};
+
+export const Command: Story = {
+  render: () => ({ template: '<nds-command-docs />' }),
   play,
 };

@@ -6,14 +6,10 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 35 dos 47 componentes prontos — Blocos 1, 2 e 3 fechados e a
-primeira metade do Bloco 4 (button, separator, label, card, badge, skeleton,
-aspect-ratio, input, textarea, checkbox, switch, toggle, radio-group, slider,
-progress, avatar, code-block, alert, breadcrumb, table, accordion, collapsible,
-tabs, toggle-group, scroll-area, pagination, sidebar, tooltip, sheet, dialog,
-popover, hover-card, dropdown-menu, alert-dialog, context-menu), mais a família **InputGroup**, que o
-conteúdo compartilhado documenta dentro do slug `input`. Cada um com stories,
-docs page e as 15 seções genéricas. A ordem e as pendências vivem em
+**Em construção.** 40 dos 47 componentes prontos — Blocos 1 a 4 fechados.
+Faltam os 7 do Bloco 5: form, calendar, carousel, chart, data-table, input-otp,
+resizable e sonner. Cada componente pronto tem stories, docs page e as 15
+seções genéricas. A ordem e as pendências vivem em
 `.pipeline-context/_ordem.md`.
 
 ## O que é
@@ -253,7 +249,7 @@ classe `.nds-*`, não pelo `data-slot`.
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- Os 12 componentes restantes ainda não existem (fim do Bloco 4 e Bloco 5).
+- Os 7 componentes do Bloco 5 ainda não existem.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

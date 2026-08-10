@@ -31,7 +31,13 @@ async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
 }
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item3'],
+    coversNotApplicable: {
+      'functional.item6':
+        'a seta esquerda só fecha o submenu com o foco dentro dele, e o foco não entra: a view do ng-template resolve DI pela arvore de declaracao e o item nao acha a lista composta do popup (mesma limitacao registrada no DropdownMenu). O Escape fecha, e esta afirmado.',
+    },
+  },
   render: () => ({
     template: `
       <div ndsContextMenu>
@@ -83,10 +89,14 @@ export const WithSubmenu: Story = {
       );
     });
 
-    await step('Seta esquerda fecha o submenu e volta ao gatilho dele', async () => {
-      await userEvent.keyboard('{ArrowLeft}');
+    await step('Escape fecha o submenu e o foco fica no gatilho dele', async () => {
+      // `functional.item6` promete SETA ESQUERDA fechando — mas ela só age com o
+      // foco DENTRO do submenu, e aqui o foco nunca entra (mesma limitação do
+      // ng-template registrada no DropdownMenu). Afirmar a seta seria afirmar o
+      // que a story não produz; o Escape fecha e é caminho de teclado real.
+      await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('false'));
-      await waitFor(() => expect(document.activeElement).toBe(subGatilho()));
+      await expect(document.activeElement).toBe(subGatilho());
     });
   },
 };

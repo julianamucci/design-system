@@ -112,6 +112,20 @@
   transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
+/*
+ * Item filtrado para fora.
+ *
+ * `display: flex` acima é regra de AUTOR e vence o `display: none` que o
+ * navegador dá ao atributo `hidden`, que é regra de folha do agente. Sem esta
+ * linha, o item que o filtro descartou continua na tela — e a lib que liga
+ * `hidden` (é o que o primitivo de autocomplete faz) parece não funcionar.
+ *
+ * Mesmo remendo que `.nds-accordion-content[hidden]` já traz, pelo mesmo motivo.
+ */
+.nds-command-item[hidden] {
+  display: none;
+}
+
 .nds-command-item:hover,
 .nds-command-item[aria-selected="true"],
 .nds-command-item[data-selected="true"] {
@@ -191,7 +205,17 @@
 /* Command dentro de um Dialog (paleta de comando) */
 .nds-command-dialog-content {
   top: 33%;
-  transform: translate(-50%, 0);
+  /* `translate`, e não `transform: translate(...)`.
+   *
+   * O `.nds-dialog-content` centraliza com a propriedade individual
+   * `translate: -50% -50%`. `transform` é OUTRA propriedade, e as duas se
+   * COMPÕEM em vez de uma vencer: o painel saía deslocado -100% na horizontal,
+   * ou seja, quase inteiro para fora da tela pela esquerda. Usando a mesma
+   * propriedade, esta regra sobrescreve (command.css carrega depois de
+   * dialog.css) e sobra só o que se queria: centro na horizontal, 33% do topo.
+   *
+   * Vale para as quatro stacks web — nenhuma escapava. */
+  translate: -50% 0;
   overflow: hidden;
   padding: 0;
 }

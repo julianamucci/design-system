@@ -270,6 +270,26 @@ interface AnalyticsEvents {
     location?: string;
   };
 
+  /**
+   * Disparado ao abrir o Drawer. Nome próprio, e não `dialog_open`, porque é o
+   * que o conteúdo compartilhado do componente documenta na seção Analytics —
+   * separar o painel arrastável do diálogo centrado é o que permite medir o
+   * fluxo mobile sem diluí-lo no total de diálogos.
+   */
+  drawer_open: {
+    component: 'drawer';
+    label?: string;
+    location?: string;
+  };
+
+  /** Disparado ao fechar o Drawer por qualquer caminho. */
+  drawer_close: {
+    component: 'drawer';
+    label?: string;
+    reason: 'escape' | 'overlay' | 'close-button' | 'action';
+    location?: string;
+  };
+
   /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
   dialog_confirm: {
     component: string;

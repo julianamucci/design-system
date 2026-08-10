@@ -294,7 +294,9 @@
 .nds-drawer-content[data-vaul-drawer-direction="left"] {
   inset-block: 0;
   left: 0;
-  width: 75%;
+  /* Ver a nota das regras de lado do Sheet: largura por custom property, com o
+   * valor antigo como fallback, porque nenhuma classe vence (0,2,0). */
+  width: var(--drawer-width, 75%);
   border-right: 1px solid hsl(var(--border));
   border-start-end-radius: 0.75rem;
   border-end-end-radius: 0.75rem;
@@ -303,7 +305,7 @@
 .nds-drawer-content[data-vaul-drawer-direction="right"] {
   inset-block: 0;
   right: 0;
-  width: 75%;
+  width: var(--drawer-width, 75%);
   border-left: 1px solid hsl(var(--border));
   border-start-start-radius: 0.75rem;
   border-end-start-radius: 0.75rem;
@@ -312,7 +314,7 @@
 @media (min-width: 40rem) {
   .nds-drawer-content[data-vaul-drawer-direction="left"],
   .nds-drawer-content[data-vaul-drawer-direction="right"] {
-    max-width: 24rem;
+    max-width: var(--drawer-max-width, 24rem);
   }
 }
 
