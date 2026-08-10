@@ -28,7 +28,9 @@ O usuário invocou o comando com: **$ARGUMENTS**
    - **Checks de presença** (instrumentação, asserção real, paridade entre stacks) → **scan limpo não significa nada**: grep não encontra o que nunca foi escrito. Componente novo sem tracking e com asserção vazia gera scan limpo. Estes agents rodam SEMPRE em modo `new` (ver Fase D).
 2. **Inline checks nos dev-skills.** Cada `/dev-<stack>` roda `audit.mjs --category security,performance,analytics,quality` antes de commitar — elimina ~1 rodada inteira de auditoria em modo `new`.
 3. **Cross-stack por último.** Compara as 5 implementações pós-fix; rodá-lo antes gera cascata redundante.
-4. **Paralelize entre skills, serial entre componentes.** Dev-skills das 5 stacks e os auditores por componente são independentes — batch paralelo de `Agent`. Serial entre componentes evita colisão de commits.
+4. **Paralelize à vontade — o que se economiza é SUÍTE, não agent.** Dev-skills das 5 stacks e os auditores por componente são independentes; dispare quantos couberem, entre skills e entre componentes. O gargalo real nunca foi o número de agents, e sim rodar teste a cada correção: dentro de cada agent vale a mesma ordem — diagnosticar tudo, corrigir tudo, UM run em bloco, re-corrigir só o que falhou.
+
+   Com agents concorrentes, dois cuidados que não são opcionais: **nunca `git stash`** (é global — um agent apaga a entrada do outro) e **stage só dos próprios caminhos** (`git add -A` varre o que outra sessão deixou na árvore, e já levou 55 arquivos de outro stack para um commit). Nome de arquivo no scratchpad leva o nome da stack, porque ele também é compartilhado.
 5. **Context-cache por componente = contrato, não resumo.** `.pipeline-context/<slug>.md` ≤160 linhas. Além de variantes, props, tokens e lista de arquivos, ele **fixa o conteúdo dos exemplos** (ver Fase A.2). Os 4 dev-agents rodam em paralelo e não se veem: o que não estiver escrito ali, cada um inventa do seu jeito — foi assim que a mesma composição virou 4 demos diferentes.
 
    **A pasta é apagada no início de toda execução** (Fase A.0) e regenerada. Não existe reaproveitamento entre execuções: cache é contrato, e contrato velho é pior que contrato nenhum — descreve uma API que mudou, cita classe que não existe mais, e os dev-agents seguem literalmente. Caches de maio deste projeto ainda diziam "Basecoat" e mandavam alinhar overlays com `bg-black/80`. Como a pasta nasce vazia a cada rodada, ela também não precisa entrar nas varreduras de vocabulário morto do `audit.mjs`.
@@ -211,7 +213,7 @@ Fase A (serial):
   1. node scripts/audit.mjs --all --json > .pipeline-context/scans.json
   2. Gerar .pipeline-context/<slug>.md para cada componente
 
-Fase B (serial entre componentes, paralelo entre skills):
+Fase B (paralelo entre skills E entre componentes):
   Para cada <slug>:
     /security | /performance (só se scan reportou)
     /quality | /analytics    (só se scan reportou OU se o componente nunca passou
