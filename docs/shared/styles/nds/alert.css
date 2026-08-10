@@ -150,21 +150,12 @@
   --alert-fg: hsl(var(--info));
   --alert-border: hsl(var(--info) / 0.3);
 }
-/* No tema escuro o azul não alcança 4.5:1 sobre o bg soft — medido em 3.19:1,
- * contra 6.16:1 no claro. O título é 14px semibold, que NÃO é texto grande pela
- * WCAG (precisaria de 18.66px em negrito), então o limite dele é 4.5 e não 3.
- * Mesmo tratamento que o warning já tinha, e restrito ao escuro: no claro a cor
- * passa, e apagá-la ali seria perder sinal sem ganhar contraste. O ícone
- * mantém --alert-fg — é forma curta, cobrada em 3:1, e 3.19 basta. */
-.dark .nds-alert-info .nds-alert-title,
-.dark .nds-alert-info > h1,
-.dark .nds-alert-info > h2,
-.dark .nds-alert-info > h3,
-.dark .nds-alert-info > h4,
-.dark .nds-alert-info > h5,
-.dark .nds-alert-info > h6 {
-  color: hsl(var(--foreground));
-}
+/* O azul do info passa nos dois temas depois que --info subiu de 53% para 64%
+ * no escuro: 6.16:1 no claro e 4.64:1 no escuro, sobre o próprio bg soft. Havia
+ * aqui um override que forçava --foreground no escuro; ele existia porque o
+ * token estava escuro demais, e o lugar do conserto era o tema, não a variante.
+ * O título é 14px semibold, que NÃO é texto grande pela WCAG (precisaria de
+ * 18.66px em negrito), então o limite dele é 4.5 e não 3. */
 
 /* ── Action (botão no canto superior direito) ─────────────────────────────── */
 .nds-alert-action {

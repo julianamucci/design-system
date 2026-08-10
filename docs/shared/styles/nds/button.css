@@ -205,9 +205,16 @@
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
+/* --input e --border tem o MESMO valor nos tres temas e nos dois modos
+ * (default 0 0% 90% / 0 0% 15%). A linha border-color era vocabulario do
+ * shadcn sobre a borda que a regra base ja aplica: nao mudava um pixel e
+ * dizia que o botao pega emprestada a borda de um input, o que nao e o caso.
+ *
+ * O fundo continua: no escuro o outline ganha uma superficie levemente
+ * elevada para nao encostar na pagina. Isso e superficie, entao o token e
+ * --muted — mesmo valor, nome honesto. */
 .dark .nds-button-outline {
-  border-color: hsl(var(--input));
-  background-color: hsl(var(--input) / 0.3);
+  background-color: hsl(var(--muted) / 0.3);
 }
 .dark .nds-button-outline:hover,
 .dark .nds-button-outline[aria-pressed="true"] {

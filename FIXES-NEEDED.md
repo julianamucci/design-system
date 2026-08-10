@@ -1743,23 +1743,37 @@ antes da coleção `Opacidade`.
 - [ ] **button · hover de `ghost` e `outline`** — CSS: `--accent` cheio no claro,
   `--accent / 0.5` no escuro. Figma: `hover-overlay` com um alfa só.
 
-### Precisam de decisão de token (não é alfa, é o token que troca)
+### RESOLVIDOS em 2026-08-09, sem token derivado
 
-- [ ] **button · `variant=outline`** — CSS claro: fundo `--background`, borda
-  `--border`. CSS escuro: borda `--input` e fundo `--input / 0.3`. Trocar de
-  token por modo exige uma variável de cor mode-aware ou uma custom property
-  nova no CSS. Vinculado hoje a `superficie/background` + `estrutura/border`.
-- [ ] **alert · título de `variant=info`** — CSS: `.dark .nds-alert-info
-  .nds-alert-title` força `--foreground`, porque o azul info no fundo soft
-  escuro não segura o contraste. Figma: preso a `Color/feedback/info` nos dois
-  modos. Mesma classe de problema do outline do button.
+Os dois casos que pareciam exigir token novo eram, na verdade, defeito no tema.
 
-**Recomendação:** os dois primeiros são mecânicos e cabem numa rodada. Os dois
-últimos são a mesma pergunta de arquitetura — criar token derivado (ex.
-`--button-outline-bg`, `--alert-title-fg`) nos DOIS lados, ou aceitar a
-divergência e mantê-la anotada. Criar só no Figma inventaria token que o código
-não tem, que é o que a coleção `Texto` e a `Opacidade` foram desenhadas para
-evitar.
+- [x] **alert · título de `variant=info`** — não era o alert, era o token. No
+  escuro o `--info` do tema default estava em 53%, o que dava 3.19:1 no fundo
+  soft e 3.45:1 sobre a página — as duas abaixo de 4.5. Subiu para **64%**, a
+  menor lightness que passa nas duas (4.64 e 5.24). Cold (60%) e warm (58%) já
+  passavam: o default era o único fora do padrão. O override
+  `.dark .nds-alert-info .nds-alert-title` saiu, e o vínculo do Figma a
+  `Color/feedback/info` passou a estar certo nos dois modos.
+- [x] **`--info-foreground` no escuro** — achado de tabela: no escuro o tema já
+  usava PRETO em success e warning, porque essas cores ficam claras. Info tinha
+  ficado com branco, que falhava sobre o azul claro — 3.41:1 no cold e 2.66:1 no
+  warm, hoje, antes de qualquer mudança. Preto nos três dá 6.14, 6.16 e 7.90.
+- [x] **button · borda do `variant=outline`** — `--input` e `--border` têm o
+  MESMO valor nos três temas e nos dois modos. A linha `border-color:
+  hsl(var(--input))` no `.dark` não mudava um pixel: era vocabulário do shadcn
+  sobre a borda que a regra base já aplica. Removida. O `estrutura/border`
+  vinculado no Figma está certo em todos os modos.
+
+### Continua aberto
+
+- [ ] **button · fundo do `variant=outline` no escuro** — o único resto daquele
+  item: no escuro o outline ganha superfície levemente elevada,
+  `--muted / 0.3` (renomeado de `--input / 0.3` pelo mesmo motivo). É alfa por
+  modo, então cabe na `Opacidade` — camada de superfície com opacidade 0% no
+  claro e 30% no escuro, como o badge faz.
+
+**Recomendação:** os três abertos são todos alfa por modo e resolvem com a
+coleção `Opacidade` numa rodada só. Nenhum precisa de token derivado.
 
 ### Verificado e SEM divergência
 
