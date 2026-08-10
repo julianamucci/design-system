@@ -1,0 +1,110 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { expect } from 'storybook/test';
+import { NdsSlider } from './slider';
+
+// Tipos e composições do Slider. Sem argTypes, então o painel Controls é
+// desligado — do contrário ele apareceria vazio.
+
+const meta: Meta = {
+  title: 'UI/Slider/Tipos',
+  decorators: [moduleMetadata({ imports: [NdsSlider] })],
+  parameters: { layout: 'padded', controls: { disable: true } },
+};
+
+export default meta;
+type Story = StoryObj;
+
+/** Largura preenchida do range, em % do trilho. Mede o desenho, não o dado. */
+function preenchimento(raiz: HTMLElement): number {
+  const trilho = raiz.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+  const faixa = raiz.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
+  return Math.round((faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100);
+}
+
+export const Tipos: Story = {
+  parameters: { covers: ['visual.item1', 'visual.item2'] },
+  render: () => ({
+    template: `
+      <div class="nds-stack" data-spacing="lg">
+        <div class="nds-stack" data-spacing="sm">
+          <span class="nds-text-caption">Valor único</span>
+          <div ndsSlider data-testid="single" [value]="[40]" aria-label="Volume"></div>
+        </div>
+
+        <div class="nds-stack" data-spacing="sm">
+          <span class="nds-text-caption">Intervalo</span>
+          <div
+            ndsSlider
+            data-testid="range"
+            [value]="[20, 80]"
+            [thumbLabels]="['Preço mínimo', 'Preço máximo']"
+          ></div>
+        </div>
+
+        <div class="nds-stack" data-spacing="sm">
+          <span class="nds-text-caption">Passo de 5</span>
+          <div ndsSlider data-testid="passo" [value]="[35]" [step]="5" aria-label="Brilho"></div>
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('Um valor, uma alça; dois valores, duas alças', async () => {
+      const single = canvasElement.querySelector<HTMLElement>('[data-testid="single"]')!;
+      const range = canvasElement.querySelector<HTMLElement>('[data-testid="range"]')!;
+      await expect(single.querySelectorAll('[data-slot="slider-thumb"]').length).toBe(1);
+      await expect(range.querySelectorAll('[data-slot="slider-thumb"]').length).toBe(2);
+    });
+
+    await step('Cada alça do intervalo tem nome próprio', async () => {
+      // "Faixa de preço" repetido duas vezes não diz qual alça está em foco.
+      const range = canvasElement.querySelector<HTMLElement>('[data-testid="range"]')!;
+      const rotulos = [...range.querySelectorAll('[data-slot="slider-thumb"] > input')].map((i) =>
+        i.getAttribute('aria-label'),
+      );
+      await expect(rotulos).toEqual(['Preço mínimo', 'Preço máximo']);
+    });
+
+    await step('O preenchimento desenhado corresponde ao valor', async () => {
+      // Afirma o pixel, não a propriedade: é o posicionamento do primitivo que
+      // está sob teste, e ele só aparece no layout.
+      const single = canvasElement.querySelector<HTMLElement>('[data-testid="single"]')!;
+      await expect(preenchimento(single)).toBe(40);
+
+      // Num intervalo o preenchimento é o miolo entre as duas alças: 80 − 20.
+      const range = canvasElement.querySelector<HTMLElement>('[data-testid="range"]')!;
+      await expect(preenchimento(range)).toBe(60);
+    });
+
+    await step('step=5 arredonda o passo, não o valor inicial', async () => {
+      const passo = canvasElement.querySelector<HTMLElement>('[data-testid="passo"]')!;
+      const input = passo.querySelector<HTMLInputElement>('[data-slot="slider-thumb"] > input')!;
+      await expect(input.step).toBe('5');
+    });
+  },
+};
+
+export const Vertical: Story = {
+  parameters: { covers: ['visual.item3'] },
+  render: () => ({
+    template: `
+      <div ndsSlider orientation="vertical" [value]="[60]" aria-label="Temperatura"></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('data-orientation chega ao elemento que o CSS observa', async () => {
+      // O CSS vertical seleciona `.nds-slider[data-orientation="vertical"]`, e
+      // `.nds-slider` fica no control — é lá que o primitivo escreve o atributo.
+      const control = canvasElement.querySelector<HTMLElement>('[data-slot="slider-control"]')!;
+      await expect(control.classList.contains('nds-slider')).toBe(true);
+      await expect(control.getAttribute('data-orientation')).toBe('vertical');
+    });
+
+    await step('O trilho fica em pé', async () => {
+      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+      const caixa = trilho.getBoundingClientRect();
+      await expect(caixa.height).toBeGreaterThan(caixa.width);
+    });
+  },
+};

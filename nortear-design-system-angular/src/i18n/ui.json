@@ -54,7 +54,9 @@
       "no": "Não",
       "token": "Token",
       "cssClass": "Classe",
-      "screenReader": "Leitor de tela"
+      "screenReader": "Leitor de tela",
+      "min": "Mínimo",
+      "max": "Máximo"
     }
   },
   "en": {
@@ -112,7 +114,9 @@
       "no": "No",
       "token": "Token",
       "cssClass": "Class",
-      "screenReader": "Screen reader"
+      "screenReader": "Screen reader",
+      "min": "Minimum",
+      "max": "Maximum"
     }
   },
   "es": {
@@ -170,7 +174,9 @@
       "no": "No",
       "token": "Token",
       "cssClass": "Clase",
-      "screenReader": "Lector de pantalla"
+      "screenReader": "Lector de pantalla",
+      "min": "Mínimo",
+      "max": "Máximo"
     }
   }
 }

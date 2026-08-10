@@ -1,13 +1,15 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   input,
   signal,
+  viewChild,
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import { cn } from '@/lib/utils';
 import { NdsButton, NdsButtonIcon } from './button';
 import { copyText } from '@shared/primitives/clipboard';
 import {
@@ -61,10 +63,10 @@ const COPIED_RESET_MS = 2000;
         <span class="nds-sr-only" role="status" aria-live="polite">{{ liveText() }}</span>
 
         <button
+          #copyButton
           ndsButton
           variant="ghost"
           size="icon-sm"
-          data-slot="code-block-copy"
           [attr.aria-label]="copied() ? copiedLabel() : copyLabel()"
           (click)="onCopy()"
         >
@@ -81,6 +83,12 @@ const COPIED_RESET_MS = 2000;
            WCAG 3.1.2. -->
       <pre class="nds-code-block-pre" lang="en"><code class="nds-code-block-code">@for (line of lines(); track $index; let i = $index) {<span class="nds-code-block-line" [attr.data-highlighted]="highlighted().has(i + 1) ? 'true' : null"><span class="nds-code-block-gutter" aria-hidden="true">{{ i + 1 }}</span><span class="nds-code-block-text">@if (line.length === 0) {&#10;} @else {@for (span of line; track $index) {@if (span.token === 'plain') {{{ span.text }}} @else {<span [attr.data-token]="span.token">{{ span.text }}</span>}}}</span></span>}</code></pre>
     </div>
+
+    <!-- Faixa inferior opcional. Fora do scroll de propósito: a observação
+         precisa continuar visível enquanto a pessoa rola o trecho. -->
+    @if (footer()) {
+      <div class="nds-code-block-footer">{{ footer() }}</div>
+    }
   `,
 })
 export class NdsCodeBlock implements OnDestroy {
@@ -93,11 +101,36 @@ export class NdsCodeBlock implements OnDestroy {
   readonly showLineNumbers = input<boolean>(true);
   /** Linhas destacadas: `[3, '5-7']` ou `'3, 5-7'`. */
   readonly highlightLines = input<LineRangeInput | undefined>(undefined);
+  /**
+   * Observação abaixo do código. Texto, não markup: o conteúdo do rodapé chega
+   * de `translations.json` e um `[innerHTML]` aqui abriria superfície de XSS num
+   * componente que hoje não tem nenhuma.
+   */
+  readonly footer = input<string>('');
   readonly copyLabel = input<string>('Copiar código');
   readonly copiedLabel = input<string>('Copiado!');
 
   protected readonly copied = signal(false);
   private timer: ReturnType<typeof setTimeout> | undefined;
+
+  // `read: ElementRef` é obrigatório: numa tag com componente, o `#ref` do
+  // template resolve para a INSTÂNCIA do componente, não para o elemento.
+  private readonly copyButton = viewChild.required('copyButton', {
+    read: ElementRef<HTMLButtonElement>,
+  });
+
+  constructor() {
+    // `data-slot="code-block-copy"` é o contrato cross-stack para achar a ação
+    // de copiar sem depender de classe. Escrever o atributo no template NÃO
+    // funciona: o `NdsButton` declara `[attr.data-slot]="button"` como host
+    // binding, e host binding roda DEPOIS do binding do template — o valor do
+    // template era sobrescrito em silêncio, e a ação ficava indistinguível de
+    // qualquer outro botão. Como o host binding é constante, o Ivy só escreve
+    // na primeira detecção; escrever uma vez depois dela é definitivo.
+    afterNextRender(() => {
+      this.copyButton().nativeElement.setAttribute('data-slot', 'code-block-copy');
+    });
+  }
 
   protected readonly numbered = computed(() => (this.showLineNumbers() ? 'true' : 'false'));
   protected readonly resolvedLanguage = computed(() => resolveLanguage(this.language()));

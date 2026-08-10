@@ -1,0 +1,160 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, fn, userEvent } from 'storybook/test';
+import { NdsRadioGroup, NdsRadioGroupItem } from './radio-group';
+import { NdsLabel } from './label';
+import { NdsRadioGroupDocs } from '@/components/docs/RadioGroupDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+type RadioGroupArgs = {
+  groupLabel: string;
+  name: string;
+  value: string;
+  disabled: boolean;
+  onValueChange: (valor: string | null) => void;
+};
+
+/** Ver a nota em separator.stories.ts. */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<RadioGroupArgs> }): string {
+  const { groupLabel = 'Forma de pagamento', name = 'payment', value = '', disabled = false } =
+    ctx.args ?? {};
+
+  // Só o que difere do default entra: snippet que repete valor padrão ensina ruído.
+  const attrs = [
+    `name="${name}"`,
+    value ? `value="${value}"` : '',
+    disabled ? '[disabled]="true"' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return `import { NdsRadioGroup, NdsRadioGroupItem } from '@/components/ui/radio-group';
+import { NdsLabel } from '@/components/ui/label';
+
+@Component({
+  imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel],
+  template: \`
+    <p id="pagamento-titulo" class="nds-text-body nds-font-semibold">${groupLabel}</p>
+    <fieldset ndsRadioGroup aria-labelledby="pagamento-titulo" ${attrs}>
+      <div class="nds-radio-row">
+        <button ndsRadioGroupItem value="cartao" id="cartao"></button>
+        <label ndsLabel class="nds-radio-label" for="cartao">Cartão de crédito</label>
+      </div>
+      <div class="nds-radio-row">
+        <button ndsRadioGroupItem value="pix" id="pix"></button>
+        <label ndsLabel class="nds-radio-label" for="pix">Pix</label>
+      </div>
+    </fieldset>
+  \`,
+})
+export class Exemplo {}`;
+}
+
+const meta: Meta<RadioGroupArgs> = {
+  title: 'UI/RadioGroup',
+  tags: ['autodocs', 'form'],
+  decorators: [moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel] })],
+  parameters: {
+    layout: 'padded',
+    docs: { page: withAutoDocsTab(NdsRadioGroupDocs) },
+  },
+  argTypes: {
+    groupLabel: {
+      control: 'text',
+      description: 'Texto que nomeia o grupo — associado por aria-labelledby.',
+    },
+    name: {
+      control: 'text',
+      description: 'Nome do campo no formulário HTML.',
+    },
+    value: {
+      control: 'select',
+      options: ['', 'cartao', 'pix', 'boleto'],
+      description: 'Valor selecionado. É um model — aceita [(value)].',
+    },
+    disabled: { control: 'boolean', description: 'Desabilita todos os itens do grupo.' },
+    // Função em `args` sem entrada aqui NÃO chega ao template no renderer
+    // Angular — o `(valueChange)` ficaria ligado a nada, sem erro nenhum.
+    onValueChange: { control: false, table: { disable: true } },
+  },
+  args: {
+    groupLabel: 'Forma de pagamento',
+    name: 'payment',
+    value: '',
+    disabled: false,
+    onValueChange: fn(),
+  },
+};
+
+export default meta;
+type Story = StoryObj<RadioGroupArgs>;
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+  },
+  render: (args) => ({
+    props: { ...args },
+    template: `
+      <div class="nds-stack" data-spacing="xs">
+        <p id="pg-titulo" class="nds-text-body nds-font-semibold">{{ groupLabel }}</p>
+        <fieldset
+          ndsRadioGroup
+          aria-labelledby="pg-titulo"
+          [name]="name"
+          [value]="value"
+          [disabled]="disabled"
+          (valueChange)="onValueChange($event)"
+        >
+          <div class="nds-radio-row">
+            <button ndsRadioGroupItem value="cartao" id="pg-cartao"></button>
+            <label ndsLabel class="nds-radio-label" for="pg-cartao">Cartão de crédito</label>
+          </div>
+          <div class="nds-radio-row">
+            <button ndsRadioGroupItem value="pix" id="pg-pix"></button>
+            <label ndsLabel class="nds-radio-label" for="pg-pix">Pix</label>
+          </div>
+          <div class="nds-radio-row">
+            <button ndsRadioGroupItem value="boleto" id="pg-boleto"></button>
+            <label ndsLabel class="nds-radio-label" for="pg-boleto">Boleto bancário</label>
+          </div>
+        </fieldset>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+
+    await step('O grupo é um radiogroup com nome acessível', async () => {
+      // O `role` vem do primitivo; o nome vem do <p> apontado por
+      // aria-labelledby. Sem nome, o leitor de tela anuncia "grupo" e pronto.
+      await expect(canvas.getByRole('radiogroup', { name: args.groupLabel })).toBeTruthy();
+    });
+
+    await step('Cada opção é um radio alcançável pelo rótulo', async () => {
+      // getByRole com name prova que o <label for> chega ao <button>: se a
+      // associação quebrar, o nome acessível some e esta busca falha.
+      await expect(canvas.getAllByRole('radio')).toHaveLength(3);
+      await expect(canvas.getByRole('radio', { name: 'Pix' })).toBeTruthy();
+    });
+
+    if (args.disabled) {
+      await step('Grupo desabilitado bloqueia todos os itens', async () => {
+        for (const r of canvas.getAllByRole('radio')) await expect(r).toBeDisabled();
+      });
+      return;
+    }
+
+    await step('Selecionar "Pix" marca só ele e avisa quem escuta', async () => {
+      // Idempotente: selecionar um radio já marcado o mantém marcado, então o
+      // replay do painel Interactions chega ao mesmo estado.
+      const pix = canvas.getByRole('radio', { name: 'Pix' });
+      await userEvent.click(pix);
+      await expect(pix.getAttribute('aria-checked')).toBe('true');
+      await expect(pix.getAttribute('data-state')).toBe('checked');
+      const cartao = canvas.getByRole('radio', { name: 'Cartão de crédito' });
+      await expect(cartao.getAttribute('aria-checked')).toBe('false');
+      await expect(args.onValueChange).toHaveBeenCalledWith('pix');
+    });
+  },
+};

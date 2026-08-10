@@ -46,6 +46,31 @@ const config: StorybookConfig = {
     componentsManifest: true,
   },
   viteFinal: async (viteConfig) => {
+    // Pré-empacota TODOS os subcaminhos do @radix-ng/primitives de uma vez.
+    //
+    // Sem isto, o Vite descobre cada subcaminho no momento em que a primeira
+    // story o importa e refaz o optimize em rodadas separadas. Um subcaminho
+    // que entra tarde traz junto uma SEGUNDA cópia do @angular/core, e as duas
+    // não compartilham o estado interno do compilador. O erro que aparece é
+    // `Cannot read properties of null (reading 'firstCreatePass')` ou `NG0203`
+    // em toda story do componente — parece defeito do componente e não é.
+    //
+    // Custou tempo em switch, toggle e slider antes de virar esta regra. A
+    // lista sai do próprio `exports` do pacote, então componente novo não
+    // exige editar este arquivo.
+    const { createRequire } = await import('node:module');
+    const exigir = createRequire(import.meta.url);
+    const exports = exigir('@radix-ng/primitives/package.json').exports as Record<string, unknown>;
+    const subcaminhos = Object.keys(exports)
+      .filter((k) => k !== './package.json')
+      .map((k) => k.replace(/^\.$/, '@radix-ng/primitives').replace(/^\.\//, '@radix-ng/primitives/'));
+
+    viteConfig.optimizeDeps = viteConfig.optimizeDeps ?? {};
+    viteConfig.optimizeDeps.include = [
+      ...(viteConfig.optimizeDeps.include ?? []),
+      ...subcaminhos,
+    ];
+
     // O alias precisa ser reaplicado aqui: o framework Angular monta a própria
     // config e não herda o resolve.alias do vite.config.ts raiz.
     viteConfig.resolve = viteConfig.resolve ?? {};

@@ -20,11 +20,18 @@ import { NdsSkeletonDocs } from './SkeletonDocs';
 import { NdsAspectRatioDocs } from './AspectRatioDocs';
 import { NdsInputDocs } from './InputDocs';
 import { NdsCheckboxDocs } from './CheckboxDocs';
+import { NdsSwitchDocs } from './SwitchDocs';
+import { NdsToggleDocs } from './ToggleDocs';
+import { NdsRadioGroupDocs } from './RadioGroupDocs';
+import { NdsSliderDocs } from './SliderDocs';
+import { NdsProgressDocs } from './ProgressDocs';
+import { NdsAvatarDocs } from './AvatarDocs';
+import { NdsCodeBlockDocs } from './CodeBlockDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -102,5 +109,40 @@ export const Input: Story = {
 
 export const Checkbox: Story = {
   render: () => ({ template: '<nds-checkbox-docs />' }),
+  play,
+};
+
+export const Switch: Story = {
+  render: () => ({ template: '<nds-switch-docs />' }),
+  play,
+};
+
+export const Toggle: Story = {
+  render: () => ({ template: '<nds-toggle-docs />' }),
+  play,
+};
+
+export const RadioGroup: Story = {
+  render: () => ({ template: '<nds-radio-group-docs />' }),
+  play,
+};
+
+export const Slider: Story = {
+  render: () => ({ template: '<nds-slider-docs />' }),
+  play,
+};
+
+export const Progress: Story = {
+  render: () => ({ template: '<nds-progress-docs />' }),
+  play,
+};
+
+export const Avatar: Story = {
+  render: () => ({ template: '<nds-avatar-docs />' }),
+  play,
+};
+
+export const CodeBlock: Story = {
+  render: () => ({ template: '<nds-code-block-docs />' }),
   play,
 };

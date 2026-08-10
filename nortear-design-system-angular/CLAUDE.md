@@ -6,8 +6,9 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 9 dos 47 componentes prontos (button, separator, label, card,
-badge, skeleton, aspect-ratio, input, textarea, checkbox), cada um com stories,
+**Em construção.** 17 dos 47 componentes prontos (button, separator, label, card,
+badge, skeleton, aspect-ratio, input, textarea, checkbox, switch, toggle,
+radio-group, slider, progress, avatar, code-block), cada um com stories,
 docs page e as 15 seções genéricas. A ordem e as pendências vivem em
 `.pipeline-context/_ordem.md`.
 
@@ -95,6 +96,38 @@ argTypes: {
 args: { onClick: fn() },
 ```
 
+### 6. Subcaminho do Radix NG não pré-empacotado duplica o `@angular/core`
+
+Já resolvida no `.storybook/main.ts`, mas vale saber reconhecer: se voltar a
+aparecer `Cannot read properties of null (reading 'firstCreatePass')` ou
+`NG0203` em **todas** as stories de um componente novo, não é o componente.
+
+O Vite descobria cada subcaminho de `@radix-ng/primitives` no momento em que a
+primeira story o importava e refazia o optimize em rodadas separadas; o
+subcaminho que entrava tarde trazia uma segunda cópia do `@angular/core`, e as
+duas não compartilham o estado interno do compilador. O `viteFinal` agora
+pré-empacota todos os subcaminhos de uma vez, lendo a lista do `exports` do
+próprio pacote — componente novo não exige editar nada.
+
+Se o cache já estiver envenenado de um run anterior, apague
+`node_modules/.cache/storybook`.
+
+Custou tempo em `switch`, `toggle` e `slider` antes de virar regra.
+
+### 7. Input de host directive aninhada é exposto junto
+
+`hostDirectives: [{ directive: X, inputs: [...] }]` restringe o que **X** expõe.
+Não alcança o que as host directives DE X expõem: essas continuam ligáveis no
+elemento, mesmo fora da sua lista.
+
+Foi o que aconteceu no `slider`. O `RdxSliderRoot` tem o `RdxControlValueAccessor`
+como host directive, e o acessor recebia o `[value]` escrito no elemento mesmo
+sem `value` na lista. Como o primitivo decide se é intervalo por
+`Array.isArray(value)`, `[50]` virava uma faixa de 50% a 50% — preenchimento de
+largura zero, sem erro nenhum, e a alça no lugar certo disfarçando.
+
+Antes de compor, olhe as host directives do primitivo, não só os inputs dele.
+
 ## Convenções deste stack
 
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
@@ -159,7 +192,7 @@ args: { onClick: fn() },
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- Os 38 componentes restantes ainda não existem.
+- Os 30 componentes restantes ainda não existem.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.
