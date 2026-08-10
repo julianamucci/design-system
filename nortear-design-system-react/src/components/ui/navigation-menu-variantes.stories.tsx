@@ -10,7 +10,7 @@ import {
 } from "./navigation-menu";
 
 const meta = {
-  title: "UI/NavigationMenu/Variantes",
+  title: "UI/NavigationMenu/Variants",
   tags: ["navigation"],
   component: NavigationMenu,
   parameters: {

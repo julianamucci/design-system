@@ -6,7 +6,7 @@ import { NdsCard } from './card';
 import { NDS_SIDEBAR } from './sidebar';
 
 const meta: Meta = {
-  title: 'UI/Separator/Composições',
+  title: 'UI/Separator/Compositions',
   decorators: [moduleMetadata({ imports: [NdsSeparator, NdsCard, ...NDS_SIDEBAR] })],
   parameters: {
     layout: 'padded',

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const meta: Meta = {
-  title: "UI/Tabs/Composicoes",
+  title: "UI/Tabs/Compositions",
   tags: ["navigation"],
   component: Tabs,
   parameters: {
@@ -26,8 +26,7 @@ type Story = StoryObj;
 
 // ─── Com ícones ───────────────────────────────────────────────────────────────
 
-export const ComIcones: Story = {
-  name: "Com ícones",
+export const WithIcons: Story = {
   render: () => (
     <Tabs defaultValue="profile" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Configuracoes da conta">
@@ -67,8 +66,7 @@ export const ComIcones: Story = {
 
 // ─── Com badge ────────────────────────────────────────────────────────────────
 
-export const ComBadge: Story = {
-  name: "Com badge",
+export const WithBadge: Story = {
   render: () => (
     <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Painel do projeto">
@@ -123,7 +121,7 @@ function ControlledTabs() {
   );
 }
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => <ControlledTabs />,
   parameters: {
     docs: {
@@ -149,7 +147,7 @@ export const Controlado: Story = {
 // ─── Manual activation ────────────────────────────────────────────────────────
 
 export const ManualActivation: Story = {
-  name: "Activation manual",
+  name: "Manual activation",
   render: () => (
     <Tabs
       defaultValue="overview"

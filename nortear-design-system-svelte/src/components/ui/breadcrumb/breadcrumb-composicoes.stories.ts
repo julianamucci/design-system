@@ -6,7 +6,7 @@ import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Breadcrumb/Composicoes',
+  title: 'UI/Breadcrumb/Compositions',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {

@@ -4,7 +4,7 @@ import { createInput } from './input';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Input/Estados',
+  title: 'UI/Input/States',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -35,7 +35,7 @@ export const Padrao: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => createInput({ type: 'text', placeholder: 'Não disponível', disabled: true }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -46,7 +46,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   render: () => {
     const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
     input.setAttribute('aria-invalid', 'true');
@@ -61,7 +61,7 @@ export const Erro: Story = {
   },
 };
 
-export const ComPlaceholder: Story = {
+export const WithPlaceholder: Story = {
   render: () => createInput({ type: 'text', placeholder: 'Buscar componentes...' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -12,7 +12,7 @@ import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
  * Estas stories demonstram os pares mais comuns.
  */
 const meta: Meta = {
-  title: 'UI/Label/Composicoes',
+  title: 'UI/Label/Compositions',
   component: LabelWithInputStory,
   tags: ['form'],
   parameters: {
@@ -30,7 +30,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComInput: Story = {
+export const WithInput: Story = {
   render: () => ({
     Component: LabelWithInputStory,
     props: {},
@@ -53,7 +53,7 @@ export const ComInput: Story = {
   },
 };
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   render: () => ({
     Component: LabelWithCheckboxStory,
     props: {},
@@ -79,8 +79,8 @@ export const ComCheckbox: Story = {
   },
 };
 
-export const CampoObrigatorio: Story = {
-  name: 'Com Input obrigatório',
+export const RequiredField: Story = {
+  name: 'With required input',
   render: () => ({
     Component: LabelCampoObrigatorioStory,
     props: {},

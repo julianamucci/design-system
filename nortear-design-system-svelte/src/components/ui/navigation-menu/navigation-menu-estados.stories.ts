@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Estados',
+  title: 'UI/NavigationMenu/States',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   args: {
     defaultValue: undefined,
     demonstration: 'default',
@@ -46,7 +46,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   args: {
     defaultValue: 'produtos',
     demonstration: 'default',
@@ -70,7 +70,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Ativo: Story = {
+export const Active: Story = {
   args: {
     defaultValue: undefined,
     demonstration: 'default',

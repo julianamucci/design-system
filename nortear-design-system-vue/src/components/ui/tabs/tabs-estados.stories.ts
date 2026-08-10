@@ -3,7 +3,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Tabs/Estados',
+  title: 'UI/Tabs/States',
   component: Tabs,
   tags: ['navigation'],
   parameters: {

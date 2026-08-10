@@ -4,7 +4,7 @@ import { createInput } from './input';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Input/Composicoes',
+  title: 'UI/Input/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -84,7 +84,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComTextoDeApoio: Story = {
+export const WithSupportText: Story = {
   render: () => {
     const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
     return createFormField({
@@ -103,7 +103,7 @@ export const ComTextoDeApoio: Story = {
   },
 };
 
-export const ComMensagemDeErro: Story = {
+export const WithErrorMessage: Story = {
   render: () => {
     const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
     input.setAttribute('aria-invalid', 'true');
@@ -128,7 +128,7 @@ export const ComMensagemDeErro: Story = {
   },
 };
 
-export const ComPrefixoTexto: Story = {
+export const WithTextPrefix: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';

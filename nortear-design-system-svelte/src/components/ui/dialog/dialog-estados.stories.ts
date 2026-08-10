@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Dialog/Estados',
+  title: 'UI/Dialog/States',
   component: DialogStory,
   tags: ['overlay'],
   parameters: {

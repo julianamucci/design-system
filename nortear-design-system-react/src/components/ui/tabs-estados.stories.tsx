@@ -3,7 +3,7 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const meta: Meta = {
-  title: "UI/Tabs/Estados",
+  title: "UI/Tabs/States",
   tags: ["navigation"],
   component: Tabs,
   parameters: {
@@ -24,7 +24,6 @@ type Story = StoryObj;
 // ─── Default + Active ─────────────────────────────────────────────────────────
 
 export const DefaultEActive: Story = {
-  name: "Default e Active",
   render: () => (
     <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">

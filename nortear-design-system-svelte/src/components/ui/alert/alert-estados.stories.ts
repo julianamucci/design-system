@@ -12,7 +12,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Estados',
+  title: 'UI/Alert/States',
   component: Alert,
   tags: ['feedback'],
 };
@@ -45,7 +45,7 @@ export const Completo: Story = {
   },
 };
 
-export const SemTitulo: Story = {
+export const WithoutTitle: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     Component: AlertStory,
@@ -72,7 +72,7 @@ export const SemTitulo: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   render: () => ({
     Component: AlertStory,
     props: {
@@ -100,7 +100,7 @@ export const SemIcone: Story = {
 // Alert estático não pode ser live region: com o `role="alert"` padrão o leitor
 // de tela interrompe a leitura e salta para o alert no carregamento da página.
 // `role="note"` remove o anúncio sem mexer no visual — e o default segue `alert`.
-export const SemAnuncio: Story = {
+export const WithoutAnnouncement: Story = {
   render: () => ({
     Component: AlertSemAnuncioStory,
   }),
@@ -121,7 +121,7 @@ export const SemAnuncio: Story = {
   },
 };
 
-export const InsercaoDinamica: Story = {
+export const DynamicInsertion: Story = {
   parameters: { covers: ['functional.item6'] },
   render: () => ({
     Component: AlertStory,

@@ -9,7 +9,7 @@ const chartData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Composicoes',
+  title: 'UI/Chart/Compositions',
   component: ChartContainer,
   tags: ['display'],
 };
@@ -29,7 +29,7 @@ export const ChartIsolado: Story = {
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const TituloEmbutido: Story = {
+export const InlineTitle: Story = {
   args: {
     option: buildBarOption({ data: chartData, title: 'Vendas mensais' }),
     class: 'h-[280px] w-[480px]',

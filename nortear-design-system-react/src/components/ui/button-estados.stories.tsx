@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Button/Estados",
+  title: "UI/Button/States",
   tags: ["form"],
   component: Button,
   parameters: {

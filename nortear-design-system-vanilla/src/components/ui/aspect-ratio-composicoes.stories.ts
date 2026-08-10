@@ -6,7 +6,7 @@ import { expect } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/AspectRatio/Composicoes',
+  title: 'UI/AspectRatio/Compositions',
   parameters: {
     design: figmaDesign('aspectRatio'),
     controls: { disable: true },
@@ -49,9 +49,9 @@ function buildImage(src: string, alt: string, extraClass = ''): HTMLImageElement
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComImagem: Story = {
+export const WithImage: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item1'] },
-  name: 'Com <img>',
+  name: 'With <img>',
   render: () =>
     boxed(
       createAspectRatio({
@@ -75,9 +75,8 @@ export const ComImagem: Story = {
   },
 };
 
-export const ComIframe: Story = {
+export const WithIframe: Story = {
   parameters: { covers: ['accessibility.item3'] },
-  name: 'Com <iframe>',
   render: () => {
     const iframe = document.createElement('iframe');
     iframe.src = 'https://www.openstreetmap.org/export/embed.html?bbox=-46.66,-23.57,-46.63,-23.54&layer=mapnik';
@@ -99,9 +98,8 @@ export const ComIframe: Story = {
   },
 };
 
-export const ComVideo: Story = {
+export const WithVideo: Story = {
   parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
-  name: 'Com <video>',
   render: () => {
     const video = document.createElement('video');
     video.controls = true;
@@ -143,9 +141,9 @@ export const ComVideo: Story = {
   },
 };
 
-export const EmGrid: Story = {
+export const InGrid: Story = {
   parameters: { covers: ['functional.item4'] },
-  name: 'Grid de cards',
+  name: 'Card grid',
   render: () => {
     const grid = document.createElement('div');
     grid.className = 'nds-grid nds-w-full';
@@ -219,7 +217,7 @@ export const EmGrid: Story = {
   },
 };
 
-export const PlaceholderVazio: Story = {
+export const EmptyPlaceholder: Story = {
   parameters: { covers: ['functional.item5'] },
   name: 'Placeholder (skeleton)',
   render: () =>
@@ -245,8 +243,8 @@ export const PlaceholderVazio: Story = {
   },
 };
 
-export const ComImagemDecorativa: Story = {
-  name: 'Imagem decorativa',
+export const WithDecorativeImage: Story = {
+  name: 'Decorative image',
   parameters: { covers: ['accessibility.item2'] },
   render: () =>
     boxed(

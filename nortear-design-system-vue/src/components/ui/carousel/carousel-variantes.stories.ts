@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { Card } from '@/components/ui/card';
 
 const meta = {
-  title: 'UI/Carousel/Variantes',
+  title: 'UI/Carousel/Variants',
   component: Carousel,
   tags: ['display'],
   parameters: {

@@ -20,7 +20,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/DropdownMenu/Composicoes",
+  title: "UI/DropdownMenu/Compositions",
   tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
@@ -86,7 +86,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   parameters: {
     docs: {
       description: {
@@ -148,7 +148,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   parameters: {
     docs: {
       description: {
@@ -194,7 +194,7 @@ export const ComRadioGroup: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   parameters: {
     docs: {
       description: {

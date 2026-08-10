@@ -12,7 +12,7 @@ import { CodeBlock } from './index';
  * `Text` é a prova de que texto simples continua sem cor.
  */
 const meta = {
-  title: 'UI/CodeBlock/Variantes',
+  title: 'UI/CodeBlock/Variants',
   component: CodeBlock,
   tags: ['display'],
   parameters: {
@@ -69,7 +69,7 @@ export const Styles: Story = {
   },
 };
 
-export const Data: Story = {
+export const Date: Story = {
   args: { code: '{ "port": 6006, "open": true }', language: 'json' },
   play: async ({ canvasElement, step }) => {
     await step('A sintaxe dos dados é classificada', async () => {

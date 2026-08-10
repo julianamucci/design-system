@@ -6,7 +6,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/Variantes',
+  title: 'UI/Tooltip/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -59,7 +59,6 @@ function fireOpen(trigger: HTMLElement): void {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar' });
@@ -77,8 +76,7 @@ export const Default: Story = {
   },
 };
 
-export const ComAtalho: Story = {
-  name: 'Com Atalho',
+export const WithShortcut: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
     // NOTA: factory Vanilla não suporta nodes filhos no content; o atalho
@@ -97,8 +95,7 @@ export const ComAtalho: Story = {
   },
 };
 
-export const TextoLongo: Story = {
-  name: 'Texto Longo',
+export const LongText: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Mais informação', ariaLabel: 'Mais informação' });
     const el = createTooltip({

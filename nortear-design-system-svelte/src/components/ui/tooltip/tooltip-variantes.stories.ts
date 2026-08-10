@@ -5,7 +5,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Tooltip/Variantes',
+  title: 'UI/Tooltip/Variants',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {
@@ -57,7 +57,7 @@ export const Default: Story = {
 };
 
 export const WithShortcut: Story = {
-  name: 'Com atalho (kbd)',
+  name: 'With shortcut (kbd)',
   args: {
     ...baseArgs,
     variant: 'withShortcut',
@@ -73,7 +73,7 @@ export const WithShortcut: Story = {
 };
 
 export const LongText: Story = {
-  name: 'Texto longo (max-w-xs)',
+  name: 'Long text (max-w-xs)',
   args: {
     ...baseArgs,
     variant: 'longText',

@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/context-menu';
 
 const meta = {
-  title: 'UI/ContextMenu/Composicoes',
+  title: 'UI/ContextMenu/Compositions',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
@@ -38,8 +38,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComCheckbox: Story = {
-  name: 'Com CheckboxItem',
+export const WithCheckbox: Story = {
+  name: 'With CheckboxItem',
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
@@ -92,8 +92,7 @@ export const ComCheckbox: Story = {
   }),
 };
 
-export const ComRadioGroup: Story = {
-  name: 'Com RadioGroup',
+export const WithRadioGroup: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
@@ -139,8 +138,7 @@ export const ComRadioGroup: Story = {
   }),
 };
 
-export const ComSubmenu: Story = {
-  name: 'Com Submenu',
+export const WithSubmenu: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {
@@ -198,7 +196,7 @@ export const ComSubmenu: Story = {
 };
 
 export const Completo: Story = {
-  name: 'Completo — Checkbox + Radio + Submenu + Shortcut',
+  name: 'Complete — Checkbox + Radio + Submenu + Shortcut',
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('trigger renderizado', async () => {

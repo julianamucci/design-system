@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Composicoes',
+  title: 'UI/Skeleton/Compositions',
   component: SkeletonComposicaoStory,
   tags: ['feedback'],
   parameters: {
@@ -53,7 +53,7 @@ export const CardDePerfil: Story = {
   },
 };
 
-export const ListaComAvatar: Story = {
+export const ListWithAvatar: Story = {
   args: { variant: 'listaComAvatar' },
   parameters: {
     docs: {
@@ -80,7 +80,7 @@ export const ListaComAvatar: Story = {
   },
 };
 
-export const ImagemEmAspectRatio: Story = {
+export const ImageInAspectRatio: Story = {
   args: { variant: 'imagemEmAspectRatio' },
   parameters: {
     docs: {

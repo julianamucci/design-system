@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Slider/Estados',
+  title: 'UI/Slider/States',
   component: SliderStory,
   tags: ['form'],
   parameters: {

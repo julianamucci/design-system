@@ -5,7 +5,7 @@ import { createToggle } from './toggle';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Toggle/Variantes',
+  title: 'UI/Toggle/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

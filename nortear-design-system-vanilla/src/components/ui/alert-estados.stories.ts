@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Estados',
+  title: 'UI/Alert/States',
 };
 
 export default meta;
@@ -38,7 +38,7 @@ export const Completo: Story = {
   },
 };
 
-export const SemTitulo: Story = {
+export const WithoutTitle: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => {
     const alert = createAlert();
@@ -61,7 +61,7 @@ export const SemTitulo: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertTitle({ text: 'Atenção' }));
@@ -83,7 +83,7 @@ export const SemIcone: Story = {
   },
 };
 
-export const SemAnuncio: Story = {
+export const WithoutAnnouncement: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
@@ -126,7 +126,7 @@ export const SemAnuncio: Story = {
   },
 };
 
-export const InsercaoDinamica: Story = {
+export const DynamicInsertion: Story = {
   parameters: { covers: ['functional.item6'] },
   render: () => {
     const wrapper = document.createElement('div');

@@ -10,7 +10,7 @@ import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Collapsible/Composicoes",
+  title: "UI/Collapsible/Compositions",
   tags: ["disclosure"],
   component: Collapsible,
   parameters: {
@@ -31,8 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Com Button asChild ───────────────────────────────────────────────────────
 
-export const ComButtonAsChild: Story = {
-  name: "Com Button (asChild)",
+export const WithButtonAsChild: Story = {
   render: () => (
     <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
@@ -75,8 +74,7 @@ export const ComButtonAsChild: Story = {
 
 // ─── Com ícone no trigger ─────────────────────────────────────────────────────
 
-export const ComIconeNoTrigger: Story = {
-  name: "Com Ícone no Trigger",
+export const WithIconInTrigger: Story = {
   render: () => (
     <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
@@ -117,8 +115,7 @@ export const ComIconeNoTrigger: Story = {
 
 // ─── Com conteúdo estruturado ─────────────────────────────────────────────────
 
-export const ComConteudoEstruturado: Story = {
-  name: "Com Conteúdo Estruturado",
+export const WithStructuredContent: Story = {
   render: () => (
     <Collapsible defaultOpen className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <div className="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-px-4" data-align="center" data-spacing="sm" style={{ paddingBlock: "0.75rem" }}>

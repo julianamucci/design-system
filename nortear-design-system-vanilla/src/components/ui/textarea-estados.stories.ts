@@ -4,7 +4,7 @@ import { createTextarea } from './textarea';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Estados',
+  title: 'UI/Textarea/States',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
@@ -38,7 +38,7 @@ function labeled(id: string, labelText: string, textarea: HTMLTextAreaElement): 
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => labeled(
     'est-default',
     'Descrição',
@@ -81,7 +81,7 @@ export const Filled: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => labeled(
     'est-disabled',
     'Descrição',

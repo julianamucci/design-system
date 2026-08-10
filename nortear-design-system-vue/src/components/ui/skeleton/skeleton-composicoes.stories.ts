@@ -4,7 +4,7 @@ import { Skeleton } from './index';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const meta: Meta<any> = {
-  title: 'UI/Skeleton/Composicoes',
+  title: 'UI/Skeleton/Compositions',
   component: Skeleton,
   tags: ['feedback'],
   parameters: {
@@ -63,7 +63,7 @@ export const CardDePerfil: Story = {
   },
 };
 
-export const ListaComAvatar: Story = {
+export const ListWithAvatar: Story = {
   render: () => ({
     components: { Skeleton },
     template: `
@@ -100,7 +100,7 @@ export const ListaComAvatar: Story = {
   },
 };
 
-export const ImagemEmAspectRatio: Story = {
+export const ImageInAspectRatio: Story = {
   render: () => ({
     components: { Skeleton, AspectRatio },
     template: `

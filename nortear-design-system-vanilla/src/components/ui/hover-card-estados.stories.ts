@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/Estados',
+  title: 'UI/HoverCard/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -78,8 +78,7 @@ async function cleanupPortal(): Promise<void> {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
-  name: 'Fechado',
+export const Closed: Story = {
   render: () => {
     const trigger = buildTrigger('@joana');
     const el = createHoverCard({ trigger, content: buildContent() });
@@ -96,8 +95,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto',
+export const Open: Story = {
   render: () => {
     const trigger = buildTrigger('@joana');
     const el = createHoverCard({ trigger, content: buildContent() });
@@ -119,8 +117,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
-  name: 'Controlado',
+export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';

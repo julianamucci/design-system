@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sonner/Composicoes',
+  title: 'UI/Sonner/Compositions',
   component: SonnerToastStory,
   tags: ['feedback'],
   parameters: {

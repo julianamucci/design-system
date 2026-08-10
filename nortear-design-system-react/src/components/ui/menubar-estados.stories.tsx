@@ -11,7 +11,7 @@ import {
 } from "./menubar";
 
 const meta = {
-  title: "UI/Menubar/Estados",
+  title: "UI/Menubar/States",
   tags: ["navigation"],
   component: Menubar,
   parameters: {
@@ -35,7 +35,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: {
@@ -73,7 +73,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {

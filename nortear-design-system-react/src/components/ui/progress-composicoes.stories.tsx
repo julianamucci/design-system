@@ -10,7 +10,7 @@ import {
 } from "./progress";
 
 const meta = {
-  title: "UI/Progress/Composicoes",
+  title: "UI/Progress/Compositions",
   tags: ["feedback"],
   component: Progress,
   parameters: {
@@ -28,7 +28,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Progress>;
 
-export const MultiplosNiveis: Story = {
+export const MultipleLevels: Story = {
   render: () => (
     <div className="" data-spacing="md" style={{ width: "20rem" }}>
       <Progress value={0} aria-label="Etapa 1" />
@@ -76,7 +76,7 @@ export const CorCustomizada: Story = {
   },
 };
 
-export const ComLabelEValor: Story = {
+export const WithLabelAndValue: Story = {
   render: function ComLabelEValorRender() {
     const [value, setValue] = useState<number>(0);
 
@@ -109,7 +109,7 @@ export const ComLabelEValor: Story = {
   },
 };
 
-export const ComAriaLive: Story = {
+export const WithAriaLive: Story = {
   render: function ComAriaLiveRender() {
     const [value, setValue] = useState<number>(0);
 

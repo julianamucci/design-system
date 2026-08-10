@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Dialog/Estados',
+  title: 'UI/Dialog/States',
   component: Dialog,
   tags: ['overlay'],
   parameters: {

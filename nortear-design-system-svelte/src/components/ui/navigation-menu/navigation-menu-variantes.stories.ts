@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Variantes',
+  title: 'UI/NavigationMenu/Variants',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {

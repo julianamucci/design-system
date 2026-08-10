@@ -9,7 +9,7 @@ import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from 'luci
 import { contrasteNosDoisTemas, descreverFalhas } from '@shared/testing/alert-probe';
 
 const meta = {
-  title: 'UI/Alert/Variantes',
+  title: 'UI/Alert/Variants',
   component: Alert,
   tags: ['feedback'],
   parameters: {
@@ -103,7 +103,6 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
-  name: 'Info',
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() { return {}; },
@@ -229,7 +228,6 @@ export const Dismissible: Story = {
 const dismissKeyboardSpy = fn();
 
 export const DismissibleTeclado: Story = {
-  name: 'Dismissible (teclado)',
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() {

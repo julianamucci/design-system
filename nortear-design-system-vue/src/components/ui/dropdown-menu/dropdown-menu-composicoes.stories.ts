@@ -19,7 +19,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/DropdownMenu/Composicoes',
+  title: 'UI/DropdownMenu/Compositions',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {
@@ -88,7 +88,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   parameters: {
     docs: { description: { story: 'CheckboxItems para toggles independentes (mostrar/ocultar colunas).' } },
   },
@@ -125,7 +125,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   parameters: {
     docs: { description: { story: 'RadioGroup para seleção única (tema light/dark/system).' } },
   },
@@ -161,7 +161,7 @@ export const ComRadioGroup: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   parameters: {
     docs: { description: { story: 'Submenu aninhado — limite a 1 nível para evitar confusão.' } },
   },

@@ -6,7 +6,7 @@ import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Select/Estados',
+  title: 'UI/Select/States',
   component: Select,
   tags: ['form'],
   parameters: {

@@ -13,7 +13,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 
 const meta = {
-  title: 'UI/Table/Estados',
+  title: 'UI/Table/States',
   component: Table,
   tags: ['tables'],
   parameters: {
@@ -76,7 +76,7 @@ export const Empty: Story = {
   },
 };
 
-export const LinhaSelecionada: Story = {
+export const SelectedRow: Story = {
   render: () => ({
     components: {
       Table,
@@ -142,7 +142,7 @@ export const LinhaSelecionada: Story = {
   },
 };
 
-export const Carregando: Story = {
+export const Loading: Story = {
   render: () => ({
     components: {
       Table,

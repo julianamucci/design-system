@@ -11,7 +11,7 @@ import {
 } from './data-table.fixtures';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'UI/DataTable/Composicoes',
+  title: 'UI/DataTable/Compositions',
   component: DataTable as never,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
@@ -53,7 +53,7 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComFiltrosPorColuna: Story = {
+export const WithColumnFilters: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
@@ -65,7 +65,7 @@ export const ComFiltrosPorColuna: Story = {
 };
 
 // ── Resize ─────────────────────────────────────────────────────────────────
-export const ColunasRedimensionaveis: Story = {
+export const ResizableColumns: Story = {
   render: () => ({
     components: { DataTable },
     setup() {
@@ -112,7 +112,7 @@ const editableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComEdicaoInline: Story = {
+export const WithInlineEditing: Story = {
   render: () => ({
     components: { DataTable },
     setup() {

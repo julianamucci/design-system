@@ -12,7 +12,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Popover/Estados",
+  title: "UI/Popover/States",
   tags: ["overlay"],
   component: Popover,
   parameters: {
@@ -103,7 +103,7 @@ export const Open: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

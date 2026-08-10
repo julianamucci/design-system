@@ -7,7 +7,7 @@ import {
 } from "./resizable";
 
 const meta = {
-  title: "UI/Resizable/Estados",
+  title: "UI/Resizable/States",
   tags: ["layout"],
   component: ResizablePanelGroup,
   parameters: {

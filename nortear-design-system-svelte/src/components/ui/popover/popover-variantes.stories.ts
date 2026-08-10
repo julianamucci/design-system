@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Popover/Variantes',
+  title: 'UI/Popover/Variants',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {

@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Textarea/Estados',
+  title: 'UI/Textarea/States',
   component: TextareaStory,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => ({
     Component: TextareaStory,
     props: {

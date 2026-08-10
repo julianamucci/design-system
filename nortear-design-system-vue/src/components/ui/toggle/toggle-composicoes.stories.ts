@@ -4,7 +4,7 @@ import { Toggle } from './index';
 import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Toggle/Composicoes',
+  title: 'UI/Toggle/Compositions',
   component: Toggle,
   tags: ['form'],
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BarraDeFormatacao: Story = {
+export const FormattingBar: Story = {
   render: () => ({
     components: { Toggle, Bold, Italic, Underline, List },
     setup() { return {}; },
@@ -64,7 +64,7 @@ export const BarraDeFormatacao: Story = {
   },
 };
 
-export const FiltroDeVisualizacao: Story = {
+export const ViewFilter: Story = {
   render: () => ({
     components: { Toggle, Eye, LayoutGrid },
     setup() { return {}; },
@@ -94,7 +94,7 @@ export const FiltroDeVisualizacao: Story = {
   },
 };
 
-export const TamanhosComparados: Story = {
+export const SizesCompared: Story = {
   render: () => ({
     components: { Toggle, Bold },
     setup() { return {}; },
@@ -121,7 +121,7 @@ export const TamanhosComparados: Story = {
   },
 };
 
-export const ToggleEmPainel: Story = {
+export const ToggleInPanel: Story = {
   render: () => ({
     components: { Toggle, Eye },
     setup() { return {}; },

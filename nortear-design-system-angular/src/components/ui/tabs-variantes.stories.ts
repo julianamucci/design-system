@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { NDS_TABS } from './tabs';
 
 const meta: Meta = {
-  title: 'UI/Tabs/Variantes',
+  title: 'UI/Tabs/Variants',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_TABS] })],
   parameters: {

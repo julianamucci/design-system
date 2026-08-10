@@ -10,7 +10,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/CodeBlock/Composicoes',
+  title: 'UI/CodeBlock/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -31,7 +31,7 @@ const root = (canvasElement: HTMLElement): HTMLElement =>
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', title: 'lista.ts' }),
   play: async ({ canvasElement, step }) => {
@@ -44,7 +44,7 @@ export const ComRotulo: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: false }),
   play: async ({ canvasElement, step }) => {
@@ -57,7 +57,7 @@ export const SemNumeracao: Story = {
   },
 };
 
-export const ComDestaque: Story = {
+export const WithHighlight: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', highlightLines: [2] }),
   play: async ({ canvasElement, step }) => {
@@ -69,7 +69,7 @@ export const ComDestaque: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   render: () =>
     createCodeBlock({
       code: COMPOSITION_CODE,

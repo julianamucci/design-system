@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 
 const meta = {
-  title: 'UI/AspectRatio/Variantes',
+  title: 'UI/AspectRatio/Variants',
   component: AspectRatio,
   tags: ['layout'],
   parameters: {

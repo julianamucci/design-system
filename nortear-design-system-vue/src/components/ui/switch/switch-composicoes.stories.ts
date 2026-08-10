@@ -4,7 +4,7 @@ import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Switch/Composicoes',
+  title: 'UI/Switch/Compositions',
   component: Switch,
   tags: ['form'],
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const PainelConfiguracoes: Story = {
+export const SettingsPanel: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
@@ -106,7 +106,7 @@ export const ListaDePreferencias: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },

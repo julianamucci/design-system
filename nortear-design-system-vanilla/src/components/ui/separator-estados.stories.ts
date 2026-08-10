@@ -4,7 +4,7 @@ import { createSeparator } from './separator';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Separator/Estados',
+  title: 'UI/Separator/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -25,7 +25,6 @@ type Story = StoryObj;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Decorativo: Story = {
-  name: 'Decorativo',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -65,8 +64,7 @@ export const Decorativo: Story = {
   },
 };
 
-export const Semantico: Story = {
-  name: 'Semantico',
+export const Semantic: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

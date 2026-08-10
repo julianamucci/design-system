@@ -7,7 +7,7 @@ const IMG_MARIA =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
 
 const meta = {
-  title: "UI/Avatar/Tamanhos",
+  title: "UI/Avatar/Sizes",
   tags: ["display"],
   component: Avatar,
   parameters: {
@@ -59,7 +59,7 @@ export const Sm: Story = {
 };
 
 export const Md: Story = {
-  name: "md (32px · padrão)",
+  name: "md (32px · default)",
   parameters: { covers: ["functional.item6", "visual.item3"] },
   render: () => (
     <Avatar>

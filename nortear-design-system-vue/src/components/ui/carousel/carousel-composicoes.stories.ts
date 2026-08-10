@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 const meta = {
-  title: 'UI/Carousel/Composicoes',
+  title: 'UI/Carousel/Compositions',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -93,7 +93,7 @@ const CarouselComDots = defineComponent({
   },
 });
 
-export const ComDots: Story = {
+export const WithDots: Story = {
   render: () => ({
     components: { CarouselComDots },
     template: '<CarouselComDots />',

@@ -11,7 +11,7 @@ const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Avatar/Estados',
+  title: 'UI/Avatar/States',
   parameters: {
     design: figmaDesign('avatar'),
     controls: { disable: true },
@@ -65,7 +65,7 @@ export const Loaded: Story = {
 };
 
 export const Loading: Story = {
-  name: 'Loading (atraso de 600ms)',
+  name: 'Loading (600ms delay)',
   parameters: {
     covers: ['functional.item4'],
     docs: {

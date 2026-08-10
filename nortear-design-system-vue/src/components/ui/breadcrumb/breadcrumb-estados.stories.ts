@@ -13,7 +13,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Breadcrumb/Estados',
+  title: 'UI/Breadcrumb/States',
   component: Breadcrumb,
   tags: ['navigation'],
   parameters: {

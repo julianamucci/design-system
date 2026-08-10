@@ -5,7 +5,7 @@ import { NdsRadioGroup, NdsRadioGroupItem } from './radio-group';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/RadioGroup/Estados',
+  title: 'UI/RadioGroup/States',
   tags: ['form'],
   decorators: [moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel] })],
   parameters: {

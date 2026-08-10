@@ -5,7 +5,7 @@ import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/RadioGroup/Composicoes',
+  title: 'UI/RadioGroup/Compositions',
   component: RadioGroup,
   tags: ['form'],
   parameters: {
@@ -79,7 +79,7 @@ export const FormaDeEntregaHorizontal: Story = {
   },
 };
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => ({
     Component: RadioGroupStory,
     props: {

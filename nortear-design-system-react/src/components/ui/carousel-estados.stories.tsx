@@ -10,7 +10,7 @@ import {
 import { Card, CardContent } from "./card";
 
 const meta = {
-  title: "UI/Carousel/Estados",
+  title: "UI/Carousel/States",
   tags: ["display"],
   component: Carousel,
   parameters: {
@@ -39,7 +39,7 @@ function SlideCard({ label }: { label: string }) {
   );
 }
 
-export const PrimeiroSlide: Story = {
+export const FirstSlide: Story = {
   render: () => (
     <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria no primeiro slide">
       <CarouselContent>
@@ -68,7 +68,7 @@ export const PrimeiroSlide: Story = {
   },
 };
 
-export const UltimoSlide: Story = {
+export const LastSlide: Story = {
   render: () => (
     <Carousel
       className="nds-w-full nds-max-w-md"

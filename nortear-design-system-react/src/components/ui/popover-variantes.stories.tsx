@@ -13,7 +13,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Popover/Variantes",
+  title: "UI/Popover/Variants",
   tags: ["overlay"],
   component: Popover,
   parameters: {
@@ -72,7 +72,7 @@ export const Default: Story = {
   },
 };
 
-export const ComTitulo: Story = {
+export const WithTitle: Story = {
   parameters: {
     docs: {
       description: {

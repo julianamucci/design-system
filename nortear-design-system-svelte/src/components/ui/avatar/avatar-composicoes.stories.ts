@@ -6,7 +6,7 @@ import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Avatar/Composicoes',
+  title: 'UI/Avatar/Compositions',
   component: Avatar,
   tags: ['display'],
   parameters: {

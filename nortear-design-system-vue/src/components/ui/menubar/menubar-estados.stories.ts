@@ -12,7 +12,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Menubar/Estados',
+  title: 'UI/Menubar/States',
   component: Menubar,
   tags: ['navigation'],
   parameters: {
@@ -41,7 +41,7 @@ const sharedComponents = {
   MenubarTrigger,
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: { description: { story: 'Estado inicial — apenas a barra com Triggers visíveis. Portal vazio.' } },
   },
@@ -75,7 +75,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: { description: { story: 'Menu Arquivo aberto via defaultValue. Captura visual no Chromatic.' } },
   },

@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/InputOTP/Variantes',
+  title: 'UI/InputOTP/Variants',
   component: InputOTP,
   tags: ['form'],
   parameters: {
@@ -119,7 +119,7 @@ export const QuatroDigitos: Story = {
   },
 };
 
-export const ComSeparator: Story = {
+export const WithSeparator: Story = {
   parameters: {
     docs: {
       description: {
@@ -173,7 +173,7 @@ export const ComSeparator: Story = {
   },
 };
 
-export const Alfanumerico: Story = {
+export const Alphanumeric: Story = {
   parameters: {
     docs: {
       description: {

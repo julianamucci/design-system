@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { Card } from '@/components/ui/card';
 
 const meta = {
-  title: 'UI/Carousel/Estados',
+  title: 'UI/Carousel/States',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const PrimeiroSlide: Story = {
+export const FirstSlide: Story = {
   render: () => ({
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { opts: { startIndex: 0 }, slides: [1, 2, 3, 4, 5] }; },
@@ -55,7 +55,7 @@ export const PrimeiroSlide: Story = {
   },
 };
 
-export const UltimoSlide: Story = {
+export const LastSlide: Story = {
   render: () => ({
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() { return { opts: { startIndex: 4 }, slides: [1, 2, 3, 4, 5] }; },

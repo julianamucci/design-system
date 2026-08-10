@@ -4,7 +4,7 @@ import { createSwitch } from './switch';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Switch/Composicoes',
+  title: 'UI/Switch/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -62,7 +62,7 @@ export const ComLabel: Story = {
 
 // ─── ComDescricao ─────────────────────────────────────────────────────────────
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => {
     const panel = document.createElement('div');
     panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
@@ -112,7 +112,7 @@ export const ComDescricao: Story = {
 
 // ─── ListaDeConfiguracoes ─────────────────────────────────────────────────────
 
-export const ListaDeConfiguracoes: Story = {
+export const SettingsList: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
@@ -182,7 +182,7 @@ export const ListaDeConfiguracoes: Story = {
 
 // ─── EmFormularioComHidden ────────────────────────────────────────────────────
 
-export const EmFormularioComHidden: Story = {
+export const InFormWithHidden: Story = {
   render: () => {
     // Divergência Vanilla: o factory custom NÃO expõe prop `name`.
     // Para envio em formulário, sincronizamos o estado em um <input type="hidden">.

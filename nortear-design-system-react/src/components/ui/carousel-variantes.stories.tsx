@@ -10,7 +10,7 @@ import {
 import { Card, CardContent } from "./card";
 
 const meta = {
-  title: "UI/Carousel/Variantes",
+  title: "UI/Carousel/Variants",
   tags: ["display"],
   component: Carousel,
   parameters: {

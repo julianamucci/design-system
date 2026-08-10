@@ -4,7 +4,7 @@ import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Switch/Estados',
+  title: 'UI/Switch/States',
   component: Switch,
   tags: ['form'],
   parameters: {

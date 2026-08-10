@@ -6,7 +6,7 @@ import { createBadge } from './badge';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Badge/Composicoes',
+  title: 'UI/Badge/Compositions',
   parameters: {
     design: figmaDesign('badge'),
     controls: { disable: true },

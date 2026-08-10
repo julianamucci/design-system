@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Calendar/Composicoes',
+  title: 'UI/Calendar/Compositions',
   component: Calendar,
   tags: ['form'],
   parameters: {

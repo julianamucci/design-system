@@ -8,7 +8,7 @@ import {
 } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/ToggleGroup/Composicoes',
+  title: 'UI/ToggleGroup/Compositions',
   component: ToggleGroup,
   tags: ['form'],
   parameters: {
@@ -27,7 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BarraDeAlinhamento: Story = {
+export const AlignmentBar: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight, AlignJustify },
     setup() { return {}; },
@@ -56,7 +56,7 @@ export const BarraDeAlinhamento: Story = {
   },
 };
 
-export const BarraDeFormatacao: Story = {
+export const FormattingBar: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
     setup() { return {}; },
@@ -84,7 +84,7 @@ export const BarraDeFormatacao: Story = {
   },
 };
 
-export const ModoVisualizacaoVertical: Story = {
+export const VerticalViewMode: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, LayoutGrid, List },
     setup() { return {}; },
@@ -117,7 +117,7 @@ export const ModoVisualizacaoVertical: Story = {
   },
 };
 
-export const ComSpacing: Story = {
+export const WithSpacing: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
     setup() { return {}; },
@@ -142,7 +142,7 @@ export const ComSpacing: Story = {
   },
 };
 
-export const TamanhosComparados: Story = {
+export const SizesCompared: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },
     setup() { return {}; },

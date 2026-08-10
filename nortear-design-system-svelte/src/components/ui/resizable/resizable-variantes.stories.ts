@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Resizable/Variantes',
+  title: 'UI/Resizable/Variants',
   component: ResizableStory,
   tags: ['layout'],
   parameters: {

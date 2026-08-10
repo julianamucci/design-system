@@ -4,7 +4,7 @@ import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Checkbox/Composicoes',
+  title: 'UI/Checkbox/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -63,7 +63,7 @@ export const ComLabel: Story = {
 
 // ─── ComDescricao ─────────────────────────────────────────────────────────────
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-cluster';
@@ -114,7 +114,7 @@ export const ComDescricao: Story = {
 
 // ─── EmGrupoFieldset ──────────────────────────────────────────────────────────
 
-export const EmGrupoFieldset: Story = {
+export const InFieldsetGroup: Story = {
   render: () => {
     const fieldset = document.createElement('fieldset');
     fieldset.className = 'nds-stack nds-border-default nds-rounded-lg nds-p-4';
@@ -173,7 +173,7 @@ export const EmGrupoFieldset: Story = {
 
 // ─── SelecionarTodos ──────────────────────────────────────────────────────────
 
-export const SelecionarTodos: Story = {
+export const SelectAll: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Quatro checkboxes presentes (1 pai + 3 filhos)', async () => {

@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Skeleton/Variantes',
+  title: 'UI/Skeleton/Variants',
   component: Skeleton,
   tags: ['feedback'],
   parameters: {
@@ -62,7 +62,7 @@ export const Circulo: Story = {
   },
 };
 
-export const LinhaDeTexto: Story = {
+export const TextLine: Story = {
   render: () => ({
     components: { Skeleton },
     template: `

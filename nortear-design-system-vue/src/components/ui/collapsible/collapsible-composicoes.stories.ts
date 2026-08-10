@@ -4,7 +4,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Collapsible/Composicoes',
+  title: 'UI/Collapsible/Compositions',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
     setup() { return {}; },
@@ -71,7 +71,7 @@ export const ComIconeNoTrigger: Story = {
   },
 };
 
-export const ComIconeGiratório: Story = {
+export const WithRotatingIconório: Story = {
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Settings },
     setup() { return {}; },

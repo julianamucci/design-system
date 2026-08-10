@@ -5,7 +5,7 @@ import { Check, Bell } from "lucide-react";
 import { Badge } from "./badge";
 
 const meta = {
-  title: "UI/Badge/Composicoes",
+  title: "UI/Badge/Compositions",
   tags: ["feedback"],
   component: Badge,
   parameters: {

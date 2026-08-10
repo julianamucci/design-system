@@ -4,7 +4,7 @@ import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Textarea/Estados',
+  title: 'UI/Textarea/States',
   component: Textarea,
   tags: ['form'],
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -43,7 +43,7 @@ export const Padrao: Story = {
   },
 };
 
-export const Preenchido: Story = {
+export const Filled: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -66,7 +66,7 @@ export const Preenchido: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `

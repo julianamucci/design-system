@@ -5,7 +5,7 @@ import { Alert, AlertTitle, AlertDescription } from './index';
 import { Info } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Alert/Estados',
+  title: 'UI/Alert/States',
   component: Alert,
   tags: ['feedback'],
   parameters: {
@@ -44,7 +44,7 @@ export const Completo: Story = {
   },
 };
 
-export const SemTitulo: Story = {
+export const WithoutTitle: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     components: { Alert, AlertDescription, Info },
@@ -71,7 +71,7 @@ export const SemTitulo: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },
     setup() { return {}; },
@@ -102,7 +102,7 @@ export const SemIcone: Story = {
 // region assertiva. Conteúdo estático pede `role="note"`, que não anuncia.
 // A story prova os dois lados no mesmo canvas — o valor explícito e o default
 // intacto para quem depende do anúncio.
-export const SemAnuncio: Story = {
+export const WithoutAnnouncement: Story = {
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },
@@ -142,7 +142,7 @@ export const SemAnuncio: Story = {
   },
 };
 
-export const InsercaoDinamica: Story = {
+export const DynamicInsertion: Story = {
   parameters: { covers: ['functional.item6'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },

@@ -5,7 +5,7 @@ import { Textarea } from "./textarea";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Textarea/Variantes",
+  title: "UI/Textarea/Variants",
   tags: ["form"],
   component: Textarea,
   parameters: {

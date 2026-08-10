@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/NavigationMenu/Composicoes',
+  title: 'UI/NavigationMenu/Compositions',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {
@@ -38,7 +38,7 @@ const sharedComponents = {
   NavigationMenuTrigger,
 };
 
-export const LinkSimples: Story = {
+export const SimpleLink: Story = {
   parameters: {
     docs: { description: { story: 'NavigationMenuLink direto, sem Trigger nem Content — para itens sem hierarquia.' } },
   },
@@ -65,7 +65,7 @@ export const LinkSimples: Story = {
   },
 };
 
-export const ComDropdown: Story = {
+export const WithDropdown: Story = {
   parameters: {
     docs: { description: { story: 'Item com Trigger + Content em lista vertical simples — caso típico de dropdown de produtos.' } },
   },
@@ -137,7 +137,7 @@ export const MegaMenuGrid: Story = {
   },
 };
 
-export const ComCardDestacado: Story = {
+export const WithHighlightedCard: Story = {
   parameters: {
     docs: { description: { story: 'Mega-menu com card promocional à esquerda + lista de links à direita.' } },
   },

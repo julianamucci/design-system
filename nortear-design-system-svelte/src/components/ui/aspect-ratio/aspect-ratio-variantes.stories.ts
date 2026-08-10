@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/AspectRatio/Variantes',
+  title: 'UI/AspectRatio/Variants',
   component: AspectRatioStory,
   tags: ['layout'],
   parameters: {

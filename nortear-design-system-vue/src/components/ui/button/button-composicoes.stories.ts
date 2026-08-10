@@ -5,7 +5,7 @@ import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import { Button } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Button/Composicoes',
+  title: 'UI/Button/Compositions',
   component: Button,
   tags: ['form'],
   parameters: {
@@ -18,7 +18,7 @@ const meta: Meta<any> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIconeAEsquerda: Story = {
+export const WithIconLeft: Story = {
   render: () => ({
     components: { Button, Plus },
     template: `
@@ -40,7 +40,7 @@ export const ComIconeAEsquerda: Story = {
   },
 };
 
-export const ComIconeADireita: Story = {
+export const WithIconRight: Story = {
   render: () => ({
     components: { Button, ChevronRight },
     template: `
@@ -60,7 +60,7 @@ export const ComIconeADireita: Story = {
   },
 };
 
-export const IconeDestrutivo: Story = {
+export const DestructiveIcon: Story = {
   render: () => ({
     components: { Button, Trash2 },
     template: `
@@ -98,7 +98,7 @@ export const IconOnly: Story = {
   },
 };
 
-export const ParDeAcoes: Story = {
+export const ActionPair: Story = {
   render: () => ({
     components: { Button },
     template: `

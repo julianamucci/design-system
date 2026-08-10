@@ -3,7 +3,7 @@ import { expect } from "storybook/test";
 import { Separator } from "./separator";
 
 const meta = {
-  title: "UI/Separator/Estados",
+  title: "UI/Separator/States",
   tags: ["layout"],
   component: Separator,
   parameters: {
@@ -49,7 +49,7 @@ export const Decorativo: Story = {
   },
 };
 
-export const Semantico: Story = {
+export const Semantic: Story = {
   parameters: {
     docs: {
       description: {

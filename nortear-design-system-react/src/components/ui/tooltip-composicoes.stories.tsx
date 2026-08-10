@@ -11,7 +11,7 @@ import { Button } from "./button";
 import { Save, Trash2, Share2, Bold, Italic, Underline } from "lucide-react";
 
 const meta = {
-  title: "UI/Tooltip/Composicoes",
+  title: "UI/Tooltip/Compositions",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [
@@ -101,7 +101,7 @@ export const IconBarToolbar: Story = {
   },
 };
 
-export const ComAtalhoTeclado: Story = {
+export const WithKeyboardShortcut: Story = {
   parameters: {
     docs: {
       description: {

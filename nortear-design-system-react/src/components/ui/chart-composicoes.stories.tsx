@@ -11,7 +11,7 @@ const chartData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Composicoes',
+  title: 'UI/Chart/Compositions',
   tags: ["display"],
 };
 export default meta;
@@ -24,7 +24,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const ComCard: Story = {
+export const WithCard: Story = {
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-6 nds-shadow-sm" style={{ width: "480px" }}>
       <h3 className="nds-text-body nds-font-medium nds-mb-1">Acessos por mês</h3>
@@ -40,7 +40,7 @@ export const ComCard: Story = {
   },
 };
 
-export const TituloEmbutido: Story = {
+export const InlineTitle: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ data: chartData, title: 'Vendas mensais' })}

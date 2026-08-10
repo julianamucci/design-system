@@ -3,7 +3,7 @@ import { within, expect } from "storybook/test";
 import { Input } from "./input";
 
 const meta = {
-  title: "UI/Input/Tipos",
+  title: "UI/Input/Types",
   tags: ["form"],
   component: Input,
   parameters: {

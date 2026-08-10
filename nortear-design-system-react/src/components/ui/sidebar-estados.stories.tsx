@@ -141,7 +141,7 @@ function SidebarLoadingPreview() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar/Estados",
+  title: "UI/Sidebar/States",
   tags: ["layout"],
   component: Sidebar,
   parameters: {
@@ -168,8 +168,8 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Expandida: Story = {
-  name: "Estado: expandida",
+export const Expanded: Story = {
+  name: "State: expanded",
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="offcanvas" label="Sidebar expandida (defaultOpen=true)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -188,7 +188,7 @@ export const Expandida: Story = {
 };
 
 export const RecolhidaIcon: Story = {
-  name: "Estado: recolhida (icon mode)",
+  name: "State: collapsed (icon mode)",
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -213,7 +213,7 @@ export const RecolhidaIcon: Story = {
 };
 
 export const Offcanvas: Story = {
-  name: "Estado: offcanvas (oculta)",
+  name: "State: offcanvas (hidden)",
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="offcanvas" label="Sidebar offcanvas (colapsada fora da viewport)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -237,7 +237,7 @@ export const Offcanvas: Story = {
 };
 
 export const Fixa: Story = {
-  name: "Estado: fixa (collapsible=none)",
+  name: "State: fixed (collapsible=none)",
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="none" label="Sidebar fixa (collapsible=none)" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar sem data-state (collapsible=none)", async () => {
@@ -250,7 +250,7 @@ export const Fixa: Story = {
 };
 
 export const Loading: Story = {
-  name: "Estado: loading (SidebarMenuSkeleton)",
+  name: "State: loading (SidebarMenuSkeleton)",
   render: () => <SidebarLoadingPreview />,
   play: async ({ canvasElement, step }) => {
     await step("SidebarMenuSkeleton está presente", async () => {

@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { ScrollArea, ScrollBar } from './index';
 
 const meta = {
-  title: 'UI/ScrollArea/Variantes',
+  title: 'UI/ScrollArea/Variants',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {

@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Tooltip/Estados',
+  title: 'UI/Tooltip/States',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {
@@ -36,7 +36,7 @@ const waitForClose = async () => {
   );
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   args: {
     defaultOpen: false,
     delayDuration: 200,
@@ -55,8 +55,8 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto (defaultOpen)',
+export const Open: Story = {
+  name: 'Open (defaultOpen)',
   args: {
     defaultOpen: true,
     delayDuration: 0,
@@ -72,7 +72,7 @@ export const Aberto: Story = {
 };
 
 export const FocoTeclado: Story = {
-  name: 'Foco via teclado (sem delay)',
+  name: 'Keyboard focus (no delay)',
   args: {
     defaultOpen: false,
     delayDuration: 0,
@@ -90,8 +90,8 @@ export const FocoTeclado: Story = {
   },
 };
 
-export const Controlado: Story = {
-  name: 'Controlado (open prop)',
+export const Controlled: Story = {
+  name: 'Controlled (open prop)',
   args: {
     open: true,
     delayDuration: 0,

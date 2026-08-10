@@ -13,7 +13,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Composicoes',
+  title: 'UI/Alert/Compositions',
   component: Alert,
   tags: ['feedback'],
 };
@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item2'] },
   render: () => ({
     Component: AlertStory,
@@ -41,7 +41,7 @@ export const ComIcone: Story = {
   },
 };
 
-export const ComAcao: Story = {
+export const WithAction: Story = {
   render: () => ({ Component: AlertAcaoStory }),
 
   play: async ({ canvasElement, step }) => {
@@ -94,7 +94,7 @@ export const ClasseAdicional: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     Component: AlertStory,

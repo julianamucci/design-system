@@ -10,7 +10,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Select/Estados',
+  title: 'UI/Select/States',
   component: Select,
   tags: ['form'],
   parameters: {
@@ -69,7 +69,7 @@ export const Default: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: { story: 'Dropdown aberto via click — Content em portal com role=listbox. Captura visual no Chromatic.' },

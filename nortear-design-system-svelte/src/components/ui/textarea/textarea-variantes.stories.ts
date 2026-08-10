@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Textarea/Variantes',
+  title: 'UI/Textarea/Variants',
   component: TextareaStory,
   tags: ['form'],
   parameters: {

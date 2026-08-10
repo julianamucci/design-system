@@ -5,7 +5,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/HoverCard/Composicoes',
+  title: 'UI/HoverCard/Compositions',
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
@@ -40,7 +40,7 @@ const waitOpen = async () => {
 };
 
 export const PerfilDeUsuario: Story = {
-  name: 'Preview de perfil',
+  name: 'Profile preview',
   args: {
     ...baseArgs,
     variant: 'userProfile',
@@ -55,7 +55,7 @@ export const PerfilDeUsuario: Story = {
 };
 
 export const PreviewDeLink: Story = {
-  name: 'Preview de link externo',
+  name: 'External link preview',
   args: {
     ...baseArgs,
     variant: 'linkPreview',
@@ -68,8 +68,8 @@ export const PreviewDeLink: Story = {
   },
 };
 
-export const DefinicaoDeTermo: Story = {
-  name: 'Definição contextual',
+export const TermDefinition: Story = {
+  name: 'Contextual definition',
   args: {
     ...baseArgs,
     variant: 'definition',
@@ -83,7 +83,6 @@ export const DefinicaoDeTermo: Story = {
 };
 
 export const MetricaExplicada: Story = {
-  name: 'Métrica explicada',
   args: {
     ...baseArgs,
     variant: 'metric',

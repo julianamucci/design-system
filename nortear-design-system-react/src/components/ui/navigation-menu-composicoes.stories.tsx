@@ -10,7 +10,7 @@ import {
 } from "./navigation-menu";
 
 const meta = {
-  title: "UI/NavigationMenu/Composicoes",
+  title: "UI/NavigationMenu/Compositions",
   tags: ["navigation"],
   component: NavigationMenu,
   parameters: {
@@ -34,7 +34,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const LinkSimples: Story = {
+export const SimpleLink: Story = {
   parameters: {
     docs: {
       description: {
@@ -76,7 +76,7 @@ export const LinkSimples: Story = {
   },
 };
 
-export const ComDropdown: Story = {
+export const WithDropdown: Story = {
   parameters: {
     docs: {
       description: {
@@ -210,7 +210,7 @@ export const MegaMenuGrid: Story = {
   },
 };
 
-export const ComCardDestacado: Story = {
+export const WithHighlightedCard: Story = {
   parameters: {
     docs: {
       description: {

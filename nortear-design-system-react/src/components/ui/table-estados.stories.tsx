@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Table/Estados",
+  title: "UI/Table/States",
   tags: ["tables"],
   component: Table,
   parameters: {
@@ -67,7 +67,7 @@ export const Empty: Story = {
 
 // ─── Linha Selecionada ───────────────────────────────────────────────────────
 
-export const LinhaSelecionada: Story = {
+export const SelectedRow: Story = {
   play: async ({ canvasElement, step }) => {
     await step("TableRow com data-state='selected' presente", async () => {
       const selected = canvasElement.querySelector('[data-state="selected"]');
@@ -111,7 +111,7 @@ export const LinhaSelecionada: Story = {
 
 // ─── Carregando ──────────────────────────────────────────────────────────────
 
-export const Carregando: Story = {
+export const Loading: Story = {
   play: async ({ canvasElement, step }) => {
     await step("linhas de skeleton renderizadas (3 linhas)", async () => {
       const rows = canvasElement.querySelectorAll("tbody tr");
@@ -124,7 +124,7 @@ export const Carregando: Story = {
   },
   render: () => (
     <Table>
-      <TableCaption className="nds-sr-only">Carregando faturas...</TableCaption>
+      <TableCaption className="nds-sr-only">Loading faturas...</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead scope="col">Fatura</TableHead>

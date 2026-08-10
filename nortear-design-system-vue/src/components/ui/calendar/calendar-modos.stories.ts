@@ -6,7 +6,7 @@ import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 
 const meta = {
-  title: 'UI/Calendar/Modos',
+  title: 'UI/Calendar/Modes',
   component: Calendar,
   tags: ['form'],
   parameters: {

@@ -20,7 +20,7 @@ const rootOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
 const meta = {
-  title: "UI/CodeBlock/Estados",
+  title: "UI/CodeBlock/States",
   component: CodeBlock,
   tags: ["display"],
   parameters: {
@@ -32,7 +32,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComNumeracao: Story = {
+export const WithNumbering: Story = {
   args: { code: BASE_CODE, language: "ts", showLineNumbers: true },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -42,7 +42,7 @@ export const ComNumeracao: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { code: BASE_CODE, language: "ts", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -80,7 +80,7 @@ export const Copiado: Story = {
   },
 };
 
-export const ScrollDuplo: Story = {
+export const DoubleScroll: Story = {
   args: { code: SCROLL_CODE, language: "ts" },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {

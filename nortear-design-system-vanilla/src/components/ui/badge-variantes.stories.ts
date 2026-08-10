@@ -5,7 +5,7 @@ import { createBadge } from './badge';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Badge/Variantes',
+  title: 'UI/Badge/Variants',
   parameters: {
     design: figmaDesign('badge'),
     controls: { disable: true },
@@ -121,7 +121,7 @@ export const Outline: Story = {
  * provável — copiar o bloco do destructive e esquecer de trocar o token, que é
  * como as três nasceriam iguais.
  */
-export const Semanticas: Story = {
+export const Semantics: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
     docs: {

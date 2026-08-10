@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Drawer/Composicoes',
+  title: 'UI/Drawer/Compositions',
   component: DrawerStory,
   tags: ['disclosure'],
   parameters: {
@@ -30,7 +30,7 @@ async function expectOpen() {
   return dialog;
 }
 
-export const ComFormulario: Story = {
+export const WithForm: Story = {
   args: {
     direction: 'right',
     defaultOpen: true,
@@ -50,7 +50,7 @@ export const ComFormulario: Story = {
   },
 };
 
-export const ComConfirmacao: Story = {
+export const WithConfirmation: Story = {
   args: {
     direction: 'bottom',
     defaultOpen: true,
@@ -68,7 +68,7 @@ export const ComConfirmacao: Story = {
   },
 };
 
-export const ComScroll: Story = {
+export const WithScroll: Story = {
   args: {
     direction: 'bottom',
     defaultOpen: true,

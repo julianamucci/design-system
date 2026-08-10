@@ -27,7 +27,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Variantes',
+  title: 'UI/Chart/Variants',
 };
 
 export default meta;
@@ -64,7 +64,7 @@ export const Bar: Story = {
 
 // ─── Linha ────────────────────────────────────────────────────────────────────
 
-export const Linha: Story = {
+export const Row: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

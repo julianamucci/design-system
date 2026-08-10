@@ -4,7 +4,7 @@ import { within, expect } from "storybook/test";
 import { Slider } from "./slider";
 
 const meta = {
-  title: "UI/Slider/Variantes",
+  title: "UI/Slider/Variants",
   tags: ["form"],
   component: Slider,
   parameters: {

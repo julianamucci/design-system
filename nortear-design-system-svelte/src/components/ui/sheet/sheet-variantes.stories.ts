@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sheet/Variantes',
+  title: 'UI/Sheet/Variants',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {

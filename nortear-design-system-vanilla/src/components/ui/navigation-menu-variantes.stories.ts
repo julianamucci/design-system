@@ -4,7 +4,7 @@ import { createNavigationMenu } from './navigation-menu';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/NavigationMenu/Variantes',
+  title: 'UI/NavigationMenu/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -37,7 +37,6 @@ function wrap(child: HTMLElement, minHeight = 220): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
-  name: 'Horizontal',
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '/' },
@@ -69,7 +68,6 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  name: 'Vertical',
   render: () => {
     // Factory Vanilla fixa horizontal — aplicamos classes utilitárias para
     // converter o <ul> em coluna (sidebar/mobile). Itens mantêm role=menuitem.

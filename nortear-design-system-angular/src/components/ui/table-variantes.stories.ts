@@ -19,7 +19,7 @@ import { FATURAS, TOTAL, VARIANTE_POR_STATUS } from './table.fixtures';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Table/Variantes',
+  title: 'UI/Table/Variants',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

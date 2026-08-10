@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Estados',
+  title: 'UI/Accordion/States',
 };
 
 export default meta;
@@ -40,7 +40,7 @@ const FOCUS_ITEMS: AccordionOptions['items'] = [
 
 // ─── Estados ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
+export const Closed: Story = {
   render: () => createAccordion({ type: 'single', collapsible: true, items: SINGLE_ITEM }),
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
@@ -62,7 +62,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   render: () =>
     createAccordion({
       type: 'single',

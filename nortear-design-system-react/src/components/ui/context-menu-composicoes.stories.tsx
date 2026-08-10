@@ -21,7 +21,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/ContextMenu/Composicoes",
+  title: "UI/ContextMenu/Compositions",
   tags: ["overlay"],
   component: ContextMenu,
   parameters: {
@@ -52,7 +52,7 @@ function TriggerArea({ children }: { children: React.ReactNode }) {
 
 // ─── Com Shortcut ─────────────────────────────────────────────────────────────
 
-export const ComShortcut: Story = {
+export const WithShortcut: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado e visível", async () => {
@@ -127,7 +127,7 @@ function CheckboxDemo() {
   );
 }
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -166,8 +166,8 @@ function RadioDemo() {
   );
 }
 
-export const ComRadio: Story = {
-  name: "Com Radio Group",
+export const WithRadio: Story = {
+  name: "With radio group",
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -184,7 +184,7 @@ export const ComRadio: Story = {
 
 // ─── Com Submenu ──────────────────────────────────────────────────────────────
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {
@@ -276,8 +276,7 @@ function CompleteDemo() {
   );
 }
 
-export const ComposicaoCompleta: Story = {
-  name: "Composição Completa",
+export const CompleteComposition: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("trigger renderizado", async () => {

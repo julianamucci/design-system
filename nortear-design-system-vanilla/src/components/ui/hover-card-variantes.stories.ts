@@ -4,7 +4,7 @@ import { createHoverCard } from './hover-card';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/Variantes',
+  title: 'UI/HoverCard/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -100,7 +100,6 @@ async function closeAfter(): Promise<void> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () => {
     const trigger = buildTrigger('@joana');
     const el = createHoverCard({ trigger, content: buildContent() });
@@ -122,8 +121,7 @@ export const Default: Story = {
   },
 };
 
-export const ComDelayCurto: Story = {
-  name: 'Com Delay Curto',
+export const WithShortDelay: Story = {
   render: () => {
     const trigger = buildTrigger('@maria');
     // A factory Vanilla tem delays fixos; usamos a classe customizada para

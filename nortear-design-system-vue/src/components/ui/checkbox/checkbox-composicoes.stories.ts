@@ -3,7 +3,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Checkbox } from './index';
 
 const meta = {
-  title: 'UI/Checkbox/Composicoes',
+  title: 'UI/Checkbox/Compositions',
   component: Checkbox,
   tags: ['form'],
   parameters: {
@@ -65,7 +65,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -111,7 +111,7 @@ export const ComDescricao: Story = {
   },
 };
 
-export const GrupoFieldset: Story = {
+export const FieldsetGroup: Story = {
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -167,7 +167,7 @@ export const GrupoFieldset: Story = {
   },
 };
 
-export const SelecionarTodos: Story = {
+export const SelectAll: Story = {
   render: () => ({
     components: { Checkbox },
     setup() {
@@ -235,7 +235,7 @@ export const SelecionarTodos: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },

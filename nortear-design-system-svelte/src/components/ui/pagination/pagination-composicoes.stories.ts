@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Pagination/Composicoes',
+  title: 'UI/Pagination/Compositions',
   component: PaginationStory,
   tags: ['navigation'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Simples: Story = {
+export const Simple: Story = {
   args: {
     count: 50,
     perPage: 10,
@@ -42,7 +42,7 @@ export const Simples: Story = {
   },
 };
 
-export const ComEllipsis: Story = {
+export const WithEllipsis: Story = {
   args: {
     count: 120,
     perPage: 10,
@@ -65,7 +65,7 @@ export const ComEllipsis: Story = {
   },
 };
 
-export const UltimaPagina: Story = {
+export const LastPage: Story = {
   args: {
     count: 100,
     perPage: 10,
@@ -83,7 +83,7 @@ export const UltimaPagina: Story = {
   },
 };
 
-export const Controlada: Story = {
+export const Controlled: Story = {
   args: {
     count: 50,
     perPage: 10,

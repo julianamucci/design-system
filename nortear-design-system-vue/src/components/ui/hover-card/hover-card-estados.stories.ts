@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/HoverCard/Estados',
+  title: 'UI/HoverCard/States',
   component: HoverCard,
   tags: ['overlay'],
   parameters: {
@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger, Button };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: { story: 'Estado inicial — apenas o trigger é visível. Portal vazio.' },
@@ -61,7 +61,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {
@@ -96,7 +96,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

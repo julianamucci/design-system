@@ -9,7 +9,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
 const meta = {
-  title: "UI/ToggleGroup/Composicoes",
+  title: "UI/ToggleGroup/Compositions",
   tags: ["form"],
   component: ToggleGroup,
   parameters: {
@@ -27,7 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AlinhamentoSingle: Story = {
+export const SingleAlignment: Story = {
   render: function AlinhamentoSingleRender() {
     const [alignment, setAlignment] = useState<string[]>(["left"]);
     return (
@@ -81,7 +81,7 @@ export const AlinhamentoSingle: Story = {
   },
 };
 
-export const FormatacaoMultiple: Story = {
+export const MultipleFormatting: Story = {
   render: function FormatacaoMultipleRender() {
     const [formats, setFormats] = useState<string[]>(["bold"]);
     return (

@@ -4,7 +4,7 @@ import { within, expect, userEvent, fn } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta<ButtonEstadosArgs> = {
-  title: 'UI/Button/Estados',
+  title: 'UI/Button/States',
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
   // `onClick` precisa de argType: sem ele o renderer Angular do Storybook não

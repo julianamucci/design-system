@@ -6,7 +6,7 @@ import { createCommand } from './command';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Command/Composicoes',
+  title: 'UI/Command/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -25,8 +25,7 @@ type Story = StoryObj;
 
 // ─── Com Grupos ───────────────────────────────────────────────────────────────
 
-export const ComGrupos: Story = {
-  name: 'Com Grupos',
+export const WithGroups: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
@@ -70,8 +69,7 @@ export const ComGrupos: Story = {
 
 // ─── Com Itens Desabilitados ──────────────────────────────────────────────────
 
-export const ComItensDesabilitados: Story = {
-  name: 'Com Itens Desabilitados',
+export const WithDisabledItems: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
@@ -109,7 +107,7 @@ export const ComItensDesabilitados: Story = {
 // ─── Lista Longa ──────────────────────────────────────────────────────────────
 
 export const ListaLonga: Story = {
-  name: 'Lista Longa (scroll)',
+  name: 'Long list (scroll)',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';

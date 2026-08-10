@@ -6,7 +6,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/Estados',
+  title: 'UI/Tooltip/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,8 +52,7 @@ async function cleanupPortal(): Promise<void> {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
-  name: 'Fechado',
+export const Closed: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
@@ -71,8 +70,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto',
+export const Open: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
@@ -98,7 +96,7 @@ export const Aberto: Story = {
 };
 
 export const FocoTeclado: Story = {
-  name: 'Foco via Teclado',
+  name: 'Keyboard focus',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });

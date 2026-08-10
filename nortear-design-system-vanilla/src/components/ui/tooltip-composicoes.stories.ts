@@ -6,7 +6,7 @@ import { createButton, createButtonIcon } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Tooltip/Composicoes',
+  title: 'UI/Tooltip/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -58,8 +58,7 @@ function fireOpen(trigger: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const IconButtonComAtalho: Story = {
-  name: 'Icon-Button com Atalho',
+export const IconButtonWithShortcut: Story = {
   render: () => {
     const iconWrap = document.createElement('span');
     iconWrap.setAttribute('aria-hidden', 'true');
@@ -89,8 +88,8 @@ export const IconButtonComAtalho: Story = {
   },
 };
 
-export const CamposDeForm: Story = {
-  name: 'Campo de Form com Ajuda',
+export const FormFields: Story = {
+  name: 'Form field with help',
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -143,8 +142,7 @@ export const CamposDeForm: Story = {
   },
 };
 
-export const DescricaoDeMetrica: Story = {
-  name: 'Descrição de Métrica',
+export const MetricDescription: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -194,7 +192,6 @@ export const DescricaoDeMetrica: Story = {
 };
 
 export const LadosDePosicionamento: Story = {
-  name: 'Lados de Posicionamento',
   render: () => {
     const grid = document.createElement('div');
     grid.style.contain = 'layout';

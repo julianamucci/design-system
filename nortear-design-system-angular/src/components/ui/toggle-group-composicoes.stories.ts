@@ -5,7 +5,7 @@ import { NdsToggle, NdsToggleIcon } from './toggle';
 import { NdsToggleGroup, NdsToggleGroupIcon } from './toggle-group';
 
 const meta: Meta = {
-  title: 'UI/ToggleGroup/Composições',
+  title: 'UI/ToggleGroup/Compositions',
   decorators: [
     moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle, NdsToggleIcon] }),
   ],

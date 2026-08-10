@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/DropdownMenu/Estados',
+  title: 'UI/DropdownMenu/States',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {
@@ -42,7 +42,7 @@ const sharedComponents = {
   Button,
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: { description: { story: 'Estado inicial — apenas o trigger é visível. Portal vazio.' } },
   },
@@ -72,7 +72,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: { description: { story: 'Menu aberto via defaultOpen. Captura visual no Chromatic.' } },
   },
@@ -98,7 +98,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: { description: { story: 'Abertura controlada por estado externo via open + @update:open.' } },
   },

@@ -11,7 +11,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Variantes',
+  title: 'UI/Alert/Variants',
 };
 
 export default meta;

@@ -9,7 +9,7 @@ import {
 } from './accordion';
 
 const meta: Meta = {
-  title: 'UI/Accordion/Variantes',
+  title: 'UI/Accordion/Variants',
   tags: ['disclosure'],
   decorators: [
     moduleMetadata({

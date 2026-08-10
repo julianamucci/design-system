@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/NavigationMenu/Variantes',
+  title: 'UI/NavigationMenu/Variants',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {

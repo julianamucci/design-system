@@ -6,7 +6,7 @@ import { createBadge } from './badge';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/Composicoes',
+  title: 'UI/ScrollArea/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -41,7 +41,7 @@ function tagItem(label: string, count: string): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const TagsList: Story = {
-  name: 'Lista vertical com badges',
+  name: 'Vertical list with badges',
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
@@ -75,7 +75,7 @@ export const TagsList: Story = {
 };
 
 export const HorizontalCards: Story = {
-  name: 'Carrossel horizontal de cards',
+  name: 'Horizontal card carousel',
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full';
@@ -127,7 +127,7 @@ export const HorizontalCards: Story = {
 };
 
 export const WideTable: Story = {
-  name: 'Tabela ampla (bidirecional)',
+  name: 'Wide table (bidirectional)',
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full';
@@ -187,7 +187,7 @@ export const WideTable: Story = {
 };
 
 export const InsideCard: Story = {
-  name: 'Dentro de Card',
+  name: 'Inside card',
   render: () => {
     const card = createCard({ className: 'nds-w-full nds-max-w-md' });
 
@@ -245,7 +245,7 @@ export const InsideCard: Story = {
 };
 
 export const Sidebar: Story = {
-  name: 'Sidebar de navegação',
+  name: 'Navigation sidebar',
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-cluster nds-w-full';

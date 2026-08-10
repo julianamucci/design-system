@@ -6,7 +6,7 @@ import { createCommand } from './command';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Command/Estados',
+  title: 'UI/Command/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -26,7 +26,7 @@ type Story = StoryObj;
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
-  name: 'Empty State — Sem resultados',
+  name: 'Empty state — no results',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
@@ -71,7 +71,7 @@ export const EmptyState: Story = {
 // ─── Disabled Item ────────────────────────────────────────────────────────────
 
 export const DisabledItem: Story = {
-  name: 'Item Desabilitado',
+  name: 'Disabled item',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';

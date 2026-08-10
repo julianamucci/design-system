@@ -6,7 +6,7 @@ import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Avatar/Tamanhos',
+  title: 'UI/Avatar/Sizes',
   component: Avatar,
   tags: ['display'],
   parameters: {
@@ -61,7 +61,7 @@ export const Sm: Story = {
 };
 
 export const Md: Story = {
-  name: 'md (32px · padrão)',
+  name: 'md (32px · default)',
   parameters: { covers: ['functional.item6', 'visual.item3'] },
   render: () => ({ Component: AvatarStory, props: { ...baseProps } }),
   play: async ({ canvasElement }) => {

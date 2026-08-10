@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/Label/Estados',
+  title: 'UI/Label/States',
   decorators: [moduleMetadata({ imports: [NdsLabel] })],
   parameters: {
     layout: 'padded',

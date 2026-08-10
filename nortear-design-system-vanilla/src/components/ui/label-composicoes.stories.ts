@@ -8,7 +8,7 @@ import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Label/Composicoes',
+  title: 'UI/Label/Compositions',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
@@ -26,7 +26,7 @@ type Story = StoryObj;
 
 // ─── Com Input ────────────────────────────────────────────────────────────────
 
-export const ComInput: Story = {
+export const WithInput: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
@@ -54,7 +54,7 @@ export const ComInput: Story = {
 
 // ─── Com Checkbox ─────────────────────────────────────────────────────────────
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-cluster';
@@ -86,7 +86,7 @@ export const ComCheckbox: Story = {
 
 // ─── Campo Obrigatório ────────────────────────────────────────────────────────
 
-export const CampoObrigatorio: Story = {
+export const RequiredField: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

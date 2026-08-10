@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/HoverCard/Estados',
+  title: 'UI/HoverCard/States',
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   args: {
     defaultOpen: false,
     openDelay: 700,
@@ -41,8 +41,8 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto (defaultOpen)',
+export const Open: Story = {
+  name: 'Open (defaultOpen)',
   args: {
     defaultOpen: true,
     openDelay: 0,
@@ -57,8 +57,8 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
-  name: 'Controlado (open prop)',
+export const Controlled: Story = {
+  name: 'Controlled (open prop)',
   args: {
     open: true,
     openDelay: 0,

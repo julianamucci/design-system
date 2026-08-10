@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import InputStory from './InputStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Input/Tipos',
+  title: 'UI/Input/Types',
   component: InputStory,
   tags: ['form'],
   parameters: {

@@ -12,7 +12,7 @@ import {
 } from "./pagination";
 
 const meta = {
-  title: "UI/Pagination/Composicoes",
+  title: "UI/Pagination/Compositions",
   tags: ["navigation"],
   component: Pagination,
   parameters: {
@@ -30,7 +30,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Simples: Story = {
+export const Simple: Story = {
   parameters: {
     docs: {
       description: {
@@ -79,7 +79,7 @@ export const Simples: Story = {
   },
 };
 
-export const ComEllipsis: Story = {
+export const WithEllipsis: Story = {
   parameters: {
     docs: {
       description: {
@@ -144,7 +144,7 @@ export const ComEllipsis: Story = {
   },
 };
 
-export const UltimaPagina: Story = {
+export const LastPage: Story = {
   parameters: {
     docs: {
       description: {
@@ -243,7 +243,7 @@ export const AsButton: Story = {
   },
 };
 
-export const ComOnPageChange: Story = {
+export const WithOnPageChange: Story = {
   parameters: {
     docs: {
       description: {

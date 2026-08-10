@@ -17,7 +17,7 @@ import { FATURAS } from './table.fixtures';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Table/Estados',
+  title: 'UI/Table/States',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

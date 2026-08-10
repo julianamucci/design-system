@@ -13,7 +13,7 @@ const multipleSeries = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Estados',
+  title: 'UI/Chart/States',
   tags: ['display'],
 };
 export default meta;
@@ -26,7 +26,7 @@ async function expectRendered(el: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const Vazio: Story = {
+export const Empty: Story = {
   render: () => h(ChartContainer, { option: buildBarOption({ data: [] }), class: 'h-[200px] w-[480px]' }),
   parameters: { docs: { description: { story: '"No data" automático do ECharts quando series vazia.' } } },
 };
@@ -37,7 +37,7 @@ export const UmaSerie: Story = {
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const MultiplasSeries: Story = {
+export const MultipleSeries: Story = {
   render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: multipleSeries }), class: 'h-[280px] w-[500px]' }),
   parameters: { docs: { description: { story: 'Múltiplas séries — legenda automática.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),

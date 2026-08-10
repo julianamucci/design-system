@@ -19,7 +19,7 @@ import {
 } from "./menubar";
 
 const meta = {
-  title: "UI/Menubar/Composicoes",
+  title: "UI/Menubar/Compositions",
   tags: ["navigation"],
   component: Menubar,
   parameters: {
@@ -83,7 +83,7 @@ export const ComShortcuts: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   parameters: {
     docs: {
       description: {
@@ -123,7 +123,7 @@ export const ComSubmenu: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   parameters: {
     docs: {
       description: {
@@ -179,7 +179,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   parameters: {
     docs: {
       description: {

@@ -5,7 +5,7 @@ import { NDS_SIDEBAR } from './sidebar';
 import { NdsSeparator } from './separator';
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Composições',
+  title: 'UI/Sidebar/Compositions',
   decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsSeparator] })],
   parameters: { layout: 'fullscreen', controls: { disable: true } },
 };

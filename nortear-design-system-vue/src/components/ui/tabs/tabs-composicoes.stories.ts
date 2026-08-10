@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 
 const meta: Meta<any> = {
-  title: 'UI/Tabs/Composicoes',
+  title: 'UI/Tabs/Compositions',
   component: Tabs,
   tags: ['navigation'],
   parameters: {
@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { Tabs, TabsList, TabsTrigger, TabsContent };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
@@ -81,7 +81,7 @@ export const Controlado: Story = {
   },
 };
 
-export const ComIcones: Story = {
+export const WithIcons: Story = {
   render: () => ({
     components: { ...sharedComponents, Code2, Eye, Settings2 },
     template: `
@@ -124,7 +124,7 @@ export const ComIcones: Story = {
   },
 };
 
-export const VerticalConfiguracoes: Story = {
+export const VerticalSettings: Story = {
   render: () => ({
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `

@@ -3,7 +3,7 @@ import { DataTable } from './index';
 import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 const meta: Meta<Record<string, unknown>> = {
-  title: 'UI/DataTable/Configuracoes',
+  title: 'UI/DataTable/Settings',
   component: DataTable as never,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
@@ -20,7 +20,7 @@ const bigData: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   amount: Math.round(Math.random() * 2000),
 }));
 
-export const Virtualizado1000Linhas: Story = {
+export const Virtualized1000Rows: Story = {
   render: () => ({
     components: { DataTable },
     setup() {

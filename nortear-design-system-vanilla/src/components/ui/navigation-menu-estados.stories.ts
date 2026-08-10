@@ -4,7 +4,7 @@ import { createNavigationMenu } from './navigation-menu';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/NavigationMenu/Estados',
+  title: 'UI/NavigationMenu/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,8 +52,7 @@ function openFirstTrigger(nav: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
-  name: 'Fechado',
+export const Closed: Story = {
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início',  href: '/' },
@@ -79,8 +78,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto',
+export const Open: Story = {
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '/' },
@@ -113,8 +111,8 @@ export const Aberto: Story = {
   },
 };
 
-export const Ativo: Story = {
-  name: 'Ativo (página atual)',
+export const Active: Story = {
+  name: 'Active (current page)',
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início',    href: '/' },

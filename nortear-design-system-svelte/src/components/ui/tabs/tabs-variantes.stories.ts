@@ -4,7 +4,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Tabs/Variantes',
+  title: 'UI/Tabs/Variants',
   component: TabsStory,
   tags: ['navigation'],
   parameters: {

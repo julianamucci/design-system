@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Separator/Estados',
+  title: 'UI/Separator/States',
   component: SeparatorStory,
   tags: ['layout'],
   parameters: {
@@ -40,7 +40,7 @@ export const Decorativo: Story = {
   },
 };
 
-export const Semantico: Story = {
+export const Semantic: Story = {
   args: {
     orientation: 'horizontal',
     decorative: false,

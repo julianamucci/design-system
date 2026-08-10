@@ -5,7 +5,7 @@ import { Switch } from "./switch";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Switch/Composicoes",
+  title: "UI/Switch/Compositions",
   tags: ["form"],
   component: Switch,
   parameters: {
@@ -50,7 +50,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const PainelDeConfiguracoes: Story = {
+export const SettingsPanel: Story = {
   render: () => (
     <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style={{ width: "24rem" }}>
       <div className="" data-spacing="xs">
@@ -124,7 +124,7 @@ export const ListaDePreferencias: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: function ControladoRender() {
     const [enabled, setEnabled] = useState(false);
     return (
@@ -164,7 +164,7 @@ export const Controlado: Story = {
   },
 };
 
-export const TamanhoCompacto: Story = {
+export const CompactSize: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
       {[

@@ -22,7 +22,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Composicoes',
+  title: 'UI/Chart/Compositions',
 };
 
 export default meta;
@@ -30,7 +30,7 @@ type Story = StoryObj;
 
 // ─── ComCard ──────────────────────────────────────────────────────────────────
 
-export const ComCard: Story = {
+export const WithCard: Story = {
   render: () => {
     const card = createCard({ className: 'nds-w-sm' });
 

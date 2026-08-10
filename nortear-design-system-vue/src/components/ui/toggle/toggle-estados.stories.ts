@@ -4,7 +4,7 @@ import { Toggle } from './index';
 import { Bold, Underline } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Toggle/Estados',
+  title: 'UI/Toggle/States',
   component: Toggle,
   tags: ['form'],
   parameters: {

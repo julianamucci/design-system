@@ -5,7 +5,7 @@ import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 
 const meta = {
-  title: "UI/Calendar/Estados",
+  title: "UI/Calendar/States",
   tags: ["form"],
   component: Calendar,
   parameters: {

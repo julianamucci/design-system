@@ -14,7 +14,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Composicoes',
+  title: 'UI/Accordion/Compositions',
   component: Accordion,
   tags: ['disclosure'],
 };
@@ -30,7 +30,7 @@ const abrir = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => ({ Component: AccordionIconStory }),
   parameters: {
     covers: ['functional.item1', 'visual.item4'],
@@ -58,7 +58,7 @@ export const ComIconeNoTrigger: Story = {
   },
 };
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   render: () => ({ Component: AccordionBadgeStory }),
   parameters: {
     covers: ['visual.item4'],

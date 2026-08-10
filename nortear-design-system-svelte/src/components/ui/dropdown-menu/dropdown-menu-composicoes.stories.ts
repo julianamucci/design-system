@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/DropdownMenu/Composicoes',
+  title: 'UI/DropdownMenu/Compositions',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {
@@ -52,7 +52,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   args: {
     defaultOpen: true,
     variant: 'withCheckbox',
@@ -73,7 +73,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   args: {
     defaultOpen: true,
     variant: 'withRadio',
@@ -94,7 +94,7 @@ export const ComRadioGroup: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   args: {
     defaultOpen: true,
     variant: 'withSubmenu',

@@ -20,7 +20,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'UI/CodeBlock/Composicoes',
+  title: 'UI/CodeBlock/Compositions',
   component: CodeBlock,
   tags: ['display'],
 };
@@ -28,7 +28,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   args: { code: BASE_CODE, language: 'ts', title: 'lista.ts' },
   play: async ({ canvasElement, step }) => {
     await step('O rótulo do arquivo aparece no header, ao lado da ação de copiar', async () => {
@@ -42,7 +42,7 @@ export const ComRotulo: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { code: BASE_CODE, language: 'ts', showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     await step('Sem numeração o gutter não aparece', async () => {
@@ -56,7 +56,7 @@ export const SemNumeracao: Story = {
   },
 };
 
-export const ComDestaque: Story = {
+export const WithHighlight: Story = {
   args: { code: BASE_CODE, language: 'ts', highlightLines: [2] },
   play: async ({ canvasElement, step }) => {
     await step('Só a linha pedida fica destacada', async () => {
@@ -70,7 +70,7 @@ export const ComDestaque: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   args: {
     code: BASE_CODE,
     language: 'ts',

@@ -10,7 +10,7 @@ import {
 } from "./pagination";
 
 const meta = {
-  title: "UI/Pagination/Estados",
+  title: "UI/Pagination/States",
   tags: ["navigation"],
   component: Pagination,
   parameters: {

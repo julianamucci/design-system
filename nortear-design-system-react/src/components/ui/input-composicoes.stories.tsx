@@ -11,7 +11,7 @@ import {
 } from "./input-group";
 
 const meta = {
-  title: "UI/Input/Composicoes",
+  title: "UI/Input/Compositions",
   tags: ["form"],
   component: InputGroup,
   parameters: {
@@ -29,7 +29,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AddonIconeEsquerda: Story = {
+export const AddonIconLeft: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-icon-left" className="nds-text-body nds-font-medium">
@@ -63,7 +63,7 @@ export const AddonIconeEsquerda: Story = {
   },
 };
 
-export const AddonIconeDireita: Story = {
+export const AddonIconRight: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-icon-right" className="nds-text-body nds-font-medium">
@@ -91,7 +91,7 @@ export const AddonIconeDireita: Story = {
   },
 };
 
-export const AddonTextoEsquerda: Story = {
+export const AddonTextLeft: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-text-left" className="nds-text-body nds-font-medium">
@@ -117,7 +117,7 @@ export const AddonTextoEsquerda: Story = {
   },
 };
 
-export const AddonTextoDireita: Story = {
+export const AddonTextRight: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-text-right" className="nds-text-body nds-font-medium">
@@ -147,7 +147,7 @@ export const AddonTextoDireita: Story = {
   },
 };
 
-export const BotaoInterno: Story = {
+export const InnerButton: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-btn-search" className="nds-text-body nds-font-medium">
@@ -184,7 +184,7 @@ export const BotaoInterno: Story = {
   },
 };
 
-export const SenhaComToggle: Story = {
+export const PasswordWithToggle: Story = {
   render: function SenhaComToggleRender() {
     const [show, setShow] = useState(false);
     return (
@@ -235,7 +235,7 @@ export const SenhaComToggle: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-disabled" className="nds-text-body nds-font-medium">
@@ -264,7 +264,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const ComErro: Story = {
+export const WithError: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-error" className="nds-text-body nds-font-medium">

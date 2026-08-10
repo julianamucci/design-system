@@ -5,7 +5,7 @@ import { NDS_AVATAR } from './avatar';
 import { IMG_AVATAR } from './avatar.stories';
 
 const meta: Meta = {
-  title: 'UI/Avatar/Composições',
+  title: 'UI/Avatar/Compositions',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {

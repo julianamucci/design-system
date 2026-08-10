@@ -9,7 +9,7 @@ import { fn, userEvent, within, expect } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Calendar/Modos',
+  title: 'UI/Calendar/Modes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

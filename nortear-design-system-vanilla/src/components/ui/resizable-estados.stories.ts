@@ -4,7 +4,7 @@ import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Resizable/Estados',
+  title: 'UI/Resizable/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -59,7 +59,6 @@ function basicHorizontal(): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Idle: Story = {
-  name: 'Idle',
   render: () => frame(basicHorizontal()),
   play: async ({ canvasElement, step }) => {
     await step('Handle no estado idle: role=separator + tabindex=0', async () => {
@@ -71,7 +70,6 @@ export const Idle: Story = {
 };
 
 export const Focus: Story = {
-  name: 'Focus',
   render: () => frame(basicHorizontal()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -88,7 +86,7 @@ export const Focus: Story = {
 };
 
 export const Dragging: Story = {
-  name: 'Dragging (via teclado)',
+  name: 'Dragging (via keyboard)',
   render: () => frame(basicHorizontal()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -108,7 +106,6 @@ export const Dragging: Story = {
 };
 
 export const Disabled: Story = {
-  name: 'Disabled',
   render: () => {
     // NOTA: factory Vanilla NÃO expõe prop disabled — aplicamos manualmente
     // tabindex=-1, aria-disabled=true e pointer-events:none para simular o

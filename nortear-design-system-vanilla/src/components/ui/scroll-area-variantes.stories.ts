@@ -4,7 +4,7 @@ import { createScrollArea } from './scroll-area';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/Variantes',
+  title: 'UI/ScrollArea/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -137,7 +137,7 @@ export const Horizontal: Story = {
 };
 
 export const Both: Story = {
-  name: 'Bidirecional',
+  name: 'Bidirectional',
   parameters: {
     docs: { description: { story: 'Scroll bidirecional — altura + largura fixas no root, conteúdo maior em ambas as dimensões.' } },
   },

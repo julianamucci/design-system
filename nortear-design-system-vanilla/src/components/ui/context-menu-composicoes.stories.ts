@@ -5,7 +5,7 @@ import { within, expect, fn } from 'storybook/test';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/ContextMenu/Composicoes',
+  title: 'UI/ContextMenu/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -88,7 +88,7 @@ function createChevronSvg(): SVGSVGElement {
 
 // ─── ComCheckbox ──────────────────────────────────────────────────────────────
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   parameters: {
     docs: {
       description: {
@@ -199,7 +199,7 @@ export const ComCheckbox: Story = {
 
 // ─── ComRadio ─────────────────────────────────────────────────────────────────
 
-export const ComRadio: Story = {
+export const WithRadio: Story = {
   parameters: {
     docs: {
       description: {
@@ -307,7 +307,7 @@ export const ComRadio: Story = {
 
 // ─── ComSubmenu ───────────────────────────────────────────────────────────────
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   parameters: {
     docs: {
       description: {

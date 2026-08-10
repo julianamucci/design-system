@@ -10,7 +10,7 @@ import {
 } from "./select";
 
 const meta = {
-  title: "UI/Select/Estados",
+  title: "UI/Select/States",
   tags: ["form"],
   component: Select,
   parameters: {

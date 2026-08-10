@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Sheet/Estados',
+  title: 'UI/Sheet/States',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {

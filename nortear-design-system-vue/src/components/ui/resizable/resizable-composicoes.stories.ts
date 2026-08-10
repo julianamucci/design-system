@@ -7,7 +7,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Resizable/Composicoes',
+  title: 'UI/Resizable/Compositions',
   component: ResizablePanelGroup,
   tags: ['layout'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<Meta<any>>;
 
-export const EditorComPreview: Story = {
+export const EditorWithPreview: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
@@ -57,7 +57,7 @@ export const EditorComPreview: Story = {
   },
 };
 
-export const VerticalCabecalhoConteudoRodape: Story = {
+export const VerticalHeaderContentFooter: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
@@ -83,7 +83,7 @@ export const VerticalCabecalhoConteudoRodape: Story = {
   },
 };
 
-export const SidebarComConsole: Story = {
+export const SidebarWithConsole: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `

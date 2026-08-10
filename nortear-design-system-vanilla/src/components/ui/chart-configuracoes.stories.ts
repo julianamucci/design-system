@@ -21,7 +21,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Configuracoes',
+  title: 'UI/Chart/Settings',
 };
 
 export default meta;
@@ -29,7 +29,7 @@ type Story = StoryObj;
 
 // ─── CoresPersonalizadas ──────────────────────────────────────────────────────
 
-export const CoresPersonalizadas: Story = {
+export const CustomColors: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -58,7 +58,7 @@ export const CoresPersonalizadas: Story = {
 
 // ─── AlturaPersonalizada ──────────────────────────────────────────────────────
 
-export const AlturaPersonalizada: Story = {
+export const CustomHeight: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

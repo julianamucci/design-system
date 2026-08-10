@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const meta = {
-  title: 'UI/Label/Composicoes',
+  title: 'UI/Label/Compositions',
   component: Label,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComInput: Story = {
+export const WithInput: Story = {
   render: () => ({
     components: { Label, Input },
     setup() { return {}; },
@@ -48,7 +48,7 @@ export const ComInput: Story = {
   },
 };
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   render: () => ({
     components: { Label, Checkbox },
     setup() { return {}; },
@@ -73,8 +73,8 @@ export const ComCheckbox: Story = {
   },
 };
 
-export const CampoObrigatorio: Story = {
-  name: 'Com Input obrigatório',
+export const RequiredField: Story = {
+  name: 'With required input',
   render: () => ({
     components: { Label, Input },
     setup() { return {}; },

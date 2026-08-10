@@ -4,7 +4,7 @@ import { createPagination } from './pagination';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Pagination/Estados',
+  title: 'UI/Pagination/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -36,7 +36,6 @@ function wrap(child: HTMLElement, minHeight = 100): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () =>
     wrap(
       createPagination({
@@ -54,7 +53,7 @@ export const Default: Story = {
 };
 
 export const Active: Story = {
-  name: 'Active (página atual)',
+  name: 'Active (current page)',
   render: () =>
     wrap(
       createPagination({
@@ -73,7 +72,7 @@ export const Active: Story = {
 };
 
 export const DisabledFirst: Story = {
-  name: 'Disabled (Previous na primeira página)',
+  name: 'Disabled (Previous on first page)',
   render: () =>
     wrap(
       createPagination({
@@ -96,7 +95,7 @@ export const DisabledFirst: Story = {
 };
 
 export const DisabledLast: Story = {
-  name: 'Disabled (Next na última página)',
+  name: 'Disabled (Next on last page)',
   render: () =>
     wrap(
       createPagination({

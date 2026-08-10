@@ -13,7 +13,7 @@ import {
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Breadcrumb/Estados',
+  title: 'UI/Breadcrumb/States',
   parameters: {
     design: [figmaDesign('breadcrumb', 'Trilha'), figmaDesign('breadcrumbLink', 'Link')],
     controls: { disable: true },

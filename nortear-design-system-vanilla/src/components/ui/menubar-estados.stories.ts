@@ -4,7 +4,7 @@ import { createMenubar } from './menubar';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Menubar/Estados',
+  title: 'UI/Menubar/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,8 +52,7 @@ function openFirstMenu(bar: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
-  name: 'Fechado',
+export const Closed: Story = {
   render: () => {
     const bar = createMenubar([
       { label: 'Arquivo', items: [{ type: 'item', label: 'Novo' }] },
@@ -75,8 +74,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto',
+export const Open: Story = {
   render: () => {
     const bar = createMenubar([
       {
@@ -111,7 +109,6 @@ export const Aberto: Story = {
 };
 
 export const ItemDesabilitado: Story = {
-  name: 'Item Desabilitado',
   render: () => {
     const bar = createMenubar([
       {
@@ -144,7 +141,6 @@ export const ItemDesabilitado: Story = {
 };
 
 export const CheckboxChecked: Story = {
-  name: 'Checkbox Checked',
   render: () => {
     const bar = createMenubar([
       {

@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Drawer/Estados',
+  title: 'UI/Drawer/States',
   component: DrawerStory,
   tags: ['disclosure'],
   parameters: {
@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   args: {
     defaultOpen: false,
     triggerLabel: 'Abrir drawer',
@@ -42,7 +42,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   args: {
     defaultOpen: true,
     triggerLabel: 'Editar perfil',
@@ -61,7 +61,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   args: {
     open: false,
     triggerLabel: 'Abrir via estado externo',

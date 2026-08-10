@@ -10,7 +10,7 @@ import {
 } from "./menubar";
 
 const meta = {
-  title: "UI/Menubar/Variantes",
+  title: "UI/Menubar/Variants",
   tags: ["navigation"],
   component: Menubar,
   parameters: {

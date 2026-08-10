@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ToggleStory from './ToggleStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Toggle/Composicoes',
+  title: 'UI/Toggle/Compositions',
   component: ToggleStory,
   tags: ['form'],
   parameters: {

@@ -11,7 +11,7 @@ import { LANGUAGE_ITEMS, COMPOSITION_CODE } from '@/components/docs/CodeBlockDoc
 // story e documentação não possam divergir em silêncio.
 
 const meta: Meta = {
-  title: 'UI/CodeBlock/Variantes',
+  title: 'UI/CodeBlock/Variants',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock] })],
   parameters: {

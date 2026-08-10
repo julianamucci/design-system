@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/context-menu';
 
 const meta = {
-  title: 'UI/ContextMenu/Estados',
+  title: 'UI/ContextMenu/States',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
@@ -32,7 +32,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ItemDisabled: Story = {
-  name: 'Item Disabled',
   render: () => ({
     components: {
       ContextMenu,
@@ -87,7 +86,7 @@ export const ItemDisabled: Story = {
 };
 
 export const ItemInset: Story = {
-  name: 'Item com Inset',
+  name: 'Item with inset',
   render: () => ({
     components: {
       ContextMenu,
@@ -124,7 +123,7 @@ export const ItemInset: Story = {
 };
 
 export const ItemDestructiveIsolado: Story = {
-  name: 'Item Destructive',
+  name: 'Destructive item',
   render: () => ({
     components: {
       ContextMenu,

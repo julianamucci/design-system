@@ -12,7 +12,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Pagination/Composicoes',
+  title: 'UI/Pagination/Compositions',
   component: Pagination,
   tags: ['navigation'],
   parameters: {
@@ -41,7 +41,7 @@ const sharedComponents = {
   PaginationPrevious,
 };
 
-export const Simples: Story = {
+export const Simple: Story = {
   parameters: {
     docs: { description: { story: 'Paginação básica de 5 páginas — página 1 ativa, Previous desabilitado.' } },
   },
@@ -78,7 +78,7 @@ export const Simples: Story = {
   },
 };
 
-export const ComEllipsis: Story = {
+export const WithEllipsis: Story = {
   parameters: {
     docs: {
       description: {
@@ -120,7 +120,7 @@ export const ComEllipsis: Story = {
   },
 };
 
-export const UltimaPagina: Story = {
+export const LastPage: Story = {
   parameters: {
     docs: { description: { story: 'Última página ativa — Next deve ficar visualmente desabilitado pelo consumidor.' } },
   },
@@ -154,7 +154,7 @@ export const UltimaPagina: Story = {
   },
 };
 
-export const Controlada: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

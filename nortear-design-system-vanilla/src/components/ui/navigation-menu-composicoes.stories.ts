@@ -4,7 +4,7 @@ import { createNavigationMenu } from './navigation-menu';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/NavigationMenu/Composicoes',
+  title: 'UI/NavigationMenu/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,8 +52,7 @@ function openFirstTrigger(nav: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const LinkSimples: Story = {
-  name: 'Link Simples',
+export const SimpleLink: Story = {
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início',   href: '/' },
@@ -74,8 +73,7 @@ export const LinkSimples: Story = {
   },
 };
 
-export const ComDropdown: Story = {
-  name: 'Com Dropdown',
+export const WithDropdown: Story = {
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '/' },
@@ -108,7 +106,6 @@ export const ComDropdown: Story = {
 };
 
 export const MegaMenuGrid: Story = {
-  name: 'Mega-menu Grid',
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '/' },
@@ -164,8 +161,7 @@ export const MegaMenuGrid: Story = {
   },
 };
 
-export const ComCardDestacado: Story = {
-  name: 'Com Card Destacado',
+export const WithHighlightedCard: Story = {
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '/' },

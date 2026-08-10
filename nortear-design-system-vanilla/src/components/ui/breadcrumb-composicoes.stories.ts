@@ -14,7 +14,7 @@ import { createDropdownMenu } from './dropdown-menu';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Breadcrumb/Composicoes',
+  title: 'UI/Breadcrumb/Compositions',
   parameters: {
     design: figmaDesign('breadcrumb'),
     controls: { disable: true },

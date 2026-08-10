@@ -29,7 +29,7 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Estados',
+  title: 'UI/Carousel/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -45,7 +45,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const PrimeiroSlide: Story = {
+export const FirstSlide: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -67,7 +67,7 @@ export const PrimeiroSlide: Story = {
   },
 };
 
-export const UltimoSlide: Story = {
+export const LastSlide: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

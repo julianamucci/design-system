@@ -5,7 +5,7 @@ import { Root as ContextMenu } from './index';
 import ContextMenuEstadoStory from './ContextMenuEstadoStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/ContextMenu/Estados',
+  title: 'UI/ContextMenu/States',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {

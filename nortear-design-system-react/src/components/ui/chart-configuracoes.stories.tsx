@@ -18,7 +18,7 @@ const multiSeries = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Configuracoes',
+  title: 'UI/Chart/Settings',
   tags: ["display"],
 };
 export default meta;
@@ -31,7 +31,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const ComTooltip: Story = {
+export const WithTooltip: Story = {
   render: () => (
     <ChartContainer option={buildBarOption({ data: singleSeries })} className="" style={{ height: "240px", width: "480px" }} />
   ),
@@ -43,7 +43,7 @@ export const ComTooltip: Story = {
   },
 };
 
-export const ComLegenda: Story = {
+export const WithCaption: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}

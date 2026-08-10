@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sheet/Estados',
+  title: 'UI/Sheet/States',
   component: SheetStory,
   tags: ['disclosure'],
   parameters: {

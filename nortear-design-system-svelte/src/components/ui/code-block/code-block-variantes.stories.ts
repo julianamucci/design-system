@@ -28,7 +28,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'UI/CodeBlock/Variantes',
+  title: 'UI/CodeBlock/Variants',
   component: CodeBlock,
   tags: ['display'],
 };
@@ -75,7 +75,7 @@ export const Styles: Story = {
   },
 };
 
-export const Data: Story = {
+export const Date: Story = {
   args: { code: LANG_DATA, language: 'json', showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     await step('Os dados estruturados receberam classificação de sintaxe', async () => {

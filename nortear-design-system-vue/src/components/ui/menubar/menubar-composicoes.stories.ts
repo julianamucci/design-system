@@ -19,7 +19,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Menubar/Composicoes',
+  title: 'UI/Menubar/Compositions',
   component: Menubar,
   tags: ['navigation'],
   parameters: {
@@ -92,7 +92,7 @@ export const ComShortcuts: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   parameters: {
     docs: { description: { story: 'Submenu aninhado dentro de Content — limite a 1 nível para evitar confusão de navegação.' } },
   },
@@ -131,7 +131,7 @@ export const ComSubmenu: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   parameters: {
     docs: { description: { story: 'CheckboxItems para toggles independentes (mostrar/ocultar barras).' } },
   },
@@ -167,7 +167,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   parameters: {
     docs: { description: { story: 'RadioGroup para seleção única dentro do Menubar (visualização lista/grid/kanban).' } },
   },

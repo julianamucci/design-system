@@ -5,7 +5,7 @@ import { NDS_CARD } from './card';
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'UI/Card/Variantes',
+  title: 'UI/Card/Variants',
   decorators: [moduleMetadata({ imports: [...NDS_CARD, NdsButton] })],
   parameters: {
     layout: 'padded',

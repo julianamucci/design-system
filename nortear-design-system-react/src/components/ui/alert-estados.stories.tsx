@@ -8,7 +8,7 @@ const meta = {
   parameters: {
     design: figmaDesign("alert"),
   },
-  title: "UI/Alert/Estados",
+  title: "UI/Alert/States",
   tags: ["feedback"],
   component: Alert,
 } satisfies Meta<typeof Alert>;
@@ -40,7 +40,7 @@ export const Completo: Story = {
   },
 };
 
-export const SemTitulo: Story = {
+export const WithoutTitle: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
@@ -64,7 +64,7 @@ export const SemTitulo: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   render: () => (
     <Alert>
       <AlertTitle>Atenção</AlertTitle>
@@ -88,7 +88,7 @@ export const SemIcone: Story = {
   },
 };
 
-export const SemAnuncio: Story = {
+export const WithoutAnnouncement: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item3"], controls: { disable: true } },
   render: () => (
@@ -127,7 +127,7 @@ export const SemAnuncio: Story = {
   },
 };
 
-export const InsercaoDinamica: Story = {
+export const DynamicInsertion: Story = {
   parameters: { covers: ["functional.item6"] },
   render: () => (
     <div aria-live="polite">

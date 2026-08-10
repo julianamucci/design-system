@@ -13,7 +13,7 @@ const multiSeries = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Configuracoes',
+  title: 'UI/Chart/Settings',
   tags: ['display'],
 };
 export default meta;
@@ -26,13 +26,13 @@ async function expectRendered(el: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const ComTooltip: Story = {
+export const WithTooltip: Story = {
   render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: singleSeries }), class: 'h-[240px] w-[480px]' }),
   parameters: { docs: { description: { story: 'Tooltip nativo do ECharts — passe o mouse.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const ComLegenda: Story = {
+export const WithCaption: Story = {
   render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: multiSeries }), class: 'h-[260px] w-[480px]' }),
   parameters: { docs: { description: { story: 'Legenda automática quando há >1 série.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),

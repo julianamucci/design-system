@@ -5,7 +5,7 @@ import { Plus } from 'lucide-vue-next';
 import { Button } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Button/Tamanhos',
+  title: 'UI/Button/Sizes',
   component: Button,
   tags: ['form'],
   parameters: {

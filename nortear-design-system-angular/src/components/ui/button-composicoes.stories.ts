@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta = {
-  title: 'UI/Button/Composições',
+  title: 'UI/Button/Compositions',
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

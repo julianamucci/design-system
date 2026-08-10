@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/DropdownMenu/Composicoes',
+  title: 'UI/DropdownMenu/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -212,7 +212,6 @@ function makeRadioItem(label: string, checked: boolean, group: HTMLUListElement)
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const ComLabel: Story = {
-  name: 'Com Label',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Conta' });
     const menu = createDropdownMenu({
@@ -246,8 +245,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
-  name: 'Com Checkbox Items',
+export const WithCheckboxItems: Story = {
   render: () => wrap(
     buildCustomMenu('Mostrar colunas', (menu) => {
       menu.append(
@@ -273,8 +271,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
-  name: 'Com Radio Group',
+export const WithRadioGroup: Story = {
   render: () => wrap(
     buildCustomMenu('Tema', (menu) => {
       const group = menu;
@@ -302,7 +299,6 @@ export const ComRadioGroup: Story = {
 };
 
 export const ComShortcuts: Story = {
-  name: 'Com Shortcuts',
   render: () => wrap(
     buildCustomMenu('Editar', (menu) => {
       menu.append(

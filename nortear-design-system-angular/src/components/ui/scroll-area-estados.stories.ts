@@ -10,7 +10,7 @@ import { NdsButton } from './button';
 // ausência de teto, que é o erro de uso mais comum do componente.
 
 const meta: Meta = {
-  title: 'UI/ScrollArea/Estados',
+  title: 'UI/ScrollArea/States',
   decorators: [moduleMetadata({ imports: [NdsScrollArea, NdsButton] })],
   parameters: {
     layout: 'padded',

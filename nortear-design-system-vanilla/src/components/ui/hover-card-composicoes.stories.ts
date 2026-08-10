@@ -4,7 +4,7 @@ import { createHoverCard } from './hover-card';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/HoverCard/Composicoes',
+  title: 'UI/HoverCard/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -81,7 +81,6 @@ function fireOpen(trigger: HTMLElement): void {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const PerfilDeUsuario: Story = {
-  name: 'Perfil de Usuário',
   render: () => {
     const trigger = buildLink('@joana');
 
@@ -139,7 +138,6 @@ export const PerfilDeUsuario: Story = {
 };
 
 export const PreviewDeLink: Story = {
-  name: 'Preview de Link',
   render: () => {
     const trigger = buildLink('design-system.dev', 'https://design-system.dev');
 
@@ -193,8 +191,7 @@ export const PreviewDeLink: Story = {
   },
 };
 
-export const DefinicaoDeTermo: Story = {
-  name: 'Definição de Termo',
+export const TermDefinition: Story = {
   render: () => {
     const trigger = buildSpan('WCAG 2.2 AA');
 
@@ -233,7 +230,6 @@ export const DefinicaoDeTermo: Story = {
 };
 
 export const MetricaExplicada: Story = {
-  name: 'Métrica Explicada',
   render: () => {
     const trigger = buildSpan('LCP 1.8s');
 

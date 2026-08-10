@@ -5,7 +5,7 @@ import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/RadioGroup/Variantes',
+  title: 'UI/RadioGroup/Variants',
   component: RadioGroup,
   tags: ['form'],
   parameters: {

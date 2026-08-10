@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Dialog/Composicoes',
+  title: 'UI/Dialog/Compositions',
   component: Dialog,
   tags: ['overlay'],
   parameters: {

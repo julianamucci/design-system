@@ -11,7 +11,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Card/Estados",
+  title: "UI/Card/States",
   tags: ["layout"],
   component: Card,
   parameters: {

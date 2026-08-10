@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Separator/Variantes',
+  title: 'UI/Separator/Variants',
   component: SeparatorStory,
   tags: ['layout'],
   parameters: {

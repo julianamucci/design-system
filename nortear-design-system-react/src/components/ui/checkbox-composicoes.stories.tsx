@@ -3,7 +3,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 
 const meta = {
-  title: "UI/Checkbox/Composicoes",
+  title: "UI/Checkbox/Compositions",
   tags: ["form"],
   component: Checkbox,
   parameters: {
@@ -47,7 +47,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="with-desc" className="nds-mt-0-5" />
@@ -84,7 +84,7 @@ export const ComDescricao: Story = {
   },
 };
 
-export const GrupoComFieldset: Story = {
+export const GroupWithFieldset: Story = {
   render: () => (
     <fieldset className="border-none nds-p-0 m-0" data-spacing="sm">
       <legend className="nds-text-body nds-font-semibold mb-3">Preferências de contato</legend>
@@ -126,7 +126,7 @@ export const GrupoComFieldset: Story = {
   },
 };
 
-export const SelecionarTodos: Story = {
+export const SelectAll: Story = {
   render: function SelecionarTodosRender() {
     return (
       <div className="nds-stack" data-spacing="sm">
@@ -172,7 +172,7 @@ export const SelecionarTodos: Story = {
   },
 };
 
-export const DentroDeCard: Story = {
+export const InsideCard: Story = {
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-p-4 nds-shadow-sm nds-max-w-sm">
       <div className="nds-cluster" data-align="start" data-spacing="sm">

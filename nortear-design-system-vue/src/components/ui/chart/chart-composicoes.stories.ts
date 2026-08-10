@@ -10,7 +10,7 @@ const chartData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Composicoes',
+  title: 'UI/Chart/Compositions',
   tags: ['display'],
 };
 export default meta;
@@ -23,7 +23,7 @@ async function expectRendered(el: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const ComCard: Story = {
+export const WithCard: Story = {
   render: () => h('div', { class: 'rounded-lg border border-border bg-card p-6 shadow-sm w-[480px]' }, [
     h('h3', { class: 'text-sm font-medium mb-1' }, 'Acessos por mês'),
     h('p', { class: 'text-xs nds-text-muted-foreground mb-4' }, 'Janeiro — Abril'),
@@ -33,7 +33,7 @@ export const ComCard: Story = {
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const TituloEmbutido: Story = {
+export const InlineTitle: Story = {
   render: () => h(ChartContainer, {
     option: buildBarOption({ data: chartData, title: 'Vendas mensais' }),
     class: 'h-[260px] w-[480px]',

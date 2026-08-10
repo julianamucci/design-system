@@ -5,7 +5,7 @@ import { NdsSwitch } from './switch';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/Switch/Variantes',
+  title: 'UI/Switch/Variants',
   decorators: [moduleMetadata({ imports: [NdsSwitch, NdsLabel] })],
   parameters: {
     // Sem argTypes nesta story: o painel Controls ficaria vazio.

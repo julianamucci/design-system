@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Sheet/Composicoes',
+  title: 'UI/Sheet/Compositions',
   component: Sheet,
   tags: ['disclosure'],
   parameters: {

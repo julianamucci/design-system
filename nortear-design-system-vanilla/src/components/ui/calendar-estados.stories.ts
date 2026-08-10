@@ -14,7 +14,7 @@ import { createCalendar } from './calendar';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Calendar/Estados',
+  title: 'UI/Calendar/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -167,7 +167,7 @@ export const Today: Story = {
   },
 };
 
-export const NavegacaoPorTeclado: Story = {
+export const KeyboardNavigation: Story = {
   render: () =>
     createCalendar({
       locale: 'pt-BR',

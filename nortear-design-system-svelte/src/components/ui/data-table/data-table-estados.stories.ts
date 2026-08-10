@@ -3,7 +3,7 @@ import DataTable from './data-table.svelte';
 import { baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
-  title: 'UI/DataTable/Estados',
+  title: 'UI/DataTable/States',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const SemResultados: Story = {
+export const NoResults: Story = {
   args: {
     columns: baseColumns as never,
     data: [],

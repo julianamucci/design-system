@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Switch/Composicoes',
+  title: 'UI/Switch/Compositions',
   component: SwitchStory,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const SemLabel: Story = {
+export const WithoutLabel: Story = {
   args: {
     checked: false,
     withLabel: false,
@@ -72,7 +72,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   args: {
     checked: false,
     withDescription: true,
@@ -105,7 +105,7 @@ export const ComDescricao: Story = {
   },
 };
 
-export const Ativado: Story = {
+export const Activated: Story = {
   args: {
     checked: true,
     withLabel: true,
@@ -122,7 +122,7 @@ export const Ativado: Story = {
   },
 };
 
-export const TamanhoSm: Story = {
+export const SizeSm: Story = {
   args: {
     checked: false,
     size: 'sm',

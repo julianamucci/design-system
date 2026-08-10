@@ -14,7 +14,7 @@ import { Button } from "./button";
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Carousel/Composicoes",
+  title: "UI/Carousel/Compositions",
   tags: ["display"],
   component: Carousel,
   parameters: {
@@ -101,7 +101,7 @@ function ComDotsCarousel() {
   );
 }
 
-export const ComDots: Story = {
+export const WithDots: Story = {
   render: () => <ComDotsCarousel />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

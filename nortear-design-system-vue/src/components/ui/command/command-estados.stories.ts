@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/command';
 
 const meta = {
-  title: 'UI/Command/Estados',
+  title: 'UI/Command/States',
   component: Command,
   tags: ['overlay'],
   parameters: {
@@ -29,8 +29,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const EstadoVazio: Story = {
-  name: 'Sem resultados (CommandEmpty)',
+export const EmptyState: Story = {
+  name: 'No results (CommandEmpty)',
   render: () => ({
     components: { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList },
     setup() {
@@ -66,7 +66,6 @@ export const EstadoVazio: Story = {
 };
 
 export const ItemDesabilitado: Story = {
-  name: 'Item desabilitado',
   render: () => ({
     components: { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList },
     setup() {

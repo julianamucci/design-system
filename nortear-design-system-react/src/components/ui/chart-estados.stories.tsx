@@ -14,7 +14,7 @@ const multipleSeries = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Estados',
+  title: 'UI/Chart/States',
   tags: ["display"],
 };
 export default meta;
@@ -27,7 +27,7 @@ async function expectChartRendered(canvasElement: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const Vazio: Story = {
+export const Empty: Story = {
   render: () => (
     <ChartContainer option={buildBarOption({ data: [] })} className="" style={{ height: "200px", width: "480px" }} />
   ),
@@ -51,7 +51,7 @@ export const UmaSerie: Story = {
   },
 };
 
-export const MultiplasSeries: Story = {
+export const MultipleSeries: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multipleSeries })}

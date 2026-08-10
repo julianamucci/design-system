@@ -5,7 +5,7 @@ import { NDS_AVATAR } from './avatar';
 import { IMG_AVATAR, IMG_QUEBRADA } from './avatar.stories';
 
 const meta: Meta = {
-  title: 'UI/Avatar/Estados',
+  title: 'UI/Avatar/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [...NDS_AVATAR] })],
   parameters: {
@@ -62,7 +62,7 @@ export const Loaded: Story = {
 };
 
 export const AguardandoAtraso: Story = {
-  name: 'Carregando (com atraso)',
+  name: 'Loading (delayed)',
   parameters: {
     covers: ['functional.item4'],
     docs: {

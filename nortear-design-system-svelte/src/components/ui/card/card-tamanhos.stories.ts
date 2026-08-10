@@ -5,7 +5,7 @@ import { Card } from './index';
 import CardStory from './CardStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Card/Tamanhos',
+  title: 'UI/Card/Sizes',
   component: Card,
   tags: ['layout'],
   parameters: {

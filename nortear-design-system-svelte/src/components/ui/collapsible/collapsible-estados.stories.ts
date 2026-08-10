@@ -6,7 +6,7 @@ import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Collapsible/Estados',
+  title: 'UI/Collapsible/States',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {
@@ -25,7 +25,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => ({
     Component: CollapsibleControladoStory,
     props: {
@@ -58,8 +58,7 @@ export const Controlado: Story = {
   },
 };
 
-export const NaoControlado: Story = {
-  name: 'Não-controlado',
+export const Uncontrolled: Story = {
   render: () => ({
     Component: CollapsibleStory,
     props: {
@@ -90,8 +89,7 @@ export const NaoControlado: Story = {
   },
 };
 
-export const AbertoporPadrao: Story = {
-  name: 'Aberto por Padrão',
+export const OpenByDefault: Story = {
   render: () => ({
     Component: CollapsibleStory,
     props: {
@@ -114,7 +112,7 @@ export const AbertoporPadrao: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => ({
     Component: CollapsibleStory,
     props: {

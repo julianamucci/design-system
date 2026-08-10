@@ -11,7 +11,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Estados',
+  title: 'UI/Button/States',
   component: Button,
   tags: ['form'],
   args: {

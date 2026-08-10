@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NdsSkeleton } from './skeleton';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Estados',
+  title: 'UI/Skeleton/States',
   decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

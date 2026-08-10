@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/NavigationMenu/Estados',
+  title: 'UI/NavigationMenu/States',
   component: NavigationMenu,
   tags: ['navigation'],
   parameters: {
@@ -38,7 +38,7 @@ const sharedComponents = {
   NavigationMenuTrigger,
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: { description: { story: 'Estado padrão — apenas Triggers e Links visíveis na barra; Viewport vazio.' } },
   },
@@ -69,7 +69,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: { description: { story: 'Trigger ativo com Content expandido no Viewport via defaultValue. Captura visual no Chromatic.' } },
   },
@@ -103,7 +103,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Ativo: Story = {
+export const Active: Story = {
   parameters: {
     docs: { description: { story: 'Link da página atual com aria-current="page" recebe estilo destacado (bg-accent).' } },
   },

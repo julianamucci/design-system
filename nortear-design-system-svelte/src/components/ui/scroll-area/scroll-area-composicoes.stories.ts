@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/ScrollArea/Composicoes',
+  title: 'UI/ScrollArea/Compositions',
   component: ScrollAreaStory,
   tags: ['layout'],
   parameters: {

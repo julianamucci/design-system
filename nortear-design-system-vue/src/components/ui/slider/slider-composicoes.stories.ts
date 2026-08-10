@@ -5,7 +5,7 @@ import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Slider/Composicoes',
+  title: 'UI/Slider/Compositions',
   component: Slider,
   tags: ['form'],
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const VolumeComValor: Story = {
+export const VolumeWithValue: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -94,7 +94,7 @@ export const FaixaDePreco: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {

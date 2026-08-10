@@ -19,7 +19,7 @@ import {
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Sidebar/Variantes',
+  title: 'UI/Sidebar/Variants',
   component: Sidebar,
   tags: ['layout'],
   parameters: {
@@ -126,7 +126,6 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
 // ─── Variante: sidebar (padrão) ───────────────────────────────────────────────
 
 export const VariantSidebar: Story = {
-  name: 'Variant: sidebar',
   parameters: {
     docs: {
       description: { story: 'Sidebar padrão colada na borda da viewport. Empurra o conteúdo ao expandir (push mode).' },
@@ -145,7 +144,6 @@ export const VariantSidebar: Story = {
 // ─── Variante: floating ───────────────────────────────────────────────────────
 
 export const VariantFloating: Story = {
-  name: 'Variant: floating',
   parameters: {
     docs: {
       description: { story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.' },
@@ -164,7 +162,6 @@ export const VariantFloating: Story = {
 // ─── Variante: inset ──────────────────────────────────────────────────────────
 
 export const VariantInset: Story = {
-  name: 'Variant: inset',
   parameters: {
     docs: {
       description: { story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.' },
@@ -183,7 +180,6 @@ export const VariantInset: Story = {
 // ─── Side: right ─────────────────────────────────────────────────────────────
 
 export const SideRight: Story = {
-  name: 'Side: right',
   parameters: {
     docs: {
       description: { story: 'Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.' },

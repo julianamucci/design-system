@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { Progress } from './index';
 
 const meta = {
-  title: 'UI/Progress/Composicoes',
+  title: 'UI/Progress/Compositions',
   component: Progress,
   tags: ['feedback'],
   parameters: {

@@ -6,7 +6,7 @@ import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Composicoes',
+  title: 'UI/Sidebar/Compositions',
   component: SidebarNavGroupsStory,
   tags: ['layout'],
   parameters: {
@@ -24,8 +24,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComGruposDeNav: Story = {
-  name: 'Com grupos de navegação',
+export const WithNavGroups: Story = {
+  name: 'With nav groups',
   render: () => ({
     Component: SidebarNavGroupsStory,
     props: {},
@@ -46,8 +46,7 @@ export const ComGruposDeNav: Story = {
 };
 
 // Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
-export const ComSubMenu: StoryObj<Record<string, never>> = {
-  name: 'Com sub-menu',
+export const WithSubmenu: StoryObj<Record<string, never>> = {
   render: () => ({
     Component: SidebarSubMenuStory,
     props: {},
@@ -67,8 +66,8 @@ export const ComSubMenu: StoryObj<Record<string, never>> = {
   },
 };
 
-export const ComSkeleton: Story = {
-  name: 'Estado de carregamento (Skeleton)',
+export const WithSkeleton: Story = {
+  name: 'Loading state (Skeleton)',
   render: () => ({
     Component: SidebarSkeletonStory,
     props: {},

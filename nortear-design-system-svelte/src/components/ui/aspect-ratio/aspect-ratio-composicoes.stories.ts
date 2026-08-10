@@ -6,7 +6,7 @@ import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/AspectRatio/Composicoes',
+  title: 'UI/AspectRatio/Compositions',
   component: AspectRatioStory,
   tags: ['layout'],
   parameters: {
@@ -26,7 +26,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComImagem: Story = {
+export const WithImage: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item1'] },
   args: {
     ratio: 16 / 9,
@@ -48,7 +48,7 @@ export const ComImagem: Story = {
   },
 };
 
-export const ComIframe: Story = {
+export const WithIframe: Story = {
   parameters: { covers: ['accessibility.item3'] },
   args: {
     ratio: 16 / 9,
@@ -68,7 +68,7 @@ export const ComIframe: Story = {
   },
 };
 
-export const ComVideo: Story = {
+export const WithVideo: Story = {
   parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
   args: {
     ratio: 16 / 9,
@@ -97,7 +97,7 @@ export const ComVideo: Story = {
   },
 };
 
-export const EmGrid: Story = {
+export const InGrid: Story = {
   render: () => ({
     Component: AspectRatioGridStory,
   }),
@@ -123,7 +123,7 @@ export const EmGrid: Story = {
   },
 };
 
-export const PlaceholderVazio: Story = {
+export const EmptyPlaceholder: Story = {
   parameters: { covers: ['functional.item5'] },
   args: {
     ratio: 16 / 9,
@@ -141,7 +141,7 @@ export const PlaceholderVazio: Story = {
   },
 };
 
-export const ComImagemDecorativa: Story = {
+export const WithDecorativeImage: Story = {
   parameters: { covers: ['accessibility.item2'] },
   args: {
     ratio: 16 / 9,

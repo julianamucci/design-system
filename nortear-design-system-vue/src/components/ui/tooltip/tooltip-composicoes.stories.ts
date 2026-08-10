@@ -12,7 +12,7 @@ import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Tooltip/Composicoes',
+  title: 'UI/Tooltip/Compositions',
   component: Tooltip,
   tags: ['overlay'],
   decorators: [
@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { Tooltip, TooltipContent, TooltipTrigger, Button, Kbd, Save, Trash2, Share2, Copy, Pencil };
 
-export const BotaoIconOnly: Story = {
+export const IconOnlyButton: Story = {
   parameters: {
     docs: {
       description: {
@@ -72,7 +72,7 @@ export const BotaoIconOnly: Story = {
   },
 };
 
-export const BarraDeAcoes: Story = {
+export const ActionBar: Story = {
   parameters: {
     docs: {
       description: {
@@ -146,7 +146,7 @@ export const BarraDeAcoes: Story = {
   },
 };
 
-export const AtalhoDeTeclado: Story = {
+export const KeyboardShortcut: Story = {
   parameters: {
     docs: {
       description: {

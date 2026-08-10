@@ -4,7 +4,7 @@ import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Checkbox/Estados',
+  title: 'UI/Checkbox/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

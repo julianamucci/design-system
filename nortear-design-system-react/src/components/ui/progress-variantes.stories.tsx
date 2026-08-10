@@ -10,7 +10,7 @@ import {
 } from "./progress";
 
 const meta = {
-  title: "UI/Progress/Variantes",
+  title: "UI/Progress/Variants",
   tags: ["feedback"],
   component: Progress,
   parameters: {

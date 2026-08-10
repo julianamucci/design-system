@@ -13,7 +13,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 // classificação não conhece e o bloco removido antes do fim do feedback.
 
 const meta: Meta = {
-  title: 'UI/CodeBlock/Estados',
+  title: 'UI/CodeBlock/States',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock, NdsButton] })],
   parameters: {

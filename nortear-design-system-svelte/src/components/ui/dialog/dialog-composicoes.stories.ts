@@ -7,7 +7,7 @@ import DialogProfileEditStory from './DialogProfileEditStory.svelte';
 import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Dialog/Composicoes',
+  title: 'UI/Dialog/Compositions',
   parameters: {
     layout: 'centered',
     controls: { disable: true },

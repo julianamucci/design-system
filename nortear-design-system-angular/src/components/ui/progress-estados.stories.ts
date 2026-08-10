@@ -12,7 +12,7 @@ function percentualDesenhado(raiz: HTMLElement): number {
 }
 
 const meta: Meta = {
-  title: 'UI/Progress/Estados',
+  title: 'UI/Progress/States',
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {
     layout: 'padded',

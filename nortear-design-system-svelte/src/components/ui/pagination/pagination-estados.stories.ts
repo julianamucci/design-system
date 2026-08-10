@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Pagination/Estados',
+  title: 'UI/Pagination/States',
   component: PaginationStory,
   tags: ['navigation'],
   parameters: {

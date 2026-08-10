@@ -13,7 +13,7 @@ import {
 // o que varia é a composição (com/sem título, com/sem ícone) e a semântica de
 // anúncio. O título da story segue "Estados" para não quebrar o storySort.
 const meta: Meta = {
-  title: 'UI/Alert/Estados',
+  title: 'UI/Alert/States',
   tags: ['feedback'],
   decorators: [
     moduleMetadata({

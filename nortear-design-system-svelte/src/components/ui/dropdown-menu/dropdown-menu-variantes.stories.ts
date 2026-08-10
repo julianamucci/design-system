@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/DropdownMenu/Variantes',
+  title: 'UI/DropdownMenu/Variants',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {

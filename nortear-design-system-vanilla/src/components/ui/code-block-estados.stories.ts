@@ -11,7 +11,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/CodeBlock/Estados',
+  title: 'UI/CodeBlock/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -57,7 +57,7 @@ const LONG_CODE = Array.from({ length: 60 }, (_, i) =>
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComNumeracao: Story = {
+export const WithNumbering: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: true }),
   play: async ({ canvasElement, step }) => {
@@ -71,7 +71,7 @@ export const ComNumeracao: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: false }),
   play: async ({ canvasElement, step }) => {
@@ -113,7 +113,7 @@ export const Copiado: Story = {
   },
 };
 
-export const ScrollDuplo: Story = {
+export const DoubleScroll: Story = {
   render: () => createCodeBlock({ code: LONG_CODE, language: 'ts' }),
   play: async ({ canvasElement, step }) => {
     await step('A região rola nos dois eixos e aceita foco', async () => {

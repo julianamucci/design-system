@@ -12,7 +12,7 @@ const SQUARE_SRC =
   "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80";
 
 const meta = {
-  title: "UI/AspectRatio/Composicoes",
+  title: "UI/AspectRatio/Compositions",
   tags: ["layout"],
   component: AspectRatio,
   parameters: {
@@ -33,7 +33,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComImagem: Story = {
+export const WithImage: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item1"],
     docs: {
@@ -68,7 +68,7 @@ export const ComImagem: Story = {
   },
 };
 
-export const ComIframe: Story = {
+export const WithIframe: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     docs: {
@@ -100,7 +100,7 @@ export const ComIframe: Story = {
   },
 };
 
-export const ComVideo: Story = {
+export const WithVideo: Story = {
   parameters: {
     covers: ["accessibility.item4", "accessibility.item5"],
     docs: {
@@ -150,7 +150,7 @@ export const ComVideo: Story = {
   },
 };
 
-export const PlaceholderVazio: Story = {
+export const EmptyPlaceholder: Story = {
   parameters: {
     covers: ["functional.item5"],
     docs: {
@@ -185,7 +185,7 @@ export const PlaceholderVazio: Story = {
   },
 };
 
-export const EmGrid: Story = {
+export const InGrid: Story = {
   parameters: {
     covers: ["functional.item4"],
     docs: {
@@ -234,7 +234,7 @@ export const EmGrid: Story = {
   },
 };
 
-export const ComImagemDecorativa: Story = {
+export const WithDecorativeImage: Story = {
   parameters: {
     covers: ["accessibility.item2"],
     docs: {

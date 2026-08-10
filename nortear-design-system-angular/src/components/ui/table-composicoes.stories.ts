@@ -27,7 +27,7 @@ import { FATURAS, type Fatura } from './table.fixtures';
 // existe aqui; entra quando ele existir.
 
 const meta: Meta = {
-  title: 'UI/Table/Composicoes',
+  title: 'UI/Table/Compositions',
   tags: ['tables'],
   decorators: [
     moduleMetadata({

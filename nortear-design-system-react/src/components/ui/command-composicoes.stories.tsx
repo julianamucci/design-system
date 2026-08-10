@@ -30,7 +30,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Command/Composicoes",
+  title: "UI/Command/Compositions",
   tags: ["overlay"],
   component: Command,
   parameters: {
@@ -57,8 +57,8 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Com Grupos e Separador ───────────────────────────────────────────────────
 
-export const ComGrupos: Story = {
-  name: "Com Grupos e Separador",
+export const WithGroups: Story = {
+  name: "With groups and separator",
   render: () => (
     <div className="nds-w-full nds-max-w-xs">
       <Command>
@@ -159,7 +159,7 @@ const FRAMEWORKS = [
 ];
 
 export const ComoCombobox: Story = {
-  name: "Como Combobox (em Popover)",
+  name: "As combobox (in Popover)",
   parameters: {
     // Esta story abre Popover via portal fora de #storybook-root durante o play function.
     // O addon-a11y do Storybook checa o documento inteiro (com portal) e detecta violations
@@ -265,7 +265,7 @@ export const ComoCombobox: Story = {
 // ─── Command Palette (em CommandDialog) ──────────────────────────────────────
 
 export const CommandPalette: Story = {
-  name: "Command Palette (em CommandDialog)",
+  name: "Command palette (in CommandDialog)",
   render: () => {
     const [open, setOpen] = useState(false);
 

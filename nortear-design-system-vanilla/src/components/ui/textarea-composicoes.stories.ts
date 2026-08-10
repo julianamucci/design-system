@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Composicoes',
+  title: 'UI/Textarea/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -116,7 +116,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComTextoDeApoio: Story = {
+export const WithSupportText: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
@@ -138,7 +138,7 @@ export const ComTextoDeApoio: Story = {
   },
 };
 
-export const ComContadorAcessivel: Story = {
+export const WithAccessibleCounter: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto em até 500 caracteres...',
@@ -168,7 +168,7 @@ export const ComContadorAcessivel: Story = {
   },
 };
 
-export const ComMensagemDeErro: Story = {
+export const WithErrorMessage: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
@@ -193,7 +193,7 @@ export const ComMensagemDeErro: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack nds-w-full nds-max-w-md';

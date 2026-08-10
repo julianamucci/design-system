@@ -9,7 +9,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Collapsible/Composicoes',
+  title: 'UI/Collapsible/Compositions',
 };
 
 export default meta;
@@ -62,7 +62,7 @@ function makeContent(items: string[]): HTMLElement {
 
 // ─── Com Botão Customizado ────────────────────────────────────────────────────
 
-export const ComBotaoCustomizado: Story = {
+export const WithCustomButton: Story = {
   render: () => {
     const btn = document.createElement('button');
     btn.className =
@@ -101,7 +101,7 @@ export const ComBotaoCustomizado: Story = {
 
 // ─── Com Ícone no Trigger ─────────────────────────────────────────────────────
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => {
     const triggerEl = makeTriggerWithIcon(
       Filter as unknown as LucideIconNode[],
@@ -130,7 +130,7 @@ export const ComIconeNoTrigger: Story = {
 
 // ─── Com Chevron Rotativo ─────────────────────────────────────────────────────
 
-export const ComChevronRotativo: Story = {
+export const WithRotatingChevron: Story = {
   render: () => {
     const chevron = createIcon(
       ChevronDown as unknown as LucideIconNode[],
@@ -204,7 +204,7 @@ export const ComChevronRotativo: Story = {
 
 // ─── Com Ícone Settings ──────────────────────────────────────────────────────
 
-export const ComIconeSettings: Story = {
+export const WithSettingsIcon: Story = {
   render: () => {
     const triggerEl = makeTriggerWithIcon(
       Settings as unknown as LucideIconNode[],

@@ -16,7 +16,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Sheet/Composicoes",
+  title: "UI/Sheet/Compositions",
   tags: ["disclosure"],
   component: Sheet,
   parameters: {

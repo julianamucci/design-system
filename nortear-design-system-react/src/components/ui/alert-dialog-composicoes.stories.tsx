@@ -18,7 +18,7 @@ import { Button } from "./button";
 import { TriangleAlert } from "lucide-react";
 
 const meta = {
-  title: "UI/AlertDialog/Composicoes",
+  title: "UI/AlertDialog/Compositions",
   tags: ["overlay"],
   component: AlertDialog,
   parameters: {
@@ -38,7 +38,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: {
     covers: ["visual.item6"],
     docs: {
@@ -86,7 +86,7 @@ export const ComIcone: Story = {
 };
 
 // Mesmo exemplo da seção Variantes / destructive da docs page.
-export const Destrutiva: Story = {
+export const Destructive: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
@@ -188,7 +188,7 @@ export const Neutra: Story = {
 };
 
 // testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
-export const DescricaoLonga: Story = {
+export const LongDescription: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
@@ -250,7 +250,7 @@ export const DescricaoLonga: Story = {
 // a captura precisa acontecer numa viewport estreita: daí os viewports do
 // Chromatic. A play verifica a ordem no DOM, que é o que produz o empilhamento
 // (Cancel primeiro no DOM, visualmente abaixo do Action em mobile).
-export const Responsivo: Story = {
+export const Responsive: Story = {
   globals: { viewport: { value: "mobile1" } },
   parameters: {
     // Os dois sub-componentes que o Figma usa para simular o mobile: o eixo

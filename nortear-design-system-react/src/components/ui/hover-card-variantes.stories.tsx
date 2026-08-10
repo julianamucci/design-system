@@ -4,7 +4,7 @@ import { waitForPortal } from "@/lib/wait-for-portal";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const meta = {
-  title: "UI/HoverCard/Variantes",
+  title: "UI/HoverCard/Variants",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {
@@ -73,7 +73,7 @@ export const Default: Story = {
   },
 };
 
-export const ComDelayCurto: Story = {
+export const WithShortDelay: Story = {
   parameters: {
     docs: {
       description: {

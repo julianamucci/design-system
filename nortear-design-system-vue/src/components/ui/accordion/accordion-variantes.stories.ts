@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Accordion/Variantes',
+  title: 'UI/Accordion/Variants',
   tags: ['disclosure'],
   parameters: {
     design: figmaDesign('accordion'),

@@ -10,13 +10,13 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Composicoes',
+  title: 'UI/Button/Compositions',
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const ComIconeAEsquerda: Story = {
+export const WithIconLeft: Story = {
   render: () => {
     const btn = createButton({ variant: 'default' });
     btn.appendChild(createButtonIcon('plus'));
@@ -38,7 +38,7 @@ export const ComIconeAEsquerda: Story = {
   },
 };
 
-export const ComIconeADireita: Story = {
+export const WithIconRight: Story = {
   render: () => {
     const btn = createButton({ variant: 'outline' });
     const label = document.createElement('span');
@@ -58,7 +58,7 @@ export const ComIconeADireita: Story = {
   },
 };
 
-export const IconeDestrutivo: Story = {
+export const DestructiveIcon: Story = {
   render: () => {
     const btn = createButton({ variant: 'destructive' });
     btn.appendChild(createButtonIcon('trash'));
@@ -93,7 +93,7 @@ export const IconOnly: Story = {
   },
 };
 
-export const ParDeAcoes: Story = {
+export const ActionPair: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-cluster';

@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { NdsToggle, NdsToggleIcon } from './toggle';
 
 const meta: Meta = {
-  title: 'UI/Toggle/Variantes',
+  title: 'UI/Toggle/Variants',
   decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {
     layout: 'padded',

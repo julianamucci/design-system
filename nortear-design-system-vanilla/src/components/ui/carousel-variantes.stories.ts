@@ -29,7 +29,7 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Variantes',
+  title: 'UI/Carousel/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

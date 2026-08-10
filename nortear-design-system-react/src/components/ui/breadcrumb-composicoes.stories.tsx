@@ -18,7 +18,7 @@ import {
 } from "./dropdown-menu";
 
 const meta = {
-  title: "UI/Breadcrumb/Composicoes",
+  title: "UI/Breadcrumb/Compositions",
   tags: ["navigation"],
   component: Breadcrumb,
   parameters: {

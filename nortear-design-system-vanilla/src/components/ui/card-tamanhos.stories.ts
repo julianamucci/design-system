@@ -10,7 +10,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Card/Tamanhos',
+  title: 'UI/Card/Sizes',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

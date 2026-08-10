@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/RadioGroup/Variantes",
+  title: "UI/RadioGroup/Variants",
   tags: ["form"],
   component: RadioGroup,
   parameters: {

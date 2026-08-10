@@ -7,7 +7,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Resizable/Variantes',
+  title: 'UI/Resizable/Variants',
   component: ResizablePanelGroup,
   tags: ['layout'],
   parameters: {

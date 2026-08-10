@@ -5,7 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Carousel/Estados',
+  title: 'UI/Carousel/States',
   component: Carousel,
   tags: ['display'],
   parameters: {
@@ -24,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const PrimeiroSlide: Story = {
+export const FirstSlide: Story = {
   render: () => ({
     Component: CarouselStory,
     props: {
@@ -52,7 +52,7 @@ export const PrimeiroSlide: Story = {
   },
 };
 
-export const UltimoSlide: Story = {
+export const LastSlide: Story = {
   render: () => ({
     Component: CarouselStory,
     props: {

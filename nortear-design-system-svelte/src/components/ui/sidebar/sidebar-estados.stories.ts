@@ -6,7 +6,7 @@ import SidebarIconStory from './SidebarIconStory.svelte';
 import SidebarFixedStory from './SidebarFixedStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Estados',
+  title: 'UI/Sidebar/States',
   component: SidebarStory,
   tags: ['layout'],
   parameters: {
@@ -24,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Expandido: Story = {
+export const Expanded: Story = {
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -50,7 +50,7 @@ export const Expandido: Story = {
 };
 
 export const ModoIcon: Story = {
-  name: 'Modo icon (colapsado)',
+  name: 'Icon mode (collapsed)',
   render: () => ({
     Component: SidebarIconStory,
     props: {},
@@ -70,8 +70,7 @@ export const ModoIcon: Story = {
   },
 };
 
-export const OffcanvasFechado: Story = {
-  name: 'Offcanvas (fechado)',
+export const OffcanvasClosed: Story = {
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -92,7 +91,7 @@ export const OffcanvasFechado: Story = {
 };
 
 export const Fixo: Story = {
-  name: 'Fixo (collapsible none)',
+  name: 'Fixed (collapsible none)',
   render: () => ({
     Component: SidebarFixedStory,
     props: {},

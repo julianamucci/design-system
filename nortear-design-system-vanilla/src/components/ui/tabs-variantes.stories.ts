@@ -4,7 +4,7 @@ import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Tabs/Variantes',
+  title: 'UI/Tabs/Variants',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

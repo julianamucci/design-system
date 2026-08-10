@@ -4,7 +4,7 @@ import { createInputOTP } from './input-otp';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Variantes',
+  title: 'UI/InputOTP/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -48,7 +48,7 @@ function withLabel(label: string, child: HTMLElement): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const SeisDigitos: Story = {
-  name: 'Seis Dígitos (SMS)',
+  name: 'Six digits (SMS)',
   render: () => wrap(withLabel('maxLength=6', createInputOTP({ length: 6 }))),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -60,7 +60,7 @@ export const SeisDigitos: Story = {
 };
 
 export const QuatroDigitos: Story = {
-  name: 'Quatro Dígitos (PIN)',
+  name: 'Four digits (PIN)',
   render: () => wrap(withLabel('maxLength=4', createInputOTP({ length: 4 }))),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -71,8 +71,8 @@ export const QuatroDigitos: Story = {
   },
 };
 
-export const ComSeparator: Story = {
-  name: 'Com Separator (3+3)',
+export const WithSeparator: Story = {
+  name: 'With separator (3+3)',
   render: () =>
     wrap(
       withLabel(
@@ -91,8 +91,8 @@ export const ComSeparator: Story = {
   },
 };
 
-export const Alfanumerico: Story = {
-  name: 'Alfanumérico (não suportado)',
+export const Alphanumeric: Story = {
+  name: 'Alphanumeric (not supported)',
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack nds-max-w-md';

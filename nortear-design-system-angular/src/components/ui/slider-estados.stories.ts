@@ -4,7 +4,7 @@ import { expect, userEvent, fn } from 'storybook/test';
 import { NdsSlider } from './slider';
 
 const meta: Meta = {
-  title: 'UI/Slider/Estados',
+  title: 'UI/Slider/States',
   decorators: [moduleMetadata({ imports: [NdsSlider] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

@@ -12,7 +12,7 @@ import { createButton } from '@/components/ui/button';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Card/Estados',
+  title: 'UI/Card/States',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },

@@ -3,7 +3,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Input } from './index';
 
 const meta = {
-  title: 'UI/Input/Estados',
+  title: 'UI/Input/States',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="text" placeholder="ex: João da Silva" /></div>',
@@ -41,7 +41,7 @@ export const Padrao: Story = {
   },
 };
 
-export const ComPlaceholder: Story = {
+export const WithPlaceholder: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="text" placeholder="Buscar componentes..." /></div>',
@@ -55,7 +55,7 @@ export const ComPlaceholder: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="text" placeholder="Não disponível" disabled /></div>',
@@ -74,7 +74,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   render: () => ({
     components: { Input },
     template: `

@@ -25,7 +25,7 @@ const pieData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Variantes',
+  title: 'UI/Chart/Variants',
   tags: ["display"],
 };
 export default meta;
@@ -50,7 +50,7 @@ export const Bar: Story = {
   },
 };
 
-export const Linha: Story = {
+export const Row: Story = {
   render: () => (
     <ChartContainer option={buildLineOption({ data: chartData })} className="" style={{ height: "240px", width: "480px" }} />
   ),

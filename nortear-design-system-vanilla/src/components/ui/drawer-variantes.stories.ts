@@ -7,7 +7,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/Variantes',
+  title: 'UI/Drawer/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -72,25 +72,21 @@ async function expectDirection(side: SheetSide, step: (name: string, fn: () => P
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Bottom: Story = {
-  name: 'Bottom',
   render: () => buildVariant('bottom', 'Abrir bottom', 'Editar perfil'),
   play: async ({ step }) => { await expectDirection('bottom', step); },
 };
 
 export const Top: Story = {
-  name: 'Top',
   render: () => buildVariant('top', 'Abrir top', 'Notificação'),
   play: async ({ step }) => { await expectDirection('top', step); },
 };
 
 export const Left: Story = {
-  name: 'Left',
   render: () => buildVariant('left', 'Abrir left', 'Menu'),
   play: async ({ step }) => { await expectDirection('left', step); },
 };
 
 export const Right: Story = {
-  name: 'Right',
   render: () => buildVariant('right', 'Abrir right', 'Filtros'),
   play: async ({ step }) => { await expectDirection('right', step); },
 };

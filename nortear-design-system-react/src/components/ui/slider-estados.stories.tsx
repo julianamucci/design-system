@@ -4,7 +4,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 
 const meta = {
-  title: "UI/Slider/Estados",
+  title: "UI/Slider/States",
   tags: ["form"],
   component: Slider,
   parameters: {

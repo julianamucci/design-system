@@ -102,7 +102,7 @@ function SidebarPreview({ variant, collapsible = "offcanvas", side = "left" }: S
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar/Variantes",
+  title: "UI/Sidebar/Variants",
   tags: ["layout"],
   component: Sidebar,
   parameters: {
@@ -130,7 +130,6 @@ type Story = StoryObj<typeof meta>;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const VariantSidebar: Story = {
-  name: "Variant: sidebar",
   render: () => <SidebarPreview variant="sidebar" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar renderiza com data-slot=sidebar", async () => {
@@ -145,7 +144,6 @@ export const VariantSidebar: Story = {
 };
 
 export const VariantFloating: Story = {
-  name: "Variant: floating",
   render: () => <SidebarPreview variant="floating" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar floating renderiza com data-slot=sidebar", async () => {
@@ -160,7 +158,6 @@ export const VariantFloating: Story = {
 };
 
 export const VariantInset: Story = {
-  name: "Variant: inset",
   render: () => <SidebarPreview variant="inset" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar inset renderiza com data-slot=sidebar", async () => {
@@ -175,7 +172,6 @@ export const VariantInset: Story = {
 };
 
 export const CollapsibleOffcanvas: Story = {
-  name: "Collapsible: offcanvas",
   render: () => <SidebarPreview variant="sidebar" collapsible="offcanvas" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar offcanvas renderiza com data-slot=sidebar", async () => {
@@ -186,7 +182,6 @@ export const CollapsibleOffcanvas: Story = {
 };
 
 export const CollapsibleIcon: Story = {
-  name: "Collapsible: icon",
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar icon renderiza com data-slot=sidebar", async () => {
@@ -197,7 +192,6 @@ export const CollapsibleIcon: Story = {
 };
 
 export const CollapsibleNone: Story = {
-  name: "Collapsible: none",
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar none renderiza com data-slot=sidebar", async () => {
@@ -208,7 +202,6 @@ export const CollapsibleNone: Story = {
 };
 
 export const SideLeft: Story = {
-  name: "Side: left",
   render: () => <SidebarPreview variant="sidebar" side="left" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar left renderiza com data-slot=sidebar", async () => {
@@ -219,7 +212,6 @@ export const SideLeft: Story = {
 };
 
 export const SideRight: Story = {
-  name: "Side: right",
   render: () => <SidebarPreview variant="sidebar" side="right" />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar right renderiza com data-slot=sidebar", async () => {

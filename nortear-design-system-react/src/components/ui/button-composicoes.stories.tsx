@@ -5,7 +5,7 @@ import { Plus, Trash2, ChevronRight, Download } from "lucide-react";
 import { Button, buttonVariants } from "./button";
 
 const meta = {
-  title: "UI/Button/Composicoes",
+  title: "UI/Button/Compositions",
   tags: ["form"],
   component: Button,
   parameters: {
@@ -18,7 +18,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIconeAEsquerda: Story = {
+export const WithIconLeft: Story = {
   render: () => (
     <Button>
       <Plus aria-hidden="true" />
@@ -41,7 +41,7 @@ export const ComIconeAEsquerda: Story = {
   },
 };
 
-export const ComIconeADireita: Story = {
+export const WithIconRight: Story = {
   render: () => (
     <Button variant="outline">
       Próximo
@@ -64,7 +64,7 @@ export const ComIconeADireita: Story = {
   },
 };
 
-export const IconeDestrutivo: Story = {
+export const DestructiveIcon: Story = {
   render: () => (
     <Button variant="destructive">
       <Trash2 aria-hidden="true" />
@@ -108,7 +108,7 @@ export const IconOnly: Story = {
   },
 };
 
-export const ParDeAcoes: Story = {
+export const ActionPair: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Button variant="outline">Cancelar</Button>

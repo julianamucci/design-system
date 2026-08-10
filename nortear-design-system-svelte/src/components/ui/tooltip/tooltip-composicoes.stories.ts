@@ -5,7 +5,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Tooltip/Composicoes',
+  title: 'UI/Tooltip/Compositions',
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {
@@ -40,8 +40,8 @@ const waitOpen = async () => {
   );
 };
 
-export const AtalhoTeclado: Story = {
-  name: 'Atalho de teclado em icon button',
+export const KeyboardShortcut: Story = {
+  name: 'Keyboard shortcut on icon button',
   args: {
     ...baseArgs,
     side: 'top',
@@ -58,7 +58,6 @@ export const AtalhoTeclado: Story = {
 };
 
 export const SideTop: Story = {
-  name: 'Side: top',
   args: {
     ...baseArgs,
     side: 'top',
@@ -75,7 +74,6 @@ export const SideTop: Story = {
 };
 
 export const SideBottom: Story = {
-  name: 'Side: bottom',
   args: {
     ...baseArgs,
     side: 'bottom',
@@ -92,7 +90,6 @@ export const SideBottom: Story = {
 };
 
 export const SideLeft: Story = {
-  name: 'Side: left',
   args: {
     ...baseArgs,
     side: 'left',
@@ -109,7 +106,6 @@ export const SideLeft: Story = {
 };
 
 export const SideRight: Story = {
-  name: 'Side: right',
   args: {
     ...baseArgs,
     side: 'right',
@@ -125,8 +121,8 @@ export const SideRight: Story = {
   },
 };
 
-export const DescricaoAcao: Story = {
-  name: 'Descrição curta de ação',
+export const ActionDescription: Story = {
+  name: 'Short action description',
   args: {
     ...baseArgs,
     side: 'top',

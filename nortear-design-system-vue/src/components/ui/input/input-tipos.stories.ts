@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import { Input } from './index';
 
 const meta = {
-  title: 'UI/Input/Tipos',
+  title: 'UI/Input/Types',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Texto: Story = {
+export const Text: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="text" placeholder="ex: João da Silva" /></div>',
@@ -50,7 +50,7 @@ export const Email: Story = {
   },
 };
 
-export const Senha: Story = {
+export const Password: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="password" placeholder="••••••••" /></div>',
@@ -78,7 +78,7 @@ export const Numero: Story = {
   },
 };
 
-export const Arquivo: Story = {
+export const File: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><label for="arquivo-input" class="nds-block nds-text-body nds-font-medium nds-mb-1">Anexar arquivo</label><Input id="arquivo-input" type="file" /></div>',

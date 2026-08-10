@@ -14,7 +14,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Drawer/Variantes",
+  title: "UI/Drawer/Variants",
   tags: ["disclosure"],
   component: Drawer,
   parameters: {

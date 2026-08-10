@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/DropdownMenu/Estados',
+  title: 'UI/DropdownMenu/States',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {
@@ -36,7 +36,7 @@ async function waitForClose() {
   );
 }
 
-export const Fechado: Story = {
+export const Closed: Story = {
   args: {
     defaultOpen: false,
     variant: 'default',
@@ -59,7 +59,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   args: {
     defaultOpen: true,
     variant: 'withLabel',
@@ -78,7 +78,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   args: {
     open: false,
     variant: 'default',

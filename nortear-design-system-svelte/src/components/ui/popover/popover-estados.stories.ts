@@ -5,7 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Popover/Estados',
+  title: 'UI/Popover/States',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {
@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Closed: Story = {
-  name: 'Fechado',
+  name: 'Closed',
   parameters: {
     docs: { description: { story: 'Estado inicial — apenas o trigger é visível, Content não renderizado.' } },
   },
@@ -45,7 +45,7 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
-  name: 'Aberto (defaultOpen)',
+  name: 'Open (defaultOpen)',
   parameters: {
     docs: { description: { story: 'Popover aberto. Captura visual no Chromatic.' } },
   },
@@ -90,7 +90,7 @@ export const SideTop: Story = {
 };
 
 export const Controlled: Story = {
-  name: 'Controlado (open prop)',
+  name: 'Controlled (open prop)',
   parameters: {
     docs: {
       description: {

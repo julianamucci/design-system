@@ -17,7 +17,7 @@ const SCROLL_CODE = Array.from({ length: 40 }, (_, i) =>
 ).join('\n');
 
 const meta = {
-  title: 'UI/CodeBlock/Estados',
+  title: 'UI/CodeBlock/States',
   component: CodeBlock,
   tags: ['display'],
   parameters: {
@@ -35,7 +35,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComNumeracao: Story = {
+export const WithNumbering: Story = {
   args: { showLineNumbers: true },
   play: async ({ canvasElement, step }) => {
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
@@ -47,7 +47,7 @@ export const ComNumeracao: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
@@ -91,7 +91,7 @@ export const Copiado: Story = {
   },
 };
 
-export const ScrollDuplo: Story = {
+export const DoubleScroll: Story = {
   args: { code: SCROLL_CODE, language: 'ts', showLineNumbers: true },
   play: async ({ canvasElement, step }) => {
     const scroll = canvasElement.querySelector<HTMLElement>('.nds-code-block-scroll')!;

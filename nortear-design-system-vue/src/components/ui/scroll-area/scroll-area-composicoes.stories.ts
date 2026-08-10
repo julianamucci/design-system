@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { ScrollArea, ScrollBar } from './index';
 
 const meta = {
-  title: 'UI/ScrollArea/Composicoes',
+  title: 'UI/ScrollArea/Compositions',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {
@@ -62,7 +62,7 @@ const ROWS = Array.from({ length: 18 }, (_, i) => ({
   status: i % 4 === 0 ? 'Férias' : 'Ativo',
 }));
 
-export const SidebarLista: Story = {
+export const SidebarList: Story = {
   render: () => ({
     components: { ScrollArea },
     setup() {

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Popover/Composicoes',
+  title: 'UI/Popover/Compositions',
   component: Popover,
   tags: ['overlay'],
   parameters: {
@@ -89,7 +89,7 @@ export const EditarPerfil: Story = {
   },
 };
 
-export const SeletorDeDimensoes: Story = {
+export const DimensionSelector: Story = {
   parameters: {
     docs: {
       description: {

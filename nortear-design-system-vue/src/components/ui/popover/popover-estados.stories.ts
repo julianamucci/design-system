@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Popover/Estados',
+  title: 'UI/Popover/States',
   component: Popover,
   tags: ['overlay'],
   parameters: {
@@ -38,7 +38,7 @@ const sharedComponents = {
   Button,
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: { story: 'Estado inicial — apenas o trigger é visível. PopoverContent desmontado.' },
@@ -70,7 +70,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {
@@ -101,7 +101,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

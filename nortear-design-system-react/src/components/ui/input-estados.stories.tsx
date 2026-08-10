@@ -3,7 +3,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Input } from "./input";
 
 const meta = {
-  title: "UI/Input/Estados",
+  title: "UI/Input/States",
   tags: ["form"],
   component: Input,
   parameters: {
@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="estado-padrao" className="nds-text-body nds-font-medium">
@@ -48,7 +48,7 @@ export const Padrao: Story = {
   },
 };
 
-export const ComPlaceholder: Story = {
+export const WithPlaceholder: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="estado-placeholder" className="nds-text-body nds-font-medium">
@@ -77,7 +77,7 @@ export const ComPlaceholder: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="estado-disabled" className="nds-text-body nds-font-medium">
@@ -106,7 +106,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="estado-erro" className="nds-text-body nds-font-medium">

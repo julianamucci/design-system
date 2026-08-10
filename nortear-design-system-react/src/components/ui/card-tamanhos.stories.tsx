@@ -9,7 +9,7 @@ import {
 } from "./card";
 
 const meta = {
-  title: "UI/Card/Tamanhos",
+  title: "UI/Card/Sizes",
   tags: ["layout"],
   component: Card,
   parameters: {

@@ -4,7 +4,7 @@ import { userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/Variantes',
+  title: 'UI/InputOTP/Variants',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {
@@ -31,7 +31,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
 }
 
 export const SeisDigitos: Story = {
-  name: '6 dígitos (padrão SMS)',
+  name: '6 digits (SMS default)',
   args: {
     maxLength: 6,
     inputmode: 'numeric',
@@ -49,7 +49,7 @@ export const SeisDigitos: Story = {
 };
 
 export const QuatroDigitos: Story = {
-  name: '4 dígitos (PIN)',
+  name: '4 digits (PIN)',
   args: {
     maxLength: 4,
     inputmode: 'numeric',
@@ -66,8 +66,8 @@ export const QuatroDigitos: Story = {
   },
 };
 
-export const ComSeparator: Story = {
-  name: 'Com Separator (3+3)',
+export const WithSeparator: Story = {
+  name: 'With separator (3+3)',
   args: {
     maxLength: 6,
     inputmode: 'numeric',
@@ -88,8 +88,7 @@ export const ComSeparator: Story = {
   },
 };
 
-export const Alfanumerico: Story = {
-  name: 'Alfanumérico',
+export const Alphanumeric: Story = {
   args: {
     maxLength: 6,
     inputmode: 'text',

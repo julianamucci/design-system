@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/DropdownMenu/Variantes',
+  title: 'UI/DropdownMenu/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -37,7 +37,6 @@ function wrap(child: HTMLElement): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Ações' });
     const menu = createDropdownMenu({
@@ -66,7 +65,6 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  name: 'Destructive',
   render: () => {
     // A factory atual não tem prop `variant` — montamos um menu manual com
     // as classes destructive aplicadas no item de exclusão.

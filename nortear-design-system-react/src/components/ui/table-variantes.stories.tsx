@@ -26,7 +26,7 @@ const invoices = [
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Table/Variantes",
+  title: "UI/Table/Variants",
   tags: ["tables"],
   component: Table,
   parameters: {
@@ -75,7 +75,7 @@ export const Basica: Story = {
 
 // ─── Com Rodapé ──────────────────────────────────────────────────────────────
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   play: async ({ canvasElement, step }) => {
     await step("tfoot presente", async () => {
       await expect(canvasElement.querySelector("tfoot")).not.toBeNull();
@@ -149,7 +149,7 @@ export const CaptionSrOnly: Story = {
 
 // ─── Com Ações por Linha ─────────────────────────────────────────────────────
 
-export const ComAcoesPorLinha: Story = {
+export const WithRowActions: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("botões de ação têm aria-label contextual", async () => {

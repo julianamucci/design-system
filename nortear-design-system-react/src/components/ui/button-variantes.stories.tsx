@@ -4,7 +4,7 @@ import { within, expect } from "storybook/test";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Button/Variantes",
+  title: "UI/Button/Variants",
   tags: ["form"],
   component: Button,
   parameters: {

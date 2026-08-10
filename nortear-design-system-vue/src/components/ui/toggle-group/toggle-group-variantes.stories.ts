@@ -8,7 +8,7 @@ import {
 } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/ToggleGroup/Variantes',
+  title: 'UI/ToggleGroup/Variants',
   component: ToggleGroup,
   tags: ['form'],
   parameters: {

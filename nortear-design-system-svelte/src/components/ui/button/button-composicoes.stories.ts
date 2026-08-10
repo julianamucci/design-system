@@ -12,7 +12,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Composicoes',
+  title: 'UI/Button/Compositions',
   component: Button,
   tags: ['form'],
 };
@@ -20,7 +20,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComIconeAEsquerda: Story = {
+export const WithIconLeft: Story = {
   render: () => ({
     Component: ButtonStory,
     props: { variant: 'default', label: 'Adicionar item', iconStart: 'plus' },
@@ -38,7 +38,7 @@ export const ComIconeAEsquerda: Story = {
   },
 };
 
-export const ComIconeADireita: Story = {
+export const WithIconRight: Story = {
   render: () => ({
     Component: ButtonStory,
     props: { variant: 'outline', label: 'Próximo', iconEnd: 'chevron-right' },
@@ -54,7 +54,7 @@ export const ComIconeADireita: Story = {
   },
 };
 
-export const IconeDestrutivo: Story = {
+export const DestructiveIcon: Story = {
   render: () => ({
     Component: ButtonStory,
     props: { variant: 'destructive', label: 'Excluir', iconStart: 'trash' },
@@ -84,7 +84,7 @@ export const IconOnly: Story = {
   },
 };
 
-export const ParDeAcoes: Story = {
+export const ActionPair: Story = {
   render: () => ({
     Component: ButtonPairStory,
     props: { primaryLabel: 'Confirmar', secondaryLabel: 'Cancelar' },
@@ -127,7 +127,7 @@ export const AsLink: Story = {
 // composição só desta — React usa `render`, Vue `as`, Vanilla aplica as classes
 // num <a>. Nenhuma das outras valida protocolo, porque nenhuma recebe href.
 
-export const LinkDesabilitado: Story = {
+export const DisabledLink: Story = {
   render: () => ({
     Component: ButtonStory,
     props: { variant: 'link', label: 'Ver documentação', href: '#docs', disabled: true },
@@ -149,7 +149,7 @@ export const LinkDesabilitado: Story = {
   },
 };
 
-export const HrefComProtocoloInseguro: Story = {
+export const HrefWithUnsafeProtocol: Story = {
   render: () => ({
     Component: ButtonStory,
     // O javascript: aqui é proposital — é o vetor que a guarda do Button existe

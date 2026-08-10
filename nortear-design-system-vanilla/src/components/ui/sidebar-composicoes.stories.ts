@@ -17,7 +17,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/Composicoes',
+  title: 'UI/Sidebar/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',
@@ -75,8 +75,8 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
 
 // ─── Grupos de Navegação ──────────────────────────────────────────────────────
 
-export const ComGrupos: Story = {
-  name: 'Com grupos de navegação',
+export const WithGroups: Story = {
+  name: 'With nav groups',
   render: () => {
     const instance = createSidebar({ defaultOpen: true });
     const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -159,8 +159,7 @@ export const ComGrupos: Story = {
 
 // ─── Com Sub-menu ─────────────────────────────────────────────────────────────
 
-export const ComSubMenu: Story = {
-  name: 'Com sub-menu',
+export const WithSubmenu: Story = {
   render: () => {
     const instance = createSidebar({ defaultOpen: true });
     const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -331,8 +330,8 @@ export const ComSubMenu: Story = {
 
 // ─── Com Busca no Header ──────────────────────────────────────────────────────
 
-export const ComBusca: Story = {
-  name: 'Com busca no header',
+export const WithSearch: Story = {
+  name: 'With search in header',
   render: () => {
     const instance = createSidebar({ defaultOpen: true });
     const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -431,8 +430,8 @@ export const ComBusca: Story = {
 
 // ─── Com Badges ───────────────────────────────────────────────────────────────
 
-export const ComBadges: Story = {
-  name: 'Com badges de contagem',
+export const WithBadges: Story = {
+  name: 'With count badges',
   render: () => {
     const instance = createSidebar({ defaultOpen: true });
     const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;

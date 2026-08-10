@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Select/Composicoes',
+  title: 'UI/Select/Compositions',
   component: Select,
   tags: ['form'],
   parameters: {
@@ -79,7 +79,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: { story: 'Seleção controlada por estado externo via modelValue + @update:modelValue.' },
@@ -124,7 +124,7 @@ export const Controlado: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   parameters: {
     docs: {
       description: { story: 'Select integrado em form HTML — prop name expõe o valor no submit.' },
@@ -162,7 +162,7 @@ export const EmFormulario: Story = {
   },
 };
 
-export const ComSeparator: Story = {
+export const WithSeparator: Story = {
   parameters: {
     docs: {
       description: { story: 'SelectSeparator entre grupos para divisão visual explícita — útil quando há muitas categorias.' },

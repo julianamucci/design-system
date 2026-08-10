@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import { Label } from './index';
 
 const meta = {
-  title: 'UI/Label/Estados',
+  title: 'UI/Label/States',
   component: Label,
   tags: ['form'],
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => ({
     components: { Label },
     setup() { return {}; },
@@ -78,8 +78,7 @@ export const Disabled: Story = {
   },
 };
 
-export const DisabledViaGrupo: Story = {
-  name: 'Disabled (via group)',
+export const DisabledViaGroup: Story = {
   render: () => ({
     components: { Label },
     setup() { return {}; },

@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Pagination/Estados',
+  title: 'UI/Pagination/States',
   component: Pagination,
   tags: ['navigation'],
   parameters: {

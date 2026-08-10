@@ -6,7 +6,7 @@ import CalendarDatePickerStory from './CalendarDatePickerStory.svelte';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
-  title: 'UI/Calendar/Composicoes',
+  title: 'UI/Calendar/Compositions',
   component: Calendar,
   tags: ['form'],
   parameters: {

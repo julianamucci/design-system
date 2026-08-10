@@ -4,7 +4,7 @@ import { createTextarea } from './textarea';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Textarea/Variantes',
+  title: 'UI/Textarea/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

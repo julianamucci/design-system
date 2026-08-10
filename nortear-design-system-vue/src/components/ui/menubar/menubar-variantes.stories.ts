@@ -11,7 +11,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Menubar/Variantes',
+  title: 'UI/Menubar/Variants',
   component: Menubar,
   tags: ['navigation'],
   parameters: {

@@ -16,7 +16,7 @@ import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
 const meta = {
-  title: "UI/Sheet/Variantes",
+  title: "UI/Sheet/Variants",
   tags: ["disclosure"],
   component: Sheet,
   parameters: {

@@ -5,7 +5,7 @@ import { Toaster } from './index';
 import { Button } from '@/components/ui/button';
 
 const meta = {
-  title: 'UI/Sonner/Tipos',
+  title: 'UI/Sonner/Types',
   component: Toaster,
   tags: ['feedback'],
   parameters: {

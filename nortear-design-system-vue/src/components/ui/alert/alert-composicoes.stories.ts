@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Alert/Composicoes',
+  title: 'UI/Alert/Compositions',
   component: Alert,
   tags: ['feedback'],
   parameters: {
@@ -19,7 +19,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item2'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
@@ -40,7 +40,7 @@ export const ComIcone: Story = {
   },
 };
 
-export const ComAcao: Story = {
+export const WithAction: Story = {
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
     setup() { return {}; },
@@ -121,7 +121,7 @@ export const ClasseAdicional: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },

@@ -5,7 +5,7 @@ import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Slider/Variantes',
+  title: 'UI/Slider/Variants',
   component: Slider,
   tags: ['form'],
   parameters: {

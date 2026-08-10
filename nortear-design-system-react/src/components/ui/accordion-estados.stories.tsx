@@ -9,7 +9,7 @@ import {
 } from "./accordion";
 
 const meta: Meta = {
-  title: "UI/Accordion/Estados",
+  title: "UI/Accordion/States",
   tags: ["disclosure"],
   parameters: {
     design: figmaDesign("accordionItem"),
@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   render: () => (
     <Accordion className="nds-max-w-lg">
       <AccordionItem value="item-1">
@@ -49,7 +49,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   render: () => (
     <Accordion defaultValue={["item-1"]} className="nds-max-w-lg">
       <AccordionItem value="item-1">

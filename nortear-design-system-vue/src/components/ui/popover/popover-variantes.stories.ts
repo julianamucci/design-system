@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Popover/Variantes',
+  title: 'UI/Popover/Variants',
   component: Popover,
   tags: ['overlay'],
   parameters: {
@@ -76,7 +76,7 @@ export const Default: Story = {
   },
 };
 
-export const ComTitulo: Story = {
+export const WithTitle: Story = {
   parameters: {
     docs: {
       description: {

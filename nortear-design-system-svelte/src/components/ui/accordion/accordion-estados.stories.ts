@@ -11,7 +11,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Estados',
+  title: 'UI/Accordion/States',
   component: Accordion,
   tags: ['disclosure'],
 };
@@ -37,7 +37,7 @@ const FOCUS_ITEMS = [
   { value: 'item-2', q: 'Segundo item', a: 'Tab move o foco para este trigger.' },
 ];
 
-export const Fechado: Story = {
+export const Closed: Story = {
   render: () => ({
     Component: AccordionStory,
     props: { type: 'single', items: SINGLE_ITEM },
@@ -60,7 +60,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   render: () => ({
     Component: AccordionStory,
     props: { type: 'single', defaultValue: 'item-1', items: OPEN_ITEM },

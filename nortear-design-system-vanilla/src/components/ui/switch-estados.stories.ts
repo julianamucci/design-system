@@ -4,7 +4,7 @@ import { createSwitch } from './switch';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Switch/Estados',
+  title: 'UI/Switch/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

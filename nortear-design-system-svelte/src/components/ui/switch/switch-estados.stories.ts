@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Switch/Estados',
+  title: 'UI/Switch/States',
   component: SwitchStory,
   tags: ['form'],
   parameters: {

@@ -4,7 +4,7 @@ import { createPagination } from './pagination';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Pagination/Composicoes',
+  title: 'UI/Pagination/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -35,8 +35,8 @@ function wrap(child: HTMLElement, minHeight = 120): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Simples: Story = {
-  name: 'Simples (5 páginas)',
+export const Simple: Story = {
+  name: 'Simple (5 pages)',
   render: () =>
     wrap(
       createPagination({
@@ -65,8 +65,8 @@ export const Simples: Story = {
   },
 };
 
-export const ComEllipsis: Story = {
-  name: 'Com Ellipsis (12 páginas, atual=6)',
+export const WithEllipsis: Story = {
+  name: 'With ellipsis (12 pages, current=6)',
   render: () =>
     wrap(
       createPagination({
@@ -97,8 +97,8 @@ export const ComEllipsis: Story = {
   },
 };
 
-export const UltimaPagina: Story = {
-  name: 'Última página (Next desabilitado)',
+export const LastPage: Story = {
+  name: 'Last page (Next disabled)',
   render: () =>
     wrap(
       createPagination({
@@ -120,8 +120,8 @@ export const UltimaPagina: Story = {
   },
 };
 
-export const Interativo: Story = {
-  name: 'Interativo (estado controlado externamente)',
+export const Interactive: Story = {
+  name: 'Interactive (externally controlled state)',
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';

@@ -10,7 +10,7 @@ import {
 } from "./navigation-menu";
 
 const meta = {
-  title: "UI/NavigationMenu/Estados",
+  title: "UI/NavigationMenu/States",
   tags: ["navigation"],
   component: NavigationMenu,
   parameters: {
@@ -34,7 +34,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: {
@@ -77,7 +77,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {
@@ -127,7 +127,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Ativo: Story = {
+export const Active: Story = {
   parameters: {
     docs: {
       description: {

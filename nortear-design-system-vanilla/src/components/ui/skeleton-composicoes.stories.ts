@@ -4,7 +4,7 @@ import { createSkeleton } from './skeleton';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Skeleton/Composicoes',
+  title: 'UI/Skeleton/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -69,7 +69,6 @@ function loadingContainer(label: string, extraClass = ''): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const CardDePerfil: Story = {
-  name: 'Card de Perfil',
   render: () => {
     const wrap = loadingContainer('Carregando card de perfil', 'nds-max-w-sm');
 
@@ -102,8 +101,7 @@ export const CardDePerfil: Story = {
   },
 };
 
-export const ListaComAvatar: Story = {
-  name: 'Lista com Avatar',
+export const ListWithAvatar: Story = {
   render: () => {
     const wrap = loadingContainer('Carregando lista de pedidos', 'nds-stack nds-max-w-md');
     wrap.dataset.spacing = 'md';
@@ -141,8 +139,7 @@ export const ListaComAvatar: Story = {
   },
 };
 
-export const ImagemEmAspectRatio: Story = {
-  name: 'Imagem em AspectRatio',
+export const ImageInAspectRatio: Story = {
   render: () => {
     const wrap = loadingContainer('Carregando imagem', 'nds-max-w-md');
 
@@ -168,7 +165,6 @@ export const ImagemEmAspectRatio: Story = {
 };
 
 export const Paragrafo: Story = {
-  name: 'Parágrafo',
   render: () => {
     const wrap = loadingContainer('Carregando parágrafo', 'nds-stack nds-max-w-md');
     wrap.dataset.spacing = 'xs';

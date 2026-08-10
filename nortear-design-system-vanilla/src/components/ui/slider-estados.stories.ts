@@ -4,7 +4,7 @@ import { createSlider } from './slider';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Slider/Estados',
+  title: 'UI/Slider/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

@@ -3,7 +3,7 @@ import { DataTable } from "./data-table"
 import { baseColumns, type Invoice } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
-  title: "UI/DataTable/Estados",
+  title: "UI/DataTable/States",
   tags: ["tables"],
   component: DataTable<Invoice>,
   parameters: { controls: { disable: true }, actions: { disable: true } },
@@ -12,7 +12,7 @@ const meta: Meta<typeof DataTable<Invoice>> = {
 export default meta
 type Story = StoryObj<typeof DataTable<Invoice>>
 
-export const SemResultados: Story = {
+export const NoResults: Story = {
   args: {
     columns: baseColumns,
     data: [],

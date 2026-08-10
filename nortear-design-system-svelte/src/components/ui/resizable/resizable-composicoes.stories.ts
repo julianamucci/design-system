@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Resizable/Composicoes',
+  title: 'UI/Resizable/Compositions',
   component: ResizableStory,
   tags: ['layout'],
   parameters: {

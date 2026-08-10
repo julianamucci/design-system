@@ -7,7 +7,7 @@ import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
 import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Command/Estados',
+  title: 'UI/Command/States',
   component: Command.Root,
   tags: ['overlay'],
   parameters: {
@@ -26,8 +26,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const EstadoVazio: Story = {
-  name: 'Empty State',
+export const EmptyState: Story = {
   render: () => ({
     Component: CommandEstadoEmptyStory,
     props: {},
@@ -44,7 +43,7 @@ export const EstadoVazio: Story = {
   },
 };
 
-export const EstadoCarregando: Story = {
+export const LoadingState: Story = {
   name: 'Loading (CommandLoading)',
   render: () => ({
     Component: CommandEstadoLoadingStory,

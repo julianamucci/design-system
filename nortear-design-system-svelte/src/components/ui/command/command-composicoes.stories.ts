@@ -8,7 +8,7 @@ import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.sve
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Command/Composicoes',
+  title: 'UI/Command/Compositions',
   component: Command,
   tags: ['overlay'],
   parameters: {
@@ -27,7 +27,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComGrupos: Story = {
+export const WithGroups: Story = {
   render: () => ({
     Component: CommandComposicaoGruposStory,
     props: {},
@@ -65,8 +65,8 @@ export const ComShortcuts: Story = {
   },
 };
 
-export const ComLinkItem: Story = {
-  name: 'Com CommandLinkItem',
+export const WithLinkItem: Story = {
+  name: 'With CommandLinkItem',
   render: () => ({
     Component: CommandComposicaoLinkItemStory,
     props: {},

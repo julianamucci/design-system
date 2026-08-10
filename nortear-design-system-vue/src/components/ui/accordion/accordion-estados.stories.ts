@@ -9,7 +9,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Accordion/Estados',
+  title: 'UI/Accordion/States',
   tags: ['disclosure'],
   parameters: {
     design: figmaDesign('accordionItem'),
@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
@@ -51,7 +51,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `

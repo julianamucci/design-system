@@ -4,7 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import SonnerToastStory from './SonnerToastStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sonner/Tipos',
+  title: 'UI/Sonner/Types',
   component: SonnerToastStory,
   tags: ['feedback'],
   parameters: {

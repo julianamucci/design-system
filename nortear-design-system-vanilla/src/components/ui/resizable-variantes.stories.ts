@@ -4,7 +4,7 @@ import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Resizable/Variantes',
+  title: 'UI/Resizable/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -46,7 +46,6 @@ function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
-  name: 'Horizontal',
   render: () => {
     const root = createResizablePanel({
       direction: 'horizontal',
@@ -76,7 +75,6 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  name: 'Vertical',
   render: () => {
     const root = createResizablePanel({
       direction: 'vertical',
@@ -103,7 +101,6 @@ export const Vertical: Story = {
 };
 
 export const Nested: Story = {
-  name: 'Nested',
   render: () => {
     const inner = createResizablePanel({
       direction: 'vertical',

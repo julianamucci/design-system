@@ -5,7 +5,7 @@ import { Root as ContextMenu } from './index';
 import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/ContextMenu/Composicoes',
+  title: 'UI/ContextMenu/Compositions',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
@@ -26,7 +26,7 @@ type Story = StoryObj;
 
 // ── Com Shortcut ─────────────────────────────────────────────────────────────
 
-export const ComShortcut: Story = {
+export const WithShortcut: Story = {
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'shortcut' },
@@ -47,7 +47,7 @@ export const ComShortcut: Story = {
 
 // ── Com Checkbox ─────────────────────────────────────────────────────────────
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'checkbox' },
@@ -63,7 +63,7 @@ export const ComCheckbox: Story = {
 
 // ── Com Radio Group ───────────────────────────────────────────────────────────
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'radio' },
@@ -79,7 +79,7 @@ export const ComRadioGroup: Story = {
 
 // ── Com Submenu ───────────────────────────────────────────────────────────────
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   render: () => ({
     Component: ContextMenuComposicaoStory,
     props: { composition: 'submenu' },

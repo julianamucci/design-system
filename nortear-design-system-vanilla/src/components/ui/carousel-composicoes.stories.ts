@@ -29,7 +29,7 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Carousel/Composicoes',
+  title: 'UI/Carousel/Compositions',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -45,7 +45,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComDots: Story = {
+export const WithDots: Story = {
   render: () => {
     const total = 5;
     const wrap = document.createElement('div');

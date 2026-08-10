@@ -13,7 +13,7 @@ const RAIZ_VERTICAL = 'nds-w-sm nds-rounded-md nds-border-default';
 const RAIZ_LARGA = 'nds-max-w-md nds-rounded-md nds-border-default';
 
 const meta: Meta = {
-  title: 'UI/ScrollArea/Variantes',
+  title: 'UI/ScrollArea/Variants',
   decorators: [moduleMetadata({ imports: [NdsScrollArea] })],
   parameters: {
     layout: 'padded',

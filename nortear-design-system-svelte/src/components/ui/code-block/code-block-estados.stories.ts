@@ -26,7 +26,7 @@ const meta: Meta = {
       },
     },
   },
-  title: 'UI/CodeBlock/Estados',
+  title: 'UI/CodeBlock/States',
   component: CodeBlock,
   tags: ['display'],
 };
@@ -34,7 +34,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComNumeracao: Story = {
+export const WithNumbering: Story = {
   args: { code: BASE_CODE, language: 'ts', showLineNumbers: true },
   play: async ({ canvasElement, step }) => {
     await step('A raiz registra a numeração e o gutter aparece', async () => {
@@ -48,7 +48,7 @@ export const ComNumeracao: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { code: BASE_CODE, language: 'ts', showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     await step('A raiz registra a ausência de numeração e o gutter some', async () => {
@@ -89,7 +89,7 @@ export const Copiado: Story = {
   },
 };
 
-export const ScrollDuplo: Story = {
+export const DoubleScroll: Story = {
   args: { code: LONG_CODE, language: 'ts', showLineNumbers: true },
   play: async ({ canvasElement, step }) => {
     await step('A região rolável é alcançável por teclado e rola na horizontal', async () => {

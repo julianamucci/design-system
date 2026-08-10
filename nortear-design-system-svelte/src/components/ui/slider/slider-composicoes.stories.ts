@@ -5,7 +5,7 @@ import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Slider/Composicoes',
+  title: 'UI/Slider/Compositions',
   component: SliderStory,
   tags: ['form'],
   parameters: {
@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const VolumeComValor: Story = {
+export const VolumeWithValue: Story = {
   args: {
     value: [50],
     min: 0,
@@ -97,7 +97,7 @@ export const FaixaDePreco: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     Component: SliderFormStory as never,
     props: {} as never,

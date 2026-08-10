@@ -17,7 +17,7 @@ import { useTranslation } from "@/lib/i18n";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 
 const meta = {
-  title: "UI/Dialog/Estados",
+  title: "UI/Dialog/States",
   tags: ["overlay"],
   component: Dialog,
   parameters: {

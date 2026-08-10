@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/Composicoes',
+  title: 'UI/InputOTP/Compositions',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {
@@ -34,7 +34,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComHelpText: Story = {
+export const WithHelpText: Story = {
   args: {
     maxLength: 6,
     label: 'Código de verificação',
@@ -47,7 +47,7 @@ export const ComHelpText: Story = {
   },
 };
 
-export const ComErrorMessage: Story = {
+export const WithErrorMessage: Story = {
   args: {
     maxLength: 6,
     hasError: true,
@@ -66,7 +66,7 @@ export const ComErrorMessage: Story = {
   },
 };
 
-export const ComResendButton: Story = {
+export const WithResendButton: Story = {
   args: {
     maxLength: 6,
     label: 'Código de verificação',

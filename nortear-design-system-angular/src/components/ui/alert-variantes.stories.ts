@@ -12,7 +12,7 @@ import {
 import { contrasteNosDoisTemas, descreverFalhas } from '@shared/testing/alert-probe';
 
 const meta: Meta = {
-  title: 'UI/Alert/Variantes',
+  title: 'UI/Alert/Variants',
   tags: ['feedback'],
   decorators: [
     moduleMetadata({
@@ -140,7 +140,6 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
-  name: 'Info',
   render: () => ({
     template: `
       <div ndsAlert variant="info">

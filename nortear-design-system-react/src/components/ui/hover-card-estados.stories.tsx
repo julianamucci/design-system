@@ -6,7 +6,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/HoverCard/Estados",
+  title: "UI/HoverCard/States",
   tags: ["overlay"],
   component: HoverCard,
   parameters: {
@@ -30,7 +30,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: {
@@ -67,7 +67,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {
@@ -112,7 +112,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

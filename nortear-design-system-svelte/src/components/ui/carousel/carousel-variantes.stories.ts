@@ -5,7 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Carousel/Variantes',
+  title: 'UI/Carousel/Variants',
   component: Carousel,
   tags: ['display'],
   parameters: {

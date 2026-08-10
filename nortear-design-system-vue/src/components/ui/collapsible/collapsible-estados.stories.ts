@@ -5,7 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Collapsible/Estados',
+  title: 'UI/Collapsible/States',
   component: Collapsible,
   tags: ['disclosure'],
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const NaoControlado: Story = {
+export const Uncontrolled: Story = {
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
@@ -74,7 +74,7 @@ export const NaoControlado: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() {
@@ -142,7 +142,7 @@ export const Controlado: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },

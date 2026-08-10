@@ -13,7 +13,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Accordion/Composicoes',
+  title: 'UI/Accordion/Compositions',
 };
 
 export default meta;
@@ -64,7 +64,7 @@ function makeIconTrigger(nodes: LucideIconNode[], text: string, tone: string): H
 
 // ─── Com Ícone no Trigger ─────────────────────────────────────────────────────
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-w-full nds-max-w-lg';
@@ -122,7 +122,7 @@ export const ComIconeNoTrigger: Story = {
 
 // ─── Com Badge no Trigger ────────────────────────────────────────────────────
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-w-full nds-max-w-lg';

@@ -4,7 +4,7 @@ import { createInputOTP } from './input-otp';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Estados',
+  title: 'UI/InputOTP/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,8 +52,7 @@ function applyError(root: HTMLElement): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Vazio: Story = {
-  name: 'Vazio',
+export const Empty: Story = {
   render: () => wrap(createInputOTP({ length: 6 })),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -64,8 +63,8 @@ export const Vazio: Story = {
   },
 };
 
-export const Preenchendo: Story = {
-  name: 'Preenchendo (3 de 6)',
+export const Filling: Story = {
+  name: 'Filling (3 of 6)',
   render: () => {
     const el = createInputOTP({ length: 6 });
     fillSlots(el, '123');
@@ -83,7 +82,6 @@ export const Preenchendo: Story = {
 };
 
 export const Completo: Story = {
-  name: 'Completo',
   render: () => {
     const el = createInputOTP({ length: 6 });
     fillSlots(el, '123456');
@@ -98,8 +96,7 @@ export const Completo: Story = {
   },
 };
 
-export const Desabilitado: Story = {
-  name: 'Desabilitado',
+export const Disabled: Story = {
   render: () => wrap(createInputOTP({ length: 6, disabled: true })),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -112,8 +109,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
-  name: 'Erro',
+export const Error: Story = {
   render: () => {
     const el = createInputOTP({ length: 6 });
     fillSlots(el, '123456');

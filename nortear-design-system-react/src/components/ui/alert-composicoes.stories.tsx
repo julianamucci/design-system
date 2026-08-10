@@ -6,7 +6,7 @@ import { Alert, AlertAction, AlertTitle, AlertDescription } from "./alert";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Alert/Composicoes",
+  title: "UI/Alert/Compositions",
   tags: ["feedback"],
   component: Alert,
   parameters: {
@@ -19,7 +19,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: { covers: ["functional.item3", "accessibility.item2"] },
   render: () => (
     <Alert>
@@ -36,7 +36,7 @@ export const ComIcone: Story = {
   },
 };
 
-export const ComAcao: Story = {
+export const WithAction: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="nds-icon" />
@@ -115,7 +115,7 @@ export const ClasseAdicional: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   parameters: { covers: ["visual.item4"] },
   render: () => (
     <Alert>

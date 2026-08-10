@@ -12,7 +12,7 @@ const IMG_MARIA =
 const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
 
 const meta: Meta = {
-  title: 'UI/Avatar/Estados',
+  title: 'UI/Avatar/States',
   component: Avatar,
   tags: ['display'],
   parameters: {
@@ -63,7 +63,7 @@ export const Loaded: Story = {
 };
 
 export const Loading: Story = {
-  name: 'Loading (atraso de 600ms)',
+  name: 'Loading (600ms delay)',
   parameters: { covers: ['functional.item4'] },
   render: () => ({
     Component: AvatarStory,

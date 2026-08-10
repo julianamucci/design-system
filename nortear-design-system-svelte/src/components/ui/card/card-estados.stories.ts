@@ -5,7 +5,7 @@ import { Card } from './index';
 import CardStory from './CardStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Card/Estados',
+  title: 'UI/Card/States',
   component: Card,
   tags: ['layout'],
   parameters: {

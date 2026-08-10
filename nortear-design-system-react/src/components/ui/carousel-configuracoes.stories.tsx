@@ -11,7 +11,7 @@ import {
 import { Card, CardContent } from "./card";
 
 const meta = {
-  title: "UI/Carousel/Configuracoes",
+  title: "UI/Carousel/Settings",
   tags: ["display"],
   component: Carousel,
   parameters: {

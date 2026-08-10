@@ -5,7 +5,7 @@ import { Badge } from './index';
 import { Check, Bell } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Badge/Composicoes',
+  title: 'UI/Badge/Compositions',
   component: Badge,
   tags: ['feedback'],
   parameters: {

@@ -8,7 +8,7 @@ import {
 } from "./input-otp";
 
 const meta = {
-  title: "UI/InputOTP/Estados",
+  title: "UI/InputOTP/States",
   tags: ["form"],
   component: InputOTP,
   parameters: {
@@ -34,7 +34,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement | null {
   ) as HTMLInputElement | null;
 }
 
-export const Vazio: Story = {
+export const Empty: Story = {
   parameters: {
     docs: {
       description: { story: "Nenhum slot preenchido. value=''." },
@@ -71,7 +71,7 @@ export const Vazio: Story = {
   },
 };
 
-export const Preenchendo: Story = {
+export const Filling: Story = {
   parameters: {
     docs: {
       description: { story: "Parcialmente preenchido (3 de 6 slots)." },
@@ -155,7 +155,7 @@ export const Completo: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: {
     docs: {
       description: {
@@ -194,7 +194,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   parameters: {
     docs: {
       description: {

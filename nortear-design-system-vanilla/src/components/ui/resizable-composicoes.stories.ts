@@ -4,7 +4,7 @@ import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Resizable/Composicoes',
+  title: 'UI/Resizable/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -84,8 +84,7 @@ function labelHandles(root: HTMLElement, label: string): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const EditorComPreview: Story = {
-  name: 'Editor com Preview',
+export const EditorWithPreview: Story = {
   render: () => {
     const editor = block(
       'Editor',
@@ -125,8 +124,8 @@ export const EditorComPreview: Story = {
   },
 };
 
-export const SidebarComConteudoEConsole: Story = {
-  name: 'Sidebar + Conteúdo / Console',
+export const SidebarWithContentAndConsole: Story = {
+  name: 'Sidebar + content / console',
   render: () => {
     const sidebar = listBlock('Arquivos', ['index.ts', 'README.md', 'package.json', 'tsconfig.json']);
     const content = block('Conteúdo', 'Conteúdo principal do arquivo selecionado.');
@@ -175,7 +174,6 @@ export const SidebarComConteudoEConsole: Story = {
 };
 
 export const ListaDetalhe: Story = {
-  name: 'Lista + Detalhe',
   render: () => {
     const list = listBlock('Inbox (4)', [
       'Maria Santos — Atualização do projeto',
@@ -207,8 +205,7 @@ export const ListaDetalhe: Story = {
   },
 };
 
-export const TresColunas: Story = {
-  name: 'Três Colunas',
+export const ThreeColumns: Story = {
   render: () => {
     const nav = listBlock('Navegação', ['Visão geral', 'Componentes', 'Tokens', 'Guidelines']);
     const content = block('Conteúdo', 'Conteúdo principal da página selecionada.');

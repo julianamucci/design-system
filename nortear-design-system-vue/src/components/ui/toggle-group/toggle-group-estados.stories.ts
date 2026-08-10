@@ -4,7 +4,7 @@ import { ToggleGroup, ToggleGroupItem } from './index';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/ToggleGroup/Estados',
+  title: 'UI/ToggleGroup/States',
   component: ToggleGroup,
   tags: ['form'],
   parameters: {

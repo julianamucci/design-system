@@ -6,7 +6,7 @@ import { User, Settings, Shield } from 'lucide';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Tabs/Composicoes',
+  title: 'UI/Tabs/Compositions',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
@@ -74,7 +74,7 @@ function setLabel(root: HTMLElement, label: string): HTMLElement {
 
 // ─── Com Ícones no Trigger ────────────────────────────────────────────────────
 
-export const ComIconesNoTrigger: Story = {
+export const WithIconsInTrigger: Story = {
   render: () => {
     const items: TabsItemDef[] = [
       { value: 'profile',  label: 'Perfil',    content: makeRichPanel('Perfil',    'Edite suas informações públicas.') },
@@ -125,7 +125,7 @@ export const ComIconesNoTrigger: Story = {
 
 // ─── Com Badge no Trigger ─────────────────────────────────────────────────────
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   render: () => {
     const items: TabsItemDef[] = [
       { value: 'inbox',  label: 'Caixa de entrada', content: makeRichPanel('Caixa de entrada', '12 mensagens não lidas.') },
@@ -217,7 +217,7 @@ export const Vertical: Story = {
 
 // ─── Sub-navegação (variant line) ─────────────────────────────────────────────
 
-export const SubNavegacaoLine: Story = {
+export const SubNavigationLine: Story = {
   render: () => {
     const items: TabsItemDef[] = [
       { value: 'all',     label: 'Tudo',       content: makePanel('Mostrando todos os itens.') },

@@ -8,7 +8,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Dialog/Estados',
+  title: 'UI/Dialog/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

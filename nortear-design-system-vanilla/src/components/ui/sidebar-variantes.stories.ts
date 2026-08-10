@@ -15,7 +15,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/Variantes',
+  title: 'UI/Sidebar/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',
@@ -109,8 +109,8 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const VarianteSidebar: Story = {
-  name: 'sidebar (padrão)',
+export const VariantSidebar: Story = {
+  name: 'sidebar (default)',
   render: () => buildVariantDemo('sidebar'),
   parameters: {
     docs: {
@@ -132,7 +132,7 @@ export const VarianteSidebar: Story = {
   },
 };
 
-export const VarianteFloating: Story = {
+export const VariantFloating: Story = {
   name: 'floating',
   render: () => buildVariantDemo('floating'),
   parameters: {
@@ -150,7 +150,7 @@ export const VarianteFloating: Story = {
   },
 };
 
-export const VarianteInset: Story = {
+export const VariantInset: Story = {
   name: 'inset',
   render: () => buildVariantDemo('inset'),
   parameters: {

@@ -7,7 +7,7 @@ import TableEstadoLinhaSelecionada from './TableEstadoLinhaSelecionada.svelte';
 import TableEstadoCarregando from './TableEstadoCarregando.svelte';
 
 const meta: Meta = {
-  title: 'UI/Table/Estados',
+  title: 'UI/Table/States',
   component: Table,
   tags: ['tables'],
   parameters: {
@@ -42,7 +42,7 @@ export const Empty: Story = {
   },
 };
 
-export const LinhaSelecionada: Story = {
+export const SelectedRow: Story = {
   render: () => ({
     Component: TableEstadoLinhaSelecionada,
     props: {},
@@ -60,7 +60,7 @@ export const LinhaSelecionada: Story = {
   },
 };
 
-export const Carregando: Story = {
+export const Loading: Story = {
   render: () => ({
     Component: TableEstadoCarregando,
     props: {},

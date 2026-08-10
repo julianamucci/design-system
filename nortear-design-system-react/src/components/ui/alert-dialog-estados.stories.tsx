@@ -17,7 +17,7 @@ import {
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/AlertDialog/Estados",
+  title: "UI/AlertDialog/States",
   tags: ["overlay"],
   component: AlertDialog,
   parameters: {

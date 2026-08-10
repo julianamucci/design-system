@@ -5,7 +5,7 @@ import { Input } from './index';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Input/Composicoes',
+  title: 'UI/Input/Compositions',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -47,7 +47,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComLabelEHint: Story = {
+export const WithLabelAndHint: Story = {
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -77,7 +77,7 @@ export const ComLabelEHint: Story = {
   },
 };
 
-export const ComLabelEErro: Story = {
+export const WithLabelAndError: Story = {
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -108,7 +108,7 @@ export const ComLabelEErro: Story = {
   },
 };
 
-export const Senha: Story = {
+export const Password: Story = {
   render: () => ({
     Component: InputWithLabelStory,
     props: {

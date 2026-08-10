@@ -8,7 +8,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/InputOTP/Estados',
+  title: 'UI/InputOTP/States',
   component: InputOTP,
   tags: ['form'],
   parameters: {
@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSlot };
 
-export const Vazio: Story = {
+export const Empty: Story = {
   parameters: {
     docs: {
       description: { story: 'Nenhum slot preenchido. Estado inicial.' },
@@ -60,7 +60,7 @@ export const Vazio: Story = {
   },
 };
 
-export const Preenchendo: Story = {
+export const Filling: Story = {
   parameters: {
     docs: {
       description: { story: 'Três de seis slots preenchidos. Foco no slot 4.' },
@@ -123,7 +123,7 @@ export const Completo: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: {
     docs: {
       description: { story: 'disabled=true aplica has-disabled:opacity-50 no container.' },
@@ -154,7 +154,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   parameters: {
     docs: {
       description: {

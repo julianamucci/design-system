@@ -4,7 +4,7 @@ import { createProgress } from './progress';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Progress/Estados',
+  title: 'UI/Progress/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

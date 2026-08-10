@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 
 const meta = {
-  title: 'UI/AspectRatio/Composicoes',
+  title: 'UI/AspectRatio/Compositions',
   component: AspectRatio,
   tags: ['layout'],
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComImagem: Story = {
+export const WithImage: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item1'] },
   render: () => ({
     components: { AspectRatio },
@@ -54,7 +54,7 @@ export const ComImagem: Story = {
   },
 };
 
-export const ComIframe: Story = {
+export const WithIframe: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     components: { AspectRatio },
@@ -81,7 +81,7 @@ export const ComIframe: Story = {
   },
 };
 
-export const ComVideo: Story = {
+export const WithVideo: Story = {
   parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
   render: () => ({
     components: { AspectRatio },
@@ -122,7 +122,7 @@ export const ComVideo: Story = {
   },
 };
 
-export const EmGrid: Story = {
+export const InGrid: Story = {
   parameters: { covers: ['functional.item4'] },
   render: () => ({
     components: { AspectRatio },
@@ -202,7 +202,7 @@ export const EmGrid: Story = {
   },
 };
 
-export const PlaceholderVazio: Story = {
+export const EmptyPlaceholder: Story = {
   parameters: { covers: ['functional.item5'] },
   render: () => ({
     components: { AspectRatio },
@@ -229,7 +229,7 @@ export const PlaceholderVazio: Story = {
   },
 };
 
-export const ComImagemDecorativa: Story = {
+export const WithDecorativeImage: Story = {
   parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     components: { AspectRatio },

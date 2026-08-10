@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Button/Tamanhos",
+  title: "UI/Button/Sizes",
   tags: ["form"],
   component: Button,
   parameters: {

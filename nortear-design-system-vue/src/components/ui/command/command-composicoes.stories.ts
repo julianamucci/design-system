@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 
 const meta = {
-  title: 'UI/Command/Composicoes',
+  title: 'UI/Command/Compositions',
   component: Command,
   tags: ['overlay'],
   parameters: {
@@ -35,8 +35,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComGrupos: Story = {
-  name: 'Com grupos e separador',
+export const WithGroups: Story = {
+  name: 'With groups and separator',
   render: () => ({
     components: {
       Command,
@@ -78,7 +78,6 @@ export const ComGrupos: Story = {
 };
 
 export const ComShortcuts: Story = {
-  name: 'Com shortcuts',
   render: () => ({
     components: {
       Command,
@@ -135,7 +134,7 @@ export const ComShortcuts: Story = {
 };
 
 export const ComoCombobox: Story = {
-  name: 'Como combobox (em Popover)',
+  name: 'As combobox (in Popover)',
   render: () => ({
     components: {
       Command,
@@ -221,7 +220,7 @@ export const ComoCombobox: Story = {
 };
 
 export const CommandPalette: Story = {
-  name: 'Command palette (em CommandDialog)',
+  name: 'Command palette (in CommandDialog)',
   render: () => ({
     components: {
       Command,

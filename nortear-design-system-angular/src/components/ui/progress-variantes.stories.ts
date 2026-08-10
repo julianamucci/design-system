@@ -51,7 +51,7 @@ function contraste(a: Rgba, b: Rgba): number {
 }
 
 const meta: Meta = {
-  title: 'UI/Progress/Variantes',
+  title: 'UI/Progress/Variants',
   decorators: [moduleMetadata({ imports: [...NDS_PROGRESS] })],
   parameters: {
     layout: 'padded',

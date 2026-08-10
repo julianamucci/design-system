@@ -12,7 +12,7 @@ import {
 import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
 
 const meta = {
-  title: "UI/Command/Estados",
+  title: "UI/Command/States",
   tags: ["overlay"],
   component: Command,
   parameters: {
@@ -39,8 +39,8 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
-export const EstadoSemResultados: Story = {
-  name: "Sem Resultados (CommandEmpty)",
+export const NoResultsState: Story = {
+  name: "No results (CommandEmpty)",
   render: () => (
     <div className="nds-w-full nds-max-w-xs">
       <Command>

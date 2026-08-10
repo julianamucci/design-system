@@ -10,7 +10,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/DropdownMenu/Variantes',
+  title: 'UI/DropdownMenu/Variants',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {

@@ -5,7 +5,7 @@ import { createToggle, type ToggleOptions, type ToggleVariant } from './toggle';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Toggle/Composicoes',
+  title: 'UI/Toggle/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -73,7 +73,7 @@ function iconToggle(opts: {
 
 // ─── ToolbarFormatacao ────────────────────────────────────────────────────────
 
-export const ToolbarFormatacao: Story = {
+export const FormattingToolbar: Story = {
   render: () => {
     const toolbar = document.createElement('div');
     toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
@@ -116,7 +116,7 @@ export const ToolbarFormatacao: Story = {
 
 // ─── FiltroComLabel ───────────────────────────────────────────────────────────
 
-export const FiltroComLabel: Story = {
+export const FilterWithLabel: Story = {
   render: () => {
     const wrap = document.createElement('span');
     wrap.className = 'nds-cluster';
@@ -157,7 +157,7 @@ export const FiltroComLabel: Story = {
 
 // ─── Tamanhos ─────────────────────────────────────────────────────────────────
 
-export const Tamanhos: Story = {
+export const Sizes: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-cluster';
@@ -189,7 +189,7 @@ export const Tamanhos: Story = {
 
 // ─── SimulacaoToggleGroup ─────────────────────────────────────────────────────
 
-export const SimulacaoToggleGroup: Story = {
+export const ToggleGroupSimulation: Story = {
   render: () => {
     // Divergência idiomática Vanilla: não existe ToggleGroup nativo no factory.
     // Aqui simulamos manualmente uma escolha exclusiva (single) — em produção,
@@ -263,7 +263,7 @@ export const SimulacaoToggleGroup: Story = {
 
 // ─── ListaDeFiltros ───────────────────────────────────────────────────────────
 
-export const ListaDeFiltros: Story = {
+export const FilterList: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

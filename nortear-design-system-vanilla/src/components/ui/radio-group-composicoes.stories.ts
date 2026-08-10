@@ -4,7 +4,7 @@ import { createRadioGroup } from './radio-group';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/RadioGroup/Composicoes',
+  title: 'UI/RadioGroup/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -110,7 +110,7 @@ export const FormaDeEntrega: Story = {
 
 // ─── ComDescricao ─────────────────────────────────────────────────────────────
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack';
@@ -178,7 +178,7 @@ export const ComDescricao: Story = {
 
 // ─── EmFormulario ─────────────────────────────────────────────────────────────
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';

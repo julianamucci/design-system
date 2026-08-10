@@ -18,7 +18,7 @@ const pieData = [
 
 const meta: Meta = {
   parameters: { controls: { disable: true }, actions: { disable: true } },
-  title: 'UI/Chart/Variantes',
+  title: 'UI/Chart/Variants',
   component: ChartContainer,
   tags: ['display'],
 };
@@ -38,7 +38,7 @@ export const Bar: Story = {
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const Linha: Story = {
+export const Row: Story = {
   args: { option: buildLineOption({ data: chartData }), class: 'h-[240px] w-[480px]' },
   parameters: { docs: { description: { story: 'Line — tendência contínua.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),

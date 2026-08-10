@@ -4,7 +4,7 @@ import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Textarea/Composicoes',
+  title: 'UI/Textarea/Compositions',
   component: Textarea,
   tags: ['form'],
   parameters: {
@@ -48,7 +48,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComTextoDeApoio: Story = {
+export const WithSupportText: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -79,7 +79,7 @@ export const ComTextoDeApoio: Story = {
   },
 };
 
-export const ComContador: Story = {
+export const WithCounter: Story = {
   render: () => ({
     components: { Textarea, Label },
     data() {
@@ -126,7 +126,7 @@ export const ComContador: Story = {
   },
 };
 
-export const ComMensagemDeErro: Story = {
+export const WithErrorMessage: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -161,7 +161,7 @@ export const ComMensagemDeErro: Story = {
   },
 };
 
-export const CampoObrigatorio: Story = {
+export const RequiredField: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `

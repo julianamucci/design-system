@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { Separator } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Separator/Variantes',
+  title: 'UI/Separator/Variants',
   component: Separator,
   tags: ['layout'],
   parameters: {

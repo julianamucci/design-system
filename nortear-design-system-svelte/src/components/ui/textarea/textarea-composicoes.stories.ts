@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Textarea/Composicoes',
+  title: 'UI/Textarea/Compositions',
   component: TextareaStory,
   tags: ['form'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComLabelEAjuda: Story = {
+export const WithLabelAndHelp: Story = {
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -44,7 +44,7 @@ export const ComLabelEAjuda: Story = {
   },
 };
 
-export const ComContadorAcessivel: Story = {
+export const WithAccessibleCounter: Story = {
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -78,7 +78,7 @@ export const ComContadorAcessivel: Story = {
   },
 };
 
-export const ComErro: Story = {
+export const WithError: Story = {
   render: () => ({
     Component: TextareaStory,
     props: {

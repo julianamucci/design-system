@@ -7,7 +7,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Popover/Composicoes',
+  title: 'UI/Popover/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,7 +52,6 @@ async function cleanupPortal(): Promise<void> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const EditarPerfil: Story = {
-  name: 'Editar Perfil',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
@@ -107,8 +106,7 @@ export const EditarPerfil: Story = {
   },
 };
 
-export const FiltroDeTabela: Story = {
-  name: 'Filtro de Tabela',
+export const TableFilter: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Filtros' });
 
@@ -169,7 +167,6 @@ export const FiltroDeTabela: Story = {
 };
 
 export const SeletorDeCor: Story = {
-  name: 'Seletor de Cor',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Cor' });
 
@@ -237,7 +234,6 @@ export const SeletorDeCor: Story = {
 };
 
 export const ConfiguracoesRapidas: Story = {
-  name: 'Configuracoes Rápidas',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Configuracoes' });
 

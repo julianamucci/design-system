@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { ScrollArea } from './index';
 
 const meta = {
-  title: 'UI/ScrollArea/Estados',
+  title: 'UI/ScrollArea/States',
   component: ScrollArea,
   tags: ['layout'],
   parameters: {
@@ -78,7 +78,7 @@ export const Always: Story = {
 };
 
 export const ScrollOnScroll: Story = {
-  name: 'Scroll (durante rolagem)',
+  name: 'Scroll (while scrolling)',
   render: () => ({
     components: { ScrollArea },
     setup() {

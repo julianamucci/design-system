@@ -5,7 +5,7 @@ import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Checkbox/Variantes',
+  title: 'UI/Checkbox/Variants',
   component: Checkbox,
   tags: ['form'],
   parameters: {
@@ -154,7 +154,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComDescricao: Story = {
+export const WithDescription: Story = {
   render: () => ({
     Component: CheckboxStory,
     props: {

@@ -11,7 +11,7 @@ import { Button } from "./button";
 import { Save } from "lucide-react";
 
 const meta = {
-  title: "UI/Tooltip/Variantes",
+  title: "UI/Tooltip/Variants",
   tags: ["overlay"],
   component: Tooltip,
   decorators: [
@@ -77,7 +77,7 @@ export const Default: Story = {
   },
 };
 
-export const ComAtalho: Story = {
+export const WithShortcut: Story = {
   parameters: {
     docs: {
       description: {
@@ -114,7 +114,7 @@ export const ComAtalho: Story = {
   },
 };
 
-export const TextoLongo: Story = {
+export const LongText: Story = {
   parameters: {
     docs: {
       description: {

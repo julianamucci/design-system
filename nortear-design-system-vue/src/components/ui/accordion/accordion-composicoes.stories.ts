@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Accordion/Composicoes',
+  title: 'UI/Accordion/Compositions',
   tags: ['disclosure'],
   parameters: {
     design: figmaDesign('accordionTrigger'),
@@ -31,7 +31,7 @@ const abrir = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Info, AlertTriangle, CheckCircle },
     template: `
@@ -98,7 +98,7 @@ export const ComIconeNoTrigger: Story = {
   },
 };
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Badge },
     template: `

@@ -3,7 +3,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 
 const meta = {
-  title: "UI/Checkbox/Estados",
+  title: "UI/Checkbox/States",
   tags: ["form"],
   component: Checkbox,
   parameters: {
@@ -46,7 +46,7 @@ export const Desmarcado: Story = {
   },
 };
 
-export const Marcado: Story = {
+export const Checked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="checked" defaultChecked />
@@ -77,7 +77,7 @@ export const Marcado: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="disabled" disabled />
@@ -113,7 +113,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const DesabilitadoMarcado: Story = {
+export const DisabledChecked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="disabled-checked" disabled defaultChecked />
@@ -147,7 +147,7 @@ export const DesabilitadoMarcado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs">
       <div className="nds-cluster" data-spacing="sm">

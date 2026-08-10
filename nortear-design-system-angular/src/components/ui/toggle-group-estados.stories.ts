@@ -5,7 +5,7 @@ import { NdsToggle, NdsToggleIcon } from './toggle';
 import { NdsToggleGroup, NdsToggleGroupIcon } from './toggle-group';
 
 const meta: Meta = {
-  title: 'UI/ToggleGroup/Estados',
+  title: 'UI/ToggleGroup/States',
   decorators: [
     moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle, NdsToggleIcon] }),
   ],

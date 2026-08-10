@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Drawer/Variantes',
+  title: 'UI/Drawer/Variants',
   component: DrawerStory,
   tags: ['disclosure'],
   parameters: {

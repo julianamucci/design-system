@@ -4,7 +4,7 @@ import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_TABS } from './tabs';
 
 const meta: Meta = {
-  title: 'UI/Tabs/Estados',
+  title: 'UI/Tabs/States',
   tags: ['navigation'],
   decorators: [moduleMetadata({ imports: [...NDS_TABS] })],
   parameters: {

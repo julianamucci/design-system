@@ -6,7 +6,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/RadioGroup/Composicoes",
+  title: "UI/RadioGroup/Compositions",
   tags: ["form"],
   component: RadioGroup,
   parameters: {
@@ -79,7 +79,7 @@ export const Controlled: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   parameters: {
     docs: {
       description: {

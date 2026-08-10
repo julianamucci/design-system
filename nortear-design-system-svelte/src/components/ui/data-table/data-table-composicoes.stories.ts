@@ -4,7 +4,7 @@ import type { DataTableColumn } from './index';
 import { invoices, baseColumns, currency, statusVariant, type Invoice } from './data-table.fixtures';
 
 const meta: Meta = {
-  title: 'UI/DataTable/Composicoes',
+  title: 'UI/DataTable/Compositions',
   component: DataTable,
   tags: ['tables'],
   parameters: { controls: { disable: true }, actions: { disable: true } },
@@ -44,7 +44,7 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComFiltrosPorColuna: Story = {
+export const WithColumnFilters: Story = {
   args: {
     columns: filterableColumns as never,
     data: invoices,
@@ -52,7 +52,7 @@ export const ComFiltrosPorColuna: Story = {
   },
 };
 
-export const ColunasRedimensionaveis: Story = {
+export const ResizableColumns: Story = {
   args: {
     columns: baseColumns as never,
     data: invoices,
@@ -89,7 +89,7 @@ const editableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComEdicaoInline: Story = {
+export const WithInlineEditing: Story = {
   args: {
     columns: editableColumns as never,
     data: invoices.slice(0, 6),

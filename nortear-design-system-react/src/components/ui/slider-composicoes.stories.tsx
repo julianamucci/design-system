@@ -5,7 +5,7 @@ import { Slider } from "./slider";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Slider/Composicoes",
+  title: "UI/Slider/Compositions",
   tags: ["form"],
   component: Slider,
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComLabelEValor: Story = {
+export const WithLabelAndValue: Story = {
   render: function ComLabelEValorRender() {
     const [value, setValue] = useState<number[]>([75]);
     return (
@@ -126,7 +126,7 @@ export const StepCustomizado: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: function EmFormularioRender() {
     const [volume, setVolume] = useState<number[]>([60]);
     const [brilho, setBrilho] = useState<number[]>([80]);

@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import InputStory from './InputStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Input/Estados',
+  title: 'UI/Input/States',
   component: InputStory,
   tags: ['form'],
   parameters: {
@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => ({
     Component: InputStory,
     props: { type: 'text', placeholder: 'ex: João da Silva' },
@@ -42,7 +42,7 @@ export const Padrao: Story = {
   },
 };
 
-export const ComPlaceholder: Story = {
+export const WithPlaceholder: Story = {
   render: () => ({
     Component: InputStory,
     props: { type: 'email', placeholder: 'ex: joao@empresa.com' },
@@ -57,7 +57,7 @@ export const ComPlaceholder: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => ({
     Component: InputStory,
     props: { type: 'text', placeholder: 'Não disponível', disabled: true },
@@ -79,7 +79,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
+export const Error: Story = {
   render: () => ({
     Component: InputStory,
     props: {

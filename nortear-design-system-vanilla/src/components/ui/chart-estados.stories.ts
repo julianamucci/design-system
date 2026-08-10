@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Chart/Estados',
+  title: 'UI/Chart/States',
 };
 
 export default meta;
@@ -18,7 +18,7 @@ type Story = StoryObj;
 
 // ─── Vazio ────────────────────────────────────────────────────────────────────
 
-export const Vazio: Story = {
+export const Empty: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

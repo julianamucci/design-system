@@ -96,7 +96,6 @@ export const Playground: Story = {
 };
 
 export const ItemDefault: Story = {
-  name: 'Item Default',
   render: () => ({
     components: {
       ContextMenu,
@@ -128,7 +127,6 @@ export const ItemDefault: Story = {
 };
 
 export const ItemDestructive: Story = {
-  name: 'Item Destructive',
   render: () => ({
     components: {
       ContextMenu,

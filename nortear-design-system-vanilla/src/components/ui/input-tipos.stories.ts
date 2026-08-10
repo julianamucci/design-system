@@ -4,7 +4,7 @@ import { createInput } from './input';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Input/Tipos',
+  title: 'UI/Input/Types',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Texto: Story = {
+export const Text: Story = {
   render: () => createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -42,7 +42,7 @@ export const Email: Story = {
   },
 };
 
-export const Senha: Story = {
+export const Password: Story = {
   render: () => createInput({ type: 'password', placeholder: '••••••••' }),
   play: async ({ canvasElement, step }) => {
     await step('Input do tipo password renderizado', async () => {
@@ -62,7 +62,7 @@ export const Numero: Story = {
   },
 };
 
-export const Arquivo: Story = {
+export const File: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

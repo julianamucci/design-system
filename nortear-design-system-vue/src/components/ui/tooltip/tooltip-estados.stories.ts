@@ -12,7 +12,7 @@ import { Save } from 'lucide-vue-next';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Tooltip/Estados',
+  title: 'UI/Tooltip/States',
   component: Tooltip,
   tags: ['overlay'],
   decorators: [
@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { Tooltip, TooltipContent, TooltipTrigger, Button, Save };
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     docs: {
       description: { story: 'Estado inicial — apenas trigger renderizado. Portal vazio.' },
@@ -69,7 +69,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     docs: {
       description: {
@@ -98,7 +98,7 @@ export const Aberto: Story = {
   },
 };
 
-export const ComFoco: Story = {
+export const WithFocus: Story = {
   parameters: {
     docs: {
       description: {
@@ -144,7 +144,7 @@ export const ComFoco: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: {
     docs: {
       description: {

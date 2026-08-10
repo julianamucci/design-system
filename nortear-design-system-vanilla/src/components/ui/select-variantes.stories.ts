@@ -4,7 +4,7 @@ import { createSelect } from './select';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Select/Variantes',
+  title: 'UI/Select/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

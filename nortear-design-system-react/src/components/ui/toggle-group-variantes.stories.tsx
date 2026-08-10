@@ -8,7 +8,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
 const meta = {
-  title: "UI/ToggleGroup/Variantes",
+  title: "UI/ToggleGroup/Variants",
   tags: ["form"],
   component: ToggleGroup,
   parameters: {

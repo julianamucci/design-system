@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Drawer/Composicoes',
+  title: 'UI/Drawer/Compositions',
   component: Drawer,
   tags: ['disclosure'],
   parameters: {
@@ -49,7 +49,7 @@ const sharedComponents = {
   Label,
 };
 
-export const ComFormulario: Story = {
+export const WithForm: Story = {
   parameters: {
     docs: {
       description: { story: 'Drawer com formulário inline em direction=bottom — padrão mobile-first para edição.' },
@@ -97,7 +97,7 @@ export const ComFormulario: Story = {
   },
 };
 
-export const ComConfirmacao: Story = {
+export const WithConfirmation: Story = {
   parameters: {
     docs: {
       description: {
@@ -136,7 +136,7 @@ export const ComConfirmacao: Story = {
   },
 };
 
-export const ComScroll: Story = {
+export const WithScroll: Story = {
   parameters: {
     docs: {
       description: { story: 'Drawer com conteúdo longo e scroll interno; Header e Footer fixos.' },

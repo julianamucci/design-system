@@ -4,7 +4,7 @@ import { Label } from "./label";
 import { Input } from "./input";
 
 const meta = {
-  title: "UI/Label/Estados",
+  title: "UI/Label/States",
   tags: ["form"],
   component: Label,
   parameters: {
@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Padrao: Story = {
+export const Default: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="estado-padrao">Nome completo</Label>
@@ -77,7 +77,7 @@ export const Disabled: Story = {
   },
 };
 
-export const DisabledViaGrupo: Story = {
+export const DisabledViaGroup: Story = {
   render: () => (
     <div className="nds-stack group" data-spacing="xs" style={{ width: "16rem" }} data-disabled="true">
       <Label htmlFor="estado-grupo-disabled">Documento</Label>

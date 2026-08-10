@@ -9,7 +9,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Card/Tamanhos',
+  title: 'UI/Card/Sizes',
   component: Card,
   tags: ['layout'],
   parameters: {

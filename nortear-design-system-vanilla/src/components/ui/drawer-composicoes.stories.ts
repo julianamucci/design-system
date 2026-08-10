@@ -6,7 +6,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/Composicoes',
+  title: 'UI/Drawer/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -63,8 +63,7 @@ async function closeAfter(step: (name: string, fn: () => Promise<void> | void) =
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComFormulario: Story = {
-  name: 'Com Formulário',
+export const WithForm: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
@@ -104,8 +103,7 @@ export const ComFormulario: Story = {
   },
 };
 
-export const ComConfirmacao: Story = {
-  name: 'Com Confirmação',
+export const WithConfirmation: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Remover item' });
 
@@ -141,8 +139,7 @@ export const ComConfirmacao: Story = {
   },
 };
 
-export const ComScroll: Story = {
-  name: 'Com Scroll',
+export const WithScroll: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 

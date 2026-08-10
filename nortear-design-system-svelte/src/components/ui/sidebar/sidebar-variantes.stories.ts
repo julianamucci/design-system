@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import SidebarStory from './SidebarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Sidebar/Variantes',
+  title: 'UI/Sidebar/Variants',
   component: SidebarStory,
   tags: ['layout'],
   parameters: {
@@ -22,8 +22,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const VarianteSidebar: Story = {
-  name: 'sidebar (padrão)',
+export const VariantSidebar: Story = {
+  name: 'sidebar (default)',
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -42,7 +42,7 @@ export const VarianteSidebar: Story = {
   },
 };
 
-export const VarianteFloating: Story = {
+export const VariantFloating: Story = {
   name: 'floating',
   render: () => ({
     Component: SidebarStory,
@@ -62,7 +62,7 @@ export const VarianteFloating: Story = {
   },
 };
 
-export const VarianteInset: Story = {
+export const VariantInset: Story = {
   name: 'inset',
   render: () => ({
     Component: SidebarStory,
@@ -82,8 +82,7 @@ export const VarianteInset: Story = {
   },
 };
 
-export const SideDireita: Story = {
-  name: 'side right',
+export const SideRight: Story = {
   render: () => ({
     Component: SidebarStory,
     props: {

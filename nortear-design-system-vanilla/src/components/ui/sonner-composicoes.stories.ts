@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Sonner/Composicoes',
+  title: 'UI/Sonner/Compositions',
   parameters: {
     actions: { disable: true },
     controls: { disable: true },

@@ -5,7 +5,7 @@ import { NdsCheckbox } from './checkbox';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/Checkbox/Estados',
+  title: 'UI/Checkbox/States',
   decorators: [moduleMetadata({ imports: [NdsCheckbox, NdsLabel] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

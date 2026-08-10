@@ -15,7 +15,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Select/Composicoes",
+  title: "UI/Select/Compositions",
   tags: ["form"],
   component: Select,
   parameters: {
@@ -87,7 +87,7 @@ export const Controlled: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   parameters: {
     docs: {
       description: {

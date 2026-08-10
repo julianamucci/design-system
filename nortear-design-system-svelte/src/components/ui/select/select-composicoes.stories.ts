@@ -6,7 +6,7 @@ import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Select/Composicoes',
+  title: 'UI/Select/Compositions',
   component: Select,
   tags: ['form'],
   parameters: {
@@ -24,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const TamanhoCompacto: Story = {
+export const CompactSize: Story = {
   render: () => ({
     Component: SelectStory,
     props: {
@@ -51,7 +51,7 @@ export const TamanhoCompacto: Story = {
   },
 };
 
-export const SelecaoPorRegiao: Story = {
+export const RegionSelection: Story = {
   render: () => ({
     Component: SelectStory,
     props: {
@@ -82,7 +82,7 @@ export const SelecaoPorRegiao: Story = {
   },
 };
 
-export const ComIcones: Story = {
+export const WithIcons: Story = {
   render: () => ({
     Component: SelectStory,
     props: {

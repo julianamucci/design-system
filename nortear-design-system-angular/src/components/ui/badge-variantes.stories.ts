@@ -14,7 +14,7 @@ const VARIANTES: { variant: BadgeVariant; label: string }[] = [
 ];
 
 const meta: Meta = {
-  title: 'UI/Badge/Variantes',
+  title: 'UI/Badge/Variants',
   decorators: [moduleMetadata({ imports: [NdsBadge] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

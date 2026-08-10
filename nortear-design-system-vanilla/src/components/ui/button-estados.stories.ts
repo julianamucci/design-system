@@ -19,7 +19,7 @@ const meta: Meta<EstadosArgs> = {
   args: {
     onClick: fn(),
   },
-  title: 'UI/Button/Estados',
+  title: 'UI/Button/States',
 };
 
 export default meta;

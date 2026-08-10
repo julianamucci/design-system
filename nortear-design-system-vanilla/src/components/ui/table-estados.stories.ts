@@ -12,7 +12,7 @@ import {
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/Table/Estados',
+  title: 'UI/Table/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -69,7 +69,7 @@ export const Empty: Story = {
 
 // ─── LinhaSelecionada ─────────────────────────────────────────────────────────
 
-export const LinhaSelecionada: Story = {
+export const SelectedRow: Story = {
   render: () => {
     const invoices = [
       { id: '#INV-001', status: 'Pago',     method: 'Cartão de crédito', amount: 'R$ 250,00' },
@@ -112,7 +112,7 @@ export const LinhaSelecionada: Story = {
 
 // ─── Carregando ───────────────────────────────────────────────────────────────
 
-export const Carregando: Story = {
+export const Loading: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas — carregando'));

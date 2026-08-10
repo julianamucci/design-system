@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Menubar/Variantes',
+  title: 'UI/Menubar/Variants',
   component: MenubarStory,
   tags: ['navigation'],
   parameters: {

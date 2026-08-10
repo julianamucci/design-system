@@ -4,7 +4,7 @@ import { createSeparator } from './separator';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Separator/Variantes',
+  title: 'UI/Separator/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -25,7 +25,6 @@ type Story = StoryObj;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
-  name: 'Horizontal',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -65,7 +64,6 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  name: 'Vertical',
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-cluster nds-w-full nds-max-w-md';

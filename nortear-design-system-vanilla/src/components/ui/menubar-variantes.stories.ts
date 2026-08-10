@@ -4,7 +4,7 @@ import { createMenubar } from './menubar';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Menubar/Variantes',
+  title: 'UI/Menubar/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -53,7 +53,6 @@ function openFirstMenu(bar: HTMLElement): void {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () => {
     const bar = createMenubar([
       {
@@ -84,7 +83,6 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  name: 'Destructive',
   render: () => {
     // Factory Vanilla não tem `variant` — adicionamos um item destructive
     // após criar a barra, anexando o <li> manualmente ao panel do menu.

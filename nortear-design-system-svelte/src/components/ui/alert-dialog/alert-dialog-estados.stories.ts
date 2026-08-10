@@ -7,7 +7,7 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogControlledStory from './AlertDialogControlledStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/AlertDialog/Estados',
+  title: 'UI/AlertDialog/States',
   component: AlertDialog,
   tags: ['overlay'],
   parameters: {

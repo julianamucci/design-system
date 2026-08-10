@@ -21,7 +21,7 @@ const tokensOf = (root: HTMLElement) =>
   [...root.querySelectorAll("[data-token]")].map((el) => el.getAttribute("data-token"));
 
 const meta = {
-  title: "UI/CodeBlock/Variantes",
+  title: "UI/CodeBlock/Variants",
   component: CodeBlock,
   tags: ["display"],
   parameters: {
@@ -63,7 +63,7 @@ export const Styles: Story = {
   },
 };
 
-export const Data: Story = {
+export const Date: Story = {
   args: { code: LANG_DATA, language: "json", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {

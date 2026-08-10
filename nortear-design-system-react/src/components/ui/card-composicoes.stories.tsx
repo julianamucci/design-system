@@ -21,7 +21,7 @@ const DEMO_IMAGE_AVATAR =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
 
 const meta = {
-  title: "UI/Card/Composicoes",
+  title: "UI/Card/Compositions",
   tags: ["layout"],
   component: Card,
   parameters: {

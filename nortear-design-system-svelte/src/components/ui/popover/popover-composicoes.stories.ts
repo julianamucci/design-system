@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Popover/Composicoes',
+  title: 'UI/Popover/Compositions',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {
@@ -29,7 +29,6 @@ const waitOpen = async () => {
 };
 
 export const ConteudoLivre: Story = {
-  name: 'Conteúdo livre',
   parameters: {
     docs: {
       description: {
@@ -47,8 +46,7 @@ export const ConteudoLivre: Story = {
   play: waitOpen,
 };
 
-export const ConfiguracoesComTitulo: Story = {
-  name: 'Configuracoes com título',
+export const SettingsWithTitle: Story = {
   parameters: {
     docs: {
       description: {
@@ -74,7 +72,6 @@ export const ConfiguracoesComTitulo: Story = {
 };
 
 export const FormularioInline: Story = {
-  name: 'Formulário inline',
   parameters: {
     docs: {
       description: {

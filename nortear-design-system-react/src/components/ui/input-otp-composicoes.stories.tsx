@@ -10,7 +10,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/InputOTP/Composicoes",
+  title: "UI/InputOTP/Compositions",
   tags: ["form"],
   component: InputOTP,
   parameters: {
@@ -80,7 +80,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComHelpText: Story = {
+export const WithHelpText: Story = {
   parameters: {
     docs: {
       description: {
@@ -128,7 +128,7 @@ export const ComHelpText: Story = {
   },
 };
 
-export const ComErrorMessage: Story = {
+export const WithErrorMessage: Story = {
   parameters: {
     docs: {
       description: {
@@ -178,7 +178,7 @@ export const ComErrorMessage: Story = {
   },
 };
 
-export const ComResendButton: Story = {
+export const WithResendButton: Story = {
   parameters: {
     docs: {
       description: {

@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const meta = {
-  title: 'UI/Card/Composicoes',
+  title: 'UI/Card/Compositions',
   component: Card,
   tags: ['layout'],
   parameters: {

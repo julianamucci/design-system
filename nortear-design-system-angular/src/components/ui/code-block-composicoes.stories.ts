@@ -10,7 +10,7 @@ import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 // base: o que muda entre eles é só o input passado ao bloco.
 
 const meta: Meta = {
-  title: 'UI/CodeBlock/Composicoes',
+  title: 'UI/CodeBlock/Compositions',
   tags: ['display'],
   decorators: [moduleMetadata({ imports: [NdsCodeBlock] })],
   parameters: {

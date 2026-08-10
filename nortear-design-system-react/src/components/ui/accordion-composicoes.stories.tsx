@@ -11,7 +11,7 @@ import {
 } from "./accordion";
 
 const meta: Meta = {
-  title: "UI/Accordion/Composicoes",
+  title: "UI/Accordion/Compositions",
   tags: ["disclosure"],
   parameters: {
     design: figmaDesign("accordionTrigger"),
@@ -31,7 +31,7 @@ const abrir = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
 };
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   render: () => (
     <Accordion className="nds-max-w-lg">
       <AccordionItem value="info">
@@ -96,7 +96,7 @@ export const ComIconeNoTrigger: Story = {
   },
 };
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   render: () => (
     <Accordion className="nds-max-w-lg">
       <AccordionItem value="novo">

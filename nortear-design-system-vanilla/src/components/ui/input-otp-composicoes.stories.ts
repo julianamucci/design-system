@@ -5,7 +5,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/InputOTP/Composicoes',
+  title: 'UI/InputOTP/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -51,7 +51,6 @@ function applyError(otp: HTMLElement): void {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const ComLabel: Story = {
-  name: 'Com Label',
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -78,8 +77,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComHelpText: Story = {
-  name: 'Com Help Text',
+export const WithHelpText: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -112,8 +110,8 @@ export const ComHelpText: Story = {
   },
 };
 
-export const ComErrorMessage: Story = {
-  name: 'Com Mensagem de Erro',
+export const WithErrorMessage: Story = {
+  name: 'With error message',
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -147,8 +145,8 @@ export const ComErrorMessage: Story = {
   },
 };
 
-export const ComResendButton: Story = {
-  name: 'Com Botão Reenviar',
+export const WithResendButton: Story = {
+  name: 'With resend button',
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';

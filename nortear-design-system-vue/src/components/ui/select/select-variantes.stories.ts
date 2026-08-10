@@ -13,7 +13,7 @@ import { Globe } from 'lucide-vue-next';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Select/Variantes',
+  title: 'UI/Select/Variants',
   component: Select,
   tags: ['form'],
   parameters: {

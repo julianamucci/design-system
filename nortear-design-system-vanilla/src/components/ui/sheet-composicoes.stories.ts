@@ -8,7 +8,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Sheet/Composicoes',
+  title: 'UI/Sheet/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

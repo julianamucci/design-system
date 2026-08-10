@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-vue-next';
 import { Button } from './index';
 
 const meta: Meta<any> = {
-  title: 'UI/Button/Estados',
+  title: 'UI/Button/States',
   component: Button,
   tags: ['form'],
   args: {

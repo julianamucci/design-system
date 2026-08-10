@@ -294,7 +294,7 @@ function SidebarWithSearch() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/Sidebar/Composicoes",
+  title: "UI/Sidebar/Compositions",
   tags: ["layout"],
   component: Sidebar,
   parameters: {
@@ -321,8 +321,8 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComGruposNavegacao: Story = {
-  name: "Com grupos de navegação",
+export const WithNavGroups: Story = {
+  name: "With nav groups",
   render: () => <SidebarWithNavGroups />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar renderiza com data-slot=sidebar", async () => {
@@ -336,8 +336,8 @@ export const ComGruposNavegacao: Story = {
   },
 };
 
-export const ComSubMenu: Story = {
-  name: "Com submenu aninhado",
+export const WithSubmenu: Story = {
+  name: "With nested submenu",
   render: () => <SidebarWithSubMenu />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar renderiza com data-slot=sidebar", async () => {
@@ -351,8 +351,8 @@ export const ComSubMenu: Story = {
   },
 };
 
-export const ComBusca: Story = {
-  name: "Com SidebarInput (busca)",
+export const WithSearch: Story = {
+  name: "With SidebarInput (search)",
   render: () => <SidebarWithSearch />,
   play: async ({ canvasElement, step }) => {
     await step("Sidebar renderiza com data-slot=sidebar", async () => {

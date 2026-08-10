@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { Progress } from './index';
 
 const meta = {
-  title: 'UI/Progress/Estados',
+  title: 'UI/Progress/States',
   component: Progress,
   tags: ['feedback'],
   parameters: {

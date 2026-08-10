@@ -6,7 +6,7 @@ import { NdsLabel } from './label';
 import { NdsButton } from './button';
 
 const meta: Meta = {
-  title: 'UI/RadioGroup/Composicoes',
+  title: 'UI/RadioGroup/Compositions',
   tags: ['form'],
   decorators: [
     moduleMetadata({ imports: [NdsRadioGroup, NdsRadioGroupItem, NdsLabel, NdsButton] }),

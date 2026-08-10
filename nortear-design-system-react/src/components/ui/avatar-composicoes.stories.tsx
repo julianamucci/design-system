@@ -19,7 +19,7 @@ const IMG_THIRD =
   "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&h=160&fit=crop&crop=faces";
 
 const meta = {
-  title: "UI/Avatar/Composicoes",
+  title: "UI/Avatar/Compositions",
   tags: ["display"],
   component: Avatar,
   parameters: {

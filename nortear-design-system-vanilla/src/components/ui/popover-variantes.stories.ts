@@ -7,7 +7,7 @@ import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/Popover/Variantes',
+  title: 'UI/Popover/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -52,7 +52,6 @@ async function cleanupPortal(): Promise<void> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
@@ -76,8 +75,7 @@ export const Default: Story = {
   },
 };
 
-export const ComTitulo: Story = {
-  name: 'Com Título',
+export const WithTitle: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
@@ -113,7 +111,6 @@ export const ComTitulo: Story = {
 };
 
 export const Form: Story = {
-  name: 'Form',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 

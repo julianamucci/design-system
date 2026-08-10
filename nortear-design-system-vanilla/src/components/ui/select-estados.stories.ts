@@ -4,7 +4,7 @@ import { createSelect } from './select';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Select/Estados',
+  title: 'UI/Select/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

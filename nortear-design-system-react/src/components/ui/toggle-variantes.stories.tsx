@@ -4,7 +4,7 @@ import { Bold, Italic, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
 
 const meta = {
-  title: "UI/Toggle/Variantes",
+  title: "UI/Toggle/Variants",
   tags: ["form"],
   component: Toggle,
   parameters: {

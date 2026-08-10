@@ -4,7 +4,7 @@ import { createSlider } from './slider';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Slider/Composicoes',
+  title: 'UI/Slider/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -238,7 +238,7 @@ export const FaixaDePreco: Story = {
 
 // ─── EmFormulario ─────────────────────────────────────────────────────────────
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack';

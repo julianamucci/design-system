@@ -6,7 +6,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 
 const meta = {
-  title: "UI/Textarea/Composicoes",
+  title: "UI/Textarea/Compositions",
   tags: ["form"],
   component: Textarea,
   parameters: {
@@ -24,7 +24,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComLabelEDescricao: Story = {
+export const WithLabelAndDescription: Story = {
   render: () => (
     <div className="" data-spacing="sm" style={{ width: "24rem" }}>
       <Label htmlFor="comp-desc">Descrição</Label>
@@ -90,7 +90,7 @@ function ComContadorRender() {
   );
 }
 
-export const ComContadorAcessivel: Story = {
+export const WithAccessibleCounter: Story = {
   render: () => <ComContadorRender />,
   parameters: {
     docs: {
@@ -160,7 +160,7 @@ function EmFormularioRender() {
   );
 }
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => <EmFormularioRender />,
   parameters: {
     docs: {
@@ -201,7 +201,7 @@ function ControladoRender() {
   );
 }
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => <ControladoRender />,
   parameters: {
     docs: {

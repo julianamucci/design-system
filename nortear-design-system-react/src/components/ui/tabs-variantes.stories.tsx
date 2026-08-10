@@ -3,7 +3,7 @@ import { within, expect } from "storybook/test";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 const meta: Meta = {
-  title: "UI/Tabs/Variantes",
+  title: "UI/Tabs/Variants",
   tags: ["navigation"],
   component: Tabs,
   parameters: {

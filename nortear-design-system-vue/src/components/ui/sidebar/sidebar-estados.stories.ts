@@ -20,7 +20,7 @@ import {
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Sidebar/Estados',
+  title: 'UI/Sidebar/States',
   component: Sidebar,
   tags: ['layout'],
   parameters: {
@@ -47,7 +47,7 @@ type Story = StoryObj<typeof meta>;
 // ─── Expandida (padrão) ───────────────────────────────────────────────────────
 
 export const Expanded: Story = {
-  name: 'Expandida',
+  name: 'Expanded',
   parameters: {
     docs: {
       description: { story: 'Estado padrão: sidebar visível em largura total (16rem). Labels e ícones exibidos. data-state="expanded"' },
@@ -122,7 +122,7 @@ export const Expanded: Story = {
 // ─── Icon mode colapsado ──────────────────────────────────────────────────────
 
 export const CollapsedIcon: Story = {
-  name: 'Recolhido (icon)',
+  name: 'Collapsed (icon)',
   parameters: {
     docs: {
       description: { story: 'collapsible="icon": sidebar reduz para 3rem. Apenas ícones visíveis; tooltips ao hover. data-state="collapsed"' },
@@ -193,7 +193,7 @@ export const CollapsedIcon: Story = {
 // ─── Fixo (none) ──────────────────────────────────────────────────────────────
 
 export const CollapsibleNone: Story = {
-  name: 'Fixo (none)',
+  name: 'Fixed (none)',
   parameters: {
     docs: {
       description: { story: 'collapsible="none": sidebar sempre visível. Sem toggle. Sem data-state de collapsed.' },
@@ -255,7 +255,6 @@ export const CollapsibleNone: Story = {
 // ─── Loading Skeleton ─────────────────────────────────────────────────────────
 
 export const LoadingSkeleton: Story = {
-  name: 'Loading Skeleton',
   parameters: {
     docs: {
       description: { story: 'SidebarMenuSkeleton com showIcon=true: placeholder de carregamento para itens de menu.' },
@@ -305,7 +304,6 @@ export const LoadingSkeleton: Story = {
 // ─── Mobile (viewport simulada) ───────────────────────────────────────────────
 
 export const MobileOverlay: Story = {
-  name: 'Mobile (overlay)',
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
     docs: {

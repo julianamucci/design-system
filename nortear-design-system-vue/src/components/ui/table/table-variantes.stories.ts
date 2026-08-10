@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const meta = {
-  title: 'UI/Table/Variantes',
+  title: 'UI/Table/Variants',
   component: Table,
   tags: ['tables'],
   parameters: {
@@ -90,7 +90,7 @@ export const Basica: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   render: () => ({
     components: {
       Table,
@@ -218,7 +218,7 @@ export const CaptionSrOnly: Story = {
   },
 };
 
-export const ComAcoesPorLinha: Story = {
+export const WithRowActions: Story = {
   render: () => ({
     components: {
       Table,

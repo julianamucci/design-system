@@ -5,7 +5,7 @@ import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Checkbox/Estados',
+  title: 'UI/Checkbox/States',
   component: Checkbox,
   tags: ['form'],
   parameters: {

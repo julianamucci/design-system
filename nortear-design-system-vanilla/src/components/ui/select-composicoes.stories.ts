@@ -4,7 +4,7 @@ import { createSelect } from './select';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/Select/Composicoes',
+  title: 'UI/Select/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -41,7 +41,7 @@ function withLabel(select: HTMLSelectElement, labelText: string, id: string): HT
 
 // ─── EstadoBrasileiro ─────────────────────────────────────────────────────────
 
-export const EstadoBrasileiro: Story = {
+export const BrazilianState: Story = {
   render: () =>
     withLabel(
       createSelect({
@@ -80,7 +80,7 @@ export const EstadoBrasileiro: Story = {
 
 // ─── RegiaoComGrupos ──────────────────────────────────────────────────────────
 
-export const RegiaoComGrupos: Story = {
+export const RegionWithGroups: Story = {
   render: () => {
     // O factory createSelect só aceita items planos — para grupos,
     // construímos o <select> + <optgroup> manualmente.
@@ -161,7 +161,7 @@ export const RegiaoComGrupos: Story = {
 
 // ─── EmFormulario ─────────────────────────────────────────────────────────────
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack nds-border-default nds-rounded-lg';

@@ -6,7 +6,7 @@ import { type Invoice, baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/DataTable/Estados',
+  title: 'UI/DataTable/States',
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -19,7 +19,7 @@ type Story = StoryObj;
 
 // ─── SemResultados ──────────────────────────────────────────────────────────
 
-export const SemResultados: Story = {
+export const NoResults: Story = {
   render: () => createDataTable<Invoice>({
     columns: baseColumns,
     data: [],

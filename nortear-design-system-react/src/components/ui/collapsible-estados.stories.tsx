@@ -11,7 +11,7 @@ import { Button, buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
 const meta = {
-  title: "UI/Collapsible/Estados",
+  title: "UI/Collapsible/States",
   tags: ["disclosure"],
   component: Collapsible,
   parameters: {
@@ -32,8 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Uncontrolled ─────────────────────────────────────────────────────────────
 
-export const NaoControlado: Story = {
-  name: "Não Controlado",
+export const Uncontrolled: Story = {
   render: () => (
     <Collapsible defaultOpen={false} className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger
@@ -110,7 +109,7 @@ function ControlledExample() {
   );
 }
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: () => <ControlledExample />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -138,7 +137,7 @@ export const Controlado: Story = {
 
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   render: () => (
     <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <CollapsibleTrigger

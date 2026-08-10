@@ -4,7 +4,7 @@ import { createPagination } from './pagination';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Pagination/Variantes',
+  title: 'UI/Pagination/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -36,7 +36,6 @@ function wrap(child: HTMLElement, minHeight = 100): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  name: 'Default',
   render: () =>
     wrap(
       createPagination({
@@ -60,7 +59,7 @@ export const Default: Story = {
 };
 
 export const Active: Story = {
-  name: 'Active (página atual)',
+  name: 'Active (current page)',
   render: () => {
     const nav = createPagination({
       total: 7,

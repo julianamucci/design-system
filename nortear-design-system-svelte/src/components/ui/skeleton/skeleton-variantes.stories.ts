@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import SkeletonStory from './SkeletonStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Skeleton/Variantes',
+  title: 'UI/Skeleton/Variants',
   component: SkeletonStory,
   tags: ['feedback'],
   parameters: {
@@ -62,7 +62,7 @@ export const Circulo: Story = {
   },
 };
 
-export const LinhaDeTexto: Story = {
+export const TextLine: Story = {
   args: { class: 'h-4 w-[200px]' },
   parameters: {
     docs: {

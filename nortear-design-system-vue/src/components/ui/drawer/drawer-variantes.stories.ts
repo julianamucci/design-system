@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Drawer/Variantes',
+  title: 'UI/Drawer/Variants',
   component: Drawer,
   tags: ['disclosure'],
   parameters: {

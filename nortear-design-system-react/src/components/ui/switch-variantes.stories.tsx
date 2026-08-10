@@ -4,7 +4,7 @@ import { Switch } from "./switch";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Switch/Variantes",
+  title: "UI/Switch/Variants",
   tags: ["form"],
   component: Switch,
   parameters: {

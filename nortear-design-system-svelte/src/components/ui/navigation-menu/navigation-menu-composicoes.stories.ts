@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/NavigationMenu/Composicoes',
+  title: 'UI/NavigationMenu/Compositions',
   component: NavigationMenuStory,
   tags: ['navigation'],
   parameters: {
@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const LinkSimples: Story = {
+export const SimpleLink: Story = {
   args: {
     demonstration: 'simpleLink',
     ariaLabel: 'Navegação principal',
@@ -43,7 +43,7 @@ export const LinkSimples: Story = {
   },
 };
 
-export const ComDropdown: Story = {
+export const WithDropdown: Story = {
   args: {
     demonstration: 'withDropdown',
     ariaLabel: 'Navegação principal',
@@ -91,7 +91,7 @@ export const MegaMenuGrid: Story = {
   },
 };
 
-export const ComCardDestacado: Story = {
+export const WithHighlightedCard: Story = {
   args: {
     demonstration: 'withFeatured',
     ariaLabel: 'Navegação principal',

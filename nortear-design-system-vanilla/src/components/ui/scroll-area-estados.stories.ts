@@ -4,7 +4,7 @@ import { createScrollArea } from './scroll-area';
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/ScrollArea/Estados',
+  title: 'UI/ScrollArea/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',

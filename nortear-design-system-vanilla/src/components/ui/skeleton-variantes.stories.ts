@@ -4,7 +4,7 @@ import { createSkeleton } from './skeleton';
 
 const meta: Meta = {
   tags: ['feedback'],
-  title: 'UI/Skeleton/Variantes',
+  title: 'UI/Skeleton/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -35,7 +35,6 @@ function buildContainer(label: string): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Retangulo: Story = {
-  name: 'Retângulo',
   render: () => {
     const wrap = buildContainer('Carregando bloco retangular');
     const skeleton = createSkeleton({ height: '6rem', width: '100%' });
@@ -54,7 +53,6 @@ export const Retangulo: Story = {
 };
 
 export const Circulo: Story = {
-  name: 'Círculo',
   render: () => {
     const wrap = buildContainer('Carregando avatar');
     const skeleton = createSkeleton({ className: 'nds-rounded-full nds-size-12' });
@@ -72,8 +70,7 @@ export const Circulo: Story = {
   },
 };
 
-export const LinhaDeTexto: Story = {
-  name: 'Linha de Texto',
+export const TextLine: Story = {
   render: () => {
     const wrap = buildContainer('Carregando linhas de texto');
 

@@ -6,7 +6,7 @@ import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Badge/Composicoes',
+  title: 'UI/Badge/Compositions',
   component: Badge,
   tags: ['feedback'],
   parameters: {

@@ -11,13 +11,13 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Alert/Composicoes',
+  title: 'UI/Alert/Compositions',
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item2'] },
   render: () => {
     const alert = createAlert();
@@ -37,7 +37,7 @@ export const ComIcone: Story = {
 
 // ─── Com Ação ────────────────────────────────────────────────────────────────
 
-export const ComAcao: Story = {
+export const WithAction: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
@@ -119,7 +119,7 @@ export const ClasseAdicional: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => {
     const alert = createAlert();

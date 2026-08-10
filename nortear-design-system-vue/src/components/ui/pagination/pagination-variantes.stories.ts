@@ -10,7 +10,7 @@ import {
 } from './index';
 
 const meta = {
-  title: 'UI/Pagination/Variantes',
+  title: 'UI/Pagination/Variants',
   component: Pagination,
   tags: ['navigation'],
   parameters: {

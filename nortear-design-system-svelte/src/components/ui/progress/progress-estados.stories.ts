@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Progress/Estados',
+  title: 'UI/Progress/States',
   component: ProgressStory,
   tags: ['feedback'],
   parameters: {

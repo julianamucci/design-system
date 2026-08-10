@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 
 const meta = {
-  title: 'UI/Badge/Variantes',
+  title: 'UI/Badge/Variants',
   component: Badge,
   tags: ['feedback'],
   parameters: {
@@ -127,7 +127,7 @@ export const Outline: Story = {
  * provável — copiar o bloco do destructive e esquecer de trocar o token, que é
  * como as três nasceriam iguais.
  */
-export const Semanticas: Story = {
+export const Semantics: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
     docs: {

@@ -4,7 +4,7 @@ import { userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/InputOTP/Estados',
+  title: 'UI/InputOTP/States',
   component: InputOTPStory,
   tags: ['form'],
   parameters: {
@@ -30,7 +30,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   return input;
 }
 
-export const Vazio: Story = {
+export const Empty: Story = {
   args: {
     maxLength: 6,
     defaultValue: '',
@@ -42,8 +42,8 @@ export const Vazio: Story = {
   },
 };
 
-export const Preenchendo: Story = {
-  name: 'Preenchendo (3 de 6)',
+export const Filling: Story = {
+  name: 'Filling (3 of 6)',
   args: {
     maxLength: 6,
     defaultValue: '123',
@@ -56,7 +56,7 @@ export const Preenchendo: Story = {
 };
 
 export const Completo: Story = {
-  name: 'Completo (6 dígitos)',
+  name: 'Complete (6 digits)',
   args: {
     maxLength: 6,
     defaultValue: '123456',
@@ -68,7 +68,7 @@ export const Completo: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   args: {
     maxLength: 6,
     disabled: true,
@@ -85,8 +85,8 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Erro: Story = {
-  name: 'Erro (aria-invalid)',
+export const Error: Story = {
+  name: 'Error (aria-invalid)',
   args: {
     maxLength: 6,
     hasError: true,

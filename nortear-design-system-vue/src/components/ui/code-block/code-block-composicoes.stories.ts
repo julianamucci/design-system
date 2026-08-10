@@ -8,7 +8,7 @@ const total = items.length;
 render(items, total);`;
 
 const meta = {
-  title: 'UI/CodeBlock/Composições',
+  title: 'UI/CodeBlock/Compositions',
   component: CodeBlock,
   tags: ['display'],
   parameters: {
@@ -26,7 +26,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   args: { title: 'lista.ts' },
   play: async ({ canvasElement, step }) => {
     await step('O header ganha o rótulo do arquivo', async () => {
@@ -37,7 +37,7 @@ export const ComRotulo: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     const root = canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
@@ -49,7 +49,7 @@ export const SemNumeracao: Story = {
   },
 };
 
-export const ComDestaque: Story = {
+export const WithHighlight: Story = {
   args: { highlightLines: [2] },
   play: async ({ canvasElement, step }) => {
     await step('Só a linha pedida fica destacada', async () => {
@@ -60,7 +60,7 @@ export const ComDestaque: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   args: { footer: 'A ação de copiar leva apenas o código.' },
   play: async ({ canvasElement, step }) => {
     await step('O rodapé aparece abaixo do código', async () => {

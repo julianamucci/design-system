@@ -14,7 +14,7 @@ import { createButton } from '@/components/ui/button';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/Table/Variantes',
+  title: 'UI/Table/Variants',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -85,7 +85,7 @@ export const Basica: Story = {
 
 // ─── ComRodape ────────────────────────────────────────────────────────────────
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas com total'));
@@ -133,7 +133,7 @@ export const CaptionSrOnly: Story = {
 
 // ─── ComAcoesPorLinha ─────────────────────────────────────────────────────────
 
-export const ComAcoesPorLinha: Story = {
+export const WithRowActions: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas com ações por linha'));

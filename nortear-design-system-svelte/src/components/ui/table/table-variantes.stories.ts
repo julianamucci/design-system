@@ -8,7 +8,7 @@ import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 
 const meta: Meta = {
-  title: 'UI/Table/Variantes',
+  title: 'UI/Table/Variants',
   component: Table,
   tags: ['tables'],
   parameters: {
@@ -39,7 +39,7 @@ export const Basica: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   render: () => ({
     Component: TableVarianteComRodape,
     props: {},
@@ -76,7 +76,7 @@ export const CaptionSrOnly: Story = {
   },
 };
 
-export const ComAcoesPorLinha: Story = {
+export const WithRowActions: Story = {
   render: () => ({
     Component: TableVarianteComAcoes,
     props: {},

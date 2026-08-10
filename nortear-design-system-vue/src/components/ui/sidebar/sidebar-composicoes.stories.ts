@@ -30,7 +30,7 @@ import {
 } from 'lucide-vue-next';
 
 const meta = {
-  title: 'UI/Sidebar/Composicoes',
+  title: 'UI/Sidebar/Compositions',
   component: Sidebar,
   tags: ['layout'],
   parameters: {
@@ -57,7 +57,7 @@ type Story = StoryObj<typeof meta>;
 // ─── Com grupos de navegação ──────────────────────────────────────────────────
 
 export const WithNavGroups: Story = {
-  name: 'Com grupos de navegação',
+  name: 'With nav groups',
   parameters: {
     docs: {
       description: { story: 'Sidebar com múltiplos SidebarGroup separados por SidebarSeparator, cada grupo com label e ação.' },
@@ -178,7 +178,7 @@ export const WithNavGroups: Story = {
 // ─── Com sub-menu ─────────────────────────────────────────────────────────────
 
 export const WithSubMenu: Story = {
-  name: 'Com sub-menu',
+  name: 'With submenu',
   parameters: {
     docs: {
       description: { story: 'Sidebar com SidebarMenuSub: itens aninhados com linha de referência visual.' },
@@ -297,7 +297,7 @@ export const WithSubMenu: Story = {
 // ─── Com busca ────────────────────────────────────────────────────────────────
 
 export const WithSearch: Story = {
-  name: 'Com campo de busca',
+  name: 'With search field',
   parameters: {
     docs: {
       description: { story: 'Sidebar com SidebarInput no header para filtrar navegação inline.' },

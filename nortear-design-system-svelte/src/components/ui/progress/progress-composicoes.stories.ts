@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Progress/Composicoes',
+  title: 'UI/Progress/Compositions',
   component: ProgressStory,
   tags: ['feedback'],
   parameters: {
@@ -50,7 +50,7 @@ export const UploadAnimado: Story = {
   },
 };
 
-export const LoadingSimples: Story = {
+export const SimpleLoading: Story = {
   args: {
     value: 35,
     'aria-label': 'Carregando dados',
@@ -71,7 +71,7 @@ export const LoadingSimples: Story = {
   },
 };
 
-export const ConclusaoSucesso: Story = {
+export const SuccessCompletion: Story = {
   args: {
     value: 100,
     'aria-label': 'Operação concluída',
@@ -98,7 +98,7 @@ export const ConclusaoSucesso: Story = {
   },
 };
 
-export const ProcessandoIndeterminate: Story = {
+export const ProcessingIndeterminate: Story = {
   args: {
     value: null,
     'aria-label': 'Processando…',

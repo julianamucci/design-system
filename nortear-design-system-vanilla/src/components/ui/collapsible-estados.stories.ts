@@ -8,7 +8,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Collapsible/Estados',
+  title: 'UI/Collapsible/States',
 };
 
 export default meta;
@@ -30,7 +30,7 @@ function makeContent(items: string[]): HTMLElement {
 
 // ─── NaoControlado ────────────────────────────────────────────────────────────
 
-export const NaoControlado: Story = {
+export const Uncontrolled: Story = {
   render: () =>
     createCollapsible({
       trigger: 'Exibir filtros avançados',
@@ -67,7 +67,7 @@ export const NaoControlado: Story = {
 
 // ─── AbertoporPadrao ─────────────────────────────────────────────────────────
 
-export const AbertoporPadrao: Story = {
+export const OpenByDefault: Story = {
   render: () =>
     createCollapsible({
       trigger: 'Ocultar filtros avançados',

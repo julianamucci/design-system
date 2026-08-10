@@ -6,7 +6,7 @@ import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/DataTable/Configuracoes',
+  title: 'UI/DataTable/Settings',
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -27,7 +27,7 @@ const bigData: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   amount: Math.round(Math.random() * 2000),
 }));
 
-export const Virtualizado1000Linhas: Story = {
+export const Virtualized1000Rows: Story = {
   render: () => createDataTable<Invoice>({
     columns: baseColumns,
     data: bigData,

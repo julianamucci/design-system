@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Variantes',
+  title: 'UI/Button/Variants',
 };
 
 export default meta;

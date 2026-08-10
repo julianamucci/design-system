@@ -7,7 +7,7 @@ import { type Invoice, invoices, currency, statusVariant, baseColumns } from './
 
 const meta: Meta = {
   tags: ['tables'],
-  title: 'UI/DataTable/Composicoes',
+  title: 'UI/DataTable/Compositions',
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -58,7 +58,7 @@ const filterableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComFiltrosPorColuna: Story = {
+export const WithColumnFilters: Story = {
   render: () => createDataTable<Invoice>({
     columns: filterableColumns,
     data: invoices,
@@ -69,7 +69,7 @@ export const ComFiltrosPorColuna: Story = {
 
 // ─── ColunasRedimensionaveis ────────────────────────────────────────────────
 
-export const ColunasRedimensionaveis: Story = {
+export const ResizableColumns: Story = {
   render: () => createDataTable<Invoice>({
     columns: baseColumns,
     data: invoices,
@@ -123,7 +123,7 @@ const editableColumns: DataTableColumn<Invoice>[] = [
   },
 ];
 
-export const ComEdicaoInline: Story = {
+export const WithInlineEditing: Story = {
   render: () => {
     const wrap = document.createElement('div');
     let workingData = invoices.slice(0, 6);

@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/ToggleGroup/Variantes',
+  title: 'UI/ToggleGroup/Variants',
   component: ToggleGroupStory,
   tags: ['form'],
   parameters: {

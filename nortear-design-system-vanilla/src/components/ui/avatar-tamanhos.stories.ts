@@ -5,7 +5,7 @@ import { createAvatar, type AvatarSize } from './avatar';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/Avatar/Tamanhos',
+  title: 'UI/Avatar/Sizes',
   parameters: {
     design: figmaDesign('avatar'),
     controls: { disable: true },
@@ -68,7 +68,7 @@ export const Sm: Story = {
 };
 
 export const Md: Story = {
-  name: 'md (32px · padrão)',
+  name: 'md (32px · default)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: { description: { story: 'Tamanho padrão do componente (32px) — comentários e chips.' } },

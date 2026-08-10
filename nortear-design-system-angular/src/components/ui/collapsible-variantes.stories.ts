@@ -27,7 +27,7 @@ const PAINEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
 const meta: Meta = {
-  title: 'UI/Collapsible/Variantes',
+  title: 'UI/Collapsible/Variants',
   decorators: [moduleMetadata({ imports: [...NDS_COLLAPSIBLE, NdsButton] })],
   parameters: {
     layout: 'padded',

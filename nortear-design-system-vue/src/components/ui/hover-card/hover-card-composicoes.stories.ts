@@ -8,7 +8,7 @@ import {
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/HoverCard/Composicoes',
+  title: 'UI/HoverCard/Compositions',
   component: HoverCard,
   tags: ['overlay'],
   parameters: {
@@ -105,7 +105,7 @@ export const PreviewDeLink: Story = {
   },
 };
 
-export const DefinicaoDeTermo: Story = {
+export const TermDefinition: Story = {
   parameters: {
     docs: {
       description: {

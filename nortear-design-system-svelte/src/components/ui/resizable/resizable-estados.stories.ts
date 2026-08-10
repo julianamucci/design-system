@@ -4,7 +4,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Resizable/Estados',
+  title: 'UI/Resizable/States',
   component: ResizableStory,
   tags: ['layout'],
   parameters: {

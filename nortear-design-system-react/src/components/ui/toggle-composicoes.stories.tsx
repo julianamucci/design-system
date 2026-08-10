@@ -5,7 +5,7 @@ import { Bold, Italic, Underline, List, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
 
 const meta = {
-  title: "UI/Toggle/Composicoes",
+  title: "UI/Toggle/Compositions",
   tags: ["form"],
   component: Toggle,
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BarraDeFormatacao: Story = {
+export const FormattingBar: Story = {
   render: () => (
     <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-align="center" data-spacing="xs">
       <Toggle aria-label="Negrito">
@@ -65,7 +65,7 @@ export const BarraDeFormatacao: Story = {
   },
 };
 
-export const FiltroComLabel: Story = {
+export const FilterWithLabel: Story = {
   render: () => (
     <Toggle variant="outline" aria-label="Mostrar ocultos">
       <Eye aria-hidden="true" />
@@ -92,7 +92,7 @@ export const FiltroComLabel: Story = {
   },
 };
 
-export const Tamanhos: Story = {
+export const Sizes: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle size="sm" aria-label="Negrito pequeno">
@@ -124,7 +124,7 @@ export const Tamanhos: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   render: function ControladoRender() {
     const [isBold, setIsBold] = useState(false);
     return (

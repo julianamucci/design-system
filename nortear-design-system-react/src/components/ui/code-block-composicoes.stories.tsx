@@ -13,7 +13,7 @@ const rootOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
 const meta = {
-  title: "UI/CodeBlock/Composicoes",
+  title: "UI/CodeBlock/Compositions",
   component: CodeBlock,
   tags: ["display"],
   parameters: {
@@ -25,7 +25,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   args: { code: COMPOSITION_CODE, language: "ts", title: "lista.ts" },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -35,7 +35,7 @@ export const ComRotulo: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   args: { code: COMPOSITION_CODE, language: "ts", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -45,7 +45,7 @@ export const SemNumeracao: Story = {
   },
 };
 
-export const ComDestaque: Story = {
+export const WithHighlight: Story = {
   args: { code: COMPOSITION_CODE, language: "ts", highlightLines: [2] },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -56,7 +56,7 @@ export const ComDestaque: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   args: { code: COMPOSITION_CODE, language: "ts", footer: FOOTER_NOTE },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {

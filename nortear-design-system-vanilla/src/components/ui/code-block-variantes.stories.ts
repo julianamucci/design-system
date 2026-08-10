@@ -11,7 +11,7 @@ import { LANGUAGE_ITEMS } from '@/components/docs/CodeBlockDocs';
 
 const meta: Meta = {
   tags: ['display'],
-  title: 'UI/CodeBlock/Variantes',
+  title: 'UI/CodeBlock/Variants',
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -85,7 +85,7 @@ export const Styles: Story = {
   },
 };
 
-export const Data: Story = {
+export const Date: Story = {
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
     await step('JSON recebe classificação de sintaxe', async () => {

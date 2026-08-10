@@ -14,7 +14,7 @@ import {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: "UI/ContextMenu/Estados",
+  title: "UI/ContextMenu/States",
   tags: ["overlay"],
   component: ContextMenu,
   parameters: {

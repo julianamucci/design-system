@@ -9,7 +9,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['overlay'],
-  title: 'UI/AlertDialog/Estados',
+  title: 'UI/AlertDialog/States',
   parameters: {
     design: figmaDesign('alertDialog'),
     controls: { disable: true },

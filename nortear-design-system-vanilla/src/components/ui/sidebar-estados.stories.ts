@@ -15,7 +15,7 @@ import {
 
 const meta: Meta = {
   tags: ['layout'],
-  title: 'UI/Sidebar/Estados',
+  title: 'UI/Sidebar/States',
   parameters: {
     actions: { disable: true },
     layout: 'fullscreen',
@@ -145,8 +145,8 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Expandido: Story = {
-  name: 'Expandido (padrão)',
+export const Expanded: Story = {
+  name: 'Expanded (default)',
   render: () => buildBase(true),
   parameters: {
     docs: {
@@ -171,7 +171,7 @@ export const Expandido: Story = {
 };
 
 export const Recolhido: Story = {
-  name: 'Recolhido (offcanvas)',
+  name: 'Collapsed (offcanvas)',
   render: () => buildBase(false),
   parameters: {
     docs: {
@@ -189,7 +189,7 @@ export const Recolhido: Story = {
 };
 
 export const ModoIcon: Story = {
-  name: 'Modo Icon (collapsible icon)',
+  name: 'Icon mode (collapsible icon)',
   render: () => {
     // Build collapsed sidebar to represent icon mode visually
     const instance = createSidebar({ defaultOpen: false, variant: 'sidebar' });
@@ -289,8 +289,8 @@ export const ModoIcon: Story = {
   },
 };
 
-export const SemToggle: Story = {
-  name: 'Sem toggle (collapsible none)',
+export const WithoutToggle: Story = {
+  name: 'No toggle (collapsible none)',
   render: () => buildBase(true, 'none'),
   parameters: {
     docs: {

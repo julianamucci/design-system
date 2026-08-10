@@ -12,7 +12,7 @@ import { Save } from 'lucide-vue-next';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
-  title: 'UI/Tooltip/Variantes',
+  title: 'UI/Tooltip/Variants',
   component: Tooltip,
   tags: ['overlay'],
   decorators: [
@@ -69,7 +69,7 @@ export const Default: Story = {
   },
 };
 
-export const ComAtalho: Story = {
+export const WithShortcut: Story = {
   parameters: {
     docs: {
       description: {
@@ -103,7 +103,7 @@ export const ComAtalho: Story = {
   },
 };
 
-export const TextoLongo: Story = {
+export const LongText: Story = {
   parameters: {
     docs: {
       description: {

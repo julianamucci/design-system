@@ -16,7 +16,7 @@ import { NdsButton } from './button';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'UI/Breadcrumb/Composicoes',
+  title: 'UI/Breadcrumb/Compositions',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

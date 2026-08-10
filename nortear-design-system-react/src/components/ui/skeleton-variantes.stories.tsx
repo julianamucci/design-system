@@ -3,7 +3,7 @@ import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
 
 const meta = {
-  title: "UI/Skeleton/Variantes",
+  title: "UI/Skeleton/Variants",
   tags: ["feedback"],
   component: Skeleton,
   parameters: {
@@ -74,7 +74,7 @@ export const Circulo: Story = {
   },
 };
 
-export const LinhaDeTexto: Story = {
+export const TextLine: Story = {
   parameters: {
     docs: {
       description: {

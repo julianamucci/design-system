@@ -10,7 +10,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
-  title: 'UI/Button/Tamanhos',
+  title: 'UI/Button/Sizes',
 };
 
 export default meta;

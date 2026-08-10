@@ -5,7 +5,7 @@ import { Input } from "./input";
 import { Checkbox } from "./checkbox";
 
 const meta = {
-  title: "UI/Label/Composicoes",
+  title: "UI/Label/Compositions",
   tags: ["form"],
   component: Label,
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComInput: Story = {
+export const WithInput: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="comp-input">Telefone</Label>
@@ -55,7 +55,7 @@ export const ComInput: Story = {
   },
 };
 
-export const ComCheckbox: Story = {
+export const WithCheckbox: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="comp-checkbox" />
@@ -87,7 +87,7 @@ export const ComCheckbox: Story = {
   },
 };
 
-export const CampoObrigatorio: Story = {
+export const RequiredField: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
       <Label htmlFor="comp-required">

@@ -17,7 +17,7 @@ import {
 // Controls aparece vazio.
 
 const meta: Meta = {
-  title: 'UI/Pagination/Estados',
+  title: 'UI/Pagination/States',
   tags: ['navigation'],
   decorators: [
     moduleMetadata({

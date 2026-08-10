@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/RadioGroup/Composicoes',
+  title: 'UI/RadioGroup/Compositions',
   component: RadioGroup,
   tags: ['form'],
   parameters: {
@@ -62,7 +62,7 @@ export const FormaDePagamento: Story = {
   },
 };
 
-export const ComFieldsetLegend: Story = {
+export const WithFieldsetLegend: Story = {
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -97,7 +97,7 @@ export const ComFieldsetLegend: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -160,7 +160,7 @@ export const EmFormulario: Story = {
   },
 };
 
-export const CartoesSelecionaveis: Story = {
+export const SelectableCards: Story = {
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },

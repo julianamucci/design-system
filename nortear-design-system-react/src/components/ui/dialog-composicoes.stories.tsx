@@ -16,7 +16,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Dialog/Composicoes",
+  title: "UI/Dialog/Compositions",
   tags: ["overlay"],
   component: Dialog,
   parameters: {

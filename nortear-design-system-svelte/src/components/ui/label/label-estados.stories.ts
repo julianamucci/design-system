@@ -18,7 +18,7 @@ import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
  * com `data-disabled="true"`.
  */
 const meta: Meta = {
-  title: 'UI/Label/Estados',
+  title: 'UI/Label/States',
   component: LabelStory,
   tags: ['form'],
   parameters: {
@@ -84,8 +84,7 @@ export const Required: Story = {
   },
 };
 
-export const DisabledViaGrupo: Story = {
-  name: 'Disabled (via group)',
+export const DisabledViaGroup: Story = {
   render: () => ({
     Component: LabelDisabledGroupStory,
     props: {},

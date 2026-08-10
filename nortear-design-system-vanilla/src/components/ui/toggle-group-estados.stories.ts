@@ -5,7 +5,7 @@ import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/ToggleGroup/Estados',
+  title: 'UI/ToggleGroup/States',
   parameters: {
     actions: { disable: true },
     layout: 'centered',

@@ -5,7 +5,7 @@ import { within, expect } from 'storybook/test';
 import MenubarStory from './MenubarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Menubar/Composicoes',
+  title: 'UI/Menubar/Compositions',
   component: MenubarStory,
   tags: ['navigation'],
   parameters: {
@@ -49,7 +49,7 @@ export const ComShortcuts: Story = {
   },
 };
 
-export const ComSubmenu: Story = {
+export const WithSubmenu: Story = {
   args: {
     defaultValue: 'file',
     demonstration: 'submenu',
@@ -69,7 +69,7 @@ export const ComSubmenu: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
+export const WithCheckboxItems: Story = {
   args: {
     defaultValue: 'view',
     demonstration: 'checkbox',
@@ -89,7 +89,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
+export const WithRadioGroup: Story = {
   args: {
     defaultValue: 'tools',
     demonstration: 'radio',

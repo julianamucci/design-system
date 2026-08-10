@@ -16,7 +16,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Drawer/Composicoes",
+  title: "UI/Drawer/Compositions",
   tags: ["disclosure"],
   component: Drawer,
   parameters: {
@@ -59,7 +59,7 @@ async function assertSemanticStructure(step: (label: string, fn: () => Promise<v
   });
 }
 
-export const ComFormulario: Story = {
+export const WithForm: Story = {
   parameters: {
     docs: {
       description: {
@@ -112,7 +112,7 @@ export const ComFormulario: Story = {
   },
 };
 
-export const ComConfirmacao: Story = {
+export const WithConfirmation: Story = {
   parameters: {
     docs: {
       description: {
@@ -153,7 +153,7 @@ export const ComConfirmacao: Story = {
   },
 };
 
-export const ComScroll: Story = {
+export const WithScroll: Story = {
   parameters: {
     docs: {
       description: {

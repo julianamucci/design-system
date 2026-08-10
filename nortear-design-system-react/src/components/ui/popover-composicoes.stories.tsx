@@ -13,7 +13,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta = {
-  title: "UI/Popover/Composicoes",
+  title: "UI/Popover/Compositions",
   tags: ["overlay"],
   component: Popover,
   parameters: {
@@ -98,7 +98,7 @@ export const EditarPerfil: Story = {
   },
 };
 
-export const FiltrosRapidos: Story = {
+export const QuickFilters: Story = {
   parameters: {
     docs: {
       description: {
@@ -150,7 +150,7 @@ export const FiltrosRapidos: Story = {
   },
 };
 
-export const SelecaoDeData: Story = {
+export const DateSelection: Story = {
   parameters: {
     docs: {
       description: {

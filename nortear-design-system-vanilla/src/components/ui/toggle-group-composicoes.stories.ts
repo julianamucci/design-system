@@ -15,7 +15,7 @@ import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
 
 const meta: Meta = {
   tags: ['form'],
-  title: 'UI/ToggleGroup/Composicoes',
+  title: 'UI/ToggleGroup/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'centered',
@@ -90,7 +90,7 @@ function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
 
 // ─── BarraDeAlinhamento (single) ──────────────────────────────────────────────
 
-export const BarraDeAlinhamento: Story = {
+export const AlignmentBar: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
       { value: 'left',   children: '' },
@@ -134,7 +134,7 @@ export const BarraDeAlinhamento: Story = {
 
 // ─── BarraDeFormatacao (multiple) ─────────────────────────────────────────────
 
-export const BarraDeFormatacao: Story = {
+export const FormattingBar: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
       { value: 'bold',      children: '' },
@@ -177,7 +177,7 @@ export const BarraDeFormatacao: Story = {
 
 // ─── ModoDeVisualizacao (vertical + texto visível) ────────────────────────────
 
-export const ModoDeVisualizacao: Story = {
+export const ViewMode: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
       { value: 'grid', children: '' },
@@ -224,7 +224,7 @@ export const ModoDeVisualizacao: Story = {
 
 // ─── ComItemDesabilitado ──────────────────────────────────────────────────────
 
-export const ComItemDesabilitado: Story = {
+export const WithDisabledItem: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
       { value: 'left',   children: '' },
@@ -263,7 +263,7 @@ export const ComItemDesabilitado: Story = {
 
 // ─── ComFiltroVisivel ─────────────────────────────────────────────────────────
 
-export const ComFiltroVisivel: Story = {
+export const WithVisibleFilter: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

@@ -5,7 +5,7 @@ import { NdsInput } from './input';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
-  title: 'UI/Input/Estados',
+  title: 'UI/Input/States',
   decorators: [moduleMetadata({ imports: [NdsInput, NdsLabel] })],
   parameters: { layout: 'padded', controls: { disable: true } },
 };

@@ -5,7 +5,7 @@ import { expect, waitFor } from 'storybook/test';
 import HoverCardStory from './HoverCardStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/HoverCard/Variantes',
+  title: 'UI/HoverCard/Variants',
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
@@ -49,8 +49,8 @@ export const Default: Story = {
   },
 };
 
-export const ComDelayCurto: Story = {
-  name: 'Com delay curto (50ms)',
+export const WithShortDelay: Story = {
+  name: 'With short delay (50ms)',
   args: {
     openDelay: 0,
     closeDelay: 0,

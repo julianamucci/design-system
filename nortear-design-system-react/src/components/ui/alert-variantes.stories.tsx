@@ -9,7 +9,7 @@ import { Alert, AlertTitle, AlertDescription } from "./alert";
 import { contrasteNosDoisTemas, descreverFalhas } from "@shared/testing/alert-probe";
 
 const meta = {
-  title: "UI/Alert/Variantes",
+  title: "UI/Alert/Variants",
   tags: ["feedback"],
   component: Alert,
   parameters: {
@@ -99,7 +99,6 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
-  name: "Info",
   render: () => (
     <Alert variant="info">
       <InfoIcon aria-hidden="true" className="nds-icon" />

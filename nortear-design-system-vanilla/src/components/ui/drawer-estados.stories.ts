@@ -6,7 +6,7 @@ import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['disclosure'],
-  title: 'UI/Drawer/Estados',
+  title: 'UI/Drawer/States',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -69,8 +69,7 @@ function buildBase(opts: {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Fechado: Story = {
-  name: 'Fechado',
+export const Closed: Story = {
   render: () => buildBase({ triggerLabel: 'Abrir drawer', title: 'Editar perfil' }).wrapper,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -83,8 +82,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
-  name: 'Aberto',
+export const Open: Story = {
   render: () => buildBase({
     triggerLabel: 'Abrir drawer',
     title: 'Editar perfil',
@@ -107,8 +105,7 @@ export const Aberto: Story = {
   },
 };
 
-export const Controlado: Story = {
-  name: 'Controlado',
+export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
@@ -176,7 +173,6 @@ export const Controlado: Story = {
 };
 
 export const NaoDismissible: Story = {
-  name: 'Nao Dismissible',
   parameters: {
     docs: {
       description: {

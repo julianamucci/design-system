@@ -4,7 +4,7 @@ import { createMenubar } from './menubar';
 
 const meta: Meta = {
   tags: ['navigation'],
-  title: 'UI/Menubar/Composicoes',
+  title: 'UI/Menubar/Compositions',
   parameters: {
     actions: { disable: true },
     layout: 'padded',
@@ -140,7 +140,6 @@ function injectRadio(panel: HTMLElement, label: string, checked: boolean): void 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const ComShortcuts: Story = {
-  name: 'Com Shortcuts',
   render: () => {
     const bar = createMenubar([
       {
@@ -175,8 +174,7 @@ export const ComShortcuts: Story = {
   },
 };
 
-export const ComCheckboxItems: Story = {
-  name: 'Com Checkbox Items',
+export const WithCheckboxItems: Story = {
   render: () => {
     const bar = createMenubar([
       {
@@ -216,8 +214,7 @@ export const ComCheckboxItems: Story = {
   },
 };
 
-export const ComRadioGroup: Story = {
-  name: 'Com Radio Group',
+export const WithRadioGroup: Story = {
   render: () => {
     const bar = createMenubar([
       {
@@ -258,7 +255,6 @@ export const ComRadioGroup: Story = {
 };
 
 export const EditorCompleto: Story = {
-  name: 'Editor Completo',
   render: () => {
     const bar = createMenubar([
       {

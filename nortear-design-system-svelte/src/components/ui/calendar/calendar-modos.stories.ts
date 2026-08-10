@@ -5,7 +5,7 @@ import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 
 const meta: Meta = {
-  title: 'UI/Calendar/Modos',
+  title: 'UI/Calendar/Modes',
   component: Calendar,
   tags: ['form'],
   parameters: {

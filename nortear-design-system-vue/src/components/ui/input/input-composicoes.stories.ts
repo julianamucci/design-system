@@ -4,7 +4,7 @@ import { Input } from './index';
 import { Label } from '@/components/ui/label';
 
 const meta = {
-  title: 'UI/Input/Composicoes',
+  title: 'UI/Input/Compositions',
   component: Input,
   tags: ['form'],
   parameters: {
@@ -51,7 +51,7 @@ export const ComLabel: Story = {
   },
 };
 
-export const ComTextoDeApoio: Story = {
+export const WithSupportText: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
@@ -71,7 +71,7 @@ export const ComTextoDeApoio: Story = {
   },
 };
 
-export const ComMensagemDeErro: Story = {
+export const WithErrorMessage: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
@@ -106,7 +106,7 @@ export const ComMensagemDeErro: Story = {
   },
 };
 
-export const CampoObrigatorio: Story = {
+export const RequiredField: Story = {
   render: () => ({
     components: { Input, Label },
     template: `
