@@ -563,11 +563,14 @@ só falhas; sem provas bidirecionais/canários redundantes.
    - Bônus: `DocsAccessibility.svelte` tinha o mesmo `<h3>` incondicional do
      Vue (lote 1) — mesmo fix aplicado.
 
-- [ ] **VARREDURA PENDENTE — `asChild` fantasma no svelte**: o mesmo bug
-  latente (`asChild` inerte virando wrapper `<button>` sem nome) aparece em
-  BreadcrumbDocs, ButtonDocs, AspectRatioDocs, AlertDialogDocs e
-  AccordionDocs do svelte. Candidato a lote serial próprio: trocar pelo
-  snippet `child` (padrão da stack) + alinhar code strings didáticas.
+- [x] **`asChild` fantasma no svelte — VERIFICADO E JÁ RESOLVIDO (2026-08-09).**
+  Medido: zero ocorrências de `asChild` sendo passado como prop em qualquer
+  `.svelte` da stack, e `ButtonDocs.svelte` não tem nenhuma menção. O que
+  restou é legítimo — a chave de tradução `props.table.asChild` reusada na
+  descrição do prop `child` (o nome real no bits-ui) em AlertDialogDocs,
+  AspectRatioDocs e BreadcrumbDocs, o `ABSENT_PROPS` do AccordionDocs que
+  declara a prop como inexistente, e o comentário do CommandDocs que registra o
+  conserto. A varredura aconteceu junto com o lote serial de axe.
 
 5. **Sweep final (4 stacks em paralelo, 1 agent por stack)** — `76e26247`
    react · `8b5492b3` vue · svelte (2 commits) · `f35c5ae2` vanilla ·
@@ -1735,13 +1738,17 @@ O padrão é sempre o mesmo: o CSS muda alfa (ou token) no `.dark`, e o Figma
 carrega um valor único para os dois modos. É exatamente o que o Badge tinha
 antes da coleção `Opacidade`.
 
-### Resolvem com a coleção `Opacidade` (já existe, modos light/dark)
+### Resolvidos com a coleção `Opacidade`
 
-- [ ] **button · `variant=destructive` › `bg`** — CSS: fundo `/0.1` no claro e
-  `/0.15` no escuro; hover `/0.15` → `/0.25`. Figma: alfa fixo. Mesmo conserto do
-  badge: vincular a opacidade do nó a `Opacidade/button/*`.
-- [ ] **button · hover de `ghost` e `outline`** — CSS: `--accent` cheio no claro,
-  `--accent / 0.5` no escuro. Figma: `hover-overlay` com um alfa só.
+- [x] **button · `variant=destructive` › `bg` e `hover-overlay`** — vinculados a
+  `Opacidade/button/fundo-destructive` (10% / 15%) e
+  `Opacidade/button/hover-destructive` (5.56% / 11.76%). Os alfas do hover saem
+  de `1 - (1 - a_fundo)(1 - a_hover)`: levar 10% a 15% pede 5.56%, e 15% a 25%
+  pede 11.76%. Aplicado nos 8 tamanhos.
+- [x] **button · hover de `ghost` e `outline`** — vinculados a
+  `Opacidade/button/hover-neutro` (100% / 50%), 16 componentes. default e
+  secondary ficaram com número fixo de propósito: o CSS não tem `.dark` para o
+  hover deles.
 
 ### RESOLVIDOS em 2026-08-09, sem token derivado
 
@@ -1764,16 +1771,18 @@ Os dois casos que pareciam exigir token novo eram, na verdade, defeito no tema.
   sobre a borda que a regra base já aplica. Removida. O `estrutura/border`
   vinculado no Figma está certo em todos os modos.
 
-### Continua aberto
+- [x] **button · fundo do `variant=outline` no escuro** — camada `bg-lift`
+  criada nos 8 tamanhos: `Color/marca/muted` com opacidade vinculada a
+  `Opacidade/button/elevacao-outline`, 0% no claro e 30% no escuro. A 0% o
+  componente mostra o próprio `--background`, que é a regra clara; a 30% sobre
+  esse fundo opaco o resultado é o mesmo que o CSS produz sobre a página, porque
+  página e fundo do componente são o mesmo token. Aproximação conhecida e
+  anotada no nó: no hover escuro o CSS troca o fundo inteiro, enquanto aqui a
+  camada de accent a 50% fica por cima desta — diferença abaixo de 1% de
+  lightness.
 
-- [ ] **button · fundo do `variant=outline` no escuro** — o único resto daquele
-  item: no escuro o outline ganha superfície levemente elevada,
-  `--muted / 0.3` (renomeado de `--input / 0.3` pelo mesmo motivo). É alfa por
-  modo, então cabe na `Opacidade` — camada de superfície com opacidade 0% no
-  claro e 30% no escuro, como o badge faz.
-
-**Recomendação:** os três abertos são todos alfa por modo e resolvem com a
-coleção `Opacidade` numa rodada só. Nenhum precisa de token derivado.
+**O Button não tem mais pendência.** Verificado com leitura de volta nos dois
+modos e captura no escuro.
 
 ### Verificado e SEM divergência
 
