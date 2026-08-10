@@ -180,7 +180,7 @@ export const WithEllipsis: Story = {
 
 // ─── Separador customizado ────────────────────────────────────────────────────
 
-export const SeparadorCustomizado: Story = {
+export const CustomSeparator: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {

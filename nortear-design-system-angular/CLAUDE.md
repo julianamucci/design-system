@@ -6,12 +6,13 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 27 dos 47 componentes prontos — os Blocos 1, 2 e 3 fechados
-(button, separator, label, card, badge, skeleton, aspect-ratio, input, textarea,
-checkbox, switch, toggle, radio-group, slider, progress, avatar, code-block,
-alert, breadcrumb, table, accordion, collapsible, tabs, toggle-group,
-scroll-area, pagination, sidebar), mais a família **InputGroup**, que o conteúdo
-compartilhado documenta dentro do slug `input`. Cada um com stories,
+**Em construção.** 33 dos 47 componentes prontos — Blocos 1, 2 e 3 fechados e a
+primeira metade do Bloco 4 (button, separator, label, card, badge, skeleton,
+aspect-ratio, input, textarea, checkbox, switch, toggle, radio-group, slider,
+progress, avatar, code-block, alert, breadcrumb, table, accordion, collapsible,
+tabs, toggle-group, scroll-area, pagination, sidebar, tooltip, sheet, dialog,
+popover, hover-card, dropdown-menu), mais a família **InputGroup**, que o
+conteúdo compartilhado documenta dentro do slug `input`. Cada um com stories,
 docs page e as 15 seções genéricas. A ordem e as pendências vivem em
 `.pipeline-context/_ordem.md`.
 
@@ -172,6 +173,22 @@ Apareceu no `pagination`: o link desabilitado continuava chamando o callback da
 página. Para barrar de verdade, registre no construtor com
 `addEventListener(..., { capture: true })` e leia o estado na hora do clique.
 
+### 11. Duas diretivas no mesmo elemento disputam `data-slot`
+
+`data-slot` é ligado por host binding em quase todo componente deste stack. Com
+duas diretivas no mesmo host — `<button ndsSidebarMenuButton ndsTooltipTrigger>`,
+`<button ndsDialogClose ndsButton>`, `<input ndsInput ndsInputGroupInput>` — as
+duas escrevem o mesmo atributo e uma sobrescreve a outra, sem ordem garantida.
+
+Custa caro porque `data-slot` é o contrato de markup que as cinco stacks
+compartilham e que a auditoria compara: o elemento perde a identidade que os
+testes e o CSS usam para achá-lo, sem erro nenhum.
+
+Quando compor for inevitável, a peça que se compõe **não** liga `data-slot`
+(foi a saída no `NdsDialogClose`) ou traz a classe base junto para dispensar a
+outra diretiva (foi a saída no `NdsInputGroupInput`). Em teste, procure pela
+classe `.nds-*`, não pelo `data-slot`.
+
 ## Convenções deste stack
 
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
@@ -236,7 +253,7 @@ página. Para barrar de verdade, registre no construtor com
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- Os 20 componentes restantes ainda não existem (Blocos 4 e 5).
+- Os 14 componentes restantes ainda não existem (segunda metade do Bloco 4 e Bloco 5).
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

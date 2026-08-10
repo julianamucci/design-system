@@ -116,7 +116,7 @@ export const WithAction: Story = {
  * slot de ação (absoluto, shrink-to-fit por default) são inertes de propósito:
  * a story prova a composição de classes sem mexer no snapshot visual.
  */
-export const ClasseAdicional: Story = {
+export const AdditionalClass: Story = {
   render: () => ({
     template: `
       <div ndsAlert class="nds-w-full">

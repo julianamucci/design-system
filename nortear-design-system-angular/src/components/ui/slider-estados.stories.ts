@@ -36,7 +36,7 @@ export const Disabled: Story = {
   },
 };
 
-export const Teclado: Story = {
+export const Keyboard: Story = {
   parameters: { covers: ['functional.item3', 'functional.item4'] },
   render: () => ({
     template: `<div ndsSlider [value]="[50]" [min]="0" [max]="100" aria-label="Volume"></div>`,
@@ -62,7 +62,7 @@ export const Teclado: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     template: `<div ndsSlider [value]="[50]" aria-label="Volume"></div>`,

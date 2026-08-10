@@ -55,7 +55,7 @@ function contraste(a: string, b: string): number {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const LigadoEDesligado: Story = {
+export const OnAndOff: Story = {
   parameters: { covers: ['visual.item1', 'visual.item2', 'accessibility.item2'] },
   render: () => ({
     template: `
@@ -103,7 +103,7 @@ export const LigadoEDesligado: Story = {
   },
 };
 
-export const Teclado: Story = {
+export const Keyboard: Story = {
   parameters: { covers: ['functional.item2', 'accessibility.item3'] },
   render: () => ({
     template: `

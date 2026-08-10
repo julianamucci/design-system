@@ -21,7 +21,7 @@ type Story = StoryObj;
  * As três variantes que o conteúdo compartilhado documenta: o par
  * switch + rótulo, o painel com descrição auxiliar e o degrau compacto.
  */
-export const Tipos: Story = {
+export const Types: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `

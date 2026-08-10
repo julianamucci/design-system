@@ -1,0 +1,279 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
+import { NDS_SHEET, type SheetSide } from './sheet';
+import { NdsButton } from './button';
+import { esperarPortal, esperarPortalSumir } from '@/lib/wait-for-portal';
+import { useTranslation } from '@/lib/i18n';
+import sheetTranslations from '@shared/content/sheet/translations.json';
+import { NdsSheetDocs } from '@/components/docs/SheetDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
+
+type SheetArgs = {
+  side: SheetSide;
+  showCloseButton: boolean;
+  modal: boolean;
+  defaultOpen: boolean;
+  triggerLabel: string;
+  onOpenChange: (aberto: boolean) => void;
+};
+
+/**
+ * O painel Code imprime o `template` da story literalmente — com os bindings
+ * ligados aos args. `transform` devolve o uso real, com os valores atuais dos
+ * controls (armadilha 3 do CLAUDE.md deste stack).
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<SheetArgs> }): string {
+  const {
+    side = 'right',
+    showCloseButton = true,
+    modal = true,
+    defaultOpen = false,
+    triggerLabel = t('demonstration.labels.trigger'),
+  } = ctx.args ?? {};
+
+  // Só o que difere do default entra no snippet: documentação que repete valor
+  // padrão ensina ruído.
+  const raiz = ['<nds-sheet', defaultOpen ? '[defaultOpen]="true"' : '', modal ? '' : '[modal]="false"']
+    .filter(Boolean)
+    .join(' ');
+  const conteudo = [
+    '<ng-template ndsSheetContent',
+    side === 'right' ? '' : `side="${side}"`,
+    showCloseButton ? '' : '[showCloseButton]="false"',
+  ].filter(Boolean).join(' ');
+
+  return `import { NDS_SHEET } from '@/components/ui/sheet';
+import { NdsButton } from '@/components/ui/button';
+
+@Component({
+  imports: [...NDS_SHEET, NdsButton],
+  template: \`
+    ${raiz}>
+      <button ndsSheetTrigger ndsButton variant="outline">${triggerLabel}</button>
+
+      ${conteudo}>
+        <div ndsSheetHeader>
+          <h2 ndsSheetTitle>${t('demonstration.labels.title')}</h2>
+          <p ndsSheetDescription>${t('demonstration.labels.description')}</p>
+        </div>
+
+        <div ndsSheetFooter>
+          <button ndsSheetClose ndsButton variant="outline">${t('demonstration.labels.cancel')}</button>
+          <button ndsButton>${t('demonstration.labels.apply')}</button>
+        </div>
+      </ng-template>
+    </nds-sheet>
+  \`,
+})
+export class Exemplo {}`;
+}
+
+const meta: Meta<SheetArgs> = {
+  title: 'UI/Sheet',
+  tags: ['autodocs', 'disclosure'],
+  decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
+  parameters: {
+    layout: 'centered',
+    docs: { page: withAutoDocsTab(NdsSheetDocs) },
+  },
+  argTypes: {
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      description: 'Borda de onde o painel desliza. Mora no conteúdo, não na raiz.',
+    },
+    showCloseButton: {
+      control: 'boolean',
+      description: 'Exibe o botão X no canto superior direito do painel.',
+    },
+    modal: {
+      control: 'boolean',
+      description:
+        'Prende o foco, trava a rolagem da página e bloqueia o ponteiro fora do painel.',
+    },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Estado inicial no modo não-controlado.',
+    },
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto do gatilho. Verbo no infinitivo — nomeie a ação, nunca "Mais".',
+    },
+    // Espião de output. Sem entrada aqui o renderer Angular não repassa a função
+    // em `props` e o `(openChange)` do template fica ligado a nada — sem erro
+    // nenhum (armadilha 5 do CLAUDE.md deste stack).
+    onOpenChange: {
+      control: false,
+      description: 'Emitido a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
+  },
+  args: {
+    side: 'right',
+    showCloseButton: true,
+    modal: true,
+    defaultOpen: false,
+    triggerLabel: t('demonstration.labels.trigger'),
+    onOpenChange: fn(),
+  },
+};
+
+export default meta;
+type Story = StoryObj<SheetArgs>;
+
+/**
+ * Abre só se estiver fechado.
+ *
+ * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
+ * do estado que a rodada anterior deixou e inverteria o resultado.
+ */
+async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+  if (within(document.body).queryAllByRole('dialog').length === 0) {
+    await userEvent.click(trigger);
+  }
+  return await esperarPortal('dialog');
+}
+
+/** Fecha só se estiver aberto. */
+async function fechar(): Promise<void> {
+  if (within(document.body).queryAllByRole('dialog').length > 0) {
+    await userEvent.keyboard('{Escape}');
+  }
+  await esperarPortalSumir('dialog');
+}
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item3', 'accessibility.item4', 'accessibility.item5',
+    ],
+  },
+  render: (args) => ({
+    // Os rótulos do painel entram como props, não como args: são conteúdo
+    // compartilhado (trilíngue), não parâmetro do componente — em `args`
+    // virariam controls falsos na aba API Reference.
+    props: {
+      ...args,
+      tituloPainel: t('demonstration.labels.title'),
+      descricaoPainel: t('demonstration.labels.description'),
+      rotuloCancelar: t('demonstration.labels.cancel'),
+      rotuloAplicar: t('demonstration.labels.apply'),
+    },
+    template: `
+      <nds-sheet
+        [defaultOpen]="defaultOpen"
+        [modal]="modal"
+        (openChange)="onOpenChange($event)"
+      >
+        <button ndsSheetTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
+
+        <ng-template ndsSheetContent [side]="side" [showCloseButton]="showCloseButton">
+          <div ndsSheetHeader>
+            <h2 ndsSheetTitle>{{ tituloPainel }}</h2>
+            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsSheetFooter>
+            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
+            <button ndsButton>{{ rotuloAplicar }}</button>
+          </div>
+        </ng-template>
+      </nds-sheet>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: args.triggerLabel });
+
+    await fechar();
+
+    await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
+      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const painel = await abrir(trigger);
+
+      await expect(painel).toBeVisible();
+      // O nome acessível vem do aria-labelledby que o primitivo liga ao id REAL
+      // do ndsSheetTitle — painel modal anônimo é o defeito silencioso aqui.
+      await expect(painel).toHaveAccessibleName(t('demonstration.labels.title'));
+      await expect(painel).toHaveAccessibleDescription(t('demonstration.labels.description'));
+      await expect(painel).toHaveAttribute('aria-modal', 'true');
+      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
+      await expect(painel).toHaveAttribute('data-side', args.side);
+      await expect(painel).toHaveAttribute('data-state', 'open');
+      await expect(painel).toHaveClass(/nds-sheet-content/);
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBe(chamadasAntes + 1);
+    });
+
+    await step('O painel é portalizado para fora da story', async () => {
+      // É o que faz `position: fixed` valer contra a viewport, e não contra
+      // qualquer ancestral com transform.
+      const painel = await esperarPortal('dialog');
+      await expect(canvasElement.contains(painel)).toBe(false);
+      await expect(document.body.contains(painel)).toBe(true);
+    });
+
+    await step('O foco entra no painel ao abrir', async () => {
+      const painel = await esperarPortal('dialog');
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco não entrou no painel');
+        }
+      });
+    });
+
+    await step('Tab mantém o foco preso dentro do painel', async () => {
+      const painel = await esperarPortal('dialog');
+      // Volta suficiente para dar a volta completa em qualquer um dos lados.
+      for (let i = 0; i < 6; i++) await userEvent.tab();
+      await expect(painel.contains(document.activeElement)).toBe(true);
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await fechar();
+      await waitFor(() => {
+        if (document.activeElement !== trigger) {
+          throw new Error('o foco não voltou ao gatilho');
+        }
+      });
+    });
+
+    if (args.modal) {
+      await step('Clique no overlay fecha o painel', async () => {
+        await abrir(trigger);
+        const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
+        await expect(overlay).not.toBeNull();
+        await userEvent.click(overlay!);
+        await esperarPortalSumir('dialog');
+      });
+    }
+
+    if (args.showCloseButton) {
+      await step('O X do canto fecha o painel', async () => {
+        const painel = await abrir(trigger);
+        const fecharBtn = within(painel).getByRole('button', { name: /close/i });
+        await userEvent.click(fecharBtn);
+        await esperarPortalSumir('dialog');
+      });
+    }
+
+    await step('Cancelar no rodapé também fecha', async () => {
+      const painel = await abrir(trigger);
+      const cancelar = within(painel).getByRole('button', {
+        name: t('demonstration.labels.cancel'),
+      });
+      await userEvent.click(cancelar);
+      await esperarPortalSumir('dialog');
+    });
+
+    // Termina fechado: a próxima rodada da play (painel Interactions) precisa
+    // do mesmo ponto de partida desta.
+    await fechar();
+  },
+};

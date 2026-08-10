@@ -49,7 +49,7 @@ export const Disabled: Story = {
   },
 };
 
-export const Teclado: Story = {
+export const Keyboard: Story = {
   parameters: { covers: ['functional.item3', 'functional.item4', 'accessibility.item3'] },
   args: { onClick: fn() },
   render: (args) => ({

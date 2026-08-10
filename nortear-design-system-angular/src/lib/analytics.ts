@@ -230,6 +230,32 @@ interface AnalyticsEvents {
     trigger: 'keyboard' | 'button';
   };
 
+  /** Disparado quando um DropdownMenu abre. */
+  dropdown_menu_open: {
+    component: 'dropdown-menu';
+    label: string;
+    location?: string;
+  };
+
+  /** Disparado quando um DropdownMenu fecha, por qualquer caminho. */
+  dropdown_menu_close: {
+    component: 'dropdown-menu';
+    label: string;
+    location?: string;
+  };
+
+  /**
+   * Disparado ao escolher um item de um DropdownMenu.
+   * `label` leva o VALOR do item, nunca o texto traduzido — o texto partiria o
+   * mesmo evento em três no GA4, um por idioma.
+   */
+  dropdown_menu_item_select: {
+    component: 'dropdown-menu';
+    label: string;
+    menu: string;
+    location?: string;
+  };
+
   /** Disparado ao abrir um ContextMenu via right-click. */
   menu_open: {
     component: 'context_menu';

@@ -65,7 +65,7 @@ type Story = StoryObj;
 
 // ─── Básica ───────────────────────────────────────────────────────────────────
 
-export const Basica: Story = {
+export const Basic: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item1'],
     docs: {

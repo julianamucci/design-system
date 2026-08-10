@@ -82,7 +82,7 @@ export const Variants: Story = {
   },
 };
 
-export const Recolhimento: Story = {
+export const Collapse: Story = {
   parameters: { covers: ['functional.item4', 'functional.item5', 'visual.item2'] },
   render: () => ({
     template: `
@@ -132,7 +132,7 @@ export const Recolhimento: Story = {
   },
 };
 
-export const Lado: Story = {
+export const Side: Story = {
   parameters: { covers: ['visual.item6'] },
   render: () => ({
     template: `

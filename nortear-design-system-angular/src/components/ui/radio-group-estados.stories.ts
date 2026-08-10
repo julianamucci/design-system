@@ -268,7 +268,7 @@ export const Invalid: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">

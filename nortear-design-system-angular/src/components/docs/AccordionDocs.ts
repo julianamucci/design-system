@@ -809,14 +809,14 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
       cols: {
         element: t('usage.uxWriting.table.element'),
         rules: t('usage.uxWriting.table.rules'),
-        correct: t('usage.uxWriting.table.correct'),
-        avoid: t('usage.uxWriting.table.avoid'),
+        do: t('usage.uxWriting.table.correct'),
+        dont: t('usage.uxWriting.table.avoid'),
       },
       items: ['trigger', 'triggerDoc', 'content'].map((k) => ({
         element: toPlainText(t(`usage.uxWriting.table.${k}.name`)),
         rules: toPlainText(t(`usage.uxWriting.table.${k}.format`)),
-        correct: toPlainText(t(`usage.uxWriting.table.${k}.good`)),
-        avoid: toPlainText(t(`usage.uxWriting.table.${k}.bad`)),
+        do: toPlainText(t(`usage.uxWriting.table.${k}.good`)),
+        dont: toPlainText(t(`usage.uxWriting.table.${k}.bad`)),
       })),
     };
   });

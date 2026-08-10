@@ -118,7 +118,7 @@ export const IconInTrigger: Story = {
   },
 };
 
-export const ChevronRotativo: Story = {
+export const RotatingChevron: Story = {
   parameters: { covers: ['visual.item4', 'accessibility.item4'] },
   render: () => ({
     template: `
@@ -179,7 +179,7 @@ export const ChevronRotativo: Story = {
   },
 };
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   render: () => ({
     template: `
       <div ndsCollapsible class="nds-w-full nds-max-w-sm">

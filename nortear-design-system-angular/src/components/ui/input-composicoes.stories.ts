@@ -114,7 +114,7 @@ export const Alignments: Story = {
   },
 };
 
-export const CliqueNoAddon: Story = {
+export const AddonClick: Story = {
   parameters: { covers: ['functional.item8'] },
   render: () => ({
     template: `

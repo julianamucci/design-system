@@ -119,7 +119,7 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
 
 // ─── Primeira página ──────────────────────────────────────────────────────────
 
-export const PrimeiraPagina: Story = {
+export const FirstPage: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
     docs: {
@@ -203,7 +203,7 @@ export const LastPage: Story = {
 
 // ─── Foco ─────────────────────────────────────────────────────────────────────
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
@@ -280,7 +280,7 @@ function fundoEfetivo(elemento: HTMLElement): [number, number, number] {
   return [255, 255, 255];
 }
 
-export const Contraste: Story = {
+export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item2'],
     docs: {

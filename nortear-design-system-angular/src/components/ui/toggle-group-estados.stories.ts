@@ -114,7 +114,7 @@ export const Disabled: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => ({
     template: `
       <div ndsToggleGroup variant="outline" defaultValue="left" aria-label="Alinhamento do texto">
@@ -159,7 +159,7 @@ export const ItemDesabilitado: Story = {
 // o anel some justamente na variante mais usada. É defeito do CSS
 // compartilhado, igual nas cinco stacks, e está reportado; aqui a story mede o
 // anel onde ele existe em vez de mascarar a falha com um teste tolerante.
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     template: `

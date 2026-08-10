@@ -51,7 +51,7 @@ export const InCard: Story = {
   },
 };
 
-export const CorCustomizada: Story = {
+export const CustomColor: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     template: `

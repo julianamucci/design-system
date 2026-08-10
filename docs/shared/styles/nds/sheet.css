@@ -41,12 +41,24 @@
 }
 
 /* ── Sides ───────────────────────────────────────────────────────────────── */
+/*
+ * A largura sai de `--sheet-width` / `--sheet-max-width`, com o valor antigo
+ * como fallback — nada muda de aparência.
+ *
+ * O motivo é especificidade: estas regras são (0,2,0) e QUALQUER utilitário de
+ * largura é (0,1,0), então `class="nds-max-w-lg"` no painel nunca pegava.
+ * A doc do Sheet prometia essa customização por classe em react, vue, svelte e
+ * angular, e ela não funcionava em nenhuma das quatro. Custom property não
+ * disputa especificidade: quem declara na mesma caixa vence, venha de onde vier.
+ *
+ *   .nds-sidebar-mobile { --sheet-width: var(--sidebar-width); }
+ */
 .nds-sheet-content[data-side="right"] {
   inset-block: 0;
   right: 0;
   height: 100%;
-  width: 75%;
-  max-width: 24rem;                                /* 384px — sm:max-w-sm */
+  width: var(--sheet-width, 75%);
+  max-width: var(--sheet-max-width, 24rem);        /* 384px */
   border-left: 1px solid hsl(var(--border));
   animation: nds-sheet-slide-in-right var(--duration-base) var(--ease-entrance);
 }
@@ -55,8 +67,8 @@
   inset-block: 0;
   left: 0;
   height: 100%;
-  width: 75%;
-  max-width: 24rem;
+  width: var(--sheet-width, 75%);
+  max-width: var(--sheet-max-width, 24rem);
   border-right: 1px solid hsl(var(--border));
   animation: nds-sheet-slide-in-left var(--duration-base) var(--ease-entrance);
 }

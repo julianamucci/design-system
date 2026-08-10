@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Formas: Story = {
+export const Shapes: Story = {
   // As cinco linhas de `testes.visual` numa story só: o que a regressão visual
   // compara é o conjunto, e cada forma isolada viraria uma imagem que nunca se
   // confronta com as outras.

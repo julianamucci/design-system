@@ -65,7 +65,7 @@ function anelDeFocoDeclarado(): boolean {
   return Array.from(document.styleSheets).some(varre);
 }
 
-export const Foco: Story = {
+export const Focus: Story = {
   parameters: { covers: ['accessibility.item3', 'visual.item4'] },
   render: () => ({
     props: { tags: TAGS },
@@ -100,7 +100,7 @@ export const Foco: Story = {
   },
 };
 
-export const ConteudoFocavel: Story = {
+export const FocusableContent: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: () => ({
     props: { acoes: ACOES },

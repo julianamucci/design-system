@@ -30,7 +30,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "{/* No root da app — uma vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Onde precisar */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Salvar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- No root da app — uma vez -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Onde precisar -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- No root da app — uma vez -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Onde precisar -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "usage": {
@@ -260,7 +260,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// TooltipProvider no root da app (uma vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip com atalho de teclado em botão icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Salvar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- TooltipProvider no root da app (uma vez) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip com atalho de teclado em botão icon-only -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- TooltipProvider no root da app (uma vez) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip com atalho de teclado em botão icon-only -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "tokens": {
@@ -475,7 +475,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "{/* At app root — once */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Where needed */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Save (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- At app root — once -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Wherever needed -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- At app root — once -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Wherever needed -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "usage": {
@@ -705,7 +705,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// TooltipProvider at app root (once)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip with keyboard shortcut on icon-only button\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Save\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Save <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- TooltipProvider at app root (once) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip with keyboard shortcut on an icon-only button -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- TooltipProvider at app root (once) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip with keyboard shortcut on an icon-only button -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "tokens": {
@@ -920,7 +920,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "{/* En el root de la app — una vez */}\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n{/* Donde necesario */}\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent>\n    Guardar (Ctrl+S)\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- En el root de la app — una vez -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Donde haga falta -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- En el root de la app — una vez -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Donde haga falta -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent>\n    Salvar (Ctrl+S)\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "usage": {
@@ -1150,7 +1150,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// TooltipProvider en el root de la app (una vez)\n<TooltipProvider delay={400}>\n  <App />\n</TooltipProvider>\n\n// Tooltip con atajo de teclado en botón icon-only\n<Tooltip>\n  <TooltipTrigger asChild>\n    <Button variant=\"ghost\" size=\"icon\" aria-label=\"Guardar\">\n      <Save aria-hidden=\"true\" />\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent side=\"bottom\">\n    Guardar <kbd>Ctrl</kbd>+<kbd>S</kbd>\n  </TooltipContent>\n</Tooltip>",
-        "angular": "<!-- TooltipProvider en el root de la app (una vez) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip con atajo de teclado en botón icon-only -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsIcon kind=\"save\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
+        "angular": "<!-- TooltipProvider en el root de la app (una vez) -->\n<nds-tooltip-provider [delay]=\"400\">\n  <app-root />\n</nds-tooltip-provider>\n\n<!-- Tooltip con atajo de teclado en botón icon-only -->\n<nds-tooltip>\n  <button ndsTooltipTrigger ndsButton variant=\"ghost\" size=\"icon\" aria-label=\"Salvar\">\n    <svg ndsButtonIcon kind=\"download\" aria-hidden=\"true\"></svg>\n  </button>\n  <ng-template ndsTooltipContent side=\"bottom\">\n    Salvar <kbd class=\"nds-kbd\">Ctrl</kbd>+<kbd class=\"nds-kbd\">S</kbd>\n  </ng-template>\n</nds-tooltip>"
       }
     },
     "tokens": {

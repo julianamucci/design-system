@@ -40,7 +40,7 @@ export const Disabled: Story = {
   },
 };
 
-export const Invalido: Story = {
+export const Invalid: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4', 'visual.item2'],
   },
@@ -86,7 +86,7 @@ export const Invalido: Story = {
   },
 };
 
-export const Tipos: Story = {
+export const Types: Story = {
   parameters: {
     covers: ['functional.item5', 'functional.item6', 'accessibility.item2', 'visual.item3'],
   },
@@ -139,7 +139,7 @@ export const Tipos: Story = {
  * de erro e desabilitado dependem de tokens que trocam de valor entre paletas,
  * e é onde o contraste costuma cair primeiro.
  */
-export const PaletaEscura: Story = {
+export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item5'],
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story

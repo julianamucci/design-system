@@ -179,7 +179,7 @@ export const WithBadgeInTrigger: Story = {
   },
 };
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {

@@ -46,7 +46,7 @@ const TRES_ABAS = `
  * stack (ver o `effect` em `NdsTabsList`). Se essa ligação parar de valer, a
  * aba deixa de acompanhar a seta e nenhuma outra prova cai.
  */
-export const Teclado: Story = {
+export const Keyboard: Story = {
   parameters: { covers: ['functional.item2', 'functional.item3', 'accessibility.item5'] },
   render: () => ({ template: TRES_ABAS }),
   play: async ({ canvasElement, step }) => {
@@ -188,7 +188,7 @@ export const DisabledTab: Story = {
 /**
  * Foco visível e o caminho do Tab até o conteúdo.
  */
-export const Foco: Story = {
+export const Focus: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item3'] },
   render: () => ({ template: TRES_ABAS }),
   play: async ({ canvasElement, step }) => {

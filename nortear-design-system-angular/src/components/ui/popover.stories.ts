@@ -1,0 +1,294 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent, waitFor, screen, fn } from 'storybook/test';
+import { NDS_POPOVER, type PopoverAlign, type PopoverSide } from './popover';
+import { NdsButton } from './button';
+import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+type PopoverArgs = {
+  side: PopoverSide;
+  align: PopoverAlign;
+  sideOffset: number;
+  defaultOpen: boolean;
+  triggerLabel: string;
+  onOpenChange: (open: boolean) => void;
+};
+
+/**
+ * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
+ * story literalmente, com os bindings ligados aos args e o `(openChange)` do
+ * espião. O `transform` devolve o uso real, com os valores atuais dos controls.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<PopoverArgs> }): string {
+  const {
+    side = 'bottom',
+    align = 'center',
+    sideOffset = 4,
+    defaultOpen = false,
+    triggerLabel = 'Abrir popover',
+  } = ctx.args ?? {};
+
+  // Só o que difere do padrão entra no snippet — documentação que repete valor
+  // padrão ensina ruído.
+  const opcoes = [
+    side !== 'bottom' ? `side="${side}"` : '',
+    align !== 'center' ? `align="${align}"` : '',
+    sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
+  ].filter(Boolean).join(' ');
+  const raiz = ['<div ndsPopover', defaultOpen ? '[defaultOpen]="true"' : '']
+    .filter(Boolean)
+    .join(' ');
+
+  return `import { NDS_POPOVER } from '@/components/ui/popover';
+import { NdsButton } from '@/components/ui/button';
+
+@Component({
+  imports: [...NDS_POPOVER, NdsButton],
+  template: \`
+    ${raiz}>
+      <button ndsPopoverTrigger ndsButton variant="outline">${triggerLabel}</button>
+
+      <ng-template ndsPopoverContent${opcoes ? ` ${opcoes}` : ''}>
+        <div ndsPopoverHeader>
+          <h3 ndsPopoverTitle>Configurações de exibição</h3>
+          <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
+        </div>
+
+        <div class="nds-cluster" data-justify="end" data-spacing="sm">
+          <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+          <button ndsPopoverClose ndsButton size="sm">Salvar</button>
+        </div>
+      </ng-template>
+    </div>
+  \`,
+})
+export class Exemplo {}`;
+}
+
+const meta: Meta<PopoverArgs> = {
+  title: 'UI/Popover',
+  tags: ['autodocs', 'overlay'],
+  decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
+  parameters: {
+    layout: 'centered',
+    docs: { page: withAutoDocsTab(NdsPopoverDocs) },
+  },
+  argTypes: {
+    side: {
+      control: 'radio',
+      options: ['top', 'right', 'bottom', 'left'],
+      description: 'Lado preferido em relação ao gatilho. Vira o oposto quando não há espaço.',
+    },
+    align: {
+      control: 'radio',
+      options: ['start', 'center', 'end'],
+      description: 'Alinhamento ao longo do eixo do side.',
+    },
+    sideOffset: {
+      control: { type: 'number', min: 0, max: 24, step: 1 },
+      description: 'Distância em pixels entre o gatilho e o painel.',
+    },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Estado inicial no modo não-controlado.',
+    },
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto do gatilho. Verbo e objeto — nunca "Clique aqui".',
+    },
+    // Espião de output. Sem entrada aqui o renderer Angular não repassa a função
+    // em `props` e o `(openChange)` do template fica ligado a nada — sem erro
+    // nenhum (armadilha 5 do CLAUDE.md deste stack).
+    onOpenChange: {
+      control: false,
+      description: 'Emitido a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
+  },
+  args: {
+    side: 'bottom',
+    align: 'center',
+    sideOffset: 4,
+    defaultOpen: false,
+    triggerLabel: 'Abrir popover',
+    onOpenChange: fn(),
+  },
+};
+
+export default meta;
+type Story = StoryObj<PopoverArgs>;
+
+/** O painel mora em portal no body — `screen`, não `within(canvasElement)`. */
+function painel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
+}
+
+/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
+async function abrir(gatilho: HTMLElement): Promise<void> {
+  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+  // Esperar pela VISIBILIDADE, não pela presença no DOM: o positioner nasce
+  // com visibility hidden e só aparece depois que o floating-ui mede a posição.
+  // Nesse intervalo o painel existe mas está fora da árvore de acessibilidade —
+  // getByRole('dialog') não o acha e nada dentro dele recebe foco.
+  await waitFor(() => expect(screen.getByRole('dialog')).toBeVisible());
+  // E esperar o foco assentar DENTRO do painel: a abertura o move no quadro
+  // seguinte ao da medição, e mexer no foco antes disso disputaria com o
+  // próprio componente — a ordem de tabulação medida sairia invertida.
+  await waitFor(() => expect(painel()!.contains(document.activeElement)).toBe(true));
+}
+
+/** Fecha só se estiver aberto. */
+async function fechar(gatilho: HTMLElement): Promise<void> {
+  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+  await waitFor(() => expect(painel()).toBeNull());
+}
+
+/** O lado oposto no MESMO eixo — o auto-flip troca de lado, nunca de eixo. */
+const OPOSTO: Record<string, string> = {
+  top: 'bottom', bottom: 'top', left: 'right', right: 'left',
+  start: 'end', end: 'start', center: 'center',
+};
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+    covers: [
+      'functional.item1', 'functional.item2',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
+  render: (args) => ({
+    props: { ...args },
+    template: `
+      <div ndsPopover [defaultOpen]="defaultOpen" (openChange)="onOpenChange($event)">
+        <button ndsPopoverTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
+
+        <ng-template
+          ndsPopoverContent
+          [side]="side"
+          [align]="align"
+          [sideOffset]="sideOffset"
+        >
+          <div ndsPopoverHeader>
+            <h3 ndsPopoverTitle>Configurações de exibição</h3>
+            <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
+          </div>
+
+          <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+            <button ndsPopoverClose ndsButton size="sm">Salvar</button>
+          </div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="popover"]')!;
+    const gatilho = canvas.getByRole('button', { name: args.triggerLabel });
+
+    await step('O markup é o mesmo das outras stacks', async () => {
+      await expect(raiz.tagName).toBe('DIV');
+      await expect(gatilho.tagName).toBe('BUTTON');
+      await expect(gatilho).toHaveAttribute('data-slot', 'popover-trigger');
+      // O gatilho ANUNCIA que abre um diálogo — é o que separa o popover de um
+      // botão comum para quem usa leitor de tela.
+      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(gatilho).toHaveAttribute('type', 'button');
+    });
+
+    await step('O estado inicial vem do input', async () => {
+      // Esta é a asserção que prova o binding de input: sob JIT o componente
+      // renderiza no default e `aria-expanded` viria sempre "false" com o
+      // control em true (armadilha 1 do CLAUDE.md deste stack).
+      await expect(gatilho.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
+      await expect(gatilho).toHaveAttribute('data-state', args.defaultOpen ? 'open' : 'closed');
+    });
+
+    await step('Clicar no gatilho abre o painel com role=dialog', async () => {
+      await fechar(gatilho);
+      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      await abrir(gatilho);
+
+      const dialogo = screen.getByRole('dialog');
+      await expect(dialogo).toBeVisible();
+      await expect(dialogo).toHaveClass(/nds-popover-content/);
+      await expect(dialogo).toHaveAttribute('data-state', 'open');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBe(chamadasAntes + 1);
+    });
+
+    await step('side e align do template chegam ao posicionamento', async () => {
+      // Contra o EIXO, não contra o valor exato: o auto-flip por colisão pode
+      // trocar `bottom` por `top`, mas nunca o eixo escolhido. Se o input não
+      // tivesse chegado, o painel cairia no padrão `bottom`/`center` e um
+      // control em `left`/`start` reprovaria aqui.
+      const dialogo = screen.getByRole('dialog');
+      await expect([args.side, OPOSTO[args.side]]).toContain(dialogo.getAttribute('data-side'));
+      await expect([args.align, OPOSTO[args.align]]).toContain(dialogo.getAttribute('data-align'));
+    });
+
+    await step('O painel é nomeado pelo título e descrito pela descrição', async () => {
+      const dialogo = screen.getByRole('dialog');
+      const idTitulo = dialogo.getAttribute('aria-labelledby');
+      const idDescricao = dialogo.getAttribute('aria-describedby');
+      await expect(idTitulo).toBeTruthy();
+      await expect(document.getElementById(idTitulo!)).toHaveAttribute(
+        'data-slot', 'popover-title',
+      );
+      await expect(idDescricao).toBeTruthy();
+      await expect(document.getElementById(idDescricao!)).toHaveAttribute(
+        'data-slot', 'popover-description',
+      );
+      // Com título não existe `aria-label`: dois contratos de nome no mesmo
+      // elemento é ambiguidade, não redundância.
+      await expect(dialogo).not.toHaveAttribute('aria-label');
+    });
+
+    await step('Aberto, aria-controls aponta para o id real do painel', async () => {
+      // O primitivo só escreve `aria-controls` enquanto o painel existe: com o
+      // painel desmontado o atributo apontaria para um id ausente e o axe
+      // reprovaria por aria-valid-attr-value.
+      const id = gatilho.getAttribute('aria-controls');
+      await expect(id).toBeTruthy();
+      await expect(document.getElementById(id!)).toBe(painel());
+    });
+
+    await step('O foco entra no painel ao abrir', async () => {
+      // É o que separa popover de tooltip: o conteúdo é interativo, então o
+      // foco precisa alcançá-lo sem caçar com Tab pela página inteira.
+      await waitFor(async () => {
+        await expect(painel()!.contains(document.activeElement)).toBe(true);
+      });
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await abrir(gatilho);
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(painel()).toBeNull();
+      });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      // Fechado não há painel para apontar, e o atributo some junto.
+      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
+      await waitFor(async () => {
+        await expect(gatilho).toHaveFocus();
+      });
+    });
+
+    await step('O botão de fechar dentro do painel também fecha', async () => {
+      await abrir(gatilho);
+      const cancelar = screen.getByRole('button', { name: 'Cancelar' });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await waitFor(async () => {
+        await expect(painel()).toBeNull();
+      });
+    });
+  },
+};

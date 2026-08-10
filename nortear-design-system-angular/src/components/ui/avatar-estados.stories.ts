@@ -61,7 +61,7 @@ export const Loaded: Story = {
   },
 };
 
-export const AguardandoAtraso: Story = {
+export const AwaitingDelay: Story = {
   name: 'Loading (delayed)',
   parameters: {
     covers: ['functional.item4'],
@@ -116,7 +116,7 @@ export const AguardandoAtraso: Story = {
   },
 };
 
-export const Falhou: Story = {
+export const Failed: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {

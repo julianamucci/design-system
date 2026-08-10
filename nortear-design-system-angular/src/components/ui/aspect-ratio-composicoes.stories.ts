@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ImagemDecorativa: Story = {
+export const DecorativeImage: Story = {
   parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     props: { src: IMG_PLACEHOLDER },
@@ -37,7 +37,7 @@ export const ImagemDecorativa: Story = {
   },
 };
 
-export const IframeEVideo: Story = {
+export const IframeAndVideo: Story = {
   parameters: { covers: ['accessibility.item3', 'accessibility.item4'] },
   render: () => ({
     template: `
@@ -90,7 +90,7 @@ export const IframeEVideo: Story = {
   },
 };
 
-export const MidiaClicavel: Story = {
+export const ClickableMedia: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     props: { src: IMG_PLACEHOLDER },

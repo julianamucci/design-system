@@ -107,7 +107,7 @@ export const Disabled: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     template: `

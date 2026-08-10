@@ -109,7 +109,7 @@ export const WithoutNumbering: Story = {
   },
 };
 
-export const Copiado: Story = {
+export const Copied: Story = {
   render: () => ({
     props: { code: COMPOSITION_CODE },
     template: `<nds-code-block [code]="code" language="ts" />`,
@@ -162,7 +162,7 @@ export const DoubleScroll: Story = {
   },
 };
 
-export const LinguagemDesconhecida: Story = {
+export const UnknownLanguage: Story = {
   parameters: { covers: ['functional.item7'] },
   render: () => ({
     props: { code: COMPOSITION_CODE },

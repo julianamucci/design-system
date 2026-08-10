@@ -37,11 +37,17 @@ import { NdsSidebarDocs } from './SidebarDocs';
 import { NdsTableDocs } from './TableDocs';
 import { NdsScrollAreaDocs } from './ScrollAreaDocs';
 import { NdsPaginationDocs } from './PaginationDocs';
+import { NdsTooltipDocs } from './TooltipDocs';
+import { NdsSheetDocs } from './SheetDocs';
+import { NdsDialogDocs } from './DialogDocs';
+import { NdsPopoverDocs } from './PopoverDocs';
+import { NdsHoverCardDocs } from './HoverCardDocs';
+import { NdsDropdownMenuDocs } from './DropdownMenuDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -204,5 +210,35 @@ export const ScrollArea: Story = {
 
 export const Pagination: Story = {
   render: () => ({ template: '<nds-pagination-docs />' }),
+  play,
+};
+
+export const Tooltip: Story = {
+  render: () => ({ template: '<nds-tooltip-docs />' }),
+  play,
+};
+
+export const Sheet: Story = {
+  render: () => ({ template: '<nds-sheet-docs />' }),
+  play,
+};
+
+export const Dialog: Story = {
+  render: () => ({ template: '<nds-dialog-docs />' }),
+  play,
+};
+
+export const Popover: Story = {
+  render: () => ({ template: '<nds-popover-docs />' }),
+  play,
+};
+
+export const HoverCard: Story = {
+  render: () => ({ template: '<nds-hover-card-docs />' }),
+  play,
+};
+
+export const DropdownMenu: Story = {
+  render: () => ({ template: '<nds-dropdown-menu-docs />' }),
   play,
 };

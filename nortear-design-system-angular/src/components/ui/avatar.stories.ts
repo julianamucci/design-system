@@ -21,7 +21,7 @@ export const IMG_AVATAR =
 export const IMG_QUEBRADA = 'data:image/png;base64,AAAA';
 
 /** Diâmetro de cada preset, em px, na densidade padrão. */
-export const DIAMETRO: Record<AvatarSize, number> = {
+export const DIAMETER: Record<AvatarSize, number> = {
   sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64,
 };
 
@@ -138,8 +138,8 @@ export const Playground: Story = {
       // sob JIT, `[size]` cairia no default e só a linha de md passaria.
       await expect(root).toHaveAttribute('data-size', args.size);
       const { width, height } = root.getBoundingClientRect();
-      await expect(Math.abs(width - DIAMETRO[args.size])).toBeLessThan(0.5);
-      await expect(Math.abs(height - DIAMETRO[args.size])).toBeLessThan(0.5);
+      await expect(Math.abs(width - DIAMETER[args.size])).toBeLessThan(0.5);
+      await expect(Math.abs(height - DIAMETER[args.size])).toBeLessThan(0.5);
     });
 
     await step('A foto identifica a pessoa pelo alt', async () => {

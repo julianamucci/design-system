@@ -22,7 +22,7 @@ function preenchimento(raiz: HTMLElement): number {
   return Math.round((faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100);
 }
 
-export const Tipos: Story = {
+export const Types: Story = {
   parameters: { covers: ['visual.item1', 'visual.item2'] },
   render: () => ({
     template: `

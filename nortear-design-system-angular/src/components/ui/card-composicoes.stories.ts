@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const CardClicavel: Story = {
+export const ClickableCard: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item4', 'accessibility.item5'] },
   render: () => ({
     // O Card não vira botão: quem carrega a semântica de navegação é o <a> em

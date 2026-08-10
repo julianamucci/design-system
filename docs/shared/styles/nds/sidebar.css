@@ -307,7 +307,22 @@
 
 /* ── Mobile (dentro de sheet) ────────────────────────────────────────────── */
 .nds-sidebar-mobile {
-  width: var(--sidebar-width);
+  /* A medida é declarada AQUI, e não herdada de `--sidebar-width`: o painel
+   * móvel é um Sheet, e Sheet vive num portal no fim do <body> — fora do
+   * `.nds-sidebar-wrapper` onde `--sidebar-width` existe. Herança não alcança.
+   *
+   * `--sidebar-width-mobile` é o token que a documentação do Sidebar já lista
+   * em `tokens.table` e que não estava definido em lugar nenhum. Um tema pode
+   * redefini-lo em `:root`.
+   *
+   * As duas propriedades de sheet existem porque as regras de lado do
+   * `sheet.css` são (0,2,0) e esta classe é (0,1,0) — por classe ela perderia.
+   * Custom property não disputa especificidade. */
+  --sidebar-width-mobile: 18rem;
+  --sheet-width: var(--sidebar-width-mobile);
+  --sheet-max-width: var(--sidebar-width-mobile);
+
+  width: var(--sidebar-width-mobile);
   padding: 0;
   background-color: hsl(var(--sidebar));
   color: hsl(var(--sidebar-foreground));

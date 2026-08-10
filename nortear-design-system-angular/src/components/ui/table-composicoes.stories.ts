@@ -179,7 +179,7 @@ export const FilterToolbar: Story = {
 
 // ─── Cabeçalhos ordenáveis ────────────────────────────────────────────────────
 
-export const CabecalhosOrdenaveis: Story = {
+export const SortableHeaders: Story = {
   parameters: {
     docs: {
       description: {

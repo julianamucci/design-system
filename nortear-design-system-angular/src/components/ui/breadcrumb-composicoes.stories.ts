@@ -60,7 +60,7 @@ function aoNavegar(event: Event): void {
 
 // ─── Trilha completa ──────────────────────────────────────────────────────────
 
-export const TrilhaCompleta: Story = {
+export const CompleteTrail: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item3'],
     docs: {

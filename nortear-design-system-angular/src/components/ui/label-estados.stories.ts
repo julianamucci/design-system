@@ -15,7 +15,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Obrigatorio: Story = {
+export const Required: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item3'] },
   render: () => ({
     template: `

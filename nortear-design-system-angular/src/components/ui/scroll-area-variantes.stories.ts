@@ -119,7 +119,7 @@ export const Horizontal: Story = {
   },
 };
 
-export const Bidirecional: Story = {
+export const Bidirectional: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
     props: { linhas: LINHAS, colunas: COLUNAS },

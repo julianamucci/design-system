@@ -148,7 +148,7 @@ export const Text: Story = {
 // dois fundos possíveis — a superfície e a linha em destaque — no claro e no
 // escuro, que é o critério `testes.accessibility.item4`.
 
-export const PaletaClara: Story = {
+export const LightPalette: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: renderPaleta,
   play: async ({ canvasElement, step }) => {
@@ -171,7 +171,7 @@ export const PaletaClara: Story = {
   },
 };
 
-export const PaletaEscura: Story = {
+export const DarkPalette: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story

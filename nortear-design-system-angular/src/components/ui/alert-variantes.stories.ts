@@ -264,7 +264,7 @@ export const Dismissible: Story = {
 
 // O contrato documenta "clique ou Enter" — esta story cobre o caminho de
 // teclado, com o foco no botão.
-export const DismissibleTeclado: Story = {
+export const DismissibleByKeyboard: Story = {
   argTypes: {
     onDismiss: { control: false, table: { disable: true } },
   },
@@ -311,7 +311,7 @@ export const DismissibleTeclado: Story = {
  * num componente cuja função é chamar atenção — e a sonda é a mesma das outras
  * quatro stacks, para a divergência aparecer como número e não como impressão.
  */
-export const Contraste: Story = {
+export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {

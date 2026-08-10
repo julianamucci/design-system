@@ -5,6 +5,7 @@ import {
   Directive,
   ElementRef,
   Injectable,
+  InjectionToken,
   ViewEncapsulation,
   computed,
   effect,
@@ -16,6 +17,13 @@ import {
   type OnInit,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import {
+  NdsSheet,
+  NdsSheetContent,
+  NdsSheetHeader,
+  NdsSheetTitle,
+  NdsSheetDescription,
+} from './sheet';
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 //
@@ -39,6 +47,18 @@ const COOKIE = 'sidebar_state';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // uma semana
 /** Abaixo disto a sidebar vira gaveta sobreposta em vez de coluna. */
 const LARGURA_MOVEL = '(max-width: 767px)';
+
+/**
+ * A media query que decide se a barra é coluna ou gaveta.
+ *
+ * Injetável porque o ponto de virada é do produto, não do design system: uma
+ * aplicação com sidebar mais estreita vira mais tarde. Também é o que permite
+ * exercitar o caminho móvel sem redimensionar o navegador.
+ */
+export const NDS_SIDEBAR_MOBILE_QUERY = new InjectionToken<string>(
+  'nds-sidebar-mobile-query',
+  { providedIn: 'root', factory: () => LARGURA_MOVEL },
+);
 
 export type SidebarState = 'expanded' | 'collapsed';
 export type SidebarSide = 'left' | 'right';
@@ -83,7 +103,7 @@ export class NdsSidebarStore {
     };
     document.addEventListener('keydown', aoTeclar);
 
-    const consulta = window.matchMedia(LARGURA_MOVEL);
+    const consulta = window.matchMedia(inject(NDS_SIDEBAR_MOBILE_QUERY));
     const aoMudarLargura = () => this._isMobile.set(consulta.matches);
     aoMudarLargura();
     consulta.addEventListener('change', aoMudarLargura);
@@ -169,7 +189,7 @@ export class NdsSidebarProvider implements OnInit {
 @Component({
   selector: 'div[ndsSidebar]',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, NdsSheet, NdsSheetContent, NdsSheetHeader, NdsSheetTitle, NdsSheetDescription],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -189,7 +209,36 @@ export class NdsSidebarProvider implements OnInit {
          vazia, sem erro. O <ng-container> não deixa elemento no DOM. -->
     <ng-template #conteudo><ng-content /></ng-template>
 
-    @if (collapsible() === 'none') {
+    @if (store.isMobile() && collapsible() !== 'none') {
+      <!-- Em tela estreita a barra deixa de ser coluna e vira gaveta sobreposta.
+           Não é escolha estética: 16rem numa tela de 360px não deixa conteúdo.
+           O Sheet traz foco preso, Escape, devolução de foco e trava de rolagem,
+           que uma gaveta modal precisa ter e ninguém escreve certo à mão.
+
+           O X embutido fica desligado porque o CSS compartilhado já o esconde
+           dentro de .nds-sidebar-mobile — o gatilho continua sendo a saída. -->
+      <nds-sheet
+        [open]="store.openMobile()"
+        (openChange)="store.definirMovel($event)"
+      >
+        <ng-template
+          ndsSheetContent
+          [side]="side()"
+          panelClass="nds-sidebar-mobile"
+          [showCloseButton]="false"
+        >
+          <!-- Título só para leitor de tela: um diálogo sem nome é anunciado
+               como "diálogo" e mais nada. O mesmo par que o React escreve. -->
+          <div ndsSheetHeader class="nds-sr-only">
+            <h2 ndsSheetTitle>{{ mobileTitle() }}</h2>
+            <p ndsSheetDescription>{{ mobileDescription() }}</p>
+          </div>
+          <div class="nds-sidebar-mobile-inner">
+            <ng-container [ngTemplateOutlet]="conteudo" />
+          </div>
+        </ng-template>
+      </nds-sheet>
+    } @else if (collapsible() === 'none') {
       <!-- Sem recolhimento não há vão a reservar nem painel flutuante: o
            conteúdo é a própria coluna. -->
       <ng-container [ngTemplateOutlet]="conteudo" />
@@ -212,11 +261,44 @@ export class NdsSidebar {
   readonly variant = input<SidebarVariant>('sidebar');
   readonly collapsible = input<SidebarCollapsible>('offcanvas');
 
+  /**
+   * Nome do painel na versão móvel, só para leitor de tela.
+   *
+   * Default em inglês para bater com o que as outras quatro stacks já escrevem
+   * — lá é literal cravado no componente; aqui pelo menos dá para traduzir.
+   */
+  readonly mobileTitle = input('Sidebar');
+  readonly mobileDescription = input('Displays the mobile sidebar.');
+
   protected readonly store = inject(NdsSidebarStore);
 
   protected readonly classeDoHost = computed(() =>
     this.collapsible() === 'none' ? 'nds-sidebar-static' : 'nds-sidebar-root',
   );
+
+  /** Quem tinha o foco quando a gaveta móvel abriu. */
+  private focoAntesDaGaveta: HTMLElement | null = null;
+
+  constructor() {
+    // Devolver o foco é trabalho de quem abriu.
+    //
+    // O Sheet restaura sozinho quando o gatilho é um `ndsSheetTrigger` — aqui
+    // não é: a gaveta abre pelo store, a partir do `ndsSidebarTrigger`, que o
+    // primitivo nunca vê. Sem isto o Escape fecha o painel e o foco cai no
+    // <body>: quem navega por teclado volta ao começo da página.
+    effect(() => {
+      const aberta = this.store.openMobile();
+      if (aberta) {
+        this.focoAntesDaGaveta = document.activeElement as HTMLElement | null;
+        return;
+      }
+      const alvo = this.focoAntesDaGaveta;
+      this.focoAntesDaGaveta = null;
+      // Adiado de propósito: o painel ainda está saindo, e o gerenciador de
+      // foco do primitivo mexe no foco durante a animação de saída.
+      if (alvo?.isConnected) setTimeout(() => alvo.focus());
+    });
+  }
 
   /**
    * `data-collapsible` só existe enquanto a sidebar está recolhida.

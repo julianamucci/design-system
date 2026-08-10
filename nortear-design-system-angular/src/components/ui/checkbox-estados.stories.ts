@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Teclado: Story = {
+export const Keyboard: Story = {
   parameters: { covers: ['functional.item1', 'functional.item2', 'functional.item3', 'accessibility.item2'] },
   render: () => ({
     template: `

@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const DimensaoCustomizada: Story = {
+export const CustomDimension: Story = {
   parameters: { covers: ['functional.item2', 'functional.item3', 'accessibility.item2'] },
   render: () => ({
     template: `
@@ -46,7 +46,7 @@ export const DimensaoCustomizada: Story = {
   },
 };
 
-export const ContainerOcupado: Story = {
+export const BusyContainer: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item3'] },
   render: () => ({
     template: `
@@ -73,7 +73,7 @@ export const ContainerOcupado: Story = {
   },
 };
 
-export const MovimentoReduzido: Story = {
+export const ReducedMotion: Story = {
   parameters: { covers: ['functional.item5', 'accessibility.item4', 'accessibility.item5'] },
   render: () => ({
     template: `

@@ -54,7 +54,7 @@ export const WithIconAndIconOnly: Story = {
   },
 };
 
-export const ComoLink: Story = {
+export const AsLink: Story = {
   parameters: { covers: ['functional.item5', 'accessibility.item1'] },
   render: () => ({
     // O seletor do NdsButton aceita `a[ndsButton]`: quando a ação NAVEGA, o
