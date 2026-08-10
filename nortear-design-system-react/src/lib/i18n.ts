@@ -5,6 +5,7 @@ import {
   resolveCodeVariant,
   type Stack,
 } from '@shared/primitives/code-variants';
+import { negociarLocale } from '@shared/primitives/locale-negotiation';
 
 /** Stack deste pacote — escolhe a variante das chaves `*Code`. */
 const STACK: Stack = 'react';
@@ -13,27 +14,15 @@ const STACK: Stack = 'react';
 
 export type Locale = 'pt-BR' | 'en' | 'es';
 
-const VALID_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const STORAGE_KEY = 'ds-locale';
 
 // ─── Leitura inicial do locale ────────────────────────────────────────────────
 
-/**
- * Ordem de prioridade:
- * 1. Query param `?lang=` na URL (permite links compartilháveis por idioma)
- * 2. Valor salvo em localStorage (persiste entre sessões)
- * 3. Padrão: 'pt-BR'
- */
 function getInitialLocale(): Locale {
-  if (typeof window === 'undefined') return 'pt-BR';
-
-  const urlLang = new URLSearchParams(window.location.search).get('lang') as Locale | null;
-  if (urlLang && VALID_LOCALES.includes(urlLang)) return urlLang;
-
-  const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-  if (stored && VALID_LOCALES.includes(stored)) return stored;
-
-  return 'pt-BR';
+  // Escada compartilhada: ?lang= (link explicito) > localStorage (escolha
+  // anterior) > idioma do navegador > pt-BR. O navegador e palpite, e por
+  // isso vem depois das duas escolhas explicitas.
+  return negociarLocale(undefined, undefined, STORAGE_KEY);
 }
 
 // ─── Store Zustand ────────────────────────────────────────────────────────────

@@ -5,21 +5,19 @@ import {
   resolveCodeVariant,
   type Stack,
 } from '@shared/primitives/code-variants';
+import { negociarLocale } from '@shared/primitives/locale-negotiation';
 
 /** Stack deste pacote — escolhe a variante das chaves `*Code`. */
 const STACK: Stack = 'vue';
 
 export type Locale = 'pt-BR' | 'en' | 'es';
-const VALID_LOCALES: Locale[] = ['pt-BR', 'en', 'es'];
 const STORAGE_KEY = 'ds-locale';
 
 function getInitialLocale(): Locale {
-  if (typeof window === 'undefined') return 'pt-BR';
-  const urlLang = new URLSearchParams(window.location.search).get('lang') as Locale;
-  if (urlLang && VALID_LOCALES.includes(urlLang)) return urlLang;
-  const stored = localStorage.getItem(STORAGE_KEY) as Locale;
-  if (stored && VALID_LOCALES.includes(stored)) return stored;
-  return 'pt-BR';
+  // Escada compartilhada: ?lang= (link explicito) > localStorage (escolha
+  // anterior) > idioma do navegador > pt-BR. O navegador e palpite, e por
+  // isso vem depois das duas escolhas explicitas.
+  return negociarLocale(undefined, undefined, STORAGE_KEY);
 }
 
 export const useI18nStore = defineStore('i18n', {
