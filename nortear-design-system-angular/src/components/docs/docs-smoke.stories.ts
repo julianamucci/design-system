@@ -16,11 +16,13 @@ import { NdsSeparatorDocs } from './SeparatorDocs';
 import { NdsLabelDocs } from './LabelDocs';
 import { NdsCardDocs } from './CardDocs';
 import { NdsBadgeDocs } from './BadgeDocs';
+import { NdsSkeletonDocs } from './SkeletonDocs';
+import { NdsAspectRatioDocs } from './AspectRatioDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -78,5 +80,15 @@ export const Card: Story = {
 
 export const Badge: Story = {
   render: () => ({ template: '<nds-badge-docs />' }),
+  play,
+};
+
+export const Skeleton: Story = {
+  render: () => ({ template: '<nds-skeleton-docs />' }),
+  play,
+};
+
+export const AspectRatio: Story = {
+  render: () => ({ template: '<nds-aspect-ratio-docs />' }),
   play,
 };
