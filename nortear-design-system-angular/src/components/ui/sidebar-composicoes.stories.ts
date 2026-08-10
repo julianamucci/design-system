@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComGruposEBusca: Story = {
+export const WithGroupsAndSearch: Story = {
   parameters: { covers: ['functional.item9', 'accessibility.item6'] },
   render: () => ({
     template: `
@@ -123,7 +123,7 @@ export const ComGruposEBusca: Story = {
   },
 };
 
-export const Carregando: Story = {
+export const Loading: Story = {
   parameters: { covers: ['functional.item9'] },
   render: () => ({
     template: `

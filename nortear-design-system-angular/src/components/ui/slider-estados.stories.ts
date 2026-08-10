@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `<div ndsSlider [value]="[45]" [disabled]="true" aria-label="Volume"></div>`,
@@ -92,7 +92,7 @@ export const FocoVisivel: Story = {
   },
 };
 
-export const Arrasto: Story = {
+export const Drag: Story = {
   parameters: { covers: ['functional.item1', 'functional.item2'] },
   render: () => ({
     props: { onValueChange: fn() },

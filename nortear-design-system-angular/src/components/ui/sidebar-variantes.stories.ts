@@ -42,7 +42,7 @@ const MIOLO = (rotuloNav: string) => `
   </div>
 `;
 
-export const Variantes: Story = {
+export const Variants: Story = {
   parameters: { covers: ['visual.item3', 'visual.item4', 'functional.item8'] },
   render: () => ({
     template: `

@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Estados: Story = {
+export const States: Story = {
   parameters: {
     covers: ['visual.item1', 'visual.item2', 'visual.item4', 'accessibility.item2'],
   },
@@ -75,7 +75,7 @@ export const Estados: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item4'] },
   render: () => ({
     template: `

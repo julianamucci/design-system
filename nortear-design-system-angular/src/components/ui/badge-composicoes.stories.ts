@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComIconeEContador: Story = {
+export const WithIconAndCounter: Story = {
   parameters: { covers: ['functional.item5', 'visual.item3'] },
   render: () => ({
     template: `
@@ -41,7 +41,7 @@ export const ComIconeEContador: Story = {
   },
 };
 
-export const EmLinkEEmBotao: Story = {
+export const InLinkAndButton: Story = {
   parameters: { covers: ['functional.item6', 'visual.item4', 'accessibility.item1'] },
   render: () => ({
     // O Badge não vira o controle: quem carrega a interação é o <a> ou o

@@ -26,7 +26,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
     docs: {
@@ -67,7 +67,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
     docs: {

@@ -47,7 +47,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const NaoControlado: Story = {
+export const Uncontrolled: Story = {
   render: () => ({
     template: `
       <div ndsCollapsible class="nds-w-full nds-max-w-sm" [defaultOpen]="false">
@@ -86,7 +86,7 @@ export const NaoControlado: Story = {
   },
 };
 
-export const Controlado: Story = {
+export const Controlled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     props: { aberto: false },
@@ -155,7 +155,7 @@ export const Controlado: Story = {
   },
 };
 
-export const BotaoCustomizado: Story = {
+export const CustomButton: Story = {
   parameters: { covers: ['functional.item5'] },
   render: () => ({
     template: `

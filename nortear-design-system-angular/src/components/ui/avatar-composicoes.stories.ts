@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComFoto: Story = {
+export const WithPhoto: Story = {
   parameters: {
     covers: ['functional.item1', 'accessibility.item1', 'accessibility.item2'],
     docs: {
@@ -63,7 +63,7 @@ export const ComFoto: Story = {
   },
 };
 
-export const ComIniciais: Story = {
+export const WithInitials: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
     docs: {
@@ -100,7 +100,7 @@ export const ComIniciais: Story = {
   },
 };
 
-export const ComIcone: Story = {
+export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
@@ -141,7 +141,7 @@ export const ComIcone: Story = {
   },
 };
 
-export const Grupo: Story = {
+export const Group: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
@@ -194,7 +194,7 @@ export const Grupo: Story = {
   },
 };
 
-export const ComStatus: Story = {
+export const WithStatus: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {

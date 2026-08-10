@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Variantes: Story = {
+export const Variants: Story = {
   parameters: { covers: ['visual.item3', 'accessibility.item5'] },
   render: () => ({
     template: `
@@ -75,7 +75,7 @@ export const Variantes: Story = {
   },
 };
 
-export const Tamanhos: Story = {
+export const Sizes: Story = {
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="sm">
@@ -122,7 +122,7 @@ export const Tamanhos: Story = {
   },
 };
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="sm">

@@ -142,7 +142,7 @@ export const Teclado: Story = {
   },
 };
 
-export const RotuloAssociado: Story = {
+export const AssociatedLabel: Story = {
   parameters: { covers: ['functional.item3'] },
   render: () => ({
     template: `
@@ -172,7 +172,7 @@ export const RotuloAssociado: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     template: `

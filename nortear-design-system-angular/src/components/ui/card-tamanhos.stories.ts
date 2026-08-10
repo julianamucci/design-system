@@ -15,7 +15,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Tamanhos: Story = {
+export const Sizes: Story = {
   parameters: { covers: ['functional.item5', 'visual.item1', 'visual.item2'] },
   render: () => ({
     template: `

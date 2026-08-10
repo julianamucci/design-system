@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Variantes: Story = {
+export const Variants: Story = {
   parameters: {
     // Uma story cobre as sete variantes de uma vez: é o conjunto lado a lado
     // que a regressão visual compara, e é nele que a diferença de cor aparece.

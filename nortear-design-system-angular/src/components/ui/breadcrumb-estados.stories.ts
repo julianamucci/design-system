@@ -61,7 +61,7 @@ function aoNavegar(event: Event): void {
 
 // ─── Simples ──────────────────────────────────────────────────────────────────
 
-export const Simples: Story = {
+export const Simple: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item5'],
     docs: {
@@ -126,7 +126,7 @@ export const Simples: Story = {
 
 // ─── Com reticências ──────────────────────────────────────────────────────────
 
-export const ComReticencias: Story = {
+export const WithEllipsis: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {

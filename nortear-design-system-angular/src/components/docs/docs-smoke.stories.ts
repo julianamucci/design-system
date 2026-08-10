@@ -34,11 +34,14 @@ import { NdsCollapsibleDocs } from './CollapsibleDocs';
 import { NdsTabsDocs } from './TabsDocs';
 import { NdsToggleGroupDocs } from './ToggleGroupDocs';
 import { NdsSidebarDocs } from './SidebarDocs';
+import { NdsTableDocs } from './TableDocs';
+import { NdsScrollAreaDocs } from './ScrollAreaDocs';
+import { NdsPaginationDocs } from './PaginationDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -186,5 +189,20 @@ export const ToggleGroup: Story = {
 
 export const Sidebar: Story = {
   render: () => ({ template: '<nds-sidebar-docs />' }),
+  play,
+};
+
+export const Table: Story = {
+  render: () => ({ template: '<nds-table-docs />' }),
+  play,
+};
+
+export const ScrollArea: Story = {
+  render: () => ({ template: '<nds-scroll-area-docs />' }),
+  play,
+};
+
+export const Pagination: Story = {
+  render: () => ({ template: '<nds-pagination-docs />' }),
   play,
 };

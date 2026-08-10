@@ -64,7 +64,7 @@ export const CardClicavel: Story = {
   },
 };
 
-export const ContrasteDaDescricao: Story = {
+export const DescriptionContrast: Story = {
   parameters: { covers: ['accessibility.item2', 'accessibility.item3'] },
   render: () => ({
     template: `

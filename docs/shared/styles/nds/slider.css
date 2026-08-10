@@ -62,7 +62,14 @@
   height: var(--spacing-4);
 
   background-color: hsl(var(--background));
-  border: 1px solid hsl(var(--primary) / 0.5);
+  /* Borda em --primary CHEIO, não a 0.5.
+   *
+   * O miolo da alça é da cor do fundo da página, então quem a separa do trilho
+   * é só a borda. A 0.5 ela dava 2.22:1 contra o trilho — abaixo dos 3:1 que a
+   * WCAG 1.4.11 exige de componente não textual, e abaixo do que a própria
+   * documentação do Slider promete em testes.accessibility. Cheia dá 11.7:1.
+   * Mesmo token, sem valor novo. */
+  border: 1px solid hsl(var(--primary));
   border-radius: var(--radius-full);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.1);
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);

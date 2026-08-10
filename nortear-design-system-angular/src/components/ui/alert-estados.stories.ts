@@ -61,7 +61,7 @@ export const Completo: Story = {
   },
 };
 
-export const SemTitulo: Story = {
+export const WithoutTitle: Story = {
   parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     template: `
@@ -96,7 +96,7 @@ export const SemTitulo: Story = {
   },
 };
 
-export const SemIcone: Story = {
+export const WithoutIcon: Story = {
   render: () => ({
     template: `
       <div ndsAlert>
@@ -119,7 +119,7 @@ export const SemIcone: Story = {
   },
 };
 
-export const SemAnuncio: Story = {
+export const WithoutAnnouncement: Story = {
   parameters: { covers: ['accessibility.item1'] },
   render: () => ({
     template: `
@@ -155,7 +155,7 @@ export const SemAnuncio: Story = {
   },
 };
 
-export const InsercaoDinamica: Story = {
+export const DynamicInsertion: Story = {
   parameters: { covers: ['functional.item6'] },
   render: () => ({
     template: `

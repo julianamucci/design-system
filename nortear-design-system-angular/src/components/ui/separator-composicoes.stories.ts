@@ -17,7 +17,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const EmCard: Story = {
+export const InCard: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
     template: `
@@ -78,7 +78,7 @@ export const CorCustomizada: Story = {
  * Fecha `visual.item4`, que estava descoberto desde o Bloco 1: o critério pede
  * o separador entre grupos de uma Sidebar, e a Sidebar só existiu no Bloco 3.
  */
-export const EmSidebar: Story = {
+export const InSidebar: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `

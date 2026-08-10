@@ -30,7 +30,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComIcones: Story = {
+export const WithIcons: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: () => ({
     template: `
@@ -89,7 +89,7 @@ export const ComIcones: Story = {
   },
 };
 
-export const ComBadge: Story = {
+export const WithBadge: Story = {
   parameters: { covers: ['functional.item1'] },
   render: () => ({
     template: `

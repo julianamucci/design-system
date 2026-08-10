@@ -26,7 +26,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Tamanhos: Story = {
+export const Sizes: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
     props: { textos: TEXTOS, icones: ICONES },

@@ -75,6 +75,18 @@ const { t, dict } = useTranslation(sliderTranslations as Record<string, unknown>
   },
 });
 
+/**
+ * Rótulo de navegação, com queda para o ui.json.
+ *
+ * Nem todo componente declara a lista de nav inteira no próprio JSON: o
+ * slider não tem nav.compositions. Sem a queda, o que aparece na barra
+ * lateral é a chave crua.
+ */
+function rotuloDeNav(chave: string): string {
+  const doComponente = t(chave);
+  return doComponente === chave ? tNav(chave) : doComponente;
+}
+
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
   'importacao', 'variantes', 'composicoes', 'estados', 'propriedades', 'tokens',
@@ -91,6 +103,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   { labelKey: 'nav.techRef', sections: [
     { id: 'importacao',   labelKey: 'nav.import'   },
     { id: 'variantes',    labelKey: 'nav.variants' },
+    { id: 'composicoes',  labelKey: 'nav.compositions' },
     { id: 'estados',      labelKey: 'nav.states'   },
     { id: 'propriedades', labelKey: 'nav.props'    },
     { id: 'tokens',       labelKey: 'nav.tokens'   },
@@ -453,8 +466,8 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: t(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: t(s.labelKey) })),
+      label: rotuloDeNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
     }));
   });
 

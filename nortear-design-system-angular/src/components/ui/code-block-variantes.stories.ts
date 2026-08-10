@@ -109,7 +109,7 @@ export const Styles: Story = {
   },
 };
 
-export const Data: Story = {
+export const Date: Story = {
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
     await step('JSON recebe classificação de sintaxe', async () => {

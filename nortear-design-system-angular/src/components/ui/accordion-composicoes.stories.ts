@@ -38,7 +38,7 @@ const abrir = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
 };
 
-export const ComIconeNoTrigger: Story = {
+export const WithIconInTrigger: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item4'],
     docs: {
@@ -122,7 +122,7 @@ export const ComIconeNoTrigger: Story = {
   },
 };
 
-export const ComBadgeNoTrigger: Story = {
+export const WithBadgeInTrigger: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { NDS_SIDEBAR } from './sidebar';
+import { NdsButtonIcon } from './button';
 import { NdsSidebarDocs } from '@/components/docs/SidebarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -67,7 +68,7 @@ export class Exemplo {}`;
 const meta: Meta<SidebarArgs> = {
   title: 'UI/Sidebar',
   tags: ['autodocs'],
-  decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR] })],
+  decorators: [moduleMetadata({ imports: [...NDS_SIDEBAR, NdsButtonIcon] })],
   parameters: {
     layout: 'fullscreen',
     docs: { page: withAutoDocsTab(NdsSidebarDocs) },
@@ -97,7 +98,8 @@ export const Playground: Story = {
     docs: { source: { transform: playgroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item6',
-      'accessibility.item1', 'accessibility.item2', 'accessibility.item4',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
+      'accessibility.item4', 'accessibility.item5',
       'visual.item1',
     ],
   },
@@ -115,7 +117,10 @@ export const Playground: Story = {
                 <div ndsSidebarGroupContent>
                   <ul ndsSidebarMenu>
                     <li ndsSidebarMenuItem>
-                      <a ndsSidebarMenuButton href="/painel" [active]="true">Painel</a>
+                      <a ndsSidebarMenuButton href="/painel" [active]="true">
+                        <svg ndsButtonIcon kind="chevron-right" class="nds-icon"></svg>
+                        <span>Painel</span>
+                      </a>
                     </li>
                     <li ndsSidebarMenuItem>
                       <a ndsSidebarMenuButton href="/componentes">Componentes</a>
@@ -160,6 +165,16 @@ export const Playground: Story = {
       // Uma sidebar sem nome no <nav> é só "navegação" na lista de marcos do
       // leitor de tela — indistinguível de qualquer outra da página.
       await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeTruthy();
+    });
+
+    await step('O ícone do item não é lido pelo leitor de tela', async () => {
+      // O ícone reforça o rótulo, nunca o substitui. Sem `aria-hidden` o item
+      // "Painel" viraria "gráfico Painel" — ou pior, só "gráfico" se o ícone
+      // tivesse um title.
+      const icone = canvasElement.querySelector<SVGElement>(
+        '[data-slot="sidebar-menu-button"] svg',
+      )!;
+      await expect(icone.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('O item ativo é anunciado como página atual', async () => {

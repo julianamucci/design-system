@@ -42,7 +42,7 @@ export const Decorativo: Story = {
   },
 };
 
-export const Semantico: Story = {
+export const Semantic: Story = {
   parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
   render: () => ({
     template: `

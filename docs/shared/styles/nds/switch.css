@@ -92,15 +92,11 @@
   transform: translateX(var(--spacing-2));            /* 8px deslocamento */
 }
 
-/* ── Hit-area expandida ──────────────────────────────────────────────────── */
-.nds-switch {
-  position: relative;
-}
-.nds-switch::after {
-  content: "";
-  position: absolute;
-  inset: -0.5rem -0.75rem;
-}
+/* A hit-area expandida vive no topo do arquivo, junto do `position: relative`
+ * que ela precisa. Havia aqui um segundo bloco idêntico com `inset` diferente
+ * (-0.75rem lateral) que, por vir depois, vencia — deixando o comentário lá de
+ * cima descrevendo uma medida que não era a aplicada. O de cima já cobre a
+ * WCAG 2.5.8 com folga (20+16=36 e 36+8=44, contra os 24 exigidos). */
 
 @media (prefers-reduced-motion: reduce) {
   .nds-switch,

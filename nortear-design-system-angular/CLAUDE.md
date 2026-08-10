@@ -6,10 +6,12 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 24 dos 47 componentes prontos (button, separator, label, card,
-badge, skeleton, aspect-ratio, input, textarea, checkbox, switch, toggle,
-radio-group, slider, progress, avatar, code-block, sidebar, alert, breadcrumb,
-accordion, collapsible, tabs, toggle-group), cada um com stories,
+**Em construção.** 27 dos 47 componentes prontos — os Blocos 1, 2 e 3 fechados
+(button, separator, label, card, badge, skeleton, aspect-ratio, input, textarea,
+checkbox, switch, toggle, radio-group, slider, progress, avatar, code-block,
+alert, breadcrumb, table, accordion, collapsible, tabs, toggle-group,
+scroll-area, pagination, sidebar), mais a família **InputGroup**, que o conteúdo
+compartilhado documenta dentro do slug `input`. Cada um com stories,
 docs page e as 15 seções genéricas. A ordem e as pendências vivem em
 `.pipeline-context/_ordem.md`.
 
@@ -160,6 +162,16 @@ input vai em `ngOnInit`.
 No `sidebar` isso fez `[defaultOpen]="false"` ser ignorado: a barra nascia
 aberta, sem erro, só com o estado errado.
 
+### 10. `(click)` no `host` corre DEPOIS do `(click)` de quem consome
+
+Um listener declarado em `host: { '(click)': '...' }` é registrado depois do
+`(click)` que o consumidor escreve no mesmo elemento. `stopImmediatePropagation()`
+a partir dele não alcança ninguém — o handler de quem usa já disparou.
+
+Apareceu no `pagination`: o link desabilitado continuava chamando o callback da
+página. Para barrar de verdade, registre no construtor com
+`addEventListener(..., { capture: true })` e leia o estado na hora do clique.
+
 ## Convenções deste stack
 
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
@@ -224,7 +236,7 @@ aberta, sem erro, só com o estado errado.
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- Os 23 componentes restantes ainda não existem.
+- Os 20 componentes restantes ainda não existem (Blocos 4 e 5).
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

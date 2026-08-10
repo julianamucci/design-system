@@ -65,9 +65,48 @@
   font-variant-numeric: tabular-nums;
 }
 
+/*
+ * ─── Indeterminado ──────────────────────────────────────────────────────────
+ * Sem valor conhecido não há o que preencher, e um trilho vazio lê como 0% —
+ * o oposto do que se quer dizer. Um traço curto percorre a barra para dizer
+ * "em andamento, sem estimativa".
+ *
+ * O `transform` da barra determinada é anulado aqui: ele depende de `--value`,
+ * que neste estado não existe (e, valendo 0, esconderia a barra fora da vista).
+ *
+ *   <div class="nds-progress" role="progressbar" data-indeterminate>
+ *     <div class="nds-progress-indicator"></div>
+ *   </div>
+ *
+ * Sem `aria-valuenow`: é assim que o leitor de tela anuncia "ocupado" em vez
+ * de um número que ninguém sabe.
+ */
+.nds-progress[data-indeterminate] .nds-progress-indicator,
+.nds-progress[data-indeterminate] .nds-progress-bar {
+  width: 40%;
+  transform: none;
+  transition: none;
+  animation: nds-progress-indeterminate var(--duration-stately) var(--ease-emphasis) infinite;
+}
+
+@keyframes nds-progress-indeterminate {
+  from { margin-inline-start: -40%; }
+  to   { margin-inline-start: 100%; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-progress-indicator,
   .nds-progress-bar {
     transition: none;
+  }
+
+  /* `animation: none` explícito, e não só duração zero: com `infinite` e 0s o
+   * navegador reinicia o ciclo sem parar, que é exatamente o piscar que a
+   * preferência pede para evitar. O traço fica parado no início do trilho —
+   * ainda diz "em andamento", sem movimento. */
+  .nds-progress[data-indeterminate] .nds-progress-indicator,
+  .nds-progress[data-indeterminate] .nds-progress-bar {
+    animation: none;
+    margin-inline-start: 0;
   }
 }

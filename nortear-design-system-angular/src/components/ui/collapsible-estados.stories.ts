@@ -46,7 +46,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Fechado: Story = {
+export const Closed: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     template: `
@@ -88,7 +88,7 @@ export const Fechado: Story = {
   },
 };
 
-export const Aberto: Story = {
+export const Open: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     props: { aberto: true },
@@ -139,7 +139,7 @@ export const Aberto: Story = {
   },
 };
 
-export const AbertoPorPadrao: Story = {
+export const OpenByDefault: Story = {
   parameters: { covers: ['functional.item3'] },
   render: () => ({
     template: `
@@ -180,7 +180,7 @@ export const AbertoPorPadrao: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item6', 'visual.item5'] },
   render: () => ({
     template: `

@@ -71,7 +71,7 @@ export const FormaDePagamento: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   render: () => ({
     template: `
       <form class="nds-stack nds-p-4 nds-border-default nds-rounded-lg nds-max-w-md" data-spacing="md">

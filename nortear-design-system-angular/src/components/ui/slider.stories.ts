@@ -51,6 +51,26 @@ export class Exemplo {
 }`;
 }
 
+/**
+ * Razão de contraste entre duas cores computadas (`rgb()` / `rgba()`).
+ *
+ * Uma cor translúcida é achatada sobre branco antes da conta: é o que o olho vê
+ * quando o fundo da página é claro, e medir o canal alfa cru daria um número
+ * que não corresponde a nada na tela.
+ */
+function contraste(corA: string, corB: string): number {
+  const luminancia = (cor: string): number => {
+    const [r = 0, g = 0, b = 0, a = 1] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
+    const canal = (v: number) => {
+      const misturado = (v * a + 255 * (1 - a)) / 255;
+      return misturado <= 0.03928 ? misturado / 12.92 : ((misturado + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
+  };
+  const [claro, escuro] = [luminancia(corA), luminancia(corB)].sort((x, y) => y - x);
+  return (claro + 0.05) / (escuro + 0.05);
+}
+
 const meta: Meta<SliderArgs> = {
   title: 'UI/Slider',
   tags: ['autodocs', 'form'],
@@ -79,7 +99,11 @@ type Story = StoryObj<SliderArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    covers: ['functional.item3', 'accessibility.item4', 'accessibility.item5', 'visual.item1'],
+    covers: [
+      'functional.item3',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item5',
+      'visual.item1',
+    ],
   },
   render: (args) => ({
     props: { ...args },
@@ -120,6 +144,19 @@ export const Playground: Story = {
         '[data-slot="slider-thumb"] > input',
       )!;
       await expect(input.getAttribute('aria-label')).toBe(args.ariaLabel);
+    });
+
+    await step('A borda da alça alcança 3:1 contra o trilho', async () => {
+      // WCAG 1.4.11: componente de interface não textual precisa de 3:1 contra
+      // o que está em volta. Quem separa a alça do trilho é a BORDA dela — o
+      // miolo é da cor do fundo da página de propósito.
+      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
+      const razao = contraste(
+        getComputedStyle(alca).borderTopColor,
+        getComputedStyle(trilho).backgroundColor,
+      );
+      await expect(razao).toBeGreaterThanOrEqual(3);
     });
 
     await step('A classe .nds-slider fica no control, como nas outras stacks', async () => {

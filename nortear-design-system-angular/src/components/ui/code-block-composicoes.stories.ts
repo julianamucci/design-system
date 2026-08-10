@@ -45,7 +45,7 @@ const RODAPE = 'A ação de copiar leva apenas o código.';
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComRotulo: Story = {
+export const WithLabel: Story = {
   render: () => ({
     props: { code: COMPOSITION_CODE },
     template: `<nds-code-block [code]="code" language="ts" title="lista.ts" />`,
@@ -79,7 +79,7 @@ export const ComRotulo: Story = {
   },
 };
 
-export const ComDestaqueDeLinha: Story = {
+export const WithRowHighlight: Story = {
   parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
     props: { code: COMPOSITION_CODE, destaque: [2] },
@@ -100,7 +100,7 @@ export const ComDestaqueDeLinha: Story = {
   },
 };
 
-export const ComIntervaloEmDestaque: Story = {
+export const WithHighlightedRange: Story = {
   parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
     props: { code: COMPOSITION_CODE },
@@ -115,7 +115,7 @@ export const ComIntervaloEmDestaque: Story = {
   },
 };
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   render: () => ({
     props: { code: COMPOSITION_CODE, rodape: RODAPE },
     template: `<nds-code-block [code]="code" language="ts" [footer]="rodape" />`,
@@ -136,7 +136,7 @@ export const ComRodape: Story = {
   },
 };
 
-export const SemRodape: Story = {
+export const WithoutFooter: Story = {
   render: () => ({
     props: { code: COMPOSITION_CODE },
     template: `<nds-code-block [code]="code" language="ts" />`,

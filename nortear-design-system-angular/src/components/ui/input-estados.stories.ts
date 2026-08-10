@@ -13,7 +13,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item3'] },
   render: () => ({
     template: `
@@ -130,6 +130,56 @@ export const Tipos: Story = {
       const email = canvas.getByLabelText('Email') as HTMLInputElement;
       await userEvent.type(email, 'ana@empresa.com');
       await expect(email.value).toBe('ana@empresa.com');
+    });
+  },
+};
+
+/**
+ * Fecha `visual.item5`. O tema escuro não é um enfeite do Chromatic: os estados
+ * de erro e desabilitado dependem de tokens que trocam de valor entre paletas,
+ * e é onde o contraste costuma cair primeiro.
+ */
+export const PaletaEscura: Story = {
+  parameters: {
+    covers: ['visual.item5'],
+    // themeOverride é o canal do addon-themes: a classe volta sozinha na story
+    // seguinte, porque o efeito do decorator depende dele.
+    themes: { themeOverride: 'dark' },
+  },
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-max-w-sm" data-spacing="md">
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="dk-padrao">Padrão</label>
+          <input ndsInput id="dk-padrao" type="text" placeholder="Digite" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="dk-erro">Com erro</label>
+          <input ndsInput id="dk-erro" type="email" aria-invalid="true" aria-describedby="dk-erro-msg" />
+          <p id="dk-erro-msg" class="nds-text-caption nds-text-destructive">E-mail inválido</p>
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="dk-off">Desabilitado</label>
+          <input ndsInput id="dk-off" type="text" disabled value="Bloqueado" />
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('A paleta escura está aplicada no documento', async () => {
+      await expect(document.documentElement.classList.contains('dark')).toBe(true);
+    });
+
+    await step('O campo é mais escuro que o texto que ele recebe', async () => {
+      // Prova que a paleta trocou de verdade: com os tokens do claro esta
+      // relação se inverte, e a asserção acusa.
+      const campo = canvasElement.querySelector<HTMLElement>('#dk-padrao')!;
+      const cs = getComputedStyle(campo);
+      const brilho = (cor: string) => {
+        const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });
   },
 };

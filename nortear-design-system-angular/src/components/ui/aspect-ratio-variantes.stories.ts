@@ -21,7 +21,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Proporcoes: Story = {
+export const Ratios: Story = {
   parameters: {
     covers: [
       'functional.item3', 'functional.item4',

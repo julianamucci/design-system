@@ -94,7 +94,7 @@ export const Teclado: Story = {
  * Vale quando o painel custa caro (uma requisição por aba, por exemplo): passar
  * por três abas com a seta faria três buscas que ninguém pediu.
  */
-export const AtivacaoManual: Story = {
+export const ManualActivation: Story = {
   parameters: { covers: ['functional.item2'] },
   render: () => ({
     template: `
@@ -144,7 +144,7 @@ export const AtivacaoManual: Story = {
  * `<button disabled>` sai do alcance do foco. O bloqueio do clique vem do
  * `pointer-events: none` que o CSS aplica em `[aria-disabled="true"]`.
  */
-export const AbaDesabilitada: Story = {
+export const DisabledTab: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `

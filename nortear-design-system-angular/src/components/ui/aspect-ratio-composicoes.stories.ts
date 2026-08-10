@@ -130,7 +130,7 @@ export const MidiaClicavel: Story = {
   },
 };
 
-export const SemFilho: Story = {
+export const WithoutChild: Story = {
   parameters: { covers: ['functional.item5'] },
   render: () => ({
     template: `

@@ -19,7 +19,7 @@ export default meta;
 type ButtonEstadosArgs = { onClick: (e: MouseEvent) => void };
 type Story = StoryObj<ButtonEstadosArgs>;
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item2', 'visual.item4'] },
   args: { onClick: fn() },
   render: (args) => ({

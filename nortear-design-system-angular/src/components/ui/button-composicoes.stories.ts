@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComIconeEIconOnly: Story = {
+export const WithIconAndIconOnly: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item5'] },
   render: () => ({
     template: `

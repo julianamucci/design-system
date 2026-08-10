@@ -121,7 +121,7 @@ export const TrilhaCompleta: Story = {
 
 // ─── Reticências com gatilho ──────────────────────────────────────────────────
 
-export const ReticenciasComGatilho: Story = {
+export const EllipsisWithTrigger: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {

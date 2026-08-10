@@ -81,7 +81,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const IconeNoTrigger: Story = {
+export const IconInTrigger: Story = {
   render: () => ({
     template: `
       <div ndsCollapsible class="nds-w-full nds-max-w-sm">

@@ -65,14 +65,21 @@
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
+/* `min-height`, como na base: `height` cravado recorta o rótulo quando a pessoa
+ * aumenta a fonte do navegador (WCAG 1.4.4). O padding-block da base continua
+ * dando o respiro; aqui só muda o piso e o recuo lateral. */
 .nds-toggle[data-size="sm"] {
-  height: var(--spacing-8);                      /* 32px */
+  min-height: var(--spacing-8);                  /* 32px de alvo de toque */
+  /* O recuo vertical acompanha o lateral neste degrau. Com o padding-block da
+   * base (8px) o ícone de 16px mais a borda passariam de 32, e o toggle
+   * icon-only deixaria de ser quadrado — o `min-height` é piso, não teto. */
+  padding-block: var(--spacing-1-5, 0.375rem);
   padding-inline: var(--spacing-1-5, 0.375rem);
   min-width: var(--spacing-8);
 }
 
 .nds-toggle[data-size="lg"] {
-  height: var(--spacing-10, 2.5rem);             /* 40px */
+  min-height: var(--spacing-10, 2.5rem);         /* 40px de alvo de toque */
   padding-inline: var(--spacing-2-5, 0.625rem);
   min-width: var(--spacing-10, 2.5rem);
 }

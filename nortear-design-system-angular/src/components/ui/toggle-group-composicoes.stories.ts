@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const BarraDeAlinhamento: Story = {
+export const AlignmentBar: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `
@@ -69,7 +69,7 @@ export const BarraDeAlinhamento: Story = {
   },
 };
 
-export const ModoDeVisualizacao: Story = {
+export const ViewMode: Story = {
   render: () => ({
     template: `
       <div
@@ -107,7 +107,7 @@ export const ModoDeVisualizacao: Story = {
   },
 };
 
-export const FiltrosComTexto: Story = {
+export const FiltersWithText: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     template: `

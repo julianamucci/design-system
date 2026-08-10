@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComRodape: Story = {
+export const WithFooter: Story = {
   parameters: { covers: ['functional.item3', 'visual.item3'] },
   render: () => ({
     template: `
@@ -45,7 +45,7 @@ export const ComRodape: Story = {
   },
 };
 
-export const ComAcao: Story = {
+export const WithAction: Story = {
   parameters: { covers: ['functional.item4', 'visual.item4'] },
   render: () => ({
     template: `
@@ -72,7 +72,7 @@ export const ComAcao: Story = {
   },
 };
 
-export const ComImagem: Story = {
+export const WithImage: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     template: `

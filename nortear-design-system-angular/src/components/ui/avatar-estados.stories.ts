@@ -24,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Carregada: Story = {
+export const Loaded: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item1'],
     docs: {
@@ -152,7 +152,7 @@ export const Falhou: Story = {
   },
 };
 
-export const SemImagem: Story = {
+export const WithoutImage: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {

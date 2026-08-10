@@ -105,6 +105,7 @@ function filesForSlug(slug, stack) {
     vue: ['.vue', '.ts'],
     svelte: ['.svelte', '.ts'],
     vanilla: ['.ts'],
+    angular: ['.ts'],
   }[stack];
 
   // `startsWith` puro casava slug com vizinho de nome mais longo: `alert` pegava

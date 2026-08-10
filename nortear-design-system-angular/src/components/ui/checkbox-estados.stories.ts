@@ -50,7 +50,7 @@ export const Teclado: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item4'] },
   render: () => ({
     template: `
@@ -83,7 +83,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const Indeterminado: Story = {
+export const Indeterminate: Story = {
   parameters: { covers: ['functional.item6', 'visual.item1', 'visual.item2', 'visual.item3', 'visual.item5'] },
   render: () => ({
     template: `
@@ -136,7 +136,7 @@ export const Indeterminado: Story = {
   },
 };
 
-export const EmFormulario: Story = {
+export const InForm: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item3', 'accessibility.item4', 'accessibility.item5'],
   },

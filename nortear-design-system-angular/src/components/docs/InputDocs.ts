@@ -16,6 +16,7 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsInput } from '@/components/ui/input';
+import { NDS_INPUT_GROUP } from '@/components/ui/input-group';
 import { NdsLabel } from '@/components/ui/label';
 import uiTranslations from '@/i18n/ui.json';
 import inputTranslations from '@shared/content/input/translations.json';
@@ -109,7 +110,7 @@ const TIPOS = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    NdsInput, NdsLabel,
+    NdsInput, ...NDS_INPUT_GROUP, NdsLabel,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
@@ -180,10 +181,23 @@ const TIPOS = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         </p>
       </div>
     </ng-template>
+    <!-- Prefixo é InputGroup, e o preview mostra isso agora que a família
+         existe. Antes ele renderizava um campo comum, que é exatamente o que a
+         descrição diz para NÃO fazer: a moldura tem que ser uma só. -->
     <ng-template #tplCompPrefix>
       <div class="nds-stack nds-max-w-sm" data-spacing="sm">
         <label ndsLabel for="comp-prefix">{{ t('demonstration.labels.searchLabel') }}</label>
-        <input ndsInput id="comp-prefix" type="search" [placeholder]="t('demonstration.labels.searchPlaceholder')" />
+        <div ndsInputGroup>
+          <span ndsInputGroupAddon align="inline-start">
+            <span ndsInputGroupText>https://</span>
+          </span>
+          <input
+            ndsInputGroupInput
+            id="comp-prefix"
+            type="url"
+            [placeholder]="t('demonstration.labels.searchPlaceholder')"
+          />
+        </div>
       </div>
     </ng-template>
 
@@ -477,6 +491,50 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
           { name: 'aria-invalid',  type: 'boolean', defaultValue: '—',      required: nao, description: toPlainText(t('props.table.ariaInvalid')) },
           { name: 'autocomplete',  type: 'string',  defaultValue: '—',      required: nao, description: toPlainText(t('props.table.autoComplete')) },
           { name: 'class',         type: 'string',  defaultValue: '—',      required: nao, description: toPlainText(t('props.table.className')) },
+        ],
+      },
+      {
+        // O InputGroup é família própria (arquivo `input-group.ts`), mas o
+        // conteúdo compartilhado o documenta dentro deste slug — e a chave
+        // `props.inputGroupTitle` existe justamente para esta tabela.
+        title: t('props.inputGroupTitle'),
+        cols,
+        items: [
+          {
+            name: 'ndsInputGroupAddon · align',
+            type: `'inline-start' | 'inline-end' | 'block-start' | 'block-end'`,
+            defaultValue: `'inline-start'`,
+            required: nao,
+            description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupAddon')),
+          },
+          {
+            name: 'ndsInputGroupButton · size',
+            type: `'xs' | 'sm' | 'icon-xs' | 'icon-sm'`,
+            defaultValue: `'xs'`,
+            required: nao,
+            description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupButton')),
+          },
+          {
+            name: 'ndsInputGroupInput',
+            type: tNav('common.no'),
+            defaultValue: '—',
+            required: nao,
+            description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupInput')),
+          },
+          {
+            name: 'ndsInputGroupTextarea',
+            type: tNav('common.no'),
+            defaultValue: '—',
+            required: nao,
+            description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupTextarea')),
+          },
+          {
+            name: 'ndsInputGroupText',
+            type: tNav('common.no'),
+            defaultValue: '—',
+            required: nao,
+            description: toPlainText(t('variants.items.inputGroup.subcomponents.inputGroupText')),
+          },
         ],
       },
     ];

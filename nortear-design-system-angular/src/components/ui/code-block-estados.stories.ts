@@ -68,7 +68,7 @@ const LONG_CODE = Array.from({ length: 60 }, (_, i) =>
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComNumeracao: Story = {
+export const WithNumbering: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
     props: { code: COMPOSITION_CODE },
@@ -85,7 +85,7 @@ export const ComNumeracao: Story = {
   },
 };
 
-export const SemNumeracao: Story = {
+export const WithoutNumbering: Story = {
   parameters: { covers: ['functional.item6', 'visual.item3'] },
   render: () => ({
     props: { code: COMPOSITION_CODE },
@@ -139,7 +139,7 @@ export const Copiado: Story = {
   },
 };
 
-export const ScrollDuplo: Story = {
+export const DoubleScroll: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     props: { code: LONG_CODE },
@@ -183,7 +183,7 @@ export const LinguagemDesconhecida: Story = {
   },
 };
 
-export const RemovidoAntesDoFeedback: Story = {
+export const RemovedBeforeFeedback: Story = {
   parameters: { covers: ['functional.item8'] },
   render: () => ({
     // Signal e não campo comum: em modo zoneless é o signal que garante a nova

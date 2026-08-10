@@ -40,7 +40,7 @@ export const Obrigatorio: Story = {
   },
 };
 
-export const Desabilitado: Story = {
+export const Disabled: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item4'] },
   render: () => ({
     template: `
@@ -67,7 +67,7 @@ export const Desabilitado: Story = {
   },
 };
 
-export const ComInput: Story = {
+export const WithInput: Story = {
   parameters: { covers: ['visual.item1', 'visual.item2', 'visual.item3', 'visual.item4'] },
   render: () => ({
     template: `
