@@ -27,7 +27,7 @@ export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } 
  * (elemento em transição, não paleta ruim).
  */
 export async function esperarPortal(
-  role: 'menu' | 'menuitem' | 'dialog' | 'listbox' | 'tooltip',
+  role: 'menu' | 'menuitem' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',
   options: { name?: string | RegExp; timeout?: number } = {},
 ): Promise<HTMLElement> {
   const { name, timeout = 4000 } = options;
@@ -54,7 +54,7 @@ export async function esperarPortal(
 
 /** Espera o portal sumir — para provar Escape, clique fora e seleção de item. */
 export async function esperarPortalSumir(
-  role: 'menu' | 'dialog' | 'listbox' | 'tooltip',
+  role: 'menu' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',
   timeout = 2000,
 ): Promise<void> {
   const corpo = within(document.body);

@@ -15,8 +15,13 @@
  *     </div>
  *   </div>
  *
- * Sem overlay-click-to-close e sem Escape-to-close — comportamento canônico
- * de alert dialog (decisão crítica, exige escolha explícita do usuário).
+ * Sem overlay-click-to-close: a decisão é crítica e exige escolha explícita.
+ *
+ * Escape FECHA, e equivale a cancelar — o comentário anterior dizia o
+ * contrário, e contradizia o próprio conteúdo compartilhado do componente
+ * (testes.functional.item4). A WAI-ARIA manda o alertdialog seguir o teclado do
+ * dialog: tirar a única saída de teclado seria pior do que o risco de dispensa
+ * acidental, que é justamente o que o clique-fora bloqueado já cobre.
  *
  * Tokens: --background, --foreground, --muted-foreground, --border,
  *         --spacing-*

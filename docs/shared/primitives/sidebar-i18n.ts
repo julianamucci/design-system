@@ -44,8 +44,20 @@ function criarLoja() {
   };
 }
 
+/**
+ * A fatia do React que este arquivo usa. Adaptador estrutural para não puxar
+ * `@types/react` numa pasta compartilhada por cinco stacks.
+ *
+ * Os parâmetros são `any` de propósito, e não `unknown`: parâmetro de função é
+ * CONTRAVARIANTE, então uma função que aceita `unknown` não é atribuível a
+ * partir do `createElement` real, que aceita tipos específicos. Com `unknown` o
+ * tipo era impossível de satisfazer — o stack Angular, que tem `@types/react`
+ * instalado pelo Storybook, não compilava; os outros passavam só porque lá o
+ * `React` já chegava como `any`.
+ */
 type ReactMinimo = {
-  createElement: (tipo: unknown, props?: unknown, ...filhos: unknown[]) => unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  createElement: (tipo: any, props?: any, ...filhos: any[]) => unknown;
   useSyncExternalStore: <T>(assinar: (o: Ouvinte) => () => void, ler: () => T) => T;
 };
 
