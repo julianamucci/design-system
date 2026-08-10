@@ -18,7 +18,11 @@
   justify-content: center;
   gap: var(--spacing-2);
 
-  height: var(--spacing-9, 2.25rem);             /* 36px default */
+  /* Piso, nao medida: com `height` o rotulo era cortado quando a pessoa
+   * aumenta a fonte do navegador (WCAG 1.4.4). O padding-block da o respiro,
+   * e o min-height mantem o alvo de toque de 36px no tamanho padrao. */
+  min-height: var(--spacing-9, 2.25rem);         /* 36px de alvo de toque */
+  padding-block: var(--spacing-2);               /* 8px */
   padding-inline: var(--spacing-2);              /* 8px */
   min-width: var(--spacing-9, 2.25rem);
 

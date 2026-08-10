@@ -2102,6 +2102,209 @@ function auditInlineStyle(slug) {
   return violations;
 }
 
+/* ─── Guardas de regra escrita ───────────────────────────────────────────────
+ *
+ * Regras que viviam só no CLAUDE.md e na cabeça de quem revisava. Todas passam
+ * hoje: são guarda de regressão, não backlog. O valor de uma guarda verde é que
+ * ela fica vermelha no dia em que alguém reintroduzir o defeito — e cada uma
+ * destas já custou caro uma vez.
+ */
+
+// Emoji e marca de certo/errado. NÃO inclui setas: `Configurações → Assinatura`
+// é prosa legítima, e a primeira versão desta regra acusou 78 delas.
+const GLIFO_PROIBIDO =
+  /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}☀-➿✅❌✓✔✗✘⚠️]/u;
+
+/** Primitivos cuja RAIZ carrega texto — só neles altura fixa corta o conteúdo. */
+const PRIMITIVOS_COM_TEXTO = new Set([
+  'button', 'input', 'textarea', 'label', 'badge', 'toggle', 'toggle-group',
+  'native-select', 'combobox', 'select', 'pagination', 'breadcrumb',
+]);
+
+function auditGuardrails(slug) {
+  const violations = [];
+  const push = (o) => violations.push({ slug, ...o });
+
+  // 1. Emoji no conteúdo compartilhado. O ícone é renderizado pela docs page
+  //    (pill .nds-* + lucide); no texto ele aparece duplicado.
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(contentFile);
+  if (raw) {
+    let json = null;
+    try { json = JSON.parse(raw); } catch { /* outra regra cobra JSON inválido */ }
+    const walk = (node, path) => {
+      if (typeof node === 'string') {
+        if (GLIFO_PROIBIDO.test(node)) {
+          push({
+            category: 'quality', severity: 'medium', stack: 'shared',
+            file: relative(ROOT, contentFile), rule: 'emoji_in_translation',
+            message: `${path} traz emoji ou glifo de status — o ícone vem do código da docs page, e no texto ele duplica`,
+          });
+        }
+        return;
+      }
+      if (node && typeof node === 'object') for (const [k, v] of Object.entries(node)) walk(v, path ? `${path}.${k}` : k);
+    };
+    if (json) walk(json, '');
+
+    // 2. `useSeoEffect` já acrescenta "· Design System"; no JSON isso duplica.
+    for (const [loc, bloco] of Object.entries(json ?? {})) {
+      const t = bloco && bloco.seo && bloco.seo.title;
+      if (typeof t === 'string' && /·\s*Design System/i.test(t)) {
+        push({
+          category: 'quality', severity: 'medium', stack: 'shared',
+          file: relative(ROOT, contentFile), rule: 'seo_title_suffix',
+          message: `seo.title [${loc}] já contém "· Design System" — useSeoEffect acrescenta o sufixo, o título sai duplicado`,
+        });
+      }
+    }
+  }
+
+  // 3. Altura fixa na raiz de primitivo com texto (WCAG 1.4.4). Descendente
+  //    (ícone, indicador, thumb) e variante icon-only continuam livres: não há
+  //    texto ali para crescer.
+  if (PRIMITIVOS_COM_TEXTO.has(slug)) {
+    const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
+    const css = (readFile(cssFile) || '').replace(/\/\*[\s\S]*?\*\//g, '');
+    const rx = new RegExp(`(^|\\n)([^{}\\n]*\\.nds-${slug}(-(?!icon)[a-z0-9-]+)?)\\s*\\{([^}]*)\\}`, 'g');
+    for (const m of css.matchAll(rx)) {
+      const sel = m[2].trim();
+      if (/>|\s[a-z]|::|\[data-|-thumb|-indicator|-icon|-svg|-track|-dot|-separator|-ellipsis/.test(sel)) continue;
+      const h = m[4].match(/^\s*(height|block-size)\s*:\s*([^;]+);/m);
+      if (!h) continue;
+      // `--reka-select-trigger-height` e `--bits-*` são medidas que a lib
+      // headless calcula em runtime para alinhar o painel ao gatilho. Não há
+      // escolha de design ali, e proibir seria pedir que o painel desalinhasse.
+      if (/--(reka|bits|radix)-/.test(h[2])) continue;
+      if (!/100%|auto|inherit|fit-content/.test(h[2])) {
+        push({
+          category: 'quality', severity: 'high', stack: 'shared',
+          file: relative(ROOT, cssFile), rule: 'fixed_height_on_text_primitive',
+          message: `${sel} fixa ${h[1]}: ${h[2].trim()} — a altura de primitivo com texto é resultado de padding-block + line-height, senão o texto é cortado quando a pessoa aumenta a fonte (WCAG 1.4.4)`,
+        });
+      }
+    }
+  }
+
+  for (const stack of STACKS) {
+    const { all, docs } = filesForSlug(slug, stack);
+
+    // 4. `gtag()` direto. GA4 vive no manager; o iframe não o enxerga, e a
+    //    chamada direta registra tudo em /iframe.html.
+    for (const file of all) {
+      const content = stripComments(readFile(file) || '');
+      if (/(^|[^.\w])gtag\s*\(/.test(content)) {
+        push({
+          category: 'analytics', severity: 'high', stack,
+          file: relative(ROOT, file), rule: 'gtag_direct_call',
+          message: 'chama gtag() direto — usar track() de src/lib/analytics, que resolve window.top.gtag',
+        });
+      }
+    }
+
+    // 5. Locale do Vue vindo de store. Já derrubou docs page em runtime.
+    if (stack === 'vue') {
+      for (const file of docs) {
+        const content = stripComments(readFile(file) || '');
+        if (/useLocaleStore|from\s+['"]pinia['"]/.test(content)) {
+          push({
+            category: 'quality', severity: 'high', stack,
+            file: relative(ROOT, file), rule: 'vue_locale_from_store',
+            message: 'docs page Vue lê locale de store/Pinia — a fonte é useTranslation(); a store já causou crash em runtime',
+          });
+        }
+      }
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * Infra do Storybook: slug-independente, roda 1x por processo.
+ *
+ * O GA4 no iframe já aconteceu em produção — 863 de 863 pageviews caíram em
+ * `/iframe.html`, porque `location.pathname` do iframe é invariante. E o
+ * repositório é público, então ID de medição commitado é vazamento.
+ */
+function auditStorybookInfra() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const sb = join(ROOT, stackDir(stack), '.storybook');
+    if (!existsSync(sb)) continue;
+
+    const previewHead = join(sb, 'preview-head.html');
+    if (existsSync(previewHead) && /googletagmanager|gtag\/js/i.test(readFile(previewHead) || '')) {
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, previewHead), rule: 'ga4_in_preview_head',
+        message: 'GA4 carregado no preview-head — o iframe tem pathname invariante e 100% dos page_view colidem em /iframe.html; o lugar é manager-head.html',
+      });
+    }
+
+    for (const nome of ['manager-head.html', 'preview-head.html']) {
+      const f = join(sb, nome);
+      if (!existsSync(f)) continue;
+      const m = (readFile(f) || '').match(/\bG-[A-Z0-9]{8,}\b/);
+      if (m) {
+        violations.push({
+          category: 'security', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, f), rule: 'measurement_id_committed',
+          message: `ID de medição ${m[0]} escrito no arquivo — o repositório é público; injetar por variável de ambiente no build`,
+        });
+      }
+    }
+
+    // O listener de canal só é exigido onde o renderer pula o re-render do
+    // decorator ao voltar a toolbar para Default. O renderer html (vanilla)
+    // re-roda sozinho, e o Angular ainda está sendo construído.
+    if (!['react', 'vue', 'svelte'].includes(stack)) continue;
+    const preview = ['preview.ts', 'preview.tsx'].map((n) => join(sb, n)).find(existsSync);
+    if (preview && !/GLOBALS_UPDATED/.test(readFile(preview) || '')) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, preview), rule: 'theme_channel_missing',
+        message: 'preview sem listener de GLOBALS_UPDATED no nível do módulo — só decorator + useEffect não reverte o tema para Default, porque o renderer pula o re-render nesse caso',
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * Guideline de componente não carrega código de implementação.
+ *
+ * Código em guideline envelhece mais rápido que no componente: commit no
+ * componente não atualiza a guideline, e o leitor segue a versão velha. A
+ * guideline decide QUANDO e POR QUE usar; o COMO vive no componente, no
+ * `translations.json` e na docs page.
+ *
+ * Vale só para as de componente (04 a 10 de cada stack). As transversais em
+ * `docs/shared/guidelines` podem ilustrar uma regra com snippet — é onde estão
+ * os 276 blocos atuais, todos legítimos.
+ */
+function auditGuidelineCode() {
+  const violations = [];
+  const RX_FENCE = /^```(ts|tsx|jsx|vue|svelte|typescript)\s*$/gm;
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'guidelines');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!/^(0[4-9]|10)-.*\.md$/.test(nome)) continue;
+      const conteudo = readFile(join(dir, nome)) || '';
+      const n = (conteudo.match(RX_FENCE) || []).length;
+      if (n > 0) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: relative(ROOT, join(dir, nome)), rule: 'code_in_component_guideline',
+          message: `${n} bloco(s) de código de implementação — guideline de componente traz propósito, estrutura textual, tabelas e regras; o código vive no componente e no translations.json, que não envelhecem juntos`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditComponentVars(slug) {
   const violations = [];
   const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
@@ -2360,6 +2563,7 @@ function runAudit(slug, category) {
     ...auditI18nKeys(slug),
     ...auditComponentVars(slug),
     ...auditInlineStyle(slug),
+    ...auditGuardrails(slug),
   ];
 }
 
@@ -2440,7 +2644,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
