@@ -6,9 +6,10 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 17 dos 47 componentes prontos (button, separator, label, card,
+**Em construção.** 24 dos 47 componentes prontos (button, separator, label, card,
 badge, skeleton, aspect-ratio, input, textarea, checkbox, switch, toggle,
-radio-group, slider, progress, avatar, code-block), cada um com stories,
+radio-group, slider, progress, avatar, code-block, sidebar, alert, breadcrumb,
+accordion, collapsible, tabs, toggle-group), cada um com stories,
 docs page e as 15 seções genéricas. A ordem e as pendências vivem em
 `.pipeline-context/_ordem.md`.
 
@@ -128,6 +129,37 @@ largura zero, sem erro nenhum, e a alça no lugar certo disfarçando.
 
 Antes de compor, olhe as host directives do primitivo, não só os inputs dele.
 
+### 8. Duas `<ng-content>` em ramos de `@if` engolem o conteúdo
+
+Um componente com dois destinos de projeção padrão — um em cada ramo de um
+`@if` — não entrega o conteúdo a **nenhum** dos dois. A projeção é resolvida em
+tempo de compilação, antes de existir ramo ativo.
+
+Não há erro: o componente renderiza vazio, com os wrappers no lugar. Custou uma
+sonda de `outerHTML` no `sidebar` para achar.
+
+A saída é uma `<ng-content>` só, guardada num `<ng-template>` e instanciada onde
+faz falta. O `<ng-container>` não deixa elemento no DOM:
+
+```html
+<ng-template #conteudo><ng-content /></ng-template>
+
+@if (semRecolhimento()) {
+  <ng-container [ngTemplateOutlet]="conteudo" />
+} @else {
+  <div class="wrapper"><ng-container [ngTemplateOutlet]="conteudo" /></div>
+}
+```
+
+### 9. `input()` no construtor devolve o default, não o valor ligado
+
+Ler `this.meuInput()` no construtor dá o valor declarado no componente — o
+binding de quem consome ainda não foi aplicado. Inicialização que dependa de
+input vai em `ngOnInit`.
+
+No `sidebar` isso fez `[defaultOpen]="false"` ser ignorado: a barra nascia
+aberta, sem erro, só com o estado errado.
+
 ## Convenções deste stack
 
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
@@ -192,7 +224,7 @@ Antes de compor, olhe as host directives do primitivo, não só os inputs dele.
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- Os 30 componentes restantes ainda não existem.
+- Os 23 componentes restantes ainda não existem.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

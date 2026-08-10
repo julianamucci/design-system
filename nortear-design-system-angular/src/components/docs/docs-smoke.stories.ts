@@ -27,11 +27,18 @@ import { NdsSliderDocs } from './SliderDocs';
 import { NdsProgressDocs } from './ProgressDocs';
 import { NdsAvatarDocs } from './AvatarDocs';
 import { NdsCodeBlockDocs } from './CodeBlockDocs';
+import { NdsAlertDocs } from './AlertDocs';
+import { NdsBreadcrumbDocs } from './BreadcrumbDocs';
+import { NdsAccordionDocs } from './AccordionDocs';
+import { NdsCollapsibleDocs } from './CollapsibleDocs';
+import { NdsTabsDocs } from './TabsDocs';
+import { NdsToggleGroupDocs } from './ToggleGroupDocs';
+import { NdsSidebarDocs } from './SidebarDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -144,5 +151,40 @@ export const Avatar: Story = {
 
 export const CodeBlock: Story = {
   render: () => ({ template: '<nds-code-block-docs />' }),
+  play,
+};
+
+export const Alert: Story = {
+  render: () => ({ template: '<nds-alert-docs />' }),
+  play,
+};
+
+export const Breadcrumb: Story = {
+  render: () => ({ template: '<nds-breadcrumb-docs />' }),
+  play,
+};
+
+export const Accordion: Story = {
+  render: () => ({ template: '<nds-accordion-docs />' }),
+  play,
+};
+
+export const Collapsible: Story = {
+  render: () => ({ template: '<nds-collapsible-docs />' }),
+  play,
+};
+
+export const Tabs: Story = {
+  render: () => ({ template: '<nds-tabs-docs />' }),
+  play,
+};
+
+export const ToggleGroup: Story = {
+  render: () => ({ template: '<nds-toggle-group-docs />' }),
+  play,
+};
+
+export const Sidebar: Story = {
+  render: () => ({ template: '<nds-sidebar-docs />' }),
   play,
 };

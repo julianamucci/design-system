@@ -1,0 +1,287 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent, fn } from 'storybook/test';
+import { NdsToggle } from './toggle';
+import {
+  NdsToggleGroup,
+  NdsToggleGroupIcon,
+  type ToggleGroupType,
+  type ToggleGroupOrientation,
+} from './toggle-group';
+import { NdsToggleGroupDocs } from '@/components/docs/ToggleGroupDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import type { ToggleVariant } from './toggle';
+
+type ToggleGroupArgs = {
+  type: ToggleGroupType;
+  variant: ToggleVariant;
+  orientation: ToggleGroupOrientation;
+  spacing: number;
+  disabled: boolean;
+  ariaLabel: string;
+  onValueChange?: (value: string | string[]) => void;
+};
+
+const ROTULOS = {
+  left: 'Alinhar à esquerda',
+  center: 'Centralizar',
+  right: 'Alinhar à direita',
+};
+
+/**
+ * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da
+ * story literalmente, com os bindings ligados aos args. O `transform` devolve o
+ * uso real, já com os valores atuais dos controls.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs> }): string {
+  const {
+    type = 'single',
+    variant = 'outline',
+    orientation = 'horizontal',
+    spacing = 0,
+    disabled = false,
+    ariaLabel = 'Alinhamento do texto',
+  } = ctx.args ?? {};
+
+  // Só o que difere do default entra no snippet — documentação que repete valor
+  // padrão ensina ruído.
+  const atributos = [
+    type === 'single' ? '' : `type="${type}"`,
+    variant === 'default' ? '' : `variant="${variant}"`,
+    orientation === 'horizontal' ? '' : `orientation="${orientation}"`,
+    spacing === 0 ? '' : `[spacing]="${spacing}"`,
+    disabled ? '[disabled]="true"' : '',
+    type === 'single' ? `defaultValue="left"` : `[defaultValue]="['left']"`,
+    // O grupo sem nome acessível anuncia só "barra de ferramentas".
+    `aria-label="${ariaLabel}"`,
+  ].filter(Boolean);
+
+  const varianteItem = variant === 'default' ? '' : ` variant="${variant}"`;
+  const itens = (['left', 'center', 'right'] as const)
+    .map(
+      (v) =>
+        `      <button ndsToggle${varianteItem} value="${v}" aria-label="${ROTULOS[v]}">\n` +
+        `        <svg ndsToggleGroupIcon kind="align-${v}"></svg>\n` +
+        `      </button>`,
+    )
+    .join('\n');
+
+  return `import { NdsToggle } from '@/components/ui/toggle';
+import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group';
+
+@Component({
+  imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle],
+  template: \`
+    <div
+      ndsToggleGroup
+      ${atributos.join('\n      ')}
+    >
+${itens}
+    </div>
+  \`,
+})
+export class Exemplo {}`;
+}
+
+const meta: Meta<ToggleGroupArgs> = {
+  title: 'UI/ToggleGroup',
+  tags: ['autodocs', 'form'],
+  decorators: [moduleMetadata({ imports: [NdsToggleGroup, NdsToggleGroupIcon, NdsToggle] })],
+  parameters: {
+    layout: 'padded',
+    docs: { page: withAutoDocsTab(NdsToggleGroupDocs) },
+  },
+  argTypes: {
+    type: {
+      control: 'inline-radio',
+      options: ['single', 'multiple'],
+      description: 'Modo de seleção. Exclusivo devolve string; combinado devolve lista.',
+    },
+    variant: {
+      control: 'inline-radio',
+      options: ['default', 'outline'],
+      description: 'Estilo do conjunto. "outline" emenda os itens num container só.',
+    },
+    orientation: {
+      control: 'inline-radio',
+      options: ['horizontal', 'vertical'],
+      description: 'Direção do empilhamento e das setas de navegação.',
+    },
+    spacing: {
+      control: { type: 'number', min: 0, max: 3 },
+      description: 'Distância entre itens. 0 emenda as bordas (segmentado).',
+    },
+    disabled: { control: 'boolean', description: 'Desabilita o grupo inteiro.' },
+    ariaLabel: {
+      control: 'text',
+      description: 'Nome acessível do grupo — obrigatório, descreve a categoria.',
+    },
+    // Sem entrada em argTypes o renderer Angular não repassa a função em
+    // `props`, e o `(valueChange)` do template fica ligado a nada — sem erro.
+    onValueChange: {
+      control: false,
+      description: 'Emitido ao trocar a seleção, com o novo valor.',
+      table: { type: { summary: '(value: string | string[]) => void' } },
+    },
+  },
+  args: {
+    type: 'single',
+    variant: 'outline',
+    orientation: 'horizontal',
+    spacing: 0,
+    disabled: false,
+    ariaLabel: 'Alinhamento do texto',
+    onValueChange: fn(),
+  },
+};
+
+export default meta;
+type Story = StoryObj<ToggleGroupArgs>;
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+    covers: [
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      rotulos: ROTULOS,
+      // A forma do valor inicial acompanha o modo: string no exclusivo, lista
+      // no combinado. É a mesma regra que o componente aplica ao emitir.
+      valorInicial: args.type === 'single' ? 'left' : ['left'],
+    },
+    template: `
+      <div
+        ndsToggleGroup
+        [type]="type"
+        [variant]="variant"
+        [orientation]="orientation"
+        [spacing]="spacing"
+        [disabled]="disabled"
+        [defaultValue]="valorInicial"
+        [attr.aria-label]="ariaLabel"
+        (valueChange)="onValueChange($event)"
+      >
+        <button ndsToggle [variant]="variant" value="left" [attr.aria-label]="rotulos.left">
+          <svg ndsToggleGroupIcon kind="align-left"></svg>
+        </button>
+        <button ndsToggle [variant]="variant" value="center" [attr.aria-label]="rotulos.center">
+          <svg ndsToggleGroupIcon kind="align-center"></svg>
+        </button>
+        <button ndsToggle [variant]="variant" value="right" [attr.aria-label]="rotulos.right">
+          <svg ndsToggleGroupIcon kind="align-right"></svg>
+        </button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const grupo = canvas.getByRole('toolbar');
+    const esquerda = canvas.getByRole('button', { name: ROTULOS.left });
+    const centro = canvas.getByRole('button', { name: ROTULOS.center });
+    const direita = canvas.getByRole('button', { name: ROTULOS.right });
+
+    await step('O grupo é uma barra de ferramentas nomeada', async () => {
+      await expect(grupo.tagName).toBe('DIV');
+      await expect(grupo).toHaveClass(/nds-toggle-group/);
+      await expect(grupo).toHaveAttribute('data-slot', 'toggle-group');
+      // accessibility.item5 — sem nome, o leitor anuncia só "barra de ferramentas".
+      await expect(grupo).toHaveAttribute('aria-label', args.ariaLabel);
+    });
+
+    await step('Orientação e variante viram atributo, e "default" é a ausência', async () => {
+      // Esta é a asserção que prova o binding de input: sob JIT o componente
+      // renderiza nos defaults e nenhum destes atributos acompanharia o control.
+      await expect(grupo).toHaveAttribute('data-orientation', args.orientation);
+      await expect(grupo).toHaveAttribute('aria-orientation', args.orientation);
+      await expect(grupo.getAttribute('data-variant')).toBe(
+        args.variant === 'default' ? null : args.variant,
+      );
+      await expect(grupo.getAttribute('data-spacing')).toBe(args.spacing === 0 ? '0' : null);
+    });
+
+    await step('Cada item tem nome próprio, e o ícone não é lido', async () => {
+      for (const [botao, nome] of [
+        [esquerda, ROTULOS.left],
+        [centro, ROTULOS.center],
+        [direita, ROTULOS.right],
+      ] as const) {
+        await expect(botao).toHaveAttribute('aria-label', nome);
+        await expect(botao.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+      }
+    });
+
+    await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {
+      // `aria-pressed` vem do primitivo; `data-state` é o contrato de markup das
+      // outras stacks. Ler o par junto é o que impede os dois de divergirem.
+      for (const botao of [esquerda, centro, direita]) {
+        const ligado = botao.getAttribute('aria-pressed') === 'true';
+        await expect(botao).toHaveAttribute('data-state', ligado ? 'on' : 'off');
+      }
+      // O valor inicial do grupo chega ao item: exatamente um pressionado.
+      const pressionados = [esquerda, centro, direita].filter(
+        (b) => b.getAttribute('aria-pressed') === 'true',
+      );
+      await expect(pressionados).toHaveLength(1);
+    });
+
+    if (args.disabled) {
+      await step('Grupo desabilitado propaga o estado a cada item', async () => {
+        await expect(grupo).toHaveAttribute('data-disabled', '');
+        for (const botao of [esquerda, centro, direita]) {
+          await expect(botao).toBeDisabled();
+        }
+      });
+      return;
+    }
+
+    await step('Um único item na ordem de tabulação (roving tabindex)', async () => {
+      const naOrdem = [esquerda, centro, direita].filter((b) => b.tabIndex === 0);
+      await expect(naOrdem).toHaveLength(1);
+    });
+
+    await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
+      const antes = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      esquerda.focus();
+      // Vertical navega por ↓/↑; horizontal por →/←. É a orientação que o
+      // composite recebeu — testar a tecla errada passaria por acidente.
+      await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
+      await expect(centro).toHaveFocus();
+      const depois = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      await expect(depois).toEqual(antes);
+    });
+
+    await step('Home e End alcançam as pontas', async () => {
+      await userEvent.keyboard('{End}');
+      await expect(direita).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(esquerda).toHaveFocus();
+    });
+
+    await step('functional.item4 — Space alterna o item focado', async () => {
+      // Lido antes e comparado depois: reexecutar a play no painel Interactions
+      // parte do estado que a rodada anterior deixou, e uma asserção absoluta
+      // inverteria de rodada em rodada.
+      centro.focus();
+      const antes = centro.getAttribute('aria-pressed');
+      await userEvent.keyboard(' ');
+      const depois = centro.getAttribute('aria-pressed');
+      await expect(depois).not.toBe(antes);
+      await expect(centro.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
+      await expect(args.onValueChange).toHaveBeenCalled();
+    });
+
+    await step('Enter alterna, idêntico a Space', async () => {
+      const antes = centro.getAttribute('aria-pressed');
+      await userEvent.keyboard('{Enter}');
+      await expect(centro.getAttribute('aria-pressed')).not.toBe(antes);
+    });
+  },
+};
