@@ -6,9 +6,10 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Spike validado, não é o stack completo.** Existe um componente ponta a ponta
-(`button`) com stories, docs page de 16 seções e as 15 seções genéricas
-portadas. Os outros 47 componentes ainda não existem.
+**Em construção.** 9 dos 47 componentes prontos (button, separator, label, card,
+badge, skeleton, aspect-ratio, input, textarea, checkbox), cada um com stories,
+docs page e as 15 seções genéricas. A ordem e as pendências vivem em
+`.pipeline-context/_ordem.md`.
 
 ## O que é
 
@@ -31,7 +32,7 @@ npx tsc -p .storybook/tsconfig.json --noEmit   # checagem de tipos
 
 ## Armadilhas específicas deste stack
 
-Quatro coisas já custaram tempo aqui. Nenhuma dá erro vermelho — todas falham
+Cinco coisas já custaram tempo aqui. Nenhuma dá erro vermelho — todas falham
 em silêncio.
 
 ### 1. `noEmit: true` mata o AOT (e o sintoma é NG0303)
@@ -76,6 +77,24 @@ addon-docs. Só se vê abrindo a story.
 template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
 `computed` no componente.
 
+### 5. Função em `args` sem `argTypes` não chega ao template
+
+O renderer Angular do Storybook só repassa em `props` o que tem entrada em
+`argTypes`. Uma função declarada apenas em `args` — um `fn()` de espião, por
+exemplo — **não** chega ao template, e o `(click)="onClick($event)"` fica
+ligado a nada.
+
+Não há erro: o botão simplesmente não responde, e o teste falha com
+"expected onClick to be called at least once" apontando para o componente, que
+está correto. Custou uma sonda para descobrir que nem o clique chegava.
+
+```ts
+argTypes: {
+  onClick: { control: false, table: { disable: true } },
+},
+args: { onClick: fn() },
+```
+
 ## Convenções deste stack
 
 - **Componentes com seletor de atributo** (`button[ndsButton]`, `span[ndsBadge]`):
@@ -115,10 +134,15 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
 - **Nunca invente classe `.nds-*`.** Prefixo certo não quer dizer que a regra
   existe: `nds-skeleton-line` e `nds-p-3` têm cara de válidas e não pintam nada.
   Confira em `docs/shared/styles/nds/` antes de usar; se faltar a regra, crie no
-  CSS compartilhado seguindo o Vanilla. Dimensão que imita a caixa do conteúdo
-  (skeleton, scroll-area) vai em `style`, não em classe — é o que o próprio
-  `skeleton.css` documenta. Portão: `node scripts/audit.mjs <slug>`, regra
-  `unknown_class_reference`.
+  CSS compartilhado seguindo o Vanilla. Portão: `node scripts/audit.mjs <slug>`,
+  regra `unknown_class_reference`.
+- **Nunca escreva CSS inline.** Sem `style="…"`, sem `[style]`. Medida que falta
+  vira regra no CSS compartilhado, com token da escada `--spacing-*` (o grid de
+  8px) ou `--size-*`. E **altura não se crava**: nasce de `padding-block` mais
+  tipografia, para o bloco crescer junto quando a pessoa aumenta a fonte do
+  navegador (guideline 12, WCAG 1.4.4). Quando a variação é escolha de quem usa
+  — forma e largura de um esqueleto, por exemplo — exponha `data-*`, como
+  `data-spacing` e `data-size` já fazem no resto do sistema.
 - **`DOMPurify.sanitize()` vai no próprio binding `[innerHTML]`**, com
   `protected readonly DOMPurify = DOMPurify` expondo o módulo ao template.
   O `[innerHTML]` do Angular já passa pelo DomSanitizer do framework — a
@@ -135,11 +159,7 @@ template Angular (erro em runtime: `ctx.String is not a function`). Exponha um
   contrato a cumprir, não como registro do que está implementado. Ao criar um
   componente, confira o snippet contra o que você implementou e corrija o
   conteúdo compartilhado se divergir.
-- `node scripts/audit.mjs button` acusa **9 `contract_divergent`**: critérios de
-  teste cobertos nas outras quatro e não aqui. Não é ruído — o stack tem duas
-  stories (Playground, Variantes) contra as cinco das outras. Fecha sozinho
-  quando as stories de tamanhos/estados/composições existirem.
-- Os 46 componentes restantes não existem — só o `button` está implementado.
+- Os 38 componentes restantes ainda não existem.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

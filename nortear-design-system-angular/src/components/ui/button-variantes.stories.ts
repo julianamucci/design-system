@@ -25,6 +25,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Variantes: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     props: { variantes: VARIANTES },
     template: `

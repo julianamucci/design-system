@@ -81,6 +81,13 @@ export function btnClass(
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"button"',
+    // O RdxButtonDirective marca `role="button"` em qualquer host que não seja
+    // um <button> nativo. Num <a href> isso é perda de semântica: o leitor
+    // anuncia "botão" para algo que NAVEGA, e o Ctrl+clique deixa de abrir em
+    // outra aba. Aqui devolvemos o papel de link — a aparência é do design
+    // system, a semântica é do elemento que quem escreve escolheu.
+    '[attr.role]': 'papel()',
+    '[attr.tabindex]': 'tabIndexDoHost()',
   },
 })
 export class NdsButton {
@@ -89,6 +96,14 @@ export class NdsButton {
 
   /** Tamanho do botão. Variantes `icon-*` são quadradas e exigem `ariaLabel`. */
   readonly size = input<ButtonSize>('default');
+
+  private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** `<a href>` já é link e já é focável — não precisa de role nem tabindex. */
+  private readonly ehAncora = this.hostRef.nativeElement.tagName === 'A';
+
+  protected readonly papel = computed(() => (this.ehAncora ? null : undefined));
+  protected readonly tabIndexDoHost = computed(() => (this.ehAncora ? null : undefined));
 
   protected readonly hostClass = computed(() =>
     btnClass(this.variant(), this.size()),
