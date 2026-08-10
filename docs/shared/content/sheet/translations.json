@@ -253,7 +253,7 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes .nds-* adicionais. Útil para customizar a largura do painel."
+          "description": "Classes .nds-* adicionais. A largura do painel não sai daqui: ela vem das custom properties --sheet-width e --sheet-max-width."
         }
       },
       "extensibilityTitle": "Extensibilidade",
@@ -361,7 +361,7 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Sheet usa Dialog</strong> — internamente é uma Dialog com estilo de painel lateral; daí a obrigatoriedade de Title/Description.",
       "item3": "<strong>side no Content</strong> — a prop <code>side</code> fica no <code>SheetContent</code>, não no <code>Sheet</code> root.",
-      "item4": "<strong>Largura padrão</strong> — em <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. Para painéis maiores, sobrescreva via <code>className</code>."
+      "item4": "<strong>Largura padrão</strong> — em <code>side=\"right\"</code>/<code>\"left\"</code>: 75% da largura da tela, com teto de 24rem. Para painéis maiores, redefina <code>--sheet-width</code> e <code>--sheet-max-width</code>. Uma classe de largura não resolve: a regra de lado é mais específica que qualquer utilitário, e custom property não disputa especificidade."
     },
     "analytics": {
       "title": "Analytics",
@@ -717,7 +717,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional .nds-* classes. Useful to customize the panel width."
+          "description": "Additional .nds-* classes. Panel width does not come from here: it comes from the --sheet-width and --sheet-max-width custom properties."
         }
       },
       "extensibilityTitle": "Extensibility",
@@ -825,7 +825,7 @@
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Sheet uses Dialog</strong> — internally it's a Dialog with side-panel styling; hence the mandatory Title/Description.",
       "item3": "<strong>side on Content</strong> — the <code>side</code> prop is on <code>SheetContent</code>, not <code>Sheet</code> root.",
-      "item4": "<strong>Default width</strong> — on <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. For larger panels, override via <code>className</code>."
+      "item4": "<strong>Default width</strong> — on <code>side=\"right\"</code>/<code>\"left\"</code>: 75% of the viewport width, capped at 24rem. For wider panels, redefine <code>--sheet-width</code> and <code>--sheet-max-width</code>. A width utility class will not do it: the side rule is more specific than any utility, and custom properties do not compete on specificity."
     },
     "analytics": {
       "title": "Analytics",
@@ -1181,7 +1181,7 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases .nds-* adicionales. Útil para personalizar el ancho del panel."
+          "description": "Clases .nds-* adicionales. El ancho del panel no sale de aquí: viene de las custom properties --sheet-width y --sheet-max-width."
         }
       },
       "extensibilityTitle": "Extensibilidad",
@@ -1289,7 +1289,7 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Sheet usa Dialog</strong> — internamente es un Dialog con estilo de panel lateral; de ahí la obligatoriedad de Title/Description.",
       "item3": "<strong>side en Content</strong> — la prop <code>side</code> va en <code>SheetContent</code>, no en <code>Sheet</code> root.",
-      "item4": "<strong>Ancho por defecto</strong> — en <code>side=\"right\"</code>/<code>\"left\"</code>: <code>w-3/4 sm:max-w-sm</code>. Para paneles más grandes, sobrescribe vía <code>className</code>."
+      "item4": "<strong>Ancho por defecto</strong> — en <code>side=\"right\"</code>/<code>\"left\"</code>: 75% del ancho de la pantalla, con tope de 24rem. Para paneles más grandes, redefine <code>--sheet-width</code> y <code>--sheet-max-width</code>. Una clase de ancho no lo resuelve: la regla de lado es más específica que cualquier utilidad, y las custom properties no compiten por especificidad."
     },
     "analytics": {
       "title": "Analytics",
