@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, waitFor } from 'storybook/test';
 import { NDS_AVATAR, type AvatarSize } from './avatar';
-import { DIAMETRO, IMG_AVATAR } from './avatar.stories';
+import { DIAMETER, IMG_AVATAR } from './avatar.stories';
 
 const PRESETS: AvatarSize[] = ['sm', 'md', 'lg', 'xl', '2xl'];
 
@@ -63,8 +63,8 @@ export const Presets: Story = {
       for (const p of PRESETS) {
         const el = canvasElement.querySelector<HTMLElement>(`[data-testid="avatar-${p}"]`)!;
         const { width, height } = el.getBoundingClientRect();
-        await expect(Math.abs(width - DIAMETRO[p])).toBeLessThan(0.5);
-        await expect(Math.abs(height - DIAMETRO[p])).toBeLessThan(0.5);
+        await expect(Math.abs(width - DIAMETER[p])).toBeLessThan(0.5);
+        await expect(Math.abs(height - DIAMETER[p])).toBeLessThan(0.5);
       }
     });
 
@@ -76,7 +76,7 @@ export const Presets: Story = {
           await expect(img.style.display).toBe('');
         }, { timeout: 5000 });
         const caixa = img.getBoundingClientRect();
-        await expect(Math.abs(caixa.width - DIAMETRO[p])).toBeLessThan(0.5);
+        await expect(Math.abs(caixa.width - DIAMETER[p])).toBeLessThan(0.5);
       }
     });
   },

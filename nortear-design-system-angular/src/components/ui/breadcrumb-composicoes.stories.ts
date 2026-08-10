@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import {
   NdsBreadcrumb,
   NdsBreadcrumbEllipsis,
@@ -12,6 +12,7 @@ import {
   NdsBreadcrumbSeparator,
 } from './breadcrumb';
 import { NdsButton } from './button';
+import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -181,6 +182,126 @@ export const EllipsisWithTrigger: Story = {
       await expect(gatilho).toHaveFocus();
       await userEvent.keyboard('{Enter}');
       await expect(onEllipsisOpen).toHaveBeenCalledTimes(1);
+    });
+  },
+};
+
+/**
+ * Fecha `visual.item4`, aberto desde o Bloco 3: a trilha colapsada num
+ * DropdownMenu, que é o padrão no mobile quando o caminho não cabe.
+ *
+ * Os níveis ocultos entram como LINKS (`ndsDropdownMenuLinkItem`), não como
+ * itens de comando: são destinos, e destino quer link — abrir em nova aba,
+ * copiar o endereço, ver para onde vai antes de clicar.
+ */
+export const Colapsado: Story = {
+  parameters: { covers: ['visual.item4'] },
+  decorators: [
+    moduleMetadata({
+      imports: [
+        NdsBreadcrumb, NdsBreadcrumbEllipsis, NdsBreadcrumbIcon, NdsBreadcrumbItem,
+        NdsBreadcrumbLink, NdsBreadcrumbList, NdsBreadcrumbPage, NdsBreadcrumbSeparator,
+        NdsButton, ...NDS_DROPDOWN_MENU,
+      ],
+    }),
+  ],
+  render: () => ({
+    template: `
+      <nav ndsBreadcrumb label="Trilha de navegação">
+        <ol ndsBreadcrumbList>
+          <li ndsBreadcrumbItem>
+            <a ndsBreadcrumbLink href="#inicio">Início</a>
+          </li>
+          <li ndsBreadcrumbSeparator></li>
+
+          <li ndsBreadcrumbItem>
+            <nds-dropdown-menu>
+              <button
+                ndsDropdownMenuTrigger
+                ndsButton
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Mostrar níveis ocultos"
+              >
+                <!-- Sem o input de rótulo: as reticências viram decorativas
+                     porque o gatilho já carrega o nome. Com as duas coisas, o
+                     leitor de tela anunciaria o mesmo item duas vezes. -->
+                <span ndsBreadcrumbEllipsis></span>
+              </button>
+
+              <ng-template ndsDropdownMenuContent align="start">
+                <a ndsDropdownMenuLinkItem href="#produtos">Produtos</a>
+                <a ndsDropdownMenuLinkItem href="#categorias">Categorias</a>
+              </ng-template>
+            </nds-dropdown-menu>
+          </li>
+          <li ndsBreadcrumbSeparator></li>
+
+          <li ndsBreadcrumbItem>
+            <a ndsBreadcrumbLink href="#eletronicos">Eletrônicos</a>
+          </li>
+          <li ndsBreadcrumbSeparator></li>
+
+          <li ndsBreadcrumbItem>
+            <span ndsBreadcrumbPage>Fones de ouvido</span>
+          </li>
+        </ol>
+      </nav>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = () => canvas.getByRole('button', { name: 'Mostrar níveis ocultos' });
+    const menu = () => document.querySelector<HTMLElement>('[data-slot="dropdown-menu-content"]');
+
+    await step('A trilha visível fica curta, e o resto vai para o gatilho', async () => {
+      const trilha = canvasElement.querySelector<HTMLElement>('[data-slot="breadcrumb-list"]')!;
+      await expect(trilha.querySelectorAll('[data-slot="breadcrumb-item"]').length).toBe(4);
+      await expect(canvas.getByText('Fones de ouvido')).toBeVisible();
+    });
+
+    await step('As reticências não são anunciadas duas vezes', async () => {
+      // O gatilho já tem nome; deixar `label` nas reticências repetiria o item.
+      const reticencias = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="breadcrumb-ellipsis"]',
+      )!;
+      await expect(reticencias.getAttribute('aria-hidden')).toBe('true');
+      await expect(reticencias.hasAttribute('role')).toBe(false);
+    });
+
+    await step('O gatilho abre o menu e diz que abre algo', async () => {
+      await expect(gatilho().getAttribute('aria-haspopup')).toBe('menu');
+      await userEvent.click(gatilho());
+      await waitFor(() => expect(menu()).not.toBeNull());
+      await expect(gatilho().getAttribute('aria-expanded')).toBe('true');
+    });
+
+    await step('Os níveis ocultos são links de verdade, não comandos', async () => {
+      // É o ponto da composição: destino quer <a href>. Com <div> e callback a
+      // pessoa perde nova aba, copiar endereço e a barra de status.
+      const itens = [...menu()!.querySelectorAll('[data-slot="dropdown-menu-item"]')];
+      await expect(itens.length).toBe(2);
+      for (const item of itens) {
+        await expect(item.tagName).toBe('A');
+        await expect(item.getAttribute('href')).toBeTruthy();
+      }
+    });
+
+    await step('O teclado percorre os níveis ocultos', async () => {
+      // O foco já está no primeiro item: quem abre o menu não deveria precisar
+      // de uma tecla a mais para chegar ao começo da lista.
+      await waitFor(() => expect(document.activeElement?.textContent?.trim()).toBe('Produtos'));
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement?.textContent?.trim()).toBe('Categorias');
+      // E a lista dá a volta no fim, em vez de prender o foco no último.
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement?.textContent?.trim()).toBe('Produtos');
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(menu()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
     });
   },
 };

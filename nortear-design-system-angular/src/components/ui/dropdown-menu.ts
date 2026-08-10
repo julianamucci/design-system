@@ -20,6 +20,7 @@ import {
   RdxMenuPositioner,
   RdxMenuPopup,
   RdxMenuItem,
+  RdxMenuLinkItem,
   RdxMenuGroup,
   RdxMenuSeparator,
   RdxMenuSubTrigger,
@@ -342,6 +343,42 @@ export class NdsDropdownMenuItem {
   readonly inset = input(false);
 }
 
+/**
+ * Item que NAVEGA — um `<a href>` de verdade dentro do menu.
+ *
+ * Existe porque menu nem sempre é lista de comandos: uma trilha de navegação
+ * colapsada põe destinos ali dentro, e destino quer link. Com `div` mais
+ * `(onSelect)` a pessoa perde o que o navegador dá de graça — abrir em nova
+ * aba, copiar o endereço, ver para onde vai na barra de status.
+ *
+ * `closeOnClick` nasce `false` no primitivo, e é o certo: quem fecha o menu é a
+ * navegação. Forçar o fechamento antes dela correria com o roteador.
+ */
+@Directive({
+  selector: 'a[ndsDropdownMenuLinkItem]',
+  standalone: true,
+  hostDirectives: [
+    {
+      directive: RdxMenuLinkItem,
+      inputs: ['disabled', 'closeOnClick', 'label'],
+      outputs: ['onSelect'],
+    },
+  ],
+  host: {
+    // O primitivo acha os itens por `querySelectorAll('[rdxMenuLinkItem]')`, e
+    // hostDirective NÃO escreve o atributo no DOM — sem esta linha o link fica
+    // fora do roving tabindex e do typeahead, em silêncio.
+    rdxMenuLinkItem: '',
+    class: 'nds-dropdown-menu-item',
+    '[attr.data-slot]': '"dropdown-menu-item"',
+    '[attr.data-inset]': 'inset() ? "" : null',
+  },
+})
+export class NdsDropdownMenuLinkItem {
+  /** Recua o item para alinhá-lo com irmãos que têm ícone à esquerda. */
+  readonly inset = input(false);
+}
+
 // ─── Shortcut ─────────────────────────────────────────────────────────────────
 
 /**
@@ -556,6 +593,7 @@ export const NDS_DROPDOWN_MENU = [
   NdsDropdownMenuLabel,
   NdsDropdownMenuSeparator,
   NdsDropdownMenuItem,
+  NdsDropdownMenuLinkItem,
   NdsDropdownMenuShortcut,
   NdsDropdownMenuSubTrigger,
   NdsDropdownMenuCheckboxItem,
