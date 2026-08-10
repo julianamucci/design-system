@@ -453,7 +453,7 @@ export const WithSubmenu: Story = {
 
 // ─── ComShortcuts ─────────────────────────────────────────────────────────────
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   parameters: {
     docs: {
       description: {

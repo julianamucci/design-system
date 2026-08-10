@@ -31,7 +31,7 @@ const wrapperStyle: React.CSSProperties = {
 const openDelay = 0;
 const closeDelay = 0;
 
-export const PerfilDeUsuario: Story = {
+export const UserProfile: Story = {
   parameters: {
     docs: {
       description: {
@@ -86,7 +86,7 @@ export const PerfilDeUsuario: Story = {
   },
 };
 
-export const PreviewDeLink: Story = {
+export const LinkPreview: Story = {
   parameters: {
     docs: {
       description: {

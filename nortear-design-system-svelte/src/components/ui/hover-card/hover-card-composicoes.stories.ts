@@ -39,7 +39,7 @@ const waitOpen = async () => {
   );
 };
 
-export const PerfilDeUsuario: Story = {
+export const UserProfile: Story = {
   name: 'Profile preview',
   args: {
     ...baseArgs,
@@ -54,7 +54,7 @@ export const PerfilDeUsuario: Story = {
   },
 };
 
-export const PreviewDeLink: Story = {
+export const LinkPreview: Story = {
   name: 'External link preview',
   args: {
     ...baseArgs,

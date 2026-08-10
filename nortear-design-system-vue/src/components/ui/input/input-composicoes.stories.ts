@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => ({
     components: { Input, Label },
     template: `

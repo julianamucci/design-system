@@ -121,7 +121,7 @@ export const Indeterminate: Story = {
   },
 };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => ({
     Component: CheckboxStory,
     props: {

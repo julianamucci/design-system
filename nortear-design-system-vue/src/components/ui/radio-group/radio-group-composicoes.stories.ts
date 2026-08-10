@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const FormaDePagamento: Story = {
+export const PaymentMethod: Story = {
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },

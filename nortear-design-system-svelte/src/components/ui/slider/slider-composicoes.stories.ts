@@ -62,7 +62,7 @@ export const VolumeWithValue: Story = {
   },
 };
 
-export const FaixaDePreco: Story = {
+export const PriceRange: Story = {
   args: {
     value: [100, 400],
     min: 0,

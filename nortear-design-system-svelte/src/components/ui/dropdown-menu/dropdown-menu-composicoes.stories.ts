@@ -29,7 +29,7 @@ async function expectMenuOpen() {
   return menu;
 }
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   args: {
     defaultOpen: true,
     variant: 'withLabel',
@@ -115,7 +115,7 @@ export const WithSubmenu: Story = {
   },
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   args: {
     defaultOpen: true,
     variant: 'withShortcuts',

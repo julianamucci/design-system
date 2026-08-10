@@ -44,7 +44,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
       description: {
@@ -236,7 +236,7 @@ export const WithSubmenu: Story = {
   },
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   parameters: {
     docs: {
       description: {

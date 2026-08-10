@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const CardDePerfil: Story = {
+export const ProfileCard: Story = {
   args: { variant: 'cardDePerfil' },
   parameters: {
     docs: {

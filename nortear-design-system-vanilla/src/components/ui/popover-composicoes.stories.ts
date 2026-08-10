@@ -166,7 +166,7 @@ export const TableFilter: Story = {
   },
 };
 
-export const SeletorDeCor: Story = {
+export const ColorPicker: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Cor' });
 

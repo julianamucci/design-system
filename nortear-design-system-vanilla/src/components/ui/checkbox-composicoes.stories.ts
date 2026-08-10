@@ -23,7 +23,7 @@ type Story = StoryObj;
 
 // ─── ComLabel ─────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-cluster';
@@ -256,7 +256,7 @@ export const SelectAll: Story = {
 
 // ─── NaListaDeItens ───────────────────────────────────────────────────────────
 
-export const NaListaDeItens: Story = {
+export const InItemList: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Quatro checkboxes presentes na lista', async () => {

@@ -50,7 +50,7 @@ export const WithGroups: Story = {
   },
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   render: () => ({
     Component: CommandComposicaoShortcutsStory,
     props: {},

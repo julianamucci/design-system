@@ -73,7 +73,7 @@ function valorNumerico(fatura: Fatura): number {
 
 // ─── Toolbar de filtros ───────────────────────────────────────────────────────
 
-export const ToolbarDeFiltros: Story = {
+export const FilterToolbar: Story = {
   parameters: {
     docs: {
       description: {
@@ -265,7 +265,7 @@ export const CabecalhosOrdenaveis: Story = {
 
 // ─── Seleção de linhas ────────────────────────────────────────────────────────
 
-export const SelecaoDeLinhas: Story = {
+export const RowSelection: Story = {
   parameters: {
     docs: {
       description: {

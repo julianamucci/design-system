@@ -57,7 +57,7 @@ export const VolumeWithValue: Story = {
   },
 };
 
-export const FaixaDePreco: Story = {
+export const PriceRange: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {

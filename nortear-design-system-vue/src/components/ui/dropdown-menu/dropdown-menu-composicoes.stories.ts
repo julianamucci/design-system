@@ -54,7 +54,7 @@ const sharedComponents = {
   DropdownMenuSubTrigger,
 };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: { description: { story: 'Items agrupados por DropdownMenuLabel + DropdownMenuSeparator.' } },
   },
@@ -196,7 +196,7 @@ export const WithSubmenu: Story = {
   },
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   parameters: {
     docs: {
       description: {

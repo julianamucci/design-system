@@ -94,7 +94,7 @@ export const LandmarkFoundations: Story = {
 // AlertDocs NÃO passa componentSlug (como outras 20 páginas): o DocsNav tem de
 // derivar o slug do ?id= do iframe, igual ao observer, e o docs_nav_click tem
 // de reportar a seção de DESTINO — não o literal "nav" do 2º segmento.
-export const NavSemSlugRastreiaDestino: Story = {
+export const NavWithoutSlugTracksTarget: Story = {
   render: page(AlertDocs),
   play: async ({ canvasElement }) => {
     const button = canvasElement.querySelector<HTMLButtonElement>('.nds-docs-nav-button');

@@ -23,7 +23,7 @@ const meta: Meta<any> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const CardDePerfil: Story = {
+export const ProfileCard: Story = {
   render: () => ({
     components: { Skeleton },
     template: `

@@ -68,7 +68,7 @@ function loadingContainer(label: string, extraClass = ''): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const CardDePerfil: Story = {
+export const ProfileCard: Story = {
   render: () => {
     const wrap = loadingContainer('Carregando card de perfil', 'nds-max-w-sm');
 

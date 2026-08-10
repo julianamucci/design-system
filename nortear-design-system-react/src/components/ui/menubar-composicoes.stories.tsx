@@ -43,7 +43,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   parameters: {
     docs: {
       description: {

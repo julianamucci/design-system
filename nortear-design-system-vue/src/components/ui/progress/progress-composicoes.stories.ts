@@ -68,7 +68,7 @@ export const UploadAnimado: Story = {
   },
 };
 
-export const ListaDeProgressos: Story = {
+export const ProgressList: Story = {
   render: () => ({
     components: { Progress },
     setup() {

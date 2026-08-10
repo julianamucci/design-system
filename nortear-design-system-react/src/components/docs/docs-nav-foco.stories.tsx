@@ -154,7 +154,7 @@ export const LandmarkNomeadoIcones: Story = {
  * `data-track-id` de 3 partes com a seção de destino no 3º segmento — antes o
  * atributo simplesmente não existia nessas páginas.
  */
-export const NavTrackIdSemSlugExplicito: Story = {
+export const NavTrackIdWithoutExplicitSlug: Story = {
   render: () => <AspectRatioDocs />,
   play: async ({ canvasElement }) => {
     const navButtons = canvasElement.querySelectorAll<HTMLElement>('.nds-docs-nav-button');
@@ -221,7 +221,7 @@ export const NavTrackReportaSecaoDestino: Story = {
  * SidebarInset sem o landmark, para que o <main> do layout siga único
  * (axe landmark-no-duplicate-main).
  */
-export const SidebarSemMainDuplicado: Story = {
+export const SidebarWithoutDuplicateMain: Story = {
   render: () => <SidebarDocs />,
   play: async ({ canvasElement }) => expectSingleNamedMain(canvasElement),
 };

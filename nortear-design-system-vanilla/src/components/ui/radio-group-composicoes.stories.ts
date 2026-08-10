@@ -39,7 +39,7 @@ function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElem
 
 // ─── FormaDePagamento ─────────────────────────────────────────────────────────
 
-export const FormaDePagamento: Story = {
+export const PaymentMethod: Story = {
   render: () =>
     withLegend(
       createRadioGroup({
@@ -77,7 +77,7 @@ export const FormaDePagamento: Story = {
 
 // ─── FormaDeEntrega (horizontal) ──────────────────────────────────────────────
 
-export const FormaDeEntrega: Story = {
+export const DeliveryMethod: Story = {
   render: () => {
     const group = createRadioGroup({
       name: 'delivery',

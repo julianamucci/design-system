@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   args: {
     maxLength: 6,
     label: 'Código de verificação',

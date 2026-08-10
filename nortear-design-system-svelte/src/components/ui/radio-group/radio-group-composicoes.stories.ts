@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const FormaDePagamento: Story = {
+export const PaymentMethod: Story = {
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -54,7 +54,7 @@ export const FormaDePagamento: Story = {
   },
 };
 
-export const FormaDeEntregaHorizontal: Story = {
+export const DeliveryMethodHorizontal: Story = {
   render: () => ({
     Component: RadioGroupStory,
     props: {

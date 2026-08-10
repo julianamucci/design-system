@@ -211,7 +211,7 @@ function makeRadioItem(label: string, checked: boolean, group: HTMLUListElement)
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Conta' });
     const menu = createDropdownMenu({
@@ -298,7 +298,7 @@ export const WithRadioGroup: Story = {
   },
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   render: () => wrap(
     buildCustomMenu('Editar', (menu) => {
       menu.append(

@@ -80,7 +80,7 @@ function fireOpen(trigger: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const PerfilDeUsuario: Story = {
+export const UserProfile: Story = {
   render: () => {
     const trigger = buildLink('@joana');
 
@@ -137,7 +137,7 @@ export const PerfilDeUsuario: Story = {
   },
 };
 
-export const PreviewDeLink: Story = {
+export const LinkPreview: Story = {
   render: () => {
     const trigger = buildLink('design-system.dev', 'https://design-system.dev');
 

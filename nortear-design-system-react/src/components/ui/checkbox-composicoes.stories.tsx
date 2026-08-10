@@ -15,7 +15,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="with-label" />

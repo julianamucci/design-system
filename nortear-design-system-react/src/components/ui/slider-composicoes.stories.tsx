@@ -61,7 +61,7 @@ export const WithLabelAndValue: Story = {
   },
 };
 
-export const FaixaDePreco: Story = {
+export const PriceRange: Story = {
   render: function FaixaDePrecoRender() {
     const [value, setValue] = useState<number[]>([100, 400]);
     return (

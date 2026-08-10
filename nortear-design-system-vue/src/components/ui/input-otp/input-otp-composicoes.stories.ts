@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSlot, Label, Button };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
       description: {

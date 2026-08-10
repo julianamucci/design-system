@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
 
-export const PerfilDeUsuario: Story = {
+export const UserProfile: Story = {
   parameters: {
     docs: {
       description: {
@@ -67,7 +67,7 @@ export const PerfilDeUsuario: Story = {
   },
 };
 
-export const PreviewDeLink: Story = {
+export const LinkPreview: Story = {
   parameters: {
     docs: {
       description: {

@@ -75,7 +75,7 @@ export const SettingsPanel: Story = {
   },
 };
 
-export const ListaDePreferencias: Story = {
+export const PreferenceList: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
@@ -153,7 +153,7 @@ export const InForm: Story = {
   },
 };
 
-export const ItemDeMenuCompacto: Story = {
+export const CompactMenuItem: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },

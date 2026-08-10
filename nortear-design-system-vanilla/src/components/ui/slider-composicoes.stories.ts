@@ -141,7 +141,7 @@ export const Brilho: Story = {
 
 // ─── FaixaDePreco (range composto) ────────────────────────────────────────────
 
-export const FaixaDePreco: Story = {
+export const PriceRange: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack';

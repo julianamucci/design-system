@@ -46,7 +46,7 @@ const sharedComponents = {
   Label,
 };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
       description: { story: 'Label externo associado ao trigger via aria-labelledby — padrão recomendado em formulários.' },

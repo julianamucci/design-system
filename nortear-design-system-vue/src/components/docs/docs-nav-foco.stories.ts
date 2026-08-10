@@ -92,7 +92,7 @@ export const LandmarkPrincipalFoundations: Story = {
  * data-track-id continua com 3 partes e a seção de destino no 3º segmento —
  * sem isso o docs_nav_click sai sem destino.
  */
-export const NavTrackIdSemSlug: Story = {
+export const NavTrackIdWithoutSlug: Story = {
   render: () => ({ components: { AccordionDocs }, template: '<AccordionDocs />' }),
   play: async ({ canvasElement }) => {
     const navButtons = Array.from(

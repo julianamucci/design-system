@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Switch id="comp-label" />
@@ -83,7 +83,7 @@ export const SettingsPanel: Story = {
   },
 };
 
-export const ListaDePreferencias: Story = {
+export const PreferenceList: Story = {
   render: () => (
     <fieldset className="border-none nds-p-0 m-0" data-spacing="md" style={{ width: "20rem" }}>
       <legend className="nds-text-body nds-font-semibold nds-mb-2">Notificações</legend>

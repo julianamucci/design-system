@@ -43,7 +43,7 @@ export const WithoutLabel: Story = {
   },
 };
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   args: {
     checked: false,
     withLabel: true,

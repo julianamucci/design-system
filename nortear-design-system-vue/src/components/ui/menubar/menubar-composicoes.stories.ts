@@ -54,7 +54,7 @@ const sharedComponents = {
   MenubarTrigger,
 };
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   parameters: {
     docs: {
       description: {

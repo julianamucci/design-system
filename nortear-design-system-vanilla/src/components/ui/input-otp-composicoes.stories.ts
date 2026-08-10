@@ -50,7 +50,7 @@ function applyError(otp: HTMLElement): void {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';

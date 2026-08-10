@@ -66,7 +66,7 @@ function createFormField(opts: {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const input = createInput({ type: 'text', placeholder: 'ex: João da Silva' });
     return createFormField({

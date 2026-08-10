@@ -145,7 +145,7 @@ export const ConteudoFocavel: Story = {
   },
 };
 
-export const SemLimite: Story = {
+export const NoLimit: Story = {
   parameters: { covers: ['functional.item4'] },
   render: () => ({
     props: { tags: TAGS, poucas: POUCAS },

@@ -103,7 +103,7 @@ export const WithGroups: Story = {
 
 // ─── Com Shortcuts ────────────────────────────────────────────────────────────
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   render: () => (
     <div className="nds-w-full nds-max-w-xs">
       <Command>

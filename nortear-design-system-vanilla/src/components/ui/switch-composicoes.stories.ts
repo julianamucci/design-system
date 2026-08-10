@@ -23,7 +23,7 @@ type Story = StoryObj;
 
 // ─── ComLabel ─────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const row = document.createElement('div');
     row.className = 'nds-cluster';

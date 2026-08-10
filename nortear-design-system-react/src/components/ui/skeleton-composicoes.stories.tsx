@@ -43,7 +43,7 @@ async function assertSkeletonsAccessible(canvasElement: HTMLElement, step: (labe
   });
 }
 
-export const CardDePerfil: Story = {
+export const ProfileCard: Story = {
   parameters: {
     docs: {
       description: {

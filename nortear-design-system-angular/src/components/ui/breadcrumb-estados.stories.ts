@@ -231,7 +231,7 @@ export const SeparadorCustomizado: Story = {
 
 // ─── Link do router ───────────────────────────────────────────────────────────
 
-export const LinkDeRouter: Story = {
+export const RouterLink: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {

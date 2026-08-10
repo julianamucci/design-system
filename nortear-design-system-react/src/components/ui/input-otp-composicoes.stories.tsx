@@ -36,7 +36,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement | null {
   ) as HTMLInputElement | null;
 }
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
       description: {

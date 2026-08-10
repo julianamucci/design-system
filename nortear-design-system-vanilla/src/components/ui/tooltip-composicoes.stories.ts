@@ -191,7 +191,7 @@ export const MetricDescription: Story = {
   },
 };
 
-export const LadosDePosicionamento: Story = {
+export const PlacementSides: Story = {
   render: () => {
     const grid = document.createElement('div');
     grid.style.contain = 'layout';

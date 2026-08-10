@@ -26,7 +26,7 @@ const radios = (canvasElement: HTMLElement): HTMLElement[] =>
 const marcados = (canvasElement: HTMLElement): (string | null)[] =>
   radios(canvasElement).map((el) => el.getAttribute('aria-checked'));
 
-export const FormaDePagamento: Story = {
+export const PaymentMethod: Story = {
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">

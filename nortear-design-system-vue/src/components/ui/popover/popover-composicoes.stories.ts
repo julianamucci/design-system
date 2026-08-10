@@ -188,7 +188,7 @@ export const ConfiguracoesRapidas: Story = {
   },
 };
 
-export const SeletorDeCor: Story = {
+export const ColorPicker: Story = {
   parameters: {
     docs: {
       description: {

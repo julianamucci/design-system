@@ -95,7 +95,7 @@ function createTextareaField(opts: {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComLabel: Story = {
+export const WithLabel: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',

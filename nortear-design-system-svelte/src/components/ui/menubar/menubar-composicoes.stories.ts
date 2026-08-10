@@ -29,7 +29,7 @@ async function expectMenuOpen() {
   return menu;
 }
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   args: {
     defaultValue: 'edit',
     demonstration: 'shortcuts',

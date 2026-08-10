@@ -126,7 +126,7 @@ export const FocoAoNavegar: Story = {
  * partes, `nav` no meio e a SEÇÃO DE DESTINO no 3º segmento — o slug vem do
  * fallback derivado do `?id=` do iframe.
  */
-export const RastreioNavSemSlug: Story = {
+export const NavTrackingWithoutSlug: Story = {
   render: () => createButtonDocs(),
   play: async ({ canvasElement }) => {
     const navButtons = Array.from(

@@ -139,7 +139,7 @@ function injectRadio(panel: HTMLElement, label: string, checked: boolean): void 
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const ComShortcuts: Story = {
+export const WithShortcuts: Story = {
   render: () => {
     const bar = createMenubar([
       {
