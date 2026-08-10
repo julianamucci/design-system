@@ -194,7 +194,7 @@ export const EllipsisWithTrigger: Story = {
  * itens de comando: são destinos, e destino quer link — abrir em nova aba,
  * copiar o endereço, ver para onde vai antes de clicar.
  */
-export const Colapsado: Story = {
+export const Collapsed: Story = {
   parameters: { covers: ['visual.item4'] },
   decorators: [
     moduleMetadata({

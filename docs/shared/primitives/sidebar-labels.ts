@@ -71,6 +71,20 @@ const FUNDAMENTOS: Record<string, Traducao> = {
 const DICIONARIO: Record<string, Traducao> = { ...ESTRUTURA, ...FUNDAMENTOS };
 
 /**
+ * Segmentos de estrutura que NÃO recebem tradução, com o motivo registrado.
+ *
+ * Existe para o auditor: `sidebar_label_untranslated` cobra todo segmento fora
+ * do dicionário, e sem esta lista a saída seria "não traduzido" para coisas
+ * que ninguém quer traduzir. Decisão declarada vale mais que decisão inferida —
+ * quem acrescentar uma seção nova escolhe entre traduzir ou justificar aqui.
+ */
+export const SEM_TRADUCAO: Record<string, string> = {
+  QA: 'sigla, e a seção é de teste interno — não é superfície de leitura',
+  _internal: 'o underscore já marca privado; não aparece para quem consome',
+  'Input Group': 'nome de padrão do design system, como Button e Badge',
+};
+
+/**
  * Rótulo traduzido, ou o próprio nome quando não há entrada.
  *
  * Nome de componente (Button, Badge) e de story (WithIcon) caem no fallback de

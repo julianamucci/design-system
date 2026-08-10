@@ -2306,6 +2306,126 @@ function auditGuidelineCode() {
   return violations;
 }
 
+/* ─── Vocabulário da sidebar ─────────────────────────────────────────────────
+ *
+ * O menu do Storybook virou vocabulário único em inglês, e a estrutura dele
+ * (seções, subseções, fundamentos) é traduzida por `sidebar-labels.ts`. Duas
+ * coisas regridem sozinhas quando alguém cria página nova, e as duas já
+ * regrediram: o Angular reintroduziu `Colapsado` no dia seguinte à
+ * normalização.
+ */
+
+/** Agrupa sequência de maiúsculas: `DIAMETER` é um token, `IDELayout` vira dois. */
+function palavrasDoNome(nome) {
+  return nome.match(/[A-Z]+(?![a-z])|[A-Z][a-z0-9]*|[a-z0-9]+/g) ?? [];
+}
+
+// Morfologia rara em inglês e corriqueira em português. Calibrado contra os 611
+// nomes do repo: pega `Colapsado` e não pega `Animated`, `Indeterminate` nem
+// `Loaded`.
+const SUFIXO_PT = /(ado|ada|ados|adas|cao|coes|mento|dade|vel|veis|eiro|encia|ancia|oso|osa|ismo|agem)$/i;
+// Só conectivos sem homógrafo em inglês. `No`, `Em` e `Um` ficaram de fora: `No`
+// é palavra inglesa (NoResults, NoLimit) e sairia falso positivo em 9 nomes.
+const CONECTIVO_PT = /^(De|Da|Do|Dos|Das|Com|Sem|Por|Nao|Como|Uma)$/;
+
+function pareceProtugues(nome) {
+  const palavras = palavrasDoNome(nome);
+  if (palavras.some((p) => SUFIXO_PT.test(p) || CONECTIVO_PT.test(p))) return true;
+  // `E` isolado entre duas palavras é o "e" português (DefaultEActive). Na
+  // ponta ou em sigla não conta.
+  return palavras.length > 2 && palavras.slice(1, -1).includes('E');
+}
+
+/** Dicionário e lista de dispensa, lidos do próprio primitivo. */
+let _sidebarConhecidos = null;
+function sidebarConhecidos() {
+  if (_sidebarConhecidos) return _sidebarConhecidos;
+  const src = readFile(join(ROOT, 'docs', 'shared', 'primitives', 'sidebar-labels.ts')) || '';
+  const nomes = new Set();
+  // Chaves do dicionário: `Foo: {` ou `'Foo Bar': {`
+  for (const m of src.matchAll(/^\s*'?([A-Za-z_][A-Za-z0-9 ,'-]*?)'?:\s*\{/gm)) nomes.add(m[1].trim());
+  // Entradas de SEM_TRADUCAO: `Foo: 'motivo'`
+  for (const m of src.matchAll(/^\s*'?([A-Za-z_][A-Za-z0-9 ,'-]*?)'?:\s*'/gm)) nomes.add(m[1].trim());
+  _sidebarConhecidos = nomes;
+  return nomes;
+}
+
+function auditSidebarVocab(slug) {
+  const violations = [];
+  const conhecidos = sidebarConhecidos();
+
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      if (!/\.stories\./.test(file)) continue;
+      const content = stripComments(readFile(file) || '');
+
+      // 1. Nome de story fora do vocabulário inglês.
+      for (const m of content.matchAll(/^export const ([A-Za-z0-9_]+)/gm)) {
+        // Só nome de story, que é PascalCase. `IMG_QUEBRADA` e `DIAMETER` são
+        // constantes de fixture — verificado no índice do build: o indexador do
+        // Storybook checa a forma do export e não as publica como story.
+        // Sigla também sai (FAQ), porque não há o que traduzir nela.
+        if (!/^[A-Z][a-z0-9]/.test(m[1])) continue;
+        if (!pareceProtugues(m[1])) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), rule: 'story_name_not_english',
+          message: `story \`${m[1]}\` tem cara de português — o menu do Storybook usa vocabulário único em inglês, e nome fora do padrão volta a criar dois nomes para o mesmo conceito`,
+        });
+      }
+
+      // 2. Rótulo explícito com acento é português por definição.
+      for (const m of content.matchAll(/^\s*name: *(['"])(.*?)\1/gm)) {
+        if (!/[áàâãéêíóôõúüç]/i.test(m[2])) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), rule: 'story_name_not_english',
+          message: `rótulo \`name: "${m[2]}"\` está em português — é ele que a sidebar mostra, não o nome exportado`,
+        });
+      }
+
+      // 3. Segmento de estrutura sem tradução nem dispensa declarada.
+      for (const m of content.matchAll(/title: *(['"])([^'"]+)\1/g)) {
+        const partes = m[2].split('/');
+        for (const seg of [partes.length > 1 ? partes[0] : null, partes[2] ?? null]) {
+          if (!seg || conhecidos.has(seg)) continue;
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: relative(ROOT, file), rule: 'sidebar_label_untranslated',
+            message: `"${seg}" é estrutura da sidebar e não está em sidebar-labels.ts — traduza, ou declare em SEM_TRADUCAO com o motivo`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/** Título das foundations: MDX, slug-independente. */
+function auditFoundationLabels() {
+  const violations = [];
+  const conhecidos = sidebarConhecidos();
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!nome.endsWith('.mdx')) continue;
+      const t = (readFile(join(dir, nome)) || '').match(/title="([^"]+)"/);
+      if (!t) continue;
+      for (const seg of t[1].split('/')) {
+        if (conhecidos.has(seg)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: relative(ROOT, join(dir, nome)), rule: 'sidebar_label_untranslated',
+          message: `"${seg}" é título de fundamento e não está em sidebar-labels.ts — traduza, ou declare em SEM_TRADUCAO com o motivo`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditComponentVars(slug) {
   const violations = [];
   const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
@@ -2565,6 +2685,7 @@ function runAudit(slug, category) {
     ...auditComponentVars(slug),
     ...auditInlineStyle(slug),
     ...auditGuardrails(slug),
+    ...auditSidebarVocab(slug),
   ];
 }
 
@@ -2645,7 +2766,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

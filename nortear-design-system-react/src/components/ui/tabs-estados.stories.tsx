@@ -23,7 +23,7 @@ type Story = StoryObj;
 
 // ─── Default + Active ─────────────────────────────────────────────────────────
 
-export const DefaultEActive: Story = {
+export const DefaultAndActive: Story = {
   render: () => (
     <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Seções do componente">
