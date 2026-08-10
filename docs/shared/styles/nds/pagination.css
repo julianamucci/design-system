@@ -98,11 +98,26 @@
 }
 
 /* ── Prev/Next compostos com botão (padding assimétrico do lado do ícone) ── */
-.nds-pagination-prev {
+/*
+ * O seletor precisa incluir `.nds-button` para valer (0,2,0).
+ *
+ * Sozinhas, estas classes eram (0,1,0) e perdiam para `.nds-button:has(> svg)`,
+ * que é (0,1,1) e declara o padding do botão com ícone. Ou seja: o recuo
+ * assimétrico que estas regras existem para dar nunca chegou a se aplicar em
+ * react, vue, svelte nem angular — as quatro stacks que compõem prev/next em
+ * cima do botão. O Vanilla não passa por aqui: ele usa `.nds-pagination-link`
+ * standalone (a convivência dos dois sistemas está registrada como material de
+ * cross-stack).
+ *
+ * Manter as classes sozinhas também, para o caso de o elemento não ser botão.
+ */
+.nds-pagination-prev,
+.nds-button.nds-pagination-prev {
   padding-inline-start: var(--spacing-1-5, 0.375rem);
 }
 
-.nds-pagination-next {
+.nds-pagination-next,
+.nds-button.nds-pagination-next {
   padding-inline-end: var(--spacing-1-5, 0.375rem);
 }
 

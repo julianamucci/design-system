@@ -23,8 +23,22 @@
   transition: color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
+/*
+ * O anel é `inset` — e isso não é preferência estética.
+ *
+ * Como sombra EXTERNA ele era desenhado fora da caixa do viewport, que tem
+ * exatamente o tamanho da raiz; e a raiz é `overflow: hidden`. Resultado: o anel
+ * de foco era recortado inteiro, nas quatro stacks de navegador. Uma área
+ * rolável é focável por teclado (ela precisa ser, para rolar sem mouse), então
+ * era foco invisível — WCAG 2.4.7.
+ *
+ * A alternativa seria `overflow: clip` + `overflow-clip-margin` na raiz, que
+ * preservaria o anel por fora, mas depende de suporte recente demais para uma
+ * folha que atende as cinco stacks. Desenhado por dentro, o anel aparece em
+ * qualquer navegador e não briga com o recorte.
+ */
 .nds-scroll-area-viewport:focus-visible {
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+  box-shadow: inset 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
 /*
@@ -53,11 +67,36 @@
   border-top: 1px solid transparent;
 }
 
+/*
+ * O pegador tinha `flex: 1` e ocupava a trilha INTEIRA — ou seja, não indicava
+ * nem quanto do conteúdo está visível nem onde a leitura está. Um pegador do
+ * tamanho da trilha é o mesmo que não ter pegador.
+ *
+ * As libs headless publicam o tamanho medido em `--scroll-area-thumb-height` /
+ * `--scroll-area-thumb-width` no próprio pegador (convenção Base UI) e esperam
+ * que o CSS de quem consome o leia. Ninguém lia. O fallback `100%` mantém a
+ * aparência de hoje onde não há lib medindo — o Vanilla, que usa a barra nativa
+ * do sistema e nem chega a renderizar estas peças.
+ */
 .nds-scroll-area-thumb {
   position: relative;
-  flex: 1;
+  flex: 0 0 auto;
   border-radius: var(--radius-full);
   background-color: hsl(var(--border));
+}
+
+.nds-scroll-area-scrollbar[data-orientation="vertical"] .nds-scroll-area-thumb {
+  inline-size: 100%;
+  block-size: var(--scroll-area-thumb-height, 100%);
+  /* Conteúdo muito longo dá um pegador de poucos pixels, impossível de agarrar.
+   * O piso vale para mouse e para toque. */
+  min-block-size: var(--spacing-4);               /* 16px */
+}
+
+.nds-scroll-area-scrollbar[data-orientation="horizontal"] .nds-scroll-area-thumb {
+  block-size: 100%;
+  inline-size: var(--scroll-area-thumb-width, 100%);
+  min-inline-size: var(--spacing-4);
 }
 
 @media (prefers-reduced-motion: reduce) {

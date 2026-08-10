@@ -271,14 +271,23 @@
   font-size: var(--text-control);
 }
 
+/*
+ * O raio dos cantos vem de `--radius-xl` (14px), não do `0.75rem` (12px) que
+ * estava escrito literalmente nas quatro regras de direção. 12px não existe na
+ * escala de raios — e não existe de propósito, a régua vai 10 → 14. Valor solto
+ * é o tipo de medida que não acompanha o tema quando alguém redefine `--radius`.
+ *
+ * A troca move 2px em cada canto do drawer nas cinco stacks; conferir no
+ * Chromatic junto com a borda da alça do Slider.
+ */
 .nds-drawer-content[data-vaul-drawer-direction="bottom"] {
   inset-inline: 0;
   bottom: 0;
   margin-top: var(--spacing-24, 6rem);
   max-height: 80vh;
   border-top: 1px solid hsl(var(--border));
-  border-start-start-radius: 0.75rem;
-  border-start-end-radius: 0.75rem;
+  border-start-start-radius: var(--radius-xl);
+  border-start-end-radius: var(--radius-xl);
 }
 
 .nds-drawer-content[data-vaul-drawer-direction="top"] {
@@ -287,8 +296,8 @@
   margin-bottom: var(--spacing-24, 6rem);
   max-height: 80vh;
   border-bottom: 1px solid hsl(var(--border));
-  border-end-start-radius: 0.75rem;
-  border-end-end-radius: 0.75rem;
+  border-end-start-radius: var(--radius-xl);
+  border-end-end-radius: var(--radius-xl);
 }
 
 .nds-drawer-content[data-vaul-drawer-direction="left"] {
@@ -298,8 +307,8 @@
    * valor antigo como fallback, porque nenhuma classe vence (0,2,0). */
   width: var(--drawer-width, 75%);
   border-right: 1px solid hsl(var(--border));
-  border-start-end-radius: 0.75rem;
-  border-end-end-radius: 0.75rem;
+  border-start-end-radius: var(--radius-xl);
+  border-end-end-radius: var(--radius-xl);
 }
 
 .nds-drawer-content[data-vaul-drawer-direction="right"] {
@@ -307,8 +316,8 @@
   right: 0;
   width: var(--drawer-width, 75%);
   border-left: 1px solid hsl(var(--border));
-  border-start-start-radius: 0.75rem;
-  border-end-start-radius: 0.75rem;
+  border-start-start-radius: var(--radius-xl);
+  border-end-start-radius: var(--radius-xl);
 }
 
 @media (min-width: 40rem) {
@@ -359,9 +368,70 @@
   padding: var(--spacing-4);
 }
 
+/*
+ * Corpo rolável do drawer. Não existia: o React resolvia com
+ * `style={{ maxHeight }}` inline — CSS inline é proibido no projeto — e as
+ * outras stacks não resolviam de jeito nenhum, então conteúdo longo empurrava
+ * o rodapé (com os botões de ação) para fora da tela.
+ *
+ * `min-height: 0` é o que faz o `overflow` funcionar dentro de um flex column:
+ * sem ele o item flex tem tamanho mínimo automático igual ao conteúdo e nunca
+ * encolhe, então a barra de rolagem simplesmente não aparece.
+ */
+.nds-drawer-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-inline: var(--spacing-4);
+}
+
+/*
+ * Entrada e saída do drawer.
+ *
+ * O `.nds-sheet-content` já animava por `data-starting-style`/`data-ending-style`
+ * e o drawer não animava nada — aparecia e sumia num quadro, o que num painel
+ * que ocupa a borda inteira da tela lê como salto, não como abertura.
+ *
+ * A transição é suprimida durante o arraste (`[data-swiping]`): ali quem manda é
+ * o transform que a lib escreve a cada quadro seguindo o dedo, e interpolar por
+ * cima dele deixaria o painel atrasado em relação ao toque.
+ */
+.nds-drawer-content:not([data-swiping]) {
+  transition: transform var(--duration-base) ease-in-out, opacity var(--duration-base) ease-in-out;
+}
+
+.nds-drawer-content[data-starting-style],
+.nds-drawer-content[data-ending-style] {
+  opacity: 0;
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-ending-style] {
+  transform: translateY(100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="top"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="top"][data-ending-style] {
+  transform: translateY(-100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="left"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="left"][data-ending-style] {
+  transform: translateX(-100%);
+}
+
+.nds-drawer-content[data-vaul-drawer-direction="right"][data-starting-style],
+.nds-drawer-content[data-vaul-drawer-direction="right"][data-ending-style] {
+  transform: translateX(100%);
+}
+
+/* O bloco cobria só `.nds-sheet-*`; o drawer, que reusa o mesmo overlay e agora
+ * tem transição própria, ficava de fora de quem pediu menos movimento. */
 @media (prefers-reduced-motion: reduce) {
   .nds-sheet-overlay,
-  .nds-sheet-content {
+  .nds-sheet-content,
+  .nds-drawer-content,
+  .nds-drawer-content:not([data-swiping]) {
     animation: none;
     transition: none;
   }

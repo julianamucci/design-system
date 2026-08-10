@@ -61,8 +61,27 @@
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
-.nds-table th {
-  height: var(--spacing-10, 2.5rem);              /* 40px */
+/*
+ * O seletor é `:where(.nds-table) th` — (0,0,1), especificidade de ELEMENTO.
+ *
+ * Escrito como `.nds-table th` ele valia (0,1,1) e vencia qualquer utilitário,
+ * que é (0,1,0). `class="nds-text-right"` num `<th>` de coluna numérica era
+ * inerte nas CINCO stacks: react, vue, svelte e angular escrevem a classe e ela
+ * não fazia nada; o Vanilla nem tentava. E não bastava empatar, porque
+ * `utilities.css` é importado ANTES de `table.css` (ver index.css) — no empate
+ * quem carrega depois vence, e depois é esta folha. Rebaixar para elemento é o
+ * que devolve a última palavra a quem escreve a classe no markup.
+ *
+ * `:where()` não soma especificidade nenhuma; `th` sozinho soma um elemento.
+ * As regras mais específicas abaixo (`:has([role="checkbox"])`) seguem valendo.
+ */
+:where(.nds-table) th {
+  /* `min-block-size` e não `height`: 40px vira PISO, não teto. Com altura
+   * cravada o rótulo do cabeçalho é recortado quando a pessoa aumenta a fonte
+   * do navegador (guideline 12, WCAG 1.4.4). O padding é o mesmo do `td`, então
+   * a aparência no tamanho padrão não muda. */
+  min-block-size: var(--spacing-10, 2.5rem);      /* 40px */
+  padding-block: var(--spacing-2);                /* 8px */
   padding-inline: var(--spacing-2);               /* 8px */
   text-align: left;
   vertical-align: middle;
@@ -72,11 +91,30 @@
 }
 
 /* ── Cells ───────────────────────────────────────────────────────────────── */
-.nds-table td {
+/* Mesmo rebaixamento do `th`, pela mesma razão: `white-space: normal` aqui
+ * vencia `.nds-whitespace-nowrap`, então coluna que não podia quebrar quebrava. */
+:where(.nds-table) td {
   padding: var(--spacing-2);                       /* 8px */
   vertical-align: middle;
   white-space: normal;
   color: hsl(var(--foreground));
+}
+
+/*
+ * Célula de estado vazio ("nenhum resultado"), que ocupa a tabela inteira via
+ * `colspan`. Existia só como medida solta em cada stack — `style="height:6rem"`
+ * no React (CSS inline, proibido aqui) e `h-24` no Svelte, classe que nem
+ * existe. Agora é regra, com token da escada.
+ *
+ * `block-size` numa célula de tabela se comporta como MÍNIMO, não como teto:
+ * a linha cresce se o conteúdo pedir. É o que se quer — a caixa reserva a
+ * altura para o vazio não parecer defeito de carregamento, e ainda acomoda uma
+ * mensagem de duas linhas.
+ */
+.nds-table-empty {
+  block-size: var(--spacing-24, 6rem);             /* 96px */
+  text-align: center;
+  color: hsl(var(--muted-foreground));
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */

@@ -26,7 +26,11 @@
   align-items: center;
   gap: var(--spacing-1);                          /* 4px */
 
-  height: var(--spacing-9, 2.25rem);              /* 36px */
+  /* `min-height`, não `height`: a barra é um container de TEXTO (os gatilhos são
+   * rótulos), então a altura tem que nascer do conteúdo. Cravada em 36px ela
+   * recorta os rótulos quando a pessoa aumenta a fonte do navegador
+   * (guideline 12, WCAG 1.4.4). No tamanho padrão nada muda. */
+  min-height: var(--spacing-9, 2.25rem);          /* 36px */
   padding: var(--spacing-1);
 
   background-color: hsl(var(--background));
@@ -60,9 +64,22 @@
   transition: background-color var(--duration-fast), color var(--duration-fast);
 }
 
+/*
+ * Dois marcadores para o mesmo estado, de propósito.
+ *
+ * `data-state="open"` é o que o Vanilla escreve — e o Vanilla é a referência de
+ * markup. Mas as libs headless (Base UI e as que a seguem) publicam
+ * `data-popup-open` no gatilho e não emitem `data-state`. Só a primeira forma
+ * estava aqui, então o realce do menu aberto simplesmente não pintava em
+ * qualquer stack que não escrevesse `data-state` à mão — o React é um deles.
+ *
+ * O sintoma é discreto: o painel abre, mas nada na barra diz DE ONDE ele saiu.
+ * Aceitar os dois marcadores custa uma linha e não cria divergência.
+ */
 .nds-menubar-trigger:focus,
 .nds-menubar-trigger:hover,
-.nds-menubar-trigger[data-state="open"] {
+.nds-menubar-trigger[data-state="open"],
+.nds-menubar-trigger[data-popup-open] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
 }
