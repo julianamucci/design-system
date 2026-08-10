@@ -19,11 +19,12 @@ import { NdsBadgeDocs } from './BadgeDocs';
 import { NdsSkeletonDocs } from './SkeletonDocs';
 import { NdsAspectRatioDocs } from './AspectRatioDocs';
 import { NdsInputDocs } from './InputDocs';
+import { NdsCheckboxDocs } from './CheckboxDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -96,5 +97,10 @@ export const AspectRatio: Story = {
 
 export const Input: Story = {
   render: () => ({ template: '<nds-input-docs />' }),
+  play,
+};
+
+export const Checkbox: Story = {
+  render: () => ({ template: '<nds-checkbox-docs />' }),
   play,
 };
