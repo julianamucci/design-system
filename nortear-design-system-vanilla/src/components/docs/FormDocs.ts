@@ -271,11 +271,21 @@ export function createFormDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createFormField({
-                label: 'Senha',
-                input: createInput({ type: 'password', placeholder: '••••••••' }),
-                description: 'Use ao menos 8 caracteres com letras e números.',
+                label: t('demonstration.labels.passwordLabel'),
+                input: createInput({
+                  type: 'password',
+                  placeholder: t('demonstration.labels.passwordPlaceholder'),
+                }),
+                description: t('demonstration.labels.passwordDescription'),
               }),
-              dontPreviewFactory: () => createInput({ type: 'password', placeholder: 'Senha' }),
+              dontPreviewFactory: () =>
+                createInput({
+                  type: 'password',
+                  // O contraexemplo é o campo SEM rótulo, com o nome dele
+                  // servindo de placeholder — por isso aqui entra o rótulo, e
+                  // não o placeholder de pontinhos.
+                  placeholder: t('demonstration.labels.passwordLabel'),
+                }),
             },
             {
               doLabel: tNav('common.do'),
@@ -283,21 +293,32 @@ export function createFormDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: '••••••••' });
+                const inp = createInput({
+                  type: 'password',
+                  placeholder: t('demonstration.labels.passwordPlaceholder'),
+                });
                 inp.setAttribute('aria-invalid', 'true');
                 return createFormField({
-                  label: 'Senha',
+                  label: t('demonstration.labels.passwordLabel'),
                   input: inp,
-                  error: 'A senha precisa ter pelo menos 8 caracteres.',
+                  error: t('demonstration.labels.passwordError'),
                 });
               },
               dontPreviewFactory: () => {
-                const inp = createInput({ type: 'password', placeholder: '••••••••' });
+                const inp = createInput({
+                  type: 'password',
+                  placeholder: t('demonstration.labels.passwordPlaceholder'),
+                });
                 inp.setAttribute('aria-invalid', 'true');
                 return createFormField({
-                  label: 'Senha',
+                  // Rótulo e mensagem saem do conteúdo compartilhado. Estavam
+                  // cravados em português aqui: o contraexemplo do par ficava
+                  // na língua errada para quem lê a página em inglês ou
+                  // espanhol — justamente o par que ensina a escrever mensagem
+                  // de erro.
+                  label: t('demonstration.labels.passwordLabel'),
                   input: inp,
-                  error: 'Campo inválido.',
+                  error: t('demonstration.labels.genericError'),
                 });
               },
             },

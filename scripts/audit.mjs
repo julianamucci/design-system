@@ -1949,9 +1949,20 @@ function auditI18nKeys(slug) {
       );
 
       // tNav/tUi leem ui.json; t/tContent/tStore leem o conteúdo do componente.
+      //
+      // O lookbehind não é preciosismo: sem ele, `split('.')` casava — o fim de
+      // `split(` é literalmente `t(` — e a regra acusava a chave `"."`
+      // inexistente em toda página de docs que separa uma chave por ponto.
+      // Achado que não existe custa mais caro que achado nenhum: ensina a
+      // ignorar o portão. `$t(` do Vue continua passando, porque o caractere
+      // antes do `$` é separador.
       const alvos = [
         [/\bt(?:Nav|Ui)\(\s*['"]([a-zA-Z0-9_.]+)['"]/g, uiKeys, 'ui.json'],
-        [/\$?t(?:Content|Store)?\(\s*['"]([a-zA-Z0-9_.]+)['"]/g, contentKeys, 'translations.json'],
+        [
+          /(?<![A-Za-z0-9_])\$?t(?:Content|Store)?\(\s*['"]([a-zA-Z0-9_.]+)['"]/g,
+          contentKeys,
+          'translations.json',
+        ],
       ];
 
       for (const [rx, conhecidas, fonte] of alvos) {
