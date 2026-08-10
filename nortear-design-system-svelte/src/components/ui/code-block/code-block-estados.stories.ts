@@ -60,7 +60,7 @@ export const WithoutNumbering: Story = {
   },
 };
 
-export const Copiado: Story = {
+export const Copied: Story = {
   args: { code: BASE_CODE, language: 'ts', showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -100,7 +100,7 @@ export const DoubleScroll: Story = {
   },
 };
 
-export const LinguagemDesconhecida: Story = {
+export const UnknownLanguage: Story = {
   args: { code: BASE_CODE, language: 'cobol', showLineNumbers: false },
   play: async ({ canvasElement, step }) => {
     await step('Linguagem não reconhecida cai em texto simples sem quebrar o bloco', async () => {

@@ -106,7 +106,7 @@ export const Controlled: Story = {
   },
 };
 
-export const CompletaTabela: Story = {
+export const CompleteTable: Story = {
   args: {
     count: 120,
     perPage: 10,

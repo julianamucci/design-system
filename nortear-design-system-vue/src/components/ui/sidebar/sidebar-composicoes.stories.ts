@@ -177,7 +177,7 @@ export const WithNavGroups: Story = {
 
 // ─── Com sub-menu ─────────────────────────────────────────────────────────────
 
-export const WithSubMenu: Story = {
+export const WithSubmenu: Story = {
   name: 'With submenu',
   parameters: {
     docs: {

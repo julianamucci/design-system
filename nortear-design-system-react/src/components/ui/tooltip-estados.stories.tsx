@@ -111,7 +111,7 @@ export const Open: Story = {
   },
 };
 
-export const Focado: Story = {
+export const Focused: Story = {
   parameters: {
     docs: {
       description: {

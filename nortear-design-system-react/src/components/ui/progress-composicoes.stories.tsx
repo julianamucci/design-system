@@ -46,7 +46,7 @@ export const MultipleLevels: Story = {
   },
 };
 
-export const CorCustomizada: Story = {
+export const CustomColor: Story = {
   render: () => (
     <div className="" data-spacing="md" style={{ width: "20rem" }}>
       <Progress

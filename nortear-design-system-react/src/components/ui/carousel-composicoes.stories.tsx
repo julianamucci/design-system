@@ -124,7 +124,7 @@ export const WithDots: Story = {
   },
 };
 
-export const Galeria: Story = {
+export const Gallery: Story = {
   render: () => (
     <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
       <CarouselContent>

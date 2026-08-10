@@ -41,7 +41,7 @@ export const Default: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   args: {
     value: [50],
     min: 0,

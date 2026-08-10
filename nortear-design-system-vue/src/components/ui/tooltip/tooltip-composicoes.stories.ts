@@ -183,7 +183,7 @@ export const KeyboardShortcut: Story = {
   },
 };
 
-export const QuatroLados: Story = {
+export const FourSides: Story = {
   parameters: {
     docs: {
       description: {

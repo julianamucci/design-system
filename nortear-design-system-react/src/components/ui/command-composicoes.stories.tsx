@@ -158,7 +158,7 @@ const FRAMEWORKS = [
   { value: "solid", label: "SolidJS" },
 ];
 
-export const ComoCombobox: Story = {
+export const AsCombobox: Story = {
   name: "As combobox (in Popover)",
   parameters: {
     // Esta story abre Popover via portal fora de #storybook-root durante o play function.

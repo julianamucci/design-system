@@ -24,7 +24,7 @@ type Story = StoryObj;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Decorativo: Story = {
+export const Decorative: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

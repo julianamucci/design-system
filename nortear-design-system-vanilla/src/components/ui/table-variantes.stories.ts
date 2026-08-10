@@ -60,7 +60,7 @@ function buildBodyRows(table: HTMLTableElement, rows: typeof invoices): void {
 
 // ─── Basica ───────────────────────────────────────────────────────────────────
 
-export const Basica: Story = {
+export const Basic: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Lista de faturas recentes'));

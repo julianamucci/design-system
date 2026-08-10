@@ -110,7 +110,7 @@ export const Open: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   parameters: {
     docs: {
       description: {

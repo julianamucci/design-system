@@ -218,7 +218,7 @@ export const Disabled: Story = {
 
 // ─── ValorMaximo ──────────────────────────────────────────────────────────────
 
-export const ValorMaximo: Story = {
+export const MaxValue: Story = {
   render: () =>
     withLabel({
       idPrefix: 's-max',

@@ -45,7 +45,7 @@ export const WithDots: Story = {
   },
 };
 
-export const Galeria: Story = {
+export const Gallery: Story = {
   render: () => ({
     Component: CarouselStory,
     props: {
@@ -64,7 +64,7 @@ export const Galeria: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Galeria com aria-label da região', async () => {
-      const region = canvas.getByRole('region', { name: /Galeria de fotos do produto/i });
+      const region = canvas.getByRole('region', { name: /Gallery de fotos do produto/i });
       await expect(region).toHaveAttribute('aria-roledescription', 'carousel');
     });
   },

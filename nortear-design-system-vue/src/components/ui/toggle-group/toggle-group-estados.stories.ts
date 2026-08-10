@@ -67,7 +67,7 @@ export const Selected: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },
     setup() { return {}; },

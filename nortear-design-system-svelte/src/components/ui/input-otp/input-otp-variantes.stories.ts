@@ -30,7 +30,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   return input;
 }
 
-export const SeisDigitos: Story = {
+export const SixDigits: Story = {
   name: '6 digits (SMS default)',
   args: {
     maxLength: 6,
@@ -48,7 +48,7 @@ export const SeisDigitos: Story = {
   },
 };
 
-export const QuatroDigitos: Story = {
+export const FourDigits: Story = {
   name: '4 digits (PIN)',
   args: {
     maxLength: 4,

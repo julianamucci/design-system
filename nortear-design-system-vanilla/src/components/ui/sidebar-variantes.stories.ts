@@ -168,7 +168,7 @@ export const VariantInset: Story = {
   },
 };
 
-export const LadoDireito: Story = {
+export const SideRight: Story = {
   name: 'side="right"',
   play: async ({ canvasElement, step }) => {
     await step('Sidebar tem data-side="right"', async () => {

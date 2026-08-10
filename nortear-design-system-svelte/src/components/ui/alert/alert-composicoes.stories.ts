@@ -72,7 +72,7 @@ export const WithAction: Story = {
  * Extensibilidade documentada: todos os subcomponentes aceitam classe do
  * consumidor, e ela SOMA às do design system — não substitui.
  */
-export const ClasseAdicional: Story = {
+export const AdditionalClass: Story = {
   render: () => ({ Component: AlertClasseAdicionalStory }),
 
   play: async ({ canvasElement, step }) => {

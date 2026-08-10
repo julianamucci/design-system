@@ -160,7 +160,7 @@ export const Controlled: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   parameters: {
     docs: {
       description: {

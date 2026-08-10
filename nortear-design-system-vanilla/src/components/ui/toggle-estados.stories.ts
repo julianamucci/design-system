@@ -180,7 +180,7 @@ export const Invalid: Story = {
 
 // ─── FocoVisivel ──────────────────────────────────────────────────────────────
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => makeToggle({ pressed: false }),
   parameters: {
     docs: { description: { story: 'Estado de foco via teclado. Pressione Tab para navegar — anel `ring-1 ring-ring` visível. Space/Enter alternam.' } },

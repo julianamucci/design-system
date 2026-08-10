@@ -59,7 +59,7 @@ export const LoadingState: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => ({
     Component: CommandEstadoDisabledStory,
     props: {},

@@ -64,7 +64,7 @@ export const Password: Story = {
   },
 };
 
-export const Numero: Story = {
+export const Number: Story = {
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="number" placeholder="ex: 42" /></div>',

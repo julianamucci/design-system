@@ -155,7 +155,7 @@ export const Controlled: Story = {
   },
 };
 
-export const Focado: Story = {
+export const Focused: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 

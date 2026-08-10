@@ -63,7 +63,7 @@ export const On: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     components: { Toggle, Underline },
     setup() { return {}; },

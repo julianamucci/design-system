@@ -101,7 +101,7 @@ export const Controlled: Story = {
   },
 };
 
-export const NaoDismissible: Story = {
+export const NotDismissible: Story = {
   args: {
     defaultOpen: true,
     dismissible: false,

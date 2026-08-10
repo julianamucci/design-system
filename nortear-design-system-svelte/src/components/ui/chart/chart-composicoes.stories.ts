@@ -23,7 +23,7 @@ async function expectRendered(el: HTMLElement) {
   }, { timeout: 2000 });
 }
 
-export const ChartIsolado: Story = {
+export const IsolatedChart: Story = {
   args: { option: buildBarOption({ data: chartData }), class: 'h-[240px] w-[480px]' },
   parameters: { docs: { description: { story: 'Chart sem wrapper — use diretamente em layouts simples.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),

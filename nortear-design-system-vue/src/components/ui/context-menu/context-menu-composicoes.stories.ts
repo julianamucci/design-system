@@ -195,7 +195,7 @@ export const WithSubmenu: Story = {
   }),
 };
 
-export const Completo: Story = {
+export const Complete: Story = {
   name: 'Complete — Checkbox + Radio + Submenu + Shortcut',
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

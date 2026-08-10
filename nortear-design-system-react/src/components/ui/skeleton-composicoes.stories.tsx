@@ -148,7 +148,7 @@ export const ImageInAspectRatio: Story = {
   },
 };
 
-export const Paragrafo: Story = {
+export const Paragraph: Story = {
   parameters: {
     docs: {
       description: {

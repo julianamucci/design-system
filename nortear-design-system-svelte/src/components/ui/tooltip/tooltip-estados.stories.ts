@@ -71,7 +71,7 @@ export const Open: Story = {
   },
 };
 
-export const FocoTeclado: Story = {
+export const KeyboardFocus: Story = {
   name: 'Keyboard focus (no delay)',
   args: {
     defaultOpen: false,

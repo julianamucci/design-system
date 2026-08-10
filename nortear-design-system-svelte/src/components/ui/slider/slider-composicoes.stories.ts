@@ -130,7 +130,7 @@ export const InForm: Story = {
   },
 };
 
-export const StepGrosso: Story = {
+export const ThickStep: Story = {
   args: {
     value: [3],
     min: 1,

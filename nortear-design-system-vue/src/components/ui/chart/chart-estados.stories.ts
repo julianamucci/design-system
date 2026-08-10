@@ -31,7 +31,7 @@ export const Empty: Story = {
   parameters: { docs: { description: { story: '"No data" automático do ECharts quando series vazia.' } } },
 };
 
-export const UmaSerie: Story = {
+export const OneSeries: Story = {
   render: () => h(ChartContainer, { option: buildBarOption({ xAxis: xMonths, series: singleSeries }), class: 'h-[240px] w-[480px]' }),
   parameters: { docs: { description: { story: 'Uma série — legenda oculta por default.' } } },
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),

@@ -28,7 +28,7 @@ const waitOpen = async () => {
   await expect(dialog).toBeVisible();
 };
 
-export const ConteudoLivre: Story = {
+export const FreeContent: Story = {
   parameters: {
     docs: {
       description: {
@@ -71,7 +71,7 @@ export const SettingsWithTitle: Story = {
   },
 };
 
-export const FormularioInline: Story = {
+export const InlineForm: Story = {
   parameters: {
     docs: {
       description: {

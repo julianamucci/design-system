@@ -47,7 +47,7 @@ function withLabel(label: string, child: HTMLElement): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const SeisDigitos: Story = {
+export const SixDigits: Story = {
   name: 'Six digits (SMS)',
   render: () => wrap(withLabel('maxLength=6', createInputOTP({ length: 6 }))),
   play: async ({ canvasElement, step }) => {
@@ -59,7 +59,7 @@ export const SeisDigitos: Story = {
   },
 };
 
-export const QuatroDigitos: Story = {
+export const FourDigits: Story = {
   name: 'Four digits (PIN)',
   render: () => wrap(withLabel('maxLength=4', createInputOTP({ length: 4 }))),
   play: async ({ canvasElement, step }) => {

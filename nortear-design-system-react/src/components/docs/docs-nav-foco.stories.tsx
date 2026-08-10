@@ -90,7 +90,7 @@ function expectSingleNamedMain(canvasElement: HTMLElement) {
  * Bug 2: acionar o item do menu move o foco para a seção alvo, e o Tab
  * seguinte cai no primeiro focável do conteúdo — não no próximo item do menu.
  */
-export const FocoAoNavegar: Story = {
+export const FocusOnNavigate: Story = {
   render: () => <FocusFixture />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -119,7 +119,7 @@ export const FocoAoNavegar: Story = {
  * Bug 1: existe exatamente um <main> e ele tem nome acessível igual ao título
  * da página (aria-labelledby → <h1> do DocsHeader).
  */
-export const LandmarkNomeado: Story = {
+export const NamedLandmark: Story = {
   render: () => <ButtonDocs />,
   play: async ({ canvasElement }) => expectSingleNamedMain(canvasElement),
 };
@@ -129,7 +129,7 @@ export const LandmarkNomeado: Story = {
  * DocsPageLayout (renderer próprio) e ficavam sem landmark de conteúdo. Agora o
  * FoundationPage também renderiza um <main> único e rotulado pelo <h1>.
  */
-export const LandmarkNomeadoFoundations: Story = {
+export const NamedLandmarkFoundations: Story = {
   render: () => <TypographyDocs />,
   play: async ({ canvasElement }) => expectSingleNamedMain(canvasElement),
 };
@@ -139,7 +139,7 @@ export const LandmarkNomeadoFoundations: Story = {
  * está desligado nela na fumaça (o catálogo inteiro do lucide estoura o
  * timeout), então o landmark é provado aqui.
  */
-export const LandmarkNomeadoIcones: Story = {
+export const NamedLandmarkIcons: Story = {
   render: () => <IconsDocs />,
   // Mesma política da fumaça: o axe fica desligado nesta página (o catálogo
   // inteiro do lucide estoura o timeout da varredura). A prova aqui é do
@@ -180,7 +180,7 @@ export const NavTrackIdWithoutExplicitSlug: Story = {
  * a navegação (o segmento `section` do id é literalmente "nav"). O destino é o
  * 3º segmento — sem isso o evento não dizia para onde o usuário foi.
  */
-export const NavTrackReportaSecaoDestino: Story = {
+export const NavTrackReportsTargetSection: Story = {
   render: () => <FocusFixture />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

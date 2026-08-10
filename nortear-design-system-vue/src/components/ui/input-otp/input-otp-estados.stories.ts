@@ -91,7 +91,7 @@ export const Filling: Story = {
   },
 };
 
-export const Completo: Story = {
+export const Complete: Story = {
   parameters: {
     docs: {
       description: { story: 'Todos os slots preenchidos. onComplete dispara.' },

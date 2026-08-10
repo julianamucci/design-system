@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Completo: Story = {
+export const Complete: Story = {
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));

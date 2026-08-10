@@ -22,7 +22,7 @@ const meta: Meta<any> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Retangulo: Story = {
+export const Rectangle: Story = {
   render: () => ({
     components: { Skeleton },
     template: `
@@ -42,7 +42,7 @@ export const Retangulo: Story = {
   },
 };
 
-export const Circulo: Story = {
+export const Circle: Story = {
   render: () => ({
     components: { Skeleton },
     template: `

@@ -34,7 +34,7 @@ function buildContainer(label: string): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const Retangulo: Story = {
+export const Rectangle: Story = {
   render: () => {
     const wrap = buildContainer('Carregando bloco retangular');
     const skeleton = createSkeleton({ height: '6rem', width: '100%' });
@@ -52,7 +52,7 @@ export const Retangulo: Story = {
   },
 };
 
-export const Circulo: Story = {
+export const Circle: Story = {
   render: () => {
     const wrap = buildContainer('Carregando avatar');
     const skeleton = createSkeleton({ className: 'nds-rounded-full nds-size-12' });

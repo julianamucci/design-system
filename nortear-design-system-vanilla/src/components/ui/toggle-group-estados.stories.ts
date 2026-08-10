@@ -163,7 +163,7 @@ export const DisabledItem: Story = {
 
 // ─── FocoVisivel ──────────────────────────────────────────────────────────────
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'left' }),
   parameters: {
     docs: {

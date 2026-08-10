@@ -202,7 +202,7 @@ export const Invalid: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   parameters: {
     docs: {
       description: {

@@ -181,7 +181,7 @@ export const WithBadgeInTrigger: Story = {
 
 // ─── Conteúdo Rico ────────────────────────────────────────────────────────────
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-w-full nds-max-w-lg';

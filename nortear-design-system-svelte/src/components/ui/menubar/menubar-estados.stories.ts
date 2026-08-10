@@ -62,7 +62,7 @@ export const Open: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   args: {
     defaultValue: 'file',
     demonstration: 'itemDisabled',

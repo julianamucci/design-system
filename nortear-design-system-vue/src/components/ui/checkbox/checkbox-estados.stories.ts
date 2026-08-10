@@ -183,7 +183,7 @@ export const Error: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },

@@ -46,7 +46,7 @@ const sharedComponents = {
   Label,
 };
 
-export const EditarPerfil: Story = {
+export const EditProfile: Story = {
   parameters: {
     docs: {
       description: {
@@ -135,7 +135,7 @@ export const DimensionSelector: Story = {
   },
 };
 
-export const ConfiguracoesRapidas: Story = {
+export const QuickSettings: Story = {
   parameters: {
     docs: {
       description: {

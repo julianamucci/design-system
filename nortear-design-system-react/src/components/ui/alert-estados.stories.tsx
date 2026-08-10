@@ -16,7 +16,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Completo: Story = {
+export const Complete: Story = {
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />

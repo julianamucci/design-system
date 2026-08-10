@@ -182,7 +182,7 @@ export const VerticalSettings: Story = {
   },
 };
 
-export const ModoManual: Story = {
+export const ManualMode: Story = {
   render: () => ({
     components: sharedComponents,
     template: `

@@ -190,7 +190,7 @@ export const TermDefinition: Story = {
   },
 };
 
-export const MetricaExplicada: Story = {
+export const ExplainedMetric: Story = {
   parameters: {
     docs: {
       description: {

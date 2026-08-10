@@ -38,7 +38,7 @@ export const WithCaption: Story = {
   play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
 };
 
-export const MultiSeries: Story = {
+export const MultipleSeries: Story = {
   render: () => h(ChartContainer, {
     option: buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' }),
     class: 'h-[280px] w-[500px]',

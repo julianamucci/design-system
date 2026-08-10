@@ -60,7 +60,7 @@ async function assertLandmarkPrincipal(canvasElement: HTMLElement) {
 }
 
 /** A — docs page de componente (DocsPageLayout). */
-export const LandmarkPrincipal: Story = {
+export const MainLandmark: Story = {
   render: () => createButtonDocs(),
   play: async ({ canvasElement }) => {
     await assertLandmarkPrincipal(canvasElement);
@@ -76,7 +76,7 @@ export const LandmarkFoundations: Story = {
 };
 
 /** C — Foundations com layout próprio, fora do renderer. */
-export const LandmarkFoundationsIcones: Story = {
+export const LandmarkFoundationsIcons: Story = {
   render: () => createIconsDocs(),
   play: async ({ canvasElement }) => {
     await assertLandmarkPrincipal(canvasElement);
@@ -84,7 +84,7 @@ export const LandmarkFoundationsIcones: Story = {
 };
 
 /** C — Foundations com layout próprio, fora do renderer. */
-export const LandmarkFoundationsCores: Story = {
+export const LandmarkFoundationsColors: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
     await assertLandmarkPrincipal(canvasElement);
@@ -92,7 +92,7 @@ export const LandmarkFoundationsCores: Story = {
 };
 
 /** B — acionar um item do menu deixa o foco DENTRO da seção alvo. */
-export const FocoAoNavegar: Story = {
+export const FocusOnNavigate: Story = {
   render: () => createButtonDocs(),
   play: async ({ canvasElement }) => {
     const doc = canvasElement.ownerDocument;
@@ -155,7 +155,7 @@ export const NavTrackingWithoutSlug: Story = {
  * `section_id`. Antes o código lia o segmento do meio e TODO clique saía com
  * `section_id: "nav"`.
  */
-export const EventoNavReportaDestino: Story = {
+export const NavEventReportsTarget: Story = {
   render: () => createButtonDocs(),
   play: async ({ canvasElement }) => {
     // `track()` encaminha para o gtag do manager (window.top quando em iframe).

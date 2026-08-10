@@ -52,7 +52,7 @@ export const Password: Story = {
   },
 };
 
-export const Numero: Story = {
+export const Number: Story = {
   render: () => createInput({ type: 'number', placeholder: '0' }),
   play: async ({ canvasElement, step }) => {
     await step('Input do tipo number renderizado', async () => {

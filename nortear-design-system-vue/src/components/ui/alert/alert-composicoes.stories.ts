@@ -87,7 +87,7 @@ export const WithAction: Story = {
  * (absoluto, shrink-to-fit por default) são inertes de propósito: a story prova
  * a composição de classes sem mexer no snapshot visual.
  */
-export const ClasseAdicional: Story = {
+export const AdditionalClass: Story = {
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
     setup() { return {}; },

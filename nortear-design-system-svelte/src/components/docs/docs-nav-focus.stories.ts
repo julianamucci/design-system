@@ -30,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 // Mesmo cast do docs-smoke: as *Docs.svelte não recebem props.
 const page = (Page: unknown) => () => ({ Component: Page as never });
 
-export const LandmarkPrincipal: Story = {
+export const MainLandmark: Story = {
   render: page(BreadcrumbDocs),
   play: async ({ canvasElement }) => {
     const mains = canvasElement.querySelectorAll('main');
@@ -46,7 +46,7 @@ export const LandmarkPrincipal: Story = {
   },
 };
 
-export const FocoAoNavegar: Story = {
+export const FocusOnNavigate: Story = {
   render: page(BreadcrumbDocs),
   play: async ({ canvasElement }) => {
     const buttons = [

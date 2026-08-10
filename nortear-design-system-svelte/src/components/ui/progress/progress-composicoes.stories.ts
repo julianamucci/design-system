@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const UploadAnimado: Story = {
+export const AnimatedUpload: Story = {
   args: {
     value: 0,
     'aria-label': 'Enviando arquivo',

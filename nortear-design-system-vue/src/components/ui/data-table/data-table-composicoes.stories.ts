@@ -77,7 +77,7 @@ export const ResizableColumns: Story = {
 };
 
 // ── Reorder + Pin ──────────────────────────────────────────────────────────
-export const ReordenavelEFixavel: Story = {
+export const ReorderableAndPinnable: Story = {
   render: () => ({
     components: { DataTable },
     setup() {

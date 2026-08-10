@@ -148,7 +148,7 @@ export const WithBadgeInTrigger: Story = {
   },
 };
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   render: () => (
     <Accordion multiple className="nds-max-w-lg nds-text-body">
       <AccordionItem value="specs">

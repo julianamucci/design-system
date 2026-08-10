@@ -89,7 +89,7 @@ export const FormattingToolbar: Story = {
   },
 };
 
-export const ViewModeVertical: Story = {
+export const VerticalViewMode: Story = {
   args: {
     type: 'single',
     orientation: 'vertical',

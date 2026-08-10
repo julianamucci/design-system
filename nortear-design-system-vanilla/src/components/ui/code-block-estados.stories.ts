@@ -85,7 +85,7 @@ export const WithoutNumbering: Story = {
   },
 };
 
-export const Copiado: Story = {
+export const Copied: Story = {
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' }),
   play: async ({ canvasElement, step }) => {
@@ -125,7 +125,7 @@ export const DoubleScroll: Story = {
   },
 };
 
-export const LinguagemDesconhecida: Story = {
+export const UnknownLanguage: Story = {
   render: () => createCodeBlock({ code: COMPOSITION_CODE, language: 'cobol' }),
   play: async ({ canvasElement, step }) => {
     await step('Linguagem desconhecida cai em texto simples sem quebrar o bloco', async () => {

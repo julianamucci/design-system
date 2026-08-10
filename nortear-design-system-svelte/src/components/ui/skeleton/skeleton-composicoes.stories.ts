@@ -103,7 +103,7 @@ export const ImageInAspectRatio: Story = {
   },
 };
 
-export const Paragrafo: Story = {
+export const Paragraph: Story = {
   args: { variant: 'paragrafo' },
   parameters: {
     docs: {

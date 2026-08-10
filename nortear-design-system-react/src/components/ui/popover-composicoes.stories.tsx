@@ -37,7 +37,7 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-export const EditarPerfil: Story = {
+export const EditProfile: Story = {
   parameters: {
     docs: {
       description: {

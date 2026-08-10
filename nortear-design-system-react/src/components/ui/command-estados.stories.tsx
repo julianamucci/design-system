@@ -85,7 +85,7 @@ export const NoResultsState: Story = {
 
 // ─── Item Desabilitado ────────────────────────────────────────────────────────
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => (
     <div className="nds-w-full nds-max-w-xs">
       <Command>

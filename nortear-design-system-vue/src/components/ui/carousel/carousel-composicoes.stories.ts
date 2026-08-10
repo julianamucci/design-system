@@ -116,7 +116,7 @@ export const WithDots: Story = {
   },
 };
 
-export const Galeria: Story = {
+export const Gallery: Story = {
   render: () => ({
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, Card },
     setup() {

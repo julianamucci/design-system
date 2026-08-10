@@ -36,7 +36,7 @@ export const Empty: Story = {
   },
 };
 
-export const UmaSerie: Story = {
+export const OneSeries: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: singleSeries })}

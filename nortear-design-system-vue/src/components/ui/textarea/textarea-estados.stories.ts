@@ -90,7 +90,7 @@ export const Disabled: Story = {
   },
 };
 
-export const Invalido: Story = {
+export const Invalid: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -125,7 +125,7 @@ export const Invalido: Story = {
   },
 };
 
-export const SomenteLeitura: Story = {
+export const ReadOnly: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `

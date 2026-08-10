@@ -100,7 +100,7 @@ export const Disabled: Story = {
   },
 };
 
-export const SomenteLeitura: Story = {
+export const ReadOnly: Story = {
   render: () => {
     const ta = createTextarea({
       value: 'Este conteúdo é somente leitura — pode ser selecionado mas não editado.',
@@ -118,7 +118,7 @@ export const SomenteLeitura: Story = {
   },
 };
 
-export const Invalido: Story = {
+export const Invalid: Story = {
   render: () => {
     const ta = createTextarea({
       placeholder: 'ex: Descreva o produto...',

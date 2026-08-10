@@ -206,7 +206,7 @@ export const Controlled: Story = {
   },
 };
 
-export const CompletaTabela: Story = {
+export const CompleteTable: Story = {
   parameters: {
     docs: {
       description: {

@@ -82,7 +82,7 @@ export const TermDefinition: Story = {
   },
 };
 
-export const MetricaExplicada: Story = {
+export const ExplainedMetric: Story = {
   args: {
     ...baseArgs,
     variant: 'metric',

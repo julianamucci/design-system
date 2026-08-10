@@ -148,7 +148,7 @@ export const AsLink: Story = {
 //
 // Sem par nas outras stacks de propósito: só a factory recebe HTML como string.
 // Nas demais o conteúdo entra como elemento/slot e nunca passa por innerHTML.
-export const ConteudoHtmlSanitizado: Story = {
+export const SanitizedHtmlContent: Story = {
   render: () =>
     createButton({
       variant: 'default',
@@ -182,7 +182,7 @@ export const ConteudoHtmlSanitizado: Story = {
 
 // Ramo irmão do anterior: `children` como elemento vai direto no appendChild,
 // sem sanitizar (não há string para sanitizar).
-export const ConteudoComoElemento: Story = {
+export const ContentAsElement: Story = {
   render: () => {
     const span = document.createElement('span');
     span.textContent = 'Salvar';

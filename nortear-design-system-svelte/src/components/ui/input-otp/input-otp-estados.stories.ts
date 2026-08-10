@@ -55,7 +55,7 @@ export const Filling: Story = {
   },
 };
 
-export const Completo: Story = {
+export const Complete: Story = {
   name: 'Complete (6 digits)',
   args: {
     maxLength: 6,

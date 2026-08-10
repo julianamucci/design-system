@@ -184,7 +184,7 @@ export const Invalid: Story = {
   },
 };
 
-export const Readonly: Story = {
+export const ReadOnly: Story = {
   render: () => (
     <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
       <Label htmlFor="state-readonly">Observações</Label>

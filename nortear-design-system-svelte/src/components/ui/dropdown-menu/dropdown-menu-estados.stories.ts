@@ -108,7 +108,7 @@ export const Controlled: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   args: {
     defaultOpen: true,
     variant: 'itemDisabled',

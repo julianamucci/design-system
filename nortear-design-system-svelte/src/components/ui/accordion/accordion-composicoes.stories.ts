@@ -84,7 +84,7 @@ export const WithBadgeInTrigger: Story = {
   },
 };
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   render: () => ({ Component: AccordionRichStory }),
   parameters: {
     covers: ['functional.item4', 'visual.item4'],

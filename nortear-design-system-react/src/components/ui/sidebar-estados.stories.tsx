@@ -187,7 +187,7 @@ export const Expanded: Story = {
   },
 };
 
-export const RecolhidaIcon: Story = {
+export const CollapsedIcon: Story = {
   name: "State: collapsed (icon mode)",
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
   play: async ({ canvasElement, step }) => {
@@ -236,7 +236,7 @@ export const Offcanvas: Story = {
   },
 };
 
-export const Fixa: Story = {
+export const Fixed: Story = {
   name: "State: fixed (collapsible=none)",
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="none" label="Sidebar fixa (collapsible=none)" />,
   play: async ({ canvasElement, step }) => {

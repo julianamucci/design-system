@@ -175,7 +175,7 @@ export const HrefWithUnsafeProtocol: Story = {
   },
 };
 
-export const HrefMalformado: Story = {
+export const MalformedHref: Story = {
   render: () => ({
     Component: ButtonStory,
     // `new URL('http://[', base)` estoura — IPv6 inválido. É o caminho do

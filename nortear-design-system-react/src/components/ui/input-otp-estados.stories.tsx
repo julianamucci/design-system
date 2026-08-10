@@ -113,7 +113,7 @@ export const Filling: Story = {
   },
 };
 
-export const Completo: Story = {
+export const Complete: Story = {
   parameters: {
     docs: {
       description: { story: "Todos os 6 slots preenchidos (onComplete já disparou)." },

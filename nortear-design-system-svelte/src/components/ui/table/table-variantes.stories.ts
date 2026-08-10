@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Basica: Story = {
+export const Basic: Story = {
   render: () => ({
     Component: TableVarianteBasica,
     props: {},

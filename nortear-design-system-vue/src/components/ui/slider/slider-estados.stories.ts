@@ -50,7 +50,7 @@ export const Default: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {

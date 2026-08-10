@@ -95,7 +95,7 @@ export const PriceRange: Story = {
   },
 };
 
-export const StepCustomizado: Story = {
+export const CustomStep: Story = {
   render: function StepCustomizadoRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (

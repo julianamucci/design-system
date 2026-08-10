@@ -113,7 +113,7 @@ export const WithDots: Story = {
   },
 };
 
-export const Galeria: Story = {
+export const Gallery: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

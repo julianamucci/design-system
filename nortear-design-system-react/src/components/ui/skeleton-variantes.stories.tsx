@@ -21,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Retangulo: Story = {
+export const Rectangle: Story = {
   parameters: {
     docs: {
       description: {
@@ -48,7 +48,7 @@ export const Retangulo: Story = {
   },
 };
 
-export const Circulo: Story = {
+export const Circle: Story = {
   parameters: {
     docs: {
       description: {

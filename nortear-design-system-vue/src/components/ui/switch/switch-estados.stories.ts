@@ -63,7 +63,7 @@ export const Checked: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },

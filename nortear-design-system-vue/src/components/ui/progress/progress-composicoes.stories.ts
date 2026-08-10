@@ -23,7 +23,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const UploadAnimado: Story = {
+export const AnimatedUpload: Story = {
   render: () => ({
     components: { Progress },
     setup() {
@@ -113,7 +113,7 @@ export const ProgressList: Story = {
   },
 };
 
-export const CorCustomizada: Story = {
+export const CustomColor: Story = {
   render: () => ({
     components: { Progress },
     template: `

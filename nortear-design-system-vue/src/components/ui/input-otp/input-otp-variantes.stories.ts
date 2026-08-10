@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot };
 
-export const SeisDigitos: Story = {
+export const SixDigits: Story = {
   parameters: {
     docs: {
       description: {
@@ -77,7 +77,7 @@ export const SeisDigitos: Story = {
   },
 };
 
-export const QuatroDigitos: Story = {
+export const FourDigits: Story = {
   parameters: {
     docs: {
       description: {

@@ -197,7 +197,7 @@ export const Error: Story = {
 
 // ─── FocoVisivel ──────────────────────────────────────────────────────────────
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => wrapWithLabel(
     createCheckbox({}),
     'Foco visível via teclado',

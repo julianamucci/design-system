@@ -49,7 +49,7 @@ export const Expanded: Story = {
   },
 };
 
-export const ModoIcon: Story = {
+export const IconMode: Story = {
   name: 'Icon mode (collapsed)',
   render: () => ({
     Component: SidebarIconStory,
@@ -90,7 +90,7 @@ export const OffcanvasClosed: Story = {
   },
 };
 
-export const Fixo: Story = {
+export const Fixed: Story = {
   name: 'Fixed (collapsible none)',
   render: () => ({
     Component: SidebarFixedStory,

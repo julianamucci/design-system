@@ -101,7 +101,7 @@ export const SidebarList: Story = {
   },
 };
 
-export const GaleriaHorizontal: Story = {
+export const HorizontalGallery: Story = {
   render: () => ({
     components: { ScrollArea, ScrollBar },
     setup() {
@@ -141,7 +141,7 @@ export const GaleriaHorizontal: Story = {
   },
 };
 
-export const TabelaAmpla: Story = {
+export const WideTable: Story = {
   render: () => ({
     components: { ScrollArea, ScrollBar },
     setup() {

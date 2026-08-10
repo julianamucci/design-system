@@ -15,7 +15,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desmarcado: Story = {
+export const Unchecked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="unchecked" />
@@ -186,7 +186,7 @@ export const Error: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="focus" />

@@ -22,7 +22,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Decorativo: Story = {
+export const Decorative: Story = {
   args: {
     orientation: 'horizontal',
     decorative: true,

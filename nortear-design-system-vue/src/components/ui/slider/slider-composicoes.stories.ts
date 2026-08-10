@@ -159,7 +159,7 @@ export const InForm: Story = {
   },
 };
 
-export const StepGrosso: Story = {
+export const ThickStep: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {

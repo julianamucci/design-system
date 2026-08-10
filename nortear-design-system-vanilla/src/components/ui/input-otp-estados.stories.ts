@@ -81,7 +81,7 @@ export const Filling: Story = {
   },
 };
 
-export const Completo: Story = {
+export const Complete: Story = {
   render: () => {
     const el = createInputOTP({ length: 6 });
     fillSlots(el, '123456');

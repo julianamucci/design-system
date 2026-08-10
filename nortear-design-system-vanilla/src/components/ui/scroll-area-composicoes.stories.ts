@@ -40,7 +40,7 @@ function tagItem(label: string, count: string): HTMLElement {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const TagsList: Story = {
+export const TagList: Story = {
   name: 'Vertical list with badges',
   render: () => {
     const outer = document.createElement('div');

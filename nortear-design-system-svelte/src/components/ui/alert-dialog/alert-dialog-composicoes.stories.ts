@@ -108,7 +108,7 @@ export const Destructive: Story = {
   },
 };
 
-export const Neutra: Story = {
+export const Neutral: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
@@ -263,7 +263,7 @@ export const Responsive: Story = {
 // A extensibilidade por classe é documentada em props.extensibility, e esta é
 // a story que a exercita: antes, a única prova de que a classe chega ao painel
 // e ao bloco de mídia era a prosa da docs page.
-export const ClasseExtra: Story = {
+export const ExtraClass: Story = {
   parameters: {
     docs: { description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
   },

@@ -173,7 +173,7 @@ export const SidebarWithContentAndConsole: Story = {
   },
 };
 
-export const ListaDetalhe: Story = {
+export const ListDetail: Story = {
   render: () => {
     const list = listBlock('Inbox (4)', [
       'Maria Santos — Atualização do projeto',

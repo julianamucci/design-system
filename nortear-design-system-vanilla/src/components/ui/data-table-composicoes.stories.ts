@@ -80,7 +80,7 @@ export const ResizableColumns: Story = {
 
 // ─── ReordenavelEFixavel ────────────────────────────────────────────────────
 
-export const ReordenavelEFixavel: Story = {
+export const ReorderableAndPinnable: Story = {
   render: () => createDataTable<Invoice>({
     columns: baseColumns,
     data: invoices,

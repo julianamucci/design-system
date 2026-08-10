@@ -51,7 +51,7 @@ async function cleanupPortal(): Promise<void> {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-export const EditarPerfil: Story = {
+export const EditProfile: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
@@ -233,7 +233,7 @@ export const ColorPicker: Story = {
   },
 };
 
-export const ConfiguracoesRapidas: Story = {
+export const QuickSettings: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Configuracoes' });
 

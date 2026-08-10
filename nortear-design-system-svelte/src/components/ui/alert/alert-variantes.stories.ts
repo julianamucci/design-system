@@ -216,7 +216,7 @@ export const Dismissible: Story = {
   },
 };
 
-export const DismissibleTeclado: Story = {
+export const DismissibleByKeyboard: Story = {
   args: {
     dismissible: true,
     onDismiss: fn(),
@@ -261,7 +261,7 @@ export const DismissibleTeclado: Story = {
  * num componente cuja função é chamar atenção — e a que estava sem resposta no
  * tema escuro.
  */
-export const Contraste: Story = {
+export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {

@@ -194,7 +194,7 @@ export const Invalid: Story = {
 
 // ─── FocoVisivel ──────────────────────────────────────────────────────────────
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => wrapWithLabel(
     createSwitch({}),
     'Foco visível via teclado',

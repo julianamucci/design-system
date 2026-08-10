@@ -112,7 +112,7 @@ export const Volume: Story = {
 
 // ─── Brilho ───────────────────────────────────────────────────────────────────
 
-export const Brilho: Story = {
+export const Glow: Story = {
   render: () =>
     withLabel({
       idPrefix: 'comp-brightness',

@@ -70,7 +70,7 @@ export const ResizableColumns: Story = {
 }
 
 // Reorder + Pin ─────────────────────────────────────────────────────────────
-export const ReordenavelEFixavel: Story = {
+export const ReorderableAndPinnable: Story = {
   args: {
     columns: baseColumns,
     data: invoices,

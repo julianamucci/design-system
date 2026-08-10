@@ -106,7 +106,7 @@ export const WithDisabledItems: Story = {
 
 // ─── Lista Longa ──────────────────────────────────────────────────────────────
 
-export const ListaLonga: Story = {
+export const LongList: Story = {
   name: 'Long list (scroll)',
   render: () => {
     const wrap = document.createElement('div');

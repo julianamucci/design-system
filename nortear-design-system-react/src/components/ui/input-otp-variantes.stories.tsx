@@ -36,7 +36,7 @@ function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
   return input;
 }
 
-export const SeisDigitos: Story = {
+export const SixDigits: Story = {
   parameters: {
     docs: {
       description: {
@@ -83,7 +83,7 @@ export const SeisDigitos: Story = {
   },
 };
 
-export const QuatroDigitos: Story = {
+export const FourDigits: Story = {
   parameters: {
     docs: {
       description: {

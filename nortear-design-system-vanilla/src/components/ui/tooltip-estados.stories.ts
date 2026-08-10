@@ -95,7 +95,7 @@ export const Open: Story = {
   },
 };
 
-export const FocoTeclado: Story = {
+export const KeyboardFocus: Story = {
   name: 'Keyboard focus',
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });

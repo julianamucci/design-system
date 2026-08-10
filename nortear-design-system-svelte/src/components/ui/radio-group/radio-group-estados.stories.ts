@@ -65,7 +65,7 @@ export const Checked: Story = {
   },
 };
 
-export const FocoVisivel: Story = {
+export const FocusVisible: Story = {
   render: () => ({
     Component: RadioGroupStory,
     props: {

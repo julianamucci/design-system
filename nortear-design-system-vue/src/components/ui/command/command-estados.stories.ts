@@ -65,7 +65,7 @@ export const EmptyState: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => ({
     components: { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList },
     setup() {

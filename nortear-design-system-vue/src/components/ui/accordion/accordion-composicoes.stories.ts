@@ -152,7 +152,7 @@ export const WithBadgeInTrigger: Story = {
   },
 };
 
-export const ConteudoRico: Story = {
+export const RichContent: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `

@@ -168,7 +168,7 @@ export const WithKeyboardShortcut: Story = {
   },
 };
 
-export const SidesPosicionamento: Story = {
+export const PlacementSides: Story = {
   parameters: {
     docs: {
       description: {

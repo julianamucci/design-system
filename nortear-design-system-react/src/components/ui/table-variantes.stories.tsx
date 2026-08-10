@@ -40,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Básica ──────────────────────────────────────────────────────────────────
 
-export const Basica: Story = {
+export const Basic: Story = {
   play: async ({ canvasElement, step }) => {
     await step("table e thead/tbody presentes", async () => {
       await expect(canvasElement.querySelector("table")).not.toBeNull();

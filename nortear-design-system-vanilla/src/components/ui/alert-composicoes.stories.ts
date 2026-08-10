@@ -83,7 +83,7 @@ export const WithAction: Story = {
  * (absoluto, shrink-to-fit por default) são inertes de propósito: a story prova
  * a composição de classes sem mexer no snapshot visual.
  */
-export const ClasseAdicional: Story = {
+export const AdditionalClass: Story = {
   render: () => {
     const alert = createAlert({ className: 'nds-w-full' });
     alert.appendChild(createAlertIcon('info'));

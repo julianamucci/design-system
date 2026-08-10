@@ -108,7 +108,7 @@ export const Open: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => {
     const bar = createMenubar([
       {

@@ -154,7 +154,7 @@ export const Controlled: Story = {
   },
 };
 
-export const ItemDesabilitado: Story = {
+export const ItemDisabled: Story = {
   render: () => buildBase({
     triggerLabel: 'Mais ações',
     openInitially: true,

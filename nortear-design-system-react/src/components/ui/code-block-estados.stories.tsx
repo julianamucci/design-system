@@ -52,7 +52,7 @@ export const WithoutNumbering: Story = {
   },
 };
 
-export const Copiado: Story = {
+export const Copied: Story = {
   args: { code: BASE_CODE, language: "ts" },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {
@@ -90,7 +90,7 @@ export const DoubleScroll: Story = {
   },
 };
 
-export const LinguagemDesconhecida: Story = {
+export const UnknownLanguage: Story = {
   args: { code: COBOL_CODE, language: "cobol" },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement }) => {

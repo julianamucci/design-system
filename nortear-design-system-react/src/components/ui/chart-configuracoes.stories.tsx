@@ -58,7 +58,7 @@ export const WithCaption: Story = {
   },
 };
 
-export const MultiSeries: Story = {
+export const MultipleSeries: Story = {
   render: () => (
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' })}

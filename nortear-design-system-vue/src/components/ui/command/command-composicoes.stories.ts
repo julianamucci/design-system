@@ -133,7 +133,7 @@ export const WithShortcuts: Story = {
   },
 };
 
-export const ComoCombobox: Story = {
+export const AsCombobox: Story = {
   name: 'As combobox (in Popover)',
   render: () => ({
     components: {

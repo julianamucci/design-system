@@ -60,7 +60,7 @@ export const ResizableColumns: Story = {
   },
 };
 
-export const ReordenavelEFixavel: Story = {
+export const ReorderableAndPinnable: Story = {
   args: {
     columns: baseColumns as never,
     data: invoices,

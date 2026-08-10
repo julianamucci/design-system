@@ -122,7 +122,7 @@ export const ItemInset: Story = {
   },
 };
 
-export const ItemDestructiveIsolado: Story = {
+export const IsolatedDestructiveItem: Story = {
   name: 'Destructive item',
   render: () => ({
     components: {

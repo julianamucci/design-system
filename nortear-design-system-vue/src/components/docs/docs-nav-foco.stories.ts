@@ -30,7 +30,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** A — existe exatamente um <main> e ele tem o título da página como nome. */
-export const LandmarkPrincipal: Story = {
+export const MainLandmark: Story = {
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -47,7 +47,7 @@ export const LandmarkPrincipal: Story = {
 };
 
 /** B — acionar um item do menu move o foco para dentro da seção alvo. */
-export const FocoAoNavegar: Story = {
+export const FocusOnNavigate: Story = {
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: async ({ canvasElement }) => {
     const navButton = canvasElement.querySelector<HTMLButtonElement>(
@@ -70,7 +70,7 @@ export const FocoAoNavegar: Story = {
  * A (Foundations) — as páginas de Foundations montam o renderer próprio, não o
  * DocsPageLayout. Prova que elas também têm exatamente um <main> nomeado.
  */
-export const LandmarkPrincipalFoundations: Story = {
+export const MainLandmarkFoundations: Story = {
   render: () => ({ components: { TypographyDocs }, template: '<TypographyDocs />' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -122,7 +122,7 @@ export const NavTrackIdWithoutSlug: Story = {
  * B — o docs_nav_click precisa reportar a SEÇÃO DE DESTINO. Antes o
  * `section_id` vinha do 2º segmento do id, que é sempre a string "nav".
  */
-export const NavClickReportaDestino: Story = {
+export const NavClickReportsTarget: Story = {
   render: () => ({ components: { SidebarDocs }, template: '<SidebarDocs />' }),
   play: async ({ canvasElement }) => {
     // track() encaminha para o gtag do MANAGER (window.top) quando roda em

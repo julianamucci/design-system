@@ -229,7 +229,7 @@ export const TermDefinition: Story = {
   },
 };
 
-export const MetricaExplicada: Story = {
+export const ExplainedMetric: Story = {
   render: () => {
     const trigger = buildSpan('LCP 1.8s');
 

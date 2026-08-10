@@ -170,7 +170,7 @@ export const Expanded: Story = {
   },
 };
 
-export const Recolhido: Story = {
+export const Collapsed: Story = {
   name: 'Collapsed (offcanvas)',
   render: () => buildBase(false),
   parameters: {
@@ -188,7 +188,7 @@ export const Recolhido: Story = {
   },
 };
 
-export const ModoIcon: Story = {
+export const IconMode: Story = {
   name: 'Icon mode (collapsible icon)',
   render: () => {
     // Build collapsed sidebar to represent icon mode visually

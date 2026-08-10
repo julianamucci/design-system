@@ -164,7 +164,7 @@ export const ImageInAspectRatio: Story = {
   },
 };
 
-export const Paragrafo: Story = {
+export const Paragraph: Story = {
   render: () => {
     const wrap = loadingContainer('Carregando parágrafo', 'nds-stack nds-max-w-md');
     wrap.dataset.spacing = 'xs';

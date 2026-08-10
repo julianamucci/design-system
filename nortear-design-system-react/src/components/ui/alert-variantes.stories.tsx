@@ -242,7 +242,7 @@ export const Dismissible: Story = {
 
 // Segundo cenário do contrato: o caso documentado é "clique ou Enter" — este
 // story cobre o caminho de teclado (Enter no botão focado).
-export const DismissibleTeclado: Story = {
+export const DismissibleByKeyboard: Story = {
   args: { onDismiss: fn() },
   render: (args) => (
     <AlertDismissivelRemontavel
@@ -287,7 +287,7 @@ export const DismissibleTeclado: Story = {
  * num componente cuja função é chamar atenção — e a que estava sem resposta no
  * tema escuro.
  */
-export const Contraste: Story = {
+export const Contrast: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     docs: {

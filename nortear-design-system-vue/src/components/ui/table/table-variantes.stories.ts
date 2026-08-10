@@ -25,7 +25,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Basica: Story = {
+export const Basic: Story = {
   render: () => ({
     components: {
       Table,

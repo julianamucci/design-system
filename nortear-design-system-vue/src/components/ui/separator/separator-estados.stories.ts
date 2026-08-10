@@ -22,7 +22,7 @@ const meta: Meta<any> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Decorativo: Story = {
+export const Decorative: Story = {
   render: () => ({
     components: { Separator },
     template: `

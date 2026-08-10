@@ -59,7 +59,7 @@ export const Empty: Story = {
 
 // ─── UmPonto ──────────────────────────────────────────────────────────────────
 
-export const UmPonto: Story = {
+export const OnePoint: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
