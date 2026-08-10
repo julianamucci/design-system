@@ -134,14 +134,14 @@ export class NdsSeparator {
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <div class="nds-cluster" data-spacing="sm" style="height: 2.5rem">
+      <div class="nds-cluster nds-docs-demo-row" data-spacing="sm">
         <span class="nds-text-body">Editar</span>
         <div ndsSeparator orientation="vertical"></div>
         <span class="nds-text-body">Duplicar</span>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div class="nds-cluster" data-spacing="sm" style="height: 2.5rem">
+      <div class="nds-cluster nds-docs-demo-row" data-spacing="sm">
         <span class="nds-text-body">Editar</span>
         <div ndsSeparator></div>
         <span class="nds-text-body">Duplicar</span>
@@ -156,7 +156,7 @@ export class NdsSeparator {
       </div>
     </ng-template>
     <ng-template #tplVarVertical>
-      <div class="nds-cluster" data-spacing="md" style="height: 3rem">
+      <div class="nds-cluster nds-docs-demo-row" data-spacing="md">
         <span class="nds-text-body">Item A</span>
         <div ndsSeparator orientation="vertical"></div>
         <span class="nds-text-body nds-text-muted-foreground">Item B</span>
@@ -194,7 +194,7 @@ export class NdsSeparator {
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.vertical') }}
               </p>
-              <div class="nds-cluster" data-spacing="md" style="height: 3rem">
+              <div class="nds-cluster nds-docs-demo-row" data-spacing="md">
                 <span class="nds-text-body">Item A</span>
                 <div ndsSeparator orientation="vertical"></div>
                 <span class="nds-text-body">Item B</span>

@@ -7,10 +7,13 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // O CSS do .nds-skeleton não traz forma nem dimensão de propósito — quem usa
 // define a caixa que o conteúdo real vai ocupar.
+// Forma por atributo, nunca por medida: guideline 12 — altura é resultado de
+// padding e tipografia, não valor cravado, senão o bloco não cresce quando a
+// pessoa aumenta a fonte do navegador.
 const FORMAS: Record<'line' | 'circle' | 'rectangle', string> = {
-  line:      'height: 1rem; width: 15rem',
-  circle:    'height: 3rem; width: 3rem; border-radius: 9999px',
-  rectangle: 'height: 8rem; width: 100%',
+  line:      'data-shape="text" data-width="3-4"',
+  circle:    'data-shape="avatar"',
+  rectangle: 'data-shape="fill"',
 };
 
 type SkeletonArgs = {
@@ -33,7 +36,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }
     <!-- aria-busy no CONTAINER: o esqueleto é aria-hidden e quem anuncia
          o carregamento é a região que vai receber o conteúdo. -->
     <div role="status" [attr.aria-busy]="carregando()" aria-label="Carregando conteúdo">
-      <div ndsSkeleton style="${estilo}"></div>
+      <div ndsSkeleton ${estilo}></div>
     </div>
   \`,
 })
@@ -70,11 +73,12 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      estilo: FORMAS[args.shape],
+      forma: { line: 'text', circle: 'avatar', rectangle: 'fill' }[args.shape],
+      largura: args.shape === 'line' ? '3-4' : null,
     },
     template: `
       <div role="status" [attr.aria-busy]="loading" aria-label="Carregando conteúdo">
-        <div ndsSkeleton [style]="estilo"></div>
+        <div ndsSkeleton [attr.data-shape]="forma" [attr.data-width]="largura"></div>
       </div>
     `,
   }),

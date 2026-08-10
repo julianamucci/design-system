@@ -140,7 +140,7 @@ const TIPOS = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
     <ng-template #tplDoDont2Dont>
       <div class="nds-stack nds-w-full" data-spacing="sm">
         <label ndsLabel for="dd2-dont">{{ t('demonstration.labels.errorLabel') }}</label>
-        <input ndsInput id="dd2-dont" type="email" style="border-color: red" />
+        <input ndsInput id="dd2-dont" type="email" class="nds-border-destructive" />
       </div>
     </ng-template>
     <ng-template #tplDoDont3Do>

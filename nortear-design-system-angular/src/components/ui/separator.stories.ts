@@ -88,7 +88,7 @@ export const Playground: Story = {
           <p class="nds-text-body">Seção inferior</p>
         </div>
       } @else {
-        <div class="nds-cluster nds-w-full nds-max-w-md" style="height: 4rem">
+        <div class="nds-cluster nds-w-full nds-max-w-md nds-docs-demo-row">
           <span class="nds-text-body">Item A</span>
           <div ndsSeparator [orientation]="orientation" [decorative]="decorative"></div>
           <span class="nds-text-body nds-text-muted-foreground">Item B</span>

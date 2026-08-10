@@ -28,7 +28,7 @@ export const Variantes: Story = {
   render: () => ({
     props: { variantes: VARIANTES },
     template: `
-      <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center">
+      <div class="nds-cluster" data-spacing="sm">
         @for (v of variantes; track v.variant) {
           <button ndsButton [variant]="v.variant">{{ v.label }}</button>
         }

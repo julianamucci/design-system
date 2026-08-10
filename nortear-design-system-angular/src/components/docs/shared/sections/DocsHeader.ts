@@ -26,7 +26,6 @@ export const DOCS_PAGE_TITLE_ID = 'docs-page-title';
     <header
       class="ds-docs nds-stack nds-border-b-soft"
       data-spacing="md"
-      style="padding-bottom: var(--spacing-6)"
     >
       <div class="nds-cluster" data-spacing="sm">
         <span

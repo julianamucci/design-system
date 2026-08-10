@@ -17,22 +17,25 @@ export const DimensaoCustomizada: Story = {
   render: () => ({
     template: `
       <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster" data-spacing="sm">
-        <div ndsSkeleton style="height: 3rem; width: 3rem; border-radius: 9999px"></div>
+        <div ndsSkeleton data-shape="avatar"></div>
         <div class="nds-stack" data-spacing="xs">
-          <div ndsSkeleton style="height: 1rem; width: 12.5rem"></div>
-          <div ndsSkeleton style="height: 0.75rem; width: 8rem"></div>
+          <div ndsSkeleton data-shape="text" data-width="2-3"></div>
+          <div ndsSkeleton data-shape="text" data-width="1-2"></div>
         </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('A caixa medida é a que o style pediu', async () => {
-      // A dimensão não vem do componente: se alguém mover isso para uma classe
-      // que não existe, o esqueleto colapsa para zero e só a medição acusa.
+    await step('O avatar é um quadrado com medida do tema', async () => {
+      // A medida vem de `data-shape=avatar` -> escada --size-*, que responde à
+      // densidade. Se o atributo sumir, o esqueleto colapsa para zero e só a
+      // medição acusa.
       const circulo = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')[0];
       const caixa = circulo.getBoundingClientRect();
       await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
-      await expect(caixa.width).toBeGreaterThan(40);
+      // Sem número mágico: a medida vem da escada --size-*, que muda por
+      // densidade. Afirmar '40px' amarraria o teste ao tema padrão.
+      await expect(caixa.width).toBeGreaterThan(0);
     });
 
     await step('Todos os esqueletos ficam fora da árvore de acessibilidade', async () => {
@@ -48,8 +51,8 @@ export const ContainerOcupado: Story = {
   render: () => ({
     template: `
       <div role="status" aria-busy="true" aria-label="Carregando resultados" class="nds-stack" data-spacing="sm">
-        <div ndsSkeleton style="height: 1rem; width: 100%"></div>
-        <div ndsSkeleton style="height: 1rem; width: 80%"></div>
+        <div ndsSkeleton data-shape="text" data-width="full"></div>
+        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
       </div>
     `,
   }),
@@ -75,7 +78,7 @@ export const MovimentoReduzido: Story = {
   render: () => ({
     template: `
       <div role="status" aria-busy="true" aria-label="Carregando" class="nds-stack" data-spacing="sm">
-        <div ndsSkeleton style="height: 1rem; width: 15rem"></div>
+        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
       </div>
     `,
   }),

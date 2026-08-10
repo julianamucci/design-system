@@ -184,7 +184,7 @@ const ANATOMY_CODE = `<div class="nds-cluster" data-spacing="sm">
           <button ndsCheckbox id="comp-all" [indeterminate]="true"></button>
           <label ndsLabel for="comp-all">{{ t('demonstration.labels.selectAll') }}</label>
         </div>
-        <div class="nds-stack" style="padding-inline-start: var(--spacing-6)" data-spacing="md">
+        <div class="nds-stack nds-checkbox-sublist" data-spacing="md">
           <div class="nds-cluster" data-spacing="sm">
             <button ndsCheckbox id="comp-all-a" [checked]="true"></button>
             <label ndsLabel for="comp-all-a">{{ t('demonstration.labels.newsletter') }}</label>

@@ -105,11 +105,11 @@ const INTERFACE_CODE = `// <div ndsSkeleton> — diretiva de atributo, sem input
 export class NdsSkeleton {}
 
 // Forma e dimensão vêm do style de quem usa:
-// <div ndsSkeleton style="height: 1rem; width: 15rem"></div>`;
+// <div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
 
-const CODE_LINHA = `<div ndsSkeleton style="height: 1rem; width: 15rem"></div>`;
-const CODE_CIRCULO = `<div ndsSkeleton style="height: 3rem; width: 3rem; border-radius: 9999px"></div>`;
-const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div>`;
+const CODE_LINHA = `<div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
+const CODE_CIRCULO = `<div ndsSkeleton data-shape="avatar"></div>`;
+const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>`;
 
 @Component({
   selector: 'nds-skeleton-docs',
@@ -126,45 +126,45 @@ const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div
   template: `
     <ng-template #tplDoDont1Do>
       <div class="nds-stack nds-w-full" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando artigo">
-        <div ndsSkeleton style="height: 1.25rem; width: 60%"></div>
-        <div ndsSkeleton style="height: 1rem; width: 100%"></div>
-        <div ndsSkeleton style="height: 1rem; width: 85%"></div>
+        <div ndsSkeleton data-shape="heading" data-width="1-2"></div>
+        <div ndsSkeleton data-shape="text" data-width="full"></div>
+        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
       </div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
       <div class="nds-stack nds-w-full" data-spacing="sm">
-        <div ndsSkeleton style="height: 8rem; width: 100%"></div>
+        <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
       <div class="nds-cluster nds-w-full" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando perfil">
-        <div ndsSkeleton style="height: 2.5rem; width: 2.5rem; border-radius: 9999px"></div>
+        <div ndsSkeleton data-shape="avatar"></div>
         <div class="nds-stack" data-spacing="xs">
-          <div ndsSkeleton style="height: 0.875rem; width: 8rem"></div>
-          <div ndsSkeleton style="height: 0.75rem; width: 5rem"></div>
+          <div ndsSkeleton data-shape="text" data-width="1-2"></div>
+          <div ndsSkeleton data-shape="text" data-width="1-3"></div>
         </div>
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
       <div class="nds-cluster nds-w-full" data-spacing="sm">
-        <div ndsSkeleton style="height: 2.5rem; width: 2.5rem; border-radius: 9999px"></div>
+        <div ndsSkeleton data-shape="avatar"></div>
         <div class="nds-stack" data-spacing="xs">
           <p class="nds-text-body">Joana Silva</p>
-          <div ndsSkeleton style="height: 0.75rem; width: 5rem"></div>
+          <div ndsSkeleton data-shape="text" data-width="1-3"></div>
         </div>
       </div>
     </ng-template>
 
     <ng-template #tplVarRectangle>
-      <div ndsSkeleton style="height: 8rem; width: 12rem"></div>
+      <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
     </ng-template>
     <ng-template #tplVarCircle>
-      <div ndsSkeleton style="height: 3rem; width: 3rem; border-radius: 9999px"></div>
+      <div ndsSkeleton data-shape="avatar"></div>
     </ng-template>
     <ng-template #tplVarLine>
       <div class="nds-stack" data-spacing="xs">
-        <div ndsSkeleton style="height: 1rem; width: 15rem"></div>
-        <div ndsSkeleton style="height: 1rem; width: 11rem"></div>
+        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
+        <div ndsSkeleton data-shape="text" data-width="1-2"></div>
       </div>
     </ng-template>
 
@@ -191,9 +191,9 @@ const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div
               </p>
               <div ndsCard class="nds-p-4" role="status" aria-busy="true" aria-label="Carregando cartão">
                 <div class="nds-stack" data-spacing="sm">
-                  <div ndsSkeleton style="height: 8rem; width: 100%"></div>
-                  <div ndsSkeleton style="height: 1.25rem; width: 70%"></div>
-                  <div ndsSkeleton style="height: 1rem; width: 40%"></div>
+                  <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
+                  <div ndsSkeleton data-shape="heading" data-width="2-3"></div>
+                  <div ndsSkeleton data-shape="text" data-width="1-3"></div>
                 </div>
               </div>
             </div>
@@ -205,8 +205,8 @@ const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div
               <div class="nds-stack" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando lista">
                 @for (i of [1, 2, 3]; track i) {
                   <div class="nds-cluster" data-spacing="sm">
-                    <div ndsSkeleton style="height: 2rem; width: 2rem; border-radius: 9999px"></div>
-                    <div ndsSkeleton style="height: 1rem; width: 10rem"></div>
+                    <div ndsSkeleton data-shape="avatar" data-size="sm"></div>
+                    <div ndsSkeleton data-shape="text" data-width="1-2"></div>
                   </div>
                 }
               </div>
@@ -217,7 +217,7 @@ const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div
                 {{ t('demonstration.labels.image') }}
               </p>
               <div role="status" aria-busy="true" aria-label="Carregando imagem">
-                <div ndsSkeleton style="height: 9rem; width: 100%"></div>
+                <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
               </div>
             </div>
 
@@ -226,9 +226,9 @@ const CODE_RETANGULO = `<div ndsSkeleton style="height: 8rem; width: 100%"></div
                 {{ t('demonstration.labels.paragraph') }}
               </p>
               <div class="nds-stack" data-spacing="xs" role="status" aria-busy="true" aria-label="Carregando texto">
-                <div ndsSkeleton style="height: 1rem; width: 100%"></div>
-                <div ndsSkeleton style="height: 1rem; width: 92%"></div>
-                <div ndsSkeleton style="height: 1rem; width: 65%"></div>
+                <div ndsSkeleton data-shape="text" data-width="full"></div>
+                <div ndsSkeleton data-shape="text" data-width="full"></div>
+                <div ndsSkeleton data-shape="text" data-width="2-3"></div>
               </div>
             </div>
           </div>

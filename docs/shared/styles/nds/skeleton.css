@@ -2,10 +2,15 @@
  * ─── nds-skeleton ────────────────────────────────────────────────────────────
  * Placeholder animado durante carregamento de dados.
  *
- *   <div class="nds-skeleton" style="height: 16px; width: 200px"></div>
+ *   <div class="nds-skeleton" data-shape="line" data-width="lg"></div>
  *
- * Default sem dimensão própria — o consumidor define width/height via style
- * ou utilitárias. Pulsa via opacity, respeita prefers-reduced-motion.
+ * O esqueleto imita a CAIXA do conteúdo que vai substituir, então forma e
+ * largura são escolha de quem usa — mas por atributo, não por style inline.
+ * `data-shape` e `data-width` seguem a mesma convenção de `data-spacing` e
+ * `data-size` do resto do sistema, e mantêm a folha de estilo como única dona
+ * das medidas.
+ *
+ * Pulsa via opacity, respeita prefers-reduced-motion.
  *
  * Tokens: --primary (cor de fundo soft), --radius
  */
@@ -16,6 +21,63 @@
   border-radius: var(--radius);
   animation: nds-skeleton-pulse 1.5s var(--ease-standard) infinite;
 }
+
+/*
+ * ─── Forma ───────────────────────────────────────────────────────────────────
+ * O esqueleto NÃO recebe `height`. Guideline 12: altura é resultado, não
+ * medida — sai de padding + tipografia, para o bloco crescer junto quando a
+ * pessoa aumenta a fonte do navegador (WCAG 1.4.4).
+ *
+ * `text` e `heading` derivam da escada de texto: o esqueleto de uma linha tem
+ * que medir o que a linha vai medir depois que o conteúdo chegar, senão o
+ * layout pula na troca.
+ *
+ * `avatar` é a exceção que a própria guideline prevê: peça sem fluxo de texto
+ * tem medida, e ela vem da escada `--size-*`, que responde à densidade.
+ */
+.nds-skeleton[data-shape='text'] {
+  padding-block: calc(var(--text-control) / 2);
+}
+
+.nds-skeleton[data-shape='heading'] {
+  padding-block: calc(var(--text-h4) / 2);
+}
+
+.nds-skeleton[data-shape='avatar'] {
+  inline-size: var(--size-default);
+  block-size: var(--size-default);
+  border-radius: var(--radius-full);
+}
+
+.nds-skeleton[data-shape='avatar'][data-size='sm'] {
+  inline-size: var(--size-sm);
+  block-size: var(--size-sm);
+}
+
+.nds-skeleton[data-shape='avatar'][data-size='lg'] {
+  inline-size: var(--size-lg);
+  block-size: var(--size-lg);
+}
+
+/* Preenche um container que já estabelece a caixa — AspectRatio, célula, slot
+ * de card. É como o esqueleto de mídia deve nascer: quem define a proporção é
+ * o container, não o placeholder. */
+.nds-skeleton[data-shape='fill'] {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/*
+ * ─── Largura ─────────────────────────────────────────────────────────────────
+ * Percentual, não medida fixa: a linha de esqueleto imita um trecho de texto
+ * que quebra junto com o container. Variar a largura entre linhas é o que faz
+ * o bloco parecer parágrafo em vez de tabela.
+ */
+.nds-skeleton[data-width='full']    { inline-size: 100%; }
+.nds-skeleton[data-width='3-4']     { inline-size: 75%;  }
+.nds-skeleton[data-width='2-3']     { inline-size: 66%;  }
+.nds-skeleton[data-width='1-2']     { inline-size: 50%;  }
+.nds-skeleton[data-width='1-3']     { inline-size: 33%;  }
 
 @keyframes nds-skeleton-pulse {
   0%, 100% { opacity: 1;   }

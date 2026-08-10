@@ -10,3 +10,42 @@
   justify-content: center;
   margin-top: var(--spacing-2);                   /* 8px — espaçamento da seção anterior */
 }
+
+/*
+ * ─── nds-docs-demo-row ───────────────────────────────────────────────────────
+ * Linha de demonstração para peças que se esticam na altura do vizinho —
+ * separador vertical, divisória de barra de ferramentas.
+ *
+ * A altura NÃO é fixada: ela nasce do padding em volta do conteúdo, como manda
+ * a guideline 12. Assim a linha cresce junto quando a pessoa aumenta a fonte,
+ * e o separador continua acompanhando.
+ */
+.nds-docs-demo-row {
+  padding-block: var(--spacing-2);
+  /* `--cluster-align` em vez de `align-items`: o .nds-cluster centraliza por
+   * padrão, e é essa variável que ele lê. Sem esticar, o separador vertical
+   * fica com altura zero — some da tela sem quebrar nada. */
+  --cluster-align: stretch;
+}
+
+/*
+ * ─── nds-docs-header-block ───────────────────────────────────────────────────
+ * Cabeçalho da docs page. O respiro antes da primeira seção é espaçamento de
+ * bloco, não altura — por isso vive aqui e não num style inline.
+ */
+.nds-docs-header-block {
+  padding-block-end: var(--spacing-6);
+}
+
+/*
+ * ─── nds-docs-skeleton-media ─────────────────────────────────────────────────
+ * Esqueleto que ocupa o lugar de uma mídia (imagem, thumbnail, capa).
+ *
+ * Define PROPORÇÃO, não altura: a caixa cresce com a largura do container e
+ * acompanha o zoom de fonte, que é o que a guideline 12 pede. Uma altura
+ * cravada aqui congelaria o placeholder enquanto a mídia real se adapta — e o
+ * layout pularia na troca.
+ */
+.nds-docs-skeleton-media {
+  aspect-ratio: 16 / 9;
+}

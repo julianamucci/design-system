@@ -153,7 +153,7 @@ const PROPORCOES = [
     </ng-template>
     <ng-template #tplDoDont2Dont>
       <div class="nds-w-full">
-        <img [src]="img" alt="" style="height: 120px; width: 100%" />
+        <img [src]="img" alt="" class="nds-w-full" />
       </div>
     </ng-template>
 

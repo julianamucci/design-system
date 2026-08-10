@@ -48,7 +48,7 @@ export const IframeEVideo: Story = {
             <iframe
               title="Mapa da sede em Recife"
               src="about:blank"
-              style="width: 100%; height: 100%; border: 0"
+              class="nds-border-none"
             ></iframe>
           </div>
         </div>
@@ -56,7 +56,7 @@ export const IframeEVideo: Story = {
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Vídeo</p>
           <div ndsAspectRatio [ratio]="16 / 9">
-            <video controls style="width: 100%; height: 100%">
+            <video controls>
               <track kind="captions" srclang="pt-BR" label="Português" default />
             </video>
           </div>

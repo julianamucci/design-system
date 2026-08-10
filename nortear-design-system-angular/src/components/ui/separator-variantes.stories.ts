@@ -49,7 +49,7 @@ export const Vertical: Story = {
   parameters: { covers: ['functional.item4', 'visual.item2'] },
   render: () => ({
     template: `
-      <div class="nds-cluster" data-spacing="md" style="height: 3rem">
+      <div class="nds-cluster nds-docs-demo-row" data-spacing="md">
         <span class="nds-text-body">Item A</span>
         <div ndsSeparator orientation="vertical"></div>
         <span class="nds-text-body nds-text-muted-foreground">Item B</span>

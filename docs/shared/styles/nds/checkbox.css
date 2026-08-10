@@ -100,3 +100,13 @@
 .nds-checkbox[aria-checked="true"] .nds-checkbox-indicator > svg {
   animation: nds-indicator-pop var(--duration-fast) var(--ease-entrance);
 }
+
+/*
+ * ─── nds-checkbox-sublist ────────────────────────────────────────────────────
+ * Lista de opções filhas sob um "selecionar todos". O recuo alinha os
+ * checkboxes filhos ao rótulo do pai, e vem da escada de espaçamento (grid de
+ * 8px) — não de medida cravada.
+ */
+.nds-checkbox-sublist {
+  padding-inline-start: var(--spacing-6);
+}

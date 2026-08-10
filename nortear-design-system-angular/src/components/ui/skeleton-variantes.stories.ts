@@ -27,24 +27,24 @@ export const Formas: Story = {
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Retângulo</p>
           <div role="status" aria-busy="true" aria-label="Carregando bloco">
-            <div ndsSkeleton style="height: 6rem; width: 100%"></div>
+            <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
           </div>
         </div>
 
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Avatar circular</p>
           <div role="status" aria-busy="true" aria-label="Carregando avatar">
-            <div ndsSkeleton style="height: 3rem; width: 3rem; border-radius: 9999px"></div>
+            <div ndsSkeleton data-shape="avatar"></div>
           </div>
         </div>
 
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Card de perfil</p>
           <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster" data-spacing="sm">
-            <div ndsSkeleton style="height: 3rem; width: 3rem; border-radius: 9999px"></div>
+            <div ndsSkeleton data-shape="avatar"></div>
             <div class="nds-stack" data-spacing="xs">
-              <div ndsSkeleton style="height: 1rem; width: 9rem"></div>
-              <div ndsSkeleton style="height: 0.75rem; width: 6rem"></div>
+              <div ndsSkeleton data-shape="text" data-width="1-2"></div>
+              <div ndsSkeleton data-shape="text" data-width="1-3"></div>
             </div>
           </div>
         </div>
@@ -54,8 +54,8 @@ export const Formas: Story = {
           <div role="status" aria-busy="true" aria-label="Carregando lista" class="nds-stack" data-spacing="sm">
             @for (i of linhas; track i) {
               <div class="nds-cluster" data-spacing="sm">
-                <div ndsSkeleton style="height: 1.5rem; width: 1.5rem; border-radius: 9999px"></div>
-                <div ndsSkeleton style="height: 0.875rem; width: 8rem"></div>
+                <div ndsSkeleton data-shape="avatar" data-size="sm"></div>
+                <div ndsSkeleton data-shape="text" data-width="1-2"></div>
               </div>
             }
           </div>
@@ -65,7 +65,7 @@ export const Formas: Story = {
           <p class="nds-text-caption nds-text-muted-foreground">Imagem 16:9</p>
           <div role="status" aria-busy="true" aria-label="Carregando imagem">
             <div ndsAspectRatio [ratio]="16 / 9">
-              <div ndsSkeleton style="height: 100%; width: 100%"></div>
+              <div ndsSkeleton data-shape="fill"></div>
             </div>
           </div>
         </div>

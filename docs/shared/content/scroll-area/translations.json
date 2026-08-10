@@ -29,7 +29,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Conteúdo longo */}\n  </ScrollArea>\n</div>",
-        "angular": "<div style=\"height: 400px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Conteúdo longo -->\n  </nds-scroll-area>\n</div>"
+        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Conteúdo longo -->\n  </nds-scroll-area>\n</div>"
       }
     },
     "usage": {
@@ -213,7 +213,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Scroll horizontal — adicionar ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Scroll horizontal — adicionar a barra horizontal explícita -->\n<div style=\"width: 500px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "angular": "<!-- Scroll horizontal — adicionar a barra horizontal explícita -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
       }
     },
     "tokens": {
@@ -436,7 +436,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Long content */}\n  </ScrollArea>\n</div>",
-        "angular": "<div style=\"height: 400px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Long content -->\n  </nds-scroll-area>\n</div>"
+        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Long content -->\n  </nds-scroll-area>\n</div>"
       }
     },
     "usage": {
@@ -620,7 +620,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// Horizontal scroll — add explicit horizontal ScrollBar\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Horizontal scroll — add the explicit horizontal bar -->\n<div style=\"width: 500px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "angular": "<!-- Horizontal scroll — add the explicit horizontal bar -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
       }
     },
     "tokens": {
@@ -843,7 +843,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Contenido largo */}\n  </ScrollArea>\n</div>",
-        "angular": "<div style=\"height: 400px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Contenido largo -->\n  </nds-scroll-area>\n</div>"
+        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Contenido largo -->\n  </nds-scroll-area>\n</div>"
       }
     },
     "usage": {
@@ -1027,7 +1027,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Scroll horizontal — añadir ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Scroll horizontal — añadir la barra horizontal explícita -->\n<div style=\"width: 500px\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "angular": "<!-- Scroll horizontal — añadir la barra horizontal explícita -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
       }
     },
     "tokens": {

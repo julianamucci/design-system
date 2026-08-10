@@ -61,3 +61,15 @@
 .nds-textarea[aria-invalid="true"]:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
 }
+
+/*
+ * ─── nds-textarea-tall ───────────────────────────────────────────────────────
+ * Campo de texto longo — descrição, comentário, observação.
+ *
+ * `rows` já define quantas linhas cabem, e é ele que faz a altura crescer com a
+ * tipografia. Esta classe só solta o redimensionamento vertical, que o default
+ * trava. Sem `height` e sem `min-height`: a altura continua vindo do conteúdo.
+ */
+.nds-textarea-tall {
+  resize: vertical;
+}

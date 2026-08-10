@@ -66,3 +66,16 @@
     transition: none;
   }
 }
+
+/*
+ * ─── nds-scroll-area-md ──────────────────────────────────────────────────────
+ * Altura de leitura para uma área rolável — lista longa, log, painel lateral.
+ *
+ * Aqui a medida é legítima: a região rolável precisa de um limite para haver
+ * rolagem, e ele não depende de tipografia. Usa `max-block-size`, não `height`,
+ * para a caixa continuar encolhendo quando há pouco conteúdo, e o valor vem da
+ * escada de espaçamento (grid de 8px).
+ */
+.nds-scroll-area-md {
+  max-block-size: var(--spacing-96, calc(var(--spacing-base) * 96));
+}

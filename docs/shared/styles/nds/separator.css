@@ -23,5 +23,29 @@
 
 .nds-separator[data-orientation="vertical"] {
   width: 1px;
-  height: 100%;
+  /* `align-self: stretch` e não `height: 100%`: a porcentagem só resolve
+   * quando o pai tem altura DEFINIDA, e vira 0 quando a altura nasce do
+   * conteúdo — que é como o sistema constrói altura (guideline 12). Com
+   * stretch o divisor acompanha a linha do flex nos dois casos, então o
+   * exemplo continua funcionando sem ninguém cravar altura no container. */
+  align-self: stretch;
+  height: auto;
+}
+
+/*
+ * ─── Modificadores ───────────────────────────────────────────────────────────
+ * `strong` para separar blocos de peso diferente — fim de seção contra troca de
+ * assunto. A espessura sobe um degrau e a cor ganha intenção; continua sem
+ * altura cravada, porque quem estica é o `align-self` acima.
+ */
+.nds-separator[data-emphasis="strong"] {
+  background-color: hsl(var(--primary) / 0.2);
+}
+
+.nds-separator[data-emphasis="strong"][data-orientation="horizontal"] {
+  height: 2px;
+}
+
+.nds-separator[data-emphasis="strong"][data-orientation="vertical"] {
+  width: 2px;
 }

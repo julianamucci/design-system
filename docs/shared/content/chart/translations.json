@@ -30,7 +30,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Vendas trimestrais\"\n/>",
-        "angular": "<!-- ngx-echarts sobre a mesma option do buildBarOption compartilhado -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  style=\"height: 300px; width: 100%\"\n  aria-label=\"Vendas trimestrais\"\n/>"
+        "angular": "<!-- ngx-echarts sobre a mesma option do buildBarOption compartilhado -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  class=\"nds-docs-skeleton-media\"\n  aria-label=\"Vendas trimestrais\"\n/>"
       }
     },
     "usage": {
@@ -452,7 +452,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Quarterly sales\"\n/>",
-        "angular": "<!-- ngx-echarts over the same option from the shared buildBarOption -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  style=\"height: 300px; width: 100%\"\n  aria-label=\"Vendas trimestrais\"\n/>"
+        "angular": "<!-- ngx-echarts over the same option from the shared buildBarOption -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  class=\"nds-docs-skeleton-media\"\n  aria-label=\"Vendas trimestrais\"\n/>"
       }
     },
     "usage": {
@@ -874,7 +874,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Ventas trimestrales\"\n/>",
-        "angular": "<!-- ngx-echarts sobre la misma option del buildBarOption compartido -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  style=\"height: 300px; width: 100%\"\n  aria-label=\"Vendas trimestrais\"\n/>"
+        "angular": "<!-- ngx-echarts sobre la misma option del buildBarOption compartido -->\n<nds-chart\n  [option]=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  class=\"nds-docs-skeleton-media\"\n  aria-label=\"Vendas trimestrais\"\n/>"
       }
     },
     "usage": {
