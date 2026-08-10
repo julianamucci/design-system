@@ -137,3 +137,28 @@ When `*Docs.tsx` iterates `translations[locale].props.<group>.items` directly (b
 - **`seo.title` in translations.json must NOT contain "· Design System"** — `useSeoEffect` appends it.
 - **Stories of variations/states must set `parameters.controls.disable: true`** when there are no `argTypes`, otherwise the Controls panel is empty.
 - **Vue docs read locale from `useTranslation()`** (not Pinia / `useLocaleStore`) — historic crash.
+- **Never give an interactive primitive a fixed `height`** — button, input, textarea, label, badge, select. Height is a *result* of `padding-block` + `line-height`, so the component grows with the browser font size (WCAG 1.4.4, Resize Text 200%). `--height-*` tokens stay valid for containers (cards, modals, sidebar) and for icons, which have no text to grow.
+- **In coloured containers, running text is always `--foreground`** — alert, badge, callout, banner, toast. Icon and title may carry the semantic colour (short elements, 3:1 threshold); description and body copy may not, because semantic colour over a soft background rarely reaches the 4.5:1 that long text requires. Contrast must never depend on which variant was chosen.
+- **Guidelines carry no implementation code** — `nortear-design-system-*/guidelines/*.md` hold purpose, textual structure (ASCII tree), tables of props/flags/events, usage rules and a11y. Compilable code ages faster in a guideline than in the component it describes. Canonical model: `## DataTable` in `08-display-components.md`. Cross-cutting guidelines (`01-acessibilidade`, `09-seguranca-xss`) may show a snippet that illustrates a *rule*, never a component API.
+- **User-facing wording is plain Portuguese** — "Espécimes" was rejected in favour of "Exemplos visuais". Internal code names may keep the technical term; what the reader sees may not.
+- **The theme toolbar needs a module-level channel listener** — in react/vue/svelte `preview.ts`, applying `tema-*` / `densidade-*` / `fonte-*` classes only through a decorator + `useEffect` never reverts to Default: those renderers skip the decorator re-render when the toolbar returns to `defaultValue`. Subscribe to `GLOBALS_UPDATED` and `SET_GLOBALS` at module level, guarded by `typeof document !== 'undefined'`.
+- **Every event in `analytics.table.*` must exist typed in `AnalyticsEvents`** — the docs pages *are* the consuming product, so components inside them fire real product events. Payloads carry stable values (slug, `side`, `variant`), never translated text, which would split one event into three in GA4.
+
+## Cross-Stack Source Of Truth
+
+**Vanilla is the reference.** In any divergence of markup, `.nds-*` classes or behaviour, the other four stacks align to it. React, Vue and Svelte run a headless lib (`@base-ui` / `reka-ui` / `bits-ui`) that injects its own markup and state attributes, which hides shadcn residue inherited from before the `.nds-*` migration. Vanilla has no lib: what is there is what the design system actually defines, and every divergence investigated so far ended with Vanilla right. React was the reference in the shadcn + Tailwind era — the migration inverted that.
+
+Exception: divergence in **framework API** (prop name, composition shape, event syntax) has no source of truth. Record it instead of "aligning".
+
+## Working Rules
+
+Process rules, each learned from a concrete failure. They bind the orchestrator and every subagent.
+
+- **The repository is public.** Never commit measurement IDs, tokens or credentials — GA4 IDs live in `manager-head.html`, which is why that file must not carry a real ID in a commit.
+- **Close every known pendency of a component in the same pass.** When a component is under review, resolve all of its open items across the five stacks; do not record them in `FIXES-NEEDED.md` and move on. Only a decision that is genuinely the user's may stay open, and it is asked for on the spot. The goal is finishing the list with every component correct in every stack.
+- **Fix everything, then test once in a block.** Apply all fixes in scope before any run, run the block once, re-fix only the failures, re-run only those. No bidirectional proofs by default, no per-page gate probes, no canary per slug, no "just to confirm" re-runs. Parallel agents are allowed only with a clean partition (one stack each, zero shared files).
+- **Run vitest in the foreground**, `Bash` timeout 600000. Background runs have been killed silently three times on this machine: no node process, no result file, the agent waits forever. Redirect to a scratchpad file if the output needs parsing.
+- **Never `git stash` while agents share the repo.** The stash is global — one agent's `pop` destroys another's entry, and uncommitted work disappears. To compare against a baseline, copy the file to the scratchpad and restore it, or use a separate worktree. The scratchpad is shared too: prefix filenames with the stack name.
+- **Stage only your own paths.** `git add -A` sweeps in whatever a concurrent session left in the tree.
+- **An intermittent failure never closes as "does not reproduce".** It closes as fixed, or it stays open. Measure in pairs on the same machine (`git checkout HEAD~1 -- <stack>`, run, restore, run). An axe contrast violation with a ratio near 1.0 and near-identical colours is an element mid-fade, not a bad palette — the fix is making the play wait for it to settle, never `a11y.test: 'todo'`.
+- **Commit when a task closes**, without asking; one commit per subject. Push still requires an explicit request. Branch first if on the default branch.
