@@ -11,6 +11,10 @@
 
 .nds-chart {
   width: 100%;
+  /* Piso do container. Grafico sem altura colapsa para zero, e o piso
+   * estava inline em Vue e Svelte, fora do tema e fora da folha. 200px e o
+   * mesmo default que a factory do Vanilla ja usava. */
+  min-height: 12.5rem;
   overflow: hidden;
 }
 

@@ -61,6 +61,7 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `dead_lib_reference` | menciona Radix/shadcn/Basecoat/Tailwind — libs que saíram do projeto. **Radix NG é exceção**: `@radix-ng/primitives` é a lib ATUAL do Angular, e a regra a distingue por lookahead. "Radix" solto continua sendo o morto |
 | `dead_lib_in_infra` | mesmo vocabulário nas skills, guidelines, skill-refs e CSS compartilhado. Sai sob a chave `_infra` (slug-independente): é a infra que **gera** componente novo, e o vocabulário sumia do código para sobreviver nas instruções que o recriam. Menção que registra a remoção ("resíduo do shadcn", "nenhuma lib atual expõe") não conta; dívida já mapeada usa `<!-- audit-ignore: dead-lib — motivo -->` no próprio arquivo |
 | `unknown_token_reference` | token documentado que não existe em nenhum CSS — customização inerte |
+| `inline_style_design_value` | valor de design cravado em `style` inline dentro de `components/ui` — inline vence a folha, então a declaração sai do tema, da densidade e da escala, e `height` cravado é o defeito de WCAG 1.4.4. Só propriedade que existe como token (dimensão, espaço, tipografia, cor, raio, sombra, opacidade): `position`, `display`, `transform`, `contain`, `object-fit` e afins são mecânica e não contam. Valor mecânico (`auto`, `100%`, `0`), valor dinâmico e `var(--…)` também não. **high** em primitivo, **medium** em andaime `*Story.*`. Comentário é removido antes da varredura — o docblock do chart traz `style="height: 16rem"` como exemplo de uso |
 | `play_nao_idempotente` | clique seguido de asserção de estado no MESMO alvo. O painel Interactions reexecuta a play no mesmo DOM: na segunda rodada o clique parte do estado que a primeira deixou e inverte o resultado. O vitest remonta a cada teste, então a suíte fica verde enquanto o painel falha — é defeito que só regra pega |
 | `document_lang_so_no_pai` · `document_lang_ausente` | `useSeoEffect` escreve `documentElement.lang` só no documento pai (ou não escreve). Sai sob `_infra`: é regra de presença, e o alvo é o hook, não a página. O leitor de tela lê o iframe — sem isso, o idioma anunciado é o do template do Storybook |
 | `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
@@ -95,7 +96,7 @@ consumiu dezesseis commits.
 
 **Grep** (1): higiene `.nds-*` — `nds-text-h[1-4][^"']*nds-(font-(bold|semibold)|tracking-tight)|nds-text-body[^"']*nds-text-foreground|<h2[^>]*nds-text-h3` em `nortear-design-system-*/src/components/docs/*Docs.*`
 
-**Grep** (1): style inline em docs — `style=\{\{|style="` em `nortear-design-system-*/src/components/docs/*Docs.*` (exceto stories; criar utility `.nds-*` em vez de inline)
+**Grep** (1): style inline em docs — `style=\{\{|style="` em `nortear-design-system-*/src/components/docs/*Docs.*` (exceto stories; criar utility `.nds-*` em vez de inline). **Só docs**: o lado `components/ui` virou a regra `inline_style_design_value` do `audit.mjs` e não precisa de grep. As docs ficaram fora dela de propósito — misturam estilo renderizado com snippet exibido ao leitor (o `padding-bottom: 56.25%` do AspectRatio é o truque antigo sendo demonstrado), e separar os dois por regex não é confiável. Aqui o julgamento é seu.
 
 Após coletar, **não releia** nada nos passos seguintes.
 

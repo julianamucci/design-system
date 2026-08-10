@@ -48,16 +48,10 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   nativeInput.setAttribute('aria-hidden', 'true');
   nativeInput.tabIndex = -1;
   if (id) nativeInput.id = `${id}-native`;
-  // Visually hidden but participates in form submission.
-  nativeInput.style.position = 'absolute';
-  nativeInput.style.width = '1px';
-  nativeInput.style.height = '1px';
-  nativeInput.style.padding = '0';
-  nativeInput.style.margin = '-1px';
-  nativeInput.style.overflow = 'hidden';
-  nativeInput.style.clip = 'rect(0,0,0,0)';
-  nativeInput.style.whiteSpace = 'nowrap';
-  nativeInput.style.border = '0';
+  // Visually hidden but participates in form submission. `.nds-sr-only`
+  // (utilities.css) e exatamente este conjunto de declaracoes — reimplementar
+  // inline saia do tema e duplicava a regra em dois arquivos.
+  nativeInput.classList.add('nds-sr-only');
 
   const indicator = document.createElement('span');
   indicator.dataset.slot = 'checkbox-indicator';

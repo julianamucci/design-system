@@ -1985,6 +1985,123 @@ function auditI18nKeys(slug) {
  * Se a docs page não as menciona, a superfície é invisível: medido antes desta
  * regra, 5 de 9 componentes com vars locais não documentavam nenhuma.
  */
+/**
+ * Propriedades cujo valor é DECISÃO DE DESIGN — as que existem como token.
+ *
+ * O resto (`position`, `display`, `overflow`, `transform`, `contain`,
+ * `object-fit`, `user-select`, `visibility`, `z-index`…) é mecânica de layout
+ * ou de comportamento: inline ali não burla token nenhum, e proibir geraria
+ * ruído em `display: none` de factory e `transform` de posicionamento.
+ */
+const INLINE_DESIGN_PROPS = new Set([
+  'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
+  'block-size', 'inline-size', 'max-block-size', 'max-inline-size',
+  'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+  'padding-block', 'padding-inline', 'padding-block-start', 'padding-block-end',
+  'padding-inline-start', 'padding-inline-end',
+  'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+  'margin-block', 'margin-inline', 'gap', 'row-gap', 'column-gap',
+  'font-size', 'line-height', 'font-weight', 'letter-spacing',
+  'color', 'background', 'background-color', 'border-color', 'fill', 'stroke',
+  'border', 'border-width', 'border-radius', 'box-shadow', 'opacity',
+]);
+
+// `auto`, `100%`, `0` e afins são preenchimento mecânico, não medida escolhida.
+const INLINE_MECHANICAL_VALUE =
+  /^(0|0px|0rem|auto|none|inherit|initial|unset|revert|100%|fit-content|max-content|min-content|currentcolor|transparent)$/i;
+// Só interessa quantidade concreta: 2rem, 16px, 50%, #fff, hsl(...).
+const INLINE_QUANTITY = /(^|[\s(])-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)|^#[0-9a-f]{3,8}$|^(rgb|hsl)a?\(/i;
+// Valor vindo de prop/estado/token não é literal cravado.
+const INLINE_DYNAMIC = /\$\{|\{[^}]*\}|`|v-bind|\bprops\.|\bargs\.|var\(/;
+
+const kebab = (s) => s.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
+
+/**
+ * `stripComments` já cuida de `//` e `/* *​/` sem comer string. Falta o
+ * comentário de marcação, que é onde .vue e .svelte guardam o exemplo de uso —
+ * o docblock do chart traz `<ChartContainer style="height: 16rem" />`, e sem
+ * este passo a regra acusaria a própria documentação. Auditor que aponta
+ * comentário perde a confiança de quem lê o relatório.
+ * Substitui preservando quebras de linha, para o número da linha continuar certo.
+ */
+function stripMarkupComments(src) {
+  return src.replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, ' '));
+}
+
+/** Declarações inline de um arquivo, nas sintaxes que as cinco stacks usam. */
+function inlineStyleDecls(content) {
+  const out = [];
+  stripMarkupComments(stripComments(content)).split('\n').forEach((linha, i) => {
+    const push = (prop, valor) => {
+      const nome = kebab(String(prop).trim().replace(/['"]/g, ''));
+      const v = String(valor).trim().replace(/['"]/g, '');
+      if (!INLINE_DESIGN_PROPS.has(nome)) return;
+      if (INLINE_MECHANICAL_VALUE.test(v)) return;
+      if (INLINE_DYNAMIC.test(v)) return;
+      if (!INLINE_QUANTITY.test(v)) return;
+      out.push({ line: i + 1, decl: `${nome}: ${v}` });
+    };
+    const pares = (txt) => {
+      for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3]);
+    };
+
+    // style={{ height: '2rem' }} — jsx
+    if (/style=\{\{/.test(linha)) pares(linha);
+    // :style="{ minHeight: '200px' }" — vue com objeto ligado
+    for (const m of linha.matchAll(/:style=(["'])\s*\{([\s\S]*?)\}\s*\1/g)) pares(m[2]);
+    // style="a: 1rem; b: 2rem" — vue, svelte, angular, html
+    for (const m of linha.matchAll(/(?<!:)style=(["'])([^"']*)\1/g)) {
+      if (m[2].trim().startsWith('{')) continue;         // objeto, já tratado acima
+      for (const d of m[2].split(';')) {
+        const [p, ...r] = d.split(':');
+        if (p && r.length) push(p, r.join(':'));
+      }
+    }
+    // el.style.height = '2rem' — factories vanilla
+    for (const m of linha.matchAll(/\.style\.([a-zA-Z]+)\s*=\s*(["'])([^"']*)\2/g)) push(m[1], m[3]);
+  });
+  return out;
+}
+
+/**
+ * Valor de design cravado em `style` inline dentro de `components/ui`.
+ *
+ * Inline vence qualquer folha, então a declaração fica fora do tema, fora da
+ * densidade e fora da escala tipográfica — e `height` cravado é o defeito de
+ * WCAG 1.4.4 que a convenção de altura já proíbe. Medido ao criar a regra:
+ * 18 em primitivo e 148 em andaime de story, estes últimos todos no Svelte,
+ * o que por si só é divergência cross-stack.
+ *
+ * FORA DE ESCOPO, de propósito: docs pages. Elas misturam estilo renderizado
+ * com snippet de código exibido ao leitor (o `padding-bottom: 56.25%` do
+ * AspectRatio é o truque antigo sendo demonstrado), e separar os dois por
+ * regex não é confiável. O grep manual do passo 1 da skill `quality` continua
+ * cobrindo esse lado.
+ */
+function auditInlineStyle(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      if (/\.stories\./.test(file)) continue;
+      const content = readFile(file);
+      if (!content) continue;
+      const decls = inlineStyleDecls(content);
+      if (!decls.length) continue;
+      // Andaime de demo tem peso menor que o primitivo, mas é o que as pessoas
+      // copiam — por isso entra, em vez de ser ignorado.
+      const andaime = /Story\.[a-z]+$/i.test(basename(file));
+      const amostra = [...new Set(decls.map((d) => d.decl))].slice(0, 3).join(' · ');
+      violations.push({
+        category: 'quality', severity: andaime ? 'medium' : 'high', slug, stack,
+        file: relative(ROOT, file), rule: 'inline_style_design_value',
+        message: `${decls.length} valor(es) de design em style inline (linha ${decls[0].line}: ${amostra}) — inline vence a folha e sai do tema, da densidade e da escala; use classe .nds-* ou token`,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditComponentVars(slug) {
   const violations = [];
   const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
@@ -2242,6 +2359,7 @@ function runAudit(slug, category) {
     ...auditTaxonomy(slug),
     ...auditI18nKeys(slug),
     ...auditComponentVars(slug),
+    ...auditInlineStyle(slug),
   ];
 }
 

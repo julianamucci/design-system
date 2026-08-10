@@ -25,7 +25,6 @@ const delegatedProps = reactiveOmit(props, 'class')
         class="nds-cluster"
         data-justify="center"
         data-align="center"
-        style="padding-block: 2.5rem"
       >
         <slot />
       </div>

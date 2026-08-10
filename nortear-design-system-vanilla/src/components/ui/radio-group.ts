@@ -84,15 +84,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     nativeInput.tabIndex = -1;
     // Hidden native input — kept as sibling (not nested inside the button)
     // to satisfy WCAG/axe nested-interactive rule.
-    nativeInput.style.position = 'absolute';
-    nativeInput.style.width = '1px';
-    nativeInput.style.height = '1px';
-    nativeInput.style.padding = '0';
-    nativeInput.style.margin = '-1px';
-    nativeInput.style.overflow = 'hidden';
-    nativeInput.style.clip = 'rect(0,0,0,0)';
-    nativeInput.style.whiteSpace = 'nowrap';
-    nativeInput.style.border = '0';
+    nativeInput.classList.add('nds-sr-only');
 
     const labelEl = document.createElement('label');
     labelEl.id = labelId;

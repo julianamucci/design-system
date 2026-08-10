@@ -100,7 +100,6 @@ const containerRole = computed(() => (accessibleLabel.value ? 'img' : undefined)
     data-slot="chart"
     :role="containerRole"
     :class="containerClass"
-    :style="{ minHeight: '200px' }"
   >
     <VChart
       :key="themeKey"
