@@ -58,3 +58,6 @@ nortear-ds-core-*.tgz
 .claude/scheduled_tasks.lock
 .history/
 scratch/
+
+# Diário da revisão serial — local, não versionado
+.revisao/

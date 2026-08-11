@@ -2623,6 +2623,121 @@ function auditFoundationLabels() {
   return violations;
 }
 
+/**
+ * Propriedades cuja customização a doc costuma prometer por classe.
+ */
+const PROP_CUSTOMIZAVEL =
+  /(?:^|[;{\s])(width|max-width|min-width|height|max-height|min-height|padding|margin|background|background-color|color|border-radius|border-bottom-width)\s*:/g;
+
+/** Especificidade "duas ou mais": nenhuma classe única vence. */
+function selecaoForte(sel) {
+  const classes = (sel.match(/\./g) ?? []).length;
+  const attrs = (sel.match(/\[/g) ?? []).length;
+  return classes + attrs >= 2;
+}
+
+/**
+ * A doc promete customizar por classe o que o CSS não deixa.
+ *
+ * Bateu quatro vezes num bloco só — sheet, hover-card, drawer e sidebar — e o
+ * conserto foi sempre o mesmo: expor custom property. O sintoma é a regra do
+ * componente ser `(0,2,0)` ou vir depois do `utilities.css`, e a escotilha que
+ * a documentação publica ser inerte.
+ *
+ * A precisão vem do CRUZAMENTO, não da varredura: só flagra propriedade que o
+ * `tokens.customizationCode` promete por classe E que o CSS fixa em seletor
+ * forte sem `var(--…)`. Sozinha, a varredura do CSS rende 23 achados e quase
+ * todos são mecânica interna — `input` de 1px do sr-only, filete de separador,
+ * tamanho de ícone —, que ninguém quer customizar.
+ */
+function auditPromessaDeCustomizacao(slug) {
+  const violations = [];
+  const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(cssFile) || !existsSync(contentFile)) return violations;
+
+  let cc = null;
+  try {
+    const j = JSON.parse(readFile(contentFile) || '{}');
+    cc = j['pt-BR']?.tokens?.customizationCode ?? null;
+  } catch { return violations; }
+  if (!cc) return violations;
+
+  const snippet = typeof cc === 'string' ? cc : Object.values(cc).join('\n');
+  // A promessa é por PROPRIEDADE **e** ELEMENTO. Casar só o nome da propriedade
+  // rende falso positivo em todos os casos medidos: a doc do input-otp promete
+  // a largura do slot e o CSS fixa a do ícone do separador; a do radio-group
+  // promete a do controle e o CSS fixa a do input sr-only de 1px. Mesmo nome,
+  // elementos diferentes.
+  const prometidas = new Map();   // classe .nds-* -> Set(propriedades)
+  let alvo = null;
+  for (const linha of snippet.split('\n')) {
+    const seletor = linha.match(/\.(nds-[a-z0-9-]+)[^{]*\{/);
+    if (seletor) { alvo = seletor[1]; continue; }
+    if (linha.includes('}')) { alvo = null; continue; }
+    if (!alvo || /--[a-z]/.test(linha)) continue;
+    for (const m of linha.matchAll(PROP_CUSTOMIZAVEL)) {
+      if (!prometidas.has(alvo)) prometidas.set(alvo, new Set());
+      prometidas.get(alvo).add(m[1]);
+    }
+  }
+  if (!prometidas.size) return violations;
+
+  const css = stripComments(readFile(cssFile) || '');
+  for (const bloco of css.matchAll(/(^|\})\s*([^{}]+)\{([^}]*)\}/g)) {
+    const sel = bloco[2].trim().split(',')[0].trim();
+    if (!sel.startsWith('.nds-') || !selecaoForte(sel)) continue;
+
+    for (const d of bloco[3].matchAll(/^\s*([a-z-]+)\s*:\s*([^;]+);/gm)) {
+      const [, prop, valor] = d;
+      // A classe prometida tem que aparecer NO seletor que bloqueia.
+      const casa = [...prometidas].some(([classe, props]) =>
+        props.has(prop) && new RegExp(`\\.${classe}\\b`).test(sel));
+      if (!casa) continue;
+      if (/var\(--/.test(valor)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack: 'shared',
+        file: relative(ROOT, cssFile), rule: 'customization_blocked_by_specificity',
+        message: `a doc promete customizar \`${prop}\` por classe, mas \`${sel}\` a fixa em seletor que nenhuma classe única vence — exponha uma custom property (como --sheet-width e --hover-card-width) ou tire a promessa do snippet`,
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * `transform: translate(...)` e a propriedade `translate` no mesmo arquivo.
+ *
+ * São propriedades DIFERENTES e elas se COMPÕEM em vez de uma vencer: a paleta
+ * de comando dentro de um diálogo levava −100% na horizontal e saía quase fora
+ * da tela. O projeto padronizou a propriedade `translate` para centralizar.
+ *
+ * Limite conhecido, e escrito porque a regra parece maior do que é: o caso real
+ * era entre DOIS arquivos (`dialog.css` centralizava, `command.css` deslocava o
+ * mesmo elemento). Saber quais seletores casam o mesmo elemento exige análise de
+ * CSS que esta regra não faz. Aqui só o mesmo arquivo é coberto — é a parte
+ * barata e determinística, não a garantia inteira.
+ */
+function auditTranslateComposto() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+  for (const nome of readdirSync(dir)) {
+    if (!nome.endsWith('.css')) continue;
+    const css = stripComments(readFile(join(dir, nome)) || '');
+    const propriedade = /^\s*translate\s*:/m.test(css);
+    const funcao = /transform\s*:[^;]*\btranslate/.test(css);
+    if (propriedade && funcao) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, join(dir, nome)), rule: 'translate_composto',
+        message: 'usa a propriedade `translate` E `transform: translate(...)` no mesmo arquivo — elas se compõem em vez de uma vencer, e foi assim que a paleta de comando saiu da tela; padronize na propriedade `translate`',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditComponentVars(slug) {
   const violations = [];
   const cssFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
@@ -2903,6 +3018,7 @@ function runAudit(slug, category) {
     ...auditInlineStyle(slug),
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
+    ...auditPromessaDeCustomizacao(slug),
   ];
 }
 
@@ -2987,7 +3103,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
