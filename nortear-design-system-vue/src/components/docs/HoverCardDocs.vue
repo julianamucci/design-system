@@ -403,8 +403,7 @@ const a11yCritCols = computed(() => ({
         class="nds-grid nds-w-full"
         data-cols="2"
         data-spacing="lg"
-        style="--grid-min: 16rem"
-        style="contain: layout; min-height: 160px;"
+        style="--grid-min: 16rem; contain: layout; min-height: 160px;"
       >
         <!-- User profile -->
         <div
