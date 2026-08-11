@@ -157,7 +157,7 @@ export function IconsDocs() {
         {/* ── Como usar ────────────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
           <h2 className="nds-text-h2 nds-text-foreground">{t('howToUse.title')}</h2>
-          <div className="nds-grid" data-spacing="md" data-min="18rem">
+          <div className="nds-grid" data-spacing="md" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">{t('howToUse.individual.title')}</p>
               <pre className="nds-docs-code">
@@ -176,7 +176,7 @@ export function IconsDocs() {
         {/* ── Acessibilidade ───────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
           <h2 className="nds-text-h2 nds-text-foreground">{t('accessibility.title')}</h2>
-          <div className="nds-grid" data-spacing="sm" data-min="18rem">
+          <div className="nds-grid" data-spacing="sm" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">
                 {t('accessibility.decorative.title')}

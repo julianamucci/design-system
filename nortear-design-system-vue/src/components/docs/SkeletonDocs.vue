@@ -266,7 +266,7 @@ const visualTestItems = computed(() => [
         class="nds-grid nds-w-full"
         data-cols="2"
         data-spacing="lg"
-        data-min="16rem"
+        style="--grid-min: 16rem"
       >
         <!-- Card de perfil -->
         <div

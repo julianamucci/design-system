@@ -248,7 +248,7 @@ const CODE_ACTION = `<div ndsCardHeader>
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="17rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 17rem">
             <div ndsCard>
               <div ndsCardHeader>
                 <h3 ndsCardTitle>{{ t('demonstration.labels.productTitle') }}</h3>

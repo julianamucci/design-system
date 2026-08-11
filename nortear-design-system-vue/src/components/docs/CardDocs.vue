@@ -396,7 +396,7 @@ const visualTestItems = computed(() => [
         class="nds-w-full nds-grid"
         data-cols="2"
         data-spacing="md"
-        data-min="18rem"
+        style="--grid-min: 18rem"
       >
         <Card>
           <CardHeader>

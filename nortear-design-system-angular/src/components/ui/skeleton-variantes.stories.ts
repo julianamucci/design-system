@@ -23,7 +23,7 @@ export const Shapes: Story = {
   render: () => ({
     props: { linhas: [1, 2, 3, 4, 5] },
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="15rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 15rem">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Retângulo</p>
           <div role="status" aria-busy="true" aria-label="Carregando bloco">

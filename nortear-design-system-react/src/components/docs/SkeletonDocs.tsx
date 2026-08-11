@@ -164,7 +164,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style={{ '--grid-min': '16rem' } as React.CSSProperties}>
           {/* Card de perfil */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">

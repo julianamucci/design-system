@@ -447,12 +447,12 @@ track('docs_page_view', {
               <h3
                 v-if="subGroup(ex.value)!.title"
                 class="nds-text-h3 nds-text-foreground"
-                v-html="DOMPurify.sanitize(subGroup(ex.value)!.title)"
+                v-html="DOMPurify.sanitize(subGroup(ex.value)!.title ?? '')"
               />
               <p
                 v-if="subGroup(ex.value)!.body"
                 class="nds-text-body nds-leading-relaxed"
-                v-html="DOMPurify.sanitize(subGroup(ex.value)!.body)"
+                v-html="DOMPurify.sanitize(subGroup(ex.value)!.body ?? '')"
               />
               <Table v-if="subGroup(ex.value)!.cols">
                 <TableHeader>

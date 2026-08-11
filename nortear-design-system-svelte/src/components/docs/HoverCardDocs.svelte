@@ -194,7 +194,7 @@ interface HoverCardContentProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" data-min="16rem">
+    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style="--grid-min: 16rem">
       <!-- Profile preview -->
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">

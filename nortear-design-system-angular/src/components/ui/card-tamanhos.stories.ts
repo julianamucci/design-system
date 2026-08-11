@@ -19,7 +19,7 @@ export const Sizes: Story = {
   parameters: { covers: ['functional.item5', 'visual.item1', 'visual.item2'] },
   render: () => ({
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
         <div ndsCard size="default">
           <div ndsCardHeader>
             <h3 ndsCardTitle>Default</h3>

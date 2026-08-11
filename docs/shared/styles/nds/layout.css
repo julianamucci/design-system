@@ -201,11 +201,18 @@
  * cresce até preencher; quantas colunas cabem é calculado pelo navegador.
  * Não usa media query.
  *
- *   <div class="nds-grid" data-min="20rem" data-spacing="md">
+ *   <div class="nds-grid" style="--grid-min: 20rem" data-spacing="md">
  *     <Card />  <Card />  <Card />
  *   </div>
  *
  *   data-cols="2" força no máximo 2 colunas (até a viewport quebrar).
+ *
+ * A largura mínima é CUSTOM PROPERTY, não atributo. Este comentário já
+ * prometeu `data-min="20rem"`, e nenhuma regra lia isso: 32 marcações em quatro
+ * stacks renderizavam com o padrão de 16rem sem ninguém notar, e as páginas
+ * novas do Angular copiaram o atributo inerte justamente porque estava
+ * documentado aqui. Fazer o atributo funcionar exigiria `attr()` para valor
+ * não-textual, que ainda não é portável, ou uma lista fixa de valores.
  *
  * Tokens: --grid-gap, --grid-min
  */

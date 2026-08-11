@@ -217,7 +217,7 @@ const TIPOS = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="sm">
               <label ndsLabel for="demo-default">{{ t('demonstration.labels.defaultLabel') }}</label>
               <input ndsInput id="demo-default" type="text" [placeholder]="t('demonstration.labels.defaultPlaceholder')" />

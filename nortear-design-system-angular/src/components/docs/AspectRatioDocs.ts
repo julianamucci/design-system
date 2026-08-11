@@ -189,7 +189,7 @@ const PROPORCOES = [
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="13rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 13rem">
             @for (p of demoProporcoes(); track p.key) {
               <div class="nds-stack" data-spacing="sm">
                 <p class="nds-text-caption nds-text-muted-foreground">{{ p.label }}</p>

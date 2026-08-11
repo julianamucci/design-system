@@ -31,7 +31,7 @@ export const Ratios: Story = {
   render: () => ({
     props: { proporcoes: PROPORCOES, src: IMG_PLACEHOLDER },
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="12rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 12rem">
         @for (p of proporcoes; track p.nome) {
           <div class="nds-stack" data-spacing="sm">
             <p class="nds-text-caption nds-text-muted-foreground">{{ p.nome }}</p>

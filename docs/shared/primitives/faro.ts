@@ -98,10 +98,20 @@ const FORA_DO_FARO = new Set([
   'field_blur',
 ]);
 
+/**
+ * Parâmetro de função é CONTRAVARIANTE: uma função que aceita
+ * `Record<string, unknown>` NÃO é atribuível a partir do `initializeFaro` real,
+ * que exige `BrowserConfig` com `app` obrigatório. Com o tipo estreito o vanilla
+ * não compilava (`tsc` roda sobre o `.storybook/` lá) e as outras stacks só
+ * passavam porque o valor chegava como `any`. Mesma armadilha já resolvida no
+ * `sidebar-i18n`.
+ */
 export type PecasDoFaro = {
-  initializeFaro: (config: Record<string, unknown>) => FaroMinimo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initializeFaro: (config: any) => FaroMinimo;
   getWebInstrumentations: () => unknown[];
-  TracingInstrumentation: new () => unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TracingInstrumentation: new (...args: any[]) => unknown;
 };
 
 export type OpcoesFaro = {

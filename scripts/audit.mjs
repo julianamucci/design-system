@@ -2649,6 +2649,25 @@ function auditComponentVars(slug) {
   return violations;
 }
 
+/**
+ * Páginas de GALERIA: catálogo visual, não documentação de componente.
+ *
+ * Não têm as 15 seções porque não deveriam ter — não há anatomia, variante nem
+ * tabela de props num mostruário. Sem esta dispensa a regra rendia 108 achados
+ * (60 em icons, 48 em theme-colors) nas cinco stacks, 7% de todo o relatório.
+ *
+ * O custo não era o volume: ruído constante ensina a ignorar a regra, e aí ela
+ * para de proteger no dia em que um componente de verdade perder uma seção.
+ *
+ * Declarado com motivo, no mesmo espírito do `SEM_TRADUCAO` da sidebar — quem
+ * acrescentar uma galeria escolhe entre documentar como componente ou justificar
+ * aqui.
+ */
+const GALERIAS = {
+  icons: 'catálogo dos 2021 ícones lucide — busca e grade, sem API própria',
+  'theme-colors': 'mostruário das paletas por tema; a doc do sistema de temas é a foundation page',
+};
+
 function auditQuality(slug) {
   const violations = [];
   // A seção é obrigatória se, e só se, existir a chave correspondente no
@@ -2686,6 +2705,7 @@ function auditQuality(slug) {
         new RegExp(`\\b(id=|id:\\s*)['"\\\`]${id}['"\\\`]`).test(content);
 
       for (const id of REQUIRED_SECTIONS) {
+        if (GALERIAS[slug]) break;
         if (!hasSection(id)) {
           violations.push({
             category: 'quality', severity: 'medium', slug, stack,

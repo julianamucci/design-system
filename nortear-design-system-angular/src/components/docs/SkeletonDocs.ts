@@ -184,7 +184,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.card') }}

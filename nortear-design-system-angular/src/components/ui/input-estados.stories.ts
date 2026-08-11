@@ -100,7 +100,7 @@ export const Types: Story = {
       ],
     },
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="14rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 14rem">
         @for (t of tipos; track t.id) {
           <div class="nds-stack" data-spacing="sm">
             <label ndsLabel [for]="t.id">{{ t.label }}</label>

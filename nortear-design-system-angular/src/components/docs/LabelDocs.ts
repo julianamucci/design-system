@@ -175,7 +175,7 @@ const CODE_DEFAULT = `<label ndsLabel for="nome">Nome completo</label>
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.default') }}

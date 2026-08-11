@@ -208,8 +208,7 @@ interface HoverCardContentProps {
           className="nds-grid nds-w-full"
           data-cols="2"
           data-spacing="lg"
-          data-min="16rem"
-          style={{ contain: "layout", minHeight: 160 }}
+          style={{ "--grid-min": "16rem", contain: "layout", minHeight: 160 } as React.CSSProperties}
         >
           {/* Profile preview */}
           <div

@@ -216,7 +216,7 @@ interface InputOTPProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+    <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 18rem">
       <!-- 6 dígitos -->
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">

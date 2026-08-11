@@ -41,7 +41,7 @@ export const IframeAndVideo: Story = {
   parameters: { covers: ['accessibility.item3', 'accessibility.item4'] },
   render: () => ({
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Iframe</p>
           <div ndsAspectRatio [ratio]="16 / 9">

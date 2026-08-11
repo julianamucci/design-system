@@ -178,7 +178,7 @@
     <!-- ── Como usar ────────────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
       <h2 class="nds-text-h2 nds-text-foreground">{$tStore('howToUse.title')}</h2>
-      <div class="nds-grid" data-spacing="md" data-min="18rem">
+      <div class="nds-grid" data-spacing="md" style="--grid-min: 18rem">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">{$tStore('howToUse.individual.title')}</p>
           <pre class="nds-docs-code"><code>{`import Search from '@lucide/svelte/icons/search';
@@ -198,7 +198,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
     <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
       <h2 class="nds-text-h2 nds-text-foreground">{$tStore('accessibility.title')}</h2>
-      <div class="nds-grid" data-spacing="sm" data-min="18rem">
+      <div class="nds-grid" data-spacing="sm" style="--grid-min: 18rem">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">
             {$tStore('accessibility.decorative.title')}

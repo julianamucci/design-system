@@ -403,7 +403,7 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="16rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="xs">
               <p id="demo-pag-titulo" class="nds-text-body nds-font-semibold">
                 {{ t('demonstration.labels.groupLabel') }}

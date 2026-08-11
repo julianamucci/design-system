@@ -292,7 +292,7 @@ const TOKENS_MAP: { chave: string; token: string; seletor: string }[] = [
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 18rem">
             <div class="nds-stack" data-spacing="sm">
               <span id="demo-6-label" class="nds-text-label">{{ t('demonstration.labels.sixDigits') }}</span>
               <nds-input-otp aria-labelledby="demo-6-label" [maxLength]="6"></nds-input-otp>

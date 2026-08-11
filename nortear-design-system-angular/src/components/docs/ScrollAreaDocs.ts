@@ -349,7 +349,7 @@ const CAMINHOS: Record<string, string> = {
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 18rem">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground nds-m-0">
                 {{ t('demonstration.labels.verticalTitle') }}

@@ -180,7 +180,7 @@ export class NdsSeparator {
       <ng-container docsMain>
         <!-- 1. Demonstração -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-grid nds-w-full" data-spacing="lg" data-min="18rem">
+          <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 18rem">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.horizontal') }}

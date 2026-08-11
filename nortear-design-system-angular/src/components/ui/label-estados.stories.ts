@@ -71,7 +71,7 @@ export const WithInput: Story = {
   parameters: { covers: ['visual.item1', 'visual.item2', 'visual.item3', 'visual.item4'] },
   render: () => ({
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" data-min="14rem">
+      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 14rem">
         <div class="nds-stack" data-spacing="sm">
           <label ndsLabel for="par-default">Nome completo</label>
           <input class="nds-input" id="par-default" type="text" />

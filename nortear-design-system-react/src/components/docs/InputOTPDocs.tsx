@@ -258,8 +258,7 @@ interface InputOTPProps {
         <div
           className="nds-grid nds-w-full"
           data-spacing="lg"
-          data-min="18rem"
-          style={{ contain: "layout", minHeight: 160 }}
+          style={{ "--grid-min": "18rem", contain: "layout", minHeight: 160 } as React.CSSProperties}
         >
           {/* 6 dígitos */}
           <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>

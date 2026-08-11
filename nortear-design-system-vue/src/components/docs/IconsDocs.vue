@@ -200,7 +200,7 @@ onUnmounted(() => {
         <div
           class="nds-grid"
           data-spacing="md"
-          data-min="18rem"
+          style="--grid-min: 18rem"
         >
           <div
             class="nds-stack"
@@ -239,7 +239,7 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         <div
           class="nds-grid"
           data-spacing="sm"
-          data-min="18rem"
+          style="--grid-min: 18rem"
         >
           <div
             class="nds-stack"

@@ -405,7 +405,7 @@ const a11yCritCols = computed(() => ({
       <div
         class="nds-grid nds-w-full"
         data-spacing="lg"
-        data-min="18rem"
+        style="--grid-min: 18rem"
       >
         <!-- 6 dígitos -->
         <div

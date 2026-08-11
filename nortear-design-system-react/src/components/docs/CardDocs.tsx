@@ -344,7 +344,7 @@ interface CardProps extends React.ComponentProps<"div"> {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="nds-w-full nds-grid" data-cols="2" data-spacing="md" data-min="18rem">
+        <div className="nds-w-full nds-grid" data-cols="2" data-spacing="md" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
           {previewProductCard}
           {previewMetricCard}
           {previewProfileCard}
