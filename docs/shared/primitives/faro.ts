@@ -65,6 +65,8 @@ type FaroMinimo = {
       atributos?: Record<string, string>,
       opcoes?: { triggerName?: string },
     ) => unknown;
+    getActiveUserAction?: () => unknown;
+    pushEvent?: (nome: string, atributos?: Record<string, string>) => void;
   };
 };
 
@@ -166,8 +168,8 @@ export function marcarStory(id: string): void {
  */
 export function registrarAcao(evento: string, params?: Record<string, unknown>): void {
   if (FORA_DO_FARO.has(evento)) return;
-  const acao = instancia?.api?.startUserAction;
-  if (!acao) return;
+  const api = instancia?.api;
+  if (!api?.startUserAction) return;
 
   const atributos: Record<string, string> = {};
   for (const [chave, valor] of Object.entries(params ?? {})) {
@@ -175,5 +177,23 @@ export function registrarAcao(evento: string, params?: Record<string, unknown>):
     atributos[chave] = String(valor);
   }
 
-  acao(evento, atributos, { triggerName: 'analyticsTrack' });
+  // Só UMA ação pode estar ativa por vez: com outra rodando, `startUserAction`
+  // devolve `undefined` e o Faro loga "Attempted to create a new user action
+  // while one is already running". Medido no navegador — a primeira de cada
+  // rajada vencia e as demais sumiam, chegando só no GA4.
+  //
+  // A janela da ação fica aberta enquanto houver atividade, então uma
+  // interação que dispara dois eventos (o do observer e o do componente), ou
+  // dois cliques seguidos, caem sempre nesse caso. Não é excepcional, é o
+  // comum.
+  //
+  // Aqui o evento vira `pushEvent`, que é bufferizado pela ação corrente e sai
+  // com o bloco `action` dela: continua chegando ao Grafana e correlacionado,
+  // em vez de virar erro de console.
+  if (api.getActiveUserAction?.()) {
+    api.pushEvent?.(evento, atributos);
+    return;
+  }
+
+  api.startUserAction(evento, atributos, { triggerName: 'analyticsTrack' });
 }
