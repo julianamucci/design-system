@@ -84,3 +84,7 @@
 .nds-shadow-sm   { box-shadow: var(--elevation-sm); }
 .nds-shadow-md   { box-shadow: var(--elevation-md); }
 .nds-shadow-lg   { box-shadow: var(--elevation-lg); }
+/* Nível 4 da escada (tooltip/toast/hover-card). Faltava: a página de Elevação
+ * é o único lugar que desenha os cinco degraus lado a lado, e sem esta regra o
+ * degrau mais alto ficava sem utilitário — só alcançável por style inline. */
+.nds-shadow-xl   { box-shadow: var(--elevation-xl); }

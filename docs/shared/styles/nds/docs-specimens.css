@@ -1,0 +1,142 @@
+/*
+ * ─── nds-*-specimen ─ Amostras visuais das páginas de Foundations ────────────
+ *
+ * As páginas de escala (Espaçamento, Elevação, Motion) precisam mostrar o token
+ * APLICADO, e não descrito. Nas outras stacks essas amostras nascem de style
+ * inline (`el.style.width = 'var(--spacing-4)'`), porque lá o valor é escolhido
+ * item a item num laço de JS.
+ *
+ * Aqui as medidas viram regra: o conjunto de degraus é FECHADO (13 tokens de
+ * spacing, 5 de elevação, 6 de duração), então cada degrau tem seletor próprio
+ * por `data-*` — o mesmo mecanismo que `data-spacing` e `data-size` já usam no
+ * resto do sistema. Nenhum valor é literal: tudo sai de var(--spacing-*),
+ * var(--elevation-*) e var(--duration-*), então a amostra acompanha densidade,
+ * tema e prefers-reduced-motion sem código extra.
+ *
+ * Escopo: só as docs pages de Foundations. Não use estas classes em componente.
+ */
+
+/* ─── Espaçamento ─────────────────────────────────────────────────────────── */
+
+/* Coluna do nome do token — largura fixa para as barras começarem alinhadas.
+ * Sem ela cada linha começa num x diferente e a escala deixa de ser legível. */
+.nds-spacing-scale-name {
+  inline-size: 8rem;
+}
+
+/* A barra é gráfico puro (aria-hidden): a altura NÃO cresce com a fonte de
+ * propósito — o que ela mede é a largura. Cor, raio e shrink vêm dos
+ * utilitários no markup (nds-bg-primary / nds-rounded-sm / nds-shrink-0). */
+.nds-spacing-bar {
+  block-size: var(--spacing-4);
+}
+.nds-spacing-bar[data-token="px"]  { inline-size: var(--spacing-px); }
+.nds-spacing-bar[data-token="0-5"] { inline-size: var(--spacing-0-5); }
+.nds-spacing-bar[data-token="1"]   { inline-size: var(--spacing-1); }
+.nds-spacing-bar[data-token="2"]   { inline-size: var(--spacing-2); }
+.nds-spacing-bar[data-token="4"]   { inline-size: var(--spacing-4); }
+.nds-spacing-bar[data-token="6"]   { inline-size: var(--spacing-6); }
+.nds-spacing-bar[data-token="8"]   { inline-size: var(--spacing-8); }
+.nds-spacing-bar[data-token="10"]  { inline-size: var(--spacing-10); }
+.nds-spacing-bar[data-token="12"]  { inline-size: var(--spacing-12); }
+.nds-spacing-bar[data-token="14"]  { inline-size: var(--spacing-14); }
+.nds-spacing-bar[data-token="16"]  { inline-size: var(--spacing-16); }
+.nds-spacing-bar[data-token="20"]  { inline-size: var(--spacing-20); }
+.nds-spacing-bar[data-token="24"]  { inline-size: var(--spacing-24); }
+
+/* ─── Elevação, bordas e sombras ──────────────────────────────────────────── */
+
+/* Grades das amostras. `--grid-min` é a única coisa que muda em relação ao
+ * .nds-grid genérico — o `data-min` que o comentário do layout.css sugere não
+ * tem regra que o leia, então o ajuste mora aqui. */
+.nds-elevation-grid {
+  --grid-min: 8rem;
+  /* Fundo levemente acinzentado: sombra sobre branco puro some no tema claro. */
+  background-color: hsl(var(--muted) / 0.2);
+}
+.nds-radius-grid {
+  --grid-min: 8rem;
+}
+.nds-radius-nested-grid {
+  --grid-min: 12rem;
+}
+
+/* Legenda do token dentro do cartão de amostra — menor que caption para não
+ * competir com o nível de elevação, que é o assunto. */
+.nds-specimen-token-code {
+  font-size: var(--text-control-xs);
+}
+
+/* ─── Motion ──────────────────────────────────────────────────────────────── */
+
+/* Escada de durações: a mesma distância percorrida em cada degrau. O
+ * deslocamento é disparado por CLIQUE (data-played), nunca em laço — amostra
+ * que se move sozinha muda a foto do Chromatic a cada rodada e faz o axe medir
+ * contraste de um elemento no meio da transição. */
+.nds-motion-ladder-chip {
+  inline-size: fit-content;
+  transform: translateX(0);
+  transition-property: transform;
+  transition-timing-function: var(--ease-standard);
+  transition-duration: var(--duration-base);
+}
+.nds-motion-ladder-chip[data-duration="instant"]  { transition-duration: var(--duration-instant); }
+.nds-motion-ladder-chip[data-duration="fast"]     { transition-duration: var(--duration-fast); }
+.nds-motion-ladder-chip[data-duration="base"]     { transition-duration: var(--duration-base); }
+.nds-motion-ladder-chip[data-duration="moderate"] { transition-duration: var(--duration-moderate); }
+.nds-motion-ladder-chip[data-duration="slow"]     { transition-duration: var(--duration-slow); }
+.nds-motion-ladder-chip[data-duration="stately"]  { transition-duration: var(--duration-stately); }
+.nds-motion-ladder-chip[data-played="true"] {
+  transform: translateX(12rem);
+}
+
+/* Área de demonstração: altura mínima para o conteúdo não pular quando um
+ * filho sai. Mínima, não fixa — o bloco cresce com a fonte do navegador. */
+.nds-motion-demo {
+  min-block-size: 9rem;
+}
+.nds-motion-demo[data-clip="true"]     { overflow: hidden; }
+.nds-motion-demo[data-align="center"]  { align-items: center; }
+
+/* Elemento arrastável. O deslocamento chega por custom property (o valor é
+ * escolha de quem arrasta, não medida de design), com fallback para o repouso —
+ * então em pé, sem interação, o elemento está exatamente no centro. */
+.nds-motion-drag {
+  touch-action: none;
+  user-select: none;
+  transform: translate(var(--nds-drag-x, 0px), var(--nds-drag-y, 0px))
+             scale(var(--nds-drag-scale, 1));
+}
+
+/* Entrada em cascata. A classe só é aplicada DEPOIS do primeiro clique em
+ * Reproduzir: na primeira pintura os itens estão parados e opacos, e é essa a
+ * imagem que o Chromatic e o axe veem. */
+@keyframes nds-motion-stagger-in {
+  from { opacity: 0; transform: translateY(var(--motion-offset-sm)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nds-motion-stagger-item {
+  animation-name: nds-motion-stagger-in;
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-entrance);
+  animation-fill-mode: both;
+  animation-delay: var(--nds-stagger-delay, 0ms);
+}
+
+/* Presence — entrada e saída do elemento que o `@if` cria e remove. As duas
+ * classes são passadas ao `animate.enter` / `animate.leave` do Angular; nas
+ * outras stacks o mesmo par é aplicado pelo mecanismo de transição de lá. */
+@keyframes nds-motion-presence-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes nds-motion-presence-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+.nds-motion-presence-enter {
+  animation: nds-motion-presence-in var(--duration-base) var(--ease-entrance) both;
+}
+.nds-motion-presence-leave {
+  animation: nds-motion-presence-out var(--duration-fast) var(--ease-exit) both;
+}

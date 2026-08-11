@@ -209,3 +209,10 @@
   pointer-events: none;
   transition: opacity var(--duration-fast);
 }
+/* Estado explícito, no lugar de `style.opacity` escrito pelo JS. As stacks que
+ * renderizam por template (Angular) não têm onde pendurar o style inline sem
+ * quebrar a regra de "nenhum CSS inline" — e uma classe de estado é o que o
+ * resto deste arquivo já usa (.is-visible, .is-hidden). */
+.nds-icon-tile-tooltip.is-visible {
+  opacity: 1;
+}
