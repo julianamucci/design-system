@@ -12,6 +12,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
+import DOMPurify from 'dompurify';
 
 const props = defineProps<{
   /** Slug do componente em translations (ex. "foundations/tipografia"). */
@@ -261,7 +262,7 @@ track('docs_page_view', {
 
         <p
           class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
-          v-html="t('description')"
+          v-html="DOMPurify.sanitize(t('description'))"
         />
       </header>
 
@@ -283,24 +284,24 @@ track('docs_page_view', {
           <h2
             v-if="sec.title"
             class="nds-text-h2 nds-text-foreground"
-            v-html="sec.title"
+            v-html="DOMPurify.sanitize(sec.title)"
           />
           <p
             v-if="sec.subtitle"
             class="nds-text-body"
-            v-html="sec.subtitle"
+            v-html="DOMPurify.sanitize(sec.subtitle)"
           />
         </div>
 
         <p
           v-if="sec.body"
           class="nds-text-body nds-leading-relaxed nds-max-w-prose"
-          v-html="sec.body"
+          v-html="DOMPurify.sanitize(sec.body)"
         />
         <p
           v-if="sec.audience"
           class="nds-text-body nds-leading-relaxed nds-max-w-prose"
-          v-html="sec.audience"
+          v-html="DOMPurify.sanitize(sec.audience)"
         />
 
         <!-- Table (cols + rows) — o componente Table já provê .nds-table-wrapper -->
@@ -324,7 +325,7 @@ track('docs_page_view', {
                 v-for="(cell, ci) in row"
                 :key="ci"
               >
-                <span v-html="cell" />
+                <span v-html="DOMPurify.sanitize(cell)" />
               </TableCell>
             </TableRow>
           </TableBody>
@@ -348,10 +349,10 @@ track('docs_page_view', {
                   v-if="itemTitle(item.value)"
                   as="h3"
                 >
-                  <span v-html="itemTitle(item.value)" />
+                  <span v-html="DOMPurify.sanitize(itemTitle(item.value))" />
                 </CardTitle>
                 <CardDescription v-if="itemBody(item.value)">
-                  <span v-html="itemBody(item.value)" />
+                  <span v-html="DOMPurify.sanitize(itemBody(item.value))" />
                 </CardDescription>
               </CardHeader>
               <CardContent
@@ -363,7 +364,7 @@ track('docs_page_view', {
                   v-for="ex in itemExtras(item.value)"
                   :key="ex.key"
                   class="nds-text-caption nds-text-muted-foreground nds-m-0"
-                  v-html="ex.value"
+                  v-html="DOMPurify.sanitize(ex.value)"
                 />
               </CardContent>
             </Card>
@@ -377,7 +378,7 @@ track('docs_page_view', {
               v-for="item in itemEntries(sec.items)"
               :key="item.key"
               class="nds-text-body nds-leading-relaxed nds-accent-start"
-              v-html="itemBody(item.value)"
+              v-html="DOMPurify.sanitize(itemBody(item.value))"
             />
           </ul>
         </template>
@@ -392,7 +393,7 @@ track('docs_page_view', {
             v-for="rule in rulesEntries(sec.rules)"
             :key="rule.key"
             class="nds-text-body nds-leading-relaxed nds-accent-start"
-            v-html="rule.value"
+            v-html="DOMPurify.sanitize(rule.value)"
           />
         </ul>
 
@@ -408,7 +409,7 @@ track('docs_page_view', {
             <h3
               v-if="ex.key.endsWith('Title')"
               class="nds-text-h3 nds-text-foreground"
-              v-html="ex.value"
+              v-html="DOMPurify.sanitize(ex.value)"
             />
             <div
               v-else-if="ex.key.endsWith('Code')"
@@ -416,13 +417,13 @@ track('docs_page_view', {
             >
               <span
                 class="nds-whitespace-pre"
-                v-html="ex.value"
+                v-html="DOMPurify.sanitize(ex.value)"
               />
             </div>
             <p
               v-else
               class="nds-text-body nds-leading-relaxed"
-              v-html="ex.value"
+              v-html="DOMPurify.sanitize(ex.value)"
             />
           </template>
           <template v-else-if="Array.isArray(ex.value)">
@@ -433,7 +434,7 @@ track('docs_page_view', {
               <li
                 v-for="(v, i) in ex.value"
                 :key="i"
-                v-html="String(v)"
+                v-html="DOMPurify.sanitize(String(v))"
               />
             </ul>
           </template>
@@ -446,12 +447,12 @@ track('docs_page_view', {
               <h3
                 v-if="subGroup(ex.value)!.title"
                 class="nds-text-h3 nds-text-foreground"
-                v-html="subGroup(ex.value)!.title"
+                v-html="DOMPurify.sanitize(subGroup(ex.value)!.title)"
               />
               <p
                 v-if="subGroup(ex.value)!.body"
                 class="nds-text-body nds-leading-relaxed"
-                v-html="subGroup(ex.value)!.body"
+                v-html="DOMPurify.sanitize(subGroup(ex.value)!.body)"
               />
               <Table v-if="subGroup(ex.value)!.cols">
                 <TableHeader>
@@ -473,7 +474,7 @@ track('docs_page_view', {
                       v-for="(cell, ci) in row"
                       :key="ci"
                     >
-                      <span v-html="cell" />
+                      <span v-html="DOMPurify.sanitize(cell)" />
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -487,7 +488,7 @@ track('docs_page_view', {
                   v-for="it in subGroup(ex.value)!.list"
                   :key="it.key"
                   class="nds-text-body nds-leading-relaxed nds-accent-start"
-                  v-html="it.value"
+                  v-html="DOMPurify.sanitize(it.value)"
                 />
               </ul>
               <div
@@ -509,10 +510,10 @@ track('docs_page_view', {
                       v-if="itemTitle(item.value)"
                       :as="subGroup(ex.value)!.title ? 'h4' : 'h3'"
                     >
-                      <span v-html="itemTitle(item.value)" />
+                      <span v-html="DOMPurify.sanitize(itemTitle(item.value))" />
                     </CardTitle>
                     <CardDescription v-if="itemBody(item.value)">
-                      <span v-html="itemBody(item.value)" />
+                      <span v-html="DOMPurify.sanitize(itemBody(item.value))" />
                     </CardDescription>
                   </CardHeader>
                   <CardContent
@@ -524,7 +525,7 @@ track('docs_page_view', {
                       v-for="ext in itemExtras(item.value)"
                       :key="ext.key"
                       class="nds-text-caption nds-text-muted-foreground nds-m-0"
-                      v-html="ext.value"
+                      v-html="DOMPurify.sanitize(ext.value)"
                     />
                   </CardContent>
                 </Card>

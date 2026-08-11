@@ -18,6 +18,7 @@ import { getLocale, createTranslation } from '@/lib/i18n';
 import { DOCS_PAGE_TITLE_ID } from './sections/DocsHeader';
 import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
+import DOMPurify from 'dompurify';
 import {
   createCard,
   createCardHeader,
@@ -544,11 +545,11 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
     badgeCategory.textContent = t('category');
     badgeType.textContent = t('type');
     h1.textContent = t('title');
-    desc.innerHTML = t('description');
+    desc.innerHTML = DOMPurify.sanitize(t('description'));
 
     textRefs.forEach(({ el, key, html }) => {
       const val = t(key, '');
-      if (html) el.innerHTML = val;
+      if (html) el.innerHTML = DOMPurify.sanitize(val);
       else el.textContent = val;
     });
     tableCols.forEach(({ heads, keys }) => {
@@ -558,7 +559,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
     });
     tableRows.forEach(({ cells, keys }) => {
       cells.forEach((c, i) => {
-        c.innerHTML = t(keys[i], '');
+        c.innerHTML = DOMPurify.sanitize(t(keys[i], ''));
       });
     });
   }

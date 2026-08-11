@@ -3,6 +3,7 @@
   import FoundationPage from './shared/FoundationPage.svelte';
   import { useTranslation } from '@/lib/i18n';
   import translations from '@shared/content/foundations/tipografia/translations.json';
+  import DOMPurify from 'dompurify';
 
   // translations é import estático; tStore continua reativo ao locale.
   const { tStore } = untrack(() => useTranslation(translations));
@@ -26,7 +27,7 @@
         <h2 class="nds-m-0">{$tStore('specimens.h2')}</h2>
         <h3 class="nds-m-0">{$tStore('specimens.h3')}</h3>
         <h4 class="nds-m-0">{$tStore('specimens.h4')}</h4>
-        <p class="nds-m-0 nds-text-foreground">{@html $tStore('specimens.body')}</p>
+        <p class="nds-m-0 nds-text-foreground">{@html DOMPurify.sanitize($tStore('specimens.body'))}</p>
         <label class="nds-block nds-text-foreground">{$tStore('specimens.label')}</label>
       </div>
     </section>

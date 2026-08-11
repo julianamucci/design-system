@@ -7,6 +7,7 @@ import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import DOMPurify from 'dompurify';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
 
@@ -188,6 +189,11 @@ export function createIconsDocs(): HTMLElement {
 
     const iconWrap = document.createElement('span');
     iconWrap.className = 'nds-icon-tile-svg';
+    // SVG estático montado de constantes do próprio módulo: `SVG_OPEN` é literal
+    // aqui em cima e `ICON_SVG_INNER` é derivado do pacote `lucide` em tempo de
+    // build. Não há conteúdo dinâmico nem entrada externa no caminho — é o caso
+    // que a guideline 09 chama de "SVG inline hardcoded". Sanitizar aqui não
+    // removeria nada e rodaria o DOMPurify uma vez por ícone do catálogo inteiro.
     iconWrap.innerHTML = `${SVG_OPEN}${ICON_SVG_INNER[name]}</svg>`;
 
     const nameLabel = document.createElement('span');
@@ -360,7 +366,7 @@ export function createIconsDocs(): HTMLElement {
     a11yTitle.textContent = t('accessibility.title');
     decorativeTitle.textContent = t('accessibility.decorative.title');
     functionalTitle.textContent = t('accessibility.functional.title');
-    a11yRules.forEach((el, i) => { el.innerHTML = t(`accessibility.rule${i + 1}`); });
+    a11yRules.forEach((el, i) => { el.innerHTML = DOMPurify.sanitize(t(`accessibility.rule${i + 1}`)); });
     grid.querySelectorAll<HTMLSpanElement>('[data-tooltip-for]').forEach((tip) => {
       tip.textContent = t('copy.tooltip');
     });

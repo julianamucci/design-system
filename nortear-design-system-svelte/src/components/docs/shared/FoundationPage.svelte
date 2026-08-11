@@ -13,6 +13,7 @@
   import { track } from '@/lib/analytics';
   import { mountDocsTracking } from '@/lib/docs-tracking';
   import FoundationSection from './FoundationSection.svelte';
+  import DOMPurify from 'dompurify';
 
   type Props = {
     translations: Record<string, unknown>;
@@ -94,7 +95,7 @@
       </h1>
 
       <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
-        {@html $tStore('description')}
+        {@html DOMPurify.sanitize($tStore('description'))}
       </p>
     </header>
 

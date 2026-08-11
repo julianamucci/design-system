@@ -7,7 +7,9 @@
    *
    * Não tenta cobrir 100% dos formatos — apenas os shapes recorrentes em
    * docs/shared/content/foundations/*. Strings com HTML simples (<code>, <strong>)
-   * usam @html porque o conteúdo é controlado pelo design system.
+   * usam @html, sempre com DOMPurify.sanitize() no próprio call site — o conteúdo
+   * vem do JSON compartilhado, e defesa em profundidade vale mesmo para conteúdo
+   * do time (guideline 09).
    */
   import {
     Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
@@ -15,6 +17,7 @@
   import {
     Card, CardHeader, CardTitle, CardDescription, CardContent,
   } from '@/components/ui/card';
+  import DOMPurify from 'dompurify';
 
   type Props = {
     node: unknown;
@@ -135,12 +138,12 @@
 
 {#snippet renderValue(value: unknown, depth: number)}
   {#if isString(value)}
-    <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
+    <p class="nds-text-body nds-leading-relaxed">{@html DOMPurify.sanitize(value)}</p>
   {:else if isArray(value)}
     {#if value.every((v) => isString(v))}
       <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
         {#each value as item, i (i)}
-          <li>{@html item}</li>
+          <li>{@html DOMPurify.sanitize(item)}</li>
         {/each}
       </ul>
     {:else}
@@ -182,11 +185,11 @@
                 <TableRow>
                   {#if isRowArray(row)}
                     {#each row as cell, ci (ci)}
-                      <TableCell>{@html String(cell)}</TableCell>
+                      <TableCell>{@html DOMPurify.sanitize(String(cell))}</TableCell>
                     {/each}
                   {:else if isObject(row)}
                     {#each cellsOfObjectRow(row, table.cols) as cell, ci (ci)}
-                      <TableCell>{@html cell}</TableCell>
+                      <TableCell>{@html DOMPurify.sanitize(cell)}</TableCell>
                     {/each}
                   {/if}
                 </TableRow>
@@ -199,9 +202,9 @@
                igual aos renderers das demais stacks -->
         {:else if key === 'title' && isString(value)}
           {@const Tag = headingTag(depth)}
-          <svelte:element this={Tag} class="{headingClass(depth)}">{@html value}</svelte:element>
+          <svelte:element this={Tag} class="{headingClass(depth)}">{@html DOMPurify.sanitize(value)}</svelte:element>
         {:else if (key === 'subtitle' || key === 'body' || key === 'description' || key === 'intro' || key === 'audience' || key === 'note') && isString(value)}
-          <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
+          <p class="nds-text-body nds-leading-relaxed">{@html DOMPurify.sanitize(value)}</p>
         {:else if key === 'items' && isObject(value)}
           {@const itemsAreCards = Object.values(value).some((v) => v !== null && typeof v === 'object')}
           {#if itemsAreCards}
@@ -211,16 +214,16 @@
                 <Card>
                   <CardHeader>
                     {#if itemTitle(item)}
-                      <CardTitle as="h3">{@html itemTitle(item)}</CardTitle>
+                      <CardTitle as="h3">{@html DOMPurify.sanitize(itemTitle(item))}</CardTitle>
                     {/if}
                     {#if itemBody(item)}
-                      <CardDescription>{@html itemBody(item)}</CardDescription>
+                      <CardDescription>{@html DOMPurify.sanitize(itemBody(item))}</CardDescription>
                     {/if}
                   </CardHeader>
                   {#if itemExtras(item).length}
                     <CardContent class="nds-stack" data-spacing="xs">
                       {#each itemExtras(item) as [exKey, exVal] (exKey)}
-                        <p class="nds-text-caption nds-text-muted-foreground nds-m-0">{@html exVal}</p>
+                        <p class="nds-text-caption nds-text-muted-foreground nds-m-0">{@html DOMPurify.sanitize(exVal)}</p>
                       {/each}
                     </CardContent>
                   {/if}
@@ -230,7 +233,7 @@
           {:else}
             <ul class="nds-stack nds-list-none" data-spacing="md">
               {#each entries(value) as [itemKey, item] (itemKey)}
-                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
+                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html DOMPurify.sanitize(String(item))}</li>
               {/each}
             </ul>
           {/if}
@@ -239,7 +242,7 @@
           <ul class="nds-stack nds-list-none" data-spacing="md">
             {#each (isArray(value) ? value : Object.values(value)) as rule, i (i)}
               {#if isString(rule)}
-                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html rule}</li>
+                <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html DOMPurify.sanitize(rule)}</li>
               {/if}
             {/each}
           </ul>
@@ -247,27 +250,27 @@
           <ul class="nds-list-disc nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
             {#each value as item, i (i)}
               {#if isString(item)}
-                <li>{@html item}</li>
+                <li>{@html DOMPurify.sanitize(item)}</li>
               {:else if isObject(item) && isString(item.title)}
-                <li><strong>{item.title}</strong>{#if isString(item.body)} — {@html item.body}{/if}</li>
+                <li><strong>{item.title}</strong>{#if isString(item.body)} — {@html DOMPurify.sanitize(item.body)}{/if}</li>
               {/if}
             {/each}
           </ul>
         {:else if isString(value)}
           <!-- `*Title` → h3, `*Code` → bloco de código, resto → parágrafo (sem rótulo de chave) -->
           {#if key.endsWith('Title')}
-            <h3 class="nds-text-h3 nds-text-foreground">{@html value}</h3>
+            <h3 class="nds-text-h3 nds-text-foreground">{@html DOMPurify.sanitize(value)}</h3>
           {:else if key.endsWith('Code')}
-            <div class="nds-docs-code"><span class="nds-whitespace-pre">{@html value}</span></div>
+            <div class="nds-docs-code"><span class="nds-whitespace-pre">{@html DOMPurify.sanitize(value)}</span></div>
           {:else}
-            <p class="nds-text-body nds-leading-relaxed">{@html value}</p>
+            <p class="nds-text-body nds-leading-relaxed">{@html DOMPurify.sanitize(value)}</p>
           {/if}
         {:else if (isArray(value) || isObject(value)) && (isArray(value) ? value : Object.values(value)).every((x) => typeof x === 'string') && (isArray(value) ? value : Object.values(value)).length > 0}
           <!-- mapa/array puro de strings (ex.: usage.ranges) → lista de acento,
                igual React/Vue — sem heading inventado, sem parágrafos soltos -->
           <ul class="nds-stack nds-list-none" data-spacing="md">
             {#each (isArray(value) ? value : Object.values(value)) as item, i (i)}
-              <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html String(item)}</li>
+              <li class="nds-text-body nds-leading-relaxed nds-accent-start">{@html DOMPurify.sanitize(String(item))}</li>
             {/each}
           </ul>
         {:else if isArray(value) || isObject(value)}
