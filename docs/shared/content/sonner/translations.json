@@ -51,7 +51,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "// Setup no root (uma vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalhes\" })\ntoast(\"Título\", { action: { label: \"Desfazer\", onClick: fn } })\ntoast.promise(promessa, { loading: \"...\", success: \"...\", error: \"...\" })",
-        "angular": "<!-- Setup no root (uma vez) — ngx-sonner -->\n<nds-toaster position=\"top-right\" [richColors]=\"true\" />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success('Título');\ntoast.success('Título', { description: 'Detalhes' });\ntoast('Título', { action: { label: 'Desfazer', onClick: fn } });\ntoast.promise(promessa, { loading: '...', success: '...', error: '...' });"
+        "angular": "<!-- Uma vez, na raiz da aplicação -->\n<div ndsToaster position=\"top-right\" [richColors]=\"true\" [closeButton]=\"true\"></div>\n\n// Disparo em qualquer lugar — a API é uma função, não um componente\ntoast.success('Título');\ntoast.success('Título', { description: 'Detalhes' });\ntoast('Título', { action: { label: 'Desfazer', onClick: desfazer } });\ntoast.promise(promessa, { loading: '…', success: '…', error: '…' });"
       }
     },
     "usage": {
@@ -443,7 +443,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "// Setup at root (once)\n<Toaster position=\"top-right\" richColors />\n\n// Toast dispatch (anywhere)\ntoast.success(\"Title\")\ntoast.success(\"Title\", { description: \"Details\" })\ntoast(\"Title\", { action: { label: \"Undo\", onClick: fn } })\ntoast.promise(promise, { loading: \"...\", success: \"...\", error: \"...\" })",
-        "angular": "<!-- Setup at root (once) — ngx-sonner -->\n<nds-toaster position=\"top-right\" [richColors]=\"true\" />\n\n// Fire a toast (anywhere)\ntoast.success('Título');\ntoast.success('Título', { description: 'Detalhes' });\ntoast('Título', { action: { label: 'Desfazer', onClick: fn } });\ntoast.promise(promessa, { loading: '...', success: '...', error: '...' });"
+        "angular": "<!-- Once, at the application root -->\n<div ndsToaster position=\"top-right\" [richColors]=\"true\" [closeButton]=\"true\"></div>\n\n// Fire it from anywhere — the API is a function, not a component\ntoast.success('Title');\ntoast.success('Title', { description: 'Details' });\ntoast('Title', { action: { label: 'Undo', onClick: undo } });\ntoast.promise(promise, { loading: '…', success: '…', error: '…' });"
       }
     },
     "usage": {
@@ -835,7 +835,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "// Setup en el root (una vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalles\" })\ntoast(\"Título\", { action: { label: \"Deshacer\", onClick: fn } })\ntoast.promise(promesa, { loading: \"...\", success: \"...\", error: \"...\" })",
-        "angular": "<!-- Setup en el root (una vez) — ngx-sonner -->\n<nds-toaster position=\"top-right\" [richColors]=\"true\" />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success('Título');\ntoast.success('Título', { description: 'Detalhes' });\ntoast('Título', { action: { label: 'Desfazer', onClick: fn } });\ntoast.promise(promessa, { loading: '...', success: '...', error: '...' });"
+        "angular": "<!-- Una vez, en la raíz de la aplicación -->\n<div ndsToaster position=\"top-right\" [richColors]=\"true\" [closeButton]=\"true\"></div>\n\n// Dispáralo desde cualquier lugar — la API es una función, no un componente\ntoast.success('Título');\ntoast.success('Título', { description: 'Detalles' });\ntoast('Título', { action: { label: 'Deshacer', onClick: deshacer } });\ntoast.promise(promesa, { loading: '…', success: '…', error: '…' });"
       }
     },
     "usage": {

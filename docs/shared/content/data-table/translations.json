@@ -44,7 +44,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
-        "angular": "<!-- @tanstack/angular-table sobre o mesmo table-core das outras stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+        "angular": "<!-- Sem lib de tabela: ordenação, filtro e paginação vivem no componente -->\n<div\n  ndsDataTable\n  [columns]=\"colunas\"\n  [data]=\"linhas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos do trimestre\"\n></div>"
       }
     },
     "usage": {
@@ -533,7 +533,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>",
-        "angular": "<!-- @tanstack/angular-table over the same table-core as the other stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+        "angular": "<!-- No table library: sorting, filtering and pagination live in the component -->\n<div\n  ndsDataTable\n  [columns]=\"columns\"\n  [data]=\"rows\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Search...\"\n  caption=\"Orders this quarter\"\n></div>"
       }
     },
     "usage": {
@@ -1022,7 +1022,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
-        "angular": "<!-- @tanstack/angular-table sobre el mismo table-core de las otras stacks -->\n<nds-data-table\n  [columns]=\"columns\"\n  [data]=\"data\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  [enableColumnPinning]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n/>"
+        "angular": "<!-- Sin librería de tabla: orden, filtro y paginación viven en el componente -->\n<div\n  ndsDataTable\n  [columns]=\"columnas\"\n  [data]=\"filas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos del trimestre\"\n></div>"
       }
     },
     "usage": {

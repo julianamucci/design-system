@@ -14,6 +14,7 @@
       "title": "Demonstração",
       "labels": {
         "singleLabel": "Data selecionada",
+        "multipleLabel": "Várias datas",
         "rangeLabel": "Período",
         "noDate": "Nenhuma data selecionada",
         "pickDate": "Selecione uma data",
@@ -458,6 +459,7 @@
       "title": "Demonstration",
       "labels": {
         "singleLabel": "Selected date",
+        "multipleLabel": "Multiple dates",
         "rangeLabel": "Period",
         "noDate": "No date selected",
         "pickDate": "Pick a date",
@@ -902,6 +904,7 @@
       "title": "Demostración",
       "labels": {
         "singleLabel": "Fecha seleccionada",
+        "multipleLabel": "Varias fechas",
         "rangeLabel": "Período",
         "noDate": "Ninguna fecha seleccionada",
         "pickDate": "Selecciona una fecha",

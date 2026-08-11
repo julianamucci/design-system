@@ -29,7 +29,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport com overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botão voltar */}\n  <CarouselNext />           {/* Botão avançar */}\n</Carousel>",
-        "angular": "<!-- embla-carousel-angular fornece a diretiva emblaCarousel -->\n<nds-carousel>                 <!-- Container role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport com overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Botão voltar -->\n  <button ndsCarouselNext></button>       <!-- Botão avançar -->\n</nds-carousel>"
+        "angular": "<!-- Sem lib de carrossel: o índice atual vive num signal do próprio componente -->\n<nds-carousel label=\"Galeria de produtos\">\n  <div ndsCarouselContent>          <!-- Trilho que rola -->\n    <div ndsCarouselItem>…</div>    <!-- Slide -->\n    <div ndsCarouselItem>…</div>\n  </div>\n\n  <!-- Os controles ficam FORA do trilho: são do carrossel, não slides -->\n  <button ndsCarouselPrevious label=\"Item anterior\"></button>\n  <button ndsCarouselNext label=\"Próximo item\"></button>\n</nds-carousel>"
       }
     },
     "usage": {
@@ -435,7 +435,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Carousel>                   {/* Container role=\"region\" */}\n  <CarouselContent>          {/* Viewport with overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Back button */}\n  <CarouselNext />           {/* Forward button */}\n</Carousel>",
-        "angular": "<!-- embla-carousel-angular provides the emblaCarousel directive -->\n<nds-carousel>                 <!-- Container role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport with overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Previous button -->\n  <button ndsCarouselNext></button>       <!-- Next button -->\n</nds-carousel>"
+        "angular": "<!-- No carousel library: the current index lives in the component's own signal -->\n<nds-carousel label=\"Product gallery\">\n  <div ndsCarouselContent>          <!-- Scrolling track -->\n    <div ndsCarouselItem>…</div>    <!-- Slide -->\n    <div ndsCarouselItem>…</div>\n  </div>\n\n  <!-- Controls sit OUTSIDE the track: they belong to the carousel, not to a slide -->\n  <button ndsCarouselPrevious label=\"Previous item\"></button>\n  <button ndsCarouselNext label=\"Next item\"></button>\n</nds-carousel>"
       }
     },
     "usage": {
@@ -841,7 +841,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Carousel>                   {/* Contenedor role=\"region\" */}\n  <CarouselContent>          {/* Viewport con overflow */}\n    <CarouselItem>...</CarouselItem>  {/* Slide */}\n    <CarouselItem>...</CarouselItem>\n  </CarouselContent>\n  <CarouselPrevious />       {/* Botón volver */}\n  <CarouselNext />           {/* Botón avanzar */}\n</Carousel>",
-        "angular": "<!-- embla-carousel-angular aporta la directiva emblaCarousel -->\n<nds-carousel>                 <!-- Contenedor role=\"region\" -->\n  <div ndsCarouselContent>     <!-- Viewport con overflow -->\n    <div ndsCarouselItem>...</div>   <!-- Slide -->\n    <div ndsCarouselItem>...</div>\n  </div>\n  <button ndsCarouselPrevious></button>   <!-- Botón anterior -->\n  <button ndsCarouselNext></button>       <!-- Botón siguiente -->\n</nds-carousel>"
+        "angular": "<!-- Sin librería de carrusel: el índice actual vive en un signal del propio componente -->\n<nds-carousel label=\"Galería de productos\">\n  <div ndsCarouselContent>          <!-- Pista que se desplaza -->\n    <div ndsCarouselItem>…</div>    <!-- Slide -->\n    <div ndsCarouselItem>…</div>\n  </div>\n\n  <!-- Los controles van FUERA de la pista: son del carrusel, no un slide -->\n  <button ndsCarouselPrevious label=\"Elemento anterior\"></button>\n  <button ndsCarouselNext label=\"Elemento siguiente\"></button>\n</nds-carousel>"
       }
     },
     "usage": {
