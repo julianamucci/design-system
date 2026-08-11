@@ -1,3 +1,8 @@
+// Faro primeiro, antes de qualquer import: e o que garante captura de erro
+// desde o carregamento. No-op silencioso sem STORYBOOK_FARO_URL.
+import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
+import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+import { iniciarFaro, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
 import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/svelte-vite';
@@ -7,6 +12,24 @@ import { withThemeByClassName } from '@storybook/addon-themes';
 import { setMode } from 'mode-watcher';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
+
+iniciarFaro(
+  { initializeFaro, getWebInstrumentations, TracingInstrumentation },
+  { stack: 'svelte', env: import.meta.env },
+);
+
+// A story renderizada vira a view do Faro — sem isto, erro e Web Vital de
+// qualquer componente ficariam atribuidos a primeira story aberta.
+if (typeof document !== 'undefined') {
+  const assinarStory = () => {
+    try {
+      addons.getChannel().on('storyRendered', (id: string) => marcarStory(id));
+    } catch {
+      setTimeout(assinarStory, 50);   // canal ainda nao existe no module-eval
+    }
+  };
+  assinarStory();
+}
 
 function applyClasses(brand: string, density: string, font: string, typescale: string, typebase: string) {
   const html = document.documentElement;

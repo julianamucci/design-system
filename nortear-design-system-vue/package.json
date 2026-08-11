@@ -17,6 +17,8 @@
     "build-storybook:chromatic": "storybook build"
   },
   "dependencies": {
+    "@grafana/faro-web-sdk": "^2.9.0",
+    "@grafana/faro-web-tracing": "^2.9.0",
     "@tanstack/vue-table": "^8.21.3",
     "@tanstack/vue-virtual": "^3.13.34",
     "@unovis/vue": "^1.6.7",
