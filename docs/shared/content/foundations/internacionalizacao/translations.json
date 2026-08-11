@@ -12,7 +12,7 @@
     },
     "intro": {
       "title": "Visão geral",
-      "body": "Cada componente possui um único <code>translations.json</code> em <code>docs/shared/content/&lt;slug&gt;/</code>, com chaves idênticas nos três idiomas. Os quatro stacks consomem o mesmo arquivo via <code>useTranslation(translations, overrides?)</code> — cada stack expõe o hook (ou função equivalente) em <code>src/lib/i18n</code>.",
+      "body": "Cada componente possui um único <code>translations.json</code> em <code>docs/shared/content/&lt;slug&gt;/</code>, com chaves idênticas nos três idiomas. Os cinco stacks consomem o mesmo arquivo via <code>useTranslation(translations, overrides?)</code> — cada stack expõe o hook (ou função equivalente) em <code>src/lib/i18n</code>.",
       "audience": "Devs que vão criar uma docs page nova ou adicionar conteúdo a uma existente."
     },
     "languages": {
@@ -49,7 +49,7 @@
     },
     "hook": {
       "title": "useTranslation",
-      "subtitle": "Hook compartilhado pelos quatro stacks. Recebe o objeto de traduções e retorna a função <code>t(path)</code>.",
+      "subtitle": "Hook compartilhado pelos cinco stacks. Recebe o objeto de traduções e retorna a função <code>t(path)</code>.",
       "items": {
         "lookup": "<strong>Lookup por dot-path</strong> — chaves aninhadas são acessadas via string com pontos: <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>. O dicionário é pré-achatado uma vez por locale, então cada lookup é O(1).",
         "fallback": "<strong>Fallback</strong> — se o idioma inteiro faltar no JSON, o hook usa pt-BR. Se uma chave individual faltar, <code>t(chave, valorPadrao?)</code> retorna o valor padrão ou a própria chave — o texto cru na tela flagra o erro em dev. Não há fallback por chave para pt-BR.",
@@ -65,7 +65,7 @@
     },
     "switcher": {
       "title": "LanguageSwitcher",
-      "subtitle": "Componente em <code>src/components/product/LanguageSwitcher.*</code> presente nos quatro stacks. Persiste a escolha em <code>localStorage</code> e dispara o evento de analytics <code>language_switched</code>.",
+      "subtitle": "Componente em <code>src/components/product/LanguageSwitcher.*</code> presente nos cinco stacks. Persiste a escolha em <code>localStorage</code> e dispara o evento de analytics <code>language_switched</code>.",
       "body": "Está visível em todas as docs pages no header. A troca remonta a árvore consumidora do hook, atualizando textos sem reload."
     },
     "rules": {
@@ -92,7 +92,7 @@
     },
     "intro": {
       "title": "Overview",
-      "body": "Each component has a single <code>translations.json</code> at <code>docs/shared/content/&lt;slug&gt;/</code>, with identical keys across the three languages. All four stacks consume the same file via <code>useTranslation(translations, overrides?)</code> — each stack exposes the hook (or equivalent function) in <code>src/lib/i18n</code>.",
+      "body": "Each component has a single <code>translations.json</code> at <code>docs/shared/content/&lt;slug&gt;/</code>, with identical keys across the three languages. All five stacks consume the same file via <code>useTranslation(translations, overrides?)</code> — each stack exposes the hook (or equivalent function) in <code>src/lib/i18n</code>.",
       "audience": "Devs creating a new docs page or adding content to an existing one."
     },
     "languages": {
@@ -129,7 +129,7 @@
     },
     "hook": {
       "title": "useTranslation",
-      "subtitle": "Hook shared by all four stacks. Receives the translations object and returns the <code>t(path)</code> function.",
+      "subtitle": "Hook shared by all five stacks. Receives the translations object and returns the <code>t(path)</code> function.",
       "items": {
         "lookup": "<strong>Dot-path lookup</strong> — nested keys are accessed via dotted strings: <code>t('props.table.required')</code> equals <code>translations[locale].props.table.required</code>. The dictionary is pre-flattened once per locale, so each lookup is O(1).",
         "fallback": "<strong>Fallback</strong> — if the whole language is missing from the JSON, the hook uses pt-BR. If an individual key is missing, <code>t(key, defaultValue?)</code> returns the default or the key itself — raw text on screen flags the error in dev. There is no per-key fallback to pt-BR.",
@@ -145,7 +145,7 @@
     },
     "switcher": {
       "title": "LanguageSwitcher",
-      "subtitle": "Component at <code>src/components/product/LanguageSwitcher.*</code>, present in all four stacks. Persists the choice in <code>localStorage</code> and fires the <code>language_switched</code> analytics event.",
+      "subtitle": "Component at <code>src/components/product/LanguageSwitcher.*</code>, present in all five stacks. Persists the choice in <code>localStorage</code> and fires the <code>language_switched</code> analytics event.",
       "body": "It is visible on every docs page in the header. Switching remounts the hook consumer tree, updating texts without a reload."
     },
     "rules": {
@@ -172,7 +172,7 @@
     },
     "intro": {
       "title": "Visión general",
-      "body": "Cada componente tiene un único <code>translations.json</code> en <code>docs/shared/content/&lt;slug&gt;/</code>, con claves idénticas en los tres idiomas. Los cuatro stacks consumen el mismo archivo vía <code>useTranslation(translations, overrides?)</code> — cada stack expone el hook (o función equivalente) en <code>src/lib/i18n</code>.",
+      "body": "Cada componente tiene un único <code>translations.json</code> en <code>docs/shared/content/&lt;slug&gt;/</code>, con claves idénticas en los tres idiomas. Los cinco stacks consumen el mismo archivo vía <code>useTranslation(translations, overrides?)</code> — cada stack expone el hook (o función equivalente) en <code>src/lib/i18n</code>.",
       "audience": "Devs que van a crear una docs page nueva o agregar contenido a una existente."
     },
     "languages": {
@@ -209,7 +209,7 @@
     },
     "hook": {
       "title": "useTranslation",
-      "subtitle": "Hook compartido por los cuatro stacks. Recibe el objeto de traducciones y devuelve la función <code>t(path)</code>.",
+      "subtitle": "Hook compartido por los cinco stacks. Recibe el objeto de traducciones y devuelve la función <code>t(path)</code>.",
       "items": {
         "lookup": "<strong>Lookup por dot-path</strong> — las claves anidadas se acceden vía string con puntos: <code>t('props.table.required')</code> equivale a <code>translations[locale].props.table.required</code>. El diccionario se aplana una vez por locale, así cada lookup es O(1).",
         "fallback": "<strong>Fallback</strong> — si falta el idioma completo en el JSON, el hook usa pt-BR. Si falta una clave individual, <code>t(clave, valorPorDefecto?)</code> devuelve el valor por defecto o la propia clave — el texto crudo en pantalla delata el error en dev. No hay fallback por clave hacia pt-BR.",
@@ -225,7 +225,7 @@
     },
     "switcher": {
       "title": "LanguageSwitcher",
-      "subtitle": "Componente en <code>src/components/product/LanguageSwitcher.*</code>, presente en los cuatro stacks. Persiste la elección en <code>localStorage</code> y dispara el evento de analytics <code>language_switched</code>.",
+      "subtitle": "Componente en <code>src/components/product/LanguageSwitcher.*</code>, presente en los cinco stacks. Persiste la elección en <code>localStorage</code> y dispara el evento de analytics <code>language_switched</code>.",
       "body": "Está visible en todas las docs pages en el header. El cambio remonta el árbol consumidor del hook, actualizando textos sin reload."
     },
     "rules": {

@@ -3,12 +3,12 @@
     "title": "Sobre o Nortear Design System",
     "category": "Foundations",
     "type": "Visão Geral",
-    "description": "Um sistema de design multi-stack: a mesma linguagem visual implementada em React, Vue, Svelte e Vanilla TS, compartilhando conteúdo, temas e guidelines a partir de uma fonte única de verdade.",
+    "description": "Um sistema de design multi-stack: a mesma linguagem visual implementada em React, Vue, Svelte, Angular e Vanilla TS, compartilhando conteúdo, temas e guidelines a partir de uma fonte única de verdade.",
     "seo": {
       "title": "Sobre o Nortear Design System",
-      "description": "Design System multi-stack com React, Vue, Svelte e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.2 AA por padrão.",
-      "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 4 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semânticos, WCAG, multi-stack"
+      "description": "Design System multi-stack com React, Vue, Svelte, Angular e Vanilla TS sobre tokens compartilhados, primitives headless e WCAG 2.2 AA por padrão.",
+      "aiSummary": "Página de visão geral do Design System. Explica o propósito, os 5 stacks suportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Angular + Radix NG, Vanilla TS), a arquitetura de conteúdo compartilhado e os princípios fundamentais.",
+      "aiEntities": "Design System, React, Vue, Svelte, Angular, Vanilla, Storybook, tokens semânticos, WCAG, multi-stack"
     },
     "intro": {
       "title": "O que é",
@@ -17,7 +17,7 @@
       "audience": "Feito para times de produto e design que precisam de consistência entre aplicações web construídas em tecnologias diferentes, sem manter versões visuais paralelas."
     },
     "stacks": {
-      "title": "Os quatro stacks",
+      "title": "Os cinco stacks",
       "subtitle": "Cada implementação é um pacote npm independente em sua própria pasta, com Storybook próprio publicado em seu subdomínio.",
       "cols": {
         "stack": "Stack",
@@ -44,6 +44,12 @@
           "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
           "when": "Qualquer aplicação Svelte 5 — SPA ou SSR (Vite, SvelteKit)"
         },
+        "angular": {
+          "stack": "Angular",
+          "base": "Radix NG + CSS .nds-*",
+          "url": "<a href=\"https://angular.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">angular.norteardesign.com.br</a>",
+          "when": "Qualquer aplicação Angular 22 — standalone, signals e detecção sem zone"
+        },
         "nortear": {
           "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
@@ -58,7 +64,7 @@
       "items": {
         "consistency": {
           "title": "Consistência visual entre stacks",
-          "body": "O mesmo componente renderiza o mesmo pixel em React, Vue, Svelte e Vanilla. Auditores deterministas comparam markup e estilos."
+          "body": "O mesmo componente renderiza o mesmo pixel em React, Vue, Svelte, Angular e Vanilla. Auditores deterministas comparam markup e estilos."
         },
         "a11y": {
           "title": "Acessibilidade primeiro",
@@ -127,12 +133,12 @@
     "title": "About Nortear Design System",
     "category": "Foundations",
     "type": "Overview",
-    "description": "A multi-stack design system: one visual language implemented in React, Vue, Svelte and Vanilla TS, sharing content, themes and guidelines from a single source of truth.",
+    "description": "A multi-stack design system: one visual language implemented in React, Vue, Svelte, Angular and Vanilla TS, sharing content, themes and guidelines from a single source of truth.",
     "seo": {
       "title": "About Nortear Design System",
-      "description": "Multi-stack Design System with React, Vue, Svelte and Vanilla TS over shared tokens, headless primitives and WCAG 2.2 AA by default.",
-      "aiSummary": "Overview page of the Design System. Explains the purpose, the 4 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), the shared content architecture and the core principles.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, semantic tokens, WCAG, multi-stack"
+      "description": "Multi-stack Design System with React, Vue, Svelte, Angular and Vanilla TS over shared tokens, headless primitives and WCAG 2.2 AA by default.",
+      "aiSummary": "Overview page of the Design System. Explains the purpose, the 5 supported stacks (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Angular + Radix NG, Vanilla TS), the shared content architecture and the core principles.",
+      "aiEntities": "Design System, React, Vue, Svelte, Angular, Vanilla, Storybook, semantic tokens, WCAG, multi-stack"
     },
     "intro": {
       "title": "What it is",
@@ -141,7 +147,7 @@
       "audience": "Built for product and design teams that need consistency across web applications built with different technologies, without maintaining parallel visual forks."
     },
     "stacks": {
-      "title": "The four stacks",
+      "title": "The five stacks",
       "subtitle": "Each implementation is an independent npm package in its own folder, with its own Storybook published on its subdomain.",
       "cols": {
         "stack": "Stack",
@@ -168,6 +174,12 @@
           "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
           "when": "Any Svelte 5 app — SPA or SSR (Vite, SvelteKit)"
         },
+        "angular": {
+          "stack": "Angular",
+          "base": "Radix NG + CSS .nds-*",
+          "url": "<a href=\"https://angular.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">angular.norteardesign.com.br</a>",
+          "when": "Any Angular 22 app — standalone, signals and zoneless change detection"
+        },
         "nortear": {
           "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
@@ -182,7 +194,7 @@
       "items": {
         "consistency": {
           "title": "Visual consistency across stacks",
-          "body": "The same component renders the same pixels in React, Vue, Svelte and Vanilla. Deterministic auditors compare markup and styles."
+          "body": "The same component renders the same pixels in React, Vue, Svelte, Angular and Vanilla. Deterministic auditors compare markup and styles."
         },
         "a11y": {
           "title": "Accessibility first",
@@ -251,12 +263,12 @@
     "title": "Sobre Nortear Design System",
     "category": "Foundations",
     "type": "Visión General",
-    "description": "Un sistema de diseño multi-stack: el mismo lenguaje visual implementado en React, Vue, Svelte y Vanilla TS, compartiendo contenido, temas y guidelines desde una fuente única de verdad.",
+    "description": "Un sistema de diseño multi-stack: el mismo lenguaje visual implementado en React, Vue, Svelte, Angular y Vanilla TS, compartiendo contenido, temas y guidelines desde una fuente única de verdad.",
     "seo": {
       "title": "Sobre Nortear Design System",
-      "description": "Design System multi-stack con React, Vue, Svelte y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.2 AA por defecto.",
-      "aiSummary": "Página de visión general del Design System. Explica el propósito, los 4 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Vanilla TS), la arquitectura de contenido compartido y los principios fundamentales.",
-      "aiEntities": "Design System, React, Vue, Svelte, Vanilla, Storybook, tokens semánticos, WCAG, multi-stack"
+      "description": "Design System multi-stack con React, Vue, Svelte, Angular y Vanilla TS sobre tokens compartidos, primitives headless y WCAG 2.2 AA por defecto.",
+      "aiSummary": "Página de visión general del Design System. Explica el propósito, los 5 stacks soportados (React + base-ui, Vue + reka-ui, Svelte + bits-ui, Angular + Radix NG, Vanilla TS), la arquitectura de contenido compartido y los principios fundamentales.",
+      "aiEntities": "Design System, React, Vue, Svelte, Angular, Vanilla, Storybook, tokens semánticos, WCAG, multi-stack"
     },
     "intro": {
       "title": "Qué es",
@@ -265,7 +277,7 @@
       "audience": "Hecho para equipos de producto y diseño que necesitan consistencia entre aplicaciones web construidas con tecnologías distintas, sin mantener versiones visuales paralelas."
     },
     "stacks": {
-      "title": "Los cuatro stacks",
+      "title": "Los cinco stacks",
       "subtitle": "Cada implementación es un paquete npm independiente en su propia carpeta, con Storybook propio publicado en su subdominio.",
       "cols": {
         "stack": "Stack",
@@ -292,6 +304,12 @@
           "url": "<a href=\"https://svelte.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">svelte.norteardesign.com.br</a>",
           "when": "Cualquier aplicación Svelte 5 — SPA o SSR (Vite, SvelteKit)"
         },
+        "angular": {
+          "stack": "Angular",
+          "base": "Radix NG + CSS .nds-*",
+          "url": "<a href=\"https://angular.norteardesign.com.br/\" target=\"_blank\" rel=\"noopener noreferrer\">angular.norteardesign.com.br</a>",
+          "when": "Cualquier aplicación Angular 22 — standalone, signals y detección sin zone"
+        },
         "nortear": {
           "stack": "Vanilla",
           "base": "Factories TS + CSS .nds-*",
@@ -306,7 +324,7 @@
       "items": {
         "consistency": {
           "title": "Consistencia visual entre stacks",
-          "body": "El mismo componente renderiza el mismo pixel en React, Vue, Svelte y Vanilla. Auditores deterministas comparan markup y estilos."
+          "body": "El mismo componente renderiza el mismo pixel en React, Vue, Svelte, Angular y Vanilla. Auditores deterministas comparan markup y estilos."
         },
         "a11y": {
           "title": "Accesibilidad primero",

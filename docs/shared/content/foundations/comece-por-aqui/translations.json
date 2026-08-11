@@ -6,13 +6,13 @@
     "description": "Guia rápido para clonar o monorepo, instalar dependências e abrir o Storybook do stack escolhido. Tudo o que você precisa para ver o sistema rodando em menos de cinco minutos.",
     "seo": {
       "title": "Comece por Aqui — Setup do Design System",
-      "description": "Pré-requisitos, instalação, scripts essenciais e estrutura de pastas do Design System multi-stack (React, Vue, Svelte, Nortear).",
+      "description": "Pré-requisitos, instalação, scripts essenciais e estrutura de pastas do Design System multi-stack (React, Vue, Svelte, Angular, Nortear).",
       "aiSummary": "Página de onboarding técnico. Lista pré-requisitos (Node 18+, npm, git), passos de clone e install por stack, scripts essenciais (storybook, build, lint, test) e próximos passos.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalação, scripts"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Angular, Nortear, vanilla, setup, instalação, scripts"
     },
     "intro": {
       "title": "Antes de começar",
-      "body": "O repositório é um <strong>monorepo multi-stack</strong>: quatro pacotes npm independentes (React, Vue, Svelte e Nortear) compartilham conteúdo, temas e guidelines a partir de <code>docs/shared/</code>. Cada stack tem seu próprio Storybook em uma porta dedicada — você pode rodar todos em paralelo.",
+      "body": "O repositório é um <strong>monorepo multi-stack</strong>: cinco pacotes npm independentes (React, Vue, Svelte, Angular e Nortear) compartilham conteúdo, temas e guidelines a partir de <code>docs/shared/</code>. Cada stack tem seu próprio Storybook em uma porta dedicada — você pode rodar todos em paralelo.",
       "audience": "Para devs que vão consumir, contribuir ou portar componentes do sistema para um produto novo."
     },
     "prerequisites": {
@@ -48,7 +48,7 @@
       "cloneCode": "git clone https://github.com/sua-org/design-system.git\ncd design-system",
       "installTitle": "2. Instale o stack desejado",
       "installNote": "Entre na pasta do stack e rode <code>npm install</code>. Não rode na raiz — não há workspace agregador.",
-      "installCode": "cd nortear-design-system-react   # ou nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
+      "installCode": "cd nortear-design-system-react   # ou -vue / -svelte / -angular / -vanilla\nnpm install"
     },
     "scripts": {
       "title": "Scripts essenciais",
@@ -62,7 +62,7 @@
         "storybook": {
           "command": "npm run storybook",
           "purpose": "Sobe o Storybook em modo dev. É a interface principal — não use <code>App.tsx</code>/<code>main.ts</code>.",
-          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",
@@ -103,13 +103,13 @@
     "description": "Quick guide to clone the monorepo, install dependencies and open Storybook in your stack of choice. Everything you need to see the system running in under five minutes.",
     "seo": {
       "title": "Start Here — Design System Setup",
-      "description": "Prerequisites, install, essential scripts and folder map of the multi-stack Design System (React, Vue, Svelte, Nortear).",
+      "description": "Prerequisites, install, essential scripts and folder map of the multi-stack Design System (React, Vue, Svelte, Angular, Nortear).",
       "aiSummary": "Technical onboarding page. Lists prerequisites (Node 18+, npm, git), per-stack clone and install steps, essential scripts (storybook, build, lint, test) and next steps.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, install, scripts"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Angular, Nortear, vanilla, setup, install, scripts"
     },
     "intro": {
       "title": "Before you start",
-      "body": "The repo is a <strong>multi-stack monorepo</strong>: four independent npm packages (React, Vue, Svelte and Nortear) share content, themes and guidelines from <code>docs/shared/</code>. Each stack has its own Storybook on a dedicated port — you can run them all in parallel.",
+      "body": "The repo is a <strong>multi-stack monorepo</strong>: five independent npm packages (React, Vue, Svelte, Angular and Nortear) share content, themes and guidelines from <code>docs/shared/</code>. Each stack has its own Storybook on a dedicated port — you can run them all in parallel.",
       "audience": "For devs who will consume, contribute to or port components from the system into a new product."
     },
     "prerequisites": {
@@ -145,7 +145,7 @@
       "cloneCode": "git clone https://github.com/your-org/design-system.git\ncd design-system",
       "installTitle": "2. Install the desired stack",
       "installNote": "Enter the stack folder and run <code>npm install</code>. Do not run it at the root — there is no aggregator workspace.",
-      "installCode": "cd nortear-design-system-react   # or nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
+      "installCode": "cd nortear-design-system-react   # or -vue / -svelte / -angular / -vanilla\nnpm install"
     },
     "scripts": {
       "title": "Essential scripts",
@@ -159,7 +159,7 @@
         "storybook": {
           "command": "npm run storybook",
           "purpose": "Starts Storybook in dev mode. It is the main interface — do not use <code>App.tsx</code>/<code>main.ts</code>.",
-          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",
@@ -200,13 +200,13 @@
     "description": "Guía rápida para clonar el monorepo, instalar dependencias y abrir Storybook del stack elegido. Todo lo que necesitas para ver el sistema funcionando en menos de cinco minutos.",
     "seo": {
       "title": "Empieza Aquí — Setup del Design System",
-      "description": "Requisitos, instalación, scripts esenciales y estructura de carpetas del Design System multi-stack (React, Vue, Svelte, Nortear).",
+      "description": "Requisitos, instalación, scripts esenciales y estructura de carpetas del Design System multi-stack (React, Vue, Svelte, Angular, Nortear).",
       "aiSummary": "Página de onboarding técnico. Lista requisitos (Node 18+, npm, git), pasos de clon e instalación por stack, scripts esenciales (storybook, build, lint, test) y próximos pasos.",
-      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Nortear, vanilla, setup, instalación, scripts"
+      "aiEntities": "Node, npm, git, Storybook, monorepo, React, Vue, Svelte, Angular, Nortear, vanilla, setup, instalación, scripts"
     },
     "intro": {
       "title": "Antes de empezar",
-      "body": "El repositorio es un <strong>monorepo multi-stack</strong>: cuatro paquetes npm independientes (React, Vue, Svelte y Nortear) comparten contenido, temas y guidelines desde <code>docs/shared/</code>. Cada stack tiene su propio Storybook en un puerto dedicado — puedes ejecutarlos todos en paralelo.",
+      "body": "El repositorio es un <strong>monorepo multi-stack</strong>: cinco paquetes npm independientes (React, Vue, Svelte, Angular y Nortear) comparten contenido, temas y guidelines desde <code>docs/shared/</code>. Cada stack tiene su propio Storybook en un puerto dedicado — puedes ejecutarlos todos en paralelo.",
       "audience": "Para devs que van a consumir, contribuir o portar componentes del sistema a un producto nuevo."
     },
     "prerequisites": {
@@ -242,7 +242,7 @@
       "cloneCode": "git clone https://github.com/tu-org/design-system.git\ncd design-system",
       "installTitle": "2. Instala el stack deseado",
       "installNote": "Entra en la carpeta del stack y ejecuta <code>npm install</code>. No lo ejecutes en la raíz — no hay workspace agregador.",
-      "installCode": "cd nortear-design-system-react   # o nortear-design-system-vue / nortear-design-system-svelte / nortear-design-system-vanilla\nnpm install"
+      "installCode": "cd nortear-design-system-react   # o -vue / -svelte / -angular / -vanilla\nnpm install"
     },
     "scripts": {
       "title": "Scripts esenciales",
@@ -256,7 +256,7 @@
         "storybook": {
           "command": "npm run storybook",
           "purpose": "Levanta Storybook en modo dev. Es la interfaz principal — no uses <code>App.tsx</code>/<code>main.ts</code>.",
-          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009"
+          "ports": "React 6006 · Vue 6007 · Svelte 6008 · Nortear 6009 · Angular 6010"
         },
         "build": {
           "command": "npm run build",

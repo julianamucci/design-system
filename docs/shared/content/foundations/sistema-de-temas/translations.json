@@ -62,7 +62,7 @@
       "subtitle": "Além da toolbar, o tema inicial pode vir do subdomínio — útil para publicar demonstrações white-label sem nenhum clique. O primeiro rótulo do hostname decide: <code>warm.norteardesign.com.br</code> (ou <code>warm.react.…</code>) abre com <code>tema-warm</code>.",
       "items": {
         "map": "O mapa vive em <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> e <code>cold</code> apontam para os temas; subdomínios de stack e hosts institucionais caem no Default.",
-        "wiring": "Os <code>preview.ts</code> das 4 stacks usam <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> do global <code>brand</code> — o Storybook abre já tematizado e a toolbar continua funcionando para trocar.",
+        "wiring": "Os <code>preview.ts</code> das 5 stacks usam <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> do global <code>brand</code> — o Storybook abre já tematizado e a toolbar continua funcionando para trocar.",
         "dev": "Em <code>localhost</code> o tema inicial é sempre Default. Fora dos domínios de produção, <code>isDevMode()</code> retorna true e a seleção manual fica liberada; em produção o seletor do sandbox exige <code>?theme-selector</code> na URL.",
         "dns": "Para ativar um subdomínio novo de tema, basta o registro DNS/hosting apontar para o mesmo build — nenhum deploy separado é necessário."
       }
@@ -104,7 +104,7 @@
         "file": "<strong>1. Crie o arquivo</strong> — Adicione <code>docs/shared/themes/&lt;nome&gt;.css</code> com um seletor <code>.tema-&lt;nome&gt;</code> contendo todos os tokens da paleta semântica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
         "dark": "<strong>2. Cubra dark mode</strong> — Inclua um bloco <code>.tema-&lt;nome&gt;.dark</code> reescrevendo os mesmos tokens com valores escuros. Mantenha contraste WCAG AA (4.5:1 para texto).",
         "import": "<strong>3. Importe uma vez</strong> — Adicione o <code>@import</code> do arquivo novo em <code>docs/shared/themes/index.css</code>. Cada stack já importa esse índice via <code>globals.css</code>; uma linha alimenta os quatro.",
-        "register": "<strong>4. Registre na toolbar e no contrato</strong> — Adicione o nome em <code>globalTypes.brand.toolbar.items</code> nos <code>preview.ts</code> das 4 stacks e, se o tema muda a identidade de forma, sobrescreva <code>--radius</code> e os tokens de radius por componente (contrato em <code>default.css</code>)."
+        "register": "<strong>4. Registre na toolbar e no contrato</strong> — Adicione o nome em <code>globalTypes.brand.toolbar.items</code> nos <code>preview.ts</code> das 5 stacks e, se o tema muda a identidade de forma, sobrescreva <code>--radius</code> e os tokens de radius por componente (contrato em <code>default.css</code>)."
       }
     },
     "reactive": {
@@ -116,7 +116,7 @@
     "crossStack": {
       "title": "Compartilhamento cross-stack",
       "items": {
-        "source": "Temas vivem em <code>docs/shared/themes/</code> — uma única fonte para os quatro stacks.",
+        "source": "Temas vivem em <code>docs/shared/themes/</code> — uma única fonte para os cinco stacks.",
         "imports": "Cada <code>src/styles/globals.css</code> faz <code>@import</code> dos arquivos compartilhados.",
         "tokens": "Tokens dimensionais (radius, spacing) vivem em <code>docs/shared/tokens/tokens.css</code>.",
         "fonts": "Famílias tipográficas e suas variantes ficam em <code>docs/shared/themes/fonts.css</code>."
@@ -195,7 +195,7 @@
       "subtitle": "Beyond the toolbar, the initial theme can come from the subdomain — useful for publishing white-label demos with zero clicks. The first hostname label decides: <code>warm.norteardesign.com.br</code> (or <code>warm.react.…</code>) opens with <code>tema-warm</code>.",
       "items": {
         "map": "The map lives in <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> and <code>cold</code> point to the themes; stack subdomains and institutional hosts fall back to Default.",
-        "wiring": "The four stacks’ <code>preview.ts</code> use <code>getThemeFromSubdomain()</code> as the <code>brand</code> global’s <code>defaultValue</code> — Storybook opens already themed and the toolbar still switches.",
+        "wiring": "The five stacks’ <code>preview.ts</code> use <code>getThemeFromSubdomain()</code> as the <code>brand</code> global’s <code>defaultValue</code> — Storybook opens already themed and the toolbar still switches.",
         "dev": "On <code>localhost</code> the initial theme is always Default. Outside production domains <code>isDevMode()</code> returns true and manual selection is unlocked; in production the sandbox selector requires <code>?theme-selector</code> in the URL.",
         "dns": "To activate a new theme subdomain, point the DNS/hosting record at the same build — no separate deploy needed."
       }
@@ -237,7 +237,7 @@
         "file": "<strong>1. Create the file</strong> — Add <code>docs/shared/themes/&lt;name&gt;.css</code> with a <code>.tema-&lt;name&gt;</code> selector containing every token in the semantic palette (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
         "dark": "<strong>2. Cover dark mode</strong> — Include a <code>.tema-&lt;name&gt;.dark</code> block rewriting the same tokens with dark values. Keep WCAG AA contrast (4.5:1 for text).",
         "import": "<strong>3. Import once</strong> — Add the new file’s <code>@import</code> to <code>docs/shared/themes/index.css</code>. Every stack already imports that index via <code>globals.css</code>; one line feeds all four.",
-        "register": "<strong>4. Register on the toolbar and in the contract</strong> — Add the name to <code>globalTypes.brand.toolbar.items</code> in the four stacks’ <code>preview.ts</code> and, if the theme changes shape identity, override <code>--radius</code> and the per-component radius tokens (contract in <code>default.css</code>)."
+        "register": "<strong>4. Register on the toolbar and in the contract</strong> — Add the name to <code>globalTypes.brand.toolbar.items</code> in the five stacks’ <code>preview.ts</code> and, if the theme changes shape identity, override <code>--radius</code> and the per-component radius tokens (contract in <code>default.css</code>)."
       }
     },
     "reactive": {
@@ -249,7 +249,7 @@
     "crossStack": {
       "title": "Cross-stack sharing",
       "items": {
-        "source": "Themes live in <code>docs/shared/themes/</code> — single source for the four stacks.",
+        "source": "Themes live in <code>docs/shared/themes/</code> — single source for the five stacks.",
         "imports": "Each <code>src/styles/globals.css</code> <code>@import</code>s the shared files.",
         "tokens": "Dimensional tokens (radius, spacing) live in <code>docs/shared/tokens/tokens.css</code>.",
         "fonts": "Typographic families and their variants live in <code>docs/shared/themes/fonts.css</code>."
@@ -328,7 +328,7 @@
       "subtitle": "Además de la toolbar, el tema inicial puede venir del subdominio — útil para publicar demos white-label sin ningún clic. El primer rótulo del hostname decide: <code>warm.norteardesign.com.br</code> (o <code>warm.react.…</code>) abre con <code>tema-warm</code>.",
       "items": {
         "map": "El mapa vive en <code>docs/shared/themes/theme-config.ts</code> (<code>subdomainThemeMap</code>): <code>warm</code> y <code>cold</code> apuntan a los temas; los subdominios de stack y hosts institucionales caen en Default.",
-        "wiring": "Los <code>preview.ts</code> de los 4 stacks usan <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> del global <code>brand</code> — Storybook abre ya tematizado y la toolbar sigue permitiendo cambiar.",
+        "wiring": "Los <code>preview.ts</code> de los 5 stacks usan <code>getThemeFromSubdomain()</code> como <code>defaultValue</code> del global <code>brand</code> — Storybook abre ya tematizado y la toolbar sigue permitiendo cambiar.",
         "dev": "En <code>localhost</code> el tema inicial siempre es Default. Fuera de los dominios de producción, <code>isDevMode()</code> devuelve true y la selección manual queda liberada; en producción el selector del sandbox exige <code>?theme-selector</code> en la URL.",
         "dns": "Para activar un subdominio nuevo de tema, basta apuntar el registro DNS/hosting al mismo build — no hace falta deploy separado."
       }
@@ -370,7 +370,7 @@
         "file": "<strong>1. Crea el archivo</strong> — Agrega <code>docs/shared/themes/&lt;nombre&gt;.css</code> con un selector <code>.tema-&lt;nombre&gt;</code> que contenga todos los tokens de la paleta semántica (<code>--background</code>, <code>--foreground</code>, <code>--primary</code>, etc).",
         "dark": "<strong>2. Cubre dark mode</strong> — Incluye un bloque <code>.tema-&lt;nombre&gt;.dark</code> reescribiendo los mismos tokens con valores oscuros. Mantén contraste WCAG AA (4.5:1 para texto).",
         "import": "<strong>3. Importa una vez</strong> — Añade el <code>@import</code> del archivo nuevo en <code>docs/shared/themes/index.css</code>. Cada stack ya importa ese índice vía <code>globals.css</code>; una línea alimenta a los cuatro.",
-        "register": "<strong>4. Regístralo en la toolbar y en el contrato</strong> — Añade el nombre en <code>globalTypes.brand.toolbar.items</code> en los <code>preview.ts</code> de los 4 stacks y, si el tema cambia la identidad de forma, sobrescribe <code>--radius</code> y los tokens de radius por componente (contrato en <code>default.css</code>)."
+        "register": "<strong>4. Regístralo en la toolbar y en el contrato</strong> — Añade el nombre en <code>globalTypes.brand.toolbar.items</code> en los <code>preview.ts</code> de los 5 stacks y, si el tema cambia la identidad de forma, sobrescribe <code>--radius</code> y los tokens de radius por componente (contrato en <code>default.css</code>)."
       }
     },
     "reactive": {
@@ -382,7 +382,7 @@
     "crossStack": {
       "title": "Compartir cross-stack",
       "items": {
-        "source": "Los temas viven en <code>docs/shared/themes/</code> — fuente única para los cuatro stacks.",
+        "source": "Los temas viven en <code>docs/shared/themes/</code> — fuente única para los cinco stacks.",
         "imports": "Cada <code>src/styles/globals.css</code> hace <code>@import</code> de los archivos compartidos.",
         "tokens": "Tokens dimensionales (radius, spacing) viven en <code>docs/shared/tokens/tokens.css</code>.",
         "fonts": "Familias tipográficas y sus variantes están en <code>docs/shared/themes/fonts.css</code>."

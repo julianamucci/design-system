@@ -6,9 +6,9 @@
     "description": "Uma especificação, quatro implementações, um resultado visual. Cada stack usa uma lib base diferente — as APIs divergem, mas o markup final, o comportamento de teclado e os tokens visuais não.",
     "seo": {
       "title": "Divergências Cross-Stack",
-      "description": "Como o sistema mantém consistência visual entre React, Vue, Svelte e Vanilla apesar das APIs divergentes das libs base headless.",
-      "aiSummary": "Página técnica que documenta divergências entre stacks. Lista as libs base por stack (base-ui no React, reka-ui no Vue, bits-ui no Svelte, factories na stack vanilla), apresenta tabelas de divergência conhecidas (Accordion, DataTable, Checkbox), explica a estratégia de texto API-neutro em translations.json e indica onde menções literais são aceitáveis (snippets de código, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode"
+      "description": "Como o sistema mantém consistência visual entre React, Vue, Svelte, Angular e Vanilla apesar das APIs divergentes das libs base headless.",
+      "aiSummary": "Página técnica que documenta divergências entre stacks. Lista as libs base por stack (base-ui no React, reka-ui no Vue, bits-ui no Svelte, Radix NG no Angular, factories na stack vanilla), apresenta tabelas de divergência conhecidas (Accordion, DataTable, Checkbox), explica a estratégia de texto API-neutro em translations.json e indica onde menções literais são aceitáveis (snippets de código, props.table.name/type).",
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, radix-ng, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode"
     },
     "intro": {
       "title": "Filosofia",
@@ -39,6 +39,11 @@
           "lib": "bits-ui",
           "approach": "Componentes compostos com Svelte 5 runes; props camelCase, slots nativos."
         },
+        "angular": {
+          "stack": "Angular",
+          "lib": "@radix-ng/primitives",
+          "approach": "Diretivas compostas por host directives e injeção; entradas com signals, projeção por ng-content."
+        },
         "nortear": {
           "stack": "Vanilla",
           "lib": "factories vanilla TS + CSS .nds-*",
@@ -59,7 +64,7 @@
     },
     "writingStrategy": {
       "title": "Estratégia de escrita",
-      "subtitle": "Como manter um único <code>translations.json</code> servindo quatro stacks.",
+      "subtitle": "Como manter um único <code>translations.json</code> servindo cinco stacks.",
       "items": {
         "neutralText": {
           "title": "Texto descritivo: API-neutro",
@@ -87,6 +92,7 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
+        "angular": "Angular",
         "vanilla": "Vanilla"
       },
       "rows": {
@@ -95,6 +101,7 @@
           "react": "boolean (multiple)",
           "vue": "string (type)",
           "svelte": "string (type)",
+          "angular": "boolean (multiple)",
           "vanilla": "data-attr"
         },
         "checkbox": {
@@ -102,6 +109,7 @@
           "react": "boolean prop",
           "vue": "string em checked",
           "svelte": "union literal",
+          "angular": "tri-valorado + indeterminate",
           "vanilla": "aria-checked"
         },
         "select": {
@@ -109,6 +117,7 @@
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
+          "angular": "value + (valueChange)",
           "vanilla": "event listener"
         },
         "dialog": {
@@ -116,6 +125,7 @@
           "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
+          "angular": "diretiva no próprio elemento",
           "vanilla": "factory params"
         },
         "form": {
@@ -123,6 +133,7 @@
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
+          "angular": "Reactive Forms",
           "vanilla": "FormData nativo"
         }
       }
@@ -144,9 +155,9 @@
     "description": "One spec, four implementations, one visual result. Each stack uses a different base library — APIs diverge, but the final markup, keyboard behavior and visual tokens do not.",
     "seo": {
       "title": "Cross-Stack Divergences",
-      "description": "How the system keeps visual consistency across React, Vue, Svelte and Vanilla despite divergent APIs in the headless base libraries.",
+      "description": "How the system keeps visual consistency across React, Vue, Svelte, Angular and Vanilla despite divergent APIs in the headless base libraries.",
       "aiSummary": "Technical page documenting per-stack divergences. Lists the base libraries per stack (base-ui in React, reka-ui in Vue, bits-ui in Svelte, vanilla factories in Vanilla), shows known divergence tables (Accordion, DataTable, Checkbox), explains the API-neutral text strategy in translations.json and points out where literal mentions are acceptable (code snippets, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutral, Accordion, DataTable, Checkbox, override, structureCode"
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, radix-ng, vanilla, factories, headless, API-neutral, Accordion, DataTable, Checkbox, override, structureCode"
     },
     "intro": {
       "title": "Philosophy",
@@ -177,6 +188,11 @@
           "lib": "bits-ui",
           "approach": "Compound components with Svelte 5 runes; camelCase props, native slots."
         },
+        "angular": {
+          "stack": "Angular",
+          "lib": "@radix-ng/primitives",
+          "approach": "Directives composed via host directives and injection; signal inputs, projection through ng-content."
+        },
         "nortear": {
           "stack": "Vanilla",
           "lib": "vanilla TS factories + CSS .nds-*",
@@ -197,7 +213,7 @@
     },
     "writingStrategy": {
       "title": "Writing strategy",
-      "subtitle": "How a single <code>translations.json</code> serves four stacks.",
+      "subtitle": "How a single <code>translations.json</code> serves five stacks.",
       "items": {
         "neutralText": {
           "title": "Descriptive text: API-neutral",
@@ -225,6 +241,7 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
+        "angular": "Angular",
         "vanilla": "Vanilla"
       },
       "rows": {
@@ -233,6 +250,7 @@
           "react": "boolean (multiple)",
           "vue": "string (type)",
           "svelte": "string (type)",
+          "angular": "boolean (multiple)",
           "vanilla": "data-attr"
         },
         "checkbox": {
@@ -240,6 +258,7 @@
           "react": "boolean prop",
           "vue": "string in checked",
           "svelte": "union literal",
+          "angular": "tri-state + indeterminate",
           "vanilla": "aria-checked"
         },
         "select": {
@@ -247,6 +266,7 @@
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
+          "angular": "value + (valueChange)",
           "vanilla": "event listener"
         },
         "dialog": {
@@ -254,6 +274,7 @@
           "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
+          "angular": "directive on the element itself",
           "vanilla": "factory params"
         },
         "form": {
@@ -261,6 +282,7 @@
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
+          "angular": "Reactive Forms",
           "vanilla": "native FormData"
         }
       }
@@ -282,9 +304,9 @@
     "description": "Una especificación, cuatro implementaciones, un resultado visual. Cada stack usa una lib base distinta — las APIs divergen, pero el markup final, el comportamiento de teclado y los tokens visuales no.",
     "seo": {
       "title": "Divergencias Cross-Stack",
-      "description": "Cómo el sistema mantiene consistencia visual entre React, Vue, Svelte y Vanilla pese a las APIs divergentes de las libs base headless.",
-      "aiSummary": "Página técnica que documenta divergencias entre stacks. Lista las libs base por stack (base-ui en React, reka-ui en Vue, bits-ui en Svelte, factories en el stack vanilla), presenta tablas de divergencias conocidas (Accordion, DataTable, Checkbox), explica la estrategia de texto API-neutro en translations.json e indica dónde son aceptables las menciones literales (snippets de código, props.table.name/type).",
-      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode"
+      "description": "Cómo el sistema mantiene consistencia visual entre React, Vue, Svelte, Angular y Vanilla pese a las APIs divergentes de las libs base headless.",
+      "aiSummary": "Página técnica que documenta divergencias entre stacks. Lista las libs base por stack (base-ui en React, reka-ui en Vue, bits-ui en Svelte, Radix NG en Angular, factories en el stack vanilla), presenta tablas de divergencias conocidas (Accordion, DataTable, Checkbox), explica la estrategia de texto API-neutro en translations.json e indica dónde son aceptables las menciones literales (snippets de código, props.table.name/type).",
+      "aiEntities": "cross-stack, base-ui, reka-ui, bits-ui, radix-ng, vanilla, factories, headless, API-neutro, Accordion, DataTable, Checkbox, override, structureCode"
     },
     "intro": {
       "title": "Filosofía",
@@ -315,6 +337,11 @@
           "lib": "bits-ui",
           "approach": "Componentes compuestos con Svelte 5 runes; props camelCase, slots nativos."
         },
+        "angular": {
+          "stack": "Angular",
+          "lib": "@radix-ng/primitives",
+          "approach": "Directivas compuestas por host directives e inyección; entradas con signals, proyección por ng-content."
+        },
         "nortear": {
           "stack": "Vanilla",
           "lib": "factories vanilla TS + CSS .nds-*",
@@ -335,7 +362,7 @@
     },
     "writingStrategy": {
       "title": "Estrategia de escritura",
-      "subtitle": "Cómo mantener un único <code>translations.json</code> sirviendo a cuatro stacks.",
+      "subtitle": "Cómo mantener un único <code>translations.json</code> sirviendo a cinco stacks.",
       "items": {
         "neutralText": {
           "title": "Texto descriptivo: API-neutro",
@@ -363,6 +390,7 @@
         "react": "React",
         "vue": "Vue",
         "svelte": "Svelte",
+        "angular": "Angular",
         "vanilla": "Vanilla"
       },
       "rows": {
@@ -371,6 +399,7 @@
           "react": "boolean (multiple)",
           "vue": "string (type)",
           "svelte": "string (type)",
+          "angular": "boolean (multiple)",
           "vanilla": "data-attr"
         },
         "checkbox": {
@@ -378,6 +407,7 @@
           "react": "boolean prop",
           "vue": "string en checked",
           "svelte": "union literal",
+          "angular": "tri-valuado + indeterminate",
           "vanilla": "aria-checked"
         },
         "select": {
@@ -385,6 +415,7 @@
           "react": "value/onValueChange",
           "vue": "v-model",
           "svelte": "bind:value",
+          "angular": "value + (valueChange)",
           "vanilla": "event listener"
         },
         "dialog": {
@@ -392,6 +423,7 @@
           "react": "render prop (compat asChild)",
           "vue": "as-child slot",
           "svelte": "child snippet",
+          "angular": "directiva en el propio elemento",
           "vanilla": "factory params"
         },
         "form": {
@@ -399,6 +431,7 @@
           "react": "react-hook-form",
           "vue": "vee-validate",
           "svelte": "sveltekit-superforms",
+          "angular": "Reactive Forms",
           "vanilla": "FormData nativo"
         }
       }
