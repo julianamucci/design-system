@@ -8,7 +8,7 @@
       "title": "Tooltip — Overlay",
       "description": "Documentação do Tooltip: Provider, Trigger, Content e Arrow com posicionamento, delay e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tooltip com Provider, Trigger e Content, posicionamento automático com Arrow, delay configurável e suporte a teclado via foco.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -453,7 +453,7 @@
       "title": "Tooltip — Overlay",
       "description": "Tooltip documentation: Provider, Trigger, Content and Arrow with positioning, delay and WCAG 2.2 AA support.",
       "aiSummary": "Tooltip component with Provider, Trigger and Content, automatic positioning with Arrow, configurable delay and keyboard support via focus.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -898,7 +898,7 @@
       "title": "Tooltip — Overlay",
       "description": "Documentación de Tooltip: Provider, Trigger, Content y Arrow con posicionamiento, delay y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Tooltip con Provider, Trigger y Content, posicionamiento automático con Arrow, delay configurable y soporte de teclado vía foco.",
-      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role tooltip"
+      "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role tooltip"
     },
     "demonstration": {
       "title": "Demostración",

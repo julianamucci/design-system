@@ -71,7 +71,7 @@
         "arrows": "<kbd>Arrow</kbd> — navega entre opções em radio group, select, menu, tabs, carousel.",
         "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — primeiro / último item em listas, datepickers e tabelas."
       },
-      "note": "Cada página de docs de componente lista as teclas específicas suportadas na seção <em>Acessibilidade</em>. Comportamentos de teclado herdados das libs base (base-ui / reka-ui / bits-ui) seguem as práticas do W3C ARIA Authoring Practices Guide."
+      "note": "Cada página de docs de componente lista as teclas específicas suportadas na seção <em>Acessibilidade</em>. Comportamentos de teclado herdados das libs base (base-ui / reka-ui / bits-ui / radix-ng) seguem as práticas do W3C ARIA Authoring Practices Guide."
     },
     "focus": {
       "title": "Focus visible",
@@ -215,7 +215,7 @@
         "arrows": "<kbd>Arrow</kbd> — navigates options in radio group, select, menu, tabs, carousel.",
         "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — first / last item in lists, datepickers and tables."
       },
-      "note": "Every component docs page lists the specific keys supported in the <em>Accessibility</em> section. Keyboard behavior inherited from the base libraries (base-ui / reka-ui / bits-ui) follows the W3C ARIA Authoring Practices Guide."
+      "note": "Every component docs page lists the specific keys supported in the <em>Accessibility</em> section. Keyboard behavior inherited from the base libraries (base-ui / reka-ui / bits-ui / radix-ng) follows the W3C ARIA Authoring Practices Guide."
     },
     "focus": {
       "title": "Focus visible",
@@ -359,7 +359,7 @@
         "arrows": "<kbd>Arrow</kbd> — navega entre opciones en radio group, select, menu, tabs, carousel.",
         "homeEnd": "<kbd>Home</kbd> / <kbd>End</kbd> — primer / último item en listas, datepickers y tablas."
       },
-      "note": "Cada página de docs de componente lista las teclas específicas soportadas en la sección <em>Accesibilidad</em>. Comportamientos de teclado heredados de las libs base (base-ui / reka-ui / bits-ui) siguen las prácticas del W3C ARIA Authoring Practices Guide."
+      "note": "Cada página de docs de componente lista las teclas específicas soportadas en la sección <em>Accesibilidad</em>. Comportamientos de teclado heredados de las libs base (base-ui / reka-ui / bits-ui / radix-ng) siguen las prácticas del W3C ARIA Authoring Practices Guide."
     },
     "focus": {
       "title": "Focus visible",

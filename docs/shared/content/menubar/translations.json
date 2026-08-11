@@ -6,9 +6,9 @@
     "description": "Barra horizontal com múltiplos menus suspensos no estilo de aplicações desktop, com navegação por teclado entre menus.",
     "seo": {
       "title": "Menubar — Navegação",
-      "description": "Documentação do Menubar: barra de menus horizontal estilo desktop via base-ui/reka-ui/bits-ui, com setas, submenus e WCAG 2.2 AA.",
+      "description": "Documentação do Menubar: barra de menus horizontal estilo desktop via base-ui/reka-ui/bits-ui/radix-ng, com setas, submenus e WCAG 2.2 AA.",
       "aiSummary": "Componente Menubar construído sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Vanilla) que apresenta barra horizontal de menus estilo desktop com triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts e navegação por setas entre menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -478,9 +478,9 @@
     "description": "Horizontal bar with multiple dropdown menus in desktop application style, with keyboard navigation between menus.",
     "seo": {
       "title": "Menubar — Navigation",
-      "description": "Menubar documentation: desktop-style menu bar via base-ui/reka-ui/bits-ui, with arrows, submenus, and WCAG 2.2 AA.",
+      "description": "Menubar documentation: desktop-style menu bar via base-ui/reka-ui/bits-ui/radix-ng, with arrows, submenus, and WCAG 2.2 AA.",
       "aiSummary": "Menubar component built on base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Vanilla) that presents a horizontal bar of desktop-style menus with triggers, items, checkbox-items, radio-items, submenus, separators, shortcuts, and arrow navigation between menus.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -950,9 +950,9 @@
     "description": "Barra horizontal con múltiples menús desplegables al estilo de aplicaciones desktop, con navegación por teclado entre menús.",
     "seo": {
       "title": "Menubar — Navegación",
-      "description": "Documentación de Menubar: barra de menús horizontal estilo desktop vía base-ui/reka-ui/bits-ui, con flechas, submenús y WCAG 2.2 AA.",
+      "description": "Documentación de Menubar: barra de menús horizontal estilo desktop vía base-ui/reka-ui/bits-ui/radix-ng, con flechas, submenús y WCAG 2.2 AA.",
       "aiSummary": "Componente Menubar construido sobre base-ui/menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Vanilla) que presenta barra horizontal de menús estilo desktop con triggers, items, checkbox-items, radio-items, submenús, separators, shortcuts y navegación por flechas entre menús.",
-      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
+      "aiEntities": "Menubar, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, lucide, role=menubar, role=menu, role=menuitem, WCAG 2.2, aria-haspopup, desktop application"
     },
     "demonstration": {
       "title": "Demostración",

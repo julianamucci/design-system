@@ -8,7 +8,7 @@
       "title": "RadioGroup — Formulário",
       "description": "Documentação do RadioGroup: seleção única exclusiva, navegação por setas, integração com Label e Form, acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup com seleção única mutuamente exclusiva, navegação por setas, Label associado e role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -447,7 +447,7 @@
       "title": "RadioGroup — Form",
       "description": "RadioGroup documentation: exclusive single selection, arrow navigation, Label and Form integration, WCAG 2.2 AA accessibility.",
       "aiSummary": "RadioGroup component with single mutually exclusive selection, arrow navigation, associated Label and automatic role=\"radiogroup\".",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -886,7 +886,7 @@
       "title": "RadioGroup — Formulario",
       "description": "Documentación de RadioGroup: selección única excluyente, navegación por flechas, integración con Label y Form, accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente RadioGroup con selección única mutuamente excluyente, navegación por flechas, Label asociado y role=\"radiogroup\" automático.",
-      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role radiogroup"
+      "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
       "title": "Demostración",

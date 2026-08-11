@@ -72,7 +72,7 @@
         },
         "headless": {
           "title": "API headless",
-          "body": "Comportamento de teclado, foco e ARIA vem das libs base (base-ui, reka-ui, bits-ui). O sistema veste essas primitives com tokens visuais."
+          "body": "Comportamento de teclado, foco e ARIA vem das libs base (base-ui, reka-ui, bits-ui, radix-ng). O sistema veste essas primitives com tokens visuais."
         },
         "multistack": {
           "title": "Multi-stack desde o dia zero",
@@ -202,7 +202,7 @@
         },
         "headless": {
           "title": "Headless API",
-          "body": "Keyboard, focus and ARIA behavior come from base libraries (base-ui, reka-ui, bits-ui). The system dresses these primitives with visual tokens."
+          "body": "Keyboard, focus and ARIA behavior come from base libraries (base-ui, reka-ui, bits-ui, radix-ng). The system dresses these primitives with visual tokens."
         },
         "multistack": {
           "title": "Multi-stack from day zero",
@@ -332,7 +332,7 @@
         },
         "headless": {
           "title": "API headless",
-          "body": "Comportamiento de teclado, foco y ARIA viene de las libs base (base-ui, reka-ui, bits-ui). El sistema viste esas primitives con tokens visuales."
+          "body": "Comportamiento de teclado, foco y ARIA viene de las libs base (base-ui, reka-ui, bits-ui, radix-ng). El sistema viste esas primitives con tokens visuales."
         },
         "multistack": {
           "title": "Multi-stack desde el día cero",

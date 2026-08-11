@@ -8,7 +8,7 @@
       "title": "Popover — Overlay",
       "description": "Documentação do Popover: trigger, content, title e description, com posicionamento auto-flip e acessibilidade WCAG 2.2 AA.",
       "aiSummary": "Componente Popover com Trigger, Content, Title e Description, posicionamento auto-flip via base-ui, foco gerenciado e role dialog.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -461,7 +461,7 @@
       "title": "Popover — Overlay",
       "description": "Popover documentation: trigger, content, title and description with auto-flip positioning and WCAG 2.2 AA accessibility.",
       "aiSummary": "Popover component with Trigger, Content, Title and Description, auto-flip positioning via base-ui, managed focus and dialog role.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -914,7 +914,7 @@
       "title": "Popover — Overlay",
       "description": "Documentación de Popover: trigger, content, title y description con posicionamiento auto-flip y accesibilidad WCAG 2.2 AA.",
       "aiSummary": "Componente Popover con Trigger, Content, Title y Description, posicionamiento auto-flip vía base-ui, foco gestionado y role dialog.",
-      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Popover, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demostración",
