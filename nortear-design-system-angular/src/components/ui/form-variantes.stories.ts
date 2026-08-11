@@ -1,0 +1,81 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { expect, within } from 'storybook/test';
+import { NDS_FORM } from './form';
+import { NdsInput } from './input';
+
+// O Form não tem variante por prop — o que muda é quais peças opcionais entram
+// no campo. As duas stories abaixo são exatamente as duas combinações que o
+// conteúdo compartilhado documenta em `variants.items`.
+
+const meta: Meta = {
+  title: 'UI/Form/Variants',
+  decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
+  parameters: { layout: 'padded', controls: { disable: true } },
+};
+
+export default meta;
+type Story = StoryObj;
+
+/** Combinação mínima: rótulo e controle, nada abaixo. */
+export const LabelAndControl: Story = {
+  render: () => ({
+    template: `
+      <div ndsFormField class="nds-max-w-sm">
+        <label ndsFormLabel>Nome completo</label>
+        <input ndsInput type="text" placeholder="ex: João da Silva" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Só o par rótulo + controle existe no campo', async () => {
+      await expect(canvasElement.querySelector('[data-slot="field-description"]')).toBeNull();
+      await expect(canvasElement.querySelector('[data-slot="field-error"]')).toBeNull();
+    });
+
+    await step('Sem descrição, o controle não ganha aria-describedby vazio', async () => {
+      // Um `aria-describedby=""` faz o leitor de tela anunciar uma pausa sem
+      // conteúdo — o atributo tem que sumir, não ficar vazio.
+      const controle = canvas.getByLabelText('Nome completo');
+      await expect(controle.hasAttribute('aria-describedby')).toBe(false);
+    });
+  },
+};
+
+/** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
+export const WithDescription: Story = {
+  parameters: { covers: ['functional.item3', 'visual.item2'] },
+  render: () => ({
+    template: `
+      <div ndsFormField class="nds-max-w-sm">
+        <label ndsFormLabel>Senha</label>
+        <input ndsInput type="password" autocomplete="new-password" />
+        <p ndsFormDescription>Use pelo menos 8 caracteres, com letras e números.</p>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const controle = canvas.getByLabelText('Senha');
+    const descricao = canvasElement.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+
+    await step('A descrição é um parágrafo com a classe do design system', async () => {
+      await expect(descricao.tagName).toBe('P');
+      await expect(descricao).toHaveClass(/nds-form-description/);
+    });
+
+    await step('A descrição vem DEPOIS do controle', async () => {
+      // A ordem importa para quem navega por teclado: a instrução aparece onde
+      // o campo termina, não empurrando o campo para baixo da dobra.
+      await expect(descricao.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+        controle.getBoundingClientRect().bottom,
+      );
+    });
+
+    await step('O texto de apoio entra no aria-describedby do controle', async () => {
+      await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+    });
+  },
+};

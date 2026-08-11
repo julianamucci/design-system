@@ -248,10 +248,26 @@ export class NdsPopover {
       requestAnimationFrame(() => this.focarQuandoVisivel(painel, tentativa + 1));
       return;
     }
-    // Sem elemento focável dentro, o foco vai para o próprio painel — que o
+    // Se o conteúdo já levou o foco para dentro, não mexer: a intenção dele é
+    // mais específica que a política genérica de "primeiro focável".
+    if (painel.contains(document.activeElement)) return;
+
+    // `data-autofocus` é como o conteúdo diz ONDE quer o foco.
+    //
+    // Existe porque "primeiro elemento focável" é a resposta errada para alguma
+    // coisa. No Calendar dentro de um Popover, o primeiro focável é o botão de
+    // mês anterior, e o foco parava lá — quem abre por teclado tinha que
+    // atravessar a navegação inteira antes de chegar a um dia. O Calendar
+    // tentava se corrigir sozinho, e não conseguia: ele foca enquanto o painel
+    // ainda está `visibility: hidden` esperando o floating-ui, e `focus()` em
+    // elemento invisível é no-op. Quem sabe quando o painel ficou visível é este
+    // laço, aqui; então é aqui que a escolha do conteúdo tem que ser lida.
+    //
+    // Sem elemento focável nenhum, o foco vai para o próprio painel — que o
     // gerenciador de foco já deixou com `tabindex="-1"`. Assim o leitor de tela
     // anuncia o diálogo mesmo quando ele só tem texto.
-    const alvo = painel.querySelector<HTMLElement>(FOCAVEIS);
+    const declarado = painel.querySelector<HTMLElement>('[data-autofocus]');
+    const alvo = declarado ?? painel.querySelector<HTMLElement>(FOCAVEIS);
     (alvo ?? painel).focus();
   }
 }

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -273,6 +274,12 @@ const COMPOSITION_CODE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    // `NgTemplateOutlet` faltava e a página inteira renderizava mesmo assim: o
+    // `[ngTemplateOutlet]` virava um binding para propriedade inexistente de
+    // `<ng-container>` — NG0303 no console, nenhum erro de compilação, e as dez
+    // setas de expansão dos previews simplesmente não apareciam. O `tsc` não
+    // valida template Angular, então só o log do teste denunciava.
+    NgTemplateOutlet,
     ...NDS_COLLAPSIBLE, NdsButton, NdsCheckbox, NdsLabel,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,

@@ -50,11 +50,19 @@ import { NdsSelectDocs } from './SelectDocs';
 import { NdsDrawerDocs } from './DrawerDocs';
 import { NdsNavigationMenuDocs } from './NavigationMenuDocs';
 import { NdsCommandDocs } from './CommandDocs';
+import { NdsFormDocs } from './FormDocs';
+import { NdsCalendarDocs } from './CalendarDocs';
+import { NdsCarouselDocs } from './CarouselDocs';
+import { NdsChartDocs } from './ChartDocs';
+import { NdsDataTableDocs } from './DataTableDocs';
+import { NdsInputOTPDocs } from './InputOTPDocs';
+import { NdsResizableDocs } from './ResizableDocs';
+import { NdsSonnerDocs } from './SonnerDocs';
 
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsResizableDocs, NdsSonnerDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -282,5 +290,48 @@ export const NavigationMenu: Story = {
 
 export const Command: Story = {
   render: () => ({ template: '<nds-command-docs />' }),
+  play,
+};
+
+// ─── Bloco 5 — ecossistema ────────────────────────────────────────────────────
+// Com estes oito o stack fecha os 47 componentes.
+
+export const Form: Story = {
+  render: () => ({ template: '<nds-form-docs />' }),
+  play,
+};
+
+export const Calendar: Story = {
+  render: () => ({ template: '<nds-calendar-docs />' }),
+  play,
+};
+
+export const Carousel: Story = {
+  render: () => ({ template: '<nds-carousel-docs />' }),
+  play,
+};
+
+export const Chart: Story = {
+  render: () => ({ template: '<nds-chart-docs />' }),
+  play,
+};
+
+export const DataTable: Story = {
+  render: () => ({ template: '<nds-data-table-docs />' }),
+  play,
+};
+
+export const InputOTP: Story = {
+  render: () => ({ template: '<nds-input-otp-docs />' }),
+  play,
+};
+
+export const Resizable: Story = {
+  render: () => ({ template: '<nds-resizable-docs />' }),
+  play,
+};
+
+export const Sonner: Story = {
+  render: () => ({ template: '<nds-sonner-docs />' }),
   play,
 };

@@ -1,0 +1,242 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect } from 'storybook/test';
+import { parseDate } from '@internationalized/date';
+import { NdsCalendar, type CalendarCaptionLayout, type CalendarMode } from './calendar';
+import { NdsCalendarDocs } from '@/components/docs/CalendarDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+// Data FIXA, e não o relógio: um calendário que abre no mês corrente muda de
+// grade toda virada de mês, e a foto do Chromatic passa a divergir sozinha.
+// `parseDate` em vez de `new CalendarDate(...)` também mantém a data fora do
+// escopo de módulo executável que o auditor cobra.
+const DIA_ESCOLHIDO = parseDate('2026-04-12');
+const DIAS_ESCOLHIDOS = [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')];
+
+type CalendarArgs = {
+  mode: CalendarMode;
+  locale: string;
+  captionLayout: CalendarCaptionLayout;
+  numberOfMonths: number;
+  showOutsideDays: boolean;
+};
+
+/**
+ * O painel Code imprime o `template` da story literalmente — com o binding no
+ * arg, que não é o que a pessoa deve escrever. Ver a nota em
+ * `separator.stories.ts`.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<CalendarArgs> }): string {
+  const {
+    mode = 'single',
+    locale = 'pt-BR',
+    captionLayout = 'label',
+    numberOfMonths = 1,
+    showOutsideDays = true,
+  } = ctx.args ?? {};
+
+  const multiplo = mode === 'multiple';
+  const atributos = [
+    multiplo ? 'mode="multiple"' : '',
+    '[(value)]="data"',
+    `locale="${locale}"`,
+    captionLayout === 'dropdown' ? 'captionLayout="dropdown"' : '',
+    numberOfMonths !== 1 ? `[numberOfMonths]="${numberOfMonths}"` : '',
+    showOutsideDays ? '' : '[showOutsideDays]="false"',
+  ]
+    .filter(Boolean)
+    .join('\n      ');
+
+  const inicial = multiplo
+    ? `signal([parseDate('2026-04-08'), parseDate('2026-04-12')])`
+    : `signal(parseDate('2026-04-12'))`;
+
+  return `import { signal } from '@angular/core';
+import { parseDate } from '@internationalized/date';
+import { NdsCalendar } from '@/components/ui/calendar';
+
+@Component({
+  imports: [NdsCalendar],
+  template: \`
+    <div
+      ndsCalendar
+      ${atributos}
+    ></div>
+  \`,
+})
+export class Exemplo {
+  // CalendarDate do @internationalized/date — sem hora e sem fuso, que é o que
+  // um calendário precisa.
+  readonly data = ${inicial};
+}`;
+}
+
+const meta: Meta<CalendarArgs> = {
+  title: 'UI/Calendar',
+  tags: ['autodocs', 'form'],
+  decorators: [moduleMetadata({ imports: [NdsCalendar] })],
+  parameters: {
+    layout: 'centered',
+    docs: { page: withAutoDocsTab(NdsCalendarDocs) },
+  },
+  argTypes: {
+    mode: {
+      control: 'inline-radio',
+      options: ['single', 'multiple'],
+      description: 'Uma data ou várias datas avulsas.',
+    },
+    locale: {
+      control: 'select',
+      options: ['pt-BR', 'en-US', 'es-ES'],
+      description: 'Tag BCP 47 — controla nomes de mês, dias da semana e o rótulo de cada dia.',
+    },
+    captionLayout: {
+      control: 'inline-radio',
+      options: ['label', 'dropdown'],
+      description: 'Legenda em texto ou com seletores de mês e ano.',
+    },
+    numberOfMonths: { control: 'number', description: 'Quantos meses exibir lado a lado.' },
+    showOutsideDays: {
+      control: 'boolean',
+      description: 'Completa a primeira e a última semana com os dias dos meses vizinhos.',
+    },
+  },
+  args: {
+    mode: 'single',
+    locale: 'pt-BR',
+    captionLayout: 'label',
+    numberOfMonths: 1,
+    showOutsideDays: true,
+  },
+};
+
+export default meta;
+type Story = StoryObj<CalendarArgs>;
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+    covers: [
+      'visual.item1',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item4',
+      'accessibility.item6',
+    ],
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      valor: args.mode === 'multiple' ? DIAS_ESCOLHIDOS : DIA_ESCOLHIDO,
+    },
+    template: `
+      <div
+        ndsCalendar
+        [mode]="mode"
+        [value]="valor"
+        [locale]="locale"
+        [captionLayout]="captionLayout"
+        [numberOfMonths]="numberOfMonths"
+        [showOutsideDays]="showOutsideDays"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O grid e as células têm papel de tabela de datas', async () => {
+      // accessibility.item1 — sem o papel, o leitor de tela lê uma tabela
+      // qualquer e não oferece a navegação bidimensional.
+      await expect(canvas.getByRole('grid')).toBeInTheDocument();
+      await expect(canvas.getAllByRole('gridcell').length).toBeGreaterThan(27);
+    });
+
+    await step('A grade não se anuncia como aplicação', async () => {
+      // O primitivo desta stack marca a própria raiz com role="application", que
+      // manda o leitor de tela repassar todas as teclas e sair do modo de
+      // leitura — e um aria-label que repete a legenda já visível. Nenhuma das
+      // outras quatro stacks emite isso; a raiz aqui volta a ser um <div>.
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
+      await expect(raiz.hasAttribute('role')).toBe(false);
+      await expect(raiz.hasAttribute('aria-label')).toBe(false);
+
+      const meses = raiz.querySelector<HTMLElement>('.nds-calendar-months')!;
+      await expect(meses.hasAttribute('role')).toBe(false);
+      await expect(meses.hasAttribute('aria-label')).toBe(false);
+    });
+
+    await step('A paginação anuncia em português, e a semana não é lida duas vezes', async () => {
+      // Os botões de mês só têm ícone: o que o leitor de tela anuncia é o
+      // aria-label. O primitivo traz "Previous page"/"Next page" cravados em
+      // inglês — num calendário em português, isso soaria numa língua só.
+      await expect(canvas.getByRole('button', { name: 'Ir para o mês anterior' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'Ir para o próximo mês' })).toBeInTheDocument();
+
+      // A linha dos dias da semana fica fora da árvore de acessibilidade: cada
+      // dia já anuncia a data por extenso, e repetir a coluna a cada célula só
+      // encompridaria a leitura.
+      await expect(canvasElement.querySelector('thead')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Cada dia anuncia a data por extenso, no idioma pedido', async () => {
+      // accessibility.item2 — o texto da célula é só o número; sozinho ele não
+      // diz de que mês nem de que ano. E o formatador do primitivo nasce em
+      // inglês (ele lê o input no construtor), então esta asserção é a que
+      // pega a regressão do idioma.
+      const dia = canvasElement.querySelector<HTMLElement>(
+        '.nds-calendar-day-btn[data-value="2026-04-12"]',
+      )!;
+      await expect(dia).toHaveTextContent('12');
+      await expect(dia.getAttribute('aria-label')).toMatch(/12 de abril de 2026/i);
+    });
+
+    await step('A data escolhida é anunciada como escolhida', async () => {
+      // `aria-selected` mora na CÉLULA, que é quem tem papel de gridcell — é
+      // dela que o leitor lê o estado ao percorrer a grade.
+      const selecionadas = canvasElement.querySelectorAll('td[aria-selected="true"]');
+      await expect(selecionadas.length).toBe(1);
+      await expect(
+        selecionadas[0].querySelector('.nds-calendar-day-btn[data-selected]'),
+      ).not.toBeNull();
+    });
+
+    await step('O grid é uma única parada de tabulação', async () => {
+      // Se cada dia fosse uma parada, sair do calendário custaria mais de
+      // trinta Tabs.
+      await expect(
+        canvasElement.querySelectorAll('.nds-calendar-day-btn[tabindex="0"]').length,
+      ).toBe(1);
+    });
+
+    await step('O dia é um quadrado de célula, com o número no centro', async () => {
+      // Medida computada, e não classe presente: a classe estava lá nas quatro
+      // stacks e mesmo assim uma delas desenhava 48×48, porque herdava o padding
+      // do botão que compunha por fora.
+      const dia = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn')!;
+      const cs = getComputedStyle(dia);
+      const caixa = dia.getBoundingClientRect();
+
+      await expect(Math.round(caixa.width)).toBe(Math.round(caixa.height));
+      await expect(Math.round(caixa.width)).toBeLessThanOrEqual(36);
+      await expect(cs.alignItems).toBe('center');
+      await expect(cs.justifyContent).toBe('center');
+    });
+
+    await step('A paginação de mês é ghost: sem moldura própria', async () => {
+      // Emoldurado, o botão de mês competiria com o dia escolhido, que é o único
+      // elemento do calendário que deveria ter peso. Medida computada, porque
+      // classe presente não é borda ausente.
+      const anterior = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
+      const cs = getComputedStyle(anterior);
+      await expect(parseFloat(cs.borderTopWidth)).toBe(0);
+      await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
+    });
+
+    await step('O calendário encolhe até o conteúdo, e não até o contêiner', async () => {
+      // Sem `width: fit-content` as colunas se afastam e as setas vão parar nas
+      // bordas do bloco, longe do mês.
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="calendar"]')!;
+      await expect(raiz.getBoundingClientRect().width).toBeLessThan(400);
+    });
+  },
+};

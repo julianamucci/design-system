@@ -6,11 +6,14 @@ valem aqui sem alteração.
 
 ## Estado
 
-**Em construção.** 40 dos 47 componentes prontos — Blocos 1 a 4 fechados.
-Faltam os 7 do Bloco 5: form, calendar, carousel, chart, data-table, input-otp,
-resizable e sonner. Cada componente pronto tem stories, docs page e as 15
-seções genéricas. A ordem e as pendências vivem em
-`.pipeline-context/_ordem.md`.
+**Completo.** Os 47 componentes têm primitivo, stories e docs page com as 15
+seções genéricas (14 ou 13 onde o conteúdo compartilhado não traz composições ou
+estados). Portões no fim do Bloco 5: `tsc` limpo, suíte com 168 arquivos e 508
+testes verdes, `docs-smoke` com as 47 páginas passando, e
+`node scripts/audit.mjs --all` com **zero achados** para `stack === 'angular'`.
+
+O que sobrou de aberto não é implementação: são decisões de conteúdo
+compartilhado e de auditoria, registradas em `.pipeline-context/_ordem.md`.
 
 ## O que é
 
@@ -241,15 +244,35 @@ classe `.nds-*`, não pelo `data-slot`.
   `computed` `safe*` esconderia a chamada e viraria falso positivo permanente
   de XSS. `node scripts/audit.mjs <slug> --category security` é o portão.
 
+### 12. Diretiva de `@angular/common` faltando no `imports` não dá erro
+
+`[ngTemplateOutlet]` num `<ng-container>` sem `NgTemplateOutlet` no `imports`
+vira binding para propriedade inexistente: **NG0303 no console e nada mais**. A
+página renderiza inteira, o `tsc` passa (ele não valida template Angular) e o
+teste fica verde — o que some é só o que aquele outlet ia instanciar.
+
+Custou dez setas de expansão invisíveis na `CollapsibleDocs`, achadas lendo o
+log de uma rodada que tinha passado. Vale para `NgClass`, `NgStyle`, `NgIf` e
+companhia. Quando um preview aparecer vazio sem motivo, procure NG0303 no log
+antes de procurar no CSS.
+
 ## Pendências conhecidas
 
-- As 101 chaves `*Code` já têm variante `angular` (cobertura 101/0), mas **46
-  delas descrevem componentes que ainda não existem neste stack** — foram
-  escritas a partir dos seletores reais do `@radix-ng/primitives` e valem como
-  contrato a cumprir, não como registro do que está implementado. Ao criar um
-  componente, confira o snippet contra o que você implementou e corrija o
-  conteúdo compartilhado se divergir.
-- Os 7 componentes do Bloco 5 ainda não existem.
+Nenhuma de implementação. As abertas são de conteúdo compartilhado e de
+auditoria, e estão detalhadas em `.pipeline-context/_ordem.md`:
+
+- **`sonner.states` não vira seção.** O nó só tem `title` e `items`, os dois
+  engolidos pelo `SECTION_HEADERS` do `audit.mjs` — então `hasKeys` dá falso e
+  renderizar a seção é cobrado como `section_without_content`. É o achado que as
+  outras quatro stacks carregam hoje. Consertar a regra do auditor ou aceitar o
+  achado nas cinco é decisão de quem mantém.
+- **`--chart-1` a `--chart-5` não têm variante escura** em lugar nenhum
+  (`:root` e as três marcas, e o `themes/default.css` diz isso explicitamente).
+  `--chart-5` é `210 71% 23%` sobre fundo escuro. A `chart-estados` afirma o
+  recolorir pelo texto dos eixos, que tem variante; a paleta em si é decisão de
+  design pendente.
+- **`resizable` não tem regra para `[data-disabled]` no punho**, e o conteúdo
+  pede "sem cursor de resize". O estado é testado por comportamento.
 - O bridge `withAutoDocsTab` (React → Angular) não é coberto por teste: o
   `docs-smoke` renderiza a docs page direto, como nas outras stacks. A aba
   "Documentação" foi verificada em navegador manualmente no spike.

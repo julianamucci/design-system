@@ -1,0 +1,231 @@
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent } from 'storybook/test';
+import { NdsToaster, toast, type ToastOptions, type ToastPosition, type ToastType } from './sonner';
+import { esperarTorrada, limparTorradas, TEXTOS } from './sonner.fixtures';
+import { NdsButton } from './button';
+import { NdsSonnerDocs } from '@/components/docs/SonnerDocs';
+import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+
+type SonnerArgs = {
+  type: ToastType;
+  title: string;
+  description: string;
+  actionLabel: string;
+  position: ToastPosition;
+  richColors: boolean;
+  closeButton: boolean;
+  duration: number;
+};
+
+/**
+ * O painel Code imprime o `template` da story literalmente — com o botão que só
+ * existe para disparar a demonstração e com os bindings ligados aos controls. É
+ * o que a pessoa copia, e não é o que ela deve escrever. Ver a nota em
+ * `separator.stories.ts`.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<SonnerArgs> }): string {
+  const {
+    type = 'success',
+    title = TEXTOS.sucesso,
+    description = '',
+    actionLabel = '',
+    position = 'top-right',
+    richColors = true,
+    closeButton = false,
+  } = ctx.args ?? {};
+
+  // Só o que difere do default entra no snippet — documentação que repete valor
+  // padrão ensina ruído.
+  const atributos = [
+    `position="${position}"`,
+    richColors ? '[richColors]="true"' : '',
+    closeButton ? '[closeButton]="true"' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const opcoes = [
+    description ? `description: '${description}'` : '',
+    actionLabel ? `action: { label: '${actionLabel}', onClick: () => this.desfazer() }` : '',
+  ].filter(Boolean);
+
+  const chamada = type === 'default' ? 'toast' : `toast.${type}`;
+  const argumentos = opcoes.length
+    ? `'${title}', {\n      ${opcoes.join(',\n      ')},\n    }`
+    : `'${title}'`;
+
+  return `import { NdsToaster, toast } from '@/components/ui/sonner';
+
+@Component({
+  imports: [NdsToaster],
+  // O Toaster entra UMA VEZ, no root da aplicação. \`toast()\` é chamado de
+  // qualquer lugar — não precisa de referência ao Toaster nem de injeção.
+  template: \`
+    <div ndsToaster ${atributos}></div>
+  \`,
+})
+export class Exemplo {
+  confirmar(): void {
+    ${chamada}(${argumentos});
+  }
+}`;
+}
+
+const meta: Meta<SonnerArgs> = {
+  title: 'UI/Sonner',
+  tags: ['autodocs', 'feedback'],
+  decorators: [moduleMetadata({ imports: [NdsToaster, NdsButton] })],
+  parameters: {
+    layout: 'padded',
+    docs: { page: withAutoDocsTab(NdsSonnerDocs) },
+  },
+  // Sem compodoc neste stack (ver CLAUDE.md): a aba API Reference sai daqui.
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['default', 'success', 'error', 'warning', 'info', 'loading'],
+      description: 'Tipo semântico da notificação. Define ícone e cor.',
+      table: { type: { summary: 'ToastType' }, defaultValue: { summary: 'default' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Título da notificação. Uma frase, no passado, sem exclamação.',
+      table: { type: { summary: 'string' } },
+    },
+    description: {
+      control: 'text',
+      description: 'Complemento opcional ao título, quando o título sozinho não orienta.',
+      table: { type: { summary: 'string' } },
+    },
+    actionLabel: {
+      control: 'text',
+      description:
+        'Rótulo do botão de ação. Vazio remove o botão. A ação oferecida aqui precisa existir em outro lugar também — a notificação some.',
+      table: { type: { summary: 'string' } },
+    },
+    position: {
+      control: 'select',
+      options: [
+        'top-right', 'top-center', 'top-left',
+        'bottom-right', 'bottom-center', 'bottom-left',
+      ],
+      description: 'Canto da tela onde a pilha nasce.',
+      table: { type: { summary: 'ToastPosition' }, defaultValue: { summary: 'bottom-right' } },
+    },
+    richColors: {
+      control: 'boolean',
+      description: 'Aplica a cor semântica do tema a cada tipo.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    closeButton: {
+      control: 'boolean',
+      description: 'Mostra o botão de fechar em todas as notificações.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    duration: {
+      control: { type: 'number', min: 500, step: 500 },
+      description:
+        'Milissegundos até o fechamento automático. O relógio congela enquanto o ponteiro ou o foco estiverem dentro da região.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '4000' } },
+    },
+  },
+  args: {
+    type: 'success',
+    title: TEXTOS.sucesso,
+    description: '',
+    actionLabel: '',
+    position: 'top-right',
+    richColors: true,
+    closeButton: false,
+    duration: 4000,
+  },
+};
+
+export default meta;
+type Story = StoryObj<SonnerArgs>;
+
+export const Playground: Story = {
+  parameters: {
+    docs: { source: { transform: playgroundSource } },
+    covers: ['accessibility.item1', 'accessibility.item3'],
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      disparar: () => {
+        const opcoes: ToastOptions = {};
+        if (args.description) opcoes.description = args.description;
+        if (args.actionLabel) {
+          opcoes.action = { label: args.actionLabel, onClick: () => undefined };
+        }
+        if (args.type === 'default') toast(args.title, opcoes);
+        else toast[args.type](args.title, opcoes);
+      },
+    },
+    // O prazo vem do input do Toaster, e não de cada `toast()`: é o mesmo botão
+    // que o teste usa para encurtar o tempo sem depender do relógio real.
+    template: `
+      <div class="nds-stack" data-spacing="md">
+        <button ndsButton variant="outline" (click)="disparar()">Disparar notificação</button>
+
+        <div
+          ndsToaster
+          [position]="position"
+          [richColors]="richColors"
+          [closeButton]="closeButton"
+          [duration]="duration"
+          label="Notificações da demonstração"
+        ></div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    // Cada play estabelece a própria precondição: o painel Interactions
+    // reexecuta a função no mesmo DOM, sem remontar.
+    await limparTorradas();
+
+    await step('O disparo desenha a notificação na região do Toaster', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Disparar notificação' }));
+      const torrada = await esperarTorrada({ tipo: 'success', texto: TEXTOS.sucesso });
+      const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(regiao.contains(torrada)).toBe(true);
+      await expect(regiao).toHaveAttribute('data-position', 'top-right');
+    });
+
+    await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
+      // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
+      // cortaria a leitura em curso para avisar que algo deu certo, o que é
+      // hostil justamente com quem depende do leitor de tela.
+      const torrada = await esperarTorrada({ tipo: 'success' });
+      await expect(torrada).toHaveAttribute('role', 'status');
+      await expect(torrada).toHaveAttribute('aria-live', 'polite');
+      await expect(torrada.getAttribute('aria-live')).not.toBe('assertive');
+    });
+
+    await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
+      // Um marco de página nomeado: o leitor de tela chega até as notificações
+      // pela lista de regiões, e não só no instante em que elas são anunciadas.
+      const regiao = canvas.getByRole('region', { name: 'Notificações da demonstração' });
+      await expect(regiao).toHaveClass('nds-toaster');
+    });
+
+    await step('O ícone é decorativo — o texto já descreve o estado', async () => {
+      // accessibility.item3 — o tipo e o título dizem tudo; anunciar o ícone
+      // faria o leitor ler "imagem" antes de cada notificação.
+      const torrada = await esperarTorrada({ tipo: 'success' });
+      const icone = torrada.querySelector<SVGSVGElement>('.nds-toast-icon > svg')!;
+      await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      await expect(icone.childElementCount).toBeGreaterThan(0);
+    });
+
+    // Termina com a tela limpa: uma notificação com prazo correndo estaria no
+    // meio do fade quando o axe medisse contraste, e ~1.0 num elemento em
+    // transição parece paleta ruim sem ser.
+    await limparTorradas();
+  },
+};
