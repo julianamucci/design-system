@@ -58,8 +58,43 @@ const URLS_IGNORADAS = [
 ];
 
 type FaroMinimo = {
-  api?: { setView?: (v: { name: string }) => void };
+  api?: {
+    setView?: (v: { name: string }) => void;
+    startUserAction?: (
+      nome: string,
+      atributos?: Record<string, string>,
+      opcoes?: { triggerName?: string },
+    ) => unknown;
+  };
 };
+
+/**
+ * Eventos do catálogo do GA4 que NÃO viram ação de usuário no Faro.
+ *
+ * O `track()` fala 51 eventos, e mandar todos para cá seria trocar
+ * observabilidade por analytics de produto — com custo de ingestão e ruído.
+ * Ficam de fora três famílias, cada uma por um motivo:
+ *
+ * - `page_view` e `docs_page_view`: o Faro já tem a dimensão de página por
+ *   `marcarStory()`, e duplicar cria duas verdades sobre a mesma coisa.
+ * - `docs_section_viewed`, `content_scroll`, `tooltip_view`: disparam por
+ *   rolagem e hover, não por decisão de quem usa. Ação de usuário abre uma
+ *   janela de atividade no Faro; abrir uma a cada scroll não mede nada.
+ * - `field_focus` e `field_blur`: idem — foco é consequência, não ação.
+ *
+ * O resto passa: clique, troca, abertura, cópia. São ações deliberadas, e é
+ * onde correlacionar com erro e latência tem valor — que é justamente o que o
+ * GA4 não faz.
+ */
+const FORA_DO_FARO = new Set([
+  'page_view',
+  'docs_page_view',
+  'docs_section_viewed',
+  'content_scroll',
+  'tooltip_view',
+  'field_focus',
+  'field_blur',
+]);
 
 export type PecasDoFaro = {
   initializeFaro: (config: Record<string, unknown>) => FaroMinimo;
@@ -102,6 +137,9 @@ export function iniciarFaro(
     ],
     ignoreErrors: ERROS_IGNORADOS,
     ignoreUrls: URLS_IGNORADAS,
+    // Sem isto `startUserAction` não tem instrumentação por trás e a janela de
+    // atividade nunca fecha. 100ms é o padrão do Faro.
+    userActionsInstrumentation: { initialActivityTimeout: 100 },
   });
 
   return instancia;
@@ -110,4 +148,32 @@ export function iniciarFaro(
 /** Marca a story em foco como a view atual. No-op se o Faro não subiu. */
 export function marcarStory(id: string): void {
   instancia?.api?.setView?.({ name: id });
+}
+
+/**
+ * Espelha um evento do `track()` como ação de usuário no Faro.
+ *
+ * A mesma chamada que já alimenta o GA4 passa a abrir uma janela de atividade
+ * aqui: o que acontecer logo depois — requisição, erro, lentidão — fica
+ * amarrado à ação que o disparou. É a leitura que o GA4 não dá.
+ *
+ * O payload é o MESMO do GA4, e isso não é economia: a regra do projeto já
+ * obriga valor estável ali (slug, `variant`, `side`), nunca texto traduzido, e
+ * o auditor cobra com `i18n_text_in_payload`. Herdamos o payload já saneado.
+ *
+ * `startUserAction` aceita só `Record<string, string>`, então número e booleano
+ * são convertidos; `undefined` é descartado em vez de virar a string "undefined".
+ */
+export function registrarAcao(evento: string, params?: Record<string, unknown>): void {
+  if (FORA_DO_FARO.has(evento)) return;
+  const acao = instancia?.api?.startUserAction;
+  if (!acao) return;
+
+  const atributos: Record<string, string> = {};
+  for (const [chave, valor] of Object.entries(params ?? {})) {
+    if (valor === undefined || valor === null) continue;
+    atributos[chave] = String(valor);
+  }
+
+  acao(evento, atributos, { triggerName: 'analyticsTrack' });
 }

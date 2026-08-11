@@ -9,6 +9,8 @@
  *     apareça como uma página distinta no GA4.
  */
 
+import { registrarAcao } from '@shared/primitives/faro';
+
 declare global {
   interface Window {
     gtag?: (command: string, ...args: unknown[]) => void;
@@ -441,6 +443,11 @@ export function track<T extends keyof AnalyticsEvents>(
   event: T,
   params: AnalyticsEvents[T],
 ): void {
+  // Faro primeiro, e fora do early-return do gtag: sem GA4 configurado a
+  // funcao voltava sem fazer nada, e a observabilidade morreria junto por um
+  // motivo que nao tem a ver com ela.
+  registrarAcao(event, params as Record<string, unknown>);
+
   const gtag = getManagerGtag();
   if (typeof gtag !== 'function') return;
   gtag('event', event, params as Record<string, unknown>);

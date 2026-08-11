@@ -13,6 +13,8 @@
  *   track('language_switched', { previous_language: 'pt-BR', new_language: 'en' });
  */
 
+import { registrarAcao } from '@shared/primitives/faro';
+
 // ─── Extensão do tipo Window ──────────────────────────────────────────────────
 
 declare global {
@@ -437,6 +439,11 @@ export function track<T extends keyof AnalyticsEvents>(
   event: T,
   params: AnalyticsEvents[T],
 ): void {
+  // Faro primeiro, e fora do early-return do gtag: sem GA4 configurado a
+  // funcao voltava sem fazer nada, e a observabilidade morreria junto por um
+  // motivo que nao tem a ver com ela.
+  registrarAcao(event, params as Record<string, unknown>);
+
   const gtag = getManagerGtag();
   if (typeof gtag !== 'function') return;
   gtag('event', event, params as Record<string, unknown>);
