@@ -1852,7 +1852,16 @@ function auditDeadClassInComponent(slug) {
       const rel = relative(ROOT, file);
 
       const vistas = new Set();
-      for (const m of content.matchAll(/class(?:Name)?=["']([^"']+)["']/g)) {
+      // O lookbehind exclui BINDING, que não é classe literal: `:class="x"` e
+      // `v-bind:class="x"` do Vue casavam a regex por terminarem em `class=`, e
+      // o que entrava como "classe" era o nome da EXPRESSÃO. Foi assim que o
+      // `containerClass` do ChartContainer.vue — um `computed` que devolve
+      // `cn('nds-chart', props.class)` — virou achado de classe inexistente.
+      // As outras formas já não casavam por acidente de sintaxe (`[class]="x"`
+      // e `[ngClass]="x"` têm `]` antes do `=`; `class:ativo={x}` do Svelte não
+      // tem `=` logo após `class`; `className={…}` usa chave, não aspas), mas
+      // depender de acidente é o que produziu este falso positivo.
+      for (const m of content.matchAll(/(?<![:[\w-])class(?:Name)?=["']([^"']+)["']/g)) {
         const valor = m[1];
         if (/[${(}]/.test(valor)) continue;
         for (const cls of valor.split(/\s+/)) {
