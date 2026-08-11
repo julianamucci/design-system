@@ -1,10 +1,15 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  // Catálogo de ícones como JSON único (1 módulo) em vez de `import { icons }
-  // from 'lucide'` (que puxava ~5.5k módulos por-ícone e dominava o build).
-  // Regenerar quando atualizar o lucide:
-  //   node --input-type=module -e "import {icons} from 'lucide'; import {writeFileSync} from 'fs'; writeFileSync('src/lib/lucide-icons.json', JSON.stringify(icons))"
-  import icons from '@/lib/lucide-icons.json';
+  // Catálogo de ícones como JSON único, agora COMPARTILHADO pelas cinco stacks
+  // (`docs/shared/content/icons/lucide-icons.json`) em vez de uma cópia local.
+  // A escolha continua sendo a certa e passou a valer para todo mundo — a
+  // medição de 2026-08-11 está no docblock do catálogo. A cópia que vivia aqui
+  // estava 12 ícones atrás do pacote (1991 contra 2003).
+  import {
+    CATALOGO_LUCIDE,
+    NOMES_DE_ICONE,
+    montarSvgDoIcone,
+  } from '@shared/primitives/lucide-catalog';
   import { Badge } from '@/components/ui/badge';
   import LanguageSwitcher from '@/components/product/LanguageSwitcher.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -16,25 +21,18 @@
 
   // ─── Catálogo de ícones ────────────────────────────────────────────────────
 
-  type IconData = [string, Record<string, string>][];
-  const ALL_ICONS = icons as Record<string, IconData>;
-  const ALL_ICON_NAMES: string[] = Object.keys(ALL_ICONS);
+  const ALL_ICON_NAMES: string[] = NOMES_DE_ICONE;
 
-  // Pré-constrói inner HTML de cada SVG uma vez — evita {#each} aninhado
-  function buildInnerHtml(data: IconData): string {
-    return data
-      .map(([tag, attrs]) => {
-        const attrStr = Object.entries(attrs)
-          .map(([k, v]) => `${k}="${v}"`)
-          .join(' ');
-        return `<${tag} ${attrStr}/>`;
-      })
-      .join('');
-  }
-
-  const ICON_SVG_INNER: Record<string, string> = {};
+  // Pré-constrói o SVG INTEIRO de cada ícone uma vez — evita {#each} aninhado.
+  //
+  // Inteiro, e não só o interior: o DOMPurify valida namespace, e `<path>` solto
+  // (sem um `<svg>` por pai) é descartado em silêncio. Era o que acontecia aqui
+  // — os 2003 tiles desta stack desenhavam SVG vazio, e nada pegava porque esta
+  // página estava fora da fumaça de docs pages. Com a raiz junto, o sanitizador
+  // reconhece o namespace e o desenho passa.
+  const ICON_SVG: Record<string, string> = {};
   for (const name of ALL_ICON_NAMES) {
-    ICON_SVG_INNER[name] = buildInnerHtml(ALL_ICONS[name]);
+    ICON_SVG[name] = montarSvgDoIcone(CATALOGO_LUCIDE[name], 'nds-icon-lg');
   }
 
   // ─── i18n ──────────────────────────────────────────────────────────────────
@@ -124,11 +122,23 @@
   });
 </script>
 
-<div bind:this={trackingRoot} class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
-  <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
+<div bind:this={trackingRoot} class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs">
+  <!-- Landmark de conteúdo: esta página monta layout próprio (não usa o
+       DocsPageLayout nem o FoundationPage), então o <main> vem daqui, e envolve
+       a página INTEIRA — inclusive o <h1> que ele referencia por
+       aria-labelledby. Antes o cabeçalho ficava fora, e o rótulo do landmark
+       apontava para um título que não pertencia a ele.
+       tabindex="-1" permite foco programático sem entrar na ordem de tabulação. -->
+  <main
+    id="docs-main-content"
+    tabindex="-1"
+    aria-labelledby="docs-page-title"
+    class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
+    data-spacing="xl"
+  >
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
-    <header class="nds-stack nds-border-b-soft nds-pb-8" style="padding-bottom: 2rem">
+    <header class="nds-stack nds-border-b-soft nds-pb-8">
       <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
         <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
           {$tStore('category')}
@@ -146,39 +156,30 @@
         {$tStore('title')}
       </h1>
 
-      <p class="nds-text-muted-foreground nds-leading-relaxed" style="max-width: 48rem">
+      <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
         {$tStore('description')}
       </p>
 
-      <div class="nds-cluster" data-spacing="sm" data-align="center" style="padding-top: 0.25rem">
+      <div class="nds-cluster" data-spacing="sm" data-align="center">
         <span class="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default">
           <!-- Package icon inlined (SVG) — sem depender de componente de ícone -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
           @lucide/svelte
         </span>
-        <span class="nds-text-body nds-text-muted-foreground" style="opacity: 0.7">
+        <!-- Sem opacity extra: --muted-foreground já é o tom secundário, e o
+             0.7 derrubava o contraste para 3.03:1 (axe: color-contrast). -->
+        <span class="nds-text-body nds-text-muted-foreground">
           {iconsAvailableText}
         </span>
       </div>
     </header>
 
-    <!-- Landmark de conteúdo: esta página monta layout próprio (não usa o
-         DocsPageLayout nem o FoundationPage), então o <main> vem daqui.
-         tabindex="-1" permite foco programático sem entrar na ordem de
-         tabulação; as classes de stack repetem as do container para o
-         espaçamento não mudar. -->
-    <main
-      id="docs-main-content"
-      tabindex="-1"
-      aria-labelledby="docs-page-title"
-      class="ds-docs nds-stack"
-      data-spacing="xl"
-    >
-
     <!-- ── Como usar ────────────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
       <h2 class="nds-text-h2 nds-text-foreground">{$tStore('howToUse.title')}</h2>
-      <div class="nds-grid" data-spacing="md" style="--grid-min: 18rem">
+      <!-- data-cols="2" no lugar de `--grid-min: 18rem` inline: o atributo
+           existe na folha e produz a mesma coluna mínima. -->
+      <div class="nds-grid" data-spacing="md" data-cols="2">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">{$tStore('howToUse.individual.title')}</p>
           <pre class="nds-docs-code"><code>{`import Search from '@lucide/svelte/icons/search';
@@ -187,10 +188,9 @@
         </div>
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">{$tStore('howToUse.sizes.title')}</p>
-          <pre class="nds-docs-code"><code>{`h-3 w-3   // 12px — badges, captions
-h-4 w-4   // 16px — padrão em texto e botões
-h-5 w-5   // 20px — destaque em headers
-h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
+          <pre class="nds-docs-code"><code>{`nds-icon-sm   // 14px — badges, captions
+nds-icon      // 16px — padrão em texto e botões
+nds-icon-lg   // 20px — destaque em headers`}</code></pre>
         </div>
       </div>
     </section>
@@ -198,7 +198,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
     <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
       <h2 class="nds-text-h2 nds-text-foreground">{$tStore('accessibility.title')}</h2>
-      <div class="nds-grid" data-spacing="sm" style="--grid-min: 18rem">
+      <div class="nds-grid" data-spacing="sm" data-cols="2">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">
             {$tStore('accessibility.decorative.title')}
@@ -223,7 +223,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
       <ul class="nds-stack nds-text-body nds-text-muted-foreground nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
         {#each ['rule1', 'rule2', 'rule3', 'rule4'] as rule (rule)}
           <li class="nds-cluster nds-list-none" data-spacing="sm" data-align="start">
-            <span class="nds-text-primary nds-shrink-0 nds-mt-0-5">✓</span>
+            <span class="nds-text-primary nds-shrink-0 nds-mt-0-5" aria-hidden="true">✓</span>
             <!-- eslint-disable svelte/no-at-html-tags -->
             <span>{@html DOMPurify.sanitize($tStore(`accessibility.${rule}`))}</span>
           </li>
@@ -245,7 +245,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
           bind:value={search}
           placeholder={$tStore('search.placeholder')}
           aria-label={$tStore('search.placeholder')}
-          class="nds-icon-search-input"
+          class="nds-input nds-icon-search-input"
         />
       </div>
       <p class="nds-text-body" aria-live="polite" aria-atomic="true">
@@ -263,7 +263,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nds-icon-empty-state-svg" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <p class="nds-font-medium">{$tStore('search.noResults')}</p>
-      <p class="nds-text-body" style="opacity: 0.7">{$tStore('search.noResultsSub')}</p>
+      <p class="nds-text-body nds-text-muted-foreground">{$tStore('search.noResultsSub')}</p>
     </div>
 
     <!-- Grade de ícones — todos no DOM, visibility via CSS -->
@@ -277,6 +277,7 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
         <li
           class="nds-icon-grid-item"
           class:is-hidden={visibleSet !== null && !visibleSet.has(name)}
+          data-icon-name={name}
         >
           <button
             type="button"
@@ -284,45 +285,19 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
             class="nds-icon-tile"
             onclick={() => handleCopy(name)}
           >
-            <!-- Ícone / check — ambos no DOM, opacity via CSS -->
-            <span class="nds-icon-tile-svg" style="position: relative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="nds-icon-lg nds-text-primary"
-                style="position: absolute; opacity: {isCopied ? 1 : 0}; transition: opacity var(--duration-fast)"
-                aria-hidden="true"
-              >
-                <path d="M20 6 9 17l-5-5"/>
-              </svg>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="nds-icon-lg"
-                style="opacity: {isCopied ? 0 : 1}; transition: opacity var(--duration-fast)"
-                aria-hidden="true"
-              >
-                {@html DOMPurify.sanitize(ICON_SVG_INNER[name])}
-              </svg>
-            </span>
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            <span class="nds-icon-tile-svg">{@html DOMPurify.sanitize(ICON_SVG[name])}</span>
 
             <span class="nds-icon-tile-name">
               {name}
             </span>
 
+            <!-- Confirmação de cópia: só o tooltip, como no Vanilla (referência
+                 de markup). O check sobreposto que existia aqui não existia lá,
+                 e trazia consigo dois SVGs e opacity inline por ícone. -->
             <span
               class="nds-icon-tile-tooltip"
-              style="opacity: {isCopied ? 1 : 0}"
+              class:is-visible={isCopied}
               aria-hidden="true"
             >
               {isCopied ? $tStore('copy.copied') : $tStore('copy.tooltip')}
@@ -332,9 +307,5 @@ h-6 w-6   // 24px — standalone / ilustrativo`}</code></pre>
       {/each}
     </ul>
 
-    <!-- fim do landmark de conteúdo (conteúdo não re-indentado de propósito:
-         os <pre><code> abaixo carregam whitespace significativo) -->
-    </main>
-
-  </div>
+  </main>
 </div>

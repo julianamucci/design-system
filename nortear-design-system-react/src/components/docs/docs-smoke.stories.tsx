@@ -301,11 +301,14 @@ export const I18n: Story = {
   play: mounted,
 };
 
-// axe: color-contrast (última medição completa) — catálogo inteiro do lucide (~1600 ícones) estoura o timeout do axe
+// color-contrast RESOLVIDA (2026-08-11): a contagem de ícones do header somava
+// `opacity: 0.7` a --muted-foreground (3.03:1), o mesmo defeito que Vanilla e
+// Angular já tinham corrigido. Axe é portão — o catálogo inteiro sob o axe cabe
+// nesta stack (medido: a página fecha dentro do timeout), ao contrário do que a
+// nota antiga supunha.
 export const Icons: Story = {
   render: () => <IconsDocs />,
   play: mounted,
-  parameters: { a11y: { disable: true } },
 };
 
 export const Input: Story = {

@@ -1,8 +1,6 @@
-import { useState, useMemo, useEffect, useRef, useCallback, type ComponentType, type CSSProperties } from 'react';
-import * as LucideIcons from 'lucide-react';
-import { Check, Package, Search } from 'lucide-react';
+import { useState, useMemo, useEffect, useRef, useCallback, createElement } from 'react';
+import { Package, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
@@ -11,19 +9,19 @@ import { mountDocsTracking } from '@/lib/docs-tracking';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
+//
+// A geometria vem do catálogo compartilhado, não de `import * as` do
+// `lucide-react`: a galeria usa TODOS os ícones, então nada ali é removível e o
+// bundle carregava 2003 componentes React (1 263 KB) para desenhar 2003 SVGs
+// (595 KB). A medição que embasa a troca está no docblock do catálogo.
+//
+// O `lucide-react` continua sendo a lib documentada para quem CONSOME o design
+// system em React — é dele que saem os dois ícones da própria página.
 
-const ALL_ICON_NAMES: string[] = Object.keys(LucideIcons).filter((name) => {
-  const value = (LucideIcons as Record<string, unknown>)[name];
-  const type = typeof value;
-  return (
-    (type === 'function' || type === 'object') &&
-    value !== null &&
-    /^[A-Z]/.test(name) &&
-    !name.endsWith('Icon')
-  );
-});
+const ALL_ICON_NAMES = NOMES_DE_ICONE;
 
 // ─── Componente ──────────────────────────────────────────────────────────────
 
@@ -57,13 +55,22 @@ export function IconsDocs() {
   }, []);
 
   // ─── Filtro ──────────────────────────────────────────────────────────────
-  const filteredNames = useMemo(() => {
+  //
+  // A grade nasce inteira e o filtro só liga `is-hidden` — é o que o Vanilla
+  // faz, e o Vanilla é a referência de markup. Recriar a lista faria cada tecla
+  // digitada destruir e remontar dois mil nós.
+  const visibleNames = useMemo(() => {
     const q = search.trim().toLowerCase().replace(/[\s\-_]+/g, '');
-    if (!q) return ALL_ICON_NAMES;
-    return ALL_ICON_NAMES.filter((name) =>
-      name.toLowerCase().replace(/[\s\-_]+/g, '').includes(q)
+    if (!q) return null; // null = nenhum filtro ativo, todos visíveis
+    return new Set(
+      ALL_ICON_NAMES.filter((name) =>
+        name.toLowerCase().replace(/[\s\-_]+/g, '').includes(q)
+      )
     );
   }, [search]);
+
+  const visibleCount = visibleNames ? visibleNames.size : ALL_ICON_NAMES.length;
+  const hasResults = visibleCount > 0;
 
   // ─── Copiar ──────────────────────────────────────────────────────────────
   const handleCopy = useCallback((name: string) => {
@@ -80,35 +87,30 @@ export function IconsDocs() {
   const iconsAvailableText = t('iconsAvailable').replace('{count}', String(ALL_ICON_NAMES.length));
   const searchCountText = search.trim()
     ? t('search.results')
-        .replace('{count}', String(filteredNames.length))
-        .replace('{plural}', filteredNames.length !== 1 ? 's' : '')
+        .replace('{count}', String(visibleCount))
+        .replace('{plural}', visibleCount !== 1 ? 's' : '')
         .replace('{query}', search)
-    : t('search.count').replace('{count}', String(filteredNames.length));
+    : t('search.count').replace('{count}', String(visibleCount));
 
   return (
     <div
       ref={rootRef}
-      className="sb-unstyled nds-flex-1 nds-w-full ds-docs"
-      style={{ height: '100%', overflow: 'auto' }}
+      className="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs"
     >
       {/*
         Landmark de conteúdo: esta página monta layout próprio (não passa pelo
-        DocsPageLayout), então ficava sem <main>. Mesmas classes, mesmo style e
-        mesma posição na árvore do <div> anterior — zero mudança visual.
+        DocsPageLayout), então ficava sem <main>. Mesmas classes e mesma posição
+        na árvore do <div> anterior — zero mudança visual.
       */}
       <main
         tabIndex={-1}
         aria-labelledby={DOCS_PAGE_TITLE_ID}
-        className="nds-p-8 nds-stack"
+        className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
         data-spacing="xl"
-        style={{ maxWidth: '72rem', marginInline: 'auto' }}
       >
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <header
-          className="nds-stack nds-border-b-soft nds-pb-8"
-          style={{ paddingBottom: '2rem' }}
-        >
+        <header className="nds-stack nds-border-b-soft nds-pb-8">
           <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
             <Badge
               variant="secondary"
@@ -134,21 +136,18 @@ export function IconsDocs() {
             {t('title')}
           </h1>
 
-          <p className="nds-text-muted-foreground nds-leading-relaxed" style={{ maxWidth: '48rem' }}>
+          <p className="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
             {t('description')}
           </p>
 
-          <div
-            className="nds-cluster"
-            data-spacing="sm"
-            data-align="center"
-            style={{ paddingTop: '0.25rem' }}
-          >
+          <div className="nds-cluster" data-spacing="sm" data-align="center">
             <span className="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default">
               <Package aria-hidden="true" />
               lucide-react
             </span>
-            <span className="nds-text-body nds-text-muted-foreground" style={{ opacity: 0.7 }}>
+            {/* Sem opacity extra: --muted-foreground já é o tom secundário, e o
+                0.7 derrubava o contraste para 3.03:1 (axe: color-contrast). */}
+            <span className="nds-text-body nds-text-muted-foreground">
               {iconsAvailableText}
             </span>
           </div>
@@ -157,7 +156,10 @@ export function IconsDocs() {
         {/* ── Como usar ────────────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="lg">
           <h2 className="nds-text-h2 nds-text-foreground">{t('howToUse.title')}</h2>
-          <div className="nds-grid" data-spacing="md" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
+          {/* data-cols="2" no lugar de `--grid-min: 18rem` inline: o atributo
+              existe na folha e produz a mesma coluna mínima, sem style inline
+              e com o mesmo resultado nas cinco stacks. */}
+          <div className="nds-grid" data-spacing="md" data-cols="2">
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">{t('howToUse.individual.title')}</p>
               <pre className="nds-docs-code">
@@ -167,7 +169,7 @@ export function IconsDocs() {
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">{t('howToUse.sizes.title')}</p>
               <pre className="nds-docs-code">
-                <code>{`h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo`}</code>
+                <code>{`nds-icon-sm   // 14px — badges, captions\nnds-icon      // 16px — padrão em texto e botões\nnds-icon-lg   // 20px — destaque em headers`}</code>
               </pre>
             </div>
           </div>
@@ -176,7 +178,7 @@ export function IconsDocs() {
         {/* ── Acessibilidade ───────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
           <h2 className="nds-text-h2 nds-text-foreground">{t('accessibility.title')}</h2>
-          <div className="nds-grid" data-spacing="sm" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
+          <div className="nds-grid" data-spacing="sm" data-cols="2">
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">
                 {t('accessibility.decorative.title')}
@@ -200,7 +202,7 @@ export function IconsDocs() {
           >
             {(['rule1', 'rule2', 'rule3', 'rule4'] as const).map((rule) => (
               <li key={rule} className="nds-cluster nds-list-none" data-spacing="sm" data-align="start">
-                <span className="nds-text-primary nds-shrink-0 nds-mt-0-5">✓</span>
+                <span className="nds-text-primary nds-shrink-0 nds-mt-0-5" aria-hidden="true">✓</span>
                 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t(`accessibility.${rule}`)) }} />
               </li>
             ))}
@@ -215,12 +217,14 @@ export function IconsDocs() {
           </div>
           <div className="nds-icon-search-wrap">
             <Search className="nds-icon-search-svg" aria-hidden="true" />
-            <Input
+            {/* `nds-input` + modificador, o mesmo markup das outras stacks: o
+                recuo do ícone é da folha, não de style inline. */}
+            <input
               type="search"
+              className="nds-input nds-icon-search-input"
               placeholder={t('search.placeholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingInlineStart: '2.25rem' }}
               aria-label={t('search.placeholder')}
             />
           </div>
@@ -234,63 +238,70 @@ export function IconsDocs() {
         </section>
 
         {/* ── Galeria ──────────────────────────────────────────────────────── */}
-        {filteredNames.length === 0 ? (
-          <div className="nds-icon-empty-state is-visible" role="status">
-            <Search className="nds-icon-empty-state-svg" aria-hidden="true" />
-            <p className="nds-font-medium">{t('search.noResults')}</p>
-            <p className="nds-text-body" style={{ opacity: 0.7 }}>{t('search.noResultsSub')}</p>
-          </div>
-        ) : (
-          <ul className="nds-icon-grid" aria-label={iconsAvailableText}>
-            {filteredNames.map((name) => {
-              const IconComponent = (
-                LucideIcons as unknown as Record<string, ComponentType<{ className?: string; style?: CSSProperties; 'aria-hidden'?: boolean | 'true' | 'false' }>>
-              )[name];
-              const isCopied = copied === name;
+        <div
+          className={`nds-icon-empty-state${hasResults ? '' : ' is-visible'}`}
+          role="status"
+        >
+          <Search className="nds-icon-empty-state-svg" aria-hidden="true" />
+          <p className="nds-font-medium">{t('search.noResults')}</p>
+          <p className="nds-text-body nds-text-muted-foreground">{t('search.noResultsSub')}</p>
+        </div>
 
-              return (
-                <li key={name} className="nds-icon-grid-item">
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(name)}
-                    aria-label={`${t('copy.tooltip')} ${name}`}
-                    className="nds-icon-tile"
-                  >
-                    <span className="nds-icon-tile-svg" style={{ position: 'relative' }}>
-                      <Check
-                        className="nds-icon-lg nds-text-primary"
-                        style={{
-                          position: 'absolute',
-                          opacity: isCopied ? 1 : 0,
-                          transition: 'opacity var(--duration-fast)',
-                        }}
-                        aria-hidden="true"
-                      />
-                      <IconComponent
-                        className="nds-icon-lg"
-                        style={{
-                          opacity: isCopied ? 0 : 1,
-                          transition: 'opacity var(--duration-fast)',
-                        }}
-                        aria-hidden={true}
-                      />
-                    </span>
-                    <span className="nds-icon-tile-name">
-                      {name}
-                    </span>
-                    <span
-                      className="nds-icon-tile-tooltip"
-                      style={{ opacity: isCopied ? 1 : 0 }}
+        <ul
+          className={`nds-icon-grid${hasResults ? '' : ' is-hidden'}`}
+          aria-label={iconsAvailableText}
+        >
+          {ALL_ICON_NAMES.map((name) => {
+            const isCopied = copied === name;
+            const isHidden = visibleNames !== null && !visibleNames.has(name);
+
+            return (
+              <li
+                key={name}
+                className={`nds-icon-grid-item${isHidden ? ' is-hidden' : ''}`}
+                data-icon-name={name}
+              >
+                <button
+                  type="button"
+                  onClick={() => handleCopy(name)}
+                  aria-label={`${t('copy.tooltip')} ${name}`}
+                  className="nds-icon-tile"
+                >
+                  <span className="nds-icon-tile-svg">
+                    {/* Elementos React a partir da geometria — sem innerHTML e
+                        sem componente por ícone. As tags e atributos do lucide
+                        são um conjunto fechado (path, circle, line…; d, cx, r…)
+                        e nenhum deles precisa de camelCase. */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="nds-icon-lg"
                       aria-hidden="true"
                     >
-                      {isCopied ? t('copy.copied') : t('copy.tooltip')}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                      {CATALOGO_LUCIDE[name].map(([tag, attrs], i) =>
+                        createElement(tag, { ...attrs, key: `${tag}-${i}` })
+                      )}
+                    </svg>
+                  </span>
+                  <span className="nds-icon-tile-name">
+                    {name}
+                  </span>
+                  <span
+                    className={`nds-icon-tile-tooltip${isCopied ? ' is-visible' : ''}`}
+                    aria-hidden="true"
+                  >
+                    {isCopied ? t('copy.copied') : t('copy.tooltip')}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
 
       </main>
     </div>

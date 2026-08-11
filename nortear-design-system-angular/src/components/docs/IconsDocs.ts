@@ -14,8 +14,11 @@ import DOMPurify from 'dompurify';
 // Pacote `lucide` (agnóstico), NUNCA `lucide-angular`: este declara peer
 // `@angular/core: 13.x - 21.x` e conflita com o Angular 22 deste pacote.
 // Import nomeado, não `import * as`: o `wildcard_lucide_import` do auditor
-// existe justamente para o bundle não perder o tree-shaking.
-import { icons, Package, Search, type IconNode } from 'lucide';
+// existe justamente para o bundle não perder o tree-shaking. Aqui sobram só os
+// dois ícones do enfeite da página — o CATÁLOGO da galeria vem do JSON
+// compartilhado, que entrega a mesma geometria em 521 KB contra 972 KB
+// (medição no docblock de `lucide-catalog`).
+import { Package, Search, type IconNode } from 'lucide';
 
 import { NdsBadge } from '@/components/ui/badge';
 import { NdsLanguageSwitcher } from '@/components/product/LanguageSwitcher';
@@ -26,6 +29,7 @@ import { mountDocsTracking } from '@/lib/docs-tracking';
 import { DOCS_PAGE_TITLE_ID } from './shared/sections/DocsHeader';
 import { NdsLucideGlyph } from './shared/LucideGlyph';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
 
 /**
  * Icons — fundamento com LAYOUT PRÓPRIO.
@@ -51,9 +55,11 @@ interface IconeDoCatalogo {
   no: IconNode;
 }
 
-const CATALOGO: IconeDoCatalogo[] = Object.keys(icons).map((nome) => ({
+const CATALOGO: IconeDoCatalogo[] = NOMES_DE_ICONE.map((nome) => ({
   nome,
-  no: (icons as Record<string, IconNode>)[nome],
+  // O JSON guarda `[tag, atributos][]`, a mesma forma do IconNode; o cast só
+  // reaperta a tag de `string` para o union de tags SVG que o tipo declara.
+  no: CATALOGO_LUCIDE[nome] as unknown as IconNode,
 }));
 
 /** Normaliza para a busca casar "arrowright", "arrow-right" e "Arrow Right". */
@@ -68,10 +74,9 @@ const EXEMPLO_IMPORTACAO = `import { Search, Settings, User } from 'lucide';
 
 <svg [ndsLucideGlyph]="Search" class="nds-icon"></svg>`;
 
-const EXEMPLO_TAMANHOS = `h-3 w-3   // 12px — badges, captions
-h-4 w-4   // 16px — padrão em texto e botões
-h-5 w-5   // 20px — destaque em headers
-h-6 w-6   // 24px — standalone / ilustrativo`;
+const EXEMPLO_TAMANHOS = `nds-icon-sm   // 14px — badges, captions
+nds-icon      // 16px — padrão em texto e botões
+nds-icon-lg   // 20px — destaque em headers`;
 
 const EXEMPLO_DECORATIVO = `<button ndsButton>
   <svg [ndsLucideGlyph]="Save" class="nds-icon"></svg>
@@ -161,7 +166,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
         <!-- ── Como usar ─────────────────────────────────────────────────── -->
         <section class="nds-stack nds-docs-section-divider" data-spacing="lg">
           <h2 class="nds-text-h2 nds-text-foreground">{{ t('howToUse.title') }}</h2>
-          <div class="nds-grid" data-spacing="md">
+          <div class="nds-grid" data-spacing="md" data-cols="2">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-body nds-font-medium">{{ t('howToUse.individual.title') }}</p>
               <pre class="nds-docs-code"><code>{{ exemploDeImportacao }}</code></pre>
@@ -176,7 +181,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
         <!-- ── Acessibilidade ────────────────────────────────────────────── -->
         <section class="nds-stack nds-docs-section-divider" data-spacing="md">
           <h2 class="nds-text-h2 nds-text-foreground">{{ t('accessibility.title') }}</h2>
-          <div class="nds-grid" data-spacing="sm">
+          <div class="nds-grid" data-spacing="sm" data-cols="2">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-body nds-font-medium">{{ t('accessibility.decorative.title') }}</p>
               <pre class="nds-docs-code"><code>{{ exemploDecorativo }}</code></pre>
@@ -211,7 +216,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
             <svg ndsLucideGlyph [ndsLucideGlyph]="glifoDaBusca" class="nds-icon-search-svg"></svg>
             <input
               type="search"
-              class="nds-icon-search-input"
+              class="nds-input nds-icon-search-input"
               [value]="busca()"
               [placeholder]="t('search.placeholder')"
               [attr.aria-label]="t('search.placeholder')"
@@ -224,17 +229,20 @@ const REGRAS_DE_ACESSIBILIDADE = [
         </section>
 
         <!-- ── Galeria ───────────────────────────────────────────────────── -->
-        @if (semResultados()) {
-          <div class="nds-icon-empty-state is-visible" role="status">
-            <svg
-              ndsLucideGlyph
-              [ndsLucideGlyph]="glifoDaBusca"
-              class="nds-icon-empty-state-svg"
-            ></svg>
-            <p class="nds-font-medium">{{ t('search.noResults') }}</p>
-            <p class="nds-text-body nds-text-muted-foreground">{{ t('search.noResultsSub') }}</p>
-          </div>
-        }
+        <!-- Sempre no DOM, visibilidade por classe — é o que o Vanilla faz. Com
+             o bloco condicional o estado vazio entrava e saía da árvore, e o
+             role="status" chegava junto com o texto: leitor de tela só anuncia
+             live region que já estava lá quando o conteúdo mudou.
+             (Sem crase neste comentário: o template é template literal.) -->
+        <div class="nds-icon-empty-state" [class.is-visible]="semResultados()" role="status">
+          <svg
+            ndsLucideGlyph
+            [ndsLucideGlyph]="glifoDaBusca"
+            class="nds-icon-empty-state-svg"
+          ></svg>
+          <p class="nds-font-medium">{{ t('search.noResults') }}</p>
+          <p class="nds-text-body nds-text-muted-foreground">{{ t('search.noResultsSub') }}</p>
+        </div>
 
         <ul
           class="nds-icon-grid"
@@ -242,7 +250,11 @@ const REGRAS_DE_ACESSIBILIDADE = [
           [attr.aria-label]="textoDeDisponiveis()"
         >
           @for (icone of catalogo; track icone.nome) {
-            <li class="nds-icon-grid-item" [class.is-hidden]="!visiveis().has(icone.nome)">
+            <li
+              class="nds-icon-grid-item"
+              [class.is-hidden]="!visiveis().has(icone.nome)"
+              [attr.data-icon-name]="icone.nome"
+            >
               <button
                 type="button"
                 class="nds-icon-tile"

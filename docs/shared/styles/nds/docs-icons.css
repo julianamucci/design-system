@@ -19,25 +19,20 @@
   color: hsl(var(--muted-foreground));
 }
 
-.nds-icon-search-input {
-  width: 100%;
-  background-color: hsl(var(--input-background));
-  border: 1px solid hsl(var(--input));
-  border-radius: var(--radius-md);
-  padding-inline: 2.25rem 0.75rem;          /* left 36px (para o ícone), right 12px */
-  padding-block: var(--spacing-1);          /* 4px */
-  height: 2.25rem;                          /* 36px */
-  font-family: var(--font-family, inherit);
-  font-size: var(--text-control);
-  color: hsl(var(--foreground));
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  outline: none;
-  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
-}
-
-.nds-icon-search-input:focus-visible {
-  border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+/* Modificador de `.nds-input`, não um segundo campo de texto.
+ *
+ *   <input type="search" class="nds-input nds-icon-search-input">
+ *
+ * A versão anterior redeclarava fundo, borda, raio, fonte e foco — e junto
+ * vinha `height: 2.25rem`, altura fixa num campo de TEXTO: a 200% de fonte o
+ * conteúdo transbordava (WCAG 1.4.4). O `.nds-input` já resolve tudo isso por
+ * `padding-block` + `line-height`, e aqui só sobra abrir espaço para o ícone.
+ *
+ * Seletor com a tag (`input.…`) de propósito: `docs-icons.css` é importado
+ * ANTES de `input.css` no index, e a especificidade extra garante que o
+ * recuo à esquerda vença o `padding-inline` do primitivo em qualquer ordem. */
+input.nds-icon-search-input {
+  padding-inline-start: 2.25rem;            /* 36px — abre espaço para o ícone */
 }
 
 /* ── Empty state quando busca não retorna nada ────────────────────────────── */

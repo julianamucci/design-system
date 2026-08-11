@@ -1,4 +1,3 @@
-import { icons as ALL_ICONS } from 'lucide';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
@@ -7,28 +6,26 @@ import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import { CATALOGO_LUCIDE, NOMES_DE_ICONE, montarSvgDoIcone } from '@shared/primitives/lucide-catalog';
 import DOMPurify from 'dompurify';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
+//
+// A geometria vem do catálogo compartilhado, não de `import { icons } from
+// 'lucide'`: a galeria usa TODOS os ícones, então nada ali é removível, e o
+// JSON entrega a mesma coisa em menos bytes (521 KB contra 965 KB — medição no
+// docblock do catálogo). O `lucide` segue sendo a lib documentada para quem
+// consome o design system em HTML puro.
 
-type IconData = [string, Record<string, string>][];
-const ALL_ICON_NAMES: string[] = Object.keys(ALL_ICONS);
+const ALL_ICON_NAMES: string[] = NOMES_DE_ICONE;
 
-// Pré-constrói inner HTML de cada SVG uma vez
-const ICON_SVG_INNER: Record<string, string> = {};
+// Pré-constrói o SVG inteiro de cada ícone uma vez. A classe de tamanho é
+// obrigatória: <svg> com viewBox e sem largura cai no tamanho intrínseco de
+// 300×150 e estoura o tile — era o que acontecia aqui.
+const ICON_SVG: Record<string, string> = {};
 for (const name of ALL_ICON_NAMES) {
-  const data = (ALL_ICONS as unknown as Record<string, IconData>)[name];
-  ICON_SVG_INNER[name] = data
-    .map(([tag, attrs]) => {
-      const attrStr = Object.entries(attrs)
-        .map(([k, v]) => `${k}="${v}"`)
-        .join(' ');
-      return `<${tag} ${attrStr}/>`;
-    })
-    .join('');
+  ICON_SVG[name] = montarSvgDoIcone(CATALOGO_LUCIDE[name], 'nds-icon-lg');
 }
-
-const SVG_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -42,18 +39,14 @@ export function createIconsDocs(): HTMLElement {
   // Root — sb-unstyled neutraliza o reset de prose do Storybook autodocs
   // (sem ele, todas as divs descendentes herdam font-size 16px + Nunito Sans).
   const root = document.createElement('div');
-  root.className = 'sb-unstyled nds-flex-1 nds-w-full ds-docs';
-  root.style.height = '100%';
-  root.style.overflow = 'auto';
+  root.className = 'sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs';
 
   // Landmark <main> — esta página monta layout próprio (não passa pelo
   // foundationsRenderer nem pelo DocsPageLayout). Mesmas classes e mesmo lugar
   // na árvore que o <div> anterior: zero mudança visual.
   const container = document.createElement('main');
-  container.className = 'nds-p-8 nds-stack';
+  container.className = 'nds-p-8 nds-stack nds-max-w-docs nds-mx-auto';
   container.dataset.spacing = 'xl';
-  container.style.maxWidth = '72rem';
-  container.style.marginInline = 'auto';
   container.tabIndex = -1;
   container.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
   root.appendChild(container);
@@ -91,7 +84,6 @@ export function createIconsDocs(): HTMLElement {
 
   const header = document.createElement('header');
   header.className = 'nds-stack nds-border-b-soft nds-pb-8';
-  header.style.paddingBottom = '2rem';
 
   // Linha superior: badges à esquerda + language switcher à direita (spacer-start)
   const topRow = document.createElement('div');
@@ -111,14 +103,12 @@ export function createIconsDocs(): HTMLElement {
   h1.className = 'nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground';
 
   const desc = document.createElement('p');
-  desc.className = 'nds-text-muted-foreground nds-leading-relaxed';
-  desc.style.maxWidth = '48rem';
+  desc.className = 'nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose';
 
   const libRow = document.createElement('div');
   libRow.className = 'nds-cluster';
   libRow.dataset.spacing = 'sm';
   libRow.dataset.align = 'center';
-  libRow.style.paddingTop = '0.25rem';
 
   const libBadge = document.createElement('span');
   libBadge.className = 'nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default';
@@ -150,7 +140,7 @@ export function createIconsDocs(): HTMLElement {
 
   const searchInput = document.createElement('input');
   searchInput.type = 'search';
-  searchInput.className = 'nds-icon-search-input';
+  searchInput.className = 'nds-input nds-icon-search-input';
 
   const searchStatus = document.createElement('p');
   searchStatus.className = 'nds-text-body';
@@ -186,15 +176,19 @@ export function createIconsDocs(): HTMLElement {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'nds-icon-tile';
+    // Nome acessível explícito: sem ele o botão era lido como o nome do ícone
+    // solto, sem dizer o que o clique faz. As demais stacks já traziam o
+    // rótulo; era esta que faltava. Reaplicado no rerenderTexts (muda de idioma).
+    btn.setAttribute('aria-label', `${t('copy.tooltip')} ${name}`);
 
     const iconWrap = document.createElement('span');
     iconWrap.className = 'nds-icon-tile-svg';
-    // SVG estático montado de constantes do próprio módulo: `SVG_OPEN` é literal
-    // aqui em cima e `ICON_SVG_INNER` é derivado do pacote `lucide` em tempo de
-    // build. Não há conteúdo dinâmico nem entrada externa no caminho — é o caso
-    // que a guideline 09 chama de "SVG inline hardcoded". Sanitizar aqui não
-    // removeria nada e rodaria o DOMPurify uma vez por ícone do catálogo inteiro.
-    iconWrap.innerHTML = `${SVG_OPEN}${ICON_SVG_INNER[name]}</svg>`;
+    // SVG estático montado de constantes do catálogo compartilhado, derivado do
+    // pacote `lucide` em tempo de build. Não há conteúdo dinâmico nem entrada
+    // externa no caminho — é o caso que a guideline 09 chama de "SVG inline
+    // hardcoded". Sanitizar aqui não removeria nada e rodaria o DOMPurify uma
+    // vez por ícone do catálogo inteiro.
+    iconWrap.innerHTML = ICON_SVG[name];
 
     const nameLabel = document.createElement('span');
     nameLabel.className = 'nds-icon-tile-name';
@@ -214,10 +208,10 @@ export function createIconsDocs(): HTMLElement {
         .writeText(name)
         .then(() => {
           tooltip.textContent = t('copy.copied');
-          tooltip.style.opacity = '1';
+          tooltip.classList.add('is-visible');
           setTimeout(() => {
             tooltip.textContent = t('copy.tooltip');
-            tooltip.style.opacity = '0';
+            tooltip.classList.remove('is-visible');
           }, 1500);
         })
         .catch(() => {});
@@ -264,7 +258,10 @@ export function createIconsDocs(): HTMLElement {
   const howToUseGrid = document.createElement('div');
   howToUseGrid.className = 'nds-grid';
   howToUseGrid.dataset.spacing = 'md';
-  howToUseGrid.dataset.min = '18rem';
+  // data-cols="2": o `data-min` que estava aqui não existe na folha (o atributo
+  // era inerte, e a coluna caía no 16rem padrão enquanto as outras stacks usavam
+  // 18rem). `data-cols="2"` é o atributo que a folha reconhece e dá os 18rem.
+  howToUseGrid.dataset.cols = '2';
 
   const individualDiv = document.createElement('div');
   individualDiv.className = 'nds-stack';
@@ -283,7 +280,7 @@ export function createIconsDocs(): HTMLElement {
   sizesTitle.className = 'nds-text-body nds-font-medium';
   const sizesCode = document.createElement('pre');
   sizesCode.className = 'nds-docs-code';
-  sizesCode.innerHTML = `<code>h-3 w-3   // 12px — badges, captions\nh-4 w-4   // 16px — padrão em texto e botões\nh-5 w-5   // 20px — destaque em headers\nh-6 w-6   // 24px — standalone / ilustrativo</code>`;
+  sizesCode.innerHTML = `<code>nds-icon-sm   // 14px — badges, captions\nnds-icon      // 16px — padrão em texto e botões\nnds-icon-lg   // 20px — destaque em headers</code>`;
   sizesDiv.append(sizesTitle, sizesCode);
   howToUseGrid.append(individualDiv, sizesDiv);
   howToUseSection.append(howToUseTitle, howToUseGrid);
@@ -300,7 +297,7 @@ export function createIconsDocs(): HTMLElement {
   const a11yGrid = document.createElement('div');
   a11yGrid.className = 'nds-grid';
   a11yGrid.dataset.spacing = 'sm';
-  a11yGrid.dataset.min = '18rem';
+  a11yGrid.dataset.cols = '2';
 
   const decorativeBox = document.createElement('div');
   decorativeBox.className = 'nds-stack';
@@ -334,6 +331,7 @@ export function createIconsDocs(): HTMLElement {
     li.dataset.align = 'start';
     const check = document.createElement('span');
     check.className = 'nds-text-primary nds-shrink-0 nds-mt-0-5';
+    check.setAttribute('aria-hidden', 'true');
     check.textContent = '✓';
     const ruleText = document.createElement('span');
     li.append(check, ruleText);
@@ -353,7 +351,9 @@ export function createIconsDocs(): HTMLElement {
     badgeType.textContent = t('type');
     h1.textContent = t('title');
     desc.textContent = t('description');
-    iconsCount.textContent = t('iconsAvailable').replace('{count}', String(ALL_ICON_NAMES.length));
+    const disponiveis = t('iconsAvailable').replace('{count}', String(ALL_ICON_NAMES.length));
+    iconsCount.textContent = disponiveis;
+    grid.setAttribute('aria-label', disponiveis);
     searchTitle.textContent = t('search.title');
     searchSubtitle.textContent = t('search.subtitle');
     searchInput.placeholder = t('search.placeholder');
@@ -369,6 +369,8 @@ export function createIconsDocs(): HTMLElement {
     a11yRules.forEach((el, i) => { el.innerHTML = DOMPurify.sanitize(t(`accessibility.rule${i + 1}`)); });
     grid.querySelectorAll<HTMLSpanElement>('[data-tooltip-for]').forEach((tip) => {
       tip.textContent = t('copy.tooltip');
+      const botao = tip.closest('button');
+      if (botao) botao.setAttribute('aria-label', `${t('copy.tooltip')} ${tip.dataset.tooltipFor}`);
     });
     updateSearch(searchInput.value);
   }

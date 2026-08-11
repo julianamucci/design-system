@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import * as LucideIcons from 'lucide-vue-next';
-import { Package, Search, Check } from 'lucide-vue-next';
+import { Package, Search } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import { useTranslation, useI18nStore } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
@@ -11,19 +9,20 @@ import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
+//
+// A geometria vem do catálogo compartilhado, não de `import * as` do
+// `lucide-vue-next`: a galeria usa TODOS os ícones, então nada ali é removível
+// e o bundle carregava 2003 componentes (1 424 KB) para desenhar 2003 SVGs
+// (609 KB). A medição que embasa a troca está no docblock do catálogo.
+//
+// O `lucide-vue-next` continua sendo a lib documentada para quem CONSOME o
+// design system — é dele que saem os dois ícones da própria página.
 
-const ALL_ICON_NAMES: string[] = Object.keys(LucideIcons).filter((name) => {
-  const value = (LucideIcons as Record<string, unknown>)[name];
-  const type = typeof value;
-  return (
-    (type === 'object' || type === 'function') &&
-    value !== null &&
-    /^[A-Z]/.test(name) &&
-    !name.endsWith('Icon')
-  );
-});
+const ALL_ICON_NAMES = NOMES_DE_ICONE;
+const CATALOGO = CATALOGO_LUCIDE;
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -58,13 +57,23 @@ let copiedTimer: ReturnType<typeof setTimeout> | null = null;
 
 // ─── Filtro ──────────────────────────────────────────────────────────────────
 
-const filteredNames = computed(() => {
+// A grade nasce inteira e o filtro só liga `is-hidden` — é o que o Vanilla faz,
+// e o Vanilla é a referência de markup. Recriar a lista faria cada tecla
+// digitada destruir e remontar dois mil nós.
+const visibleNames = computed(() => {
   const q = search.value.trim().toLowerCase().replace(/[\s\-_]+/g, '');
-  if (!q) return ALL_ICON_NAMES;
-  return ALL_ICON_NAMES.filter((name) =>
-    name.toLowerCase().replace(/[\s\-_]+/g, '').includes(q)
+  if (!q) return null; // null = nenhum filtro ativo, todos visíveis
+  return new Set(
+    ALL_ICON_NAMES.filter((name) =>
+      name.toLowerCase().replace(/[\s\-_]+/g, '').includes(q)
+    )
   );
 });
+
+const visibleCount = computed(() =>
+  visibleNames.value ? visibleNames.value.size : ALL_ICON_NAMES.length
+);
+const hasResults = computed(() => visibleCount.value > 0);
 
 // ─── Texto interpolado ────────────────────────────────────────────────────────
 
@@ -73,7 +82,7 @@ const iconsAvailableText = computed(() =>
 );
 
 const searchCountText = computed(() => {
-  const count = filteredNames.value.length;
+  const count = visibleCount.value;
   if (search.value.trim()) {
     return t('search.results')
       .replace('{count}', String(count))
@@ -115,24 +124,19 @@ onUnmounted(() => {
 <template>
   <div
     ref="trackingRoot"
-    class="sb-unstyled nds-flex-1 nds-w-full ds-docs"
-    style="height: 100%; overflow: auto"
+    class="sb-unstyled nds-flex-1 nds-w-full nds-h-full nds-overflow-auto ds-docs"
   >
     <!-- Landmark de conteúdo (mesmo padrão do DocsPageLayout): esta página monta
          layout próprio, então o <main> é este wrapper — mesmas classes e mesma
          posição na árvore, sem mudança visual. -->
     <main
-      class="nds-p-8 nds-stack"
+      class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"
-      style="max-width: 72rem; margin-inline: auto"
       tabindex="-1"
       aria-labelledby="docs-page-title"
     >
       <!-- ── Header ──────────────────────────────────────────────────────── -->
-      <header
-        class="nds-stack nds-border-b-soft nds-pb-8"
-        style="padding-bottom: 2rem"
-      >
+      <header class="nds-stack nds-border-b-soft nds-pb-8">
         <div
           class="nds-cluster nds-w-full"
           data-spacing="sm"
@@ -163,10 +167,7 @@ onUnmounted(() => {
           {{ t('title') }}
         </h1>
 
-        <p
-          class="nds-text-muted-foreground nds-leading-relaxed"
-          style="max-width: 48rem"
-        >
+        <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
           {{ t('description') }}
         </p>
 
@@ -174,16 +175,14 @@ onUnmounted(() => {
           class="nds-cluster"
           data-spacing="sm"
           data-align="center"
-          style="padding-top: 0.25rem"
         >
           <span class="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default">
             <Package aria-hidden="true" />
             lucide-vue-next
           </span>
-          <span
-            class="nds-text-body nds-text-muted-foreground"
-            style="opacity: 0.7"
-          >
+          <!-- Sem opacity extra: --muted-foreground já é o tom secundário, e o
+               0.7 derrubava o contraste para 3.03:1 (axe: color-contrast). -->
+          <span class="nds-text-body nds-text-muted-foreground">
             {{ iconsAvailableText }}
           </span>
         </div>
@@ -197,10 +196,12 @@ onUnmounted(() => {
         <h2 class="nds-text-h2 nds-text-foreground">
           {{ t('howToUse.title') }}
         </h2>
+        <!-- data-cols="2" no lugar de `--grid-min: 18rem` inline: o atributo
+             existe na folha e produz a mesma coluna mínima, sem style inline. -->
         <div
           class="nds-grid"
           data-spacing="md"
-          style="--grid-min: 18rem"
+          data-cols="2"
         >
           <div
             class="nds-stack"
@@ -220,10 +221,9 @@ onUnmounted(() => {
             <p class="nds-text-body nds-font-medium">
               {{ t('howToUse.sizes.title') }}
             </p>
-            <pre class="nds-docs-code"><code>h-3 w-3   // 12px — badges, captions
-h-4 w-4   // 16px — padrão em texto e botões
-h-5 w-5   // 20px — destaque em headers
-h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
+            <pre class="nds-docs-code"><code>nds-icon-sm   // 14px — badges, captions
+nds-icon      // 16px — padrão em texto e botões
+nds-icon-lg   // 20px — destaque em headers</code></pre>
           </div>
         </div>
       </section>
@@ -239,7 +239,7 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         <div
           class="nds-grid"
           data-spacing="sm"
-          style="--grid-min: 18rem"
+          data-cols="2"
         >
           <div
             class="nds-stack"
@@ -279,7 +279,10 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
             data-spacing="sm"
             data-align="start"
           >
-            <span class="nds-text-primary nds-shrink-0 nds-mt-0-5">✓</span>
+            <span
+              class="nds-text-primary nds-shrink-0 nds-mt-0-5"
+              aria-hidden="true"
+            >✓</span>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="DOMPurify.sanitize(t(`accessibility.${rule}`))" />
           </li>
@@ -307,13 +310,15 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
             class="nds-icon-search-svg"
             aria-hidden="true"
           />
-          <Input
+          <!-- `nds-input` + modificador, o mesmo markup das outras stacks: o
+               recuo do ícone é da folha, não de style inline. -->
+          <input
             v-model="search"
             type="search"
+            class="nds-input nds-icon-search-input"
             :placeholder="t('search.placeholder')"
-            style="padding-inline-start: 2.25rem"
             :aria-label="t('search.placeholder')"
-          />
+          >
         </div>
         <p
           class="nds-text-body"
@@ -326,8 +331,8 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
 
       <!-- ── Galeria ──────────────────────────────────────────────────────── -->
       <div
-        v-if="filteredNames.length === 0"
-        class="nds-icon-empty-state is-visible"
+        class="nds-icon-empty-state"
+        :class="{ 'is-visible': !hasResults }"
         role="status"
       >
         <Search
@@ -337,23 +342,22 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
         <p class="nds-font-medium">
           {{ t('search.noResults') }}
         </p>
-        <p
-          class="nds-text-body"
-          style="opacity: 0.7"
-        >
+        <p class="nds-text-body nds-text-muted-foreground">
           {{ t('search.noResultsSub') }}
         </p>
       </div>
 
       <ul
-        v-else
         class="nds-icon-grid"
+        :class="{ 'is-hidden': !hasResults }"
         :aria-label="iconsAvailableText"
       >
         <li
-          v-for="name in filteredNames"
+          v-for="name in ALL_ICON_NAMES"
           :key="name"
           class="nds-icon-grid-item"
+          :class="{ 'is-hidden': visibleNames !== null && !visibleNames.has(name) }"
+          :data-icon-name="name"
         >
           <button
             type="button"
@@ -361,28 +365,35 @@ h-6 w-6   // 24px — standalone / ilustrativo</code></pre>
             class="nds-icon-tile"
             @click="handleCopy(name)"
           >
-            <span
-              class="nds-icon-tile-svg"
-              style="position: relative"
-            >
-              <Check
-                class="nds-icon-lg nds-text-primary"
-                :style="{ position: 'absolute', opacity: copied === name ? 1 : 0, transition: 'opacity var(--duration-fast)' }"
-                aria-hidden="true"
-              />
-              <component
-                :is="(LucideIcons as Record<string, unknown>)[name]"
+            <span class="nds-icon-tile-svg">
+              <!-- Geometria do catálogo compartilhado, elemento a elemento — sem
+                   v-html e sem um componente por ícone. As tags do lucide são um
+                   conjunto fechado (path, circle, line, rect, polyline…). -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
                 class="nds-icon-lg"
-                :style="{ opacity: copied === name ? 0 : 1, transition: 'opacity var(--duration-fast)' }"
                 aria-hidden="true"
-              />
+              >
+                <component
+                  :is="no[0]"
+                  v-for="(no, i) in CATALOGO[name]"
+                  :key="i"
+                  v-bind="no[1]"
+                />
+              </svg>
             </span>
             <span class="nds-icon-tile-name">
               {{ name }}
             </span>
             <span
               class="nds-icon-tile-tooltip"
-              :style="{ opacity: copied === name ? 1 : 0 }"
+              :class="{ 'is-visible': copied === name }"
               aria-hidden="true"
             >
               {{ copied === name ? t('copy.copied') : t('copy.tooltip') }}

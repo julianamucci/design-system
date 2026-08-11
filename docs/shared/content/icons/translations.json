@@ -38,7 +38,7 @@
       "rule1": "Sempre <code>aria-hidden=\"true\"</code> em ícones decorativos — o texto adjacente já descreve a ação",
       "rule2": "<code>aria-label</code> no elemento pai quando o ícone é a única comunicação visual",
       "rule3": "Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto",
-      "rule4": "Tamanho mínimo recomendado: <code>h-4 w-4</code> (16px) para legibilidade"
+      "rule4": "Tamanho mínimo recomendado: <code>nds-icon</code> (16px) para legibilidade"
     }
   },
   "en": {
@@ -80,7 +80,7 @@
       "rule1": "Always <code>aria-hidden=\"true\"</code> on decorative icons — adjacent text already describes the action",
       "rule2": "<code>aria-label</code> on the parent element when the icon is the only visual communication",
       "rule3": "Color is never the sole state indicator — always pair with icon + text",
-      "rule4": "Minimum recommended size: <code>h-4 w-4</code> (16px) for readability"
+      "rule4": "Minimum recommended size: <code>nds-icon</code> (16px) for readability"
     }
   },
   "es": {
@@ -122,7 +122,7 @@
       "rule1": "Siempre <code>aria-hidden=\"true\"</code> en íconos decorativos — el texto adyacente ya describe la acción",
       "rule2": "<code>aria-label</code> en el elemento padre cuando el ícono es la única comunicación visual",
       "rule3": "El color nunca es el único indicador de estado — siempre acompañar con ícono + texto",
-      "rule4": "Tamaño mínimo recomendado: <code>h-4 w-4</code> (16px) para legibilidad"
+      "rule4": "Tamaño mínimo recomendado: <code>nds-icon</code> (16px) para legibilidad"
     }
   }
 }

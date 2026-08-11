@@ -329,9 +329,10 @@ export const I18n: Story = {
   play: smokePlay,
 };
 
+// color-contrast RESOLVIDA (2026-08-11): a contagem de ícones do header somava
+// `opacity: 0.7` a --muted-foreground (3.03:1), o mesmo defeito que Vanilla e
+// Angular já tinham corrigido. Axe é portão.
 export const Icons: Story = {
-  // axe: color-contrast — catalogado no FIXES-NEEDED
-  parameters: { a11y: { test: 'todo' } },
   render: () => ({ components: { IconsDocs }, template: '<IconsDocs />' }),
   play: smokePlay,
 };
