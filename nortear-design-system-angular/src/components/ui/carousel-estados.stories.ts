@@ -81,6 +81,11 @@ export const FirstSlide: Story = {
       // Duas instâncias do MESMO botão, lado a lado: comparar a seta apagada com
       // a seta viva prova o contraste do estado. Medir só a opacidade da
       // desabilitada passaria numa tela onde todas estivessem apagadas.
+      //
+      // Aqui a leitura é direta, e no passo espelhado do último slide ela é
+      // envolvida por `waitFor` — a diferença é real, não descuido. Neste ponto
+      // o botão nasceu desabilitado, e transição não anima valor inicial: não há
+      // nada em curso para esperar. Lá, ele ACABOU de mudar de estado.
       const apagada = Number(getComputedStyle(anterior).opacity);
       const viva = Number(getComputedStyle(proximo).opacity);
       await expect(apagada).toBeLessThan(viva);
@@ -141,9 +146,18 @@ export const LastSlide: Story = {
       await expect(anterior.hasAttribute('aria-disabled')).toBe(false);
 
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
-      const apagada = Number(getComputedStyle(proximo()).opacity);
-      const viva = Number(getComputedStyle(anterior).opacity);
-      await expect(apagada).toBeLessThan(viva);
+      //
+      // O `waitFor` não é folga: `.nds-carousel-button` declara
+      // `transition: … opacity var(--duration-fast)`, e o botão só ficou
+      // desabilitado no clique anterior. Ler a opacidade no primeiro quadro
+      // pega o valor de PARTIDA — 1 contra 1 — e o teste reprova por corrida,
+      // não por defeito. É o mesmo caso do contraste ~1.0 que o axe acusa em
+      // elemento a meio do fade.
+      await waitFor(async () => {
+        const apagada = Number(getComputedStyle(proximo()).opacity);
+        const viva = Number(getComputedStyle(anterior).opacity);
+        await expect(apagada).toBeLessThan(viva);
+      });
     });
 
     await step('O viewport chegou ao fim do trilho', async () => {
