@@ -2,12 +2,14 @@
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { XIcon } from 'lucide-vue-next'
 import {
   DialogClose,
   DialogContent,
   DialogPortal,
+  injectDialogRootContext,
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
@@ -33,6 +35,13 @@ const emits = defineEmits<DialogContentEmits>()
 const delegatedProps = reactiveOmit(props, 'class', 'side', 'showCloseButton')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+// O primitivo desta stack isola o resto do documento com `aria-hidden` e NÃO
+// emite `aria-modal` (conferido em node_modules). O contrato de markup do
+// design system promete o atributo, então quem o emite é este wrapper — lendo
+// do contexto da raiz para que um painel não-modal não o receba.
+const rootContext = injectDialogRootContext()
+const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
 </script>
 
 <template>
@@ -42,7 +51,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       data-slot="sheet-content"
       :data-side="side"
       :class="cn('nds-sheet-content', props.class)"
-      v-bind="{ 'aria-label': $attrs['aria-labelledby'] ? undefined : 'Sheet', ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': ariaModal, 'aria-label': $attrs['aria-labelledby'] ? undefined : 'Sheet', ...$attrs, ...forwarded }"
     >
       <slot />
 
@@ -57,7 +66,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           size="icon-sm"
         >
           <XIcon />
-          <span class="nds-sr-only">Close</span>
+          <span class="nds-sr-only">Fechar</span>
         </Button>
       </DialogClose>
     </DialogContent>

@@ -146,6 +146,7 @@ export const Open: Story = {
       await expect(p).toBeVisible();
       await expect(overlay()).toBeVisible();
       await expect(p).toHaveAttribute("role", "dialog");
+      await expect(p).toHaveAttribute("aria-modal", "true");
       await conferirNomeEDescricao(p);
     });
 

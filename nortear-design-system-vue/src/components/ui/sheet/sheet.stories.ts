@@ -93,6 +93,7 @@ export const Playground: Story = {
       await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog');
       await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAttribute('aria-modal', 'true');
       await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
     });
 
@@ -125,11 +126,11 @@ export const Playground: Story = {
       await waitForClose();
     });
 
-    await step('6. Reabrir e fechar via botão Close (X)', async () => {
+    await step('6. Reabrir e fechar via botão Fechar (X)', async () => {
       const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
       await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog');
-      const closeBtn = within(dialog).getByRole('button', { name: /close/i });
+      const closeBtn = within(dialog).getByRole('button', { name: /fechar/i });
       await userEvent.click(closeBtn);
       await waitForClose();
     });

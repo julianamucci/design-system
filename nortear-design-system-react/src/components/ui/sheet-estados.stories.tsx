@@ -122,6 +122,7 @@ export const Open: Story = {
   play: async () => {
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute("aria-modal", "true");
     await expect(dialog).toHaveAccessibleName();
     await expect(dialog).toHaveAccessibleDescription();
   },
@@ -163,7 +164,7 @@ export const WithCloseButtonHidden: Story = {
   play: async () => {
     const dialog = await waitForPortal("dialog");
     await expect(dialog).toBeVisible();
-    const closeBtn = within(dialog).queryByRole("button", { name: /^Close$/i });
+    const closeBtn = within(dialog).queryByRole("button", { name: /^Fechar$/i });
     await expect(closeBtn).toBeNull();
   },
 };

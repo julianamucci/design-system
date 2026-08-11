@@ -284,7 +284,7 @@ export class NdsDialogContent {
    * `aria-label`: é o mecanismo que o conteúdo compartilhado documenta, e texto
    * real sobrevive à tradução automática da página, que ignora `aria-label`.
    */
-  readonly closeLabel = input('Close');
+  readonly closeLabel = input('Fechar');
 
   /** Par do `scroll` do overlay: tira o painel do centro fixo e o põe no fluxo. */
   readonly scroll = input(false, { transform: booleanAttribute });
@@ -405,7 +405,7 @@ export class NdsDialogFooter {
   readonly showCloseButton = input(false, { transform: booleanAttribute });
 
   /** Rótulo visível do botão de fechar do rodapé. */
-  readonly closeLabel = input('Close');
+  readonly closeLabel = input('Fechar');
 }
 
 /**

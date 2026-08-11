@@ -231,11 +231,13 @@ export const Playground: Story = {
       await waitFor(() => expect(openedWith(true)).toBe(true));
     });
 
-    await step('Content expõe role alertdialog e isola o fundo', async () => {
+    await step('Content expõe role alertdialog, aria-modal e isola o fundo', async () => {
       const dialog = await waitForPortal('alertdialog');
       await expect(dialog).toHaveAttribute('role', 'alertdialog');
-      // A lib não emite `aria-modal`: marca tudo fora do painel com
-      // aria-hidden, o que entrega o mesmo isolamento para leitores de tela.
+      // O atributo sai do wrapper do design system: a lib não o emite (marca
+      // tudo fora do painel com aria-hidden). Os dois são verificados aqui — o
+      // contrato documentado e o isolamento real.
+      await expect(dialog).toHaveAttribute('aria-modal', 'true');
       await expect(trigger.closest('[aria-hidden="true"]')).not.toBeNull();
       // O painel em si fica fora da subárvore escondida.
       await expect(dialog.closest('[aria-hidden="true"]')).toBeNull();

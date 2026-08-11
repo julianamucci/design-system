@@ -1,12 +1,23 @@
-import type * as React from "react"
+import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
+// O primitivo desta stack isola o resto do documento com `inert`/`aria-hidden`
+// e NÃO emite `aria-modal` (conferido em node_modules). Quem cumpre o contrato
+// de markup do design system é este wrapper, e para isso o Content precisa
+// saber se a raiz é modal. `'trap-focus'` prende o foco mas deixa a página
+// interativa: não é modal para o leitor de tela.
+const SheetModalContext = React.createContext<boolean | "trap-focus">(true)
+
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
-  return <SheetPrimitive.Root data-slot="sheet" {...props} />
+  return (
+    <SheetModalContext.Provider value={props.modal ?? true}>
+      <SheetPrimitive.Root data-slot="sheet" {...props} />
+    </SheetModalContext.Provider>
+  )
 }
 
 function SheetTrigger({ ...props }: SheetPrimitive.Trigger.Props) {
@@ -44,6 +55,7 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
+  const modal = React.useContext(SheetModalContext)
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -54,6 +66,7 @@ function SheetContent({
           "nds-sheet-content",
           className
         )}
+        aria-modal={modal === true ? "true" : undefined}
         {...props}
       >
         {children}
@@ -70,7 +83,7 @@ function SheetContent({
           >
             <XIcon
             />
-            <span className="nds-sr-only">Close</span>
+            <span className="nds-sr-only">Fechar</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>

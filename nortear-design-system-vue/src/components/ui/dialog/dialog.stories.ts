@@ -69,17 +69,10 @@ export const Playground: Story = {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3',
       'functional.item4', 'functional.item5', 'functional.item6',
-      'accessibility.item1', 'accessibility.item3',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item4', 'accessibility.item5', 'accessibility.item6',
       'visual.item1',
     ],
-    coversNotApplicable: {
-      // Divergência de API de biblioteca, não defeito: o primitivo desta stack
-      // isola o resto do documento com `aria-hidden` em vez de `aria-modal`
-      // (conferido em node_modules). O passo "o resto do documento sai do
-      // alcance" verifica o mecanismo que ela de fato usa.
-      'accessibility.item2': 'o primitivo desta stack isola com aria-hidden, não com aria-modal',
-    },
   },
   render: (args) => ({
     components: {
@@ -160,14 +153,21 @@ export const Playground: Story = {
     });
 
     await step('Aberto e modal, o resto do documento sai do alcance', async () => {
-      // Conferido em `node_modules/reka-ui`: o primitivo desta stack NÃO emite
-      // `aria-modal` — a string não aparece em lugar nenhum do pacote. Ele
-      // isola marcando o que está FORA do diálogo com `aria-hidden`
-      // (`shared/useHideOthers`), que é o mecanismo que o leitor de tela
-      // realmente observa. A asserção segue o mecanismo real em vez do atributo
-      // que a lib não usa; `accessibility.item2` está declarado em
-      // `coversNotApplicable` com este mesmo motivo.
-      if (!args.modal) return;
+      const p = painel()!;
+      if (!args.modal) {
+        // Sem modalidade não pode haver `aria-modal`: o atributo prometeria ao
+        // leitor de tela um isolamento que não existe.
+        await expect(p).not.toHaveAttribute('aria-modal');
+        return;
+      }
+      // Duas provas do mesmo contrato. O atributo é o que o conteúdo
+      // compartilhado documenta, e sai do wrapper do design system — conferido
+      // em `node_modules/reka-ui`, o primitivo NÃO o emite sozinho (a string não
+      // aparece em lugar nenhum do pacote).
+      await expect(p).toHaveAttribute('aria-modal', 'true');
+      // E o isolamento de fato: o primitivo marca o que está FORA do diálogo
+      // com `aria-hidden` (`shared/useHideOthers`), que é o mecanismo que o
+      // leitor de tela realmente observa.
       await waitFor(async () => {
         await expect(trigger.closest('[inert], [aria-hidden="true"]')).not.toBeNull();
       });

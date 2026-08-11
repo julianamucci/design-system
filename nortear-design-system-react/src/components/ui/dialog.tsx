@@ -5,8 +5,19 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
+// O primitivo desta stack isola o resto do documento com `inert`/`aria-hidden`
+// e NÃO emite `aria-modal` (conferido em node_modules). O contrato de markup do
+// design system promete o atributo, então quem o emite é este wrapper — e para
+// isso o Content precisa saber se a raiz é modal. O valor `'trap-focus'` prende
+// o foco mas deixa a página interativa: não é modal para o leitor de tela.
+const DialogModalContext = React.createContext<boolean | "trap-focus">(true)
+
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return (
+    <DialogModalContext.Provider value={props.modal ?? true}>
+      <DialogPrimitive.Root data-slot="dialog" {...props} />
+    </DialogModalContext.Provider>
+  )
 }
 
 type DialogTriggerProps = DialogPrimitive.Trigger.Props & {
@@ -65,6 +76,7 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
+  const modal = React.useContext(DialogModalContext)
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -74,6 +86,7 @@ function DialogContent({
           "nds-dialog-content",
           className
         )}
+        aria-modal={modal === true ? "true" : undefined}
         {...props}
       >
         {children}
@@ -90,7 +103,7 @@ function DialogContent({
           >
             <XIcon
             />
-            <span className="nds-sr-only">Close</span>
+            <span className="nds-sr-only">Fechar</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -128,7 +141,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
+          Fechar
         </DialogPrimitive.Close>
       )}
     </div>

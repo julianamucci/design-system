@@ -143,10 +143,8 @@ export const Open: Story = {
     await step('Monta já aberto, sem estado externo nenhum', async () => {
       await expect(p).toBeVisible();
       await expect(p).toHaveAttribute('data-state', 'open');
-      // Sem `aria-modal`: conferido em node_modules, o primitivo desta stack
-      // não emite o atributo — ele isola com `aria-hidden` no que está fora.
-      // Quem verifica esse mecanismo é a Playground.
       await expect(p).toHaveAttribute('role', 'dialog');
+      await expect(p).toHaveAttribute('aria-modal', 'true');
       await expect(overlay()).toBeVisible();
       await conferirNomeEDescricao(p);
     });

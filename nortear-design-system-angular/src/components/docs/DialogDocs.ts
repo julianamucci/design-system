@@ -242,7 +242,7 @@ export class NdsDialogPortal {}
 })
 export class NdsDialogContent {
   readonly showCloseButton = input(true, { transform: booleanAttribute });
-  readonly closeLabel = input('Close');
+  readonly closeLabel = input('Fechar');
   readonly scroll = input(false, { transform: booleanAttribute });
 }`;
 
@@ -1137,7 +1137,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
           {
             name: 'closeLabel',
             type: 'string',
-            defaultValue: "'Close'",
+            defaultValue: "'Fechar'",
             required: nao,
             description: toPlainText(t('props.table.closeLabel')),
           },
@@ -1178,7 +1178,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
           {
             name: 'closeLabel',
             type: 'string',
-            defaultValue: "'Close'",
+            defaultValue: "'Fechar'",
             required: nao,
             description: toPlainText(t('props.table.closeLabel')),
           },

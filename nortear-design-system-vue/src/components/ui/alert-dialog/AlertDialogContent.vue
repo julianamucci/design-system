@@ -34,6 +34,13 @@ const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'Al
 </script>
 
 <template>
+  <!--
+    `aria-modal` sai deste wrapper: o primitivo desta stack isola o resto do
+    documento com `aria-hidden` e não emite o atributo (conferido em
+    node_modules), enquanto o contrato de markup do design system o promete.
+    Incondicional de propósito — a raiz do alert dialog não expõe `modal`, ela
+    é sempre modal por definição do papel.
+  -->
   <AlertDialogPortal>
     <AlertDialogOverlay
       data-slot="alert-dialog-overlay"
@@ -41,7 +48,7 @@ const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'Al
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

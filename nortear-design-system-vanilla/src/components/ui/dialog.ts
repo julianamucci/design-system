@@ -149,11 +149,11 @@ export function createDialog(options: DialogOptions): HTMLElement {
       closeBtn.type = 'button';
       closeBtn.className = 'nds-dialog-close';
       closeBtn.dataset.slot = 'dialog-close';
-      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.setAttribute('aria-label', 'Fechar');
       closeBtn.appendChild(createCloseIcon());
       const srOnly = document.createElement('span');
       srOnly.className = 'nds-sr-only';
-      srOnly.textContent = 'Close';
+      srOnly.textContent = 'Fechar';
       closeBtn.appendChild(srOnly);
       closeBtn.addEventListener('click', () => closeWithReason('close-button'));
       panelEl.appendChild(closeBtn);

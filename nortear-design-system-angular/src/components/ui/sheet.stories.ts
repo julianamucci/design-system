@@ -257,7 +257,7 @@ export const Playground: Story = {
     if (args.showCloseButton) {
       await step('O X do canto fecha o painel', async () => {
         const painel = await abrir(trigger);
-        const fecharBtn = within(painel).getByRole('button', { name: /close/i });
+        const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
         await userEvent.click(fecharBtn);
         await esperarPortalSumir('dialog');
       });

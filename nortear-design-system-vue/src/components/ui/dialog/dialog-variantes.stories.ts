@@ -368,12 +368,12 @@ export const CustomCloseInFooter: Story = {
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(botaoFecharDoCanto(p)).toBeNull();
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(rodape).getByRole('button', { name: /close/i })).toBeVisible();
+      await expect(within(rodape).getByRole('button', { name: /fechar/i })).toBeVisible();
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(rodape).getByRole('button', { name: /close/i }));
+      await userEvent.click(within(rodape).getByRole('button', { name: /fechar/i }));
       await esperarFechado();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await abrir(canvasElement)).toBeVisible();

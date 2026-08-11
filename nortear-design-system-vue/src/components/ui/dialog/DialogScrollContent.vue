@@ -2,6 +2,7 @@
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { XIcon } from 'lucide-vue-next'
 import {
@@ -9,6 +10,7 @@ import {
   DialogContent,
   DialogOverlay,
   DialogPortal,
+  injectDialogRootContext,
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
@@ -23,6 +25,11 @@ const emits = defineEmits<DialogContentEmits>()
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+// Mesmo motivo do DialogContent: o primitivo desta stack não emite
+// `aria-modal`, e o contrato de markup do design system promete o atributo.
+const rootContext = injectDialogRootContext()
+const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
 </script>
 
 <template>
@@ -39,7 +46,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       <DialogContent
         data-slot="dialog-content"
         :class="cn( 'nds-dialog-content nds-dialog-content-scroll', props.class, )"
-        v-bind="{ ...$attrs, ...forwarded }"
+        v-bind="{ 'aria-modal': ariaModal, ...$attrs, ...forwarded }"
         @pointer-down-outside="(event) => {
           const originalEvent = event.detail.originalEvent;
           const target = originalEvent.target as HTMLElement;
@@ -55,7 +62,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
           class="nds-dialog-close"
         >
           <XIcon />
-          <span class="nds-sr-only">Close</span>
+          <span class="nds-sr-only">Fechar</span>
         </DialogClose>
       </DialogContent>
     </DialogOverlay>

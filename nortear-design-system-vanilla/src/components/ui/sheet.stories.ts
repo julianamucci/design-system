@@ -142,7 +142,7 @@ export const Playground: Story = {
       const trigger = canvas.getByRole('button', { name: triggerRe });
       await userEvent.click(trigger);
       const dialog = await waitForPortal('dialog');
-      const closeBtn = within(dialog).getByRole('button', { name: /close/i });
+      const closeBtn = within(dialog).getByRole('button', { name: /fechar/i });
       await userEvent.click(closeBtn);
       await waitForClose();
     });

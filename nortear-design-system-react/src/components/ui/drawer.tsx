@@ -1,12 +1,22 @@
-import type * as React from "react"
+import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
+// O primitivo desta stack (e o diálogo que ele usa por baixo) NÃO emite
+// `aria-modal` — conferido em node_modules. Quem cumpre o contrato de markup do
+// design system é este wrapper, e para isso o Content precisa saber se a raiz é
+// modal.
+const DrawerModalContext = React.createContext(true)
+
 function Drawer({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
-  return <DrawerPrimitive.Root data-slot="drawer" {...props} />
+  return (
+    <DrawerModalContext.Provider value={props.modal ?? true}>
+      <DrawerPrimitive.Root data-slot="drawer" {...props} />
+    </DrawerModalContext.Provider>
+  )
 }
 
 function DrawerTrigger({
@@ -48,6 +58,7 @@ function DrawerContent({
   children,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+  const modal = React.useContext(DrawerModalContext)
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -57,6 +68,7 @@ function DrawerContent({
           "nds-drawer-content",
           className
         )}
+        aria-modal={modal ? "true" : undefined}
         {...props}
       >
         <div className="nds-drawer-handle" />

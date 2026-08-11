@@ -134,7 +134,7 @@ export class NdsSheetContent {
    * Nome acessível do botão X. Default em inglês para bater com o que as outras
    * quatro stacks já escrevem; numa aplicação traduzida, passe o rótulo.
    */
-  readonly closeLabel = input('Close');
+  readonly closeLabel = input('Fechar');
 
   /** Classes .nds-* extras no painel (largura, principalmente). */
   readonly panelClass = input('');

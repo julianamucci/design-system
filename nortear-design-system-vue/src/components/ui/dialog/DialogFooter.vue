@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<{
       as-child
     >
       <Button variant="outline">
-        Close
+        Fechar
       </Button>
     </DialogClose>
   </div>

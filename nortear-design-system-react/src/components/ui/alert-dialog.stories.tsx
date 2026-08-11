@@ -227,11 +227,13 @@ export const Playground: Story = {
       await expect(media!.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
 
-    await step("Diálogo tem role alertdialog e isola o fundo de leitores de tela", async () => {
+    await step("Diálogo tem role alertdialog, aria-modal e isola o fundo de leitores de tela", async () => {
       const dialog = await waitForPortal("alertdialog");
       await expect(dialog).toHaveAttribute("role", "alertdialog");
-      // A lib não emite `aria-modal`: marca tudo fora do popup com
-      // aria-hidden + data-base-ui-inert, que entrega o mesmo isolamento.
+      // O atributo sai do wrapper do design system: a lib não o emite (marca
+      // tudo fora do popup com aria-hidden + data-base-ui-inert). Os dois são
+      // verificados aqui — o contrato documentado e o isolamento real.
+      await expect(dialog).toHaveAttribute("aria-modal", "true");
       const trigger = canvasElement.querySelector('[data-slot="alert-dialog-trigger"]');
       await expect(trigger).not.toBeNull();
       await expect(trigger!.closest('[aria-hidden="true"]')).not.toBeNull();

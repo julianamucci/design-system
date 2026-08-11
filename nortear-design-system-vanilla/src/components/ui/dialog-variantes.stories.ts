@@ -296,9 +296,9 @@ export const CustomCloseInFooter: Story = {
     },
   },
   render: () => {
-    const fecharNoRodape = createButton({ variant: 'ghost', label: 'Close' });
+    const fecharNoRodape = createButton({ variant: 'ghost', label: 'Fechar' });
     // O botão precisa FECHAR de verdade: a factory não liga um `DialogClose`
-    // sozinha, e um "Close" que não fecha seria a story documentando o
+    // sozinha, e um "Fechar" que não fecha seria a story documentando o
     // contrário do que promete. O clique no overlay é o caminho público.
     fecharNoRodape.addEventListener('click', () => {
       document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
@@ -325,12 +325,12 @@ export const CustomCloseInFooter: Story = {
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(botaoFecharDoCanto(p)).toBeNull();
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(rodape).getByRole('button', { name: /close/i })).toBeVisible();
+      await expect(within(rodape).getByRole('button', { name: /fechar/i })).toBeVisible();
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(rodape).getByRole('button', { name: /close/i }));
+      await userEvent.click(within(rodape).getByRole('button', { name: /fechar/i }));
       await esperarFechado();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await abrir(canvasElement)).toBeVisible();

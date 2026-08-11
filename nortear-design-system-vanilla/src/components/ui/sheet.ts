@@ -95,7 +95,7 @@ export function createSheet(options: SheetOptions): HTMLElement {
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'nds-sheet-close';
-    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.setAttribute('aria-label', 'Fechar');
     closeBtn.appendChild(createCloseIcon());
     closeBtn.addEventListener('click', () => closeWithReason('close-button'));
 

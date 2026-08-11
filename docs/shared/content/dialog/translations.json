@@ -267,7 +267,7 @@
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial vai para o primeiro elemento focável.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
       "item5": "<strong>Escape e clique no overlay</strong> — fecham o diálogo sem disparar ações do Footer. Body scroll-lock é restaurado.",
-      "item6": "<strong>Botão Close</strong> — tem <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> para leitores de tela."
+      "item6": "<strong>Botão Close</strong> — tem <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> para leitores de tela."
     },
     "keyboard": {
       "escape": "Fecha o diálogo. Foco retorna ao trigger.",
@@ -721,7 +721,7 @@
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus goes to the first focusable element.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
       "item5": "<strong>Escape and overlay click</strong> — close the dialog without firing Footer actions. Body scroll-lock is restored.",
-      "item6": "<strong>Close button</strong> — has <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> for screen readers."
+      "item6": "<strong>Close button</strong> — has <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> for screen readers."
     },
     "keyboard": {
       "escape": "Closes the dialog. Focus returns to trigger.",
@@ -1175,7 +1175,7 @@
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento focalizable.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
       "item5": "<strong>Escape y clic en overlay</strong> — cierran el diálogo sin disparar acciones del Footer. El scroll-lock del body se restaura.",
-      "item6": "<strong>Botón Close</strong> — tiene <code>&lt;span class=\"sr-only\"&gt;Close&lt;/span&gt;</code> para lectores de pantalla."
+      "item6": "<strong>Botón Close</strong> — tiene <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> para lectores de pantalla."
     },
     "keyboard": {
       "escape": "Cierra el diálogo. El foco vuelve al trigger.",

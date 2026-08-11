@@ -276,7 +276,7 @@ export const WithoutCloseButton: Story = {
     await step('O X do canto não é renderizado', async () => {
       // Prova do binding de input: sob JIT o componente cairia no default
       // (`true`) e o botão apareceria mesmo com [showCloseButton]="false".
-      await expect(within(painel).queryByRole('button', { name: /close/i })).toBeNull();
+      await expect(within(painel).queryByRole('button', { name: /fechar/i })).toBeNull();
     });
 
     await step('E ainda assim existe uma saída — o rodapé', async () => {

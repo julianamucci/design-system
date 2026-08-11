@@ -155,7 +155,10 @@ export const WithCloseButtonHidden: Story = {
     const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
-    const closeBtn = body.queryByRole('button', { name: /^Close$/i });
+    // Painel não-modal: sem `aria-modal`, porque a página em volta continua
+    // interativa e o atributo prometeria um isolamento que não existe.
+    await expect(dialog).not.toHaveAttribute('aria-modal');
+    const closeBtn = body.queryByRole('button', { name: /^Fechar$/i });
     await expect(closeBtn).not.toBeInTheDocument();
   },
 };

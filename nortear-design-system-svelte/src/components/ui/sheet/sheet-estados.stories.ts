@@ -86,7 +86,7 @@ export const WithCloseButtonHidden: Story = {
     const body = within(document.body);
     const dialog = await waitForPortal('dialog');
     await expect(dialog).toBeVisible();
-    const closeBtns = body.queryAllByRole('button', { name: /^Close$/i });
+    const closeBtns = body.queryAllByRole('button', { name: /^Fechar$/i });
     await expect(closeBtns.length).toBe(0);
   },
 };

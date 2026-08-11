@@ -46,7 +46,7 @@
 				{#snippet child({ props })}
 					<Button variant="ghost" class="nds-sheet-close-position" size="icon-sm" {...props}>
 						<XIcon  />
-						<span class="nds-sr-only">Close</span>
+						<span class="nds-sr-only">Fechar</span>
 					</Button>
 				{/snippet}
 			</SheetPrimitive.Close>

@@ -65,12 +65,20 @@ function AlertDialogContent({
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
+      {/*
+        O primitivo desta stack isola o resto do documento com
+        `inert`/`aria-hidden` e NÃO emite `aria-modal` (conferido em
+        node_modules). Quem cumpre o contrato de markup do design system é este
+        wrapper. Aqui o atributo é incondicional: a raiz do alert dialog não
+        expõe `modal` — ela é sempre modal, por definição do papel.
+      */}
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"
         className={cn(
           "nds-alert-dialog-content",
           className
         )}
+        aria-modal="true"
         {...props}
       />
     </AlertDialogPortal>

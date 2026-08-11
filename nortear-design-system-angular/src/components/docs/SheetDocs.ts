@@ -110,7 +110,7 @@ const INTERFACE_CODE = `// A raiz compõe o Dialog do Radix NG: é ele quem entr
 export class NdsSheetContent {
   side            = input<'top' | 'right' | 'bottom' | 'left'>('right');
   showCloseButton = input(true);
-  closeLabel      = input('Close');   // nome acessível do X do canto
+  closeLabel      = input('Fechar');   // nome acessível do X do canto
   panelClass      = input('');        // classes .nds-* extras no painel
 }
 
