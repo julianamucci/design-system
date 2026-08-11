@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import DOMPurify from 'dompurify';
 import {
   createSidebarProvider,
@@ -62,8 +62,15 @@ const ICON_SEARCH   = '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
 // ─── Wrapper ──────────────────────────────────────────────────────────────────
 
 function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLElement): HTMLElement {
+  // A barra é a navegação principal, e navegação precisa de marco nomeado: sem
+  // o `<nav aria-label>` o leitor de tela não a lista como região. A fábrica
+  // não impõe o elemento — quem compõe é que decide o rótulo.
+  const nav = document.createElement('nav');
+  nav.setAttribute('aria-label', 'Navegação principal');
+  nav.appendChild(instance.element);
+
   const wrapper = createSidebarProvider();
-  wrapper.appendChild(instance.element);
+  wrapper.appendChild(nav);
   wrapper.appendChild(main);
 
   const container = document.createElement('div');
@@ -143,6 +150,11 @@ export const WithGroups: Story = {
     return wrapSidebar(instance, inset);
   },
   parameters: {
+    covers: ['accessibility.item6'],
+    coversNotApplicable: {
+      'functional.item9':
+        'a fábrica desta stack não expõe skeleton de item de menu — o placeholder de carregamento é composto com o Skeleton pelo consumidor',
+    },
     docs: {
       description: {
         story: 'Sidebar com dois grupos de navegação separados por <code>SidebarSeparator</code>. Itens com ícones e badge.',
@@ -150,9 +162,44 @@ export const WithGroups: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Grupo "Principal" está presente', async () => {
-      const labels = canvasElement.querySelectorAll('[data-sidebar="group-label"]');
-      await expect(labels.length).toBeGreaterThan(0);
+    const canvas = within(canvasElement);
+
+    await step('Os grupos são separados por um separador anunciado', async () => {
+      const rotulos = canvasElement.querySelectorAll('[data-sidebar="group-label"]');
+      await expect(Array.from(rotulos).map((r) => r.textContent)).toEqual(['Principal', 'Conta']);
+      const sep = canvasElement.querySelector<HTMLElement>('[data-sidebar="separator"]')!;
+      await expect(sep.getAttribute('role')).toBe('separator');
+    });
+
+    await step('O contador entra no item, não como parada solta', async () => {
+      const badge = canvasElement.querySelector<HTMLElement>('.nds-sidebar-menu-button-badge')!;
+      await expect(badge.textContent).toBe('5');
+      // Dentro do botão: um "5" anunciado sozinho depois de "Notificações" não
+      // diria de quê.
+      await expect(badge.closest('.nds-sidebar-menu-button')).not.toBeNull();
+    });
+
+    await step('O Tab alcança todos os itens — nenhuma parada sem nome', async () => {
+      const primeiro = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      primeiro.focus();
+      const alcancados: string[] = [];
+      for (let i = 0; i < 5; i++) {
+        await userEvent.tab();
+        const ativo = document.activeElement as HTMLElement | null;
+        if (!ativo) continue;
+        // `aria-label` ANTES do texto: é ele que vence no cálculo do nome
+        // acessível, e a fábrica sempre o define no item de menu.
+        alcancados.push(ativo.getAttribute('aria-label') ?? ativo.textContent?.trim() ?? '');
+      }
+      await expect(alcancados).toContain('Componentes');
+      await expect(alcancados).toContain('Configuracoes');
+      await expect(alcancados).not.toContain('');
+      // Devolve o foco ao ponto de partida para o replay.
+      primeiro.blur();
+    });
+
+    await step('A navegação tem nome de marco', async () => {
+      await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
     });
   },
 };
@@ -321,9 +368,34 @@ export const WithSubmenu: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Botão de Componentes tem aria-expanded=false inicialmente', async () => {
-      const btn = canvasElement.querySelector('[aria-expanded]');
-      await expect(btn).toHaveAttribute('aria-expanded', 'false');
+    const pai = () => canvasElement.querySelector<HTMLButtonElement>('[aria-expanded]')!;
+    const sub = () => canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub"]')!;
+
+    // Par idempotente: só clica quando o estado atual não é o desejado, então o
+    // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
+    const definir = async (aberto: boolean) => {
+      const alvo = pai();
+      if (alvo.getAttribute('aria-expanded') !== String(aberto)) await userEvent.click(alvo);
+      await expect(pai().getAttribute('aria-expanded')).toBe(String(aberto));
+    };
+
+    await step('O submenu nasce fechado, e o botão pai diz isso', async () => {
+      await expect(pai().getAttribute('aria-expanded')).toBe('false');
+      await expect(getComputedStyle(sub()).display).toBe('none');
+    });
+
+    await step('O submenu é uma lista aninhada de verdade', async () => {
+      await expect(sub().tagName).toBe('UL');
+      await expect(sub().closest('[data-sidebar="menu-item"]')).not.toBeNull();
+      await expect(sub().querySelectorAll('[data-sidebar="menu-sub-item"]').length).toBe(4);
+    });
+
+    await step('Abrir revela os subitens, e fechar os recolhe de volta', async () => {
+      await definir(true);
+      await expect(getComputedStyle(sub()).display).not.toBe('none');
+
+      await definir(false);
+      await expect(getComputedStyle(sub()).display).toBe('none');
     });
   },
 };
@@ -360,6 +432,8 @@ export const WithSearch: Story = {
     const searchInput = document.createElement('input');
     searchInput.type = 'search';
     searchInput.placeholder = 'Buscar...';
+    // O placeholder some ao digitar; o nome acessível não pode sumir junto.
+    searchInput.setAttribute('aria-label', 'Buscar na navegação');
     searchInput.className = 'nds-w-full nds-rounded-md nds-text-caption';
     searchInput.style.border = '1px solid var(--sidebar-border)';
     searchInput.style.background = 'var(--sidebar)';
@@ -421,9 +495,18 @@ export const WithSearch: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Campo de busca está presente e acessível', async () => {
-      const input = canvasElement.querySelector('input[type="search"]');
-      await expect(input).toBeInTheDocument();
+    const canvas = within(canvasElement);
+
+    await step('O campo de busca tem nome — o placeholder some ao digitar', async () => {
+      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
+      await expect(busca.closest('[data-sidebar="header"]')).not.toBeNull();
+    });
+
+    await step('O ícone de lupa é decorativo', async () => {
+      // O nome do campo já está no aria-label; um ícone lido em cima disso vira
+      // ruído duplicado.
+      const lupa = canvasElement.querySelector<SVGElement>('[data-sidebar="input"] svg')!;
+      await expect(lupa.getAttribute('aria-hidden')).toBe('true');
     });
   },
 };
@@ -486,8 +569,26 @@ export const WithBadges: Story = {
     },
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    await step('Cada contador acompanha o item a que pertence', async () => {
+      const badges = canvasElement.querySelectorAll<HTMLElement>('.nds-sidebar-menu-button-badge');
+      await expect(Array.from(badges).map((b) => b.textContent)).toEqual(['12', '3']);
+    });
+
+    await step('O contador não é lido solto pelo leitor de tela', async () => {
+      // O badge mora DENTRO do botão, e o nome acessível do botão vem do
+      // aria-label: um "12" anunciado sozinho não diria de quê.
+      const badge = canvasElement.querySelector<HTMLElement>('.nds-sidebar-menu-button-badge')!;
+      const item = badge.closest<HTMLElement>('.nds-sidebar-menu-button')!;
+      await expect(item.getAttribute('aria-label')).toBe('Notificações');
+    });
+
+    await step('Item sem contador não ganha caixa vazia', async () => {
+      const itens = canvasElement.querySelectorAll('.nds-sidebar-menu-button');
+      await expect(itens.length).toBe(4);
+      await expect(
+        canvasElement.querySelectorAll('.nds-sidebar-menu-button-badge').length,
+      ).toBe(2);
+    });
   },
 };

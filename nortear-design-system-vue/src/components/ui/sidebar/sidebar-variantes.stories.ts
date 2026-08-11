@@ -35,7 +35,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
+      template: '<div class="nds-cluster nds-min-h-100 nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -109,8 +109,8 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
             </Sidebar>
           </nav>
           <SidebarInset>
-            <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
-              <SidebarTrigger class="lg:hidden" />
+            <header class="nds-cluster nds-px-4 nds-py-2 nds-border-b" data-align="center" data-spacing="sm">
+              <SidebarTrigger class="nds-lg-hidden" />
               <span class="nds-text-caption nds-text-muted-foreground nds-font-mono">variant="{{ variant }}"</span>
             </header>
             <main id="main-content" class="nds-p-4">
@@ -125,6 +125,8 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
 
 // ─── Variante: sidebar (padrão) ───────────────────────────────────────────────
 
+const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
+
 export const VariantSidebar: Story = {
   parameters: {
     docs: {
@@ -133,10 +135,11 @@ export const VariantSidebar: Story = {
   },
   ...makeStory('sidebar'),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('sidebar variant=sidebar renderiza nav acessível', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step('A variante padrão não arredonda o painel interno', async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz.getAttribute('data-variant')).toBe('sidebar');
+      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
 };
@@ -145,16 +148,25 @@ export const VariantSidebar: Story = {
 
 export const VariantFloating: Story = {
   parameters: {
+    covers: ['functional.item8', 'visual.item3'],
     docs: {
       description: { story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.' },
     },
   },
   ...makeStory('floating'),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('sidebar variant=floating renderiza nav acessível', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step('floating ganha borda, cantos e sombra no painel interno', async () => {
+      // Afirma o pixel, e não só o atributo: a regra é
+      // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
+      // errado passaria despercebido.
+      const raiz = raizDe(canvasElement);
+      await expect(raiz.getAttribute('data-variant')).toBe('floating');
+
+      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const estilo = getComputedStyle(interno);
+      await expect(parseFloat(estilo.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(estilo.borderTopWidth)).toBeGreaterThan(0);
+      await expect(estilo.boxShadow).not.toBe('none');
     });
   },
 };
@@ -163,16 +175,20 @@ export const VariantFloating: Story = {
 
 export const VariantInset: Story = {
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: { story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.' },
     },
   },
   ...makeStory('inset'),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('sidebar variant=inset renderiza nav acessível', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step('inset marca a variante que arredonda o conteúdo adjacente', async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz.getAttribute('data-variant')).toBe('inset');
+      // A regra que arredonda o conteúdo é `[data-variant="inset"] ~ .nds-sidebar-inset`
+      // — depende de a barra e o conteúdo serem irmãos, e é isso que se perde
+      // primeiro quando alguém envolve um dos dois.
+      await expect(canvasElement.querySelector('.nds-sidebar-inset')).not.toBeNull();
     });
   },
 };
@@ -181,15 +197,25 @@ export const VariantInset: Story = {
 
 export const SideRight: Story = {
   parameters: {
+    covers: ['visual.item6'],
     docs: {
       description: { story: 'Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.' },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('sidebar side=right renderiza nav acessível', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+
+    await step('A barra encosta na direita', async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz.getAttribute('data-side')).toBe('right');
+      // Medida, não atributo: a regra que posiciona é
+      // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
+      const painel = raiz.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      await expect(getComputedStyle(painel).right).toBe('0px');
+    });
+
+    await step('Trocar de lado não mexe na navegação', async () => {
+      await expect(canvas.getByRole('navigation', { name: /navegação principal/i })).toBeInTheDocument();
     });
   },
   render: () => ({

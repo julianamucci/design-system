@@ -27,20 +27,25 @@
   import { slide } from 'svelte/transition';
 
   let componentsOpen = $state(true);
+  // `open` bindável é a API real do provider desta stack; `defaultOpen` era
+  // aceita e ignorada.
+  let open = $state(true);
 
+  // Subitem de navegação é link, e link precisa de destino: sem `href` o <a>
+  // não tem papel de link nenhum e o leitor de tela não o anuncia como parada.
   const subItems = [
-    { label: 'Button',  isActive: true  },
-    { label: 'Alert',   isActive: false },
-    { label: 'Badge',   isActive: false },
-    { label: 'Card',    isActive: false },
+    { label: 'Button',  href: '#button', isActive: true  },
+    { label: 'Alert',   href: '#alert',  isActive: false },
+    { label: 'Badge',   href: '#badge',  isActive: false },
+    { label: 'Card',    href: '#card',   isActive: false },
   ];
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider defaultOpen={true}>
+  <SidebarProvider bind:open>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
+        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
           <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
         </SidebarHeader>
         <SidebarContent>
@@ -49,7 +54,7 @@
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Dashboard">
+                  <SidebarMenuButton tooltipContent="Dashboard">
                     <LayoutDashboard aria-hidden="true" />
                     <span>Dashboard</span>
                   </SidebarMenuButton>
@@ -57,16 +62,15 @@
 
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    tooltip="Componentes"
+                    tooltipContent="Componentes"
                     onclick={() => (componentsOpen = !componentsOpen)}
                     aria-expanded={componentsOpen}
                   >
                     <Box aria-hidden="true" />
                     <span>Componentes</span>
-                    <ChevronDown
-                      aria-hidden="true"
-                      class="ml-auto nds-transition-transform {componentsOpen ? 'rotate-180' : ''}"
-                    />
+                    <!-- `.nds-chevron` já gira 180° sob [aria-expanded="true"]:
+                         a rotação sai do estado no DOM, não de classe condicional. -->
+                    <ChevronDown aria-hidden="true" class="nds-spacer-start nds-chevron" />
                   </SidebarMenuButton>
                   {#if componentsOpen}
                     <div transition:slide={{ duration: 150 }}>
@@ -74,10 +78,11 @@
                         {#each subItems as sub (sub.label)}
                           <SidebarMenuSubItem>
                             <SidebarMenuSubButton
+                              href={sub.href}
                               isActive={sub.isActive}
                               aria-current={sub.isActive ? 'page' : undefined}
                             >
-                              <Circle aria-hidden="true" class="" style="width: 0.5rem; height: 0.5rem" />
+                              <Circle aria-hidden="true" class="nds-size-2" />
                               {sub.label}
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -88,14 +93,14 @@
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Tokens">
+                  <SidebarMenuButton tooltipContent="Tokens">
                     <Palette aria-hidden="true" />
                     <span>Tokens</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Configurações">
+                  <SidebarMenuButton tooltipContent="Configurações">
                     <Settings aria-hidden="true" />
                     <span>Configurações</span>
                   </SidebarMenuButton>
@@ -104,14 +109,14 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground">v1.0.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com sub-menu</span>
       </header>

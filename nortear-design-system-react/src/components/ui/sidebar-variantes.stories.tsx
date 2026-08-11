@@ -108,6 +108,7 @@ const meta = {
   parameters: {
     layout: "fullscreen",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -129,44 +130,51 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
+const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+
 export const VariantSidebar: Story = {
   render: () => <SidebarPreview variant="sidebar" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
-    });
-    await step("nav com aria-label está presente", async () => {
-      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step("A variante padrão não arredonda o painel interno", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-variant", "sidebar");
+      const interno = raiz.querySelector<HTMLElement>(".nds-sidebar-inner")!;
+      await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
 };
 
 export const VariantFloating: Story = {
+  parameters: { covers: ["functional.item8", "visual.item3"] },
   render: () => <SidebarPreview variant="floating" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar floating renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
-    });
-    await step("nav com aria-label está presente", async () => {
-      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step("floating ganha borda, cantos e sombra no painel interno", async () => {
+      // Afirma o pixel, e não só o atributo: a regra é
+      // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
+      // errado passaria despercebido.
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-variant", "floating");
+
+      const interno = raiz.querySelector<HTMLElement>(".nds-sidebar-inner")!;
+      const estilo = getComputedStyle(interno);
+      await expect(parseFloat(estilo.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(estilo.borderTopWidth)).toBeGreaterThan(0);
+      await expect(estilo.boxShadow).not.toBe("none");
     });
   },
 };
 
 export const VariantInset: Story = {
+  parameters: { covers: ["visual.item4"] },
   render: () => <SidebarPreview variant="inset" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar inset renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
-    });
-    await step("nav com aria-label está presente", async () => {
-      const nav = within(canvasElement).getByRole("navigation", { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step("inset marca a variante que arredonda o conteúdo adjacente", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-variant", "inset");
+      // A regra que arredonda o conteúdo é `[data-variant="inset"] ~ .nds-sidebar-inset`
+      // — depende de a barra e o conteúdo serem irmãos, e é isso que se perde
+      // primeiro quando alguém envolve um dos dois.
+      await expect(canvasElement.querySelector(".nds-sidebar-inset")).not.toBeNull();
     });
   },
 };
@@ -174,9 +182,12 @@ export const VariantInset: Story = {
 export const CollapsibleOffcanvas: Story = {
   render: () => <SidebarPreview variant="sidebar" collapsible="offcanvas" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar offcanvas renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
+    await step("Aberta, o modo de recolhimento ainda não marca nada", async () => {
+      // `data-collapsible` só existe enquanto está recolhida — se fosse fixo,
+      // a barra nasceria encolhida.
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-state", "expanded");
+      await expect(raiz.getAttribute("data-collapsible")).toBe("");
     });
   },
 };
@@ -184,9 +195,15 @@ export const CollapsibleOffcanvas: Story = {
 export const CollapsibleIcon: Story = {
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar icon renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
+    await step("Aberta, o modo icon não estreita o painel", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-state", "expanded");
+      const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
+      const cheia = parseFloat(getComputedStyle(raiz).getPropertyValue("--sidebar-width"));
+      const raizFonte = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(Math.round(parseFloat(getComputedStyle(painel).width))).toBe(
+        Math.round(cheia * raizFonte),
+      );
     });
   },
 };
@@ -194,9 +211,11 @@ export const CollapsibleIcon: Story = {
 export const CollapsibleNone: Story = {
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar none renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
+    await step("Sem recolhimento não há painel fixo nem vão reservado", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveClass("nds-sidebar-static");
+      await expect(raiz).not.toHaveAttribute("data-state");
+      await expect(canvasElement.querySelector(".nds-sidebar-gap-inner")).toBeNull();
     });
   },
 };
@@ -204,19 +223,32 @@ export const CollapsibleNone: Story = {
 export const SideLeft: Story = {
   render: () => <SidebarPreview variant="sidebar" side="left" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar left renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
+    await step("O painel encosta na esquerda", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-side", "left");
+      const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
+      await expect(getComputedStyle(painel).left).toBe("0px");
     });
   },
 };
 
 export const SideRight: Story = {
+  parameters: { covers: ["visual.item6"] },
   render: () => <SidebarPreview variant="sidebar" side="right" />,
   play: async ({ canvasElement, step }) => {
-    await step("Sidebar right renderiza com data-slot=sidebar", async () => {
-      const sidebar = canvasElement.querySelector("[data-slot='sidebar']");
-      await expect(sidebar).toBeInTheDocument();
+    const canvas = within(canvasElement);
+
+    await step("O painel encosta na direita", async () => {
+      const raiz = raizDe(canvasElement);
+      await expect(raiz).toHaveAttribute("data-side", "right");
+      // Medida, não atributo: a regra que posiciona é
+      // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
+      const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
+      await expect(getComputedStyle(painel).right).toBe("0px");
+    });
+
+    await step("Trocar de lado não mexe na navegação", async () => {
+      await expect(canvas.getByRole("navigation", { name: /navegação principal/i })).toBeInTheDocument();
     });
   },
 };

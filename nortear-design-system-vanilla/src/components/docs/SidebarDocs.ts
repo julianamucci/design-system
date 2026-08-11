@@ -927,7 +927,9 @@ export function createSidebarDocs(): HTMLElement {
         const codeWithSearch = [
           `const searchWrapper = document.createElement('div');`,
           `searchWrapper.setAttribute('data-sidebar', 'input');`,
-          `searchWrapper.className = 'relative nds-px-1 nds-pb-1';`,
+          `searchWrapper.style.position = 'relative';`,
+          `searchWrapper.style.paddingInline = 'var(--spacing-1)';`,
+          `searchWrapper.style.paddingBottom = 'var(--spacing-1)';`,
           ``,
           `const icon = makeIcon(ICON_SEARCH, 14);`,
           `icon.classList.add('nds-icon-input-start', 'nds-icon-sm', 'nds-text-muted-foreground');`,
@@ -978,7 +980,7 @@ export function createSidebarDocs(): HTMLElement {
           items: [
             { label: t('states.expanded.label'),  trigger: toPlainText(t('states.expanded.trigger')),  behavior: toPlainText(t('states.expanded.behavior'))},
             { label: t('states.collapsed.label'), trigger: toPlainText(t('states.collapsed.trigger')), behavior: toPlainText(t('states.collapsed.behavior'))},
-            { label: t('states.offcanvas.label'), trigger: toPlainText(t('states.offcanvas.trigger')), behavior: toPlainText(t('states.offcanvas.behavior'))},
+            { label: t('states.collapsedOffcanvas.label'), trigger: toPlainText(t('states.collapsedOffcanvas.trigger')), behavior: toPlainText(t('states.collapsedOffcanvas.behavior'))},
             { label: t('states.mobile.label'),    trigger: toPlainText(t('states.mobile.trigger')),    behavior: toPlainText(t('states.mobile.behavior'))},
             { label: t('states.hidden.label'),    trigger: toPlainText(t('states.hidden.trigger')),    behavior: toPlainText(t('states.hidden.behavior'))},
           ],

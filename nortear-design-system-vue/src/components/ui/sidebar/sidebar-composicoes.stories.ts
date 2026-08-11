@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import {
   Sidebar,
   SidebarContent,
@@ -46,7 +46,7 @@ const meta = {
   },
   decorators: [
     () => ({
-      template: '<div class="nds-cluster min-h-[400px] nds-w-full"><story /></div>',
+      template: '<div class="nds-cluster nds-min-h-100 nds-w-full"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof Sidebar>;
@@ -59,19 +59,50 @@ type Story = StoryObj<typeof meta>;
 export const WithNavGroups: Story = {
   name: 'With nav groups',
   parameters: {
+    covers: ['accessibility.item6'],
     docs: {
       description: { story: 'Sidebar com múltiplos SidebarGroup separados por SidebarSeparator, cada grupo com label e ação.' },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('renderiza nav acessível com grupos', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+
+    await step('Os grupos são separados por um separador', async () => {
+      await expect(canvasElement.querySelectorAll('[data-slot="sidebar-group"]').length).toBe(2);
+      await expect(canvasElement.querySelector('[data-slot="sidebar-separator"]')).not.toBeNull();
     });
-    await step('badge de notificações visível', async () => {
-      const badges = canvas.getAllByText(/^\d+$/);
-      await expect(badges.length).toBeGreaterThanOrEqual(1);
+
+    await step('As ações têm nome — o "+" e as reticências sozinhos não dizem nada', async () => {
+      // O nome vem do <span class="nds-sr-only">, que existe justamente porque
+      // o ícone é decorativo.
+      const adicionar = canvas.getByRole('button', { name: 'Adicionar item' });
+      await expect(adicionar).toHaveAttribute('data-slot', 'sidebar-group-action');
+      const mais = canvas.getByRole('button', { name: 'Mais opções' });
+      await expect(mais).toHaveAttribute('data-slot', 'sidebar-menu-action');
+    });
+
+    await step('O contador é texto de apoio, não o item de menu', async () => {
+      const badges = canvasElement.querySelectorAll('[data-slot="sidebar-menu-badge"]');
+      await expect(badges.length).toBe(2);
+      await expect(Array.from(badges).map((b) => b.textContent?.trim())).toEqual(['3', '12']);
+    });
+
+    await step('O Tab alcança os itens e as ações — nenhuma parada sem nome', async () => {
+      const primeiro = canvas.getByRole('button', { name: 'Adicionar item' });
+      primeiro.focus();
+      const alcancados: string[] = [];
+      for (let i = 0; i < 5; i++) {
+        await userEvent.tab();
+        const ativo = document.activeElement as HTMLElement | null;
+        if (!ativo) continue;
+        // `aria-label` ANTES do texto: onde ele existe, é ele que vence no
+        // cálculo do nome acessível.
+        alcancados.push(ativo.getAttribute('aria-label') ?? ativo.textContent?.trim() ?? '');
+      }
+      await expect(alcancados).toContain('Dashboard');
+      await expect(alcancados).not.toContain('');
+      // Devolve o foco ao ponto de partida para o replay.
+      primeiro.blur();
     });
   },
   render: () => ({
@@ -162,8 +193,8 @@ export const WithNavGroups: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
-            <SidebarTrigger class="lg:hidden" />
+          <header class="nds-cluster nds-px-4 nds-py-2 nds-border-b" data-align="center" data-spacing="sm">
+            <SidebarTrigger class="nds-lg-hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com grupos e badges</span>
           </header>
           <main id="main-content" class="nds-p-4">
@@ -186,9 +217,25 @@ export const WithSubmenu: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('renderiza nav acessível com sub-menus', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+
+    await step('O submenu é uma lista aninhada de verdade', async () => {
+      const subs = canvasElement.querySelectorAll<HTMLElement>('[data-slot="sidebar-menu-sub"]');
+      await expect(subs.length).toBe(2);
+      await expect(subs[0].tagName).toBe('UL');
+      await expect(subs[0].closest('[data-slot="sidebar-menu-item"]')).not.toBeNull();
+      await expect(subs[0].querySelectorAll('[data-slot="sidebar-menu-sub-item"]').length).toBe(4);
+    });
+
+    await step('O botão pai declara que o submenu está aberto', async () => {
+      // Sem `aria-expanded` a chevron gira só para quem vê: quem ouve não
+      // recebe aviso nenhum de que há um nível abaixo, nem de que ele está
+      // aberto.
+      await expect(canvas.getByRole('button', { name: /componentes/i }))
+        .toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('A navegação continua com nome de marco', async () => {
+      await expect(canvas.getByRole('navigation', { name: /navegação principal/i })).toBeInTheDocument();
     });
   },
   render: () => ({
@@ -221,10 +268,14 @@ export const WithSubmenu: Story = {
                     </SidebarMenuItem>
                     <!-- Item com sub-menu -->
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Componentes">
+                      <SidebarMenuButton tooltip="Componentes" aria-expanded="true">
                         <Blocks aria-hidden="true" />
                         <span>Componentes</span>
-                        <ChevronRight class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" aria-hidden="true" />
+                        <!-- A classe nds-chevron já gira sob [aria-expanded="true"]:
+                             a rotação sai do estado no DOM, não de classe condicional.
+                             Sem crase aqui: este comentário mora dentro de um
+                             template literal, e uma crase encerraria a string. -->
+                        <ChevronRight class="nds-spacer-start nds-chevron" aria-hidden="true" />
                       </SidebarMenuButton>
                       <SidebarMenuSub>
                         <SidebarMenuSubItem>
@@ -250,10 +301,10 @@ export const WithSubmenu: Story = {
                       </SidebarMenuSub>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Tokens">
+                      <SidebarMenuButton tooltip="Tokens" aria-expanded="true">
                         <Palette aria-hidden="true" />
                         <span>Tokens</span>
-                        <ChevronRight class="ml-auto" aria-hidden="true" />
+                        <ChevronRight class="nds-spacer-start nds-chevron" aria-hidden="true" />
                       </SidebarMenuButton>
                       <SidebarMenuSub>
                         <SidebarMenuSubItem>
@@ -281,8 +332,8 @@ export const WithSubmenu: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
-            <SidebarTrigger class="lg:hidden" />
+          <header class="nds-cluster nds-px-4 nds-py-2 nds-border-b" data-align="center" data-spacing="sm">
+            <SidebarTrigger class="nds-lg-hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com sub-menus</span>
           </header>
           <main id="main-content" class="nds-p-4">
@@ -305,13 +356,14 @@ export const WithSearch: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('renderiza nav acessível com campo de busca', async () => {
-      const nav = canvas.getByRole('navigation', { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step('O campo de busca tem nome — o placeholder some ao digitar', async () => {
+      const busca = canvas.getByRole('textbox', { name: 'Buscar na navegação' });
+      await expect(busca).toHaveAttribute('data-slot', 'sidebar-input');
+      await expect(busca.closest('[data-slot="sidebar-header"]')).not.toBeNull();
     });
-    await step('campo de busca presente', async () => {
-      const input = canvas.getByRole('textbox');
-      await expect(input).toBeInTheDocument();
+
+    await step('A navegação continua com nome de marco', async () => {
+      await expect(canvas.getByRole('navigation', { name: /navegação principal/i })).toBeInTheDocument();
     });
   },
   render: () => ({
@@ -327,8 +379,8 @@ export const WithSearch: Story = {
         <nav aria-label="Navegação principal">
           <Sidebar collapsible="offcanvas">
             <SidebarHeader class="nds-p-2" data-spacing="sm">
-              <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground group-data-[collapsible=icon]:hidden">Design System</span>
-              <SidebarInput placeholder="Buscar..." />
+              <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground nds-sidebar-hide-collapsed">Design System</span>
+              <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />
             </SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -367,8 +419,8 @@ export const WithSearch: Story = {
           </Sidebar>
         </nav>
         <SidebarInset>
-          <header class="nds-cluster nds-px-4 nds-border-b" data-align="center" data-spacing="sm" style="height: 3rem">
-            <SidebarTrigger class="lg:hidden" />
+          <header class="nds-cluster nds-px-4 nds-py-2 nds-border-b" data-align="center" data-spacing="sm">
+            <SidebarTrigger class="nds-lg-hidden" />
             <span class="nds-text-body nds-text-muted-foreground">Com busca no header</span>
           </header>
           <main id="main-content" class="nds-p-4">

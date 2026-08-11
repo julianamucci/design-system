@@ -25,7 +25,9 @@
 		"data-slot": "sidebar-menu-sub-button",
 		"data-sidebar": "menu-sub-button",
 		"data-size": size,
-		"data-active": isActive,
+		// "true" quando ativo e ausente quando não: é a forma que a folha
+		// compartilhada casa, e a mesma que as outras implementações emitem.
+		"data-active": isActive ? "true" : undefined,
 		...restProps,
 	});
 </script>

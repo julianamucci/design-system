@@ -202,6 +202,14 @@
   opacity: 0.5;
 }
 
+/*
+ * Item ativo. `data-active="true"` é a única forma reconhecida: o atributo
+ * carrega o valor textual quando ativo e some quando não. Houve uma segunda
+ * regra idêntica logo abaixo, escrita como `[data-active]:not([data-active="false"])`
+ * para tolerar implementações que emitiam o atributo vazio; duas semânticas
+ * para o mesmo seletor deixavam ambíguo o que conta como ativo, e a tolerância
+ * escondia o defeito em vez de corrigi-lo. A emissão foi alinhada na origem.
+ */
 .nds-sidebar-menu-button[data-active="true"] {
   background-color: hsl(var(--sidebar-accent));
   color: hsl(var(--sidebar-accent-foreground));
@@ -237,7 +245,7 @@
  * Extensões para sidebars com modos colapsáveis (offcanvas/icon/none),
  * variantes (sidebar/floating/inset), rail de toggle, sub-menus, actions e
  * badges. Estados via data-attrs no root: data-state, data-collapsible,
- * data-variant, data-side. Botões ativos: presença de data-active.
+ * data-variant, data-side. Botões ativos: data-active="true".
  */
 
 /* ── Root (esconde <48rem; gap/panel cuidam do resto) ────────────────────── */
@@ -428,6 +436,15 @@
   overflow: hidden;
 }
 
+/* Marcador para conteúdo livre (logotipo textual, rodapé de versão) que não
+ * cabe na largura de ícone. Rótulo de grupo, badge e sub-menu já somem por
+ * regra própria; isto é para o que o consumidor põe dentro da barra. É a
+ * "classe utilitária correspondente ao estado recolhido" que as notas de
+ * implementação descrevem — sem ela, a promessa não tinha implementação. */
+.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-hide-collapsed {
+  display: none;
+}
+
 .nds-sidebar-group-label {
   transition: margin var(--duration-base) linear, opacity var(--duration-base) linear;
 }
@@ -444,14 +461,24 @@
 }
 
 /* ── Group action (botão no canto do grupo) ──────────────────────────────── */
+/*
+ * 24×24 é o piso, não uma escolha estética: é o alvo mínimo que o critério de
+ * tamanho de alvo cobra, e vale para qualquer ponteiro — não existe exceção
+ * para mouse. O botão media 20×20 e compensava com um pseudo-elemento
+ * invisível de área ampliada que era desligado a partir de 48rem, ou seja,
+ * justamente no ponteiro fino, onde o alvo pequeno também erra. A ampliação
+ * saiu: o alvo real cresceu. O ícone dentro continua com 16px, então o que
+ * muda visualmente é só o retângulo de hover, 4px maior. O `top` desceu de
+ * 0.875rem para 0.75rem para o botão manter o mesmo centro de antes.
+ */
 .nds-sidebar-group-action {
   position: absolute;
-  top: 0.875rem;
+  top: var(--spacing-3, 0.75rem);
   right: var(--spacing-3, 0.75rem);
 
   display: flex;
   aspect-ratio: 1;
-  width: var(--spacing-5, 1.25rem);
+  width: var(--spacing-6, 1.5rem);
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -479,19 +506,6 @@
   flex-shrink: 0;
 }
 
-/* Área de toque expandida no touch (some no desktop) */
-.nds-sidebar-group-action::after {
-  content: "";
-  position: absolute;
-  inset: calc(var(--spacing-2) * -1);
-}
-
-@media (min-width: 48rem) {
-  .nds-sidebar-group-action::after {
-    display: none;
-  }
-}
-
 .nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-group-action {
   display: none;
 }
@@ -502,12 +516,8 @@
 }
 
 /* ── Menu button: variantes, tamanhos, colapso ───────────────────────────── */
-/* Presença de data-active (libs headless emitem attr booleano) */
-.nds-sidebar-menu-button[data-active]:not([data-active="false"]) {
-  background-color: hsl(var(--sidebar-accent));
-  color: hsl(var(--sidebar-accent-foreground));
-  font-weight: var(--font-weight-medium, 500);
-}
+/* O item ativo é pintado uma única vez, na regra `[data-active="true"]` mais
+ * acima neste arquivo. */
 
 .nds-sidebar-menu-button-outline {
   background-color: hsl(var(--background));
@@ -545,14 +555,23 @@
 }
 
 /* ── Menu action (botão flutuante à direita do item) ─────────────────────── */
+/*
+ * Mesmo piso de 24×24 da ação de grupo, e pela mesma razão: o alvo mínimo do
+ * critério de tamanho de alvo não tem exceção por tipo de ponteiro, e o
+ * pseudo-elemento de área ampliada que existia aqui era desligado a partir de
+ * 48rem. Ele saiu junto: com 24px reais, ampliar mais 8px por lado colocaria
+ * alvos vizinhos (a linha do menu tem 32px) por cima uns dos outros, trocando
+ * uma falha de tamanho por uma de espaçamento. Os `top` acompanham o
+ * crescimento para preservar o centro em cada tamanho de item.
+ */
 .nds-sidebar-menu-action {
   position: absolute;
-  top: var(--spacing-1-5, 0.375rem);
+  top: var(--spacing-1, 0.25rem);
   right: var(--spacing-1, 0.25rem);
 
   display: flex;
   aspect-ratio: 1;
-  width: var(--spacing-5, 1.25rem);
+  width: var(--spacing-6, 1.5rem);
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -580,20 +599,8 @@
   flex-shrink: 0;
 }
 
-.nds-sidebar-menu-action::after {
-  content: "";
-  position: absolute;
-  inset: calc(var(--spacing-2) * -1);
-}
-
-@media (min-width: 48rem) {
-  .nds-sidebar-menu-action::after {
-    display: none;
-  }
-}
-
-.nds-sidebar-menu-button[data-size="lg"] ~ .nds-sidebar-menu-action { top: var(--spacing-2-5, 0.625rem); }
-.nds-sidebar-menu-button[data-size="sm"] ~ .nds-sidebar-menu-action { top: var(--spacing-1, 0.25rem); }
+.nds-sidebar-menu-button[data-size="lg"] ~ .nds-sidebar-menu-action { top: var(--spacing-2, 0.5rem); }
+.nds-sidebar-menu-button[data-size="sm"] ~ .nds-sidebar-menu-action { top: var(--spacing-0-5, 0.125rem); }
 
 .nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-menu-action {
   display: none;
@@ -711,7 +718,7 @@
 }
 
 .nds-sidebar-menu-sub-button:hover,
-.nds-sidebar-menu-sub-button[data-active]:not([data-active="false"]) {
+.nds-sidebar-menu-sub-button[data-active="true"] {
   background-color: hsl(var(--sidebar-accent));
   color: hsl(var(--sidebar-accent-foreground));
 }

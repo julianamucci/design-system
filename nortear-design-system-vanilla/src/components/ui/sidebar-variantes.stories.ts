@@ -34,6 +34,19 @@ type Story = StoryObj;
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
+/**
+ * A barra é a navegação principal da aplicação, e navegação precisa de marco
+ * nomeado: sem o `<nav aria-label>` o leitor de tela não a lista como região, e
+ * quem navega por marcos não tem como chegar até ela. A fábrica não impõe o
+ * elemento — quem compõe é que decide o rótulo —, então é aqui que ele entra.
+ */
+function envolverEmNav(sidebar: HTMLElement, rotulo = 'Navegação principal'): HTMLElement {
+  const nav = document.createElement('nav');
+  nav.setAttribute('aria-label', rotulo);
+  nav.appendChild(sidebar);
+  return nav;
+}
+
 function buildVariantDemo(variant: SidebarVariant): HTMLElement {
   const instance = createSidebar({ defaultOpen: true, variant });
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -97,7 +110,7 @@ function buildVariantDemo(variant: SidebarVariant): HTMLElement {
   inset.append(topbar, mainContent);
 
   const wrapper = createSidebarProvider();
-  wrapper.appendChild(instance.element);
+  wrapper.appendChild(envolverEmNav(instance.element));
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
@@ -121,13 +134,16 @@ export const VariantSidebar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('SidebarTrigger presente e acessível', async () => {
-      const trigger = canvas.getByRole('button', { name: /toggle sidebar/i });
-      await expect(trigger).toBeInTheDocument();
+
+    await step('O gatilho tem nome acessível', async () => {
+      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
     });
-    await step('Sidebar tem data-variant="sidebar"', async () => {
-      const sidebar = canvasElement.querySelector('[data-variant="sidebar"]');
-      await expect(sidebar).toBeInTheDocument();
+
+    await step('A variante padrão não arredonda o painel interno', async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="sidebar"]')!;
+      await expect(raiz).toBeInTheDocument();
+      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
 };
@@ -136,6 +152,7 @@ export const VariantFloating: Story = {
   name: 'floating',
   render: () => buildVariantDemo('floating'),
   parameters: {
+    covers: ['functional.item8', 'visual.item3'],
     docs: {
       description: {
         story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.',
@@ -143,9 +160,16 @@ export const VariantFloating: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Sidebar tem data-variant="floating"', async () => {
-      const sidebar = canvasElement.querySelector('[data-variant="floating"]');
-      await expect(sidebar).toBeInTheDocument();
+    await step('floating ganha borda, cantos e sombra no painel interno', async () => {
+      // Afirma o pixel, e não só o atributo: a regra é
+      // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
+      // errado passaria despercebido.
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="floating"]')!;
+      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      const estilo = getComputedStyle(interno);
+      await expect(parseFloat(estilo.borderTopLeftRadius)).toBeGreaterThan(0);
+      await expect(parseFloat(estilo.borderTopWidth)).toBeGreaterThan(0);
+      await expect(estilo.boxShadow).not.toBe('none');
     });
   },
 };
@@ -154,6 +178,7 @@ export const VariantInset: Story = {
   name: 'inset',
   render: () => buildVariantDemo('inset'),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.',
@@ -161,9 +186,13 @@ export const VariantInset: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Sidebar tem data-variant="inset"', async () => {
-      const sidebar = canvasElement.querySelector('[data-variant="inset"]');
-      await expect(sidebar).toBeInTheDocument();
+    await step('inset marca a variante, e o painel interno fica liso', async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-variant="inset"]')!;
+      await expect(raiz).toBeInTheDocument();
+      // O arredondamento do inset é do conteúdo adjacente, não do painel: se
+      // aparecer aqui, alguém copiou a regra do floating para o lugar errado.
+      const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
     });
   },
 };
@@ -171,9 +200,21 @@ export const VariantInset: Story = {
 export const SideRight: Story = {
   name: 'side="right"',
   play: async ({ canvasElement, step }) => {
-    await step('Sidebar tem data-side="right"', async () => {
-      const sidebar = canvasElement.querySelector('[data-side="right"]');
-      await expect(sidebar).toBeInTheDocument();
+    const canvas = within(canvasElement);
+
+    await step('O painel encosta na direita', async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-side="right"]')!;
+      await expect(raiz).toBeInTheDocument();
+      // Medida, não atributo: a regra que posiciona é
+      // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.
+      const painel = raiz.querySelector<HTMLElement>('.nds-sidebar-panel')!;
+      await expect(getComputedStyle(painel).right).toBe('0px');
+    });
+
+    await step('O painel de contexto tem nome próprio de marco', async () => {
+      // Dois marcos de navegação com o mesmo nome é `landmark-unique` no axe —
+      // e, antes de ser regra, é o leitor dizendo "navegação" duas vezes.
+      await expect(canvas.getByRole('navigation', { name: 'Detalhes' })).toBeInTheDocument();
     });
   },
   render: () => {
@@ -225,7 +266,7 @@ export const SideRight: Story = {
 
     const wrapper = createSidebarProvider();
     wrapper.appendChild(inset);
-    wrapper.appendChild(instance.element);
+    wrapper.appendChild(envolverEmNav(instance.element, 'Detalhes'));
 
     const container = document.createElement('div');
     container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
@@ -234,6 +275,7 @@ export const SideRight: Story = {
     return container;
   },
   parameters: {
+    covers: ['visual.item6'],
     docs: {
       description: {
         story: 'Sidebar posicionada na direita. Usada para painéis de detalhes ou contexto.',

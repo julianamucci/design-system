@@ -1119,7 +1119,7 @@ interface SidebarMenuButtonProps {
     items={[
       { label: $tStore('states.expanded.label'),  trigger: toPlainText($tStore('states.expanded.trigger')),  behavior: toPlainText($tStore('states.expanded.behavior'))},
       { label: $tStore('states.collapsed.label'), trigger: toPlainText($tStore('states.collapsed.trigger')), behavior: toPlainText($tStore('states.collapsed.behavior'))},
-      { label: $tStore('states.offcanvas.label'), trigger: toPlainText($tStore('states.offcanvas.trigger')), behavior: toPlainText($tStore('states.offcanvas.behavior'))},
+      { label: $tStore('states.collapsedOffcanvas.label'), trigger: toPlainText($tStore('states.collapsedOffcanvas.trigger')), behavior: toPlainText($tStore('states.collapsedOffcanvas.behavior'))},
       { label: $tStore('states.mobile.label'),    trigger: toPlainText($tStore('states.mobile.trigger')),    behavior: toPlainText($tStore('states.mobile.behavior'))},
       { label: $tStore('states.hidden.label'),    trigger: toPlainText($tStore('states.hidden.trigger')),    behavior: toPlainText($tStore('states.hidden.behavior'))},
     ]}

@@ -193,7 +193,13 @@ export function createSidebarMenuItem(options: SidebarMenuItemOptions): HTMLElem
   btn.setAttribute('aria-label', options.label);
 
   if (isLink && btn instanceof HTMLAnchorElement) btn.href = options.href!;
-  if (options.active) btn.setAttribute('data-active', 'true');
+  if (options.active) {
+    btn.setAttribute('data-active', 'true');
+    // `data-active` é para o CSS. Quem não vê a cor de destaque precisa do
+    // aria-current — é ele que faz o leitor de tela anunciar "página atual",
+    // e é ele que o critério de acessibilidade do componente cobra.
+    btn.setAttribute('aria-current', 'page');
+  }
   if (options.disabled) (btn as HTMLButtonElement).disabled = true;
   if (options.onClick) btn.addEventListener('click', options.onClick);
   if (options.icon) btn.appendChild(options.icon);

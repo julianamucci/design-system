@@ -72,6 +72,10 @@
 .nds-border-b           { border-bottom: 1px solid hsl(var(--border)); }
 .nds-border-b-soft      { border-bottom: 1px solid hsl(var(--border) / 0.5); }
 
+/* Border-top isolado (divisor superior — rodapé destacado do corpo) */
+.nds-border-t           { border-top: 1px solid hsl(var(--border)); }
+.nds-border-t-soft      { border-top: 1px solid hsl(var(--border) / 0.5); }
+
 /* ── Hover variants (apenas as mais usadas) ────────────────────────────────── */
 .nds-hover-bg-muted-faint:hover { background-color: hsl(var(--muted) / 0.05); }  /* zebra suave de table-row */
 .nds-hover-bg-muted-soft:hover  { background-color: hsl(var(--muted) / 0.5); }

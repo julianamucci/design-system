@@ -1005,9 +1005,9 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
             behavior: toPlainText(tContent("states.collapsed.behavior")),
           },
           {
-            label: tContent("states.offcanvas.label"),
-            trigger: toPlainText(tContent("states.offcanvas.trigger")),
-            behavior: toPlainText(tContent("states.offcanvas.behavior")),
+            label: tContent("states.collapsedOffcanvas.label"),
+            trigger: toPlainText(tContent("states.collapsedOffcanvas.trigger")),
+            behavior: toPlainText(tContent("states.collapsedOffcanvas.behavior")),
           },
           {
             label: tContent("states.mobile.label"),

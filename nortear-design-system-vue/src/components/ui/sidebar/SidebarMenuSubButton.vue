@@ -15,13 +15,18 @@ const props = withDefaults(defineProps<PrimitiveProps & {
 </script>
 
 <template>
+  <!--
+    data-active vale "true" (e some quando inativo), nunca o atributo vazio:
+    é a forma que a folha compartilhada casa e a que as demais implementações
+    do design system emitem.
+  -->
   <Primitive
     data-slot="sidebar-menu-sub-button"
     data-sidebar="menu-sub-button"
     :as="as"
     :as-child="asChild"
     :data-size="size"
-    :data-active="isActive ? '' : undefined"
+    :data-active="isActive ? 'true' : undefined"
     :class="cn('nds-sidebar-menu-sub-button', props.class)"
   >
     <slot />

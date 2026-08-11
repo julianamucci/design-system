@@ -16,7 +16,9 @@ export default meta;
 type Story = StoryObj;
 
 export const WithGroupsAndSearch: Story = {
-  parameters: { covers: ['functional.item9', 'accessibility.item6'] },
+  // `functional.item9` (skeleton com ícone) NÃO é desta story — ela não monta
+  // nenhum skeleton. Quem o verifica é `Loading`, logo abaixo.
+  parameters: { covers: ['accessibility.item6'] },
   render: () => ({
     template: `
       <div ndsSidebarProvider>

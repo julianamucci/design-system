@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, waitFor, within, expect } from "storybook/test";
 import {
   LayoutDashboard,
   Blocks,
@@ -22,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
 } from "./sidebar";
@@ -102,6 +103,10 @@ function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryP
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
+          {/* A faixa alterna a barra pela borda, com o ponteiro: é o par de
+              desktop do gatilho. `tabIndex={-1}` de propósito — duas paradas
+              de teclado para a mesma ação seria ruído. */}
+          <SidebarRail />
         </Sidebar>
       </nav>
       <SidebarInset>
@@ -166,8 +171,17 @@ type Story = StoryObj<typeof meta>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1", "functional.item2", "functional.item6",
+      "accessibility.item1", "accessibility.item2", "accessibility.item3",
+      "accessibility.item4", "accessibility.item5",
+      "visual.item1",
+    ],
+  },
   render: (args) => (
     <SidebarStory
+      key={`${args.side}-${args.variant}-${args.collapsible}`}
       side={args.side}
       variant={args.variant}
       collapsible={args.collapsible}
@@ -175,27 +189,66 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const raiz = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+    const gatilho = () => canvas.getByRole("button", { name: /toggle sidebar/i });
 
-    await step("Sidebar está presente no DOM", async () => {
-      const nav = canvas.getByRole("navigation", { name: /navegação principal/i });
-      await expect(nav).toBeInTheDocument();
+    await step("A navegação tem nome acessível", async () => {
+      // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
+      // leitor de tela — indistinguível de qualquer outra da página.
+      await expect(canvas.getByRole("navigation", { name: /navegação principal/i })).toBeInTheDocument();
     });
 
-    await step("Item ativo tem aria-current=page", async () => {
-      const activeBtn = canvas.getByRole("button", { current: "page" });
-      await expect(activeBtn).toBeInTheDocument();
+    await step("O item ativo é anunciado como página atual", async () => {
+      // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
+      const ativo = canvas.getByRole("button", { current: "page" });
+      await expect(ativo).toHaveAttribute("data-active", "true");
+      await expect(ativo).toHaveTextContent("Dashboard");
     });
 
-    await step("SidebarTrigger está acessível", async () => {
-      const trigger = canvas.getByRole("button", { name: /toggle sidebar/i });
-      await expect(trigger).toBeInTheDocument();
+    await step("O ícone do item não é lido pelo leitor de tela", async () => {
+      const icone = canvasElement.querySelector<SVGElement>(
+        "[data-slot='sidebar-menu-button'] svg",
+      )!;
+      await expect(icone.getAttribute("aria-hidden")).toBe("true");
     });
 
-    await step("Clicar no SidebarTrigger alterna sidebar", async () => {
-      const wrapper = canvasElement.querySelector("[data-slot='sidebar-wrapper']");
-      await expect(wrapper).toBeInTheDocument();
-      const trigger = canvas.getByRole("button", { name: /toggle sidebar/i });
-      await userEvent.click(trigger);
+    await step("O gatilho tem nome acessível", async () => {
+      await expect(gatilho()).toBeInTheDocument();
+    });
+
+    await step("O gatilho alterna o estado — e volta", async () => {
+      // Par idempotente: o painel Interactions reexecuta a play no mesmo DOM,
+      // e uma única inversão faria a segunda rodada afirmar o oposto.
+      const antes = raiz().getAttribute("data-state");
+      await userEvent.click(gatilho());
+      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
+      await userEvent.click(gatilho());
+      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
+    });
+
+    await step("Ctrl+B alterna de qualquer lugar da página", async () => {
+      const antes = raiz().getAttribute("data-state");
+      await userEvent.keyboard("{Control>}b{/Control}");
+      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
+      await userEvent.keyboard("{Control>}b{/Control}");
+      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
+    });
+
+    await step("A faixa alterna sem duplicar o gatilho para quem não usa ponteiro", async () => {
+      const faixa = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
+      await expect(faixa.tabIndex).toBe(-1);
+      // A faixa é o par de ponteiro do gatilho, e faz exatamente a mesma coisa.
+      // Fora da ordem de tabulação E fora da árvore de acessibilidade: anunciada,
+      // ela seria um segundo botão com o mesmo nome, para a mesma ação, sem foco.
+      // A prova é o gatilho continuar sendo o único elemento com esse nome.
+      await expect(faixa).toHaveAttribute("aria-hidden", "true");
+      await expect(canvas.getAllByRole("button", { name: /toggle sidebar/i })).toHaveLength(1);
+
+      const antes = raiz().getAttribute("data-state");
+      faixa.click();
+      await waitFor(() => expect(raiz().getAttribute("data-state")).not.toBe(antes));
+      faixa.click();
+      await waitFor(() => expect(raiz().getAttribute("data-state")).toBe(antes));
     });
   },
 };

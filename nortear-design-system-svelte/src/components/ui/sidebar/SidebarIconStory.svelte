@@ -21,6 +21,11 @@
   import Settings from '@lucide/svelte/icons/settings';
   import User from '@lucide/svelte/icons/user';
 
+  // O provider desta stack expõe `open` (bindável), não `defaultOpen`: a prop
+  // antiga era aceita e ignorada, e esta story — que existe para mostrar a
+  // barra RECOLHIDA — vinha abrindo expandida.
+  let open = $state(false);
+
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard',    isActive: true  },
     { icon: Box,             label: 'Componentes',  isActive: false },
@@ -31,24 +36,25 @@
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider defaultOpen={false}>
+  <SidebarProvider bind:open>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="icon">
-        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-font-semibold nds-text-body nds-text-muted-foreground group-data-[collapsible=icon]:hidden">
+        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
+          <span class="nds-font-semibold nds-text-body nds-text-muted-foreground nds-sidebar-hide-collapsed">
             Design System
           </span>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel class="group-data-[collapsible=icon]:hidden">Navegação</SidebarGroupLabel>
+            <SidebarGroupLabel>Navegação</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {#each navItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltip={item.label}
+                      tooltipContent={item.label}
+                      aria-label={item.label}
                       aria-current={item.isActive ? 'page' : undefined}
                     >
                       <item.icon aria-hidden="true" />
@@ -60,14 +66,14 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed">v1.0.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Modo icon colapsado</span>
       </header>

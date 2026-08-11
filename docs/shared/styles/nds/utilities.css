@@ -48,6 +48,7 @@
 .nds-w-lg     { width: 32rem; }                        /* 512px */
 
 /* Square sizing (grid 8) — para elementos que precisam de width+height iguais */
+.nds-size-2   { width: 0.5rem;   height: 0.5rem;  }    /* 8px — marcador/bullet */
 .nds-size-4   { width: 1rem;     height: 1rem;    }    /* 16px */
 .nds-size-6   { width: 1.5rem;   height: 1.5rem;  }    /* 24px */
 .nds-size-8   { width: 2rem;     height: 2rem;    }    /* 32px */

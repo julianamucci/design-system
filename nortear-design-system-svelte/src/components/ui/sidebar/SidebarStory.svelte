@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     SidebarProvider,
     Sidebar,
@@ -28,6 +29,24 @@
     defaultOpen = true,
   } = $props();
 
+  // O provider desta stack não tem prop `defaultOpen` — o estado é `open`, e é
+  // bindável. Passar `defaultOpen` caía no rest e virava atributo no <div>:
+  // aceito, ignorado, e a barra abria sempre. Aqui `defaultOpen` é o valor
+  // inicial do estado local que fica ligado ao provider.
+  //
+  // A leitura vai dentro de `untrack`: fora de um closure, o compilador avisa
+  // que a referência captura só o valor inicial — e é exatamente o que ela faz.
+  let open = $state(untrack(() => defaultOpen));
+
+  // Depois da montagem quem manda é o gatilho, mas o painel Controls também
+  // mexe em `defaultOpen`, e sem esta ressincronização mudar o controle não
+  // reabria a barra: o estado tinha nascido do primeiro valor e nunca mais
+  // olhava para a prop. Remontar por `{#key}` não resolveria — o bloco recria o
+  // provider, não o escopo do script onde `open` mora.
+  $effect(() => {
+    open = defaultOpen;
+  });
+
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', isActive: true },
     { icon: Box,             label: 'Componentes', isActive: false },
@@ -38,10 +57,10 @@
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider {defaultOpen}>
+  <SidebarProvider bind:open>
     <nav aria-label="Navegação principal">
       <Sidebar {side} {variant} {collapsible}>
-        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
+        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
           <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
         </SidebarHeader>
         <SidebarContent>
@@ -53,7 +72,7 @@
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltip={item.label}
+                      tooltipContent={item.label}
                       aria-current={item.isActive ? 'page' : undefined}
                     >
                       <item.icon aria-hidden="true" />
@@ -65,14 +84,14 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed">v1.0.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Conteúdo principal</span>
       </header>

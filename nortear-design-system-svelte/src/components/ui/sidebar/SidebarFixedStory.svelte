@@ -32,7 +32,7 @@
   <SidebarProvider>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="none">
-        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
+        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
           <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
         </SidebarHeader>
         <SidebarContent>
@@ -55,13 +55,13 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground">v1.0.0</span>
         </SidebarFooter>
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Sidebar sempre visível — sem toggle</span>
       </header>
       <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">

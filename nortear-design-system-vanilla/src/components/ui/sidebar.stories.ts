@@ -147,8 +147,15 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   inset.appendChild(topbar);
   inset.appendChild(mainContent);
 
+  // A barra é a navegação principal, e navegação precisa de marco nomeado: sem
+  // o `<nav aria-label>` o leitor de tela não a lista como região. A fábrica
+  // não impõe o elemento — quem compõe é que decide o rótulo.
+  const nav = document.createElement('nav');
+  nav.setAttribute('aria-label', 'Navegação principal');
+  nav.appendChild(instance.element);
+
   const wrapper = createSidebarProvider();
-  wrapper.appendChild(instance.element);
+  wrapper.appendChild(nav);
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
@@ -161,17 +168,65 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item6',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
+      'accessibility.item4', 'accessibility.item5',
+      'visual.item1',
+    ],
+  },
   render: (args) => buildDemoSidebar(args),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /toggle sidebar/i });
+    const raiz = () => canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
 
-    await step('SidebarTrigger está acessível', async () => {
-      await expect(trigger).toBeInTheDocument();
+    await step('A navegação tem nome acessível', async () => {
+      // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
+      // leitor de tela — indistinguível de qualquer outra da página.
+      await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
     });
 
-    await step('Clicar no trigger alterna o estado da sidebar', async () => {
-      await userEvent.click(trigger);
+    await step('O estado inicial aparece em data-state', async () => {
+      await expect(raiz().getAttribute('data-state')).toBe(
+        args.defaultOpen ? 'expanded' : 'collapsed',
+      );
+    });
+
+    await step('O item ativo é anunciado como página atual', async () => {
+      // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
+      const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(ativo).not.toBeNull();
+      await expect(ativo.getAttribute('aria-current')).toBe('page');
+      await expect(ativo.getAttribute('aria-label')).toBe('Dashboard');
+    });
+
+    await step('O ícone do cabeçalho não é lido pelo leitor de tela', async () => {
+      const icone = canvasElement.querySelector<SVGElement>('[data-sidebar="header"] svg')!;
+      await expect(icone.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    await step('O gatilho tem nome acessível', async () => {
+      await expect(gatilho()).toBeInTheDocument();
+    });
+
+    await step('O gatilho alterna o estado — e volta', async () => {
+      // Par idempotente: o painel Interactions reexecuta a play no mesmo DOM,
+      // e uma única inversão faria a segunda rodada afirmar o oposto.
+      const antes = raiz().getAttribute('data-state');
+      await userEvent.click(gatilho());
+      await expect(raiz().getAttribute('data-state')).not.toBe(antes);
+      await userEvent.click(gatilho());
+      await expect(raiz().getAttribute('data-state')).toBe(antes);
+    });
+
+    await step('Ctrl+B alterna de qualquer lugar da página', async () => {
+      const antes = raiz().getAttribute('data-state');
+      await userEvent.keyboard('{Control>}b{/Control}');
+      await expect(raiz().getAttribute('data-state')).not.toBe(antes);
+      await userEvent.keyboard('{Control>}b{/Control}');
+      await expect(raiz().getAttribute('data-state')).toBe(antes);
     });
   },
 };

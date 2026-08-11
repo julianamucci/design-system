@@ -12,12 +12,16 @@
     SidebarMenuItem,
     SidebarMenuButton,
     SidebarMenuBadge,
+    SidebarGroupAction,
+    SidebarMenuAction,
     SidebarSeparator,
     SidebarTrigger,
     SidebarInset,
     SidebarRail,
     SidebarInput,
   } from '@/components/ui/sidebar';
+  import Plus from '@lucide/svelte/icons/plus';
+  import MoreHorizontal from '@lucide/svelte/icons/more-horizontal';
   import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
   import Box from '@lucide/svelte/icons/box';
   import Palette from '@lucide/svelte/icons/palette';
@@ -36,25 +40,32 @@
     { icon: Settings, label: 'Configurações', isActive: false, badge: null },
     { icon: User,     label: 'Perfil',        isActive: false, badge: null },
   ];
+
+  // `open` bindável é a API real do provider desta stack; `defaultOpen` era
+  // aceita e ignorada.
+  let open = $state(true);
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider defaultOpen={true}>
+  <SidebarProvider bind:open>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader class="nds-py-2 nds-border-b border-sidebar-border" style="padding-inline: 0.75rem">
-          <SidebarInput placeholder="Buscar..." />
+        <SidebarHeader class="nds-py-2 nds-px-2 nds-border-b">
+          <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Principal</SidebarGroupLabel>
+            <SidebarGroupAction aria-label="Adicionar atalho">
+              <Plus aria-hidden="true" />
+            </SidebarGroupAction>
             <SidebarGroupContent>
               <SidebarMenu>
                 {#each mainNavItems as item (item.label)}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltip={item.label}
+                      tooltipContent={item.label}
                       aria-current={item.isActive ? 'page' : undefined}
                     >
                       <item.icon aria-hidden="true" />
@@ -77,13 +88,17 @@
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltip={item.label}
+                      tooltipContent={item.label}
                     >
                       <item.icon aria-hidden="true" />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
                     {#if item.badge}
                       <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                    {:else}
+                      <SidebarMenuAction showOnHover aria-label="Mais opções de {item.label}">
+                        <MoreHorizontal aria-hidden="true" />
+                      </SidebarMenuAction>
                     {/if}
                   </SidebarMenuItem>
                 {/each}
@@ -91,14 +106,14 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60">Design System v1.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground">Design System v1.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Com grupos de navegação</span>
       </header>

@@ -56,18 +56,30 @@
 
 	const sidebar = useSidebar();
 
-	const buttonProps = $derived({
-		class: cn(sidebarMenuButtonVariants({ variant, size }), className),
+	// Identificação do elemento. Fica fora de `buttonProps` porque entra por
+	// último no merge: quando o item tem tooltip, o gatilho passa os próprios
+	// atributos por cima, entre eles um `data-slot` seu. Se ele vencesse, o
+	// elemento deixaria de se anunciar como o botão do menu e o seletor do
+	// design system não casaria com nada. O elemento É o botão do sidebar; o
+	// tooltip é comportamento acoplado a ele, não a sua identidade.
+	const identidade = {
 		"data-slot": "sidebar-menu-button",
 		"data-sidebar": "menu-button",
+	};
+
+	const buttonProps = $derived({
+		class: cn(sidebarMenuButtonVariants({ variant, size }), className),
+		...identidade,
 		"data-size": size,
-		"data-active": isActive,
+		// "true" quando ativo e ausente quando não: é a forma que a folha
+		// compartilhada casa, e a mesma que as outras implementações emitem.
+		"data-active": isActive ? "true" : undefined,
 		...restProps,
 	});
 </script>
 
 {#snippet Button({ props }: { props?: Record<string, unknown> })}
-	{@const mergedProps = mergeProps(buttonProps, props)}
+	{@const mergedProps = mergeProps(buttonProps, props, identidade)}
 	{#if child}
 		{@render child({ props: mergedProps })}
 	{:else}

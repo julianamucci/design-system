@@ -182,10 +182,10 @@
         "trigger": "Modo de recolhimento <strong>icon</strong> + toggle",
         "behavior": "Sidebar reduzida a 3rem. Apenas ícones visíveis; tooltips ao hover. data-state=\"collapsed\""
       },
-      "offcanvas": {
+      "collapsedOffcanvas": {
         "label": "Offcanvas",
         "trigger": "Modo de recolhimento <strong>offcanvas</strong> + toggle",
-        "behavior": "Sidebar desliza para fora da viewport. Largura retorna a 0. (atributo de dados offcanvas)"
+        "behavior": "O vão reservado no fluxo volta a 0 e o conteúdo principal ocupa a largura inteira. O painel continua montado, apenas fora da área visível."
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -310,7 +310,7 @@
       "tip1": "O <code>SidebarProvider</code> persiste o estado em cookie (<code>sidebar_state</code>, TTL de 7 dias). Em SSR, leia o cookie no servidor e passe <code>defaultOpen</code> para evitar flash de conteúdo.",
       "tip2": "O <code>SidebarMenuButton</code> usa <code>useRender</code> do Base UI — para links de roteador, passe <code>render={&lt;Link href=\"...\" /&gt;}</code> ou o equivalente do seu framework.",
       "tip3": "No modo de recolhimento <strong>icon</strong>, elementos marcados com a classe utilitária correspondente ao estado recolhido são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
-      "tip4": "A largura da sidebar é definida pelas variáveis CSS <code>--sidebar-width</code> (16rem) e <code>--sidebar-width-icon</code> (3rem). Sobrescreva no <code>style</code> do <code>SidebarProvider</code> se necessário.",
+      "tip4": "A largura sai de três variáveis CSS: <code>--sidebar-width</code> (16rem) no desktop expandido, <code>--sidebar-width-icon</code> (3rem) no modo recolhido em ícones e <code>--sidebar-width-mobile</code> (18rem) no overlay de mobile. As duas primeiras são declaradas no container raiz; a terceira vive na própria classe do overlay, que abre num portal no fim do documento e por isso não herda nada do container — ela também alimenta <code>--sheet-width</code> e <code>--sheet-max-width</code>, que o painel deslizante lê. Sobrescreva qualquer uma no tema.",
       "tip5": "Nunca aninhe <code>SidebarProvider</code> — ele fornece contexto global de layout. Use apenas uma instância por página."
     },
     "analytics": {
@@ -656,10 +656,10 @@
         "trigger": "Collapse mode <strong>icon</strong> + toggle",
         "behavior": "Sidebar reduced to 3rem. Only icons visible; tooltips on hover. data-state=\"collapsed\""
       },
-      "offcanvas": {
+      "collapsedOffcanvas": {
         "label": "Offcanvas",
         "trigger": "Collapse mode <strong>offcanvas</strong> + toggle",
-        "behavior": "Sidebar slides out of viewport. Width returns to 0. (offcanvas data attribute)"
+        "behavior": "The reserved gap in the flow returns to 0 and the main content takes the full width. The panel stays mounted, just outside the visible area."
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -784,7 +784,7 @@
       "tip1": "The <code>SidebarProvider</code> persists state in a cookie (<code>sidebar_state</code>, 7-day TTL). In SSR, read the cookie server-side and pass <code>defaultOpen</code> to avoid content flash.",
       "tip2": "The <code>SidebarMenuButton</code> uses Base UI's <code>useRender</code> — for router links, pass <code>render={&lt;Link href=\"...\" /&gt;}</code> or the equivalent for your framework.",
       "tip3": "In the <strong>icon</strong> collapse mode, elements marked with the utility class that targets the collapsed state are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
-      "tip4": "Sidebar width is set by CSS variables <code>--sidebar-width</code> (16rem) and <code>--sidebar-width-icon</code> (3rem). Override in the <code>SidebarProvider</code> <code>style</code> prop if needed.",
+      "tip4": "Width comes from three CSS variables: <code>--sidebar-width</code> (16rem) on expanded desktop, <code>--sidebar-width-icon</code> (3rem) in icon collapsed mode, and <code>--sidebar-width-mobile</code> (18rem) in the mobile overlay. The first two are declared on the root container; the third lives on the overlay class itself, because the overlay opens in a portal at the end of the document and inherits nothing from the container — it also feeds <code>--sheet-width</code> and <code>--sheet-max-width</code>, which the sliding panel reads. Override any of them in the theme.",
       "tip5": "Never nest <code>SidebarProvider</code> — it provides global layout context. Use only one instance per page."
     },
     "analytics": {
@@ -1130,10 +1130,10 @@
         "trigger": "Modo de colapso <strong>icon</strong> + toggle",
         "behavior": "Sidebar reducida a 3rem. Solo íconos visibles; tooltips al hover. data-state=\"collapsed\""
       },
-      "offcanvas": {
+      "collapsedOffcanvas": {
         "label": "Offcanvas",
         "trigger": "Modo de colapso <strong>offcanvas</strong> + toggle",
-        "behavior": "Sidebar desliza fuera del viewport. Ancho retorna a 0. (atributo de datos offcanvas)"
+        "behavior": "El hueco reservado en el flujo vuelve a 0 y el contenido principal ocupa el ancho completo. El panel sigue montado, solo fuera del área visible."
       },
       "mobile": {
         "label": "Mobile (overlay)",
@@ -1258,7 +1258,7 @@
       "tip1": "El <code>SidebarProvider</code> persiste el estado en cookie (<code>sidebar_state</code>, TTL de 7 días). En SSR, lee el cookie en el servidor y pasa <code>defaultOpen</code> para evitar flash de contenido.",
       "tip2": "El <code>SidebarMenuButton</code> usa <code>useRender</code> de Base UI — para links de enrutador, pasa <code>render={&lt;Link href=\"...\" /&gt;}</code> o el equivalente de tu framework.",
       "tip3": "En el modo de colapso <strong>icon</strong>, los elementos marcados con la clase utilitaria que apunta al estado colapsado se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
-      "tip4": "El ancho del sidebar se define por las variables CSS <code>--sidebar-width</code> (16rem) y <code>--sidebar-width-icon</code> (3rem). Sobrescribe en el prop <code>style</code> del <code>SidebarProvider</code> si es necesario.",
+      "tip4": "El ancho sale de tres variables CSS: <code>--sidebar-width</code> (16rem) en escritorio expandido, <code>--sidebar-width-icon</code> (3rem) en el modo recogido en iconos y <code>--sidebar-width-mobile</code> (18rem) en el overlay móvil. Las dos primeras se declaran en el contenedor raíz; la tercera vive en la propia clase del overlay, que se abre en un portal al final del documento y por eso no hereda nada del contenedor — también alimenta <code>--sheet-width</code> y <code>--sheet-max-width</code>, que lee el panel deslizante. Sobrescribe cualquiera en el tema.",
       "tip5": "Nunca anides <code>SidebarProvider</code> — provee contexto global de layout. Usa solo una instancia por página."
     },
     "analytics": {

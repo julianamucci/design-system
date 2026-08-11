@@ -15,13 +15,17 @@
     SidebarInset,
     SidebarRail,
   } from '@/components/ui/sidebar';
+
+  // `open` bindável é a API real do provider desta stack; `defaultOpen` era
+  // aceita e ignorada.
+  let open = $state(true);
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider defaultOpen={true}>
+  <SidebarProvider bind:open>
     <nav aria-label="Navegação principal">
       <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader class="nds-px-4 nds-border-b border-sidebar-border" style="padding-block: 0.75rem">
+        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
           <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
         </SidebarHeader>
         <SidebarContent>
@@ -38,14 +42,14 @@
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter class="nds-px-4 border-t border-sidebar-border" style="padding-block: 0.75rem">
-          <span class="nds-text-caption text-sidebar-foreground/60">v1.0.0</span>
+        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+          <span class="nds-text-caption nds-text-muted-foreground">v1.0.0</span>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
     </nav>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
-      <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 3rem">
+      <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />
         <span class="nds-text-body nds-font-medium nds-text-muted-foreground">Estado de carregamento</span>
       </header>

@@ -260,6 +260,15 @@ function SidebarTrigger({
   )
 }
 
+/**
+ * Faixa clicável na borda do painel.
+ *
+ * `tabIndex={-1}` de propósito: ela faz o mesmo que o gatilho, que já está na
+ * ordem de tabulação — duas paradas de teclado para uma ação só é ruído para
+ * quem navega sem mouse. `aria-hidden` completa o par: sem ele, o leitor de
+ * tela lista dois botões com o mesmo nome para a mesma ação, e um deles nem
+ * recebe foco. O `title` fica: é a dica de ponteiro, para quem a faixa existe.
+ */
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
 
@@ -267,7 +276,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-hidden="true"
       tabIndex={-1}
       onClick={toggleSidebar}
       title="Toggle Sidebar"
@@ -455,6 +464,20 @@ const sidebarMenuButtonVariants = cva("nds-sidebar-menu-button", {
   },
 })
 
+/**
+ * Serialização de `active` como `data-active="true"`.
+ *
+ * A conversão automática de estado em atributo trata flag booleana como
+ * atributo presente e vazio (`data-active=""`). A folha compartilhada do design
+ * system casa `[data-active="true"]`, que é o que as demais implementações
+ * emitem — com o atributo vazio, a regra de item ativo não pintava nada aqui.
+ * O mapeamento devolve o valor textual e omite o atributo quando inativo, igual
+ * às outras: presença do atributo é o próprio estado.
+ */
+const estadoAtivoComoTexto = {
+  active: (ativo: boolean) => (ativo ? { "data-active": "true" } : null),
+}
+
 function SidebarMenuButton({
   render,
   isActive = false,
@@ -484,6 +507,7 @@ function SidebarMenuButton({
       size,
       active: isActive,
     },
+    stateAttributesMapping: estadoAtivoComoTexto,
   })
 
   if (!tooltip) {
@@ -641,6 +665,7 @@ function SidebarMenuSubButton({
       size,
       active: isActive,
     },
+    stateAttributesMapping: estadoAtivoComoTexto,
   })
 }
 

@@ -678,7 +678,7 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     dict();
-    return ['expanded', 'collapsed', 'offcanvas', 'mobile', 'hidden'].map((k) => ({
+    return ['expanded', 'collapsed', 'collapsedOffcanvas', 'mobile', 'hidden'].map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),

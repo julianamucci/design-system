@@ -314,7 +314,7 @@ const variantItems = computed(() => [
 const stateItems = computed(() => [
   { label: tContent('states.expanded.label'),  trigger: toPlainText(tContent('states.expanded.trigger')),  behavior: toPlainText(tContent('states.expanded.behavior'))},
   { label: tContent('states.collapsed.label'), trigger: toPlainText(tContent('states.collapsed.trigger')), behavior: toPlainText(tContent('states.collapsed.behavior'))},
-  { label: tContent('states.offcanvas.label'), trigger: toPlainText(tContent('states.offcanvas.trigger')), behavior: toPlainText(tContent('states.offcanvas.behavior'))},
+  { label: tContent('states.collapsedOffcanvas.label'), trigger: toPlainText(tContent('states.collapsedOffcanvas.trigger')), behavior: toPlainText(tContent('states.collapsedOffcanvas.behavior'))},
   { label: tContent('states.mobile.label'),    trigger: toPlainText(tContent('states.mobile.trigger')),    behavior: toPlainText(tContent('states.mobile.behavior'))},
   { label: tContent('states.hidden.label'),    trigger: toPlainText(tContent('states.hidden.trigger')),    behavior: toPlainText(tContent('states.hidden.behavior'))},
 ]);

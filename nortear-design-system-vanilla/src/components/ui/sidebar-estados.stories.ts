@@ -56,15 +56,21 @@ const icons = {
   user:     '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
 };
 
+/**
+ * A barra é a navegação principal, e navegação precisa de marco nomeado: sem o
+ * `<nav aria-label>` o leitor de tela não a lista como região. A fábrica não
+ * impõe o elemento — quem compõe é que decide o rótulo.
+ */
+function envolverEmNav(sidebar: HTMLElement, rotulo = 'Navegação principal'): HTMLElement {
+  const nav = document.createElement('nav');
+  nav.setAttribute('aria-label', rotulo);
+  nav.appendChild(sidebar);
+  return nav;
+}
+
 function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'none'): HTMLElement {
   const instance = createSidebar({ defaultOpen, variant: 'sidebar' });
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
-
-  if (collapsible === 'none') {
-    // remove gap peer so sidebar is always visible
-    const gap = instance.element.querySelector('.peer');
-    if (gap) (gap as HTMLElement).style.setProperty('--sidebar-width', '16rem');
-  }
 
   const header = createSidebarHeader();
   const logoRow = document.createElement('div');
@@ -133,7 +139,7 @@ function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'n
   inset.append(topbar, mainContent);
 
   const wrapper = createSidebarProvider();
-  wrapper.appendChild(instance.element);
+  wrapper.appendChild(envolverEmNav(instance.element));
   wrapper.appendChild(inset);
 
   const container = document.createElement('div');
@@ -188,16 +194,18 @@ export const Collapsed: Story = {
   },
 };
 
+/**
+ * DÍVIDA DECLARADA: `functional.item4` pede o modo de recolhimento em ícones
+ * como configuração do componente. A fábrica desta stack não expõe
+ * `collapsible` — ela só alterna expanded/collapsed, e o cenário de ícones é
+ * montado à mão aqui. A story cobre o item VISUAL; o funcional fica declarado
+ * como não aplicável até a fábrica ganhar o modo.
+ */
 export const IconMode: Story = {
   name: 'Icon mode (collapsible icon)',
   render: () => {
     // Build collapsed sidebar to represent icon mode visually
     const instance = createSidebar({ defaultOpen: false, variant: 'sidebar' });
-    const gapEl = instance.element.querySelector('.peer') as HTMLElement | null;
-    if (gapEl) {
-      gapEl.setAttribute('data-state', 'collapsed');
-    }
-
     const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
 
     const header = createSidebarHeader();
@@ -265,7 +273,7 @@ export const IconMode: Story = {
     inset.append(topbar, mainContent);
 
     const wrapper = createSidebarProvider();
-    wrapper.appendChild(instance.element);
+    wrapper.appendChild(envolverEmNav(instance.element));
     wrapper.appendChild(inset);
 
     const container = document.createElement('div');
@@ -275,6 +283,13 @@ export const IconMode: Story = {
     return container;
   },
   parameters: {
+    covers: ['visual.item2'],
+    coversNotApplicable: {
+      'functional.item4':
+        'a fábrica desta stack não expõe modo de recolhimento; o cenário de ícones é montado à mão na story',
+      'functional.item7':
+        'a fábrica desta stack não monta tooltip no item de menu — o rótulo fica no aria-label',
+    },
     docs: {
       description: {
         story: 'Sidebar reduzida a 3rem no modo icon. Apenas ícones são exibidos; tooltips são mostrados ao hover de cada item. <code>data-state="collapsed"</code>.',
@@ -282,9 +297,22 @@ export const IconMode: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Sidebar está no estado collapsed', async () => {
-      const sidebarRoot = canvasElement.querySelector('[data-state]');
-      await expect(sidebarRoot).toHaveAttribute('data-state', 'collapsed');
+    await step('A barra nasce recolhida', async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(raiz.getAttribute('data-state')).toBe('collapsed');
+      // O vão do fluxo acompanha a raiz — é o par que o CSS lê.
+      const vao = raiz.querySelector<HTMLElement>('.nds-sidebar-gap')!;
+      await expect(vao.getAttribute('data-state')).toBe('collapsed');
+    });
+
+    await step('Sem rótulo visível, o nome do item vem do aria-label', async () => {
+      // O texto some por `display: none`; o nome acessível não pode sumir junto,
+      // senão o item vira um ícone sem nome para quem usa leitor de tela.
+      const item = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      const rotulo = item.querySelector<HTMLElement>('span:last-child')!;
+      await expect(getComputedStyle(rotulo).display).toBe('none');
+      await expect(item.getAttribute('aria-label')).toBe('Dashboard');
+      await expect(item.getAttribute('aria-current')).toBe('page');
     });
   },
 };
@@ -293,6 +321,10 @@ export const WithoutToggle: Story = {
   name: 'No toggle (collapsible none)',
   render: () => buildBase(true, 'none'),
   parameters: {
+    coversNotApplicable: {
+      'functional.item5':
+        'a fábrica desta stack não expõe modo de recolhimento; aqui o "sem toggle" é obtido não montando o gatilho, e a raiz continua com data-state',
+    },
     docs: {
       description: {
         story: 'Sidebar sempre visível com <code>collapsible="none"</code>. Sem botão de toggle. Usada em dashboards fixos.',
@@ -300,9 +332,17 @@ export const WithoutToggle: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Não há SidebarTrigger no DOM', async () => {
-      const trigger = canvasElement.querySelector('[data-sidebar="trigger"]');
-      await expect(trigger).not.toBeInTheDocument();
+    const canvas = within(canvasElement);
+
+    await step('Não há gatilho de alternância na página', async () => {
+      await expect(canvasElement.querySelector('[data-sidebar="trigger"]')).toBeNull();
+      await expect(canvas.queryByRole('button', { name: /toggle sidebar/i })).toBeNull();
+    });
+
+    await step('A navegação continua inteira e visível', async () => {
+      await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
+      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(raiz.getAttribute('data-state')).toBe('expanded');
     });
   },
 };
@@ -326,6 +366,11 @@ export const MobileOverlay: Story = {
     viewport: {
       defaultViewport: 'mobile1',
     },
+    covers: ['visual.item5'],
+    coversNotApplicable: {
+      'functional.item3':
+        'a fábrica desta stack não monta o painel móvel; o overlay é composto com o Sheet pelo consumidor',
+    },
     docs: {
       description: {
         story: 'Em viewports mobile, a Sidebar é renderizada como Sheet overlay (18rem). Abre via SidebarTrigger ou atalho Ctrl+B.',
@@ -333,8 +378,19 @@ export const MobileOverlay: Story = {
     },
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A navegação e o gatilho existem em qualquer largura', async () => {
+      // O que vale nas duas larguras: a barra tem nome de marco e há um único
+      // controle de abertura. O resto do cenário é a foto do Chromatic.
+      await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
+    });
+
+    await step('O item ativo continua anunciado como página atual', async () => {
+      const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(ativo.getAttribute('aria-current')).toBe('page');
+    });
   },
 };
