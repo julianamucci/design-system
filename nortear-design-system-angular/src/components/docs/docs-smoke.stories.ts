@@ -4,8 +4,8 @@
 // falhando → parameters.a11y.test:'todo' com as rules no comentário; página
 // limpa → axe é portão.
 //
-// Um export por docs page implementada. O stack está em construção: a lista
-// cresce a cada componente do roteiro em .pipeline-context/_ordem.md.
+// 63 exports: as 47 docs pages de componente mais as 16 de fundamento. A lista
+// está completa — o que entrar daqui pra frente é componente novo.
 
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
@@ -59,10 +59,28 @@ import { NdsInputOTPDocs } from './InputOTPDocs';
 import { NdsResizableDocs } from './ResizableDocs';
 import { NdsSonnerDocs } from './SonnerDocs';
 
+// ─── Foundations ──────────────────────────────────────────────────────────────
+import { NdsAboutDocs } from './AboutDocs';
+import { NdsAccessibilityDocs } from './AccessibilityDocs';
+import { NdsAnalyticsCatalogDocs } from './AnalyticsCatalogDocs';
+import { NdsSeoGeoDocs } from './SeoGeoDocs';
+import { NdsToneOfVoiceDocs } from './ToneOfVoiceDocs';
+import { NdsGettingStartedDocs } from './GettingStartedDocs';
+import { NdsTypographyDocs } from './TypographyDocs';
+import { NdsSpacingDocs } from './SpacingDocs';
+import { NdsElevationDocs } from './ElevationDocs';
+import { NdsMotionDocs } from './MotionDocs';
+import { NdsIconsDocs } from './IconsDocs';
+import { NdsThemeColorsDocs } from './ThemeColorsDocs';
+import { NdsThemeSystemDocs } from './ThemeSystemDocs';
+import { NdsDensitiesDocs } from './DensitiesDocs';
+import { NdsI18nDocs } from './I18nDocs';
+import { NdsCrossStackDocs } from './CrossStackDocs';
+
 const meta: Meta = {
   title: 'QA/Docs Smoke',
   tags: ['!dev'],
-  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsResizableDocs, NdsSonnerDocs] })],
+  decorators: [moduleMetadata({ imports: [NdsButtonDocs, NdsSeparatorDocs, NdsLabelDocs, NdsCardDocs, NdsBadgeDocs, NdsSkeletonDocs, NdsAspectRatioDocs, NdsInputDocs, NdsCheckboxDocs, NdsSwitchDocs, NdsToggleDocs, NdsRadioGroupDocs, NdsSliderDocs, NdsProgressDocs, NdsAvatarDocs, NdsCodeBlockDocs, NdsAlertDocs, NdsBreadcrumbDocs, NdsAccordionDocs, NdsCollapsibleDocs, NdsTabsDocs, NdsToggleGroupDocs, NdsSidebarDocs, NdsTableDocs, NdsScrollAreaDocs, NdsPaginationDocs, NdsTooltipDocs, NdsSheetDocs, NdsDialogDocs, NdsPopoverDocs, NdsHoverCardDocs, NdsDropdownMenuDocs, NdsAlertDialogDocs, NdsContextMenuDocs, NdsMenubarDocs, NdsSelectDocs, NdsDrawerDocs, NdsNavigationMenuDocs, NdsCommandDocs, NdsFormDocs, NdsCalendarDocs, NdsCarouselDocs, NdsChartDocs, NdsDataTableDocs, NdsInputOTPDocs, NdsResizableDocs, NdsSonnerDocs, NdsAboutDocs, NdsAccessibilityDocs, NdsAnalyticsCatalogDocs, NdsSeoGeoDocs, NdsToneOfVoiceDocs, NdsGettingStartedDocs, NdsTypographyDocs, NdsSpacingDocs, NdsElevationDocs, NdsMotionDocs, NdsIconsDocs, NdsThemeColorsDocs, NdsThemeSystemDocs, NdsDensitiesDocs, NdsI18nDocs, NdsCrossStackDocs] })],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
@@ -333,5 +351,92 @@ export const Resizable: Story = {
 
 export const Sonner: Story = {
   render: () => ({ template: '<nds-sonner-docs />' }),
+  play,
+};
+
+// ─── Foundations ──────────────────────────────────────────────────────────────
+// As 16 páginas de fundamento passam pelo MESMO contrato das docs pages de
+// componente: montar sem crashar, nenhuma chave de i18n vazada como texto,
+// nenhum bloco de código vazio, e axe como portão. Duas delas — Icons e
+// ThemeColors — são galerias com layout próprio, e mesmo assim entram aqui:
+// é o único lugar que prova que elas montam.
+
+export const About: Story = {
+  render: () => ({ template: '<nds-about-docs />' }),
+  play,
+};
+
+export const Accessibility: Story = {
+  render: () => ({ template: '<nds-accessibility-docs />' }),
+  play,
+};
+
+export const AnalyticsCatalog: Story = {
+  render: () => ({ template: '<nds-analytics-catalog-docs />' }),
+  play,
+};
+
+export const SeoGeo: Story = {
+  render: () => ({ template: '<nds-seo-geo-docs />' }),
+  play,
+};
+
+export const ToneOfVoice: Story = {
+  render: () => ({ template: '<nds-tone-of-voice-docs />' }),
+  play,
+};
+
+export const GettingStarted: Story = {
+  render: () => ({ template: '<nds-getting-started-docs />' }),
+  play,
+};
+
+export const Typography: Story = {
+  render: () => ({ template: '<nds-typography-docs />' }),
+  play,
+};
+
+export const Spacing: Story = {
+  render: () => ({ template: '<nds-spacing-docs />' }),
+  play,
+};
+
+export const Elevation: Story = {
+  render: () => ({ template: '<nds-elevation-docs />' }),
+  play,
+};
+
+export const Motion: Story = {
+  render: () => ({ template: '<nds-motion-docs />' }),
+  play,
+};
+
+export const Icons: Story = {
+  render: () => ({ template: '<nds-icons-docs />' }),
+  play,
+};
+
+export const ThemeColors: Story = {
+  render: () => ({ template: '<nds-theme-colors-docs />' }),
+  play,
+};
+
+export const ThemeSystem: Story = {
+  render: () => ({ template: '<nds-theme-system-docs />' }),
+  play,
+};
+
+export const Densities: Story = {
+  render: () => ({ template: '<nds-densities-docs />' }),
+  play,
+};
+
+export const I18n: Story = {
+  render: () => ({ template: '<nds-i18n-docs />' }),
+  play,
+};
+
+export const CrossStack: Story = {
+  render: () => ({ template: '<nds-cross-stack-docs />' }),
   play,
 };

@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsSeoGeoDocs } from './SeoGeoDocs';
+
+<Meta
+  title="About/SEO and GEO"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const SeoGeoDocsPage = montarAngularEmReact(NdsSeoGeoDocs);
+
+<SeoGeoDocsPage />

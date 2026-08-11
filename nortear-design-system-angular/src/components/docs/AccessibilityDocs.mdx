@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsAccessibilityDocs } from './AccessibilityDocs';
+
+<Meta
+  title="About/Accessibility"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const AccessibilityDocsPage = montarAngularEmReact(NdsAccessibilityDocs);
+
+<AccessibilityDocsPage />

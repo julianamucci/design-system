@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsMotionDocs } from './MotionDocs';
+
+<Meta
+  title="Foundations/Motion"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const MotionDocsPage = montarAngularEmReact(NdsMotionDocs);
+
+<MotionDocsPage />

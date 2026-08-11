@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsGettingStartedDocs } from './GettingStartedDocs';
+
+<Meta
+  title="Foundations/Getting Started"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const GettingStartedDocsPage = montarAngularEmReact(NdsGettingStartedDocs);
+
+<GettingStartedDocsPage />

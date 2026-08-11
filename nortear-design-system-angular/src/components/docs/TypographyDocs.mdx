@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsTypographyDocs } from './TypographyDocs';
+
+<Meta
+  title="Foundations/Typography"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const TypographyDocsPage = montarAngularEmReact(NdsTypographyDocs);
+
+<TypographyDocsPage />

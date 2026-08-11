@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsThemeSystemDocs } from './ThemeSystemDocs';
+
+<Meta
+  title="Foundations/Theme System"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const ThemeSystemDocsPage = montarAngularEmReact(NdsThemeSystemDocs);
+
+<ThemeSystemDocsPage />

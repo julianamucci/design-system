@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsI18nDocs } from './I18nDocs';
+
+<Meta
+  title="Foundations/Internationalization"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const I18nDocsPage = montarAngularEmReact(NdsI18nDocs);
+
+<I18nDocsPage />

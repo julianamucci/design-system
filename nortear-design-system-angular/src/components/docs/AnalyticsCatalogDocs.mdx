@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { NdsAnalyticsCatalogDocs } from './AnalyticsCatalogDocs';
+
+<Meta
+  title="About/Analytics"
+  parameters={{
+    layout: 'fullscreen',
+    options: { showPanel: false },
+    docs: {
+      codePanel: false,
+      source: { code: null },
+    },
+  }}
+/>
+
+export const AnalyticsCatalogDocsPage = montarAngularEmReact(NdsAnalyticsCatalogDocs);
+
+<AnalyticsCatalogDocsPage />

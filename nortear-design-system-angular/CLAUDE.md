@@ -8,9 +8,15 @@ valem aqui sem alteração.
 
 **Completo.** Os 47 componentes têm primitivo, stories e docs page com as 15
 seções genéricas (14 ou 13 onde o conteúdo compartilhado não traz composições ou
-estados). Portões no fim do Bloco 5: `tsc` limpo, suíte com 168 arquivos e 508
-testes verdes, `docs-smoke` com as 47 páginas passando, e
-`node scripts/audit.mjs --all` com **zero achados** para `stack === 'angular'`.
+estados), e as 16 páginas de **Foundations** alcançaram as outras quatro stacks.
+
+Portões no fecho: `tsc` limpo, suíte com 168 arquivos e 524 testes verdes,
+`docs-smoke` com as **63 páginas** passando no contrato de conteúdo e no axe, e
+`node scripts/audit.mjs --all` com **24 achados** para `stack === 'angular'` —
+todos `missing_section`, 12 em `icons` e 12 em `theme-colors`. São páginas de
+galeria, sem as 15 seções, e o auditor não tem escape para elas: **as outras
+quatro stacks carregam exatamente os mesmos 12+12**, conferido. Zero de qualquer
+outra regra.
 
 O que sobrou de aberto não é implementação: são decisões de conteúdo
 compartilhado e de auditoria, registradas em `.pipeline-context/_ordem.md`.
