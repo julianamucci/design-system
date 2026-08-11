@@ -97,6 +97,126 @@ function definedTokens() {
   return _definedTokens;
 }
 
+/**
+ * Todos os slugs de componente — os diretórios de `docs/shared/content` que têm
+ * `translations.json`. Memoizado: a varredura de infra pergunta uma vez por
+ * stack e a lista não muda dentro do processo.
+ */
+let _slugsDoConteudo;
+function slugsDoConteudo() {
+  if (!_slugsDoConteudo) {
+    const dir = join(ROOT, 'docs', 'shared', 'content');
+    _slugsDoConteudo = readdirSync(dir).filter((s) => existsSync(join(dir, s, 'translations.json')));
+  }
+  return _slugsDoConteudo;
+}
+
+// Formas de escrever HTML dinâmico em cada stack, com o grupo 1 capturando a
+// expressão. Vive fora das funções porque DUAS a consomem: a varredura por slug
+// e a varredura de infra, que cobre o que slug nenhum reivindica.
+const HTML_DINAMICO = [
+  { name: 'dangerouslySetInnerHTML', re: /dangerouslySetInnerHTML\s*=\s*\{\{\s*__html:\s*([^}]+)\}\}/g, stacks: ['react'] },
+  { name: 'v-html', re: /v-html\s*=\s*"([^"]+)"/g, stacks: ['vue'] },
+  { name: '{@html}', re: /\{@html\s+([^}]+)\}/g, stacks: ['svelte'] },
+  // `emJs` marca o único padrão cujo trecho casado é código JavaScript solto
+  // num arquivo .ts — onde um snippet de documentação guardado em template
+  // literal pode ser confundido com atribuição real. Nos outros quatro o
+  // casamento acontece em MARKUP, e no Angular o markup mora inteiro dentro de
+  // `template: ` + crases: aplicar ali a guarda de template literal cega a
+  // stack toda. Não é hipótese — foi medido por mutação, e a regra deixou de
+  // acusar um `[innerHTML]` com o sanitize removido à mão.
+  { name: '.innerHTML=', re: /\.innerHTML\s*=\s*([^;]+);/g, stacks: ['vanilla'], emJs: true },
+  // Angular: o binding [innerHTML] passa pelo DomSanitizer do framework,
+  // ao contrário dos quatro acima. Exigimos DOMPurify assim mesmo — a
+  // guideline 09 vale para as cinco stacks, e o SAST só reconhece o
+  // sanitizador de taint quando a chamada está no próprio call site.
+  // Sem isto, uma docs page Angular passaria no audit com a chamada
+  // escondida atrás de um computed `safe*` e o SAST reportaria XSS.
+  { name: '[innerHTML]', re: /\[innerHTML\]\s*=\s*"([^"]+)"/g, stacks: ['angular'] },
+];
+
+/**
+ * Uma expressão em `[innerHTML]` & cia. que NÃO precisa de sanitize.
+ *
+ * As duas isenções eram ancoradas no início da expressão, e por isso mais
+ * estreitas que o conceito que codificam. O custo de uma isenção estreita é o
+ * mesmo de um achado inventado: ensina a ignorar o portão.
+ *
+ *  1. SVG montado de constantes do próprio módulo. `${SVG_OPEN}${ICONES[n]}`
+ *     não casava só porque abre com `${` em vez da constante nua. Nada externo
+ *     entra no caminho, e sanitizar rodaria DOMPurify uma vez por ícone num
+ *     catálogo de ~1600.
+ *  2. Literal sem interpolação. A forma antiga rejeitava qualquer aspa DENTRO
+ *     do literal — `` `<code>import { x } from 'lucide'</code>` `` caía por
+ *     causa das aspas do próprio HTML, enquanto o literal idêntico sem aspas
+ *     passava quatro linhas abaixo. O que torna um literal inerte é não ter
+ *     `${` nem concatenação; aspa interna não tem nada a ver.
+ */
+function htmlInofensivo(expr) {
+  const svgDeConstantes =
+    /^['"`]<svg/.test(expr) || /(^|\$\{\s*)(CHEVRON|ICON|SVG)_[A-Z0-9_]*/.test(expr);
+
+  const abre = expr[0];
+  const ehLiteral = (abre === "'" || abre === '"' || abre === '`') && expr.at(-1) === abre;
+  const literalInerte = ehLiteral && !expr.includes('${') && !/[^\\]\+/.test(expr.slice(1, -1));
+
+  return svgDeConstantes || literalInerte;
+}
+
+/**
+ * O trecho casado está DENTRO de um template literal, e portanto é texto e não
+ * código?
+ *
+ * Apareceu num snippet de documentação: a `ChartDocs` do Vanilla guarda um
+ * exemplo em `` const codeSmallInline = `… el.innerHTML = … ` ``, e o regex
+ * casava o texto do exemplo como se fosse atribuição real. Corrigir o snippet
+ * mudaria o que a página ensina — o achado é que estava errado.
+ *
+ * A paridade de crases antes do índice resolve: uma atribuição de verdade tem
+ * número PAR de crases atrás dela (fora de qualquer literal); uma escrita
+ * dentro de um template tem ímpar. É heurística de lint, não parser — crase
+ * escapada é descontada, mas crase dentro de comentário pode enganar. O erro
+ * possível é para o lado seguro do ruído: deixa de acusar, nunca inventa.
+ */
+/**
+ * A expressão inteira, quando o regex a cortou no meio.
+ *
+ * O padrão do Vanilla é `.innerHTML\s*=\s*([^;]+);` — ele para no primeiro
+ * ponto e vírgula, e ponto e vírgula DENTRO da string é comum:
+ * `` `<code>import { X } from 'lucide';</code>` `` volta truncado, sem a crase
+ * de fecho. Aí nenhum teste de "literal inerte" pode valer: o que sobrou nem
+ * parece um literal.
+ *
+ * Quando a captura abre com crase e não fecha, o texto é reconstruído até a
+ * crase de fecho de verdade. Sem isso a regra cobra sanitize de uma constante
+ * sem interpolação nenhuma — e cobrar o que não tem risco é o caminho mais
+ * curto para o portão virar ruído.
+ */
+function expressaoCompleta(content, m) {
+  const bruto = m[1].trim();
+  if (bruto[0] !== '`' || bruto.at(-1) === '`') return bruto;
+
+  const inicio = m.index + m[0].indexOf(m[1]) + m[1].indexOf('`');
+  for (let i = inicio + 1; i < content.length; i++) {
+    if (content[i] !== '`') continue;
+    let barras = 0;
+    for (let k = i - 1; k >= 0 && content[k] === '\\'; k--) barras++;
+    if (barras % 2 === 0) return content.slice(inicio, i + 1);
+  }
+  return bruto;
+}
+
+function dentroDeTemplateLiteral(content, index) {
+  let crases = 0;
+  for (let i = 0; i < index; i++) {
+    if (content[i] !== '`') continue;
+    let barras = 0;
+    for (let k = i - 1; k >= 0 && content[k] === '\\'; k--) barras++;
+    if (barras % 2 === 0) crases++;
+  }
+  return crases % 2 === 1;
+}
+
 // Arquivos relevantes para um slug (UI primitive + docs page + stories).
 function filesForSlug(slug, stack) {
   const Slug = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
@@ -147,29 +267,14 @@ function auditSecurity(slug) {
       if (!content) continue;
 
       // HTML dinâmico sem sanitize
-      const patterns = [
-        { name: 'dangerouslySetInnerHTML', re: /dangerouslySetInnerHTML\s*=\s*\{\{\s*__html:\s*([^}]+)\}\}/g, stacks: ['react'] },
-        { name: 'v-html', re: /v-html\s*=\s*"([^"]+)"/g, stacks: ['vue'] },
-        { name: '{@html}', re: /\{@html\s+([^}]+)\}/g, stacks: ['svelte'] },
-        { name: '.innerHTML=', re: /\.innerHTML\s*=\s*([^;]+);/g, stacks: ['vanilla'] },
-        // Angular: o binding [innerHTML] passa pelo DomSanitizer do framework,
-        // ao contrário dos quatro acima. Exigimos DOMPurify assim mesmo — a
-        // guideline 09 vale para as cinco stacks, e o SAST só reconhece o
-        // sanitizador de taint quando a chamada está no próprio call site.
-        // Sem isto, uma docs page Angular passaria no audit com a chamada
-        // escondida atrás de um computed `safe*` e o SAST reportaria XSS.
-        { name: '[innerHTML]', re: /\[innerHTML\]\s*=\s*"([^"]+)"/g, stacks: ['angular'] },
-      ];
-      for (const { name, re, stacks } of patterns) {
+      for (const { name, re, stacks, emJs } of HTML_DINAMICO) {
         if (!stacks.includes(stack)) continue;
         let m;
+        re.lastIndex = 0;
         while ((m = re.exec(content)) !== null) {
-          const expr = m[1].trim();
-          // Ignora SVG estático hardcoded e strings vazias/literais sem interpolação
-          const isStaticSvg = /^['"`]<svg/.test(expr) || /^(CHEVRON|ICON|SVG)_/.test(expr);
-          // String literal vazia ou só com texto (sem ${}, sem concat com vars) é inofensivo
-          const isEmptyLiteral = /^['"`]\s*['"`]$/.test(expr) || /^['"`][^'"`$]*['"`]$/.test(expr);
-          if (!/sanitize/i.test(expr) && !isStaticSvg && !isEmptyLiteral) {
+          const expr = expressaoCompleta(content, m);
+          if (emJs && dentroDeTemplateLiteral(content, m.index)) continue;
+          if (!/sanitize/i.test(expr) && !htmlInofensivo(expr)) {
             const line = content.slice(0, m.index).split('\n').length;
             violations.push({
               category: 'security',
@@ -189,6 +294,87 @@ function auditSecurity(slug) {
           file: relative(ROOT, file), rule: 'href_unvalidated',
           message: 'href dinâmico sem isSafeUrl/sanitizeHref',
         });
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * A mesma regra de HTML dinâmico, agora nos arquivos que slug NENHUM reivindica.
+ *
+ * `filesForSlug` casa `components/ui/<slug>*` e `components/docs/<Slug>Docs.*`.
+ * Tudo que não tem nome de componente ficava fora da varredura de segurança nas
+ * CINCO stacks: o renderer de Foundations, as páginas de fundamento
+ * (AboutDocs, AccessibilityDocs, TypographyDocs…), as 15 seções genéricas de
+ * `components/docs/shared/sections/` e qualquer peça de produto.
+ *
+ * É justamente onde mais se escreve HTML vindo do conteúdo compartilhado — o
+ * renderer de Foundations sozinho tem 14 bindings. O portão dizia "zero" e o
+ * zero era verdadeiro só do que ele olhava.
+ *
+ * Os achados saem sob `_infra` para não inventar dono: o arquivo não pertence a
+ * componente nenhum, e pendurá-lo num slug arbitrário mandaria quem for
+ * consertar para o lugar errado.
+ */
+function auditSecurityInfra() {
+  const violations = [];
+  // Pergunta feita do ARQUIVO, não do slug: montar o conjunto de cobertos
+  // chamando `filesForSlug` para os 47 slugs × 5 stacks fazia 470 varreduras de
+  // diretório e levava o audit de segundos a minutos — um portão que ninguém
+  // roda deixa de ser portão. Aqui cada arquivo é testado uma vez contra a
+  // mesma regra de nome que `filesForSlug` usa.
+  const slugs = slugsDoConteudo();
+  const nomesDeDocs = new Set(
+    slugs.map((s) => {
+      const S = s.charAt(0).toUpperCase() + s.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      return `${S}docs`.toLowerCase();
+    }),
+  );
+  const rxUi = slugs.map(
+    (s) => new RegExp(`^${s}(\\.|-(${STORY_VARIANT_SUFFIXES.join('|')})\\.)`),
+  );
+
+  const reivindicado = (norm) => {
+    const nome = basename(norm).toLowerCase();
+    if (norm.includes('/components/docs/')) {
+      const semExt = nome.replace(/\.[^.]+$/, '');
+      return nomesDeDocs.has(semExt);
+    }
+    if (norm.includes('/components/ui/')) {
+      return rxUi.some((rx) => rx.test(nome)) || slugs.some((s) => norm.includes(`/${s}/`));
+    }
+    return false;
+  };
+
+  for (const stack of STACKS) {
+    for (const pasta of ['components/docs', 'components/ui', 'components/product']) {
+      for (const file of globStack(stack, pasta, null)) {
+        const norm = file.replace(/\\/g, '/').toLowerCase();
+        if (reivindicado(norm)) continue;
+        // Story e teste não vão para produção; `.mdx` é invólucro sem binding.
+        if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+
+        const content = readFile(file);
+        if (!content) continue;
+
+        for (const { name, re, stacks, emJs } of HTML_DINAMICO) {
+          if (!stacks.includes(stack)) continue;
+          let m;
+          re.lastIndex = 0;
+          while ((m = re.exec(content)) !== null) {
+            const expr = expressaoCompleta(content, m);
+            if (emJs && dentroDeTemplateLiteral(content, m.index)) continue;
+            if (/sanitize/i.test(expr) || htmlInofensivo(expr)) continue;
+            violations.push({
+              category: 'security', severity: 'high', slug: '_infra', stack,
+              file: relative(ROOT, file),
+              line: content.slice(0, m.index).split('\n').length,
+              rule: 'html_dynamic_unsanitized',
+              message: `${name} sem DOMPurify.sanitize(): ${expr.slice(0, 60)}`,
+            });
+          }
+        }
       }
     }
   }
@@ -2772,6 +2958,10 @@ for (const s of slugs) {
 }
 
 // Infra é slug-independente: roda 1x por processo, sob "_infra".
+if (!category || category === 'security') {
+  const infra = auditSecurityInfra();
+  if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
+}
 if (!category || category === 'analytics') {
   const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
