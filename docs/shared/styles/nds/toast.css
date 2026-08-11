@@ -135,16 +135,39 @@ svg.nds-toast-icon {
 }
 
 /* ── Action button (Desfazer/Retry) ──────────────────────────────────────── */
+/*
+ * Os dois botões da torrada tinham `padding: 0`.
+ *
+ * O de ação ficava com ≈21px de altura e o de fechar com 14×14 — os dois abaixo
+ * dos 24×24 da WCAG 2.5.8, nas cinco stacks. É o pior lugar possível para um
+ * alvo pequeno: a torrada some sozinha, então quem erra o clique não ganha
+ * segunda chance, e "Desfazer" costuma ser a única forma de reverter o que
+ * acabou de acontecer.
+ *
+ * `min-block-size`/`min-inline-size` e não `height`/`width`: 24px é PISO. O
+ * rótulo continua mandando na altura quando a pessoa aumenta a fonte do
+ * navegador (guideline 12, WCAG 1.4.4), e o mínimo horizontal só age em rótulo
+ * curto ("OK"), sem deslocar o alinhamento com a descrição acima.
+ */
 .nds-toast-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-block-size: var(--spacing-6, 1.5rem);       /* 24px */
+  min-inline-size: var(--spacing-6, 1.5rem);
+  padding: 0;
+
   margin-top: var(--spacing-2);
   background: transparent;
   border: 0;
-  padding: 0;
+  border-radius: var(--radius-xs);
   font-family: inherit;
   font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--primary));
   cursor: pointer;
+  outline: 0;
   text-underline-offset: 4px;
 }
 
@@ -152,19 +175,45 @@ svg.nds-toast-icon {
   text-decoration: underline;
 }
 
+/*
+ * Nenhum dos dois tinha `:focus-visible` — caíam no anel padrão do navegador,
+ * fora do padrão de todo interativo `.nds-*`. Numa torrada isso é mais grave que
+ * de costume: ela precisa ser alcançável por teclado enquanto está na tela
+ * (WCAG 2.2.1), e um anel que não se distingue do fundo escuro do tema faz a
+ * pessoa perder o alvo antes de o cronômetro acabar.
+ */
+.nds-toast-action:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
 /* ── Close button ────────────────────────────────────────────────────────── */
 .nds-toast-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+
+  /* Ver a nota do botão de ação: 24×24 é o piso da WCAG 2.5.8. Aqui o ícone é
+   * de 14px, então sem o mínimo o alvo tinha metade do tamanho exigido. */
+  min-block-size: var(--spacing-6, 1.5rem);
+  min-inline-size: var(--spacing-6, 1.5rem);
+  padding: 0;
+
   background: transparent;
   border: 0;
-  padding: 0;
+  border-radius: var(--radius-xs);
   color: hsl(var(--muted-foreground));
   cursor: pointer;
-  transition: color var(--duration-fast);
+  outline: 0;
+  transition: color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .nds-toast-close:hover {
   color: hsl(var(--foreground));
+}
+
+.nds-toast-close:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
 }
 
 .nds-toast-close > svg {

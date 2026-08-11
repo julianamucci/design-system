@@ -475,6 +475,23 @@
   opacity: 0.7;
 }
 
+/*
+ * Anel de foco do dia.
+ *
+ * A regra existia só na forma `.nds-calendar-day-cell[data-focused="true"]` — e
+ * `data-focused` não é escrito por NENHUMA das cinco stacks. O Radix NG publica
+ * `data-focus` (sem o "ed") no gatilho, e as outras quatro não publicam nada.
+ * Com o `outline: 0` que a base declara logo acima, o resultado era um dia em
+ * foco sem marca nenhuma na grade inteira, em todas as stacks: WCAG 2.4.7, e
+ * exatamente o que a `testes.accessibility` do Calendar promete cumprir.
+ *
+ * `:focus-visible` é a forma que não depende de lib: quem decide é o navegador,
+ * pela modalidade de entrada. As duas formas por atributo ficam ao lado para
+ * cobrir quem marca o dia em foco sem mover o foco do DOM — a navegação por
+ * setas de algumas libs faz isso.
+ */
+.nds-calendar-day-btn:focus-visible,
+.nds-calendar-day-btn[data-focus],
 .nds-calendar-day-cell[data-focused="true"] .nds-calendar-day-btn {
   position: relative;
   z-index: 10;

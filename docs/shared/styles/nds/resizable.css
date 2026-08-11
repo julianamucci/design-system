@@ -24,12 +24,47 @@
 .nds-resizable[data-direction="vertical"]   { flex-direction: column; }
 
 /* ── Panel ───────────────────────────────────────────────────────────────── */
+/*
+ * O tamanho do painel viaja por `--panel-size`.
+ *
+ * A folha desenhava o grupo, o punho e o pegador, mas nunca disse como um
+ * painel recebe seu tamanho: nas outras quatro stacks quem escreve isso é a lib
+ * de painéis (ou a factory do Vanilla), em `style` inline. Isso tira a medida do
+ * tema e da densidade, e no Angular é proibido — então a medida vira custom
+ * property e a folha é que a consome, do mesmo jeito que `--ratio` alimenta o
+ * `.nds-aspect-ratio`.
+ *
+ * Fator de crescimento, e não largura em porcentagem: com `flex-basis: 0` os
+ * painéis dividem o espaço livre na proporção pedida sem exigir que o container
+ * tenha altura definida (que é o caso do grupo vertical), e os punhos — 1px cada
+ * — saem da divisão em vez de estourarem os 100%.
+ *
+ * O padrão `1` mantém o comportamento de quem não emite nada: painéis iguais.
+ */
 .nds-resizable-panel {
+  flex-grow: var(--panel-size, 1);
+  flex-basis: 0;
   flex-shrink: 0;
   overflow: auto;
 }
 
 /* ── Handle (linha arrastável) ───────────────────────────────────────────── */
+/*
+ * A linha é `--ring`, e não `--border`.
+ *
+ * `--border` dá 1.25:1 contra o fundo no tema claro e 1.19:1 no escuro — o
+ * divisor era praticamente invisível nas cinco stacks. Não é decoração: é o
+ * próprio controle que a pessoa precisa encontrar para arrastar, o que põe a
+ * régua em 3:1 (WCAG 1.4.11) — e é o que a `testes.accessibility` do Resizable
+ * promete cumprir.
+ *
+ * `--ring` mede 4.76:1 no claro e 3.77:1 no escuro, passa nos dois, e já era o
+ * token do estado de hover — o punho não ganha uma cor nova, ganha em repouso a
+ * que só tinha sob o ponteiro. O hover subiu para `--foreground` para o gesto
+ * continuar tendo resposta visível.
+ *
+ * Muda pixel nas cinco stacks: o divisor fica visível onde antes sumia.
+ */
 .nds-resizable-handle {
   position: relative;
   display: flex;
@@ -37,7 +72,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: hsl(var(--border));
+  background-color: hsl(var(--ring));
   outline: 0;
   transition: background-color var(--duration-fast);
 }
@@ -53,7 +88,7 @@
 }
 
 .nds-resizable-handle:hover {
-  background-color: hsl(var(--ring));
+  background-color: hsl(var(--foreground));
 }
 
 .nds-resizable-handle:focus-visible {
@@ -69,8 +104,9 @@
   width: 0.75rem;                                  /* 12px */
   height: var(--spacing-4);                        /* 16px */
 
-  background-color: hsl(var(--border));
-  border: 1px solid hsl(var(--border));
+  /* Mesma razão da linha: o pegador é o alvo do gesto, precisa dos 3:1. */
+  background-color: hsl(var(--ring));
+  border: 1px solid hsl(var(--ring));
   border-radius: var(--radius-xs);
 }
 
@@ -181,7 +217,8 @@
   width: var(--spacing-1, 0.25rem);
   height: var(--spacing-6, 1.5rem);
   border-radius: var(--radius);
-  background-color: hsl(var(--border));
+  /* Mesma razão da linha e do pegador de pontos. */
+  background-color: hsl(var(--ring));
 }
 
 .nds-resizable-handle[aria-orientation="horizontal"] > .nds-resizable-grip-bar {
