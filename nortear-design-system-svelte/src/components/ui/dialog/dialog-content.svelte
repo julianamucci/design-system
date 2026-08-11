@@ -2,7 +2,10 @@
 	import { Dialog as DialogPrimitive } from "bits-ui";
 	import DialogPortal from "./dialog-portal.svelte";
 	import type { Snippet } from "svelte";
-	import * as Dialog from "./index.js";
+	// Import direto do arquivo, e não `import * as Dialog from "./index.js"`:
+	// pelo namespace o overlay entrava como `Dialog.Overlay` e nenhuma varredura
+	// por nome enxergava o uso — a peça parecia exportada e nunca renderizada.
+	import DialogOverlay from "./dialog-overlay.svelte";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
 	import { Button } from "@/components/ui/button/index.js";
@@ -23,7 +26,7 @@
 </script>
 
 <DialogPortal {...portalProps}>
-	<Dialog.Overlay />
+	<DialogOverlay />
 	<DialogPrimitive.Content
 		bind:ref
 		data-slot="dialog-content"

@@ -1,14 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import { NdsAspectRatio } from './aspect-ratio';
 import {
   IMG_PLACEHOLDER,
   LABELS,
+  abrir,
+  painel,
   esperarAberto,
   esperarFechado,
+  fechar,
 } from './dialog.fixtures';
 
 // Composições do Dialog: arranjos completos que resolvem um caso de uso, não
@@ -65,7 +68,7 @@ export const MediaPreview: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const p = await esperarAberto();
 
     await step('A mídia tem descrição textual', async () => {
@@ -79,11 +82,28 @@ export const MediaPreview: Story = {
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
     });
 
-    await step('O botão de fechar é a saída, e ele fecha', async () => {
-      const x = p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
+    await step('O botão de fechar é a saída, e ele devolve o foco ao gatilho', async () => {
+      const trigger = canvasElement.querySelector<HTMLElement>('[data-slot="dialog-trigger"]')!;
+      // A devolução do foco só faz sentido se o diálogo tiver sido ABERTO pelo
+      // gatilho. Esta story MONTA aberta por `defaultOpen`, e nesse caminho o
+      // elemento focado antes era o próprio documento — era para lá que o foco
+      // voltava, com razão. Fechar e reabrir pelo gatilho estabelece a
+      // precondição do que se quer provar.
+      await fechar();
+      await abrir(canvasElement);
+      const x = painel()!.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
       await expect(x).toHaveAccessibleName(LABELS.close);
       await userEvent.click(x);
       await esperarFechado();
+      // Sem o X, esta composição não tem rodapé nenhum: fechar por ali é a
+      // única saída de ponteiro, e a devolução do foco é metade do item
+      // 'functional.item4' que esta story declara.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
+      // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que
+      // o axe precisa varrer — 'accessibility.item6' é declarado nesta story.
+      await expect(await abrir(canvasElement)).toBeVisible();
     });
   },
 };

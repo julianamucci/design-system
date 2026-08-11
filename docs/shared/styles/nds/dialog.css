@@ -227,6 +227,24 @@
   margin-block: var(--spacing-8, 2rem);
 }
 
+/* ── Corpo rolável (o painel fica parado; só o corpo rola) ────────────────── */
+/*
+ * A outra saída para conteúdo longo é o par `-overlay-scroll` + `-content-scroll`
+ * acima, em que o painel INTEIRO entra no fluxo do overlay e a página é que
+ * rola. Aqui é o contrário: o painel continua centralizado e fixo, o header e o
+ * rodapé ficam parados, e a rolagem acontece dentro do corpo.
+ *
+ * `max-block-size` e não `height`: o limite é o teto, e o painel curto continua
+ * do tamanho do conteúdo. A medida cresce com o zoom do navegador porque é
+ * relativa à janela (WCAG 1.4.4).
+ */
+.nds-dialog-body-scroll {
+  max-block-size: 60vh;
+  overflow-y: auto;
+  /* espaço para a barra de rolagem não encostar no texto */
+  padding-inline-end: var(--spacing-2);
+}
+
 /* Botão de fechar composto (nds-button ghost icon) — só posicionamento */
 .nds-dialog-close-position {
   position: absolute;

@@ -13,7 +13,16 @@ export type DialogOptions = {
   title: string;
   description?: string;
   content: HTMLElement;
-  footer?: HTMLElement;
+  /**
+   * Ações do rodapé.
+   *
+   * Aceita uma lista porque `.nds-dialog-footer` é quem faz o arranjo — empilha
+   * ao contrário no estreito, alinha à direita no largo — e para isso os botões
+   * precisam ser filhos DIRETOS dele. Envolvê-los num `<div>` extra deixava o
+   * rodapé com um único filho e o arranjo não acontecia; era o que as stories
+   * disfarçavam com classes `flex` do Tailwind, que não existem mais.
+   */
+  footer?: HTMLElement | HTMLElement[];
   showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: DialogCloseReason) => void;
@@ -129,7 +138,9 @@ export function createDialog(options: DialogOptions): HTMLElement {
       const footerEl = document.createElement('div');
       footerEl.className = 'nds-dialog-footer';
       footerEl.dataset.slot = 'dialog-footer';
-      footerEl.appendChild(footer);
+      for (const acao of Array.isArray(footer) ? footer : [footer]) {
+        footerEl.appendChild(acao);
+      }
       panelEl.appendChild(footerEl);
     }
 

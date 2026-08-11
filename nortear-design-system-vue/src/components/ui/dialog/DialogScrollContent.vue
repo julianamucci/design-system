@@ -27,10 +27,17 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 <template>
   <DialogPortal>
+    <!--
+      Os `data-slot` são o contrato de markup que as cinco stacks compartilham:
+      sem eles esta variante ficava invisível para toda consulta que procura o
+      painel, o overlay ou o botão de fechar — inclusive as dos testes.
+    -->
     <DialogOverlay
+      data-slot="dialog-overlay"
       class="nds-dialog-overlay nds-dialog-overlay-scroll"
     >
       <DialogContent
+        data-slot="dialog-content"
         :class="cn( 'nds-dialog-content nds-dialog-content-scroll', props.class, )"
         v-bind="{ ...$attrs, ...forwarded }"
         @pointer-down-outside="(event) => {
@@ -44,6 +51,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <slot />
 
         <DialogClose
+          data-slot="dialog-close"
           class="nds-dialog-close"
         >
           <XIcon />

@@ -392,7 +392,7 @@ const keyboardItems = computed(() => [
 ]);
 
 const relatedItems = computed(() => [
-  { name: 'AlertDialog', description: stripHtml(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+  { name: 'AlertDialog', description: toPlainText(tContent('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
   { name: 'Sheet',       description: toPlainText(tContent('related.sheet')),                  path: '?path=/docs/ui-sheet--docs'       },
   { name: 'Popover',     description: toPlainText(tContent('related.popover')),                path: '?path=/docs/ui-popover--docs'     },
   { name: 'Form',        description: toPlainText(tContent('related.form')),                   path: '?path=/docs/ui-form--docs'        },
@@ -564,7 +564,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: stripHtml(tContent('doDont.pair2.do')), dontCaption: stripHtml(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

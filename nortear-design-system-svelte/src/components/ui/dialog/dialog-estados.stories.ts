@@ -1,8 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
-
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+  gatilho,
+  overlay,
+  painel,
+} from './dialog.fixtures';
 
 const meta: Meta = {
   title: 'UI/Dialog/States',
@@ -11,6 +19,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -25,6 +34,7 @@ type Story = StoryObj;
 
 export const Closed: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: { description: { story: 'Estado inicial — apenas o trigger é visível, Content não renderizado.' } },
   },
   args: {
@@ -35,17 +45,30 @@ export const Closed: Story = {
     actionLabel: 'Salvar',
     cancelLabel: 'Cancelar',
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    const trigger = canvas.getByRole('button', { name: /Editar perfil/i });
-    await expect(trigger).toBeVisible();
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+  // Esta story não interage com nada: é aqui que a leitura do estado de
+  // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
+  play: async ({ canvasElement, step }) => {
+    const trigger = gatilho(canvasElement)!;
+
+    await step('Fechado, nada do conteúdo existe no DOM', async () => {
+      // O portal é estrutural: fechado, nem o overlay nem o painel estão no
+      // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
+      // seria lido pelo leitor de tela.
+      await expect(painel()).toBeNull();
+      await expect(overlay()).toBeNull();
+      await expect(trigger).toBeVisible();
+    });
+
+    await step('O gatilho anuncia que abre um diálogo, e que está recolhido', async () => {
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
   },
 };
 
 export const Open: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: { description: { story: 'Diálogo aberto. Captura visual no Chromatic.' } },
   },
   args: {
@@ -56,15 +79,30 @@ export const Open: Story = {
     actionLabel: 'Salvar alterações',
     cancelLabel: 'Cancelar',
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  play: async ({ step }) => {
+    // `esperarAberto` e não o helper idempotente: esta story tem que provar que
+    // o estado inicial MONTA aberto. Abrir por clique aqui passaria mesmo com a
+    // prop sendo ignorada em silêncio.
+    const p = await esperarAberto();
+
+    await step('Monta já aberto, sem estado externo nenhum', async () => {
+      await expect(p).toBeVisible();
+      await expect(p).toHaveAttribute('aria-modal', 'true');
+      await expect(overlay()).toBeVisible();
+      await conferirNomeEDescricao(p);
+    });
+
+    await step('E o foco já está dentro do painel', async () => {
+      await waitFor(async () => {
+        await expect(p.contains(document.activeElement)).toBe(true);
+      });
+    });
   },
 };
 
 export const WithCloseButtonHidden: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
@@ -81,18 +119,33 @@ export const WithCloseButtonHidden: Story = {
     actionLabel: 'Enviar convite',
     cancelLabel: 'Cancelar',
   },
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    // Não há botão "Close" no Content
-    const closeBtns = body.queryAllByRole('button', { name: /^Close$/i });
-    await expect(closeBtns.length).toBe(0);
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step('Sem X no canto', async () => {
+      await expect(botaoFecharDoCanto(p)).toBeNull();
+    });
+
+    await step('Escape continua fechando — nunca se tira toda saída', async () => {
+      // Sem o X, Escape e o Cancelar do rodapé são as saídas que restam.
+      // Retirar todas de uma vez deixaria o diálogo sem fechamento acessível.
+      await userEvent.keyboard('{Escape}');
+      await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
+      // para mostrar é o painel SEM o X no canto.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };
 
+// Espião do modo controlado. Vive fora do `render` para que a play alcance as
+// chamadas — spy criado dentro do render é inalcançável e deixa a aba Actions
+// vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
+const espiaoCancelar = fn();
+
 export const Controlled: Story = {
   parameters: {
+    covers: ['functional.item7'],
     docs: {
       description: { story: 'Abertura controlada externamente via bind:open. Escape fecha mesmo controlado.' },
     },
@@ -104,31 +157,37 @@ export const Controlled: Story = {
     description: 'Este diálogo é comandado por estado externo via bind:open.',
     actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
-    onAction: fn(),
-    onCancel: fn(),
+    onCancel: espiaoCancelar,
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
+    const trigger = gatilho(canvasElement)!;
+    espiaoCancelar.mockClear();
 
-    await step('Clique no trigger abre o diálogo', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      await expect(dialog).toBeVisible();
+    await step('Nasce fechado, porque o valor externo diz que sim', async () => {
+      await expect(painel()).toBeNull();
     });
 
-    await step('Escape fecha o diálogo controlado', async () => {
+    await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
+      const p = await abrir(canvasElement);
+      await expect(p).toBeVisible();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('O Cancelar do rodapé passa pelo callback do pai', async () => {
+      const p = painel()!;
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await userEvent.click(botoes[0]);
+      await esperarFechado();
+      await expect(espiaoCancelar).toHaveBeenCalled();
+    });
+
+    await step('Escape também fecha, e o estado externo acompanha', async () => {
+      await abrir(canvasElement);
       await userEvent.keyboard('{Escape}');
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('dialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('dialog still open');
-          }
-        },
-        { timeout: 500 }
-      );
+      await esperarFechado();
+      await expect(painel()).toBeNull();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };

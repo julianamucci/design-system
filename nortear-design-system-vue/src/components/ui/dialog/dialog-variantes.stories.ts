@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+  overlay,
+} from './dialog.fixtures';
 
 const meta = {
   title: 'UI/Dialog/Variants',
@@ -51,8 +58,13 @@ const sharedComponents = {
   Label,
 };
 
+// Todas as composições trazem o gatilho, como nas outras stacks: sem ele a
+// story não tem como reabrir depois de um passo que fecha, e o painel
+// Interactions ficaria com um diálogo que não volta mais.
+
 export const Default: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: { story: 'Title + Description + Footer com ação primária. Composição padrão.' },
     },
@@ -61,6 +73,9 @@ export const Default: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Editar perfil</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar perfil</DialogTitle>
@@ -76,14 +91,32 @@ export const Default: Story = {
       </Dialog>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('As quatro partes da composição padrão estão no painel', async () => {
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
+      await conferirNomeEDescricao(p);
+    });
+
+    await step('A ação primária é a última do rodapé', async () => {
+      // `flex-direction: column-reverse` põe a ação primária no topo da pilha
+      // no estreito e à direita no largo. No DOM ela vem por último, que é a
+      // ordem de leitura e de foco correta.
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(botoes.length).toBe(2);
+      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+    });
   },
 };
 
 export const WithForm: Story = {
   parameters: {
+    covers: ['visual.item2', 'visual.item4'],
     docs: {
       description: { story: 'Body com formulário inline. Submissão dispara a ação primária do Footer.' },
     },
@@ -92,6 +125,9 @@ export const WithForm: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Editar perfil</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar perfil</DialogTitle>
@@ -99,12 +135,12 @@ export const WithForm: Story = {
           </DialogHeader>
           <form class="nds-grid" data-spacing="sm">
             <div class="nds-grid" data-spacing="xs">
-              <Label for="name">Nome</Label>
-              <Input id="name" defaultValue="Juliana Mucci" />
+              <Label for="dialog-name">Nome</Label>
+              <Input id="dialog-name" default-value="Juliana Mucci" />
             </div>
             <div class="nds-grid" data-spacing="xs">
-              <Label for="email">Email</Label>
-              <Input id="email" type="email" defaultValue="juliana@example.com" />
+              <Label for="dialog-email">E-mail</Label>
+              <Input id="dialog-email" type="email" default-value="juliana@example.com" />
             </div>
           </form>
           <DialogFooter>
@@ -117,21 +153,38 @@ export const WithForm: Story = {
       </Dialog>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const nameInput = await body.findByLabelText(/Nome/i);
-    await expect(nameInput).toBeVisible();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('Os campos estão rotulados e trazem o valor inicial', async () => {
+      // O valor entra na asserção junto com o rótulo: um campo que renderiza
+      // vazio passaria só na presença do label e ninguém veria a falha.
+      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      await expect(nome).toHaveAccessibleName('Nome');
+      await expect(nome.value).toBe('Juliana Mucci');
+
+      const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
+      await expect(email).toHaveAccessibleName('E-mail');
+      await expect(email.value).toBe('juliana@example.com');
+    });
+
+    await step('O foco alcança os campos por teclado, dentro do painel', async () => {
+      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      nome.focus();
+      await expect(document.activeElement).toBe(nome);
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(p.querySelector('#dialog-email'));
+    });
   },
 };
 
 export const WithScrollContent: Story = {
   parameters: {
+    covers: ['visual.item5'],
     docs: {
       description: {
         story:
-          'Body com conteúdo longo e scroll interno via DialogScrollContent (exclusivo do Vue/Reka UI). Header e Footer fixos.',
+          'Conteúdo longo demais para a janela: o painel sai do centro fixo e entra no fluxo do overlay, que passa a ser quem rola. Header e Footer continuam dentro do painel.',
       },
     },
   },
@@ -139,12 +192,15 @@ export const WithScrollContent: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Ver termos</Button>
+        </DialogTrigger>
         <DialogScrollContent class="nds-max-w-lg">
           <DialogHeader>
             <DialogTitle>Termos de serviço</DialogTitle>
             <DialogDescription>Leia atentamente os termos antes de aceitar.</DialogDescription>
           </DialogHeader>
-          <div class="nds-text-body nds-text-muted-foreground max-h-72 nds-overflow-y" data-spacing="sm">
+          <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
             <p v-for="i in 12" :key="i">
               Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -161,14 +217,30 @@ export const WithScrollContent: Story = {
       </Dialog>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toHaveAttribute('data-state', 'open');
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('O painel sai do centro fixo e entra no fluxo do overlay', async () => {
+      // Conteúdo mais alto que a janela precisa de alguém para rolar. Quem rola
+      // é o overlay: o painel centralizado por `position: fixed` cortaria o que
+      // não coubesse, sem barra de rolagem nenhuma. Comportamento e não nome de
+      // classe — é o `overflow` computado que prova a variante.
+      await expect(getComputedStyle(overlay()!).overflowY).toBe('auto');
+      await expect(getComputedStyle(p).position).toBe('relative');
+    });
+
+    await step('Header e Footer continuam no painel, acima e abaixo do corpo', async () => {
+      const partes = [...p.querySelectorAll<HTMLElement>('[data-slot^="dialog-"]')]
+        .map((el) => el.dataset.slot)
+        .filter((slot) => slot !== 'dialog-close');
+      await expect(partes).toEqual(['dialog-header', 'dialog-title', 'dialog-description', 'dialog-footer']);
+    });
   },
 };
 
 export const NoFooter: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: { story: 'Apenas Title + Description, sem Footer. Para uso informativo passivo.' },
     },
@@ -177,6 +249,9 @@ export const NoFooter: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Ver detalhes do pedido</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Detalhes do pedido #4287</DialogTitle>
@@ -188,14 +263,28 @@ export const NoFooter: Story = {
       </Dialog>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step('Sem rodapé, o botão X é a única saída visível', async () => {
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
+      const x = botaoFecharDoCanto(p)!;
+      await expect(x).toHaveAccessibleName();
+    });
+
+    await step('E ele fecha de verdade — a story volta a abrir para a captura', async () => {
+      await userEvent.click(botaoFecharDoCanto(p)!);
+      await esperarFechado();
+      // O Chromatic fotografa o estado final: uma composição que termina
+      // fechada capturaria só o gatilho.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };
 
 export const WithDestructiveAction: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
@@ -207,6 +296,9 @@ export const WithDestructiveAction: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">Remover anexo</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Remover anexo</DialogTitle>
@@ -222,21 +314,32 @@ export const WithDestructiveAction: Story = {
       </Dialog>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /Remover anexo/i });
-    await expect(action).toHaveAttribute('data-variant', 'destructive');
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('A ação primária carrega a variante destrutiva', async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-destructive');
+    });
+
+    await step('Ainda assim é um Dialog, não um AlertDialog', async () => {
+      // A destrutividade aqui é secundária ao fluxo (remover de uma mensagem,
+      // não apagar o recurso). Confirmação irreversível pede
+      // `role="alertdialog"`, foco inicial no Cancelar e Cancelar obrigatório —
+      // outro componente.
+      await expect(p).toHaveAttribute('role', 'dialog');
+    });
   },
 };
 
 export const CustomCloseInFooter: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
-          'showCloseButton={false} no Content e botão Close inline no Footer abaixo das ações.',
+          '`showCloseButton: false` no Content e `showCloseButton` no Footer — o botão de fechar sai do canto e passa a acompanhar as ações.',
       },
     },
   },
@@ -244,23 +347,36 @@ export const CustomCloseInFooter: Story = {
     components: sharedComponents,
     template: `
       <Dialog default-open>
-        <DialogContent :showCloseButton="false">
+        <DialogTrigger as-child>
+          <Button variant="outline">Configurar notificações</Button>
+        </DialogTrigger>
+        <DialogContent :show-close-button="false">
           <DialogHeader>
             <DialogTitle>Configuracoes de notificação</DialogTitle>
             <DialogDescription>Escolha como deseja ser avisado sobre novas atividades.</DialogDescription>
           </DialogHeader>
-          <DialogFooter class="sm:flex-col" data-spacing="sm">
+          <DialogFooter show-close-button>
             <Button>Salvar preferências</Button>
-            <DialogClose as-child>
-              <Button variant="ghost">Fechar</Button>
-            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step('Sem X no canto, o fechar mora no rodapé', async () => {
+      await expect(botaoFecharDoCanto(p)).toBeNull();
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(within(rodape).getByRole('button', { name: /close/i })).toBeVisible();
+    });
+
+    await step('E o botão do rodapé fecha o diálogo', async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await userEvent.click(within(rodape).getByRole('button', { name: /close/i }));
+      await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final da play.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };

@@ -386,7 +386,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
         doCaption: $tStore('doDont.pair2.do'),
-        dontCaption: stripHtml($tStore('doDont.pair2.dont')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
@@ -773,7 +773,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'AlertDialog', description: stripHtml($tStore('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+      { name: 'AlertDialog', description: toPlainText($tStore('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
       { name: 'Sheet',       description: $tStore('related.sheet'),                  path: '?path=/docs/ui-sheet--docs'       },
       { name: 'Popover',     description: $tStore('related.popover'),                path: '?path=/docs/ui-popover--docs'     },
       { name: 'Form',        description: $tStore('related.form'),                   path: '?path=/docs/ui-form--docs'        },

@@ -49,11 +49,17 @@
     <form class="nds-grid" data-spacing="sm" onsubmit={handleSubmit}>
       <div class="nds-grid" data-spacing="xs">
         <Label for="profile-name">Nome completo</Label>
-        <Input id="profile-name" defaultValue="Maria Silva" />
+        <!--
+          `value` e não `defaultValue`: conferido em bits-ui e no próprio
+          `input.svelte` desta stack, `defaultValue` não é prop de nada aqui —
+          cai no rest, vira atributo inerte e o campo renderiza VAZIO. É o
+          mesmo defeito de estado silencioso que o `defaultOpen` já causou.
+        -->
+        <Input id="profile-name" value="Maria Silva" />
       </div>
       <div class="nds-grid" data-spacing="xs">
         <Label for="profile-username">Nome de usuário</Label>
-        <Input id="profile-username" defaultValue="@mariasilva" />
+        <Input id="profile-username" value="@mariasilva" />
       </div>
       <DialogFooter>
         <DialogClose>

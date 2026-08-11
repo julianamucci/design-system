@@ -7,6 +7,7 @@ import {
   LABELS,
   painel,
   overlay,
+  abrir,
   esperarAberto,
   esperarFechado,
 } from './dialog.fixtures';
@@ -154,7 +155,7 @@ export const WithCloseButtonHidden: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const p = await esperarAberto();
 
     await step('Sem X no canto', async () => {
@@ -166,6 +167,9 @@ export const WithCloseButtonHidden: Story = {
       // Retirá-la junto com o X deixaria o diálogo sem fechamento acessível.
       await userEvent.keyboard('{Escape}');
       await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final e o axe roda depois da
+      // play — esta story existe para mostrar o painel SEM o X no canto.
+      await expect(await abrir(canvasElement)).toBeVisible();
     });
   },
 };
@@ -205,20 +209,12 @@ export const Controlled: Story = {
     const trigger = canvasElement.querySelector<HTMLElement>('[data-slot="dialog-trigger"]')!;
     espiaoControlado.mockClear();
 
-    // Abrir só se estiver fechado: o painel Interactions reexecuta a play no
-    // mesmo DOM, e um clique absoluto partiria do estado que a rodada anterior
-    // deixou, invertendo o resultado.
-    const abrir = async () => {
-      if (!painel()) await userEvent.click(trigger);
-      return await esperarAberto();
-    };
-
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
       await expect(painel()).toBeNull();
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
-      await abrir();
+      await abrir(canvasElement);
       await expect(espiaoControlado).toHaveBeenLastCalledWith(true);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });

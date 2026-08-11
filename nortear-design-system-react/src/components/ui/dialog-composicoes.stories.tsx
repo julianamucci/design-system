@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { expect, userEvent, waitFor, within } from "storybook/test";
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+  fechar,
+  gatilho,
+  painel,
+} from "./dialog.fixtures";
 import {
   Dialog,
   DialogClose,
@@ -68,9 +77,26 @@ export const ConfirmEmail: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toHaveAccessibleName(/Confirmar e-mail/i);
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("O diálogo se anuncia com o nome e a descrição do fluxo", async () => {
+      await conferirNomeEDescricao(p);
+    });
+
+    await step("O endereço confirmado aparece na descrição, não só no título", async () => {
+      // O dado que a pessoa precisa conferir antes de decidir mora na
+      // descrição, que é o que o leitor de tela anuncia junto com o nome.
+      const descricao = p.querySelector<HTMLElement>('[data-slot="dialog-description"]')!;
+      await expect(descricao).toHaveTextContent("maria@exemplo.com");
+    });
+
+    await step("A operação é reversível, então a ação primária é neutra", async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>("button");
+      await expect(botoes.length).toBe(2);
+      await expect(botoes[botoes.length - 1]).toHaveClass("nds-button-default");
+    });
   },
 };
 
@@ -123,15 +149,34 @@ export const ProfileEdit: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await waitForPortal("dialog");
-    const input = await within(document.body).findByLabelText(/Nome completo/i);
-    await expect(input).toBeVisible();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("Os campos estão rotulados e trazem o valor inicial", async () => {
+      // O valor entra na asserção junto com o rótulo: um campo que renderiza
+      // vazio passaria só na presença do label e ninguém veria a falha.
+      const nome = p.querySelector<HTMLInputElement>("#profile-name")!;
+      await expect(nome).toHaveAccessibleName("Nome completo");
+      await expect(nome.value).toBe("Maria Silva");
+
+      const usuario = p.querySelector<HTMLInputElement>("#profile-username")!;
+      await expect(usuario).toHaveAccessibleName("Nome de usuário");
+      await expect(usuario.value).toBe("@mariasilva");
+    });
+
+    await step("O rodapé fica dentro do formulário, e o envio não é o Cancelar", async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(rodape.closest("form")).not.toBeNull();
+      const botoes = rodape.querySelectorAll<HTMLButtonElement>("button");
+      await expect(botoes[0].type).toBe("button");
+      await expect(botoes[botoes.length - 1].type).toBe("submit");
+    });
   },
 };
 
 export const MediaPreview: Story = {
   parameters: {
+    covers: ["functional.item4", "accessibility.item6"],
     docs: {
       description: {
         story:
@@ -153,17 +198,60 @@ export const MediaPreview: Story = {
               Captura realizada em outubro de 2026, costa norte.
             </DialogDescription>
           </DialogHeader>
+          {/*
+            Marcador de mídia com as classes REAIS do sistema. O gradiente que
+            estava aqui (`bg-gradient-to-br from-orange-400 …`) era resíduo do
+            Tailwind: as quatro classes não existem mais no CSS, então a caixa
+            renderizava transparente e a descrição falava de uma cor que
+            ninguém via. A forma segue o Vanilla, que é a referência.
+          */}
           <div
+            data-slot="dialog-body"
             role="img"
-            aria-label="Imagem ilustrativa de pôr-do-sol em gradiente laranja"
-            className="nds-aspect-video nds-w-full nds-rounded-md bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600"
-          />
+            aria-label="Imagem ilustrativa de pôr-do-sol"
+            className="nds-dialog-body nds-aspect-video nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground"
+            data-align="center"
+            data-justify="center"
+          >
+            Pré-visualização da mídia
+          </div>
         </DialogContent>
       </Dialog>
     );
   },
-  play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step("A mídia tem descrição textual", async () => {
+      // O bloco carrega a informação do diálogo — sem nome acessível o
+      // conteúdo inteiro desapareceria para quem usa leitor de tela.
+      const midia = within(p).getByRole("img");
+      await expect(midia).toHaveAccessibleName();
+    });
+
+    await step("Sem rodapé de ações, porque não há o que confirmar", async () => {
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
+    });
+
+    await step("O botão de fechar é a saída, e devolve o foco ao gatilho", async () => {
+      const trigger = gatilho(canvasElement)!;
+      // A devolução do foco só faz sentido se o diálogo tiver sido ABERTO pelo
+      // gatilho. Esta story MONTA aberta, e nesse caminho o elemento focado
+      // antes era o próprio documento — era para lá que o foco voltava, com razão.
+      // Fechar e reabrir pelo gatilho estabelece a precondição do que se quer
+      // provar.
+      await fechar();
+      await abrir(canvasElement);
+      const x = botaoFecharDoCanto(painel()!)!;
+      await expect(x).toHaveAccessibleName();
+      await userEvent.click(x);
+      await esperarFechado();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
+      // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que
+      // o axe precisa varrer — `accessibility.item6` é declarado nesta story.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };

@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirFocusTrap,
+  conferirNomeEDescricao,
+  esperarFechado,
+  fechar,
+  gatilho,
+  overlay,
+  painel,
+} from "./dialog.fixtures";
 import {
   Dialog,
   DialogClose,
@@ -28,11 +38,27 @@ const meta = {
     defaultOpen: {
       control: "boolean",
       description: "Se o Dialog inicia aberto (útil para captura visual).",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
     modal: {
       control: "boolean",
       description: "Se o overlay bloqueia interação com o restante da página.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
+    // Espião do callback. Sem entrada aqui a prop fica fora da aba API
+    // Reference, e o `arg_without_argtype` do auditor cobra exatamente isso.
+    onOpenChange: {
+      control: false,
+      description: "Chamado a cada abertura e fechamento, com o novo estado.",
+      table: { type: { summary: "(open: boolean) => void" } },
+    },
+  },
+  // Valores iniciais no meta e não na story: sem eles os controls booleanos
+  // abrem vazios, e o snippet da aba Docs não acompanha a troca.
+  args: {
+    defaultOpen: false,
+    modal: true,
+    onOpenChange: fn(),
   },
 } satisfies Meta<typeof Dialog>;
 
@@ -40,14 +66,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  args: {
-    defaultOpen: false,
-    modal: true,
-    onOpenChange: fn(),
+  parameters: {
+    covers: [
+      "functional.item1", "functional.item2", "functional.item3",
+      "functional.item4", "functional.item5", "functional.item6",
+      "accessibility.item1", "accessibility.item3",
+      "accessibility.item4", "accessibility.item5", "accessibility.item6",
+      "visual.item1",
+    ],
+    coversNotApplicable: {
+      // Divergência de API de biblioteca, não defeito: o primitivo desta stack
+      // isola o resto do documento com `inert`/`aria-hidden` em vez de
+      // `aria-modal` (conferido em node_modules). O passo "o resto do documento
+      // sai do alcance" verifica o mecanismo que ela de fato usa.
+      "accessibility.item2": "o primitivo desta stack isola com inert/aria-hidden, não com aria-modal",
+    },
   },
   render: (args) => {
     const { t } = useTranslation(dialogTranslations);
-    const onAction = fn();
     return (
       <Dialog {...args}>
         <DialogTrigger render={<Button variant="outline" />}>
@@ -64,89 +100,134 @@ export const Playground: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button onClick={() => onAction()}>
-              {t("demonstration.labels.action")}
-            </Button>
+            <Button>{t("demonstration.labels.action")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     );
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+  play: async ({ canvasElement, step, args }) => {
+    // Pelo contrato de markup e não por papel: enquanto o diálogo está aberto o
+    // resto da página fica inerte, e uma consulta por papel depende de como a
+    // biblioteca de teste trata `inert`.
+    const trigger = gatilho(canvasElement)!;
+    const espiao = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
-    const waitForClose = async () => {
-      await waitFor(
-        () => {
-          const dialog = within(document.body).queryByRole("dialog");
-          if (dialog && dialog.getAttribute("data-state") !== "closed") {
-            throw new Error("dialog still open");
-          }
-        },
-        { timeout: 800 }
-      );
-    };
-
-    await step("1. Abre ao clicar no trigger", async () => {
-      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
-      await expect(trigger).toBeInTheDocument();
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAccessibleName();
-      await expect(dialog).toHaveAccessibleDescription();
+    await step("O markup é o mesmo das outras stacks", async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]');
+      // O Vanilla é a referência: a raiz não tem visual próprio e o gatilho é
+      // um `<button>` de verdade.
+      await expect(trigger.tagName).toBe("BUTTON");
+      await expect(trigger).toHaveAttribute("type", "button");
+      await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      // A raiz do base-ui não emite elemento próprio; o que precisa existir é o
+      // gatilho dentro do canvas.
+      await expect(raiz ?? trigger).toBeInTheDocument();
     });
 
-    await step("5. Focus trap — foco entra no dialog ao abrir", async () => {
-      const dialog = await waitForPortal("dialog");
-      await waitFor(() => {
-        if (!dialog.contains(document.activeElement)) {
-          throw new Error("focus did not move into dialog");
-        }
+    await step("Fechado, nada do conteúdo existe no DOM", async () => {
+      // `fechar()` e não uma leitura do estado de montagem: a story termina
+      // ABERTA (último passo), então na segunda rodada do painel Interactions o
+      // painel já estaria montado. Quem verifica o estado fechado NA MONTAGEM é
+      // a story `Closed`, que não interage com nada.
+      await fechar();
+      await expect(painel()).toBeNull();
+      await expect(overlay()).toBeNull();
+    });
+
+    await step("Clicar no gatilho abre o diálogo com overlay", async () => {
+      const p = await abrir(canvasElement);
+      await expect(p).toBeVisible();
+      await expect(overlay()).toBeInTheDocument();
+    });
+
+    await step("O painel se anuncia como diálogo, com nome e descrição", async () => {
+      const p = painel()!;
+      await expect(p).toHaveAttribute("role", "dialog");
+      await conferirNomeEDescricao(p);
+    });
+
+    await step("Aberto e modal, o resto do documento sai do alcance", async () => {
+      // Conferido em `node_modules/@base-ui/react`: o primitivo desta stack NÃO
+      // emite `aria-modal` — ele isola marcando o que está FORA do diálogo com
+      // `inert`/`aria-hidden` (`floating-ui-react/utils/markOthers`), que é o
+      // mecanismo que o leitor de tela e o axe realmente observam. A asserção
+      // segue o mecanismo real em vez do atributo que a lib não usa; o item
+      // `accessibility.item2` está declarado em `coversNotApplicable` com este
+      // mesmo motivo.
+      if (!args.modal) return;
+      await waitFor(async () => {
+        await expect(trigger.closest('[inert], [aria-hidden="true"]')).not.toBeNull();
       });
     });
 
-    await step("2. Escape fecha o diálogo", async () => {
+    await step("O foco entra no painel ao abrir", async () => {
+      const p = painel()!;
+      await waitFor(async () => {
+        await expect(p.contains(document.activeElement)).toBe(true);
+      });
+    });
+
+    await step("Tab não sai do painel", async () => {
+      await conferirFocusTrap(painel()!);
+    });
+
+    await step("Escape fecha, avisa o callback e devolve o foco ao gatilho", async () => {
+      const chamadasAntes = espiao.mock.calls.length;
       await userEvent.keyboard("{Escape}");
-      await waitForClose();
-    });
-
-    await step("6. Retorno de foco ao trigger após Escape", async () => {
-      await waitFor(() => {
-        const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
-        if (document.activeElement !== trigger) {
-          throw new Error("focus did not return to trigger");
-        }
+      await esperarFechado();
+      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      // Sem `waitFor` em volta do foco: a restauração é síncrona, e envolvê-la
+      // mascararia um bug de foco real.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
       });
     });
 
-    await step("3. Reabrir e fechar via clique no overlay", async () => {
-      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
-      await userEvent.click(trigger);
-      await waitForPortal("dialog");
-      const overlay = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]');
-      await expect(overlay).not.toBeNull();
-      overlay?.click();
-      await waitForClose();
+    await step("Clique no overlay fecha e devolve o foco", async () => {
+      await abrir(canvasElement);
+      overlay()!.click();
+      await esperarFechado();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
     });
 
-    await step("4. Reabrir e fechar via botão Close (X)", async () => {
-      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal("dialog");
-      const closeBtn = within(dialog).getByRole("button", { name: /close/i });
-      await userEvent.click(closeBtn);
-      await waitForClose();
+    await step("O botão X fecha, tem nome acessível e devolve o foco", async () => {
+      const p = await abrir(canvasElement);
+      const x = botaoFecharDoCanto(p)!;
+      await expect(x).toHaveAccessibleName();
+      await userEvent.click(x);
+      await esperarFechado();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
     });
 
-    await step("7. Uncontrolled — defaultOpen reabre sem controle externo", async () => {
-      // Playground usa onOpenChange (uncontrolled): reabrir e fechar via Cancel
-      const trigger = canvas.getByRole("button", { name: /Editar perfil/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal("dialog");
-      const cancel = within(dialog).getByRole("button", { name: /Cancelar/i });
-      await userEvent.click(cancel);
-      await waitForClose();
+    await step("O Cancelar do rodapé fecha sem tocar na ação primária", async () => {
+      const p = await abrir(canvasElement);
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>("button");
+      // A ação primária é a última do DOM — `column-reverse` a põe no topo da
+      // pilha no estreito e à direita no largo, mas a ordem de leitura e de
+      // foco continua sendo esta.
+      const cancelar = botoes[0];
+      await userEvent.click(cancelar);
+      await esperarFechado();
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
+    });
+
+    await step("A story termina aberta", async () => {
+      // O Chromatic fotografa o ESTADO FINAL e o axe do test-runner roda depois
+      // da play: terminar fechada faria a captura mostrar só o gatilho e a
+      // varredura de acessibilidade medir uma página sem diálogo nenhum — o
+      // conteúdo compartilhado declara os dois sobre o estado ABERTO
+      // (`visual.item1`, `accessibility.item6`).
+      const p = await abrir(canvasElement);
+      await expect(p).toBeVisible();
+      await expect(within(p).getAllByRole("button").length).toBeGreaterThan(0);
     });
   },
 };

@@ -1,8 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
-
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+} from './dialog.fixtures';
 
 const meta: Meta = {
   title: 'UI/Dialog/Variants',
@@ -11,10 +16,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes estruturais do Dialog. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
+          'Composicoes estruturais do Dialog. Não há prop `variant` no componente — cada item abaixo é um padrão de uso recorrente, e a diferença está em quais partes existem.',
       },
     },
   },
@@ -25,6 +31,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: { story: 'Title + Description + Footer com ação primária. Composição padrão.' },
     },
@@ -38,15 +45,32 @@ export const Default: Story = {
     actionLabel: 'Salvar alterações',
     cancelLabel: 'Cancelar',
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('As quatro partes da composição padrão estão no painel', async () => {
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
+      await conferirNomeEDescricao(p);
+    });
+
+    await step('A ação primária é a última do rodapé', async () => {
+      // `flex-direction: column-reverse` põe a ação primária no topo da pilha
+      // no estreito e à direita no largo. No DOM ela vem por último, que é a
+      // ordem de leitura e de foco correta.
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(botoes.length).toBe(2);
+      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+    });
   },
 };
 
 export const WithForm: Story = {
   parameters: {
+    covers: ['visual.item2', 'visual.item4'],
     docs: {
       description: { story: 'Body com formulário inline. Submit dispara a ação primária.' },
     },
@@ -60,18 +84,39 @@ export const WithForm: Story = {
     actionLabel: 'Salvar',
     cancelLabel: 'Cancelar',
   },
+  play: async ({ step }) => {
+    const p = await esperarAberto();
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('Os campos estão rotulados e trazem o valor inicial', async () => {
+      // O valor entra na asserção junto com o rótulo: era exatamente aqui que
+      // um `defaultValue` inexistente na lib deixava os campos VAZIOS enquanto
+      // a story dizia mostrá-los preenchidos, e nada reprovava.
+      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      await expect(nome).toHaveAccessibleName('Nome');
+      await expect(nome.value).toBe('Maria Silva');
+
+      const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
+      await expect(email).toHaveAccessibleName('E-mail');
+      await expect(email.value).toBe('maria@exemplo.com');
+    });
+
+    await step('O foco alcança os campos por teclado, dentro do painel', async () => {
+      const nome = p.querySelector<HTMLInputElement>('#dialog-name')!;
+      nome.focus();
+      await expect(document.activeElement).toBe(nome);
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(p.querySelector('#dialog-email'));
+    });
   },
 };
 
 export const WithScrollContent: Story = {
   parameters: {
+    covers: ['visual.item5'],
     docs: {
       description: {
         story:
-          'Body com conteúdo longo e scroll interno. Em Vue use DialogScrollContent; em Svelte aplique max-h + overflow-y-auto.',
+          'Body longo com rolagem própria: o painel fica parado e centralizado, e header e rodapé continuam visíveis.',
       },
     },
   },
@@ -84,14 +129,33 @@ export const WithScrollContent: Story = {
     actionLabel: 'Aceitar',
     cancelLabel: 'Recusar',
   },
+  play: async ({ step }) => {
+    const p = await esperarAberto();
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('O corpo rola sozinho, com header e rodapé parados', async () => {
+      // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
+      // conteúdo mais alto que a própria caixa. Asserção de classe morreria
+      // junto com o bug se a classe sumisse.
+      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(getComputedStyle(corpo).overflowY).toBe('auto');
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
+    });
+
+    await step('A região rolável é alcançável por teclado e tem nome', async () => {
+      // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa —
+      // é a exigência que acompanha toda região com rolagem própria.
+      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+      await expect(corpo).toHaveAccessibleName();
+    });
   },
 };
 
 export const NoFooter: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: { story: 'Apenas Title + Description, sem Footer. Para uso informativo.' },
     },
@@ -104,14 +168,28 @@ export const NoFooter: Story = {
     description:
       'Plataforma de design system multi-stack mantida pela equipe de Engenharia. Atualizada continuamente.',
   },
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('Sem rodapé, o botão X é a única saída visível', async () => {
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
+      const x = botaoFecharDoCanto(p)!;
+      await expect(x).toHaveAccessibleName();
+    });
+
+    await step('E ele fecha de verdade — a story volta a abrir para a captura', async () => {
+      await userEvent.click(botaoFecharDoCanto(p)!);
+      await esperarFechado();
+      // O Chromatic fotografa o estado final: uma composição que termina
+      // fechada capturaria só o gatilho.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };
 
 export const WithDestructiveAction: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
@@ -128,18 +206,34 @@ export const WithDestructiveAction: Story = {
     actionLabel: 'Remover item',
     cancelLabel: 'Cancelar',
   },
+  play: async ({ step }) => {
+    const p = await esperarAberto();
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('A ação primária carrega a variante destrutiva', async () => {
+      // Esta asserção é a que pega o defeito real que existia aqui: as classes
+      // aplicadas à ação (`bg-destructive` e companhia) não existiam no CSS, e
+      // a story mostrava um botão comum dizendo ser destrutivo.
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-destructive');
+    });
+
+    await step('Ainda assim é um Dialog, não um AlertDialog', async () => {
+      // A destrutividade aqui é secundária ao fluxo (remover de uma lista, não
+      // apagar o recurso). Confirmação irreversível pede `role="alertdialog"`,
+      // foco inicial no Cancelar e Cancelar obrigatório — outro componente.
+      await expect(p).toHaveAttribute('role', 'dialog');
+    });
   },
 };
 
 export const CustomCloseInFooter: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
-          'showCloseButton={false} no Content para ocultar o X — fechamento via ações do Footer ou Escape.',
+          'showCloseButton={false} no Content para ocultar o X — o fechamento passa a ser o Cancelar do rodapé, ou Escape.',
       },
     },
   },
@@ -153,8 +247,21 @@ export const CustomCloseInFooter: Story = {
     actionLabel: 'Enviar convite',
     cancelLabel: 'Cancelar',
   },
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('Sem X no canto, o fechar mora no rodapé', async () => {
+      await expect(botaoFecharDoCanto(p)).toBeNull();
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(within(rodape).getByRole('button', { name: /Cancelar/i })).toBeVisible();
+    });
+
+    await step('E o botão do rodapé fecha o diálogo', async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await userEvent.click(within(rodape).getByRole('button', { name: /Cancelar/i }));
+      await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final da play.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };

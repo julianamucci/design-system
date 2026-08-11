@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { expect, userEvent, within } from "storybook/test";
+import {
+  abrir,
+  botaoFecharDoCanto,
+  esperarAberto,
+  esperarFechado,
+  conferirNomeEDescricao,
+} from "./dialog.fixtures";
 import {
   Dialog,
   DialogClose,
@@ -39,6 +45,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
@@ -71,13 +78,32 @@ export const Default: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await expect(await waitForPortal("dialog")).toBeInTheDocument();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("As quatro partes da composição padrão estão no painel", async () => {
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
+      await conferirNomeEDescricao(p);
+    });
+
+    await step("A ação primária é a última do rodapé", async () => {
+      // `flex-direction: column-reverse` põe a ação primária no topo da pilha
+      // no estreito e à direita no largo. No DOM ela vem por último, que é a
+      // ordem de leitura e de foco correta.
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>("button");
+      await expect(botoes.length).toBe(2);
+      await expect(botoes[botoes.length - 1]).toHaveClass("nds-button-default");
+    });
   },
 };
 
 export const WithForm: Story = {
   parameters: {
+    covers: ["visual.item2", "visual.item4"],
     docs: {
       description: {
         story:
@@ -125,14 +151,37 @@ export const WithForm: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await expect(await within(document.body).findByLabelText(/nome/i)).toBeInTheDocument();
-    await expect(await within(document.body).findByLabelText(/e-mail/i)).toBeInTheDocument();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("Os campos estão rotulados e trazem o valor inicial", async () => {
+      // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
+      // par for/id ter fechado, e é isso que o leitor de tela anuncia. O valor
+      // entra junto porque um campo que renderiza vazio passaria na primeira
+      // asserção sem mostrar nada — foi assim que um `defaultValue` ignorado
+      // sobreviveu em outra stack.
+      const nome = p.querySelector<HTMLInputElement>("#dialog-name")!;
+      await expect(nome).toHaveAccessibleName("Nome");
+      await expect(nome.value).toBe("Maria Silva");
+
+      const email = p.querySelector<HTMLInputElement>("#dialog-email")!;
+      await expect(email).toHaveAccessibleName("E-mail");
+      await expect(email.value).toBe("maria@exemplo.com");
+    });
+
+    await step("O foco alcança os campos por teclado, dentro do painel", async () => {
+      const nome = p.querySelector<HTMLInputElement>("#dialog-name")!;
+      nome.focus();
+      await expect(document.activeElement).toBe(nome);
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(p.querySelector("#dialog-email"));
+    });
   },
 };
 
 export const WithScrollContent: Story = {
   parameters: {
+    covers: ["visual.item5"],
     docs: {
       description: {
         story:
@@ -155,7 +204,14 @@ export const WithScrollContent: Story = {
               Leia atentamente as condições antes de aceitar.
             </DialogDescription>
           </DialogHeader>
-          <div tabIndex={0} role="region" aria-label="Conteúdo rolável" className="max-h-[40vh] nds-overflow-y nds-text-body nds-text-muted-foreground" style={{ paddingRight: "0.5rem" }} data-spacing="sm">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Conteúdo rolável"
+            data-slot="dialog-body"
+            className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
+            data-spacing="sm"
+          >
             {Array.from({ length: 12 }).map((_, i) => (
               <p key={i}>
                 Cláusula {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing
@@ -175,13 +231,33 @@ export const WithScrollContent: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await expect(await within(document.body).findByText(/termos de uso/i)).toBeInTheDocument();
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("O corpo rola sozinho, com header e rodapé parados", async () => {
+      // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
+      // conteúdo mais alto que a própria caixa. Asserção de classe morreria
+      // junto com o bug se a classe sumisse.
+      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(getComputedStyle(corpo).overflowY).toBe("auto");
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
+    });
+
+    await step("A região rolável é alcançável por teclado e tem nome", async () => {
+      // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa —
+      // é a exigência que acompanha toda região com rolagem própria.
+      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(corpo).toHaveAttribute("tabindex", "0");
+      await expect(corpo).toHaveAccessibleName();
+    });
   },
 };
 
 export const NoFooter: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
@@ -208,13 +284,28 @@ export const NoFooter: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await expect(await within(document.body).findByText(/sobre este recurso/i)).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step("Sem rodapé, o botão X é a única saída visível", async () => {
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
+      const x = botaoFecharDoCanto(p)!;
+      await expect(x).toHaveAccessibleName();
+    });
+
+    await step("E ele fecha de verdade — a story volta a abrir para a captura", async () => {
+      await userEvent.click(botaoFecharDoCanto(p)!);
+      await esperarFechado();
+      // O Chromatic fotografa o estado final: uma composição que termina
+      // fechada capturaria só o gatilho.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };
 
 export const WithDestructiveAction: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
@@ -248,14 +339,27 @@ export const WithDestructiveAction: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    const action = await waitForPortal("button", { name: /^Remover item$/i });
-    await expect(action).toHaveClass("nds-button-destructive");
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step("A ação primária carrega a variante destrutiva", async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>("button");
+      await expect(botoes[botoes.length - 1]).toHaveClass("nds-button-destructive");
+    });
+
+    await step("Ainda assim é um Dialog, não um AlertDialog", async () => {
+      // A destrutividade aqui é secundária ao fluxo (remover de uma lista, não
+      // apagar o recurso). Confirmação irreversível pede `role="alertdialog"`,
+      // foco inicial no Cancelar e Cancelar obrigatório — outro componente.
+      await expect(p).toHaveAttribute("role", "dialog");
+    });
   },
 };
 
 export const CustomCloseInFooter: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
@@ -285,7 +389,23 @@ export const CustomCloseInFooter: Story = {
       </Dialog>
     );
   },
-  play: async () => {
-    await expect(await waitForPortal("dialog")).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step("Sem X no canto, o fechar mora no rodapé", async () => {
+      // O X do canto some com `showCloseButton={false}` no Content; o que resta
+      // é o botão de fechar que o Footer acrescenta.
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(botaoFecharDoCanto(p)).toBeNull();
+      await expect(within(rodape).getByRole("button", { name: /close/i })).toBeVisible();
+    });
+
+    await step("E o botão do rodapé fecha o diálogo", async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await userEvent.click(within(rodape).getByRole("button", { name: /close/i }));
+      await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final da play.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };

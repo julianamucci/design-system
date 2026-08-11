@@ -5,9 +5,10 @@ import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import {
   LABELS,
+  abrir as abrirDialogo,
+  fechar as fecharDialogo,
   painel,
   overlay,
-  esperarAberto,
   esperarFechado,
   conferirNomeEDescricao,
 } from './dialog.fixtures';
@@ -175,10 +176,7 @@ export const Playground: Story = {
     // Abrir só se estiver fechado: o painel Interactions REEXECUTA a play no
     // mesmo DOM, e um clique absoluto partiria do estado que a rodada anterior
     // deixou, invertendo o resultado.
-    const abrir = async () => {
-      if (!painel()) await userEvent.click(trigger);
-      return await esperarAberto();
-    };
+    const abrir = () => abrirDialogo(canvasElement);
 
     await step('O markup é o mesmo das outras stacks', async () => {
       const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
@@ -192,13 +190,17 @@ export const Playground: Story = {
       await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
     });
 
-    if (!args.defaultOpen) {
-      await step('Fechado, nada do conteúdo existe no DOM', async () => {
-        await expect(painel()).toBeNull();
-        await expect(overlay()).toBeNull();
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      });
-    }
+    await step('Fechado, nada do conteúdo existe no DOM', async () => {
+      // `fechar()` e não uma leitura do estado de montagem: a story termina
+      // ABERTA (ver o último passo), então na segunda rodada do painel
+      // Interactions o painel já estaria montado. O passo estabelece a própria
+      // precondição; quem verifica o estado fechado NA MONTAGEM é a story
+      // `Closed`, que não interage com nada.
+      await fecharDialogo();
+      await expect(painel()).toBeNull();
+      await expect(overlay()).toBeNull();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
 
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
       const p = await abrir();
@@ -261,12 +263,18 @@ export const Playground: Story = {
     });
 
     if (args.showCloseButton) {
-      await step('O botão X fecha e tem nome acessível', async () => {
+      await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
         const p = await abrir();
         const x = p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
         await expect(x).toHaveAccessibleName(LABELS.close);
         await userEvent.click(x);
         await esperarFechado();
+        // A devolução do foco faz parte do item de contrato do botão X, não só
+        // do Escape: sem ela quem navega por teclado volta para o começo da
+        // página depois de fechar.
+        await waitFor(async () => {
+          await expect(document.activeElement).toBe(trigger);
+        });
       });
     }
 
@@ -278,11 +286,20 @@ export const Playground: Story = {
       const cancelar = within(p).getByRole('button', { name: LABELS.cancel });
       await userEvent.click(cancelar);
       await esperarFechado();
-      // A story termina fechada e com o foco de volta no gatilho: a captura
-      // visual não deve depender da ordem dos passos anteriores.
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+    });
+
+    await step('A story termina aberta', async () => {
+      // O Chromatic fotografa o ESTADO FINAL e o axe do test-runner roda depois
+      // da play: terminar fechada faria a captura mostrar só o gatilho e a
+      // varredura de acessibilidade medir uma página sem diálogo nenhum — o
+      // conteúdo compartilhado declara os dois sobre o estado ABERTO
+      // (`visual.item1`, `accessibility.item6`).
+      const p = await abrir();
+      await expect(p).toBeVisible();
+      await expect(p).toHaveAttribute('data-state', 'open');
     });
   },
 };

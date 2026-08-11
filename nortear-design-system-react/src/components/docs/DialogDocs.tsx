@@ -546,7 +546,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               </Dialog>
             ),
             doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: stripHtml(tContent("doDont.pair2.dont")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -919,7 +919,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       <DocsRelated
         title={tContent("related.title")}
         items={[
-          { name: "AlertDialog", description: stripHtml(tContent("related.alertDialog")), path: "?path=/docs/ui-alertdialog--docs" },
+          { name: "AlertDialog", description: toPlainText(tContent("related.alertDialog")), path: "?path=/docs/ui-alertdialog--docs" },
           { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/ui-sheet--docs" },
           { name: "Popover",     description: toPlainText(tContent("related.popover")),                path: "?path=/docs/ui-popover--docs" },
           { name: "Form",        description: toPlainText(tContent("related.form")),                   path: "?path=/docs/ui-form--docs" },

@@ -310,7 +310,7 @@ export function createDialogDocs(): HTMLElement {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: stripHtml(t('doDont.pair2.do')),
-              dontCaption: stripHtml(t('doDont.pair2.dont')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDialogDemo({
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
@@ -686,7 +686,7 @@ export interface DialogOptions {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'AlertDialog', description: stripHtml(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
+            { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/ui-alertdialog--docs' },
             { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/ui-sheet--docs'       },
             { name: 'Popover',     description: toPlainText(t('related.popover')),                path: '?path=/docs/ui-popover--docs'     },
             { name: 'Form',        description: toPlainText(t('related.form')),                   path: '?path=/docs/ui-form--docs'        },

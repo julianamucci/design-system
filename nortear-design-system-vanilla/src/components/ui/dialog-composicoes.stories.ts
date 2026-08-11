@@ -1,8 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, waitFor } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
 import { createButton } from './button';
+import { createInput } from './input';
+import { createLabel } from './label';
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+  fechar,
+  gatilho,
+  painel,
+} from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -27,46 +38,31 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildInputField(labelText: string, type: string, value: string): HTMLLabelElement {
-  const label = document.createElement('label');
-  label.className = 'nds-stack nds-text-body';
-  label.dataset.spacing = 'xs';
-  const span = document.createElement('span');
-  span.className = 'nds-font-medium';
-  span.textContent = labelText;
-  const input = document.createElement('input');
-  input.className = 'nds-border-default nds-rounded-md';
-  input.style.padding = '0.5rem 0.75rem';
-  input.type = type;
-  input.value = value;
-  label.append(span, input);
-  return label;
+/** Factories do sistema em vez de `<input>`/`<textarea>` crus com `style`. */
+function buildField(id: string, labelText: string, type: string, value: string): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-stack';
+  wrapper.dataset.spacing = 'xs';
+  wrapper.append(createLabel({ text: labelText, htmlFor: id }), createInput({ id, type, value }));
+  return wrapper;
 }
 
-function buildTextareaField(labelText: string, value: string): HTMLLabelElement {
-  const label = document.createElement('label');
-  label.className = 'nds-stack nds-text-body';
-  label.dataset.spacing = 'xs';
-  const span = document.createElement('span');
-  span.className = 'nds-font-medium';
-  span.textContent = labelText;
-  const ta = document.createElement('textarea');
-  ta.className = 'nds-border-default nds-rounded-md';
-  ta.style.padding = '0.5rem 0.75rem';
-  ta.rows = 3;
-  ta.value = value;
-  label.append(span, ta);
-  return label;
+/**
+ * As ações do rodapé saem como LISTA, não embrulhadas num `<div>`: quem faz o
+ * arranjo é o `.nds-dialog-footer`, e para isso os botões precisam ser filhos
+ * diretos dele.
+ */
+function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement[] {
+  return [
+    createButton({ variant: 'outline', label: cancelLabel }),
+    createButton({ variant: 'default', label: actionLabel }),
+  ];
 }
 
-function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
-  const cancel = createButton({ variant: 'outline', label: cancelLabel });
-  const action = createButton({ variant: 'default', label: actionLabel });
-  const footer = document.createElement('div');
-  footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
-  footer.appendChild(cancel);
-  footer.appendChild(action);
-  return footer;
+/** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
+function abrirNaMontagem(dialog: HTMLElement): HTMLElement {
+  queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
+  return dialog;
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -82,20 +78,38 @@ export const ConfirmEmail: Story = {
   render: () => {
     const body = document.createElement('div');
     body.className = 'nds-text-body nds-text-muted-foreground';
-    body.textContent = 'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
-    const dialog = createDialog({
-      trigger: createButton({ variant: 'default', label: 'Enviar link' }),
-      title: 'Confirmar e-mail',
-      description: 'Verifique o endereço antes de enviar o link de acesso.',
-      content: body,
-      footer: makeFooter('Cancelar', 'Enviar link'),
-    });
-    queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
-    return dialog;
+    body.textContent =
+      'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
+    return abrirNaMontagem(
+      createDialog({
+        trigger: createButton({ variant: 'outline', label: 'Confirmar e-mail' }),
+        title: 'Confirmar e-mail',
+        description: 'Verifique o endereço antes de enviar o link de acesso.',
+        content: body,
+        footer: makeFooter('Cancelar', 'Enviar link'),
+      }),
+    );
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toHaveAccessibleName(/Confirmar e-mail/i);
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
+      await conferirNomeEDescricao(p);
+    });
+
+    await step('O endereço confirmado aparece no corpo, não só no título', async () => {
+      // O dado que a pessoa precisa conferir antes de decidir tem que estar na
+      // tela — o título sozinho não diz para onde o link vai.
+      const corpo = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(corpo).toHaveTextContent('maria@exemplo.com');
+    });
+
+    await step('A operação é reversível, então a ação primária é neutra', async () => {
+      const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = rodape.querySelectorAll<HTMLElement>('button');
+      await expect(botoes.length).toBe(2);
+      await expect(botoes[botoes.length - 1]).toHaveClass('nds-button-default');
+    });
   },
 };
 
@@ -113,30 +127,44 @@ export const ProfileEdit: Story = {
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
     form.append(
-      buildInputField('Nome de exibição', 'text', 'Maria Souza'),
-      buildInputField('Função', 'text', 'Designer'),
-      buildTextareaField('Bio', 'Apaixonada por design systems.'),
+      buildField('profile-name', 'Nome de exibição', 'text', 'Maria Souza'),
+      buildField('profile-role', 'Função', 'text', 'Designer'),
     );
-    const dialog = createDialog({
-      trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
-      title: 'Editar perfil',
-      description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      content: form,
-      footer: makeFooter('Cancelar', 'Salvar alterações'),
-    });
-    queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
-    return dialog;
+    return abrirNaMontagem(
+      createDialog({
+        trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+        title: 'Editar perfil',
+        description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+        content: form,
+        footer: makeFooter('Cancelar', 'Salvar alterações'),
+      }),
+    );
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await waitFor(() =>
-      expect(within(dialog).getByText(/Nome de exibição/i)).toBeVisible(),
-    );
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('Os campos estão rotulados e trazem o valor inicial', async () => {
+      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
+      await expect(nome).toHaveAccessibleName('Nome de exibição');
+      await expect(nome.value).toBe('Maria Souza');
+
+      const funcao = p.querySelector<HTMLInputElement>('#profile-role')!;
+      await expect(funcao).toHaveAccessibleName('Função');
+      await expect(funcao.value).toBe('Designer');
+    });
+
+    await step('O Tab percorre os campos na ordem em que aparecem', async () => {
+      const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
+      nome.focus();
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(p.querySelector('#profile-role'));
+    });
   },
 };
 
 export const MediaPreview: Story = {
   parameters: {
+    covers: ['functional.item4', 'accessibility.item6'],
     docs: {
       description: {
         story:
@@ -145,23 +173,56 @@ export const MediaPreview: Story = {
     },
   },
   render: () => {
+    // Classes do sistema em vez de `style.aspectRatio` / `style.display`
+    // inline: valor de design cravado no elemento sai do tema e da escala.
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-bg-muted nds-rounded-md nds-text-caption nds-text-muted-foreground';
-    wrap.style.aspectRatio = '16 / 9';
-    wrap.style.display = 'grid';
-    wrap.style.placeItems = 'center';
+    wrap.className =
+      'nds-aspect-video nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground';
+    wrap.dataset.align = 'center';
+    wrap.dataset.justify = 'center';
+    wrap.setAttribute('role', 'img');
+    wrap.setAttribute('aria-label', 'Pré-visualização da capa do post');
     wrap.textContent = 'Pré-visualização da mídia';
-    const dialog = createDialog({
-      trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),
-      title: 'Capa do post',
-      description: 'Pré-visualização em tamanho real.',
-      content: wrap,
-    });
-    queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
-    return dialog;
+
+    return abrirNaMontagem(
+      createDialog({
+        trigger: createButton({ variant: 'outline', label: 'Pré-visualizar' }),
+        title: 'Capa do post',
+        description: 'Pré-visualização em tamanho real.',
+        content: wrap,
+      }),
+    );
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(within(dialog).getByLabelText('Close')).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step('A mídia tem descrição textual', async () => {
+      // O bloco carrega a informação do diálogo — sem nome acessível o conteúdo
+      // inteiro desapareceria para quem usa leitor de tela.
+      await expect(within(p).getByRole('img')).toHaveAccessibleName();
+    });
+
+    await step('Sem rodapé de ações, porque não há o que confirmar', async () => {
+      await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
+    });
+
+    await step('O botão de fechar é a saída, e devolve o foco ao gatilho', async () => {
+      const trigger = gatilho(canvasElement)!;
+      // A devolução do foco só faz sentido se o diálogo tiver sido ABERTO pelo
+      // gatilho. Esta story MONTA aberta, e nesse caminho o elemento focado
+      // antes era o próprio documento — era para lá que o foco voltava, com razão.
+      // Fechar e reabrir pelo gatilho estabelece a precondição do que se quer
+      // provar.
+      await fechar();
+      await abrir(canvasElement);
+      const x = botaoFecharDoCanto(painel()!)!;
+      await expect(x).toHaveAccessibleName();
+      await userEvent.click(x);
+      await esperarFechado();
+      await expect(document.activeElement).toBe(trigger);
+      // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que o
+      // axe precisa varrer — `accessibility.item6` é declarado nesta story.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };

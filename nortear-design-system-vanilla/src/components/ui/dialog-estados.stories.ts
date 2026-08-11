@@ -1,8 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
 import { createButton } from './button';
+import {
+  abrir,
+  botaoFecharDoCanto,
+  conferirNomeEDescricao,
+  esperarAberto,
+  esperarFechado,
+  gatilho,
+  overlay,
+  painel,
+} from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -35,21 +44,21 @@ function buildDialog(opts: {
   openInitially?: boolean;
 }): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
-  const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-  const action = createButton({ variant: 'default', label: 'Salvar alterações' });
-  const footer = document.createElement('div');
-  footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
-  footer.appendChild(cancel);
-  footer.appendChild(action);
   const content = document.createElement('div');
   content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do diálogo.';
+
   const dialog = createDialog({
     trigger,
     title: opts.title,
     description: opts.description,
     content,
-    footer,
+    // Lista, e não um `<div>` de embrulho: as ações precisam ser filhas diretas
+    // de `.nds-dialog-footer` para o arranjo do CSS valer.
+    footer: [
+      createButton({ variant: 'outline', label: 'Cancelar' }),
+      createButton({ variant: 'default', label: 'Salvar alterações' }),
+    ],
     showCloseButton: opts.showCloseButton,
   });
   if (opts.openInitially) queueMicrotask(() => trigger.click());
@@ -60,6 +69,7 @@ function buildDialog(opts: {
 
 export const Closed: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: { description: { story: 'Estado inicial — apenas o trigger é visível, Content não está no DOM.' } },
   },
   render: () =>
@@ -68,17 +78,31 @@ export const Closed: Story = {
       title: 'Editar perfil',
       description: 'Atualize suas informações pessoais.',
     }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    const trigger = canvas.getByRole('button', { name: /Editar perfil/i });
-    await expect(trigger).toBeVisible();
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+  // Esta story não interage com nada: é aqui que a leitura do estado de
+  // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
+  play: async ({ canvasElement, step }) => {
+    const trigger = gatilho(canvasElement)!;
+
+    await step('Fechado, nada do conteúdo existe no DOM', async () => {
+      // O portal é estrutural: fechado, nem o overlay nem o painel estão no
+      // DOM. Um painel escondido por CSS continuaria na ordem de tabulação e
+      // seria lido pelo leitor de tela.
+      await expect(painel()).toBeNull();
+      await expect(overlay()).toBeNull();
+      await expect(trigger).toBeVisible();
+    });
+
+    await step('E o gatilho é um botão de verdade, pronto para o teclado', async () => {
+      await expect(trigger.tagName).toBe('BUTTON');
+      await expect(trigger).toHaveAttribute('type', 'button');
+      await expect(trigger).toHaveAccessibleName('Editar perfil');
+    });
   },
 };
 
 export const Open: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story: 'Diálogo aberto programaticamente. Captura visual no Chromatic.',
@@ -92,15 +116,29 @@ export const Open: Story = {
       description: 'Atualize suas informações pessoais.',
       openInitially: true,
     }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await waitFor(() => expect(dialog).toBeVisible());
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  play: async ({ step }) => {
+    const p = await esperarAberto();
+
+    await step('Aberto, o painel se anuncia como diálogo modal', async () => {
+      await expect(p).toBeVisible();
+      await expect(p).toHaveAttribute('role', 'dialog');
+      await expect(p).toHaveAttribute('aria-modal', 'true');
+      await expect(p).toHaveAttribute('data-state', 'open');
+      await expect(overlay()).toBeVisible();
+      await conferirNomeEDescricao(p);
+    });
+
+    await step('E o foco já está dentro do painel', async () => {
+      await waitFor(async () => {
+        await expect(p.contains(document.activeElement)).toBe(true);
+      });
+    });
   },
 };
 
 export const WithCloseButtonHidden: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
@@ -116,24 +154,38 @@ export const WithCloseButtonHidden: Story = {
       showCloseButton: false,
       openInitially: true,
     }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    // Não deve haver botão com aria-label="Close"
-    await expect(within(dialog).queryByLabelText('Close')).not.toBeInTheDocument();
-    // Escape ainda fecha
-    await userEvent.keyboard('{Escape}');
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const p = await esperarAberto();
+
+    await step('Sem X no canto', async () => {
+      await expect(botaoFecharDoCanto(p)).toBeNull();
+    });
+
+    await step('Escape continua fechando — nunca se tira toda saída', async () => {
+      // Sem o X, Escape, o overlay e o Cancelar do rodapé são as saídas que
+      // restam. Retirar todas de uma vez deixaria o diálogo sem fechamento
+      // acessível.
+      await userEvent.keyboard('{Escape}');
+      await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
+      // para mostrar é o painel SEM o X no canto.
+      await expect(await abrir(canvasElement)).toBeVisible();
+    });
   },
 };
 
+// Espião do modo controlado. Vive fora do `render` para que a play alcance as
+// chamadas — spy criado dentro do render é inalcançável e deixa a aba Actions
+// vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
+const espiaoControlado = fn();
+
 export const Controlled: Story = {
   parameters: {
-    controls: { disable: true },
+    covers: ['functional.item7'],
     docs: {
       description: {
         story:
-          'Abertura controlada externamente. O trigger interno do dialog fica escondido (sr-only) e a abertura acontece via `trigger.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
+          'Abertura controlada externamente. O trigger interno do dialog fica escondido e a abertura acontece via `trigger.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
       },
     },
   },
@@ -144,17 +196,12 @@ export const Controlled: Story = {
 
     // Trigger interno do dialog (oculto): permite reuso da factory createDialog
     // sem expor um método open() público — o pai controla via .click().
+    // `nds-sr-only` e não `sr-only`: a classe sem prefixo não existe mais no
+    // CSS, e o gatilho "escondido" aparecia na tela ao lado do externo.
     const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    hiddenTrigger.classList.add('sr-only');
+    hiddenTrigger.classList.add('nds-sr-only');
     hiddenTrigger.setAttribute('tabindex', '-1');
     hiddenTrigger.setAttribute('aria-hidden', 'true');
-
-    const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-    const action = createButton({ variant: 'default', label: 'Confirmar' });
-    const footer = document.createElement('div');
-    footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
-    footer.appendChild(cancel);
-    footer.appendChild(action);
 
     const content = document.createElement('div');
     content.className = 'nds-text-body nds-text-muted-foreground';
@@ -166,14 +213,19 @@ export const Controlled: Story = {
       title: 'Controlado pelo pai',
       description: 'Abertura programática via referência ao trigger.',
       content,
-      footer,
+      footer: [
+        createButton({ variant: 'outline', label: 'Cancelar' }),
+        createButton({ variant: 'default', label: 'Confirmar' }),
+      ],
       onOpenChange: (open) => {
         isOpen = open;
         externalBtn.dataset.open = String(open);
+        espiaoControlado(open);
       },
     });
 
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
+    externalBtn.dataset.open = 'false';
     externalBtn.addEventListener('click', () => {
       if (!isOpen) hiddenTrigger.click();
     });
@@ -184,18 +236,35 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const externo = canvas.getByRole('button', { name: /Open programmatically/i });
+    espiaoControlado.mockClear();
 
-    await step('Clique no trigger externo abre o diálogo', async () => {
-      const trigger = canvas.getByRole('button', { name: /Open programmatically/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      await waitFor(() => expect(dialog).toBeVisible());
+    await step('Nasce fechado, porque o valor externo diz que sim', async () => {
+      await expect(painel()).toBeNull();
+      await expect(externo).toHaveAttribute('data-open', 'false');
     });
 
-    await step('Escape fecha o diálogo controlado', async () => {
+    await step('O gatilho interno está fora da tela e fora do teclado', async () => {
+      // Ele existe só para a factory ter um alvo: visível ou tabulável, seria
+      // um segundo botão sem sentido para quem usa.
+      const interno = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"] > button')!;
+      await expect(interno).toHaveClass('nds-sr-only');
+      await expect(interno).toHaveAttribute('tabindex', '-1');
+      await expect(interno).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
+      if (!painel()) await userEvent.click(externo);
+      await expect(await esperarAberto()).toBeVisible();
+      await expect(espiaoControlado).toHaveBeenLastCalledWith(true);
+      await expect(externo).toHaveAttribute('data-open', 'true');
+    });
+
+    await step('Escape também passa pelo dono do estado', async () => {
       await userEvent.keyboard('{Escape}');
-      await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+      await esperarFechado();
+      await expect(espiaoControlado).toHaveBeenLastCalledWith(false);
+      await expect(externo).toHaveAttribute('data-open', 'false');
     });
   },
 };

@@ -9,6 +9,7 @@ import {
   LABELS,
   painel,
   overlay,
+  abrir,
   esperarAberto,
   esperarFechado,
   conferirNomeEDescricao,
@@ -237,7 +238,7 @@ export const NoFooter: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const p = await esperarAberto();
 
     await step('Sem rodapé, o botão X é a única saída visível', async () => {
@@ -246,9 +247,12 @@ export const NoFooter: Story = {
       await expect(x).toHaveAccessibleName(LABELS.close);
     });
 
-    await step('E ele fecha de verdade', async () => {
+    await step('E ele fecha de verdade — e a story volta a abrir para a captura', async () => {
       await userEvent.click(p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!);
       await esperarFechado();
+      // O Chromatic fotografa o estado final e o axe roda depois da play: uma
+      // story de composição que termina fechada capturaria só o gatilho.
+      await expect(await abrir(canvasElement)).toBeVisible();
     });
   },
 };
@@ -327,7 +331,7 @@ export const CustomCloseInFooter: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const p = await esperarAberto();
 
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
@@ -342,6 +346,8 @@ export const CustomCloseInFooter: Story = {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.close }));
       await esperarFechado();
       await expect(painel()).toBeNull();
+      // Reabre: o Chromatic fotografa o estado final da play.
+      await expect(await abrir(canvasElement)).toBeVisible();
     });
   },
 };
@@ -374,7 +380,7 @@ export const ConfirmEmail: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const p = await esperarAberto();
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
@@ -386,6 +392,8 @@ export const ConfirmEmail: Story = {
     await step('Cancelar sai sem consequência', async () => {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.cancel }));
       await esperarFechado();
+      // Reabre: o Chromatic fotografa o estado final da play.
+      await expect(await abrir(canvasElement)).toBeVisible();
     });
   },
 };

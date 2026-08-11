@@ -1,4 +1,4 @@
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { useTranslation } from '@/lib/i18n';
 import dialogTranslations from '@shared/content/dialog/translations.json';
 
@@ -86,6 +86,37 @@ export async function esperarFechado(): Promise<void> {
   await waitFor(() => {
     if (painel()) throw new Error('painel do diálogo ainda montado');
   });
+}
+
+/**
+ * Deixa o diálogo ABERTO, venha de onde vier.
+ *
+ * O painel Interactions reexecuta a play no MESMO DOM, sem remontar: uma story
+ * que nasce com `defaultOpen` e termina fechada encontraria, na segunda rodada,
+ * um painel que não existe mais — e `esperarAberto()` ficaria esperando até o
+ * timeout. Cada passo estabelece a própria precondição, e abrir é a precondição
+ * de quase todos.
+ *
+ * Clica no gatilho só se estiver fechado; se já estiver aberto, apenas espera a
+ * animação assentar.
+ */
+export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
+  if (!painel()) {
+    const trigger = raiz.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
+    if (trigger) await userEvent.click(trigger);
+  }
+  return esperarAberto();
+}
+
+/**
+ * Deixa o diálogo FECHADO, venha de onde vier — o par idempotente de `abrir`.
+ *
+ * Escape e não o botão X: a saída por teclado existe em toda composição,
+ * inclusive nas que escondem o X.
+ */
+export async function fechar(): Promise<void> {
+  if (painel()) await userEvent.keyboard('{Escape}');
+  await esperarFechado();
 }
 
 /**
