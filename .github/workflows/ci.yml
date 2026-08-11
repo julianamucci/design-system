@@ -27,6 +27,7 @@ jobs:
           - { name: vue,     dir: nortear-design-system-vue }
           - { name: svelte,  dir: nortear-design-system-svelte }
           - { name: vanilla, dir: nortear-design-system-vanilla }
+          - { name: angular, dir: nortear-design-system-angular }
 
     defaults:
       run:
@@ -76,4 +77,4 @@ jobs:
             echo "::error::Pelo menos uma stack falhou no build"
             exit 1
           fi
-          echo "✅ Todas as 4 stacks passaram em lint + build-storybook"
+          echo "✅ Todas as 5 stacks passaram em lint + build-storybook"

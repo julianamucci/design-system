@@ -33,6 +33,7 @@ jobs:
           - { name: vue,     dir: nortear-design-system-vue }
           - { name: svelte,  dir: nortear-design-system-svelte }
           - { name: vanilla, dir: nortear-design-system-vanilla }
+          - { name: angular, dir: nortear-design-system-angular }
 
     defaults:
       run:
@@ -80,5 +81,5 @@ jobs:
           echo "Este workflow é **informativo** — falhas aqui não bloqueiam merge." >> $GITHUB_STEP_SUMMARY
           echo "Runner: Storybook Test (vitest + addon-vitest + addon-a11y)." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Meta: 100% em todas as 4 stacks. Quando atingido, remover" >> $GITHUB_STEP_SUMMARY
+          echo "Meta: 100% em todas as 5 stacks. Quando atingido, remover" >> $GITHUB_STEP_SUMMARY
           echo "\`continue-on-error: true\` e promover a check obrigatório." >> $GITHUB_STEP_SUMMARY
