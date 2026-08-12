@@ -2750,6 +2750,97 @@ function auditPromessaDeCustomizacao(slug) {
  * CSS que esta regra não faz. Aqui só o mesmo arquivo é coberto — é a parte
  * barata e determinística, não a garantia inteira.
  */
+/**
+ * Classe morta na coluna de CLASSE da tabela de tokens.
+ *
+ * A tabela diz ao consumidor qual classe carrega cada token — é instrução
+ * direta, não prosa. Medido no repo inteiro: 23 dos 51 componentes
+ * documentavam 131 entradas que não pintam nada, quase todas vocabulário do
+ * framework utilitário que saiu (`bg-popover`, `border-border`, `rounded-lg`,
+ * `ring-ring`, `size-8`). Quem seguir a tabela não obtém estilo nenhum.
+ *
+ * Nenhuma regra existente via isto, e a razão é instrutiva: o
+ * `unknown_class_reference` só julga classe com prefixo `nds-`, e o
+ * `legacy_class_in_story` só varre stories. A tabela de tokens ficava no vão
+ * entre as duas — conteúdo compartilhado, classe sem prefixo.
+ *
+ * Só a coluna de classe é lida. As outras (token, valor, descrição) citam
+ * `--custom-property` e prosa, onde nome parecido com classe é coincidência.
+ */
+function auditDeadClassInTokenTable(slug) {
+  const violations = [];
+  const file = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(file)) return violations;
+
+  let tabela;
+  try {
+    tabela = JSON.parse(readFile(file) || '{}')['pt-BR']?.tokens?.table;
+  } catch { return violations; }
+  if (!tabela || typeof tabela !== 'object') return violations;
+
+  const definidas = definedClasses();
+  const vistas = new Set();
+
+  for (const [linhaKey, linha] of Object.entries(tabela)) {
+    if (!linha || typeof linha !== 'object') continue;
+    for (const campo of ['class', 'className', 'selector', 'classe']) {
+      const valor = linha[campo];
+      if (typeof valor !== 'string') continue;
+      for (const bruto of valor.split(/[\s,]+/)) {
+        // O sufixo de pseudo-classe/pseudo-elemento é do SELETOR, não do nome da
+        // classe: `nds-scroll-area-viewport:focus-visible` documenta um estado de
+        // uma classe que existe. Sem cortar aqui, a regra acusava a única entrada
+        // honesta da tabela do scroll-area.
+        const cls = bruto
+          .trim()
+          .replace(/^\./, '')
+          // Atributo e pseudo-classe/pseudo-elemento são do SELETOR, não do nome
+          // da classe. `nds-tabs-trigger[data-state="active"]` e
+          // `nds-scroll-area-viewport:focus-visible` documentam ESTADOS de
+          // classes que existem — sem cortar, a regra acusava as duas entradas
+          // mais precisas de toda a tabela.
+          .replace(/\[[^\]]*\]/g, '')
+          .replace(/::?[a-z-]+(\([^)]*\))?$/i, '');
+        // `—` e `-` são o "não se aplica" da tabela; custom property não é classe.
+        if (!cls || /^[-—]+$/.test(cls) || cls.startsWith('--')) continue;
+
+        let motivo = null;
+        if (cls.startsWith('nds-')) {
+          if (!definidas.has(cls)) motivo = 'não é definida por nenhum CSS do projeto';
+        } else if (/^[a-z][a-z0-9:[\]/.-]*$/i.test(cls)) {
+          motivo = 'não tem prefixo `nds-` — é vocabulário do framework utilitário que saiu do projeto';
+        }
+        if (!motivo || vistas.has(cls)) continue;
+        vistas.add(cls);
+
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack: 'shared',
+          file: relative(ROOT, file), rule: 'dead_class_in_token_table',
+          message: `tokens.table.${linhaKey} documenta a classe "${cls}", que ${motivo} — quem seguir a tabela não obtém estilo nenhum`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
+/** Classes `.nds-*` realmente definidas em qualquer CSS compartilhado ou de stack. */
+let _definedClasses = null;
+function definedClasses() {
+  if (_definedClasses) return _definedClasses;
+  _definedClasses = new Set();
+  const arquivos = [
+    ...walkDir(join(ROOT, 'docs', 'shared'), ['.css']),
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src', 'styles'), ['.css'])),
+  ];
+  for (const f of arquivos) {
+    for (const m of (readFile(f) || '').matchAll(/\.(nds-[a-z0-9-]+)/gi)) {
+      _definedClasses.add(m[1]);
+    }
+  }
+  return _definedClasses;
+}
+
 function auditTranslateComposto() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -3051,6 +3142,7 @@ function runAudit(slug, category) {
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
     ...auditPromessaDeCustomizacao(slug),
+    ...auditDeadClassInTokenTable(slug),
   ];
 }
 

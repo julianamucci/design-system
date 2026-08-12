@@ -260,28 +260,24 @@
         "class": "Classe",
         "part": "Aplicação",
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-tabs-list",
           "part": "Fundo do TabsList (variant default)"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-tabs-list",
           "part": "Texto das tabs inativas (variant default)"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
           "part": "Fundo da tab ativa (variant default)"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto da tab ativa e linha inferior (variant line)"
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Texto da tab ativa; a linha inferior da variante line usa o mesmo token"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-tabs-trigger:focus-visible",
           "part": "Anel de foco no trigger"
-        },
-        "border": {
-          "class": "border-ring",
-          "part": "Borda no estado de foco"
         }
       },
       "customizationTitle": "Customização",
@@ -706,28 +702,24 @@
         "class": "Class",
         "part": "Application",
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-tabs-list",
           "part": "TabsList background (default variant)"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-tabs-list",
           "part": "Inactive tab text (default variant)"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
           "part": "Active tab background (default variant)"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Active tab text and bottom line (line variant)"
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Active tab text; the line variant bottom line uses the same token"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-tabs-trigger:focus-visible",
           "part": "Trigger focus ring"
-        },
-        "border": {
-          "class": "border-ring",
-          "part": "Focus state border"
         }
       },
       "customizationTitle": "Customization",
@@ -1152,28 +1144,24 @@
         "class": "Clase",
         "part": "Aplicación",
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-tabs-list",
           "part": "Fondo del TabsList (variant default)"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-tabs-list",
           "part": "Texto de las tabs inactivas (variant default)"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
           "part": "Fondo de la tab activa (variant default)"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto de la tab activa y línea inferior (variant line)"
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Texto de la tab activa; la línea inferior de la variante line usa el mismo token"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-tabs-trigger:focus-visible",
           "part": "Anillo de foco en el trigger"
-        },
-        "border": {
-          "class": "border-ring",
-          "part": "Borde en el estado de foco"
         }
       },
       "customizationTitle": "Personalización",
