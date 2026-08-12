@@ -36,7 +36,7 @@ Todos os painéis de conteúdo (Dialog, Sheet, Drawer) devem usar o token de pad
 | `Enter` / `Space` | Ativa o item focado |
 | `Arrow Down/Up` | Navega entre itens de menu (DropdownMenu, ContextMenu, Command) |
 
-Todos esses comportamentos são gerenciados automaticamente pelo Radix UI ou Vaul — não reimplementar.
+Todos esses comportamentos vêm do primitivo headless — `@base-ui/react` na maioria dos overlays, Vaul no `Drawer`. Não reimplementar.
 
 ---
 
@@ -126,7 +126,7 @@ Command
 - Preferência: menu simples sem ícones, salvo instrução específica.
 - Sempre fechar o Dialog/Popover após `onSelect` (`setOpen(false)`).
 - **Command Palette (Cmd+K)**: o atalho **não é nativo** — implementar via `useEffect` + `addEventListener` para detectar `metaKey/ctrlKey + "k"` e alternar o estado do Dialog. Dica visual do atalho obrigatória (`<kbd>⌘K</kbd>` em botão de busca) — o usuário precisa descobrir o atalho.
-- **Combobox (Command + Popover)**: padrão substituto do `Select` com busca. Usar quando `Select` é insuficiente: listas com 10+ itens, busca por texto, seleção com preview. Para listas fixas pequenas sem busca, usar `Select`. No trigger, aplicar `role="combobox"` e `aria-expanded` no Button manualmente — o Radix não aplica automaticamente.
+- **Combobox (Command + Popover)**: padrão substituto do `Select` com busca. Usar quando `Select` é insuficiente: listas com 10+ itens, busca por texto, seleção com preview. Para listas fixas pequenas sem busca, usar `Select`. No trigger, aplicar `role="combobox"` e `aria-expanded` no Button manualmente — nenhum dos dois primitivos envolvidos (`cmdk` no Command, `@base-ui/react` no Popover) aplica isso automaticamente.
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - O filtro fuzzy e a navegação por Arrow keys são nativos.
@@ -203,7 +203,7 @@ Dialog
 
 **Regras**:
 - `DialogTrigger asChild` obrigatório — evita renderizar um `<button>` extra dentro do trigger.
-- `DialogTitle` e `DialogDescription` obrigatórios — sem eles o Radix emite warning e leitores de tela não têm contexto.
+- `DialogTitle` e `DialogDescription` obrigatórios — são o alvo de `aria-labelledby` e `aria-describedby`; sem eles o modal abre sem nome nem contexto para o leitor de tela.
 - Máximo 80% da viewport: `sm:max-w-[425px]` ou similar.
 - Botão de fechar nativo do Dialog (X) sempre visível — não remover com `showCloseButton={false}` salvo instrução específica.
 - Scroll interno via `overflow-y-auto` no conteúdo — nunca no `DialogContent` inteiro.
@@ -232,13 +232,13 @@ Dialog
 
 **API e exemplos**: `src/components/ui/drawer.tsx` + stories + `DrawerDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-> **Importante**: o Drawer usa **Vaul** (não Radix). A prop de direção é `direction` no `Drawer` — diferente do `Sheet`, que usa `side` no `SheetContent`.
+> **Importante**: o Drawer é o único overlay que **não** usa o primitivo headless padrão da stack — ele roda sobre **Vaul**, por causa do gesture de arrastar. A prop de direção é `direction` no `Drawer` — diferente do `Sheet`, que usa `side` no `SheetContent`.
 
 **Critério de decisão — Drawer vs Sheet**:
 
 | Aspecto | Drawer | Sheet |
 |---------|--------|-------|
-| Base técnica | Vaul | Radix Dialog |
+| Base técnica | Vaul | Dialog do `@base-ui/react` |
 | Gesture de arrastar | Sim (bottom) | Não |
 | Handle visual | Automático (bottom) | Não |
 | Melhor para | Mobile | Desktop |
@@ -378,7 +378,7 @@ Popover
 
 ## Sheet
 
-**Propósito**: painel lateral deslizante baseado em Radix Dialog. Ideal para configurações, filtros avançados e navegação secundária em desktop.
+**Propósito**: painel lateral deslizante construído sobre o mesmo primitivo de Dialog do `@base-ui/react` — muda a apresentação (entra pela borda), não a semântica. Ideal para configurações, filtros avançados e navegação secundária em desktop.
 
 **API e exemplos**: `src/components/ui/sheet.tsx` + stories + `SheetDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
@@ -386,7 +386,7 @@ Popover
 
 | Aspecto | Sheet | Drawer |
 |---------|-------|--------|
-| Base técnica | Radix Dialog | Vaul |
+| Base técnica | Dialog do `@base-ui/react` | Vaul |
 | Gesture de arrastar | Não | Sim (bottom) |
 | Melhor para | Desktop | Mobile |
 | Prop de direção | `side` no `SheetContent` | `direction` no `Drawer` |
@@ -494,7 +494,7 @@ Para overlays que precisam funcionar em ambos os contextos, o padrão recomendad
 
 **Acessibilidade transversal** (ver `11-acessibilidade.md`):
 - Focus trap automático em Dialog, Sheet, Drawer — não reimplementar
-- `Escape` fecha todos os overlays — comportamento nativo do Radix/Vaul
+- `Escape` fecha todos os overlays — comportamento nativo do primitivo headless (`@base-ui/react`, ou Vaul no Drawer)
 - `DialogTitle` / `SheetTitle` / `DrawerTitle` obrigatórios — base para `aria-labelledby`
 - `TooltipProvider` no root obrigatório para Tooltip funcionar
 - ContextMenu sempre com alternativa acessível — right-click não é descobrível

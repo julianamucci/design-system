@@ -38,9 +38,9 @@ A diretiva `{@html}` injeta HTML bruto sem escape. **Usar somente com conteúdo 
 
 ```svelte
 <script lang="ts">
-  import { sanitizeHtml } from '$lib/sanitize-html';
+  import DOMPurify from 'dompurify';
   let conteudo = $state('');
-  let conteudoSanitizado = $derived(sanitizeHtml(conteudo));
+  let conteudoSanitizado = $derived(DOMPurify.sanitize(conteudo));
 </script>
 
 <!-- ✅ OK — conteúdo sanitizado -->
@@ -49,6 +49,10 @@ A diretiva `{@html}` injeta HTML bruto sem escape. **Usar somente com conteúdo 
 <!-- ❌ NUNCA com input do usuário -->
 {@html inputDoUsuario}
 ```
+
+> `DOMPurify.sanitize` é importado e chamado **no próprio arquivo**, sem helper
+> local intermediário. Um wrapper esconde o sanitizador das ferramentas de
+> SAST, que voltam a reportar o fluxo como XSS. Ver `09-seguranca-xss.md`.
 
 ## Atributos dinâmicos
 

@@ -2,7 +2,7 @@
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
 * **É OBRIGATÓRIO que funções de criação de componentes sigam o padrão `createNomeComponente(options): HTMLElement`**
-* **É OBRIGATÓRIO usar as classes `.nds-*` definidas em `./styles/components/*.css` (CSS standalone, sem Tailwind)**
+* **É OBRIGATÓRIO usar as classes `.nds-*` definidas em `./styles/components/*.css`** — CSS standalone; o projeto não usa nenhum framework de classe utilitária, e classe sem o prefixo `nds-` é inerte em runtime
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide` (vanilla) para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
 * **É OBRIGATÓRIO que todos os componentes interativos tenham `focus-visible` com 2px de espessura (ring-2)**

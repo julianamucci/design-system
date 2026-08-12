@@ -56,7 +56,7 @@ Cria a página de documentação de um componente Vue (Reka UI) seguindo o templ
 | `useState` | `ref()` / `reactive()` |
 | `useEffect` | `onMounted` / `watch` |
 | `aria-label="..."` | `aria-label="..."` (idêntico) |
-| `asChild` (Radix) | `as-child` (Reka UI) |
+| `render` (`@base-ui/react`) | `as-child` / `as` (`reka-ui`) |
 
 ## Output
 

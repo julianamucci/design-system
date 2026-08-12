@@ -844,14 +844,14 @@ Componentes como **AlertDialog** são overlays de decisão forçada.
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 
-Componentes como **AspectRatio** (`@radix-ui/react-aspect-ratio`) preservam proporção largura/altura do filho. Não têm estado próprio, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
+Componentes como **AspectRatio** preservam proporção largura/altura do filho. É uma implementação local — nenhuma lib headless por baixo: um `div` com `data-slot="aspect-ratio"`, classe `.nds-aspect-ratio` e a custom property `--ratio` alimentada pela prop. Não têm estado próprio, não disparam eventos, não possuem `cva()` nem prop `size` — toda interação é do filho.
 
 1. **`DocsDemonstration`** — grid responsivo (`grid-cols-1 sm:grid-cols-2 gap-6`) com 4 ratios canônicos rotulados. Labels acima de cada preview em `<p className="text-xs font-medium text-muted-foreground">`. Para ratios que crescem muito (1/1, 3/4), envolver em wrapper `max-w-[220px]` / `max-w-[260px]` para evitar cartazes gigantes.
 2. **`DocsAnatomy`** — 3 items: Root (wrapper com `padding-bottom` calculado), inner `absolute inset-0` e o filho (`img | video | iframe`). `structureCode` mostra a hierarquia em 3 níveis.
 3. **`DocsWhenToUse`** — **omitir `uxWriting`**: AspectRatio não tem texto visível próprio (`alt`/`title`/captions são do filho). Manter `guidelines`, `scenarios` (5 linhas) e par `do`/`dont` (4 items cada).
 4. **`DocsVariants`** — renderizar como "Ratios Canônicos", não variantes `cva()`. `items` com 5 entradas fixas (`16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`, `21 / 9`) — o `name` é o ratio em si, não um token `default`/`destructive`. Cada `preview` usa `ImageWithFallback` dentro de um wrapper `max-w-*` proporcional ao ratio. A chave `variants.note` deixa explícito no JSON que são padrões canônicos, não variantes `cva()` — a docs page consome via o próprio container.
 5. **`DocsStates`** — 3 linhas descrevendo **ownership transfer** para o filho: `Conteúdo carregado` / `Conteúdo ausente` / `Conteúdo falhou`. A coluna "Gatilho" descreve o estado do filho, e "Comportamento" descreve o comportamento do container (que é sempre inerte). `states.note` explica no JSON que o componente é stateless.
-6. **`DocsProps`** — 1 tabela única com 4 linhas: `ratio` (number, default 1), `children` (ReactNode, obrigatório), `asChild` (boolean, default false), `className` (string). `interfaceCode` mostra a interface do Radix. Sem múltiplas tabelas (componente é um único `Root`).
+6. **`DocsProps`** — 1 tabela única com 3 linhas: `ratio` (number, obrigatório), `children` (ReactNode, obrigatório) e `className` (string); o resto são atributos nativos de `div`. `interfaceCode` mostra a interface do próprio componente. Sem múltiplas tabelas (é um elemento único, não uma composição).
 7. **`DocsTokens`** — AspectRatio não usa tokens próprios (container transparente). A tabela documenta apenas tokens aplicáveis **quando o componente é usado como placeholder** (skeleton): `--radius` → `rounded-md`, `--border` → `border border-border`, `--muted` → `bg-muted`. `tokens.note` no JSON deixa claro que sem filho o container é transparente. `customizationCode` instrui a aplicar classes de borda/radius **no filho, nunca no wrapper**.
 8. **`DocsAccessibility`** — `keyboardItems` com uma linha explicando que não há tab stops próprios (`key: "—"`) e uma nota sobre foco passar diretamente ao filho (video/link/iframe). `accessibility.aria.item*` foca em `data-slot="aspect-ratio"` e nas regras de `alt`/`title` do filho.
 9. **`DocsAnalytics`** — tabela com **uma única linha passiva**: `{ event: '—', trigger: t('analytics.note'), payload: '—' }`. A chave `analytics.note` contém a explicação "container passivo não dispara eventos próprios". Não listar `docs_page_view`/`docs_section_viewed` aqui — estes já são do layer de docs, não do componente.
@@ -888,18 +888,18 @@ Componentes como **Breadcrumb** (`Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem
 
 ### Componentes Display Compositionais com Estados (padrão Avatar)
 
-Componentes como **Avatar** (`@radix-ui/react-avatar`: `Avatar`, `AvatarImage`, `AvatarFallback`) são displays passivos com **composições** em vez de variantes `cva()` — todas as "variantes" são padrões de composição de filhos. Têm tamanho padrão embutido e estados internos de carregamento de imagem.
+Componentes como **Avatar** (`Avatar`, `AvatarImage`, `AvatarFallback`, sobre o primitivo headless `@base-ui/react`) são displays passivos com **composições** em vez de variantes `cva()` — todas as "variantes" são padrões de composição de filhos. Têm tamanho padrão embutido e estados internos de carregamento de imagem.
 
-1. **Sem `cva()` / sem prop `size`** — o Root aplica `h-10 w-10` fixo internamente. Tamanhos adicionais (`h-6 w-6`, `h-8 w-8`, `h-10 w-10`, `h-12 w-12`) vêm **sempre** via `className`. **Não criar prop `size`.**
+1. **Sem `cva()`; o tamanho é `data-size`, não classe** — o Root expõe `size` (`sm` 24 · `md` 32 padrão · `lg` 40 · `xl` 48 · `2xl` 64) e o traduz em `data-size`, que o CSS compartilhado consome. **Não** documentar tamanho como classe de altura/largura: classe fora do vocabulário `.nds-*` é inerte, e `data-size="default"` não casa com seletor nenhum.
 2. **`DocsVariants`** — **title**: "Composições" ou equivalente. `items` com 5 entradas canônicas: `image`, `initials`, `icon`, `group`, `withStatus`. Cada `preview` monta a composição completa (Root + filhos + wrappers absolutos quando aplicável). Não há variantes `cva()`.
 3. **`DocsAnatomy`** — 4 items: `Avatar` (Root), `AvatarImage`, `AvatarFallback`, e o elemento sibling de status (quando aplicável) / ring em grupos. `structureCode` mostra a hierarquia `<Avatar><AvatarImage /><AvatarFallback>…</AvatarFallback></Avatar>`.
-4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error` — Avatar é passivo. A coluna "Gatilho" descreve o estado da imagem (`onLoadingStatusChange`); "Comportamento" descreve qual filho é renderizado pelo Radix.
-5. **`DocsProps`** — 3 tables: `Avatar` (`className`, `asChild`, `children`), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `className`), `AvatarFallback` (`delayMs`, `className`, `children`). `src` e `alt` são **obrigatórios** em `AvatarImage`. `delayMs={600}` é o valor canônico no `AvatarFallback`.
-6. **`DocsTokens`** — 7 tokens: `--muted` (`bg-muted` no Fallback), `--muted-foreground` (texto das iniciais), `--background` (`ring-background` em grupos e status), `--border`, `--primary` (indicador de status online), `--radius` (`rounded-full` fixo), `--ring` (foco via Radix quando dentro de link/botão).
+4. **`DocsStates`** — 4 linhas: `loaded`, `loading`, `failed`, `noImage`. Omitir `disabled`/`error` — Avatar é passivo. A coluna "Gatilho" descreve o estado da imagem (`onLoadingStatusChange`); "Comportamento" descreve qual filho o primitivo renderiza.
+5. **`DocsProps`** — 3 tables: `Avatar` (`size`, `className`, `children`), `AvatarImage` (`src`, `alt`, `onLoadingStatusChange`, `className`), `AvatarFallback` (`delayMs`, `className`, `children`). `src` e `alt` são **obrigatórios** em `AvatarImage`. `delayMs={600}` é o valor canônico no `AvatarFallback`.
+6. **`DocsTokens`** — 7 tokens: `--muted` (`bg-muted` no Fallback), `--muted-foreground` (texto das iniciais), `--background` (`ring-background` em grupos e status), `--border`, `--primary` (indicador de status online), `--radius` (formato circular fixo), `--ring` (foco herdado do link/botão que envolve o Avatar).
 7. **`DocsAccessibility`** — regras obrigatórias: (a) `alt` descritivo (`"Foto de perfil de [Nome]"`) em `AvatarImage` quando é a única pista visual; (b) `alt=""` + `AvatarFallback aria-hidden="true"` quando o nome já está visível ao lado; (c) indicador de status com `<span aria-label="Online">` (ou equivalente); (d) grupo opcional com `role="group" aria-label="Participantes"` no wrapper; (e) contraste das iniciais ≥ 4.5:1.
 8. **`DocsAnalytics`** — Avatar é passivo: listar apenas os eventos da docs (`docs_page_view`, `docs_section_viewed`, `language_switched`). Incluir `avatar_click` (`{ component: 'avatar', location, label }`) **apenas** quando o Avatar está envolvido por link/botão em produto.
 9. **`DocsDoDont`** — pares canônicos: (a) "com fallback de iniciais" vs "sem fallback" (imagem quebrada resulta em container vazio); (b) "iniciais como 2 letras maiúsculas" vs "iniciais em minúsculas/3+ letras".
-10. **Stories** — criar 4 arquivos: `avatar.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.tsx` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.tsx` (Size6, Size8, Size10 default, Size12), `avatar-estados.stories.tsx` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.tsx`** — as "variantes" são composicionais e vão em `-composicoes`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
+10. **Stories** — criar 4 arquivos: `avatar.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(AvatarDocs)`), `avatar-composicoes.stories.tsx` (WithImage, WithInitials, WithIcon, Group, WithStatus), `avatar-tamanhos.stories.tsx` (Sm, Md default, Lg, Xl, TwoXl), `avatar-estados.stories.tsx` (Loaded, Loading com `delayMs`, Failed, NoImage). **Não criar `avatar-variantes.stories.tsx`** — as "variantes" são composicionais e vão em `-composicoes`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
 11. **`AvatarFallback` obrigatório** — regra visual absoluta: toda instância com `AvatarImage` precisa de `AvatarFallback` irmão. Sem ele, quando `src` falha/demora, o container fica vazio. Documentar no par Do/Don't e em `notes`.
 12. **Iniciais canônicas** — 2 letras maiúsculas: primeira letra do nome + primeira do sobrenome (`"João da Silva"` → `"JS"`, `"Maria"` → `"MA"`). Regra de UX writing fica em `usage.uxWriting.table.initials`.
 
@@ -957,7 +957,7 @@ Componentes como **Card** (`Card`, `CardHeader`, `CardTitle`, `CardDescription`,
 
 ### Componentes de Visualização de Dados (padrão Chart)
 
-Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipContent`, `ChartLegend`, `ChartLegendContent`, `ChartStyle`) são wrappers de theming sobre **Recharts** — não substituem Recharts, mas aplicam tokens de cor do design system via `ChartConfig`. Não usam `cva()` próprio; o tipo de gráfico é determinado pelo primitivo Recharts usado dentro do `ChartContainer`. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+Componentes como **Chart** (`ChartContainer` mais os builders `buildBarOption`, `buildLineOption`, `buildAreaOption`, `buildPieOption`) são camada de theming sobre **Apache ECharts**: o container lê os tokens do `<html>`, registra um tema do design system e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. A API é **declarativa por objeto**, não por composição de filhos: o container recebe um único `option` e devolve o desenho. Não usa `cva()`; o tipo de gráfico vem do builder escolhido (ou de `series.type` dentro do `option`). Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
 
 **Seções a renderizar (15 seções canônicas):**
 
@@ -968,8 +968,8 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
 | Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
 | Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
-| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts`, `import.vanilla` |
-| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withBuilders`, `import.vanilla` |
+| Tipos de Gráfico | `DocsCompositions` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`/`line`/`area`/`pie`/`smallInline`, `variants.compositionsTitle`, `variants.compositions.inCard.*` |
 | Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.legendTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
 | Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
@@ -981,17 +981,18 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
 
 **Regras específicas do Chart:**
 
-1. **Sem `cva()` — usar padrão §11.3** — o tipo do gráfico é determinado pelo primitivo Recharts. `DocsVariants` usa o padrão "Cards de tipo" (§11.3): 6 entradas (`bar`, `line`, `area`, `pie`, `radar`, `radialBar`). O campo `variants.note` (chave `variants.note`) deve ser exibido acima dos cards via bloco de texto sanitizado.
+1. **Sem `cva()` — usar padrão §11.3** — o tipo do gráfico vem do builder usado. `DocsCompositions` usa o padrão "Cards de tipo" (§11.3) com as 4 entradas realmente suportadas (`bar`, `line`, `area`, `pie`) mais `smallInline`, e um bloco separado de composições (`variants.compositionsTitle` + `variants.compositions.inCard.*`). O campo `variants.note` deve ser exibido acima dos cards via bloco de texto sanitizado. **Não** documentar tipo que o container não registra (dispersão, radar, mapa de calor): documentar como suportado o que exigiria registrar um módulo extra da lib é prometer desenho que não sai.
 
-2. **`DocsProps` com 3 tabelas** — usar `tables` array com 3 entradas:
-   - `ChartContainer` (config, id, className, children, initialDimension) — chave `props.containerTitle`
-   - `ChartTooltipContent` (indicator, hideLabel, hideIndicator, nameKey, labelKey, formatter, labelFormatter) — chave `props.tooltipTitle`
-   - `ChartLegendContent` (hideIcon, verticalAlign) — chave `props.legendTitle`
+2. **`DocsProps` com 2 tabelas** — usar `tables` array com 2 entradas:
+   - `ChartContainer` (`option`, `renderer`, `height`, `emptyLabel`, `className`, `aria-label`) — chave `props.containerTitle`
+   - Tipos de dado e helpers (`ChartDataPoint`, `ChartSeries`, os quatro builders) — chaves `props.legendTitle` e `props.tooltipTitle`
+   `props.extensibilityTitle` cobre o caminho de escape: montar o `option` à mão para o que os builders não cobrem.
 
-3. **`DocsImport` com 3 blocos de código** — a seção import documenta 3 padrões distintos via `secondaryCode` e `tertiaryCode` (ou renderização customizada):
-   - Básico React: `import { ChartContainer, ChartTooltip, ... } from '@/components/ui/chart'`
-   - Com primitivos Recharts: `import { BarChart, Bar, ... } from 'recharts'`
-   - Vanilla (nota informativa apenas, sem import real de componente)
+3. **`DocsImport` com 3 blocos de código** — a seção import documenta 3 padrões distintos:
+   - Básico: `import { ChartContainer } from '@/components/ui/chart'` (chave `import.basic`)
+   - Com os builders auxiliares, a partir do mesmo módulo (chave `import.withBuilders`)
+   - Vanilla (nota informativa apenas, sem import real de componente — chave `import.vanilla`)
+   **Nunca** documentar import direto da lib de gráfico: chamá-la sem passar pelo container pula o registro do tema e o desenho sai com a paleta padrão dela.
 
 4. **`DocsDemonstration`** — deve renderizar 3 tabs ou toggle entre `bar`, `line` e `area` usando os labels de `demonstration.labels.*`. Os dados de demonstração são hardcoded na docs page — não vêm do translations.json.
 
@@ -1003,19 +1004,19 @@ Componentes como **Chart** (`ChartContainer`, `ChartTooltip`, `ChartTooltipConte
 
 8. **`DocsNotes`** — 5 tips (`notes.tip1`–`notes.tip5`), sem sub-chave `title` (título é gerado pelo container). Cada tip contém HTML inline com `<code>`.
 
-9. **`DocsAnalytics`** — Chart é passivo: apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir nota (`analytics.description`) de que interações específicas podem ser rastreadas via callbacks do Recharts.
+9. **`DocsAnalytics`** — Chart é passivo: apenas `docs_page_view`, `docs_section_viewed`, `language_switched`. Incluir nota (`analytics.description`) de que interações específicas (dica sob o ponteiro, clique na legenda) se rastreiam via callback da lib quando forem relevantes para o produto.
 
 10. **`DocsTestes`** — estrutura:
     - `functional`: 6 items (`testes.functional.item1`–`item6`) — `{ action, result, priority }`
     - `accessibility`: 4 items (`testes.accessibility.item1`–`item4`) — `{ criterion, level, how }`
     - `visual`: 4 items (`testes.visual.item1`–`item4`) — `{ story, priority }`
 
-11. **Dependência peer Recharts** — Recharts é instalado separadamente (`npm install recharts`). Documentado em `notes.tip1`.
+11. **A altura é entrada do componente** — prop `height` (ou `style`), nunca classe utilitária de altura: o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`. Documentado em `notes`.
 
-12. **`accessibilityLayer` obrigatório** — toda demonstração e preview de variante deve incluir `accessibilityLayer` no componente Recharts raiz (`<BarChart accessibilityLayer>`, `<LineChart accessibilityLayer>`, etc.).
+12. **Informação nunca só na cor** (WCAG 1.4.1) — o bloco `aria` do `option` liga a trama por série, e a legenda nomeia cada série por escrito. A documentação deve dizer que a trama vem ligada por padrão e que desligá-la exige alternativa textual. Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do **contorno** das formas em `--foreground` — as cores de série ficam em torno de 2:1 e sozinhas não sustentam o critério.
 
-13. **`aria-label` obrigatório** — toda instância de `ChartContainer` em demos/previews deve incluir `aria-label` descritivo.
+13. **`aria-label` obrigatório** — toda instância de `ChartContainer` em demos/previews deve incluir `aria-label` descritivo, dizendo o que o gráfico mostra e não que é um gráfico. Sem ele o desenho é conteúdo perdido, porque o container é `role="img"`.
 
-14. **Stories** — criar 4 arquivos: `chart.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.tsx` (Bar, Line, Area, Pie, Radar, RadialBar), `chart-composicoes.stories.tsx` (WithLegend, WithTooltipCustom, MultiSeries, SingleSeries), `chart-estados.stories.tsx` (Empty, Loading, SingleSeries, MultiSeries). **Não criar** `chart-variantes.stories.tsx` nem `chart-tamanhos.stories.tsx` — Chart não tem `cva()` nem `size`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
+14. **Stories** — criar 4 arquivos: `chart.stories.tsx` (Playground + `tags: ["autodocs"]` + `withAutoDocsTab(ChartDocs)`), `chart-variantes.stories.tsx` (Bar, Line, Area, Pie), `chart-composicoes.stories.tsx` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-estados.stories.tsx` (Empty, Loading, SingleSeries, MultiSeries) e `chart-configuracoes.stories.tsx` (renderer, altura, legenda). **Não criar** `chart-tamanhos.stories.tsx` — Chart não tem prop `size`. Apenas o arquivo principal leva `tags: ["autodocs"]`.
 
 15. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas (pt-BR: 163, en: 160, es: 165). As skills de dev devem usar as descrições como estão (o conteúdo está correto); este gap deve ser corrigido pelo ux-writer numa próxima iteração com `/ux-writer chart --fix-seo`.

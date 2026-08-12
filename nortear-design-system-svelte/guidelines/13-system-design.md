@@ -193,9 +193,12 @@ document.documentElement.classList.add('dark');
 <!-- ❌ PERIGOSO — não usar com dados externos -->
 {@html inputDoUsuario}
 
-<!-- ✅ OK — com sanitização obrigatória -->
-{@html sanitizeHtml(inputMarkdown)}
+<!-- ✅ OK — DOMPurify importado e chamado no próprio arquivo -->
+{@html DOMPurify.sanitize(inputMarkdown)}
 ```
+
+A chamada fica no call site, sem helper local intermediário — um wrapper
+esconde o sanitizador das ferramentas de SAST. Ver `09-seguranca-xss.md`.
 
 ---
 

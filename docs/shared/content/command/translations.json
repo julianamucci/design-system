@@ -55,7 +55,7 @@
         "item3": "O atalho Cmd+K não é nativo — implemente via <code>useEffect</code> com <code>addEventListener('keydown')</code>.",
         "item4": "Exiba sempre uma dica visual do atalho (ex: <kbd>⌘K</kbd>) quando usar command palette — o usuário precisa descobrir o atalho.",
         "item5": "Use <code>CommandGroup</code> com <code>heading</code> para organizar grupos relacionados; omita o heading quando há apenas um grupo.",
-        "item6": "No Combobox: adicione <code>role=\"combobox\"</code> e <code>aria-expanded</code> ao trigger — o Radix não aplica automaticamente em Button."
+        "item6": "No Combobox: adicione <code>role=\"combobox\"</code> e <code>aria-expanded</code> ao trigger — nenhuma biblioteca aplica isso sozinha num botão comum."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -440,7 +440,7 @@
         "item3": "The Cmd+K shortcut is not native — implement via <code>useEffect</code> with <code>addEventListener('keydown')</code>.",
         "item4": "Always display a visual shortcut hint (e.g., <kbd>⌘K</kbd>) when using command palette — users need to discover the shortcut.",
         "item5": "Use <code>CommandGroup</code> with <code>heading</code> to organize related groups; omit the heading when there is only one group.",
-        "item6": "In Combobox pattern: add <code>role=\"combobox\"</code> and <code>aria-expanded</code> to the trigger — Radix does not apply them automatically to Button."
+        "item6": "In Combobox pattern: add <code>role=\"combobox\"</code> and <code>aria-expanded</code> to the trigger — no library applies them automatically to a plain button."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -825,7 +825,7 @@
         "item3": "El atajo Cmd+K no es nativo — impleméntalo vía <code>useEffect</code> con <code>addEventListener('keydown')</code>.",
         "item4": "Muestra siempre una pista visual del atajo (ej: <kbd>⌘K</kbd>) al usar command palette — el usuario necesita descubrir el atajo.",
         "item5": "Usa <code>CommandGroup</code> con <code>heading</code> para organizar grupos relacionados; omite el heading cuando hay solo un grupo.",
-        "item6": "En el patrón Combobox: agrega <code>role=\"combobox\"</code> y <code>aria-expanded</code> al trigger — Radix no los aplica automáticamente en Button."
+        "item6": "En el patrón Combobox: agrega <code>role=\"combobox\"</code> y <code>aria-expanded</code> al trigger — ninguna biblioteca los aplica automáticamente en un botón común."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",

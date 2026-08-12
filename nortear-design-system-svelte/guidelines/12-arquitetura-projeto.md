@@ -57,7 +57,9 @@ nortear-design-system-svelte/
 │   │   ├── i18n.ts              # Store Svelte 5 + hook useTranslation
 │   │   ├── analytics.ts         # Wrapper GA4 tipado
 │   │   ├── use-seo.ts           # applyStorybookSeo (detecta iframe)
-│   │   ├── sanitize-html.ts     # Sanitizador para {@html}
+│   │   ├── use-active-section.svelte.ts # IntersectionObserver (onActive / onDwell)
+│   │   ├── motion.ts            # prefersReducedMotion() + tokens de duração
+│   │   ├── strip-html.ts        # texto puro a partir de string com marcação
 │   │   ├── withAutoDocsTab.ts   # HOC Storybook: aba "API Reference"
 │   │   └── utils.ts             # cn() e utilitários
 │   │

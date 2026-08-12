@@ -75,7 +75,7 @@ Nortear não tem reatividade automática. A docs page:
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getCurrentLocale, subscribeLocale } from '@/lib/i18n';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';   // chamado no call site, sem wrapper local
 import uiTranslations from '@/i18n/ui.json';
 import componentTranslations from '../../../docs/shared/content/<slug>/translations.json';
 // imports dos containers (listados acima)
@@ -468,10 +468,12 @@ Componentes como **Accordion** usam a factory `createAccordion(options)` de `./a
 
 ### HTML de conteúdo
 
-Sempre use `sanitizeHtml()` antes de atribuir a `innerHTML`:
+Sempre sanitize antes de atribuir a `innerHTML`, importando e chamando `DOMPurify` **no próprio arquivo** — helper local esconde o sanitizador do SAST (ver `09-seguranca-xss.md`):
 
 ```ts
-el.innerHTML = sanitizeHtml(tContent('anatomy.item1'));
+import DOMPurify from 'dompurify';
+
+el.innerHTML = DOMPurify.sanitize(tContent('anatomy.item1'));
 ```
 
 Containers já fazem isso para os props de texto que aceitam HTML. No consumidor, só sanitize quando montar `innerHTML` diretamente em factories.
@@ -546,7 +548,7 @@ Componentes como **Avatar** usam as factories vanilla-TS `createAvatar`, `create
 
 ### Componentes de Visualização de Dados (padrão Chart) — Nortear
 
-Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, height, colors })` de `./chart` — API simplificada, **sem Recharts**. Apenas os tipos **`bar`** e **`line`** são suportados via prop `type`. O gráfico é SVG puro renderizado pela factory sem dependências externas. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a factory `createChart(opts)` de `./chart` registra o tema do design system a partir dos tokens do `<html>` e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. Quatro tipos cobertos: `bar`, `line`, `area`, `pie`. `buildChartOption(opts)` é o construtor puro do objeto de configuração, exportado à parte para quem precisa customizar antes de desenhar. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
 
 **Seções a renderizar (15 seções canônicas):**
 
@@ -558,7 +560,7 @@ Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, 
 | Quando Usar | `createDocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `createDocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
 | Importação | `createDocsImport` | `import.title`, `import.vanilla` |
-| Tipos de Gráfico | `createDocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`, `variants.items.line` |
+| Tipos de Gráfico | `createDocsCompositions` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`/`line`/`area`/`pie`/`smallInline`, `variants.compositionsTitle`, `variants.compositions.inCard.*` |
 | Estados | `createDocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `createDocsProps` | `props.title`, `props.containerTitle`, `props.table.config`, `props.table.className`, `props.extensibilityTitle`, `props.extensibility` |
 | Tokens | `createDocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
@@ -570,36 +572,38 @@ Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, 
 
 **Regras específicas do Chart Nortear:**
 
-1. **Apenas `bar` e `line`** — a factory `createChart` suporta apenas `type: 'bar' | 'line'`. `DocsVariants` deve renderizar apenas 2 cards (`bar`, `line`). Os tipos `area`, `pie`, `radar`, `radialBar` aparecem na seção de tipos mas com nota explícita de que não são suportados no Nortear — exibir `variants.note` via `element.innerHTML = sanitizeHtml(t('variants.note'))` acima dos cards.
+1. **Quatro tipos cobertos** — `type: 'bar' | 'line' | 'area' | 'pie'`. A seção de tipos renderiza esses 4 cards mais `smallInline`, e um bloco separado de composições (`variants.compositionsTitle` + `variants.compositions.inCard.*`). Exibir `variants.note` acima dos cards via `element.innerHTML = DOMPurify.sanitize(t('variants.note'))`. **Não** documentar tipo que a factory não registra (dispersão, radar, mapa de calor): prometer desenho que não sai é pior que omitir — esses exigiriam registrar um módulo extra da lib.
 
-2. **API simplificada** — a factory expõe apenas `createChart({ data, type, height, colors })`. `DocsProps` usa **1 tabela** (não 3 como no React), documentando apenas as props da factory:
-   - `data`: array de pontos `{label, value}` ou `{label, values: number[]}`
-   - `type`: `'bar' | 'line'`
-   - `height`: number (pixels)
-   - `colors`: string[] (tokens CSS ou valores hex)
-   Chave de título: `props.containerTitle` (`"createChart"` como título da tabela).
+2. **Uma tabela de props** — `createDocsProps` usa **1 tabela**, documentando as entradas de `ChartOptions`:
+   - `type`: `'bar' | 'line' | 'area' | 'pie'` (default `bar`)
+   - `data`: `ChartDataPoint[]` — dataset simples de 1 série
+   - `xAxis` + `series`: forma multi-série (`ChartSeries[]`)
+   - `height`: number (px); sem valor, vale o piso de `.nds-chart`
+   - `renderer`: `'svg' | 'canvas'` (default `svg`)
+   - `title`, `showLegend`, `class`, `label` (vira o `aria-label`), `emptyLabel`
+   Chave de título: `props.containerTitle` (`"createChart"` como título da tabela). `props.extensibilityTitle` cobre `buildChartOption`, para quem precisa ajustar o objeto antes de desenhar.
 
 3. **`DocsImport`** — usar apenas `import.vanilla`:
    ```ts
    import { createChart } from '@/components/ui/chart';
    ```
-   Omitir `import.basic` e `import.withRecharts`.
+   Omitir `import.basic` e `import.withBuilders`. **Nunca** documentar import direto da lib de gráfico: chamá-la sem passar pela factory pula o registro do tema e o desenho sai com a paleta padrão dela.
 
-4. **`createDocsDemonstration`** — `demoFactory` deve retornar um container com toggle entre `bar` e `line` (2 botões) usando `labels.bar` e `labels.line`. Dados hardcoded com 6 meses e `labels.chartTitle` como título.
+4. **`createDocsDemonstration`** — `demoFactory` retorna um container com alternância entre os tipos usando `labels.bar`, `labels.line` e `labels.area`. Dados hardcoded com 6 meses e `labels.chartTitle` como título.
 
-5. **SVG puro — sem Recharts** — previews nas factories não usam Recharts. A factory `createChart` gera SVG puro. Não incluir dependências de `recharts` no Nortear.
+5. **`label` obrigatório nos previews** — o container é `role="img"`; sem `label` o desenho é conteúdo perdido. A frase diz o que o gráfico mostra, não que é um gráfico.
 
-6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container.
+6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. No Nortear, `accessibilityLayer` não existe — acessibilidade por teclado é implementada com `tabIndex`, `aria-label`, `role="img"` e `<title>` SVG.
+7. **`createDocsAccessibility`** — `keyboardItems` com 4 entradas. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada pelo bloco `aria` do objeto de configuração, e a legenda nomeia cada série por escrito. Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do **contorno** das formas em `--foreground`, não da cor de série.
 
-8. **`notes.tip3`** — nota crítica: "No Nortear, apenas os tipos `bar` e `line` são suportados via prop `type`. A API é simplificada: `createChart({ data, type, height, colors })`." Esta nota já existe em `notes.tip3` e deve ser renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
+8. **`notes.tip3`** — nota crítica sobre a superfície da API do Vanilla (`createChart(opts)` + `buildChartOption(opts)`), renderizada de forma destacada (borda diferente ou ícone de aviso no callout).
 
-9. **`createDocsTestes`** — `functional` (6 items — apenas itens 1–3 para `bar`/`line` são diretamente testáveis; itens 4–6 podem ter notas de adaptação), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
+9. **`createDocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
 
-10. **`sanitizeHtml` obrigatório** — todo `innerHTML` com conteúdo do translations.json usa `sanitizeHtml()`. Os campos de tokens, notas e acessibilidade contêm `<code>` inline que devem ser sanitizados.
+10. **Sanitização obrigatória** — todo `innerHTML` com conteúdo do translations.json passa por `DOMPurify.sanitize()`, com o import e a chamada no próprio arquivo. Os campos de tokens, notas e acessibilidade contêm `<code>` inline.
 
-11. **Stories Nortear** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(createChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas 2 tipos), `chart-composicoes.stories.ts` (WithColors, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`. Previews chamam `createChart({...})` e fazem `render: () => el`.
+11. **Stories Nortear** — criar 5 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(createChartDocs)`), `chart-variantes.stories.ts` (Bar, Line, Area, Pie), `chart-composicoes.stories.ts` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries) e `chart-configuracoes.stories.ts` (renderer, altura, legenda). Não criar `-tamanhos` — não há prop `size`. Previews chamam `createChart({...})` e fazem `render: () => el`.
 
 12. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
 
@@ -633,4 +637,4 @@ Componentes como **Chart** no Nortear usam a factory `createChart({ data, type, 
 - [ ] `withAutoDocsTab` monta a função `createAlertDocs`
 - [ ] Listener de locale re-renderiza o root
 - [ ] `translations.json` com 3 idiomas completos
-- [ ] `sanitizeHtml()` em todo `innerHTML` com conteúdo de translations
+- [ ] `DOMPurify.sanitize()` em todo `innerHTML` com conteúdo de translations, importado e chamado no próprio arquivo

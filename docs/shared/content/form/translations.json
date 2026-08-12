@@ -245,7 +245,7 @@
       "tip2": "Para validação visual, aplique <code>aria-invalid=\"true\"</code> no controle e passe a mensagem na prop <code>error</code> — o estilo do controle reage via seletor de atributo.",
       "tip3": "Use o <code>Fieldset</code> mesmo para grupos pequenos (2 campos) quando o rótulo de grupo agrega contexto (ex.: 'Endereço de cobrança').",
       "tip4": "Mensagens de erro devem explicar o problema E sugerir correção — nunca apenas 'campo inválido'.",
-      "tip5": "Para descrição com formatação rica (links, código), use <code>innerHTML</code> sanitizado com <code>sanitizeHtml</code>."
+      "tip5": "Para descrição com formatação rica (links, código), sanitize o HTML com <code>DOMPurify.sanitize()</code> no próprio ponto de inserção."
     },
     "analytics": {
       "title": "Analytics",
@@ -601,7 +601,7 @@
       "tip2": "For visual validation, apply <code>aria-invalid=\"true\"</code> on the control and pass the message to the <code>error</code> prop — the control style reacts via attribute selector.",
       "tip3": "Use <code>Fieldset</code> even for small groups (2 fields) when the group label adds context (e.g., 'Billing address').",
       "tip4": "Error messages should explain the problem AND suggest a fix — never just 'invalid field'.",
-      "tip5": "For rich-formatted description (links, code), use <code>innerHTML</code> sanitized with <code>sanitizeHtml</code>."
+      "tip5": "For rich-formatted description (links, code), sanitize the HTML with <code>DOMPurify.sanitize()</code> at the insertion point itself."
     },
     "analytics": {
       "title": "Analytics",
@@ -957,7 +957,7 @@
       "tip2": "Para validación visual, aplica <code>aria-invalid=\"true\"</code> en el control y pasa el mensaje a la prop <code>error</code> — el estilo del control reacciona vía selector de atributo.",
       "tip3": "Usa el <code>Fieldset</code> incluso para grupos pequeños (2 campos) cuando el rótulo de grupo aporta contexto (ej.: 'Dirección de facturación').",
       "tip4": "Los mensajes de error deben explicar el problema Y sugerir corrección — nunca solo 'campo inválido'.",
-      "tip5": "Para descripción con formato rico (enlaces, código), usa <code>innerHTML</code> sanitizado con <code>sanitizeHtml</code>."
+      "tip5": "Para descripción con formato rico (enlaces, código), sanitiza el HTML con <code>DOMPurify.sanitize()</code> en el propio punto de inserción."
     },
     "analytics": {
       "title": "Analytics",

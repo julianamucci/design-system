@@ -56,10 +56,23 @@ Este documento fornece **exemplos práticos de implementação** dos design toke
 ```tsx
 // Você deve envolver com hsl() manualmente
 <div style={{ background: `hsl(var(--primary))` }}>
-
-// Para bibliotecas externas (ex: Recharts)
-<Bar dataKey="value" fill="hsl(var(--chart-1))" />
 ```
+
+**Bibliotecas que desenham fora do CSS (ex.: a lib de gráfico):**
+
+Elas recebem cor por objeto de configuração em JavaScript, não por folha de
+estilo — `var(--chart-1)` chega ali como string literal e **não é resolvido**.
+Leia o token do `<html>` e passe o valor já computado:
+
+```ts
+const raw = getComputedStyle(document.documentElement)
+  .getPropertyValue('--chart-1').trim();   // "220 44% 57%"
+const cor = `hsl(${raw})`;
+```
+
+O componente `Chart` do design system já faz essa leitura e registra um tema
+próprio a partir dos tokens, reaplicando-o quando a classe do `<html>` muda.
+Consumir a lib direto pula esse registro e o desenho sai com a paleta dela.
 
 **Referência completa**: Consulte `03-sistema-design.md` → "Formato Obrigatório: HSL"
 

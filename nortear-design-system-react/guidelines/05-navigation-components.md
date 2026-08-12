@@ -78,7 +78,7 @@ Menubar (aria-label="Menu principal")
 **Acessibilidade**:
 - `aria-label="Menu principal"` na `<Menubar>`.
 - O componente aplica `role="menubar"`, `role="menu"` e `role="menuitem"` automaticamente.
-- Navegação por teclado gerenciada pelo Radix UI:
+- Navegação por teclado gerenciada pelo primitivo headless (`@base-ui/react`):
 
 | Tecla | Ação |
 |-------|------|
@@ -138,7 +138,7 @@ Menubar (aria-label="Menu principal")
 - `<nav aria-label="Navegação principal">` envolvendo o componente.
 - `aria-current="page"` no item da página ativa — obrigatório, atualizar dinamicamente.
 - O componente aplica `role="navigation"`, `aria-expanded` e gerencia foco nos submenus automaticamente.
-- Submenus fecham com `Escape` — comportamento nativo do Radix UI, não sobrescrever.
+- Submenus fecham com `Escape` — comportamento nativo do primitivo headless, não sobrescrever.
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Labels: substantivos ou frases nominais curtas, sem verbo, sem ponto final.
@@ -293,7 +293,7 @@ Tabs
 **Acessibilidade**:
 - `aria-label` no `TabsList` descrevendo o que as tabs representam.
 - O componente aplica `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected` e `aria-controls` automaticamente.
-- Navegação por teclado gerenciada pelo Radix UI:
+- Navegação por teclado gerenciada pelo primitivo headless (`@base-ui/react`):
 
 | Tecla | Ação |
 |-------|------|

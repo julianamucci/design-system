@@ -7,7 +7,7 @@ Estas regras se aplicam a **todas** as interações neste projeto, sem exceção
 ## 1. Stack obrigatória
 
 - **Componentes**: funções TypeScript que criam/retornam `HTMLElement` — padrão `createNomeComponente(options): HTMLElement`
-- **Estilos**: CSS standalone via classes `.nds-*` definidas em `src/styles/components/*.css` (sem Tailwind) — nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
+- **Estilos**: CSS standalone via classes `.nds-*` definidas em `src/styles/components/*.css`. O projeto não usa nenhum framework de classe utilitária — classe sem o prefixo `nds-` é inerte em runtime. Nunca estilos inline arbitrários (exceto CSS custom properties dinâmicas)
 - **Ícones**: exclusivamente `lucide` (pacote vanilla) — `import { icons } from 'lucide'` — zero exceções
 - **Formulários**: HTML nativo + Zod para validação de schema — sem biblioteca de formulários
 - **Tipografia**: fonte do sistema definida no CSS base — usar classes `.nds-text-*` / `.nds-leading-*` (sem valores arbitrários ou classes utilitárias de outro framework)

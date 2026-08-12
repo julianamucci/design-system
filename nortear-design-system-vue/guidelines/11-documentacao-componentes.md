@@ -127,7 +127,7 @@ import { computed, onMounted, onUnmounted, watch, ref } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { sanitizeHtml } from '@/lib/sanitize-html';
+import DOMPurify from 'dompurify';   // chamado no call site, sem wrapper local
 import LanguageSwitcher from '@/components/product/LanguageSwitcher.vue';
 import DocsNav from '@/components/docs/shared/DocsNav.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -503,9 +503,9 @@ Componentes como **Accordion** implementam ARIA Disclosure via sub-componentes (
 8. **Play function** — 6 critérios: clicar trigger fechado abre; clicar aberto (collapsible) fecha; modo single alterna; disabled bloqueia; Enter expande; Space expande. Verificar `aria-expanded` via `toHaveAttribute`.
 9. **Chave de tradução conflitante** — `props.table.type` nomeia a coluna "Tipo"; usar `props.table.type_prop` para descrever a prop `type` (evita ambiguidade no `flattenDict`).
 
-### Componentes Radix com `dangerouslySetInnerHTML`
+### Primitivos headless com conteúdo HTML
 
-Componentes Radix/Reka com children internos **não** aceitam `dangerouslySetInnerHTML` direto. Use `<span v-html="...">` dentro do slot.
+Componentes do primitivo headless (`reka-ui`) que já renderizam children internamente **não** aceitam `v-html` no próprio elemento — a diretiva sobrescreveria o que o primitivo montou. Coloque o HTML num filho: `<span v-html="DOMPurify.sanitize(...)">` dentro do slot.
 
 ### Alert e componentes não-interativos
 
@@ -577,7 +577,7 @@ Componentes como **Avatar** (base: `reka-ui` — `Avatar`, `AvatarImage`, `Avata
 
 ### Componentes de Visualização de Dados (padrão Chart) — Vue
 
-Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferente do React. Não há `ChartContainer` do design system no Vue; os componentes são `VisXYContainer`, `VisBar`, `VisLine`, `VisArea`, `VisDonut`, `VisAxis`, `ChartCrosshair`, `ChartTooltip` (todos de `@unovis/vue`). O design system Vue fornece apenas wrappers de theming para integrar tokens de cor. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `ChartContainer` lê os tokens do `<html>`, registra um tema do design system e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. A API é **declarativa por objeto**, não por composição de filhos: `<ChartContainer :option="…" />` recebe um único `option`, montado pelos builders `buildBarOption` / `buildLineOption` / `buildAreaOption` / `buildPieOption` exportados do mesmo módulo. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
 
 **Seções a renderizar (15 seções canônicas):**
 
@@ -588,8 +588,8 @@ Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferent
 | Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
 | Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
-| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withRecharts` |
-| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withBuilders` |
+| Tipos de Gráfico | `DocsCompositions` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`/`line`/`area`/`pie`/`smallInline`, `variants.compositionsTitle`, `variants.compositions.inCard.*` |
 | Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.legendTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
 | Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
@@ -601,25 +601,23 @@ Componentes como **Chart** usam **`@unovis/vue`** — API completamente diferent
 
 **Regras específicas do Chart Vue:**
 
-1. **`@unovis/vue` — não é Recharts** — Vue usa `@unovis/vue` como biblioteca de gráficos subjacente. `ChartCrosshair` e `ChartTooltip` são importados de `@unovis/vue`, não do design system. O `structureCode` na anatomia e os exemplos de import devem refletir a API do Unovis, não a do Recharts.
+1. **Um `option`, não uma árvore de filhos** — o `structureCode` da anatomia e os exemplos de import mostram `<ChartContainer :option="buildBarOption({ … })" :height="300" aria-label="…" />`. **Nunca** documentar import direto da lib de gráfico: chamá-la sem passar pelo container pula o registro do tema e o desenho sai com a paleta padrão dela.
 
-2. **Sem `cva()` — usar padrão §11.3** — 6 tipos documentados nos cards: `bar`, `line`, `area`, `pie`, `radar`, `radialBar`. O campo `variants.note` deve ser exibido acima dos cards.
+2. **Sem `cva()` — usar padrão §11.3** — 4 tipos suportados nos cards (`bar`, `line`, `area`, `pie`) mais `smallInline`, e um bloco separado de composições (`variants.compositionsTitle` + `variants.compositions.inCard.*`). O campo `variants.note` deve ser exibido acima dos cards. **Não** documentar tipo que o container não registra (dispersão, radar, mapa de calor): prometer desenho que não sai é pior que omitir.
 
-3. **`DocsProps` com 3 tabelas** — `ChartContainer` (ou equivalente Unovis), `ChartTooltipContent`, `ChartLegendContent`. Os nomes de props e comportamentos vêm do translations.json — a implementação interna usa Unovis.
+3. **`DocsProps` com 2 tabelas** — `ChartContainer` (`option`, `renderer`, `height`, `emptyLabel`, `class`, `aria-label`) na chave `props.containerTitle`; tipos de dado e builders (`ChartDataPoint`, `ChartSeries`, os quatro builders) nas chaves `props.legendTitle` / `props.tooltipTitle`. `props.extensibilityTitle` cobre montar o `option` à mão para o que os builders não cobrem.
 
-4. **`DocsImport`** — omitir a chave `import.vanilla` (não se aplica). Usar `import.basic` e `import.withRecharts` adaptando para Unovis:
-   - Import do wrapper de theming do design system
-   - Import dos primitivos do `@unovis/vue`
+4. **`DocsImport`** — omitir a chave `import.vanilla` (não se aplica). Usar `import.basic` (o container) e `import.withBuilders` (os construtores de `option`), ambos do mesmo módulo `@/components/ui/chart`.
 
-5. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`.
+5. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. No Unovis, acessibilidade por teclado pode diferir do `accessibilityLayer` do Recharts — documentar na nota de implementação Vue.
+6. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
 
-7. **`DocsNotes`** — `notes.tip4` menciona especificamente que "Vue usa `@unovis/vue` — API diferente do React". Esta é a nota mais crítica para o Vue e deve ser renderizada primeiro ou destacada visualmente.
+7. **`DocsNotes`** — 5 tips (`notes.tip1`–`tip5`). A altura é entrada do componente (prop `height` ou `style`), nunca classe utilitária de altura: o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
 
 8. **`DocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`).
 
-9. **Stories Vue** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.ts` (Bar, Line, Area, Pie, Radar, RadialBar), `chart-composicoes.stories.ts` (WithLegend, MultiSeries, SingleSeries), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries). Não criar `-variantes` nem `-tamanhos`.
+9. **Stories Vue** — criar 5 arquivos em `src/components/ui/chart/`: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-variantes.stories.ts` (Bar, Line, Area, Pie), `chart-composicoes.stories.ts` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries) e `chart-configuracoes.stories.ts` (renderer, altura, legenda). Não criar `-tamanhos` — não há prop `size`.
 
 10. **Locale de `useTranslation()` sempre** — nunca usar `useLocaleStore`/Pinia para locale em ChartDocs.vue.
 

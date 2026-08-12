@@ -14,8 +14,10 @@
 Browser
 ├── TypeScript (linguagem tipada)
 ├── HTML/DOM API (criação de elementos)
-├── CSS standalone (`.nds-*`) — sem Tailwind
+├── CSS standalone (`.nds-*`) — nenhum framework de utilitário
 ├── lucide (ícones vanilla)
+├── Apache ECharts (gráficos)
+├── DOMPurify (sanitização de innerHTML, chamada no call site)
 ├── Zod (validação de schema)
 └── @storybook/html-vite (documentação)
 ```
@@ -214,9 +216,12 @@ el.setAttribute('aria-label', inputDoUsuario);
 // ❌ NUNCA innerHTML com dados externos
 el.innerHTML = inputDoUsuario;
 
-// ✅ OK — innerHTML com conteúdo controlado e sanitizado
-el.innerHTML = `<code>${sanitizeHtml(markdownContent)}</code>`;
+// ✅ OK — DOMPurify importado e chamado no próprio arquivo
+el.innerHTML = `<code>${DOMPurify.sanitize(markdownContent)}</code>`;
 ```
+
+A chamada fica no call site, sem helper local intermediário — um wrapper
+esconde o sanitizador das ferramentas de SAST. Ver `09-seguranca-xss.md`.
 
 ---
 

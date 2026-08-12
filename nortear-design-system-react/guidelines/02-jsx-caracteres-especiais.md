@@ -93,11 +93,15 @@ const label = "Valor A > Valor B";
 Conteúdo HTML injetado via `dangerouslySetInnerHTML` não passa pelo parser JSX — as entidades devem estar corretas no **HTML da string**, não no JSX. Além disso, sempre sanitize:
 
 ```tsx
-// ✅
-import { sanitizeHtml } from '@/lib/sanitize-html';
+// ✅ — DOMPurify importado e chamado no próprio arquivo
+import DOMPurify from 'dompurify';
 
-<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(htmlString) }} />
+<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(htmlString) }} />
 ```
+
+> A chamada fica **no call site**, sem wrapper local intermediário. Um helper
+> próprio esconde o sanitizador das ferramentas de SAST, que voltam a reportar
+> o fluxo como XSS. Ver `09-seguranca-xss.md`.
 
 Se o `htmlString` vier de `translations.json`, a entidade deve estar na string JSON:
 ```json

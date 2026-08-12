@@ -38,7 +38,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 │  └── WAI-ARIA Compliance                │
 ├─────────────────────────────────────────┤
 │  Lucide React (Ícones)                  │
-│  Recharts (Gráficos)                    │
+│  Apache ECharts (Gráficos)              │
 │  React Hook Form (Formulários)          │
 └─────────────────────────────────────────┘
 ```
@@ -535,7 +535,7 @@ function DemoSection() { }
 - Solid.js
 
 **Razões**:
-- ✅ Ecossistema maduro (@base-ui/react, Recharts)
+- ✅ Ecossistema maduro (`@base-ui/react`, Apache ECharts)
 - ✅ `@base-ui/react` é React-native
 - ✅ Maior pool de desenvolvedores
 - ✅ Primitivos acessíveis e headless, estilizados via CSS `.nds-*`

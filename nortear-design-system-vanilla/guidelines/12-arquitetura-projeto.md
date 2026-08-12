@@ -48,7 +48,10 @@ nortear-design-system-vanilla/
 │   │   ├── i18n.ts              # Store + getTranslation()
 │   │   ├── analytics.ts         # Wrapper GA4 tipado
 │   │   ├── use-seo.ts           # applyStorybookSeo()
-│   │   ├── sanitize-html.ts     # sanitizeHtml() para innerHTML seguro
+│   │   ├── use-active-section.ts # IntersectionObserver (onActive / onDwell)
+│   │   ├── motion.ts            # prefersReducedMotion() + tokens de duração
+│   │   ├── echarts-theme.ts     # registra o tema do DS na lib de gráfico
+│   │   ├── strip-html.ts        # texto puro a partir de string com marcação
 │   │   ├── withAutoDocsTab.ts   # HOC Storybook: aba "API Reference"
 │   │   └── utils.ts             # cn() e utilitários
 │   │

@@ -68,7 +68,7 @@ parameters: {
   import { t, locale } from '$lib/i18n';
   import { applySeo } from '$lib/use-seo';
   import { track } from '$lib/analytics';
-  import { sanitizeHtml } from '$lib/sanitize-html';
+  import DOMPurify from 'dompurify';   // chamado no call site, sem wrapper local
   import LanguageSwitcher from '$lib/../components/product/LanguageSwitcher.svelte';
   import DocsNav from '$lib/../components/docs/shared/DocsNav.svelte';
   import uiTranslations from '$lib/i18n/ui.json';
@@ -440,9 +440,9 @@ Componentes como **Accordion** (Bits UI `Accordion`, `AccordionItem`, `Accordion
 9. **Play function** — 6 critérios: abrir, fechar (collapsible), modo single alterna, disabled bloqueia, Enter, Space.
 10. **Chave de tradução conflitante** — usar `props.table.type_prop` para a prop `type` (evita colidir com a chave de coluna `type`).
 
-### Bits UI e `dangerouslySetInnerHTML` equivalente
+### Conteúdo HTML dentro de primitivos headless
 
-Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize: `{@html sanitizeHtml(value)}`. Componentes Bits que recebem children internamente podem precisar de `<span>{@html ...}</span>` wrapper.
+Svelte usa `{@html}` para conteúdo HTML. Sempre sanitize com `DOMPurify.sanitize` **no próprio arquivo**, sem helper local — um wrapper esconde o sanitizador do SAST (ver `09-seguranca-xss.md`): `{@html DOMPurify.sanitize(value)}`. Componentes do primitivo headless (`bits-ui`) que já renderizam children internamente podem precisar de um `<span>{@html …}</span>` como filho.
 
 ### Alert e não-interativos
 
@@ -514,7 +514,7 @@ Componentes como **Avatar** (base: `bits-ui` — `Avatar`, `AvatarImage`, `Avata
 
 ### Componentes de Visualização de Dados (padrão Chart) — Svelte 5
 
-Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`ChartTooltip`** como primitivos do design system. Não há `ChartLegend`, `ChartLegendContent` nem `ChartTooltipContent` como componentes separados no Svelte — o tooltip é configurado via props do `ChartTooltip`. Gráficos internos são SVG puro renderizado com `{@html}` a partir de dados calculados. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
+Componentes como **Chart** são camada de theming sobre **Apache ECharts**: o `ChartContainer` lê os tokens do `<html>`, registra um tema do design system e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. A API é **declarativa por objeto**: `<ChartContainer option={…} />` recebe um único `option`, montado pelos builders `buildBarOption` / `buildLineOption` / `buildAreaOption` / `buildPieOption` exportados do mesmo barrel. Não há `ChartTooltip`, `ChartLegend` nem conteúdo de dica como componentes separados — dica, legenda e eixos são campos do `option`. Categoria **Display**, translations em `docs/shared/content/chart/translations.json`.
 
 **Seções a renderizar (15 seções canônicas):**
 
@@ -525,8 +525,8 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
 | Anatomia | `DocsAnatomy` | `anatomy.title`, `anatomy.item1`–`item4`, `anatomy.structureLabel`, `anatomy.structureCode` |
 | Quando Usar | `DocsWhenToUse` | `usage.title`, `usage.guidelines.item1`–`item6`, `usage.scenarios.cols.*`, `usage.scenarios.item1`–`item6`, `usage.uxWriting.*`, `usage.do.item1`–`item4`, `usage.dont.item1`–`item3` |
 | Do & Don't | `DocsDoDont` | `doDont.title`, `doDont.pair1.*`, `doDont.pair2.*` |
-| Importação | `DocsImport` | `import.title`, `import.basic` |
-| Tipos de Gráfico | `DocsVariants` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`–`radialBar` |
+| Importação | `DocsImport` | `import.title`, `import.basic`, `import.withBuilders` |
+| Tipos de Gráfico | `DocsCompositions` | `variants.title`, `variants.visualTitle`, `variants.note`, `variants.items.bar`/`line`/`area`/`pie`/`smallInline`, `variants.compositionsTitle`, `variants.compositions.inCard.*` |
 | Estados | `DocsStates` | `states.title`, `states.cols.*`, `states.empty.*`, `states.loading.*`, `states.singleSeries.*`, `states.multiSeries.*` |
 | Propriedades | `DocsProps` | `props.title`, `props.containerTitle`, `props.tooltipTitle`, `props.table.*`, `props.extensibilityTitle`, `props.extensibility` |
 | Tokens | `DocsTokens` | `tokens.title`, `tokens.table.*`, `tokens.customizationTitle`, `tokens.note` |
@@ -538,36 +538,34 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
 
 **Regras específicas do Chart Svelte:**
 
-1. **`ChartContainer` + `ChartTooltip` apenas** — Svelte 5 expõe apenas `ChartContainer` e `ChartTooltip` como componentes do design system. A legenda (`ChartLegend`) e conteúdos de tooltip customizados são implementados com SVG inline ou HTML estruturado dentro do slot do `ChartContainer`.
+1. **Um `option`, não uma árvore de filhos** — o `structureCode` da anatomia e os exemplos de import mostram `<ChartContainer option={buildBarOption({ … })} height={300} aria-label="…" />`. **Nunca** documentar import direto da lib de gráfico: chamá-la sem passar pelo container pula o registro do tema e o desenho sai com a paleta padrão dela.
 
-2. **Sem `cva()` — usar padrão §11.3** — 6 tipos documentados nos cards: `bar`, `line`, `area`, `pie`, `radar`, `radialBar`. O campo `variants.note` deve ser exibido acima dos cards via `{@html sanitizeHtml(tContent('variants.note'))}`.
+2. **Sem `cva()` — usar padrão §11.3** — 4 tipos suportados nos cards (`bar`, `line`, `area`, `pie`) mais `smallInline`, e um bloco separado de composições (`variants.compositionsTitle` + `variants.compositions.inCard.*`). O campo `variants.note` deve ser exibido acima dos cards via `{@html DOMPurify.sanitize(tContent('variants.note'))}`. **Não** documentar tipo que o container não registra (dispersão, radar, mapa de calor): prometer desenho que não sai é pior que omitir.
 
-3. **`DocsProps` com 2 tabelas** — diferente do React (3 tabelas), Svelte usa apenas 2:
-   - `ChartContainer` (config, id, class, children snippet) — chave `props.containerTitle`
-   - `ChartTooltip` (indicator, hideLabel, nameKey, etc.) — chave `props.tooltipTitle`
-   Omitir a tabela `ChartLegendContent` — não existe como componente separado no Svelte.
+3. **`DocsProps` com 2 tabelas**:
+   - `ChartContainer` (`option`, `renderer`, `height`, `emptyLabel`, `class`, `aria-label`) — chave `props.containerTitle`
+   - Tipos de dado e builders (`ChartDataPoint`, `ChartSeries`, os quatro builders) — chaves `props.legendTitle` / `props.tooltipTitle`
+   `props.extensibilityTitle` cobre montar o `option` à mão para o que os builders não cobrem.
 
-4. **`DocsImport`** — usar apenas `import.basic`:
-   ```svelte
-   import { ChartContainer, ChartTooltip } from '$lib/../components/ui/chart';
-   ```
-   Omitir `import.withRecharts` e `import.vanilla`.
+4. **`DocsImport`** — usar `import.basic` (o container) e `import.withBuilders` (os construtores de `option`), ambos do mesmo barrel `$lib/../components/ui/chart`. Omitir `import.vanilla`.
 
-5. **SVG puro — sem lucide-svelte** — dentro dos previews de gráfico, usar SVG inline gerado programaticamente. Nunca `lucide-svelte` (incompatível com Svelte 5).
+5. **Ícones** — nunca `lucide-svelte` (incompatível com Svelte 5); usar `lucide` com renderização programática.
 
-6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`.
+6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 
-7. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. O `accessibilityLayer` do Recharts não existe no Svelte — documentar em nota que navegação por teclado é implementada via atributos ARIA manuais no SVG.
+7. **`DocsAccessibility`** — `keyboardItems` com 4 entradas via chaves `accessibility.keyboard.*`. Não há navegação granular por ponto de dado: o container é `role="img"` com `aria-label` autoral, e dataset crítico pede resumo textual `sr-only` à parte. A informação nunca vive só na cor (WCAG 1.4.1) — a trama por série vem ligada por padrão pelo bloco `aria` do `option`, e a legenda nomeia cada série por escrito.
 
 8. **`DocsTestes`** — `functional` (6 items), `accessibility` (4 items com `{criterion, level, how}`), `visual` (4 items com `{story, priority}`). Iteração via `$derived` array.
 
-9. **`{@html}` obrigatoriamente sanitizado** — todos os campos HTML do translations.json (`anatomy.item*`, `notes.tip*`, `accessibility.item*`) passam por `sanitizeHtml()` antes de `{@html}`.
+9. **`{@html}` obrigatoriamente sanitizado** — todos os campos HTML do translations.json (`anatomy.item*`, `notes.tip*`, `accessibility.item*`) passam por `DOMPurify.sanitize()` antes de `{@html}`, com o import e a chamada no próprio arquivo.
 
-10. **Stories Svelte** — criar 4 arquivos: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-tipos.stories.ts` (Bar, Line — apenas os tipos suportados em preview interativo), `chart-composicoes.stories.ts` (WithTooltip, SingleSeries, MultiSeries), `chart-estados.stories.ts` (Empty, Loading). Não criar `-variantes` nem `-tamanhos`.
+10. **Stories Svelte** — criar 5 arquivos em `src/components/ui/chart/`: `chart.stories.ts` (Playground + `withAutoDocsTab(ChartDocs)`), `chart-variantes.stories.ts` (Bar, Line, Area, Pie), `chart-composicoes.stories.ts` (SingleSeries, MultiSeries, InCard, SmallInline), `chart-estados.stories.ts` (Empty, Loading, SingleSeries, MultiSeries) e `chart-configuracoes.stories.ts` (renderer, altura, legenda). Não criar `-tamanhos` — não há prop `size`.
 
-11. **Svelte 5 runes** — usar `$state`, `$derived`, `$effect` — nunca `onMount`/`afterUpdate`/`$:`.
+11. **Altura é entrada do componente** — prop `height` (ou `style`), nunca classe utilitária de altura: o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
 
-12. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
+12. **Svelte 5 runes** — usar `$state`, `$derived`, `$effect` — nunca `onMount`/`afterUpdate`/`$:`.
+
+13. **SEO — descrições longas** — o `translations.json` gerado tem descrições SEO acima de 155 chars nos 3 idiomas. Usar as descrições como estão; gap a ser corrigido pelo ux-writer.
 
 ---
 
@@ -580,7 +578,7 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
 - ❌ **NUNCA** recrie variantes com divs/classes manuais — use sempre o componente real
 - ❌ **NUNCA** use `export let` — use sempre `$props()` (Svelte 5)
 - ❌ **NUNCA** omita o wrapper `<nav sticky>` do `DocsNav`
-- ❌ **NUNCA** use `{@html ...}` sem `sanitizeHtml()`
+- ❌ **NUNCA** use `{@html ...}` sem `DOMPurify.sanitize()` — e nunca por trás de um helper local, que esconde o sanitizador do SAST
 
 ## Checklist Final
 
@@ -599,4 +597,4 @@ Componentes como **Chart** no Svelte expõem apenas **`ChartContainer`** e **`Ch
 - [ ] IntersectionObserver dispara `track('docs_section_viewed')`
 - [ ] `withAutoDocsTab` usa a docs page Svelte
 - [ ] `translations.json` com 3 idiomas completos
-- [ ] `sanitizeHtml()` em todo `{@html}`
+- [ ] `DOMPurify.sanitize()` em todo `{@html}`, importado e chamado no próprio arquivo

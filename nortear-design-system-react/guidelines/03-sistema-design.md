@@ -52,15 +52,18 @@
 
 #### Aplicação em Inline Styles
 
-Quando usar cores em inline styles (ex: gráficos, bibliotecas externas), envolva com `hsl()`:
+Quando usar cores em inline styles, envolva com `hsl()`:
 
 ```tsx
 // ✅ CORRETO
 <div style={{ background: `hsl(var(--primary))` }}>
-
-// Para Recharts
-<Bar dataKey="value" fill="hsl(var(--chart-1))" />
 ```
+
+Biblioteca que desenha fora do CSS — a de gráfico, por exemplo — recebe cor por
+objeto de configuração em JavaScript. Ali `var(--chart-1)` chega como string
+literal e não é resolvido: leia o token do `<html>` e passe o valor computado
+(`hsl(${raw})`). O `ChartContainer` do design system já faz isso e registra um
+tema a partir dos tokens; consumir a lib direto pula esse registro.
 
 #### Arquivos Afetados
 

@@ -69,11 +69,21 @@ Para cada uso encontrado:
 - [ ] Instância única por página, não uma por elemento observado?
 - [ ] `threshold` e `rootMargin` definidos explicitamente?
 
-### 5. @apply em CSS (duplica propriedades no output)
+### 5. `@apply` — diretiva inerte, de lib que saiu do projeto
 
-`Grep` padrão `@apply` em `nortear-design-system-<stack>/src/` (arquivos `.css`).
+Onde procurar a diretiva do título: `nortear-design-system-<stack>/src/`
+(arquivos `.css`) e `docs/shared/content/*/translations.json` (o snippet de
+customização, que é onde ela mais sobrevive).
 
-Cada `@apply` copia as propriedades CSS no lugar de referenciar a classe utilitária — preferir classes inline no template.
+Ela depende do build do Tailwind, e nenhuma das 5 stacks o declara em
+`dependencies` nem em `devDependencies` — medido. Ou seja, ninguém processa a
+diretiva: no CSS ela é regra inválida, e num snippet de documentação é conselho
+inerte, porque quem seguir não obtém estilo nenhum.
+
+Cuidado com a correção: "preferir classe inline no template" era a orientação
+de quando o custo seria duplicação no output, e essa lib saiu daqui. Hoje o
+problema é a instrução não funcionar. Substitua por CSS comum sobre a classe
+`.nds-*` do componente, usando as custom properties que ele expõe.
 
 ---
 

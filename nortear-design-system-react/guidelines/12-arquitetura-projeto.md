@@ -72,7 +72,9 @@ nortear-design-system-react/
 │   │   ├── i18n.ts              # Zustand store + hook useTranslation
 │   │   ├── analytics.ts         # Wrapper GA4 tipado
 │   │   ├── use-seo.ts           # Hook de metatags SEO (detecta iframe)
-│   │   ├── sanitize-html.ts     # Sanitizador para dangerouslySetInnerHTML
+│   │   ├── use-active-section.ts # IntersectionObserver (onActive / onDwell)
+│   │   ├── motion.ts            # prefersReducedMotion() + tokens de duração
+│   │   ├── strip-html.ts        # texto puro a partir de string com marcação
 │   │   ├── withAutoDocsTab.tsx  # HOC: adiciona aba "API Reference" ao Docs
 │   │   └── utils.ts             # cn() e utilitários
 │   │
