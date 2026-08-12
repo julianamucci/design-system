@@ -1019,7 +1019,12 @@ function auditStoryQuality(slug) {
  * a documentação que existe para impedir o vocabulário de voltar.
  */
 const NEGATED_MENTION_RX =
-  /\bnunca\b|\bnão\s+(crie|recriar|recrie|usa|existe|use|confie)\b|\bnenhum[ao]?\b|proib|removid|saí?ram|saiu|deprecat|resíduo|herdad|inerte|em vez de|no lugar de/i;
+  // `existe[mn]?` porque o `\b` fazia "não existem" (plural) escapar da
+  // negação e virar achado: a frase acusada em `09-disclosure-components.md`
+  // era "Não existem props type nem collapsible (esses eram do @radix-ui
+  // legado)" — escrita justamente para registrar a remoção. `legad` cobre a
+  // outra forma de dizer a mesma coisa.
+  /\bnunca\b|\bnão\s+(crie|recriar|recrie|usa|existe[mn]?|use|confie)\b|\bnenhum[ao]?\b|proib|removid|saí?ram|saiu|deprecat|resíduo|herdad|inerte|legad|em vez de|no lugar de/i;
 
 /**
  * Libs e helpers que saíram do projeto e não devem mais ser ensinados.
@@ -1048,6 +1053,12 @@ const DEAD_LIB_RX = [
   // via porque o vocabulário morto só listava lib de componente, não de dado.
   { rx: /\brecharts\b/i, label: 'Recharts' },
   { rx: /\bchart\.js\b|\bchartjs\b/i, label: 'Chart.js' },
+  // `@apply` é diretiva do Tailwind e exige o build dele. Nenhuma das 5 stacks
+  // declara Tailwind em `dependencies` nem em `devDependencies` (medido), então
+  // o snippet de customização que ensina `@apply` é conselho inerte: quem
+  // seguir não obtém estilo nenhum. O `\btailwind\b` não pegava, porque a
+  // diretiva não nomeia a lib.
+  { rx: /@apply\b/, label: '@apply (diretiva do Tailwind, que o projeto não tem)' },
 ];
 
 /**
