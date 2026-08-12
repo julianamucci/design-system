@@ -1042,6 +1042,12 @@ const DEAD_LIB_RX = [
   { rx: /\bbasecoat\b/i, label: 'Basecoat' },
   { rx: /\btailwind\b/i, label: 'Tailwind' },
   { rx: /sanitize-html|\bsanitizeHtml\b/, label: 'wrapper sanitizeHtml (usar DOMPurify.sanitize no call site)' },
+  // Libs de gráfico que saíram do projeto — hoje é ECharts. Entraram na lista
+  // depois da rodada do chart: as guidelines ensinavam `<BarChart
+  // accessibilityLayer>` e `import { ... } from 'recharts'`, e a regra não as
+  // via porque o vocabulário morto só listava lib de componente, não de dado.
+  { rx: /\brecharts\b/i, label: 'Recharts' },
+  { rx: /\bchart\.js\b|\bchartjs\b/i, label: 'Chart.js' },
 ];
 
 /**
@@ -1532,6 +1538,12 @@ function auditDeadLibInfra() {
   const targets = [
     ...walkDir(join(ROOT, '.claude', 'commands'), ['.md']),
     ...walkDir(join(ROOT, 'docs', 'shared', 'guidelines'), ['.md']),
+    // Guidelines POR STACK. Ficavam de fora, e era onde o vocabulário morto
+    // mais sobrevivia: a rodada do chart reescreveu a seção compartilhada e as
+    // quatro de `08-display-components`, e o Recharts continuou vivo em
+    // `03-sistema-design`, `11-documentacao-componentes` e `13-system-design`
+    // do React — arquivos que descrevem como construir componente novo.
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'guidelines'), ['.md'])),
     ...walkDir(join(ROOT, 'docs', 'shared', 'skill-refs'), ['.md']),
     ...walkDir(join(ROOT, 'docs', 'shared', 'tokens'), ['.css']),
     ...walkDir(join(ROOT, 'docs', 'shared', 'themes'), ['.css']),
