@@ -1,16 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
+import {
+  desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
+} from '@shared/testing/chart-probe';
 
-const xMonths = ['Jan', 'Feb', 'Mar', 'Apr'];
-const singleSeries = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
-const multiSeries = [
-  { name: 'Desktop', data: [186, 305, 237, 73] },
-  { name: 'Mobile',  data: [80, 200, 120, 190] },
-  { name: 'Tablet',  data: [40, 90, 60, 100] },
+const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
+const VALORES = [186, 305, 237, 73];
+const SERIE_UNICA = [{ name: 'Vendas', data: VALORES }];
+const SERIES_MULTI = [
+  { name: 'Desktop', data: VALORES },
+  { name: 'Mobile', data: [80, 200, 120, 190] },
+  { name: 'Tablet', data: [40, 90, 60, 100] },
 ];
 
 const meta: Meta = {
+  // Sem argTypes: sem isto o painel Controls abre vazio.
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Settings',
   component: ChartContainer,
@@ -19,30 +24,129 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-async function expectRendered(el: HTMLElement) {
-  await waitFor(() => {
-    const n = el.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
-    expect(n).not.toBeNull();
-  }, { timeout: 2000 });
+async function aguardarDesenho(raiz: HTMLElement) {
+  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+}
+
+/**
+ * Centro de cada coluna de barra, na ordem do eixo — ou seja, na ordem das
+ * categorias. Cada barra chega ao DOM como duas formas sobrepostas (a cor e a
+ * trama) com a mesma geometria, então o agrupamento por centro devolve um
+ * ponto por categoria.
+ */
+function centrosPorCategoria(raiz: HTMLElement): Array<{ x: number; y: number }> {
+  const porCentro = new Map<number, { x: number; y: number }>();
+  for (const forma of formasDeDado(raiz)) {
+    const r = forma.getBoundingClientRect();
+    const x = Math.round(r.x + r.width / 2);
+    porCentro.set(x, { x, y: r.y + r.height / 2 });
+  }
+  return [...porCentro.values()].sort((a, b) => a.x - b.x);
 }
 
 export const WithTooltip: Story = {
-  args: { option: buildBarOption({ xAxis: xMonths, series: singleSeries }), class: 'h-[240px] w-[480px]' },
-  parameters: { docs: { description: { story: 'Tooltip nativo do ECharts — passe o mouse.' } } },
-  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
+  parameters: {
+    covers: ['functional.item4'],
+    docs: { description: { story: 'O ponteiro sobre uma coluna abre a dica com a categoria e o valor daquele ponto.' } },
+  },
+  args: {
+    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    height: 240,
+    class: 'nds-w-full',
+    'aria-label': 'Gráfico de barras: acessos mensais no desktop',
+  },
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+    await aguardarDesenho(raiz);
+    const svg = raiz.querySelector('svg')!;
+    const centros = centrosPorCategoria(raiz);
+    await expect(centros).toHaveLength(MESES.length);
+
+    // `userEvent.hover` não serve aqui: ele não leva coordenada, e a lib faz o
+    // teste de acerto por posição — o ponteiro cairia em (0,0), fora da área do
+    // desenho. `fireEvent.mouseMove` com clientX/clientY leva o ponto exato.
+    const apontarPara = (i: number) =>
+      fireEvent.mouseMove(svg, { clientX: centros[i].x, clientY: centros[i].y, bubbles: true });
+
+    await step('A dica traz a categoria e o valor da coluna apontada', async () => {
+      // 305 e 73 não aparecem em marca de eixo nenhuma (as marcas vão de 50 em
+      // 50): achar o número no container é prova de que a dica escreveu.
+      await apontarPara(1);
+      await waitFor(() => {
+        expect(raiz.textContent).toContain('Fev');
+        expect(raiz.textContent).toContain('305');
+      }, { timeout: 3000 });
+    });
+
+    await step('E acompanha o ponteiro — a dica é do ponto apontado, não a primeira que abriu', async () => {
+      await apontarPara(3);
+      await waitFor(() => {
+        expect(raiz.textContent).toContain('73');
+        expect(raiz.textContent).not.toContain('305');
+      }, { timeout: 3000 });
+    });
+  },
 };
 
 export const WithCaption: Story = {
-  args: { option: buildBarOption({ xAxis: xMonths, series: multiSeries }), class: 'h-[260px] w-[480px]' },
-  parameters: { docs: { description: { story: 'Legenda automática quando há >1 série.' } } },
-  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
+  parameters: {
+    docs: { description: { story: 'Legenda forçada: com uma série ela some por padrão, e a configuração traz de volta.' } },
+  },
+  args: {
+    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, showLegend: true }),
+    height: 260,
+    class: 'nds-w-full',
+    'aria-label': 'Gráfico de barras com legenda: acessos mensais no desktop',
+  },
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+    await aguardarDesenho(raiz);
+
+    await step('Com a legenda ligada, o nome da série é escrito mesmo havendo uma só', async () => {
+      // Sem a configuração, este mesmo desenho não escreve "Vendas" — é o que a
+      // story SingleSeries mede do outro lado.
+      await waitFor(
+        () => expect(desenhoEscreve(raiz, SERIE_UNICA[0].name)).toBe(true),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('E o desenho continua completo, com uma forma por categoria', async () => {
+      for (const mes of MESES) await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      await expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(MESES.length);
+    });
+  },
 };
 
 export const MultipleSeries: Story = {
-  args: {
-    option: buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Acessos por dispositivo' }),
-    class: 'h-[280px] w-[500px]',
+  parameters: {
+    docs: { description: { story: 'Multi-séries com título no próprio desenho — o painel típico de um relatório.' } },
   },
-  parameters: { docs: { description: { story: 'Multi-série com título — dashboard típico.' } } },
-  play: async ({ canvasElement, step }) => step('Renderizado', () => expectRendered(canvasElement)),
+  args: {
+    option: buildBarOption({
+      xAxis: MESES,
+      series: SERIES_MULTI,
+      title: 'Acessos por dispositivo',
+    }),
+    height: 300,
+    class: 'nds-w-full',
+    'aria-label': 'Acessos por dispositivo: desktop, mobile e tablet, de janeiro a abril',
+  },
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+    await aguardarDesenho(raiz);
+
+    await step('O título do desenho aparece escrito', async () => {
+      await waitFor(
+        () => expect(desenhoEscreve(raiz, 'Acessos por dispositivo')).toBe(true),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('A legenda nomeia cada série', async () => {
+      for (const serie of SERIES_MULTI) {
+        await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      }
+    });
+  },
 };

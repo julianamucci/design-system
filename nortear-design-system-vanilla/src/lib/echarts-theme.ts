@@ -27,8 +27,9 @@ export interface NortearChartTheme {
   valueAxis: ChartAxisStyle;
   logAxis: ChartAxisStyle;
   timeAxis: ChartAxisStyle;
-  line: { itemStyle: { borderWidth: number }; lineStyle: { width: number } };
-  bar: { itemStyle: { barBorderColor: string; barBorderWidth: number } };
+  line: { itemStyle: { borderColor: string; borderWidth: number }; lineStyle: { width: number } };
+  bar: { itemStyle: { borderColor: string; borderWidth: number } };
+  pie: { itemStyle: { borderColor: string; borderWidth: number } };
 }
 
 interface ChartAxisStyle {
@@ -84,8 +85,15 @@ export function buildNortearTheme(): NortearChartTheme {
     valueAxis: axisStyle,
     logAxis: axisStyle,
     timeAxis: axisStyle,
-    line: { itemStyle: { borderWidth: 2 }, lineStyle: { width: 2 } },
-    bar: { itemStyle: { barBorderColor: card, barBorderWidth: 1 } },
+    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
+    // cores de série (--chart-1 a --chart-5) ficam em torno de 2:1 contra o fundo:
+    // sozinhas não sustentam o critério. Quem sustenta é o CONTORNO em
+    // --foreground, o mesmo caminho que o Angular desenha à mão. O nome anterior
+    // (barBorderColor/barBorderWidth) é da v4 do ECharts e não tinha efeito
+    // nenhum na v5 — o contorno documentado nunca chegou a ser desenhado.
+    line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
+    bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
   };
 }
 

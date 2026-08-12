@@ -1,18 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
+import {
+  desenhoEscreve,
+  desenhoPintado,
+  exigirRaiz,
+  formasDeDado,
+} from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from './card';
+import {
+  createCard,
+  createCardHeader,
+  createCardTitle,
+  createCardDescription,
+  createCardContent,
+} from './card';
 
-// ─── Shared data ──────────────────────────────────────────────────────────────
+// ─── Dados ────────────────────────────────────────────────────────────────────
 
-const chartData = [
-  { label: 'Jan', value: 186 },
-  { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 },
-  { label: 'Apr', value: 73 },
-  { label: 'May', value: 209 },
-  { label: 'Jun', value: 214 },
-];
+const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const chartData = MESES.map((label, i) => ({
+  label,
+  value: [186, 305, 237, 73, 209, 214][i],
+}));
+
+const TITULO_DO_CARD = 'Acessos mensais';
+const TITULO_INLINE = 'Vendas mensais';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -28,61 +41,93 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── ComCard ──────────────────────────────────────────────────────────────────
+// ─── Dentro de um Card ────────────────────────────────────────────────────────
 
 export const WithCard: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Gráfico dentro de um Card: o título e o recorte temporal ficam no cabeçalho, em texto de verdade, e o desenho no conteúdo.',
+      },
+    },
+  },
   render: () => {
     const card = createCard({ className: 'nds-w-sm' });
 
     const header = createCardHeader();
-    const title = createCardTitle({ text: 'Acessos mensais', level: 3 });
-    const description = createCardDescription({ text: 'Janeiro — Junho 2024' });
-    header.appendChild(title);
-    header.appendChild(description);
+    header.appendChild(createCardTitle({ text: TITULO_DO_CARD, level: 3 }));
+    header.appendChild(createCardDescription({ text: 'Janeiro — Junho de 2024' }));
 
     const content = createCardContent();
     content.appendChild(
       createChart({
         data: chartData,
         type: 'bar',
-        height: 200,
+        height: 220,
+        label: 'Acessos mensais de janeiro a junho de 2024',
       }),
     );
 
     card.appendChild(header);
     card.appendChild(content);
-
     return card;
   },
+  play: async ({ canvasElement, step }) => {
+    await step('O cabeçalho do card traz o título em texto', async () => {
+      const card = canvasElement.querySelector('[data-slot="card"]');
+      await expect(card).not.toBeNull();
+      const titulo = canvasElement.querySelector('[data-slot="card-title"]');
+      await expect(titulo?.textContent?.trim()).toBe(TITULO_DO_CARD);
+    });
+
+    await step('O gráfico está DENTRO do card, não ao lado', async () => {
+      const dentro = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
+      await expect(dentro).not.toBeNull();
+    });
+
+    await step('E o desenho sai dentro dele', async () => {
+      const raiz = exigirRaiz(canvasElement);
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    });
+  },
+};
+
+// ─── Título dentro do desenho ─────────────────────────────────────────────────
+
+export const InlineTitle: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Chart dentro de um Card — padrão recomendado para exibir gráficos com título, descrição e rodapé.',
+        story: 'Título desenhado acima dos eixos, para quando o gráfico aparece solto, sem moldura que o nomeie. Na falta de descrição própria, o título vira a alternativa textual.',
       },
     },
   },
+  render: () => createChart({
+    data: chartData,
+    type: 'bar',
+    title: TITULO_INLINE,
+    height: 260,
+    class: 'nds-max-w-md',
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Card container está presente', async () => {
-      const card = canvasElement.querySelector('[data-slot="card"]');
-      await expect(card).not.toBeNull();
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('O título aparece escrito dentro do desenho', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(desenhoEscreve(raiz, TITULO_INLINE)).toBe(true), { timeout: 3000 });
     });
 
-    await step('Título do Card está visível', async () => {
-      const title = canvasElement.querySelector('[data-slot="card-title"]');
-      await expect(title).not.toBeNull();
-      await expect(title?.textContent).toBe('Acessos mensais');
+    await step('Sem descrição própria, o título é quem descreve o desenho', async () => {
+      // O desenho continua sendo anunciado como imagem — o que muda é de onde
+      // vem o rótulo. Título escrito e rótulo divergentes anunciariam ao leitor
+      // de tela uma coisa e mostrariam outra.
+      await expect(raiz.getAttribute('role')).toBe('img');
+      await expect(raiz.getAttribute('aria-label')).toBe(TITULO_INLINE);
     });
 
-    await step('Chart está dentro do Card', async () => {
-      const chart = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
-      await expect(chart).not.toBeNull();
-    });
-
-    await step('SVG do gráfico está presente', async () => {
-      // echarts renderiza SVG sem role=img — buscamos por tag.
-      await new Promise((r) => setTimeout(r, 100));
-      const svg = canvasElement.querySelector('svg');
-      await expect(svg).not.toBeNull();
+    await step('E o dado continua desenhado', async () => {
+      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
     });
   },
 };

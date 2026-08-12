@@ -90,33 +90,55 @@ Ver `07-feedback-components.md`.
 
 ## Chart
 
-**Propósito**: visualização de dados numéricos (linhas, barras, pizza). Stack: `<canvas>` com biblioteca de charts do projeto (Chart.js).
+**Propósito**: visualização de dados quantitativos — barras, linhas, área e pizza — com cores, tipografia e eixos vindos dos tokens do design system.
 
 **API e exemplos**: `src/components/ui/chart.ts` + stories + `ChartDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+
+> Camada sobre **Apache ECharts**. O container registra o tema do design system a partir dos tokens do `<html>` e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. Chamar a lib direto pula esse registro e o desenho sai com a paleta padrão dela. A factory recebe as opções e devolve o elemento pronto para anexar; a montagem do desenho é deferida até o elemento estar conectado ao documento.
 
 **Estrutura**:
 
 ```
-div wrapper (relative, aria-label contextual)
-└── canvas (role="img", aria-label, id único)
+container (data-slot="chart", class .nds-chart, role="img", descrição)
+├── frase de estado vazio (.nds-chart-empty)   ← quando não há série com dado
+└── desenho da lib (svg por padrão, canvas opcional)
+    ├── eixos e grade
+    ├── formas de dado (barra, traçado, área, fatia) com trama sobreposta
+    └── legenda
 ```
 
+**Entradas**: tipo, dados (forma simples ou multi-série), eixo de categorias, altura, renderer, título, legenda, frase de estado vazio e descrição do gráfico.
+
+**Tokens de cor**:
+
+| Token | Uso |
+|---|---|
+| `--chart-1` … `--chart-5` | séries de dados, na ordem em que aparecem |
+| `--foreground` | contorno das formas de dado e texto do título |
+| `--muted-foreground` | texto de eixo e de legenda |
+| `--border` | linhas de grade e de eixo |
+| `--card` | fundo da dica sob o ponteiro |
+
 **Regras**:
-- Canvas com `role="img"` + `aria-label` descritivo dos dados
-- Sempre incluir alternativa textual — `<table>` oculto via `sr-only` ou `aria-describedby` apontando a um resumo
-- Cores via tokens semânticos (`--chart-1` … `--chart-5`); nunca cor literal
-- Não usar cor como único diferenciador entre séries — adicionar pattern/dash/marker
-- Tooltip do chart deve respeitar tokens `bg-popover text-popover-foreground`
-- Altura mínima de `--spacing-48` (192px); largura responsiva
+- Altura é entrada do componente, não classe utilitária — o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
+- A cor de uma série só se sobrescreve no próprio item de série; a paleta global se muda no tema.
+- Legenda visível sempre que houver mais de uma série; com uma só ela some, porque não há o que comparar.
+- Estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
+- Renderer `svg` para relatório, impressão e exportação; `canvas` só para dataset grande ou animação pesada.
+- Para tipos não cobertos (dispersão, radar, mapa de calor), registre o módulo extra da lib antes de usar.
 
-**Acessibilidade**:
-- Alternativa textual obrigatória (tabela oculta ou resumo descritivo)
-- `aria-label` no canvas com sumário ("Vendas mensais de janeiro a dezembro de 2025")
-- Contraste 3:1 entre séries adjacentes
+**Acessibilidade** (ver `11-acessibilidade.md`):
+- `role="img"` mais descrição no container: sem nome acessível o desenho é conteúdo perdido. A descrição diz o que o gráfico mostra, não que é um gráfico.
+- A informação nunca vive só na cor (WCAG 1.4.1): a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
+- Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do CONTORNO das formas em `--foreground`, não da cor de série — as cores da paleta ficam em torno de 2:1 contra o fundo e sozinhas não sustentam o critério.
+- Texto de eixo em `--muted-foreground`, com 4.5:1 contra o fundo.
+- Gráfico denso ou dado crítico pede resumo textual à parte, com pico, mínimo e tendência.
+- Animação respeita `prefers-reduced-motion`, pelos mesmos tokens de duração do resto do sistema.
 
-**Analytics**: emitir `chart_interaction` com `{ chart_type, action }` (hover, click, legend toggle).
+**Analytics**: passivo — o gráfico não dispara evento por padrão. Interações específicas (dica sob o ponteiro, clique na legenda) se rastreiam via callback da lib quando forem relevantes para o produto.
 
 ---
+
 
 ## DataTable
 

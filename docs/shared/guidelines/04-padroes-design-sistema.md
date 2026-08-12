@@ -1044,25 +1044,39 @@ Ao adicionar qualquer transição ou animação:
 
 ### Tokens de Cores
 
-```css
---chart-1: 207 88% 68%;
---chart-2: 220 44% 57%;
---chart-3: 13 100% 68%;
---chart-4: 36 100% 79%;
---chart-5: 165 35% 48%;
-```
+Os valores vivem em `docs/shared/themes/*.css` — cada tema de marca declara os
+cinco. Não os copie para cá: uma cópia envelhece sozinha, e esta lista já esteve
+com cinco valores que nenhum tema usava.
 
-### Uso com Recharts
+| Token | Papel |
+|---|---|
+| `--chart-1` | primeira série |
+| `--chart-2` | segunda série |
+| `--chart-3` | terceira série |
+| `--chart-4` | quarta série |
+| `--chart-5` | quinta série |
 
-```tsx
-import { BarChart, Bar } from 'recharts';
+Os cinco são declarados nos blocos de tema de marca, **sem bloco `.dark`**:
+a paleta de série é a mesma nos dois modos de propósito. O que muda no escuro é o
+fundo e o texto em volta.
 
-<BarChart data={data}>
-  <Bar dataKey="value1" fill="hsl(var(--chart-1))" />
-  <Bar dataKey="value2" fill="hsl(var(--chart-2))" />
-  <Bar dataKey="value3" fill="hsl(var(--chart-3))" />
-</BarChart>
-```
+### Como as séries consomem os tokens
+
+Os cinco tokens são atribuídos às séries **na ordem em que elas aparecem** — a
+primeira série recebe `--chart-1`, a segunda `--chart-2`, e assim por diante,
+voltando ao primeiro depois do quinto. Quem faz essa atribuição é o componente
+Chart; nenhuma página escreve a cor de uma série à mão.
+
+Duas regras que não são de estilo, e sim de acessibilidade:
+
+- **A cor não é o único sinal.** Cada série recebe também uma trama sobreposta,
+  e a legenda escreve o nome da série. Retirando toda a cor, o gráfico continua
+  legível (WCAG 1.4.1).
+- **Estes cinco tokens não sustentam sozinhos os 3:1 de objeto gráfico**
+  (WCAG 1.4.11): no tema padrão ficam em torno de 2:1 contra o fundo e de 1.2:1
+  entre vizinhos. Quem sustenta o critério é o **contorno** de cada forma, em
+  `--foreground`. Trocar a paleta não pode, portanto, ser feito olhando só a
+  harmonia entre as cinco cores.
 
 ---
 

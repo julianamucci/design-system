@@ -2,13 +2,20 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsChart } from './chart';
-import { MESES, SERIE_UNICA, SERIES_MULTI, DADOS_DISPOSITIVO } from './chart.fixtures';
+import {
+  MESES,
+  SERIE_UNICA,
+  SERIES_MULTI,
+  DADOS_DISPOSITIVO,
+  corParaRgb,
+  tokenParaRgb,
+} from './chart.fixtures';
 
 const meta: Meta = {
   title: 'UI/Chart/Types',
   decorators: [moduleMetadata({ imports: [NdsChart] })],
-  // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { layout: 'padded', controls: { disable: true } },
+  // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.
+  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
 };
 
 export default meta;
@@ -92,6 +99,19 @@ export const Line: Story = {
       await expect(tracos).toHaveLength(SERIES_MULTI.length);
       for (const traco of tracos) {
         await expect(traco.getTotalLength()).toBeGreaterThan(0);
+      }
+    });
+
+    await step('A primeira série sai no primeiro token da paleta', async () => {
+      // A segunda metade do item de contrato: não basta existir traçado, ele
+      // tem de sair em --chart-1. Comparar o token RESOLVIDO, e não o texto
+      // "hsl(var(--chart-1))", é o que prova que a cascata chegou ao desenho.
+      const primeiro = [...chart.querySelectorAll<SVGPathElement>('path[data-series="0"]')]
+        .find((p) => p.getAttribute('fill') === 'none')!;
+      const desenhada = corParaRgb(getComputedStyle(primeiro).stroke)!;
+      const esperada = tokenParaRgb('--chart-1')!;
+      for (const canal of [0, 1, 2]) {
+        await expect(Math.abs(desenhada[canal] - esperada[canal])).toBeLessThan(0.01);
       }
     });
 

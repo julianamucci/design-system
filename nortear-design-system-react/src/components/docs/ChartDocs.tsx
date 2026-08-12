@@ -172,19 +172,19 @@ const series = [
 
 <ChartContainer
   option={buildBarOption({ xAxis: xMonths, series })}
-  className="nds-w-full" style={{ height: "300px" }}
+  height={300}
   aria-label="Gráfico de barras: acessos mensais"
 />`;
 
   const codeLine = `<ChartContainer
   option={buildLineOption({ xAxis: xMonths, series })}
-  className="nds-w-full" style={{ height: "300px" }}
+  height={300}
   aria-label="Gráfico de linhas: tendência mensal"
 />`;
 
   const codeArea = `<ChartContainer
   option={buildAreaOption({ xAxis: xMonths, series })}
-  className="nds-w-full" style={{ height: "300px" }}
+  height={300}
   aria-label="Gráfico de área: volume mensal"
 />`;
 
@@ -196,7 +196,7 @@ const series = [
 
 <ChartContainer
   option={buildPieOption({ data: pieData })}
-  className="nds-w-full" style={{ height: "300px" }}
+  height={300}
   aria-label="Gráfico de pizza: distribuição por dispositivo"
 />`;
 
@@ -218,7 +218,17 @@ const series = [
 interface ChartContainerProps extends React.ComponentProps<"div"> {
   option: EChartsCoreOption;
   renderer?: "svg" | "canvas";
+  /** Altura do container em px. Sem valor, vale o piso do próprio bloco. */
+  height?: number;
+  /** Frase mostrada no lugar do desenho quando nenhuma série tem dado. */
+  emptyLabel?: string;
 }
+
+/** Frase padrão do estado vazio, exportada para reuso. */
+declare const CHART_EMPTY_LABEL: string;
+
+/** O objeto de configuração descreve alguma série com dado? */
+declare function isChartOptionEmpty(option: EChartsCoreOption): boolean;
 
 // Builders auxiliares — montam o option para os tipos comuns.
 export interface ChartDataPoint { label: string; value: number }
@@ -257,7 +267,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         <div className="nds-cluster nds-w-full" data-justify="center">
           <ChartContainer
             option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-            className="nds-w-full" style={{ height: "300px", maxWidth: "36rem" }}
+            className="nds-w-full nds-max-w-prose"
+            height={300}
             aria-label="Gráfico de barras: acessos mensais por dispositivo"
           />
         </div>
@@ -370,14 +381,16 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             doPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="nds-w-full" style={{ height: "200px" }}
+                className="nds-w-full"
+                height={200}
                 aria-label="Gráfico multi-séries com legenda"
               />
             ),
             dontPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries, showLegend: false })}
-                className="nds-w-full" style={{ height: "200px" }}
+                className="nds-w-full"
+                height={200}
                 aria-label="Gráfico multi-séries sem legenda"
               />
             ),
@@ -390,14 +403,16 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             doPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
-                className="nds-w-full" style={{ height: "200px" }}
+                className="nds-w-full"
+                height={200}
                 aria-label="Gráfico de barras: acessos mensais desktop"
               />
             ),
             dontPreview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: singleSeries })}
-                className="nds-w-full" style={{ height: "200px" }}
+                className="nds-w-full"
+                height={200}
               />
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
@@ -429,7 +444,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                className="nds-w-full" style={{ height: "250px" }}
+                className="nds-w-full"
+                height={250}
                 aria-label="Gráfico de barras: acessos mensais"
                />
             ),
@@ -441,7 +457,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-                className="nds-w-full" style={{ height: "250px" }}
+                className="nds-w-full"
+                height={250}
                 aria-label="Gráfico de linhas: tendência mensal"
                />
             ),
@@ -453,7 +470,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-                className="nds-w-full" style={{ height: "250px" }}
+                className="nds-w-full"
+                height={250}
                 aria-label="Gráfico de área: volume mensal"
                />
             ),
@@ -465,7 +483,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
             preview: (
               <ChartContainer
                 option={buildPieOption({ data: pieData })}
-                className="nds-w-full nds-max-w-sm" style={{ height: "250px", marginInline: "auto" }}
+                className="nds-w-full nds-max-w-sm"
+                height={250}
                 aria-label="Gráfico de pizza: distribuição por dispositivo"
                />
             ),
@@ -519,7 +538,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   <CardContent>
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      className="nds-w-full" style={{ height: "200px" }}
+      className="nds-w-full"
+                height={200}
       aria-label="Gráfico de barras: acessos mensais por dispositivo"
      />
   </CardContent>
@@ -532,7 +552,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 <CardContent>
                   <ChartContainer
                     option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-                    className="nds-w-full" style={{ height: "200px" }}
+                    className="nds-w-full"
+                height={200}
                     aria-label="Gráfico de barras: acessos mensais por dispositivo"
                    />
                 </CardContent>
@@ -613,6 +634,20 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
                 description: toPlainText(tContent("props.table.renderer")),
               },
               {
+                name: "height",
+                type: "number",
+                defaultValue: "—",
+                required: "Não",
+                description: toPlainText(tContent("props.table.height")),
+              },
+              {
+                name: "emptyLabel",
+                type: "string",
+                defaultValue: '"Sem dados para exibir"',
+                required: "Não",
+                description: toPlainText(tContent("props.table.emptyLabel")),
+              },
+              {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
@@ -638,6 +673,15 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
               description: tContent("props.table.description"),
             },
             items: [
+              {
+                // Nesta stack o tipo do gráfico não é uma propriedade: é a
+                // escolha de qual builder monta o objeto de configuração.
+                name: "buildBarOption · buildLineOption · buildAreaOption · buildPieOption",
+                type: "(o: OptionsBase) => EChartsCoreOption",
+                defaultValue: "—",
+                required: "Sim",
+                description: toPlainText(tContent("props.table.chartType")),
+              },
               {
                 name: "data",
                 type: "{ label: string; value: number }[]",
@@ -690,16 +734,16 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--chart-1",          value: "color série 1",  description: tContent("tokens.table.chart1") },
-          { token: "--chart-2",          value: "color série 2",  description: tContent("tokens.table.chart2") },
-          { token: "--chart-3",          value: "color série 3",  description: tContent("tokens.table.chart3") },
-          { token: "--chart-4",          value: "color série 4",  description: tContent("tokens.table.chart4") },
-          { token: "--chart-5",          value: "color série 5",  description: tContent("tokens.table.chart5") },
-          { token: "--primary",          value: "axisPointer",    description: tContent("tokens.table.primary") },
-          { token: "--muted-foreground", value: "axisLabel",      description: tContent("tokens.table.mutedForeground") },
-          { token: "--border",           value: "axisLine + grid", description: tContent("tokens.table.border") },
-          { token: "--foreground",       value: "title + tooltip", description: tContent("tokens.table.foreground") },
-          { token: "--card",             value: "tooltip bg",     description: tContent("tokens.table.card") },
+          { token: "--chart-1",          value: "color série 1",  description: toPlainText(tContent("tokens.table.chart1")) },
+          { token: "--chart-2",          value: "color série 2",  description: toPlainText(tContent("tokens.table.chart2")) },
+          { token: "--chart-3",          value: "color série 3",  description: toPlainText(tContent("tokens.table.chart3")) },
+          { token: "--chart-4",          value: "color série 4",  description: toPlainText(tContent("tokens.table.chart4")) },
+          { token: "--chart-5",          value: "color série 5",  description: toPlainText(tContent("tokens.table.chart5")) },
+          { token: "--primary",          value: "axisPointer",    description: toPlainText(tContent("tokens.table.primary")) },
+          { token: "--muted-foreground", value: "axisLabel",      description: toPlainText(tContent("tokens.table.mutedForeground")) },
+          { token: "--border",           value: "axisLine + grid", description: toPlainText(tContent("tokens.table.border")) },
+          { token: "--foreground",       value: "title + tooltip", description: toPlainText(tContent("tokens.table.foreground")) },
+          { token: "--card",             value: "tooltip bg",     description: toPlainText(tContent("tokens.table.card")) },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeTokens}
@@ -721,9 +765,9 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         ]}
         keyboardTitle={tContent("accessibility.keyboardTitle")}
         keyboardItems={[
-          { key: "Tab",        description: tContent("accessibility.keyboard.tab") },
-          { key: "Arrow Right", description: tContent("accessibility.keyboard.arrowRight") },
-          { key: "Arrow Left",  description: tContent("accessibility.keyboard.arrowLeft") },
+          { key: "Tab",        description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "Arrow Right", description: toPlainText(tContent("accessibility.keyboard.arrowRight")) },
+          { key: "Arrow Left",  description: toPlainText(tContent("accessibility.keyboard.arrowLeft")) },
         ]}
       />
 
@@ -802,33 +846,33 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           },
           items: [
             {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
+              action: toPlainText(tContent("testes.functional.item1.action")),
+              result: toPlainText(tContent("testes.functional.item1.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
             },
             {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
+              action: toPlainText(tContent("testes.functional.item2.action")),
+              result: toPlainText(tContent("testes.functional.item2.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
             },
             {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
+              action: toPlainText(tContent("testes.functional.item3.action")),
+              result: toPlainText(tContent("testes.functional.item3.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
             },
             {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
+              action: toPlainText(tContent("testes.functional.item4.action")),
+              result: toPlainText(tContent("testes.functional.item4.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.high"),
             },
             {
-              action: tContent("testes.functional.item5.action"),
-              result: tContent("testes.functional.item5.result"),
+              action: toPlainText(tContent("testes.functional.item5.action")),
+              result: toPlainText(tContent("testes.functional.item5.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item5.priority")] ?? "common.medium"),
             },
             {
-              action: tContent("testes.functional.item6.action"),
-              result: tContent("testes.functional.item6.result"),
+              action: toPlainText(tContent("testes.functional.item6.action")),
+              result: toPlainText(tContent("testes.functional.item6.result")),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
             },
           ],

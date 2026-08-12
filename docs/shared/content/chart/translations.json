@@ -29,7 +29,10 @@
       "item4": "<strong>Tema reativo</strong> — cores e tipografia recalculam quando a classe do <code>&lt;html&gt;</code> muda (tema, dark mode, densidade, fonte).",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Vendas trimestrais\"\n/>",
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })}\n  height={300}\n  aria-label=\"Vendas trimestrais\"\n/>",
+        "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Vendas trimestrais\"\n/>",
+        "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Fev', 'Mar'],\n    series: [{ name: 'Vendas', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Vendas trimestrais\"\n/>",
+        "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Jan', 'Fev', 'Mar'],\n  series: [{ name: 'Vendas', data: [186, 305, 237] }],\n  height: 300,\n  label: 'Vendas trimestrais',\n});",
         "angular": "<!-- Sem lib de gráficos: o SVG é desenhado pelo próprio componente -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Vendas trimestrais\"\n  [xAxis]=\"['Jan', 'Fev', 'Mar']\"\n  [series]=\"[{ name: 'Vendas', data: [186, 305, 237] }]\"\n></div>"
       }
     },
@@ -41,7 +44,7 @@
         "item2": "Use os builders auxiliares para casos comuns; passe o objeto direto quando precisar de customização avançada.",
         "item3": "Em gráficos multi-séries, a legenda aparece automaticamente — nunca diferencie séries somente por cor.",
         "item4": "Para gráficos com muitos pontos ou dados críticos, adicione resumo textual <code>sr-only</code> com pico, mínimo e tendência.",
-        "item5": "Defina altura explícita via classe (ex.: <code>h-[300px] w-full</code>) — sem altura o container colapsa.",
+        "item5": "Defina a altura do container quando o padrão não servir — o gráfico ocupa toda a largura disponível e cai num piso de altura quando nada é informado.",
         "item6": "Use o renderer SVG (padrão) para relatórios e print; canvas só para datasets grandes ou animações pesadas."
       },
       "scenarios": {
@@ -151,10 +154,10 @@
       "visualTitle": "Tipos Disponíveis",
       "note": "O Chart não tem variantes <code>cva</code>. O tipo de gráfico vem do builder usado (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) ou do campo <code>series.type</code> dentro do objeto de configuração.",
       "items": {
-        "bar": "Comparação entre categorias discretas. Use <code>buildBarOption({ data })</code>. Mais claro para dados não contínuos.",
-        "line": "Tendência contínua ao longo do tempo. Use <code>buildLineOption({ data })</code>. Ideal para séries temporais.",
-        "area": "Tendência com ênfase no volume acumulado. Use <code>buildAreaOption({ data })</code>. Variante visual do line.",
-        "pie": "Proporção de partes em relação ao todo. Use <code>buildPieOption({ data })</code>. Limite a 5–6 fatias para legibilidade.",
+        "bar": "Comparação entre categorias discretas. Mais claro para dados não contínuos.",
+        "line": "Tendência contínua ao longo do tempo. Ideal para séries temporais.",
+        "area": "Tendência com ênfase no volume acumulado. Variante visual do gráfico de linhas.",
+        "pie": "Proporção de partes em relação ao todo. Limite a 5–6 fatias para legibilidade.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versão compacta sem eixos visíveis, altura reduzida e largura limitada — usada como indicador de tendência ao lado de um número ou KPI. Configure passando objeto customizado que oculta eixos e grid.",
@@ -180,7 +183,7 @@
       "empty": {
         "label": "Vazio",
         "trigger": "Array de séries vazio ou data vazio",
-        "behavior": "Container exibe \"No data\" automaticamente. Pode ser substituído por mensagem customizada com orientação para próxima ação."
+        "behavior": "Container troca o desenho por uma frase de estado vazio. Personalize a frase para orientar a próxima ação."
       },
       "loading": {
         "label": "Carregando",
@@ -200,7 +203,7 @@
       "withEmptyState": {
         "label": "Com estado vazio",
         "trigger": "Array de séries vazio",
-        "behavior": "Quando o array de séries está vazio, o container exibe a mensagem padrão \"No data\" do ECharts. Para customizar, substitua o container por uma mensagem completa orientando a próxima ação."
+        "behavior": "Quando o array de séries está vazio, o container troca o desenho por uma frase. O texto padrão é genérico — substitua por uma frase completa que oriente a próxima ação."
       },
       "multiSeriesWithLegend": {
         "label": "Multi-séries com legenda",
@@ -222,13 +225,16 @@
         "description": "Descrição",
         "option": "Objeto de configuração declarativa do gráfico — descreve séries, eixos, tooltip, legenda, animação. Para casos comuns use os builders auxiliares.",
         "renderer": "Tecnologia de renderização. <code>\"svg\"</code> (padrão) é melhor para print, exportação e poucos elementos; <code>\"canvas\"</code> para datasets grandes ou animações pesadas.",
-        "className": "Classes adicionais para o container. Use para definir altura explícita: <code>className=\"h-[300px] w-full\"</code>.",
+        "className": "Classes adicionais para o container. Use para largura e espaçamento; a altura tem entrada própria.",
         "ariaLabel": "Descrição textual do gráfico para leitores de tela. Obrigatório — sem ele o gráfico não é acessível.",
         "data": "Dataset simples (1 série) no formato <code>{ label, value }[]</code>. Usado pelos builders quando não há multi-série.",
         "xAxis": "Rótulos do eixo X (categoria) ou timestamps quando há multi-série. Tamanho deve casar com o comprimento de cada série.",
         "series": "Multi-série: array de <code>{ name, data, color? }</code>. Cada item gera uma série independente com cor automática do tema.",
         "title": "Título opcional renderizado dentro do gráfico, acima dos eixos.",
-        "showLegend": "Força mostrar ou esconder a legenda. Default: <code>true</code> se houver mais de uma série."
+        "showLegend": "Força mostrar ou esconder a legenda. Default: <code>true</code> se houver mais de uma série.",
+        "chartType": "Tipo do gráfico: barras, linhas, área ou pizza. É o dado que escolhe, não o estilo.",
+        "height": "Altura do container em pixels. Sem valor, vale o piso de altura definido pelo próprio bloco.",
+        "emptyLabel": "Frase exibida no lugar do desenho quando não há dados. Use uma frase completa que oriente a próxima ação."
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibility": "Para chart types não cobertos pelos builders (scatter, radar, heatmap, candlestick, sankey...), construa o objeto de configuração diretamente. A biblioteca de visualização aceita o objeto completo via <code>option</code>; cores e tipografia continuam vindo do tema do design system automaticamente."
@@ -260,7 +266,7 @@
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Chart atende WCAG 2.2 AA via <code>aria-label</code> obrigatório no container, descrição automática gerada por <code>aria.enabled</code> no objeto de configuração, padrões visuais (<code>decal</code>) para usuários com daltonismo e respeito a <code>prefers-reduced-motion</code> via tokens de duração.",
-      "item1": "<strong>aria-label no container</strong> — descreve o tipo e o propósito do gráfico. Ex.: <code>aria-label=\"Gráfico de barras: acessos mensais por dispositivo\"</code>.",
+      "item1": "<strong>aria-label no gráfico</strong> — descreve o tipo e o propósito do gráfico. Ex.: <code>aria-label=\"Gráfico de barras: acessos mensais por dispositivo\"</code>.",
       "item2": "<strong>Descrição automática</strong> — a flag <code>aria.enabled</code> no objeto de configuração gera texto alternativo descrevendo a estrutura do gráfico para leitores de tela.",
       "item3": "<strong>Padrões para daltonismo</strong> — <code>aria.decal.show</code> adiciona padrões visuais sobrepostos às séries; complemento à cor para distinguir multi-séries (WCAG 1.4.1).",
       "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos ou com muitos pontos, inclua <code>&lt;p className=\"sr-only\"&gt;</code> com resumo dos dados principais e identificação de pico/mínimo.",
@@ -326,7 +332,7 @@
         "description": "O que deve acontecer para cada configuração do Chart.",
         "item1": {
           "action": "Estado vazio: séries vazias",
-          "result": "Container renderiza com mensagem \"No data\" padrão; nenhuma barra ou linha visível",
+          "result": "Container renderiza a frase de estado vazio; nenhuma barra ou linha visível",
           "priority": "high"
         },
         "item2": {
@@ -340,8 +346,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Hover sobre ponto de dado",
-          "result": "Tooltip exibe label da categoria e valor formatado com indicador de cor",
+          "action": "Ponteiro sobre um ponto de dado",
+          "result": "A dica exibe o rótulo da categoria e o valor formatado",
           "priority": "high"
         },
         "item5": {
@@ -350,7 +356,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Troca de tema do <html>",
+          "action": "Troca de tema do &lt;html&gt;",
           "result": "Cores e tipografia recalculam automaticamente; gráfico não pisca nem requer reload",
           "priority": "medium"
         }
@@ -359,14 +365,14 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
         "item1": {
-          "criterion": "aria-label presente e descritivo no container",
+          "criterion": "aria-label presente e descritivo no gráfico",
           "level": "AA",
-          "how": "Inspecionar atributo aria-label no div[data-slot=chart]"
+          "how": "Inspecionar o atributo aria-label no elemento que representa o gráfico"
         },
         "item2": {
-          "criterion": "role=\"img\" no container para leitores de tela",
+          "criterion": "role=\"img\" no elemento do gráfico para leitores de tela",
           "level": "AA",
-          "how": "Inspecionar atributo role no div[data-slot=chart]"
+          "how": "Inspecionar o atributo role no elemento que representa o gráfico"
         },
         "item3": {
           "criterion": "Contraste mínimo 3:1 nos elementos gráficos",
@@ -451,7 +457,10 @@
       "item4": "<strong>Reactive theme</strong> — colors and typography recompute when the <code>&lt;html&gt;</code> class changes (theme, dark mode, density, font).",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Quarterly sales\"\n/>",
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })}\n  height={300}\n  aria-label=\"Quarterly sales\"\n/>",
+        "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Quarterly sales\"\n/>",
+        "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Jan', 'Feb', 'Mar'],\n    series: [{ name: 'Sales', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Quarterly sales\"\n/>",
+        "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Jan', 'Feb', 'Mar'],\n  series: [{ name: 'Sales', data: [186, 305, 237] }],\n  height: 300,\n  label: 'Quarterly sales',\n});",
         "angular": "<!-- No charting library: the component draws the SVG itself -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Quarterly sales\"\n  [xAxis]=\"['Jan', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Sales', data: [186, 305, 237] }]\"\n></div>"
       }
     },
@@ -463,7 +472,7 @@
         "item2": "Use the auxiliary builders for typical cases; pass the configuration object directly when you need advanced customization.",
         "item3": "In multi-series charts the legend appears automatically — never differentiate series by color alone.",
         "item4": "For charts with many points or critical data, add an <code>sr-only</code> textual summary with peak, minimum, and trend.",
-        "item5": "Set an explicit height via class (e.g. <code>h-[300px] w-full</code>) — without it the container collapses.",
+        "item5": "Set the container height when the default is not enough — the chart takes the full available width and falls back to a height floor when nothing is given.",
         "item6": "Use the SVG renderer (default) for reports and print; canvas only for large datasets or heavy animations."
       },
       "scenarios": {
@@ -573,10 +582,10 @@
       "visualTitle": "Available Types",
       "note": "Chart has no <code>cva</code> variants. The chart type comes from the builder you use (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) or from the <code>series.type</code> field inside the configuration object.",
       "items": {
-        "bar": "Comparison across discrete categories. Use <code>buildBarOption({ data })</code>. Best for non-continuous data.",
-        "line": "Continuous trend over time. Use <code>buildLineOption({ data })</code>. Ideal for time series.",
-        "area": "Trend with emphasis on cumulative volume. Use <code>buildAreaOption({ data })</code>. Visual variant of line.",
-        "pie": "Proportion of parts relative to a whole. Use <code>buildPieOption({ data })</code>. Limit to 5–6 slices for readability.",
+        "bar": "Comparison across discrete categories. Best for non-continuous data.",
+        "line": "Continuous trend over time. Ideal for time series.",
+        "area": "Trend with emphasis on cumulative volume. Visual variant of the line chart.",
+        "pie": "Proportion of parts relative to a whole. Limit to 5–6 slices for readability.",
         "smallInline": {
           "name": "Small inline chart",
           "description": "Compact version without visible axes, reduced height, and constrained width — used as a trend indicator next to a headline number or KPI. Configure by passing a custom object that hides axes and grid.",
@@ -602,7 +611,7 @@
       "empty": {
         "label": "Empty",
         "trigger": "Empty series array or empty data",
-        "behavior": "Container shows \"No data\" automatically. Can be replaced by a custom message with next-action guidance."
+        "behavior": "Container replaces the drawing with an empty-state sentence. Customize it to guide the next action."
       },
       "loading": {
         "label": "Loading",
@@ -622,7 +631,7 @@
       "withEmptyState": {
         "label": "With empty state",
         "trigger": "Empty series array",
-        "behavior": "When the series array is empty, the container shows the default \"No data\" message. To customize, replace the container with a complete sentence guiding the next action."
+        "behavior": "When the series array is empty, the container replaces the drawing with a sentence. The default text is generic — replace it with a complete sentence guiding the next action."
       },
       "multiSeriesWithLegend": {
         "label": "Multi-series with legend",
@@ -644,13 +653,16 @@
         "description": "Description",
         "option": "Declarative chart configuration object — describes series, axes, tooltip, legend, animation. For typical cases use the auxiliary builders.",
         "renderer": "Rendering technology. <code>\"svg\"</code> (default) is better for print, export, and few elements; <code>\"canvas\"</code> for large datasets or heavy animations.",
-        "className": "Additional classes for the container. Use to set explicit height: <code>className=\"h-[300px] w-full\"</code>.",
+        "className": "Additional classes for the container. Use it for width and spacing; height has its own entry.",
         "ariaLabel": "Textual description of the chart for screen readers. Required — without it the chart is not accessible.",
         "data": "Simple dataset (1 series) in the format <code>{ label, value }[]</code>. Used by builders when there is no multi-series.",
         "xAxis": "X-axis labels (category) or timestamps when there are multiple series. Length must match the length of each series.",
         "series": "Multi-series: array of <code>{ name, data, color? }</code>. Each item generates an independent series with automatic theme color.",
         "title": "Optional title rendered inside the chart, above the axes.",
-        "showLegend": "Forces show or hide of the legend. Default: <code>true</code> if there is more than one series."
+        "showLegend": "Forces show or hide of the legend. Default: <code>true</code> if there is more than one series.",
+        "chartType": "Chart type: bars, lines, area or pie. The data chooses it, not the styling.",
+        "height": "Container height in pixels. Without a value, the block’s own height floor applies.",
+        "emptyLabel": "Sentence shown in place of the drawing when there is no data. Use a complete sentence that guides the next action."
       },
       "extensibilityTitle": "Extensibility",
       "extensibility": "For chart types not covered by the builders (scatter, radar, heatmap, candlestick, sankey...), build the configuration object directly. The visualization library accepts the full object via <code>option</code>; colors and typography still come from the design-system theme automatically."
@@ -682,7 +694,7 @@
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Chart meets WCAG 2.2 AA via required <code>aria-label</code> on the container, automatic description generated by <code>aria.enabled</code> in the configuration object, visual patterns (<code>decal</code>) for color-blind users, and respect for <code>prefers-reduced-motion</code> via duration tokens.",
-      "item1": "<strong>aria-label on container</strong> — describes the chart type and purpose. E.g.: <code>aria-label=\"Bar chart: monthly visits by device\"</code>.",
+      "item1": "<strong>aria-label on the chart</strong> — describes the chart type and purpose. E.g.: <code>aria-label=\"Bar chart: monthly visits by device\"</code>.",
       "item2": "<strong>Automatic description</strong> — the <code>aria.enabled</code> flag in the configuration object generates alternative text describing the chart structure for screen readers.",
       "item3": "<strong>Patterns for color blindness</strong> — <code>aria.decal.show</code> adds visual patterns over series; complements color to distinguish multi-series (WCAG 1.4.1).",
       "item4": "<strong>sr-only alternative text</strong> — for critical or many-point charts, include a <code>&lt;p className=\"sr-only\"&gt;</code> with a summary of main data and identifiable peaks/minimums.",
@@ -748,7 +760,7 @@
         "description": "What should happen for each Chart configuration.",
         "item1": {
           "action": "Empty state: empty series",
-          "result": "Container renders with the default \"No data\" message; no bars or lines visible",
+          "result": "Container renders the empty-state sentence; no bars or lines visible",
           "priority": "high"
         },
         "item2": {
@@ -762,8 +774,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Hover over data point",
-          "result": "Tooltip displays category label and formatted value with color indicator",
+          "action": "Pointer over a data point",
+          "result": "The hint displays the category label and the formatted value",
           "priority": "high"
         },
         "item5": {
@@ -772,7 +784,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Theme change on <html>",
+          "action": "Theme change on &lt;html&gt;",
           "result": "Colors and typography recompute automatically; chart does not flash nor require reload",
           "priority": "medium"
         }
@@ -781,14 +793,14 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
         "item1": {
-          "criterion": "aria-label present and descriptive on the container",
+          "criterion": "aria-label present and descriptive on the chart",
           "level": "AA",
-          "how": "Inspect aria-label attribute on div[data-slot=chart]"
+          "how": "Inspect the aria-label attribute on the element that represents the chart"
         },
         "item2": {
-          "criterion": "role=\"img\" on the container for screen readers",
+          "criterion": "role=\"img\" on the chart element for screen readers",
           "level": "AA",
-          "how": "Inspect role attribute on div[data-slot=chart]"
+          "how": "Inspect the role attribute on the element that represents the chart"
         },
         "item3": {
           "criterion": "Minimum 3:1 contrast on graphical elements",
@@ -873,7 +885,10 @@
       "item4": "<strong>Tema reactivo</strong> — colores y tipografía se recalculan cuando la clase del <code>&lt;html&gt;</code> cambia (tema, dark mode, densidad, fuente).",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  className=\"h-[300px] w-full\"\n  aria-label=\"Ventas trimestrales\"\n/>",
+        "react": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })}\n  height={300}\n  aria-label=\"Ventas trimestrales\"\n/>",
+        "vue": "<ChartContainer\n  :option=\"buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  })\"\n  :height=\"300\"\n  aria-label=\"Ventas trimestrales\"\n/>",
+        "svelte": "<ChartContainer\n  option={buildBarOption({\n    xAxis: ['Ene', 'Feb', 'Mar'],\n    series: [{ name: 'Ventas', data: [186, 305, 237] }]\n  })}\n  height={300}\n  aria-label=\"Ventas trimestrales\"\n/>",
+        "vanilla": "const el = createChart({\n  type: 'bar',\n  xAxis: ['Ene', 'Feb', 'Mar'],\n  series: [{ name: 'Ventas', data: [186, 305, 237] }],\n  height: 300,\n  label: 'Ventas trimestrales',\n});",
         "angular": "<!-- Sin librería de gráficos: el SVG lo dibuja el propio componente -->\n<div\n  ndsChart\n  type=\"bar\"\n  label=\"Ventas trimestrales\"\n  [xAxis]=\"['Ene', 'Feb', 'Mar']\"\n  [series]=\"[{ name: 'Ventas', data: [186, 305, 237] }]\"\n></div>"
       }
     },
@@ -885,7 +900,7 @@
         "item2": "Usa los builders auxiliares para casos comunes; pasa el objeto de configuración directo cuando necesites customización avanzada.",
         "item3": "En gráficos multi-series la leyenda aparece automáticamente — nunca diferencies series solo por color.",
         "item4": "Para gráficos con muchos puntos o datos críticos, agrega un resumen textual <code>sr-only</code> con pico, mínimo y tendencia.",
-        "item5": "Define altura explícita vía clase (ej.: <code>h-[300px] w-full</code>) — sin altura el container colapsa.",
+        "item5": "Define la altura del container cuando el valor por defecto no alcance — el gráfico ocupa todo el ancho disponible y cae en un piso de altura cuando no se informa nada.",
         "item6": "Usa el renderer SVG (default) para reportes y print; canvas solo para datasets grandes o animaciones pesadas."
       },
       "scenarios": {
@@ -995,10 +1010,10 @@
       "visualTitle": "Tipos Disponibles",
       "note": "Chart no tiene variantes <code>cva</code>. El tipo de gráfico viene del builder que uses (<code>buildBarOption</code>, <code>buildLineOption</code>, <code>buildAreaOption</code>, <code>buildPieOption</code>) o del campo <code>series.type</code> dentro del objeto de configuración.",
       "items": {
-        "bar": "Comparación entre categorías discretas. Usa <code>buildBarOption({ data })</code>. Más claro para datos no continuos.",
-        "line": "Tendencia continua en el tiempo. Usa <code>buildLineOption({ data })</code>. Ideal para series temporales.",
-        "area": "Tendencia con énfasis en el volumen acumulado. Usa <code>buildAreaOption({ data })</code>. Variante visual del line.",
-        "pie": "Proporción de partes en relación al todo. Usa <code>buildPieOption({ data })</code>. Limita a 5–6 secciones para legibilidad.",
+        "bar": "Comparación entre categorías discretas. Más claro para datos no continuos.",
+        "line": "Tendencia continua en el tiempo. Ideal para series temporales.",
+        "area": "Tendencia con énfasis en el volumen acumulado. Variante visual del gráfico de líneas.",
+        "pie": "Proporción de partes respecto al todo. Limita a 5–6 porciones para legibilidad.",
         "smallInline": {
           "name": "Mini gráfico inline",
           "description": "Versión compacta sin ejes visibles, altura reducida y ancho limitado — usada como indicador de tendencia junto a un número o KPI. Configura pasando un objeto custom que oculta ejes y grid.",
@@ -1024,7 +1039,7 @@
       "empty": {
         "label": "Vacío",
         "trigger": "Array de series vacío o data vacío",
-        "behavior": "Container muestra \"No data\" automáticamente. Puede ser reemplazado por mensaje custom con orientación de próxima acción."
+        "behavior": "El container reemplaza el dibujo por una frase de estado vacío. Personalízala para orientar la próxima acción."
       },
       "loading": {
         "label": "Cargando",
@@ -1044,7 +1059,7 @@
       "withEmptyState": {
         "label": "Con estado vacío",
         "trigger": "Array de series vacío",
-        "behavior": "Cuando el array de series está vacío, el container muestra el mensaje \"No data\" por defecto. Para customizar, reemplaza el container con un mensaje completo que oriente la próxima acción."
+        "behavior": "Cuando el array de series está vacío, el container reemplaza el dibujo por una frase. El texto por defecto es genérico — sustitúyelo por una frase completa que oriente la próxima acción."
       },
       "multiSeriesWithLegend": {
         "label": "Multi-series con leyenda",
@@ -1066,13 +1081,16 @@
         "description": "Descripción",
         "option": "Objeto de configuración declarativa del gráfico — describe series, ejes, tooltip, leyenda, animación. Para casos comunes usa los builders auxiliares.",
         "renderer": "Tecnología de renderizado. <code>\"svg\"</code> (default) es mejor para print, exportación y pocos elementos; <code>\"canvas\"</code> para datasets grandes o animaciones pesadas.",
-        "className": "Clases adicionales para el container. Usa para definir altura explícita: <code>className=\"h-[300px] w-full\"</code>.",
+        "className": "Clases adicionales para el container. Úsalas para ancho y espaciado; la altura tiene su propia entrada.",
         "ariaLabel": "Descripción textual del gráfico para lectores de pantalla. Obligatorio — sin él el gráfico no es accesible.",
         "data": "Dataset simple (1 serie) en formato <code>{ label, value }[]</code>. Usado por los builders cuando no hay multi-series.",
         "xAxis": "Etiquetas del eje X (categoría) o timestamps cuando hay multi-series. Longitud debe coincidir con la de cada serie.",
         "series": "Multi-series: array de <code>{ name, data, color? }</code>. Cada item genera una serie independiente con color automático del tema.",
         "title": "Título opcional renderizado dentro del gráfico, encima de los ejes.",
-        "showLegend": "Fuerza mostrar u ocultar la leyenda. Default: <code>true</code> si hay más de una serie."
+        "showLegend": "Fuerza mostrar u ocultar la leyenda. Default: <code>true</code> si hay más de una serie.",
+        "chartType": "Tipo de gráfico: barras, líneas, área o circular. Lo elige el dato, no el estilo.",
+        "height": "Altura del container en píxeles. Sin valor, rige el piso de altura definido por el propio bloque.",
+        "emptyLabel": "Frase que se muestra en lugar del dibujo cuando no hay datos. Usa una frase completa que oriente la próxima acción."
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibility": "Para tipos de chart no cubiertos por los builders (scatter, radar, heatmap, candlestick, sankey...), construye el objeto de configuración directamente. La librería de visualización acepta el objeto completo vía <code>option</code>; colores y tipografía siguen viniendo del tema del design system automáticamente."
@@ -1104,7 +1122,7 @@
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Chart cumple WCAG 2.2 AA vía <code>aria-label</code> obligatorio en el container, descripción automática generada por <code>aria.enabled</code> en el objeto de configuración, patrones visuales (<code>decal</code>) para usuarios con daltonismo y respeto a <code>prefers-reduced-motion</code> vía tokens de duración.",
-      "item1": "<strong>aria-label en el container</strong> — describe el tipo y propósito del gráfico. Ej.: <code>aria-label=\"Gráfico de barras: visitas mensuales por dispositivo\"</code>.",
+      "item1": "<strong>aria-label en el gráfico</strong> — describe el tipo y el propósito del gráfico. Ej.: <code>aria-label=\"Gráfico de barras: visitas mensuales por dispositivo\"</code>.",
       "item2": "<strong>Descripción automática</strong> — la flag <code>aria.enabled</code> en el objeto de configuración genera texto alternativo describiendo la estructura del gráfico para lectores de pantalla.",
       "item3": "<strong>Patrones para daltonismo</strong> — <code>aria.decal.show</code> agrega patrones visuales sobre las series; complemento al color para distinguir multi-series (WCAG 1.4.1).",
       "item4": "<strong>Texto alternativo sr-only</strong> — para gráficos críticos o con muchos puntos, incluye <code>&lt;p className=\"sr-only\"&gt;</code> con resumen de los datos principales e identificación de pico/mínimo.",
@@ -1170,7 +1188,7 @@
         "description": "Qué debe pasar para cada configuración de Chart.",
         "item1": {
           "action": "Estado vacío: series vacías",
-          "result": "Container renderiza con mensaje \"No data\" por defecto; ninguna barra o línea visible",
+          "result": "El container renderiza la frase de estado vacío; ninguna barra ni línea visible",
           "priority": "high"
         },
         "item2": {
@@ -1184,8 +1202,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Hover sobre punto de datos",
-          "result": "Tooltip muestra label de categoría y valor formateado con indicador de color",
+          "action": "Puntero sobre un punto de dato",
+          "result": "La pista muestra el rótulo de la categoría y el valor formateado",
           "priority": "high"
         },
         "item5": {
@@ -1194,7 +1212,7 @@
           "priority": "medium"
         },
         "item6": {
-          "action": "Cambio de tema en <html>",
+          "action": "Cambio de tema en &lt;html&gt;",
           "result": "Colores y tipografía se recalculan automáticamente; el gráfico no parpadea ni requiere reload",
           "priority": "medium"
         }
@@ -1203,14 +1221,14 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
         "item1": {
-          "criterion": "aria-label presente y descriptivo en el container",
+          "criterion": "aria-label presente y descriptivo en el gráfico",
           "level": "AA",
-          "how": "Inspeccionar atributo aria-label en div[data-slot=chart]"
+          "how": "Inspeccionar el atributo aria-label en el elemento que representa el gráfico"
         },
         "item2": {
-          "criterion": "role=\"img\" en el container para lectores de pantalla",
+          "criterion": "role=\"img\" en el elemento del gráfico para lectores de pantalla",
           "level": "AA",
-          "how": "Inspeccionar atributo role en div[data-slot=chart]"
+          "how": "Inspeccionar el atributo role en el elemento que representa el gráfico"
         },
         "item3": {
           "criterion": "Contraste mínimo 3:1 en elementos gráficos",

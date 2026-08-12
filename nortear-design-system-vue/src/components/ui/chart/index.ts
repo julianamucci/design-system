@@ -3,8 +3,11 @@
 // Builders puros pra montar `option` por tipo de chart.
 
 import type { EChartsCoreOption } from 'echarts/core';
+import { ARIA } from './chart-state';
+import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 export { default as ChartContainer } from './ChartContainer.vue';
+export { CHART_EMPTY_LABEL, isChartOptionEmpty } from './chart-state';
 
 export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }
@@ -42,7 +45,12 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): ECharts
       ...(type === 'area' ? { areaStyle: { opacity: 0.18 } } : {}),
       ...(type === 'bar' ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } } : {}),
     })),
-    aria: { enabled: true, decal: { show: true } },
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    animationEasing: 'cubicOut',
+    aria: ARIA,
   };
 }
 
@@ -63,6 +71,10 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): E
       itemStyle: { borderRadius: 4 },
       data: o.data.map((p) => ({ name: p.label, value: p.value })),
     }],
-    aria: { enabled: true, decal: { show: true } },
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
   };
 }

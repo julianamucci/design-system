@@ -1,56 +1,105 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
+import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
 
-const chartData = [
-  { label: 'Jan', value: 186 },
-  { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 },
-  { label: 'Apr', value: 73 },
+const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const seriesMulti = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
+  { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
 ];
 
+const TITULO_DO_CARD = 'Acessos por mês';
+const TITULO_NO_DESENHO = 'Vendas mensais';
+
 const meta: Meta = {
-  parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Compositions',
-  tags: ["display"],
+  tags: ['display'],
+  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
 };
 export default meta;
 type Story = StoryObj;
 
-async function expectChartRendered(canvasElement: HTMLElement) {
-  await waitFor(() => {
-    const node = canvasElement.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
-    expect(node).not.toBeNull();
-  }, { timeout: 2000 });
+/** Espera o desenho existir e devolve a raiz — precondição de qualquer medida. */
+async function desenhoPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
+  const raiz = exigirRaiz(canvasElement);
+  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+  return raiz;
 }
 
 export const WithCard: Story = {
-  render: () => (
-    <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-6 nds-shadow-sm" style={{ width: "480px" }}>
-      <h3 className="nds-text-body nds-font-medium nds-mb-1">Acessos por mês</h3>
-      <p className="nds-text-caption nds-text-muted-foreground nds-mb-4">Janeiro — Abril</p>
-      <ChartContainer option={buildBarOption({ data: chartData })} className="nds-w-full" style={{ height: "200px" }} />
-    </div>
-  ),
   parameters: {
-    docs: { description: { story: 'Chart dentro de um Card com header semântico — composição padrão para dashboards.' } },
+    docs: {
+      description: {
+        story: 'Gráfico dentro de um Card — o cabeçalho carrega título e período, o desenho carrega o dado.',
+      },
+    },
   },
+  render: () => (
+    <Card className="nds-max-w-lg">
+      <CardHeader>
+        <CardTitle>{TITULO_DO_CARD}</CardTitle>
+        <CardDescription>Janeiro a junho</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          option={buildBarOption({ xAxis: meses, series: seriesMulti })}
+          height={220}
+          aria-label="Gráfico de barras: acessos mensais por dispositivo"
+        />
+      </CardContent>
+    </Card>
+  ),
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado dentro do card', () => expectChartRendered(canvasElement));
+    const raiz = await desenhoPronto(canvasElement);
+
+    await step('O card é o componente do design system, não um card desenhado à mão', async () => {
+      const card = canvasElement.querySelector('[data-slot="card"]');
+      await expect(card).not.toBeNull();
+      await expect(card!.querySelector('[data-slot="card-title"]')?.textContent?.trim()).toBe(
+        TITULO_DO_CARD,
+      );
+    });
+
+    await step('E o gráfico está DENTRO do card, não ao lado dele', async () => {
+      const dentro = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
+      await expect(dentro).toBe(raiz);
+    });
+
+    await step('O desenho traz o dado das duas séries', async () => {
+      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+    });
   },
 };
 
 export const InlineTitle: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Título dentro da própria configuração — útil quando o gráfico não tem card em volta.',
+      },
+    },
+  },
   render: () => (
     <ChartContainer
-      option={buildBarOption({ data: chartData, title: 'Vendas mensais' })}
-      className="" style={{ height: "260px", width: "480px" }}
+      option={buildBarOption({ xAxis: meses, series: seriesMulti, title: TITULO_NO_DESENHO })}
+      className="nds-max-w-lg"
+      height={280}
     />
   ),
-  parameters: {
-    docs: { description: { story: 'Título no próprio option — útil quando o chart é stand-alone sem wrapper de card.' } },
-  },
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado com título', () => expectChartRendered(canvasElement));
+    const raiz = await desenhoPronto(canvasElement);
+
+    await step('O título da configuração é escrito acima dos eixos', async () => {
+      await expect(desenhoEscreve(raiz, TITULO_NO_DESENHO)).toBe(true);
+    });
+
+    await step('Sem rótulo autoral, o título vira a descrição do desenho', async () => {
+      // A rede de segurança do container: um gráfico sem `aria-label` não fica
+      // mudo, cai no título que já está na tela.
+      await expect(raiz).toHaveAttribute('role', 'img');
+      await expect(raiz.getAttribute('aria-label')).toBe(TITULO_NO_DESENHO);
+    });
   },
 };

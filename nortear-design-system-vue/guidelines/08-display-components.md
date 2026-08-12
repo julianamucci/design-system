@@ -94,49 +94,55 @@ Carousel (opts, plugins, orientation, setApi)
 
 ## Chart
 
-**Propósito**: visualização de dados quantitativos via gráficos, integrados ao sistema de design via tokens de cor.
+**Propósito**: visualização de dados quantitativos — barras, linhas, área e pizza — com cores, tipografia e eixos vindos dos tokens do design system.
 
-**API e exemplos**: `src/components/ui/chart/chart.vue` + stories + `ChartDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/chart/ChartContainer.vue + index.ts` + stories + `ChartDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-> Camada sobre **Recharts** com integração de tema e acessibilidade. Usar Recharts diretamente sem `ChartContainer` não aplica os tokens de cor.
+> Camada sobre **Apache ECharts**. O container registra o tema do design system a partir dos tokens do `<html>` e o reaplica quando a classe muda — trocar marca, modo escuro, densidade ou fonte recolore o gráfico sem recarregar. Chamar a lib direto pula esse registro e o desenho sai com a paleta padrão dela. O container recebe um objeto de configuração único e devolve o desenho; os construtores auxiliares montam esse objeto para os quatro tipos cobertos.
 
-**Estrutura obrigatória**:
+**Estrutura**:
 
 ```
-ChartContainer (config, aria-label)
-└── [BarChart | LineChart | …] (accessibilityLayer)
-    ├── CartesianGrid / XAxis / YAxis
-    ├── ChartTooltip → ChartTooltipContent
-    ├── ChartLegend → ChartLegendContent
-    └── Bar / Line / Area (fill="var(--color-[key])")
+container (data-slot="chart", class .nds-chart, role="img", descrição)
+├── frase de estado vazio (.nds-chart-empty)   ← quando não há série com dado
+└── desenho da lib (svg por padrão, canvas opcional)
+    ├── eixos e grade
+    ├── formas de dado (barra, traçado, área, fatia) com trama sobreposta
+    └── legenda
 ```
 
-**Tokens de cor** (definidos no projeto — ver `16-padroes-design-sistema.md`):
+**Entradas**: objeto de configuração, renderer, altura, frase de estado vazio e descrição do gráfico.
+
+**Tokens de cor**:
 
 | Token | Uso |
-|-------|-----|
-| `var(--chart-1)` … `var(--chart-5)` | Séries de dados (1ª a 5ª) |
-
-> As variáveis `var(--color-[key])` dentro do gráfico são geradas automaticamente pelo `ChartContainer` a partir do `ChartConfig`. Não usar `--chart-*` diretamente dentro do SVG.
+|---|---|
+| `--chart-1` … `--chart-5` | séries de dados, na ordem em que aparecem |
+| `--foreground` | contorno das formas de dado e texto do título |
+| `--muted-foreground` | texto de eixo e de legenda |
+| `--border` | linhas de grade e de eixo |
+| `--card` | fundo da dica sob o ponteiro |
 
 **Regras**:
-- `ChartContainer` obrigatório — sem ele os tokens de cor não funcionam
-- `ChartConfig` obrigatório — define labels e mapeia chaves de dados para cores do tema
-- `accessibilityLayer` obrigatório no componente Recharts raiz — ativa navegação por teclado no gráfico
-- `ChartTooltip` com `ChartTooltipContent` — usa o estilo do design system automaticamente
-- `ChartLegend` com `ChartLegendContent` — consistente com o tema
-- Legends sempre visíveis para gráficos com múltiplas séries
+- Altura é entrada do componente, não classe utilitária — o design system não tem utility de altura para gráfico, e sem valor vale o piso de `.nds-chart`.
+- A cor de uma série só se sobrescreve no próprio item de série; a paleta global se muda no tema.
+- Legenda visível sempre que houver mais de uma série; com uma só ela some, porque não há o que comparar.
+- Estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
+- Renderer `svg` para relatório, impressão e exportação; `canvas` só para dataset grande ou animação pesada.
+- Para tipos não cobertos (dispersão, radar, mapa de calor), registre o módulo extra da lib antes de usar.
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
-- `aria-label` no `ChartContainer` descrevendo o gráfico
-- `<p class="sr-only">` com resumo textual dos dados principais — obrigatório para gráficos complexos
-- `accessibilityLayer` ativa navegação por Arrow keys
-- **Daltonismo**: nunca diferenciar séries apenas por cor — usar também padrões visuais (tracejado, pontilhado) ou `ChartLegend` com labels claros
-- `motion-reduce`: animações desativadas via `isAnimationActive={false}` nos elementos de dados quando `prefers-reduced-motion`
+- `role="img"` mais descrição no container: sem nome acessível o desenho é conteúdo perdido. A descrição diz o que o gráfico mostra, não que é um gráfico.
+- A informação nunca vive só na cor (WCAG 1.4.1): a trama por série vem ligada por padrão e a legenda nomeia cada série por escrito.
+- Os 3:1 de objeto gráfico (WCAG 1.4.11) vêm do CONTORNO das formas em `--foreground`, não da cor de série — as cores da paleta ficam em torno de 2:1 contra o fundo e sozinhas não sustentam o critério.
+- Texto de eixo em `--muted-foreground`, com 4.5:1 contra o fundo.
+- Gráfico denso ou dado crítico pede resumo textual à parte, com pico, mínimo e tendência.
+- Animação respeita `prefers-reduced-motion`, pelos mesmos tokens de duração do resto do sistema.
 
-**Analytics**: passivo. Interações específicas (hover de tooltip, clique em legenda) podem ser rastreadas via callbacks quando relevante para o produto.
+**Analytics**: passivo — o gráfico não dispara evento por padrão. Interações específicas (dica sob o ponteiro, clique na legenda) se rastreiam via callback da lib quando forem relevantes para o produto.
 
 ---
+
 
 ## Table
 

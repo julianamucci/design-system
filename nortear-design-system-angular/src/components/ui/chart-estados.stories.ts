@@ -14,7 +14,8 @@ import {
 const meta: Meta = {
   title: 'UI/Chart/States',
   decorators: [moduleMetadata({ imports: [NdsChart] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  // Sem argTypes nem callbacks: sem isto os painéis Controls e Actions abrem vazios.
+  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
 };
 
 export default meta;
@@ -70,11 +71,28 @@ export const SingleSeries: Story = {
       const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
       await expect(textos).not.toContain(SERIE_UNICA[0].name);
     });
+
+    await step('Sem legenda ocupando espaço, o valor cabe junto do dado', async () => {
+      // A contrapartida de esconder a legenda: com uma série só não há números
+      // se sobrepondo, então o valor exato é escrito no desenho.
+      const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+      for (const valor of SERIE_UNICA[0].data) {
+        await expect(textos).toContain(String(valor));
+      }
+    });
+
+    await step('A tabela tem duas colunas: categoria e a única série', async () => {
+      const cabecalho = [...chart.querySelectorAll('thead th')].map((c) => c.textContent?.trim());
+      await expect(cabecalho).toEqual(['Categoria', SERIE_UNICA[0].name]);
+    });
   },
 };
 
+// `visual.item2` é o gráfico de LINHAS multi-série; esta story desenha barras.
+// A declaração estava aqui e era falsa — o Chromatic olhava para o desenho
+// errado e passava. Quem cobre o item é a story Line, que é de linhas mesmo.
 export const MultiSeries: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item2'] },
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
     props: { meses: MESES, series: SERIES_MULTI },
     template: `
@@ -123,6 +141,9 @@ export const MultiSeries: Story = {
  * Tema escuro. A cor de série é `hsl(var(--chart-n))` escrita no atributo de
  * apresentação do SVG — quem recolore é a cascata, não JavaScript, então trocar
  * a classe do `<html>` basta.
+ *
+ * Desenha barras E linhas: o item de regressão visual que esta story declara
+ * fala dos dois, e um só deles deixaria metade do item fotografada por ninguém.
  */
 export const DarkTheme: Story = {
   parameters: { covers: ['functional.item6', 'visual.item4'], controls: { disable: true } },
@@ -134,12 +155,19 @@ export const DarkTheme: Story = {
         type="bar"
         [xAxis]="meses"
         [series]="series"
-        label="Acessos mensais por dispositivo"
+        label="Acessos mensais por dispositivo, em barras"
+      ></div>
+      <div ndsChart
+        type="line"
+        [xAxis]="meses"
+        [series]="series"
+        label="Acessos mensais por dispositivo, em linhas"
       ></div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
+    const graficos = [...canvasElement.querySelectorAll<HTMLElement>('.nds-chart')];
+    const chart = graficos[0];
     const html = document.documentElement;
     const eraEscuro = html.classList.contains('dark');
     const barra = chart.querySelector<SVGRectElement>('rect[data-series="0"]')!;
@@ -150,16 +178,29 @@ export const DarkTheme: Story = {
     // barra afirmaria que a cor muda, e ela não muda em tema nenhum.
     const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
 
+    await step('Os dois tipos estão na foto', async () => {
+      // O item de regressão visual fala de barras E linhas.
+      await expect(graficos).toHaveLength(2);
+      await expect(graficos[1].querySelector('path[data-series]')).not.toBeNull();
+    });
+
     await step('Trocar o tema recolore sem remontar', async () => {
-      html.classList.remove('dark');
-      const claro = getComputedStyle(rotulo).fill;
-      html.classList.add('dark');
-      const escuro = getComputedStyle(rotulo).fill;
-      // Mesmo nó no DOM: nada foi recriado, só a cascata resolveu outro token.
-      await expect(escuro).not.toBe(claro);
-      await expect(chart.querySelector('svg text')).toBe(rotulo);
-      await expect(chart.querySelector('rect[data-series="0"]')).toBe(barra);
-      if (!eraEscuro) html.classList.remove('dark');
+      try {
+        html.classList.remove('dark');
+        const claro = getComputedStyle(rotulo).fill;
+        html.classList.add('dark');
+        const escuro = getComputedStyle(rotulo).fill;
+        // Mesmo nó no DOM: nada foi recriado, só a cascata resolveu outro token.
+        await expect(escuro).not.toBe(claro);
+        await expect(chart.querySelector('svg text')).toBe(rotulo);
+        await expect(chart.querySelector('rect[data-series="0"]')).toBe(barra);
+      } finally {
+        // Repõe o estado que ENCONTROU. No Storybook o `globals` desta story
+        // deixa o escuro posto, e é ele que o Chromatic fotografa; na suíte, em
+        // que as stories dividem o mesmo documento, repor evita envenenar a
+        // próxima.
+        html.classList.toggle('dark', eraEscuro);
+      }
     });
   },
 };

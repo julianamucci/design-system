@@ -149,31 +149,31 @@
 
   const codeBar = `<ChartContainer
   option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-  class="nds-w-full" style="height: 240px"
+  class="nds-w-full" height={240}
   aria-label="Gráfico de barras: acessos mensais"
 />`;
 
   const codeLine = `<ChartContainer
   option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-  class="nds-w-full" style="height: 240px"
+  class="nds-w-full" height={240}
   aria-label="Gráfico de linhas: tendência mensal"
 />`;
 
   const codeArea = `<ChartContainer
   option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-  class="nds-w-full" style="height: 240px"
+  class="nds-w-full" height={240}
   aria-label="Gráfico de área: volume mensal"
 />`;
 
   const codePie = `<ChartContainer
   option={buildPieOption({ data: pieData })}
-  class="nds-w-full" style="height: 280px"
+  class="nds-w-full" height={280}
   aria-label="Gráfico de pizza: distribuição por dispositivo"
 />`;
 
   const codeMulti = `<ChartContainer
   option={buildBarOption({ xAxis: xMonths, series: multiSeries, title: 'Vendas' })}
-  class="nds-w-full" style="height: 280px"
+  class="nds-w-full" height={280}
   aria-label="Gráfico multi-séries: Vendas por categoria"
 />`;
 
@@ -182,6 +182,11 @@ interface ChartContainerProps {
   option: EChartsCoreOption;
   class?: string;
   renderer?: 'svg' | 'canvas';
+  /** Altura do container em px. Sem valor, vale o piso de .nds-chart. */
+  height?: number;
+  /** Frase no lugar do desenho quando nenhuma série tem dado. */
+  emptyLabel?: string;
+  'aria-label'?: string;
 }
 
 // Builders auxiliares — montam o option a partir de dados simples.
@@ -254,7 +259,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       <ChartContainer
         option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
         class="nds-w-full"
-        style="height: 220px; max-width: 400px"
+        height={220} style="max-width: 400px"
         aria-label={$tStore('demonstration.labels.chartTitle')}
        />
     </div>
@@ -270,7 +275,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       $tStore('anatomy.item4'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
-    structureCode={`<ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} aria-label="..." />`}
+    structureCode={$tStore('anatomy.structureCode')}
   />
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
@@ -344,16 +349,16 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair1.do'),
-        dontCaption: $tStore('doDont.pair1.dont'),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair2.do'),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
@@ -363,28 +368,28 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet doPair1()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="nds-w-full" style="height: 140px"
+      class="nds-w-full" height={140}
       aria-label="Gráfico multi-séries com legenda: Desktop e Mobile"
      />
   {/snippet}
   {#snippet dontPair1()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="nds-w-full" style="height: 140px"
+      class="nds-w-full" height={140}
       aria-label="Gráfico multi-séries sem legenda"
      />
   {/snippet}
   {#snippet doPair2()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="nds-w-full" style="height: 140px"
+      class="nds-w-full" height={140}
       aria-label="Gráfico de barras: acessos mensais por dispositivo — com aria-label descritivo"
      />
   {/snippet}
   {#snippet dontPair2()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      class="nds-w-full" style="height: 140px"
+      class="nds-w-full" height={140}
      />
   {/snippet}
 
@@ -417,7 +422,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     <p class="nds-text-caption nds-text-muted-foreground">Acessos</p>
     <p class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">1.224</p>
   </div>
-  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} style="height: 48px; width: 120px" aria-label="Tendência de acessos" />
+  <ChartContainer option={buildLineOption({ xAxis: xMonths, series: multiSeries })} height={48} style="width: 120px" aria-label="Tendência de acessos" />
 </div>`,
         preview: variantSmallInline,
       },
@@ -427,28 +432,28 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
   {#snippet variantBar()}
     <ChartContainer
       option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-      style="height: 180px; width: 300px"
+      height={180} style="width: 300px"
       aria-label="Gráfico de barras: acessos mensais"
     />
   {/snippet}
   {#snippet variantLine()}
     <ChartContainer
       option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-      style="height: 180px; width: 300px"
+      height={180} style="width: 300px"
       aria-label="Gráfico de linhas: acessos mensais"
     />
   {/snippet}
   {#snippet variantArea()}
     <ChartContainer
       option={buildAreaOption({ xAxis: xMonths, series: multiSeries })}
-      style="height: 180px; width: 300px"
+      height={180} style="width: 300px"
       aria-label="Gráfico de área: volume mensal"
     />
   {/snippet}
   {#snippet variantPie()}
     <ChartContainer
       option={buildPieOption({ data: pieData })}
-      style="height: 200px; width: 220px"
+      height={200} style="width: 220px"
       aria-label="Gráfico de pizza: distribuição por dispositivo"
     />
   {/snippet}
@@ -460,7 +465,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       </div>
       <ChartContainer
         option={buildLineOption({ xAxis: xMonths, series: multiSeries })}
-        style="height: 48px; width: 120px"
+        height={48} style="width: 120px"
         aria-label="Tendência de acessos nos últimos 6 meses"
        />
     </div>
@@ -481,7 +486,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     <CardTitle>Acessos mensais</CardTitle>
   </CardHeader>
   <CardContent>
-    <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" style="height: 200px" aria-label="..." />
+    <ChartContainer option={buildBarOption({ xAxis: xMonths, series: multiSeries })} class="nds-w-full" height={200} aria-label="..." />
   </CardContent>
 </Card>`,
         preview: compInCard,
@@ -497,7 +502,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       <CardContent>
         <ChartContainer
           option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
-          class="nds-w-full" style="height: 180px"
+          class="nds-w-full" height={180}
           aria-label="Gráfico de barras: acessos mensais"
          />
       </CardContent>
@@ -538,8 +543,10 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         items: [
           { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.option'))    },
           { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: toPlainText($tStore('props.table.renderer'))  },
+          { name: 'height',     type: 'number',            defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.height'))     },
+          { name: 'emptyLabel', type: 'string',            defaultValue: '"Sem dados para exibir"', required: 'Não', description: toPlainText($tStore('props.table.emptyLabel')) },
           { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.className')) },
-          { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.ariaLabel')) },
+          { name: 'aria-label', type: 'string',            defaultValue: '"Gráfico"', required: 'Sim', description: toPlainText($tStore('props.table.ariaLabel')) },
         ],
       },
       {
@@ -552,6 +559,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
           description: $tStore('props.table.description'),
         },
         items: [
+          { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption', type: '(o: OptionsBase) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.chartType')) },
           { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.data'))       },
           { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText($tStore('props.table.xAxis'))      },
           { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.series')) },
@@ -579,7 +587,7 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
       { token: '--chart-3',          value: 'color série 3',  description: $tStore('tokens.table.chart3')         },
       { token: '--chart-4',          value: 'color série 4',  description: $tStore('tokens.table.chart4')         },
       { token: '--chart-5',          value: 'color série 5',  description: $tStore('tokens.table.chart5')         },
-      { token: '--primary',          value: 'axisPointer',    description: $tStore('tokens.table.primary')        },
+      { token: '--primary',          value: 'axisPointer',    description: toPlainText($tStore('tokens.table.primary')) },
       { token: '--muted-foreground', value: 'axisLabel',      description: $tStore('tokens.table.mutedForeground') },
       { token: '--border',           value: 'axisLine + grid', description: $tStore('tokens.table.border')        },
       { token: '--foreground',       value: 'title + tooltip', description: $tStore('tokens.table.foreground')    },
@@ -605,9 +613,9 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
     ]}
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
-      { key: 'Tab',        description: $tStore('accessibility.keyboard.tab')        },
-      { key: 'Arrow Right', description: $tStore('accessibility.keyboard.arrowRight') },
-      { key: 'Arrow Left',  description: $tStore('accessibility.keyboard.arrowLeft')  },
+      { key: 'Tab',         description: toPlainText($tStore('accessibility.keyboard.tab'))        },
+      { key: 'Arrow Right', description: toPlainText($tStore('accessibility.keyboard.arrowRight')) },
+      { key: 'Arrow Left',  description: toPlainText($tStore('accessibility.keyboard.arrowLeft'))  },
     ]}
   />
 
@@ -659,12 +667,12 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         priority: $tNavStore('common.priority'),
       },
       items: [
-        { action: $tStore('testes.functional.item1.action'), result: $tStore('testes.functional.item1.result'), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item1.action')), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item2.action')), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item3.action')), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item6.action')), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
       ],
     }}
     accessibility={{

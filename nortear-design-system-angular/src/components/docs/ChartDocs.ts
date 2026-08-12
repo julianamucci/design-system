@@ -69,6 +69,8 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'props.containerTitle': 'Chart',
   },
   'pt-BR': {
+    'usage.guidelines.item2':
+      'Uma entrada escolhe o tipo do gráfico; o que muda entre um e outro é o dado, não a montagem.',
     'variants.items.bar.name': 'Barras',
     'variants.items.line.name': 'Linhas',
     'variants.items.area.name': 'Área',
@@ -95,15 +97,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Altura pela proporção</strong>: o desenho não tem altura cravada. A altura nasce da proporção do desenho aplicada à largura do container, e o piso vem do próprio bloco — por isso a página não salta quando o dado chega.',
     'props.extensibility':
       'Para tipos de gráfico não cobertos (dispersão, radar, mapa de calor), o caminho é estender o componente, não passar um objeto de configuração: o desenho é montado aqui. Cores e tipografia continuam vindo do tema em qualquer caso.',
-    'props.table.type': 'Tipo do gráfico: barras, linhas, área ou pizza. É o dado que escolhe, não o estilo.',
     'props.table.showData': 'Torna visível para todo mundo a tabela de dados que já existe para leitor de tela.',
     'props.table.compact':
       'Mini gráfico inline: sem eixos, grade, legenda ou rótulo de valor, e com proporção achatada. Serve de indicador de tendência ao lado de um número.',
     'props.table.categoryLabel': 'Cabeçalho da primeira coluna da tabela de dados.',
     'props.table.valueLabel': 'Nome da série quando os dados vêm na forma simples de rótulo e valor.',
     'props.table.shareLabel': 'Cabeçalho da coluna de participação, na tabela de dados da pizza.',
-    'props.table.emptyLabel':
-      'Frase exibida quando não há dado. Escreva uma frase completa com orientação, não apenas "Sem dados".',
     'props.table.className':
       'Classes extras vão no atributo class do próprio elemento — o Angular as mescla com as do design system.',
     'props.table.pointLabel': 'Rótulo da categoria — vira a marca do eixo e a primeira coluna da tabela.',
@@ -117,6 +116,8 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'demonstration.labels.dataTable': 'Tabela de dados equivalente, visível',
   },
   en: {
+    'usage.guidelines.item2':
+      'One input picks the chart type; what changes between one chart and another is the data, not the assembly.',
     'variants.items.bar.name': 'Bars',
     'variants.items.line.name': 'Lines',
     'variants.items.area.name': 'Area',
@@ -143,15 +144,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Height from the aspect ratio</strong>: the drawing has no hard-coded height. Height comes from the drawing ratio applied to the container width, and the floor comes from the block itself — which is why the page does not jump when the data arrives.',
     'props.extensibility':
       'For chart types not covered (scatter, radar, heatmap), the path is extending the component, not passing a configuration object: the drawing is built here. Colours and typography still come from the theme either way.',
-    'props.table.type': 'Chart type: bars, lines, area or pie. The data chooses it, not the styling.',
     'props.table.showData': 'Makes the data table that already exists for screen readers visible to everyone.',
     'props.table.compact':
       'Inline mini chart: no axes, grid, legend or value labels, and a flattened ratio. Works as a trend indicator next to a number.',
     'props.table.categoryLabel': 'Header of the first column of the data table.',
     'props.table.valueLabel': 'Series name when the data comes in the simple label/value shape.',
     'props.table.shareLabel': 'Header of the share column in the pie data table.',
-    'props.table.emptyLabel':
-      'Sentence shown when there is no data. Write a full sentence with guidance, not just "No data".',
     'props.table.className':
       'Extra classes go on the class attribute of the element itself — Angular merges them with the design system ones.',
     'props.table.pointLabel': 'Category label — becomes the axis tick and the first column of the table.',
@@ -165,6 +163,8 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
     'demonstration.labels.dataTable': 'Equivalent data table, visible',
   },
   es: {
+    'usage.guidelines.item2':
+      'Una entrada elige el tipo de gráfico; lo que cambia entre uno y otro es el dato, no el armado.',
     'variants.items.bar.name': 'Barras',
     'variants.items.line.name': 'Líneas',
     'variants.items.area.name': 'Área',
@@ -191,15 +191,12 @@ const { t, dict } = useTranslation(chartTranslations as Record<string, unknown>,
       '<strong>Altura por proporción</strong>: el dibujo no tiene altura fija. La altura nace de la proporción del dibujo aplicada al ancho del contenedor, y el piso viene del propio bloque — por eso la página no salta cuando llega el dato.',
     'props.extensibility':
       'Para tipos de gráfico no cubiertos (dispersión, radar, mapa de calor), el camino es extender el componente, no pasar un objeto de configuración: el dibujo se monta aquí. Los colores y la tipografía siguen viniendo del tema en cualquier caso.',
-    'props.table.type': 'Tipo de gráfico: barras, líneas, área o circular. Lo elige el dato, no el estilo.',
     'props.table.showData': 'Hace visible para todos la tabla de datos que ya existe para lectores de pantalla.',
     'props.table.compact':
       'Mini gráfico en línea: sin ejes, rejilla, leyenda ni etiquetas de valor, y con proporción achatada. Sirve de indicador de tendencia junto a un número.',
     'props.table.categoryLabel': 'Encabezado de la primera columna de la tabla de datos.',
     'props.table.valueLabel': 'Nombre de la serie cuando los datos vienen en la forma simple de rótulo y valor.',
     'props.table.shareLabel': 'Encabezado de la columna de participación, en la tabla de datos del circular.',
-    'props.table.emptyLabel':
-      'Frase mostrada cuando no hay datos. Escribe una frase completa con orientación, no solo "Sin datos".',
     'props.table.className':
       'Las clases extra van en el atributo class del propio elemento — Angular las combina con las del design system.',
     'props.table.pointLabel': 'Rótulo de la categoría — se convierte en la marca del eje y en la primera columna de la tabla.',
@@ -838,7 +835,7 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
         title: t('props.containerTitle'),
         cols,
         items: [
-          linha('type', 'type', `'bar' | 'line' | 'area' | 'pie'`, `'bar'`),
+          linha('type', 'chartType', `'bar' | 'line' | 'area' | 'pie'`, `'bar'`),
           linha('label', 'ariaLabel', 'string', '—', sim),
           linha('data', 'data', 'ChartDataPoint[]', '—'),
           linha('xAxis', 'xAxis', 'string[]', '—'),

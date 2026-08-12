@@ -1,17 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, waitFor } from 'storybook/test';
+import {
+  desenhoEscreve,
+  desenhoPintado,
+  desenhoRenderizado,
+  exigirRaiz,
+  formasDeDado,
+} from '@shared/testing/chart-probe';
 import { createChart } from './chart';
-import { within, expect } from 'storybook/test';
 
-// ─── Shared data ──────────────────────────────────────────────────────────────
+// ─── Dados ────────────────────────────────────────────────────────────────────
 
-const chartData = [
-  { label: 'Jan', value: 186 },
-  { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 },
-  { label: 'Apr', value: 73 },
-  { label: 'May', value: 209 },
-  { label: 'Jun', value: 214 },
-];
+const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const ACESSOS = [186, 305, 237, 73, 209, 214];
+
+const chartData = MESES.map((label, i) => ({ label, value: ACESSOS[i] }));
+
+/** Cor autoral da série. Fora da paleta `--chart-*`, para não se confundir com ela. */
+const ROXO = '#7c3aed';
+const ROXO_RGB = 'rgb(124, 58, 237)';
+
+const ALTURA = 320;
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -27,60 +37,86 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── CoresPersonalizadas ──────────────────────────────────────────────────────
+// ─── Cor da série ─────────────────────────────────────────────────────────────
 
-export const CustomColors: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(
-      createChart({
-        data: chartData,
-        type: 'bar',
-        height: 200,
-      }),
-    );
-    return wrap;
-  },
+export const SeriesColor: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Cores personalizadas via prop <code>colors</code>. Útil para alinhar ao branding de produto sem alterar os tokens globais.',
+        story: 'Cor autoral por série, informada no próprio item de `series`. Sobrescreve o token de paleta daquela série e só daquela — as demais continuam vindo do tema.',
       },
     },
   },
+  render: () => createChart({
+    xAxis: MESES,
+    series: [{ name: 'Desktop', data: ACESSOS, color: ROXO }],
+    type: 'bar',
+    height: 240,
+    class: 'nds-max-w-md',
+    label: 'Acessos mensais no desktop, em cor autoral',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O desenho sai', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    });
+
+    await step('As formas da série saem na cor pedida', async () => {
+      // A trama sobreposta entra como `url(#…)` e não carrega cor — por isso a
+      // procura é entre os preenchimentos que são cor de verdade.
+      const cores = formasDeDado(raiz)
+        .map((f) => getComputedStyle(f).fill)
+        .filter((cor) => !cor.startsWith('url'));
+      await expect(cores).toContain(ROXO_RGB);
+    });
+
+    await step('Toda categoria continua escrita no eixo', async () => {
+      for (const mes of MESES) {
+        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      }
+    });
   },
 };
 
-// ─── AlturaPersonalizada ──────────────────────────────────────────────────────
+// ─── Altura ───────────────────────────────────────────────────────────────────
 
 export const CustomHeight: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(
-      createChart({
-        data: chartData,
-        type: 'bar',
-        height: 300,
-      }),
-    );
-    return wrap;
-  },
   parameters: {
     docs: {
       description: {
-        story: 'Altura de 300px via prop <code>height</code>. O padrão é 200px.',
+        story: 'Altura informada em pixels. Sem valor, vale o piso de altura do próprio bloco — a altura nunca vem de classe.',
       },
     },
   },
+  render: () => createChart({
+    data: chartData,
+    type: 'bar',
+    height: ALTURA,
+    class: 'nds-max-w-md',
+    label: 'Acessos mensais, em bloco mais alto',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O container fica com a altura pedida', async () => {
+      // Tolerância de 1px: o retângulo do layout é fracionário, e comparar
+      // igualdade exata em pixel é o caminho curto para um teste intermitente.
+      await expect(Math.abs(raiz.getBoundingClientRect().height - ALTURA)).toBeLessThanOrEqual(1);
+    });
+
+    await step('E o desenho ocupa o bloco todo, não uma faixa do topo', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      const desenho = desenhoRenderizado(raiz) as SVGElement;
+      await waitFor(
+        () => expect(desenho.getBoundingClientRect().height).toBeGreaterThan(ALTURA * 0.9),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('E o dado continua desenhado', async () => {
+      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+    });
   },
 };

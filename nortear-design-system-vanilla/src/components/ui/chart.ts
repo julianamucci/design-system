@@ -18,6 +18,7 @@ import {
   LegendComponent,
   GridComponent,
   DatasetComponent,
+  AriaComponent,
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
@@ -25,11 +26,29 @@ import { THEME_NAME, registerNortearTheme, watchTheme } from '@/lib/echarts-them
 import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 // Bootstrap dos módulos — idempotente. Tree-shake friendly.
+//
+// `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
+// silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
+// quando a cor sai de cena — nunca chega a ser desenhada.
 echarts.use([
   BarChart, LineChart, PieChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
+  AriaComponent,
   SVGRenderer, CanvasRenderer,
 ]);
+
+/**
+ * Bloco `aria` comum aos dois formatos de option.
+ *
+ * `label.enabled: false` desliga a descrição gerada pela lib de propósito: ela
+ * nasce em inglês e mora num elemento interno que o `role="img"` do container
+ * poda da árvore de acessibilidade. Quem carrega a alternativa textual é o
+ * `label` autoral, no idioma da página.
+ */
+const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
+
+/** Frase padrão do estado vazio — a mesma nas cinco stacks. */
+export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -57,7 +76,7 @@ export interface ChartOptions {
   xAxis?: Array<string | number>;
   /** Multi-série: séries com dados alinhados ao xAxis. */
   series?: ChartSeries[];
-  /** Altura em px do container. Default 200. */
+  /** Altura em px do container. Sem valor, vale o piso de `.nds-chart`. */
   height?: number;
   /** Renderer. Default 'svg' (alinha com o resto da stack standalone). */
   renderer?: 'svg' | 'canvas';
@@ -67,13 +86,15 @@ export interface ChartOptions {
   showLegend?: boolean;
   /** Classe extra no container. */
   class?: string;
-}
-
-export interface ChartHandle {
-  update: (opts: ChartOptions) => void;
-  resize: () => void;
-  destroy: () => void;
-  el: HTMLElement;
+  /**
+   * Descrição do gráfico: vira o `aria-label` do container.
+   *
+   * Um desenho sem descrição é conteúdo perdido — a factory não emitia
+   * `role`/`aria-label` nenhum, e cada consumidor colava os dois à mão.
+   */
+  label?: string;
+  /** Frase mostrada no lugar do gráfico quando não há dado. */
+  emptyLabel?: string;
 }
 
 // ─── Option builder (puro) ───────────────────────────────────────────────────
@@ -109,7 +130,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
       }],
       animation: !prefersReducedMotion(),
       animationDuration: Math.round(motionDuration('moderate') * 1000),
-      aria: { enabled: true, decal: { show: true } },
+      aria: ARIA,
     };
   }
 
@@ -146,7 +167,7 @@ export function buildChartOption(opts: ChartOptions): echarts.EChartsCoreOption 
     animation: !prefersReducedMotion(),
     animationDuration: Math.round(motionDuration('moderate') * 1000),
     animationEasing: 'cubicOut',
-    aria: { enabled: true, decal: { show: true } },
+    aria: ARIA,
   };
 }
 
@@ -160,20 +181,31 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   const el = document.createElement('div');
   el.dataset.slot = 'chart';
   el.className = ['nds-chart', opts.class].filter(Boolean).join(' ');
-  el.style.width = '100%';
-  el.style.height = `${opts.height ?? 200}px`;
+  // Largura e piso de altura vêm de `.nds-chart`; só a altura pedida é inline.
+  if (opts.height !== undefined) el.style.height = `${opts.height}px`;
 
   // Estado vazio — sem dados, mostra mensagem em vez de chart.
+  //
+  // Sem `role="img"` aqui de propósito: o papel PODA a subárvore da árvore de
+  // acessibilidade, e a frase que explica a ausência de dado é justamente o
+  // conteúdo — ficaria escondida atrás de um rótulo genérico.
   const isEmpty =
     (!opts.data || opts.data.length === 0) &&
     (!opts.series || opts.series.length === 0);
   if (isEmpty) {
     const empty = document.createElement('p');
     empty.className = 'nds-chart-empty';
-    empty.textContent = 'Sem dados para exibir';
+    empty.textContent = opts.emptyLabel ?? CHART_EMPTY_LABEL;
     el.appendChild(empty);
     return el;
   }
+
+  // Com desenho, o papel de imagem é o que autoriza o `aria-label` num <div>
+  // (sem ele o axe aponta aria-prohibited-attr) e o que substitui, para o leitor
+  // de tela, um SVG que ele não teria como narrar. A factory não emitia nenhum
+  // dos dois, e cada docs page vinha colando os atributos à mão.
+  el.setAttribute('role', 'img');
+  el.setAttribute('aria-label', opts.label ?? opts.title ?? 'Gráfico');
 
   // Init deferida — espera el estar conectado pra echarts.init() funcionar.
   const mountWhenReady = (cb: () => void) => {
@@ -184,17 +216,67 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     obs.observe(document.body, { childList: true, subtree: true });
   };
 
+  // A lib desenha DENTRO de um elemento próprio, não no bloco do design system.
+  //
+  // Antes ela era montada no próprio `.nds-chart`, que tem `overflow: hidden` —
+  // e a dica sob o ponteiro, que a lib insere ao lado do desenho, nascia
+  // recortada pelo bloco. Nas outras stacks o wrapper já cria um elemento
+  // interno, e por isso só aqui a dica não aparecia. O bloco continua sendo o
+  // que carrega classe, papel e rótulo.
+  const desenho = document.createElement('div');
+  desenho.dataset.slot = 'chart-canvas';
+  desenho.style.width = '100%';
+  desenho.style.height = '100%';
+  el.appendChild(desenho);
+
   mountWhenReady(() => {
     registerNortearTheme();
-    const chart = echarts.init(el, THEME_NAME, { renderer: opts.renderer ?? 'svg' });
+    const chart = echarts.init(desenho, THEME_NAME, { renderer: opts.renderer ?? 'svg' });
     chart.setOption(buildChartOption(opts));
 
-    const ro = new ResizeObserver(() => chart.resize());
+    // Só redimensiona quando a caixa MUDA de tamanho.
+    //
+    // `chart.resize()` repinta, repintar mexe no layout, e mexer no layout
+    // notifica o observador de novo: sem esta guarda, toda repintura vira uma
+    // volta a mais. Com a troca de tema — que repinta cada gráfico da tela — o
+    // laço deixava de fechar, e a suíte de estados passava de dez minutos sem
+    // terminar.
+    let ultimaLargura = -1;
+    let ultimaAltura = -1;
+    const ro = new ResizeObserver((entradas) => {
+      const caixa = entradas[0]?.contentRect;
+      if (!caixa) return;
+      const largura = Math.round(caixa.width);
+      const altura = Math.round(caixa.height);
+      if (largura === ultimaLargura && altura === ultimaAltura) return;
+      ultimaLargura = largura;
+      ultimaAltura = altura;
+      chart.resize();
+    });
     ro.observe(el);
 
     const unwatch = watchTheme(() => {
+      // Gráfico que saiu da página se recolhe sozinho.
+      //
+      // A factory não tem gancho de desmontagem — o consumidor recebe um
+      // elemento, não um ciclo de vida —, então cada gráfico criado continuava
+      // vivo com o seu observador de tema mesmo depois de o elemento sair do
+      // documento. Numa página que troca de tela sem recarregar, uma troca de
+      // tema repintava TODOS os gráficos já descartados junto com o da tela: a
+      // aba do navegador fechava. Aqui é onde dá para perceber o descarte sem
+      // pedir nada ao consumidor.
+      if (!el.isConnected) {
+        (el as HTMLElement & { __chartCleanup?: () => void }).__chartCleanup?.();
+        return;
+      }
       registerNortearTheme();
-      chart.setOption(buildChartOption(opts), { notMerge: false, lazyUpdate: true });
+      // `registerTheme` só atualiza o REGISTRO global. A instância guarda o
+      // tema já resolvido desde o `init`, e `setOption` sem `notMerge`
+      // reaproveita esse model — trocar a classe do documento não mudava cor
+      // nenhuma do desenho, e no tema escuro o gráfico ficava com a paleta
+      // clara. Quem relê o registro é `setTheme`, e ele recolore no lugar, sem
+      // remontar: é o "não pisca nem requer reload" que a documentação promete.
+      chart.setTheme(THEME_NAME);
     });
 
     (el as HTMLElement & { __chartCleanup?: () => void }).__chartCleanup = () => {
@@ -205,37 +287,4 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   });
 
   return el;
-}
-
-/**
- * Versão com handle explícito — pra controle de update/destroy fora do Storybook.
- * Espera container já mountado.
- */
-export function createChartWithHandle(container: HTMLElement, opts: ChartOptions = {}): ChartHandle {
-  registerNortearTheme();
-  const chart = echarts.init(container, THEME_NAME, { renderer: opts.renderer ?? 'svg' });
-  let currentOpts = opts;
-  chart.setOption(buildChartOption(opts));
-
-  const ro = new ResizeObserver(() => chart.resize());
-  ro.observe(container);
-
-  const unwatch = watchTheme(() => {
-    registerNortearTheme();
-    chart.setOption(buildChartOption(currentOpts), { notMerge: false, lazyUpdate: true });
-  });
-
-  return {
-    el: container,
-    update: (newOpts) => {
-      currentOpts = { ...currentOpts, ...newOpts };
-      chart.setOption(buildChartOption(currentOpts), { notMerge: false });
-    },
-    resize: () => chart.resize(),
-    destroy: () => {
-      ro.disconnect();
-      unwatch();
-      chart.dispose();
-    },
-  };
 }

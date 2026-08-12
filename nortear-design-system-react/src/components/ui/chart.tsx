@@ -18,17 +18,50 @@ import {
   LegendComponent,
   GridComponent,
   DatasetComponent,
+  AriaComponent,
 } from 'echarts/components';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 
 import { cn } from '@/lib/utils';
+import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion';
 
 // Bootstrap dos módulos — idempotente, tree-shake friendly.
+//
+// `AriaComponent` não é enfeite: sem ele o bloco `aria` do option é ignorado em
+// silêncio, e a trama sobreposta a cada série — que é o que cumpre a WCAG 1.4.1
+// quando a cor sai de cena — nunca chega a ser desenhada. O componente ficou
+// meses fora desta lista enquanto a documentação prometia o `decal`.
 echarts.use([
   BarChart, LineChart, PieChart,
   TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent,
+  AriaComponent,
   SVGRenderer, CanvasRenderer,
 ]);
+
+/**
+ * Bloco `aria` comum aos builders.
+ *
+ * `decal.show` liga a trama por série. `label.enabled: false` desliga a
+ * descrição gerada pela lib de propósito: ela nasce em inglês e mora num
+ * elemento interno que o `role="img"` do container poda da árvore de
+ * acessibilidade — quem carrega a alternativa textual é o `aria-label`
+ * autoral do container, que está no idioma da página.
+ */
+const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
+
+/** Frase padrão do estado vazio — a mesma nas cinco stacks. */
+export const CHART_EMPTY_LABEL = 'Sem dados para exibir';
+
+/** O option descreve alguma série com dado? Decide o estado vazio. */
+export function isChartOptionEmpty(option: echarts.EChartsCoreOption): boolean {
+  const series = (option as { series?: unknown }).series;
+  const lista = Array.isArray(series) ? series : series ? [series] : [];
+  if (lista.length === 0) return true;
+  return lista.every((s) => {
+    const data = (s as { data?: unknown[] }).data;
+    return !Array.isArray(data) || data.length === 0;
+  });
+}
 
 // ─── Theme (lê tokens do <html>) ─────────────────────────────────────────────
 
@@ -71,8 +104,15 @@ function buildNortearTheme() {
     valueAxis: axisStyle,
     logAxis: axisStyle,
     timeAxis: axisStyle,
-    line: { itemStyle: { borderWidth: 2 }, lineStyle: { width: 2 } },
-    bar: { itemStyle: { barBorderColor: card, barBorderWidth: 1 } },
+    // WCAG 1.4.11 pede 3:1 do objeto gráfico contra o que está em volta, e as
+    // cores de série (--chart-1 a --chart-5) ficam em torno de 2:1 contra o fundo:
+    // sozinhas não sustentam o critério. Quem sustenta é o CONTORNO em
+    // --foreground, o mesmo caminho que o Angular desenha à mão. O nome anterior
+    // (barBorderColor/barBorderWidth) é da v4 do ECharts e não tinha efeito
+    // nenhum na v5 — o contorno documentado nunca chegou a ser desenhado.
+    line: { itemStyle: { borderColor: fg, borderWidth: 2 }, lineStyle: { width: 2 } },
+    bar: { itemStyle: { borderColor: fg, borderWidth: 1 } },
+    pie: { itemStyle: { borderColor: fg, borderWidth: 1 } },
   };
 }
 
@@ -122,7 +162,12 @@ function buildAxisOption(type: 'bar' | 'line' | 'area', o: OptionsBase): echarts
       ...(type === 'area' ? { areaStyle: { opacity: 0.18 } } : {}),
       ...(type === 'bar' ? { itemStyle: { borderRadius: [4, 4, 0, 0], ...(s.color ? { color: s.color } : {}) } } : {}),
     })),
-    aria: { enabled: true, decal: { show: true } },
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    animationEasing: 'cubicOut',
+    aria: ARIA,
   };
 }
 
@@ -143,7 +188,11 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): e
       itemStyle: { borderRadius: 4 },
       data: o.data.map((p) => ({ name: p.label, value: p.value })),
     }],
-    aria: { enabled: true, decal: { show: true } },
+    // Preferência de movimento respeitada com o mesmo helper e os mesmos tokens
+    // de duração do resto do design system — o gráfico animava sempre.
+    animation: !prefersReducedMotion(),
+    animationDuration: Math.round(motionDuration('moderate') * 1000),
+    aria: ARIA,
   };
 }
 
@@ -152,22 +201,51 @@ export function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): e
 export interface ChartContainerProps extends React.ComponentProps<'div'> {
   option: echarts.EChartsCoreOption;
   renderer?: 'svg' | 'canvas';
+  /**
+   * Altura do container em pixels.
+   *
+   * Existe porque a documentação mandava, havia meses, definir a altura por uma
+   * classe utilitária de altura fixa do Tailwind — vocabulário que saiu do
+   * projeto e não tem efeito nenhum em runtime. A altura é dado do consumidor,
+   * então é entrada, não classe; sem valor vale o `min-height` de `.nds-chart`.
+   */
+  height?: number;
+  /** Frase mostrada no lugar do gráfico quando não há série com dado. */
+  emptyLabel?: string;
 }
 
 export function ChartContainer({
   option,
   renderer = 'svg',
+  height,
+  emptyLabel = CHART_EMPTY_LABEL,
   className,
   style,
   ...rest
 }: ChartContainerProps) {
-  // Re-renderiza quando o tema do <html> muda (tema/dark/densidade/fonte).
-  const [themeKey, setThemeKey] = React.useState(0);
+  // Recolore quando o tema do <html> muda (marca / escuro / densidade / fonte).
+  //
+  // `registerTheme` só atualiza o REGISTRO global: a instância guarda o tema já
+  // resolvido desde o `init`, e nem `setOption` nem uma re-renderização o
+  // relêem. O caminho anterior era remontar o gráfico inteiro por uma `key`, o
+  // que recolore mas PISCA — e a documentação promete o contrário. `setTheme`
+  // relê o registro e repinta no lugar, sem recriar nó nenhum.
+  const chartRef = React.useRef<ReactECharts>(null);
+
+  // Registra o tema AINDA NA RENDERIZAÇÃO, antes de o filho montar.
+  //
+  // O registro é global e guarda o último tema calculado. Registrando só no
+  // efeito — que roda depois da montagem do filho — o gráfico nasce com a
+  // paleta de quem renderizou por último: uma tela clara herdava as cores da
+  // tela escura anterior, e o contorno das formas saía a 1.04:1 do fundo. O
+  // ciclo é idempotente, então registrar duas vezes não custa nada.
+  React.useMemo(() => applyTheme(), []);
+
   React.useEffect(() => {
     applyTheme();
     const observer = new MutationObserver(() => {
       applyTheme();
-      setThemeKey((n) => n + 1);
+      chartRef.current?.getEchartsInstance()?.setTheme(THEME_NAME);
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
@@ -183,24 +261,38 @@ export function ChartContainer({
   const ariaLabel =
     (rest as { 'aria-label'?: string })['aria-label'] ?? derivedLabel ?? 'Gráfico';
 
+  // Sem série com dado não existe desenho a anunciar: entra a frase, como no
+  // Vanilla (referência) e no Angular. O `min-height` de `.nds-chart` segura o
+  // bloco, e é por isso que a página não salta quando o dado chega.
+  const vazio = isChartOptionEmpty(option);
+
   return (
     <div
       data-slot="chart"
-      role="img"
+      // `role="img"` PODA a subárvore da árvore de acessibilidade. Com desenho
+      // isso é o que se quer: o `aria-label` substitui um SVG que o leitor de
+      // tela não teria como narrar. No estado vazio seria o contrário — a frase
+      // que explica a ausência de dado é justamente o conteúdo, e ficaria
+      // escondida atrás de um rótulo genérico. Sem papel, ela é lida.
+      role={vazio ? undefined : 'img'}
       className={cn('nds-chart', className)}
-      style={{ minHeight: 200, ...style }}
+      style={height === undefined ? style : { height, ...style }}
       {...rest}
-      aria-label={ariaLabel}
+      aria-label={vazio ? undefined : ariaLabel}
     >
-      <ReactECharts
-        key={themeKey}
-        option={option}
-        theme={THEME_NAME}
-        opts={{ renderer }}
-        style={{ width: '100%', height: '100%' }}
-        notMerge={false}
-        lazyUpdate
-      />
+      {vazio ? (
+        <p className="nds-chart-empty">{emptyLabel}</p>
+      ) : (
+        <ReactECharts
+          ref={chartRef}
+          option={option}
+          theme={THEME_NAME}
+          opts={{ renderer }}
+          style={{ width: '100%', height: '100%' }}
+          notMerge={false}
+          lazyUpdate
+        />
+      )}
     </div>
   );
 }

@@ -18,7 +18,12 @@
   overflow: hidden;
 }
 
-.nds-chart > svg {
+/* Descendente, não filho direto.
+ *
+ * A regra casava só com quem desenha o SVG na própria raiz; nas stacks em que a
+ * lib cria um elemento interno, o `> ` deixava o desenho de fora e a regra não
+ * fazia nada. */
+.nds-chart svg {
   display: block;
   width: 100%;
 }

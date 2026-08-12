@@ -2,20 +2,31 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { h } from 'vue';
 import {
+  desenhoEscreve,
+  desenhoPintado,
+  exigirRaiz,
+  formasDeDado,
+  textosDoDesenho,
+} from '@shared/testing/chart-probe';
+import {
   ChartContainer,
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption,
 } from './index';
 
-const chartData = [
-  { label: 'Jan', value: 186 }, { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 }, { label: 'Apr', value: 73 },
-  { label: 'May', value: 209 }, { label: 'Jun', value: 214 },
+const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
+const SERIES_MULTI = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
+  { name: 'Mobile',  data: [80, 200, 120, 190, 130, 140] },
 ];
-const pieData = [
-  { label: 'Desktop', value: 580 }, { label: 'Mobile', value: 420 }, { label: 'Tablet', value: 180 },
+const DISPOSITIVOS = [
+  { label: 'Desktop', value: 580 },
+  { label: 'Mobile',  value: 420 },
+  { label: 'Tablet',  value: 180 },
 ];
 
 const meta: Meta = {
+  // Sem argTypes: sem isto o painel Controls abre vazio.
   parameters: { controls: { disable: true }, actions: { disable: true } },
   title: 'UI/Chart/Variants',
   tags: ['display'],
@@ -23,33 +34,137 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-async function expectRendered(canvasElement: HTMLElement) {
-  await waitFor(() => {
-    const node = canvasElement.querySelector('[data-slot=chart] svg, [data-slot=chart] canvas');
-    expect(node).not.toBeNull();
-  }, { timeout: 2000 });
-}
-
 export const Bar: Story = {
-  render: () => h(ChartContainer, { option: buildBarOption({ data: chartData }), class: 'h-[240px] w-[480px]' }),
-  parameters: { docs: { description: { story: 'Bar — categorias discretas.' } } },
-  play: async ({ canvasElement, step }) => step('Chart renderizado', () => expectRendered(canvasElement)),
+  parameters: {
+    covers: ['functional.item2', 'visual.item1'],
+    docs: { description: { story: 'Barras — comparação entre categorias discretas.' } },
+  },
+  render: () => h(ChartContainer, {
+    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    height: 240,
+    'aria-label': 'Gráfico de barras: acessos mensais no desktop',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('O desenho sai com forma de dado, não só eixo', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      // `formasDeDado` recorta o que é preenchido E contornado: linha de grade e
+      // eixo têm `fill: none` e ficam de fora sem precisar saber como a lib
+      // nomeia seus grupos.
+      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+    });
+
+    await step('Toda categoria do dado aparece escrita no eixo', async () => {
+      await waitFor(
+        () => {
+          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+        },
+        { timeout: 3000 },
+      );
+    });
+  },
 };
 
-export const Row: Story = {
-  render: () => h(ChartContainer, { option: buildLineOption({ data: chartData }), class: 'h-[240px] w-[480px]' }),
-  parameters: { docs: { description: { story: 'Line — tendência contínua.' } } },
-  play: async ({ canvasElement, step }) => step('Chart renderizado', () => expectRendered(canvasElement)),
+export const Line: Story = {
+  parameters: {
+    covers: ['functional.item3', 'visual.item2'],
+    docs: { description: { story: 'Linhas — tendência contínua ao longo do tempo.' } },
+  },
+  render: () => h(ChartContainer, {
+    option: buildLineOption({ xAxis: MESES, series: SERIES_MULTI }),
+    height: 260,
+    'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('Uma linha traçada por série', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      // O traçado é o caminho SEM preenchimento e com espessura própria (2px do
+      // tema). Eixo, marca e linha de grade também são `fill: none`, mas ficam
+      // na espessura 1 — é a espessura que separa dado de moldura aqui.
+      const tracados = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+        const estilo = getComputedStyle(p);
+        return estilo.fill === 'none' && parseFloat(estilo.strokeWidth || '0') >= 2;
+      });
+      await expect(tracados.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      for (const tracado of tracados) {
+        await expect(tracado.getTotalLength()).toBeGreaterThan(0);
+      }
+    });
+
+    await step('A legenda nomeia cada série e o eixo mantém as categorias', async () => {
+      for (const serie of SERIES_MULTI) {
+        await expect(textosDoDesenho(raiz)).toContain(serie.name);
+      }
+      for (const mes of MESES) {
+        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      }
+    });
+  },
 };
 
 export const Area: Story = {
-  render: () => h(ChartContainer, { option: buildAreaOption({ data: chartData }), class: 'h-[240px] w-[480px]' }),
-  parameters: { docs: { description: { story: 'Area — linha com região preenchida.' } } },
-  play: async ({ canvasElement, step }) => step('Chart renderizado', () => expectRendered(canvasElement)),
+  parameters: {
+    docs: { description: { story: 'Área — a linha com a região sob ela preenchida, para dar volume.' } },
+  },
+  render: () => h(ChartContainer, {
+    option: buildAreaOption({ xAxis: MESES, series: SERIES_MULTI }),
+    height: 260,
+    'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('Cada série ganha uma região preenchida além do traçado', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      // A região vem com preenchimento translúcido — é o que a distingue do
+      // traçado, que é `fill: none`.
+      const areas = [...raiz.querySelectorAll<SVGPathElement>('svg path[fill-opacity]')].filter(
+        (p) => getComputedStyle(p).fill !== 'none',
+      );
+      await expect(areas.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+    });
+
+    await step('Toda categoria do dado aparece escrita no eixo', async () => {
+      await waitFor(
+        () => {
+          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+        },
+        { timeout: 3000 },
+      );
+    });
+  },
 };
 
 export const Pie: Story = {
-  render: () => h(ChartContainer, { option: buildPieOption({ data: pieData }), class: 'h-[280px] w-[480px]' }),
-  parameters: { docs: { description: { story: 'Pie (donut) — composição.' } } },
-  play: async ({ canvasElement, step }) => step('Chart renderizado', () => expectRendered(canvasElement)),
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { description: { story: 'Pizza (rosca) — participação de cada parte no todo.' } },
+  },
+  render: () => h(ChartContainer, {
+    option: buildPieOption({ data: DISPOSITIVOS }),
+    height: 280,
+    'aria-label': 'Distribuição de acessos por dispositivo',
+  }),
+  play: async ({ canvasElement, step }) => {
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('As fatias saem desenhadas', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+    });
+
+    await step('Cada fatia é nomeada por escrito — não só pela cor', async () => {
+      // Sem o nome escrito, distinguir as partes depende só da cor, e o gráfico
+      // some para quem não separa as cores da paleta.
+      await waitFor(
+        () => {
+          for (const ponto of DISPOSITIVOS) expect(desenhoEscreve(raiz, ponto.label)).toBe(true);
+        },
+        { timeout: 3000 },
+      );
+    });
+  },
 };

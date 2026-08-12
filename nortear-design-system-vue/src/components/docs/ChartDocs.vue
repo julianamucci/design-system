@@ -163,13 +163,15 @@ const codeImportSecondary = `import {
   buildPieOption,
 } from "@/components/ui/chart";`;
 
-const codeBarChart = `<ChartContainer :option="buildBarOption({ xAxis: xMonths, series: multiSeries })" class="nds-w-full" style="height: 300px" />`;
+// A altura é prop, não classe: a única forma documentada antes era uma classe
+// de altura que saiu do projeto com a migração e não tem efeito em runtime.
+const codeBarChart = `<ChartContainer :option="buildBarOption({ xAxis: xMonths, series: multiSeries })" :height="300" aria-label="Acessos mensais por dispositivo" />`;
 
-const codeLineChart = `<ChartContainer :option="buildLineOption({ xAxis: xMonths, series: multiSeries })" class="nds-w-full" style="height: 300px" />`;
+const codeLineChart = `<ChartContainer :option="buildLineOption({ xAxis: xMonths, series: multiSeries })" :height="300" aria-label="Acessos mensais por dispositivo" />`;
 
-const codeAreaChart = `<ChartContainer :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })" class="nds-w-full" style="height: 300px" />`;
+const codeAreaChart = `<ChartContainer :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })" :height="300" aria-label="Volume de acessos por dispositivo" />`;
 
-const codePieChart = `<ChartContainer :option="buildPieOption({ data: pieData })" class="nds-w-full" style="height: 300px" />`;
+const codePieChart = `<ChartContainer :option="buildPieOption({ data: pieData })" :height="300" aria-label="Distribuição de acessos por dispositivo" />`;
 
 const codeCustomizationTokens = `/* Em globals.css — personalizar tokens de cor das séries */
 :root {
@@ -193,7 +195,14 @@ interface ChartContainerProps {
   option: EChartsCoreOption;
   class?: string;
   renderer?: 'svg' | 'canvas';
+  /** Altura do container em pixels. Sem valor, vale o piso de .nds-chart. */
+  height?: number;
+  /** Frase no lugar do desenho quando nenhuma série tem dado. */
+  emptyLabel?: string;
 }
+
+/** Frase padrão do estado vazio, a mesma em todas as stacks. */
+declare const CHART_EMPTY_LABEL: string;
 
 // Builders auxiliares — montam o option a partir de dados simples.
 export interface ChartDataPoint { label: string; value: number }
@@ -243,7 +252,7 @@ const codeCompInCard = `<Card class="nds-w-full nds-max-w-sm">
   <CardContent>
     <ChartContainer
       :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
-      class="nds-w-full" style="height: 200px"
+      class="nds-w-full" :height="200"
       aria-label="Gráfico de barras: acessos mensais por dispositivo"
      />
   </CardContent>
@@ -256,7 +265,7 @@ const codeCompSmallInline = `<div class="nds-cluster nds-rounded-md nds-border-d
   </div>
   <ChartContainer
     :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
-    style="height: 48px; width: 120px"
+    :height="48" style="width: 120px"
     aria-label="Tendência de acessos nos últimos 6 meses"
    />
 </div>`;
@@ -290,11 +299,17 @@ const propCols = computed(() => ({
 const containerPropItems = computed(() => [
   { name: 'option',     type: 'EChartsCoreOption', defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.option'))    },
   { name: 'renderer',   type: '"svg" | "canvas"',  defaultValue: '"svg"', required: 'Não', description: toPlainText(tContent('props.table.renderer'))  },
+  { name: 'height',     type: 'number',            defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.height'))    },
+  { name: 'emptyLabel', type: 'string',            defaultValue: '"Sem dados para exibir"', required: 'Não', description: toPlainText(tContent('props.table.emptyLabel')) },
   { name: 'class',      type: 'string',            defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className')) },
   { name: 'aria-label', type: 'string',            defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.ariaLabel')) },
 ]);
 
 const legendPropItems = computed(() => [
+  // Nesta stack o tipo do gráfico não é uma prop: é a escolha do builder que
+  // monta o `option`. A linha existe porque a pergunta "como escolho o tipo?"
+  // continua sendo a primeira de quem chega.
+  { name: 'buildBarOption | buildLineOption | buildAreaOption | buildPieOption', type: '(options) => EChartsCoreOption', defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.chartType')) },
   { name: 'data',       type: '{ label: string; value: number }[]',           defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.data'))       },
   { name: 'xAxis',      type: '(string | number)[]',                          defaultValue: '—',    required: 'Não', description: toPlainText(tContent('props.table.xAxis'))      },
   { name: 'series',     type: '{ name: string; data: number[]; color?: string }[]', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.series')) },
@@ -302,17 +317,19 @@ const legendPropItems = computed(() => [
   { name: 'showLegend', type: 'boolean',                                      defaultValue: 'auto', required: 'Não', description: toPlainText(tContent('props.table.showLegend')) },
 ]);
 
+// A tabela de tokens escreve textNode: o markup das descrições passa por
+// toPlainText, senão a tag chega literal à tela.
 const tokenRows = computed(() => [
-  { token: '--chart-1',          value: 'color série 1',    description: tContent('tokens.table.chart1')          },
-  { token: '--chart-2',          value: 'color série 2',    description: tContent('tokens.table.chart2')          },
-  { token: '--chart-3',          value: 'color série 3',    description: tContent('tokens.table.chart3')          },
-  { token: '--chart-4',          value: 'color série 4',    description: tContent('tokens.table.chart4')          },
-  { token: '--chart-5',          value: 'color série 5',    description: tContent('tokens.table.chart5')          },
-  { token: '--primary',          value: 'axisPointer',      description: tContent('tokens.table.primary')         },
-  { token: '--muted-foreground', value: 'axisLabel',        description: tContent('tokens.table.mutedForeground') },
-  { token: '--border',           value: 'axisLine + grid',  description: tContent('tokens.table.border')          },
-  { token: '--foreground',       value: 'title + tooltip',  description: tContent('tokens.table.foreground')      },
-  { token: '--card',             value: 'tooltip bg',       description: tContent('tokens.table.card')            },
+  { token: '--chart-1',          value: 'color série 1',    description: toPlainText(tContent('tokens.table.chart1'))          },
+  { token: '--chart-2',          value: 'color série 2',    description: toPlainText(tContent('tokens.table.chart2'))          },
+  { token: '--chart-3',          value: 'color série 3',    description: toPlainText(tContent('tokens.table.chart3'))          },
+  { token: '--chart-4',          value: 'color série 4',    description: toPlainText(tContent('tokens.table.chart4'))          },
+  { token: '--chart-5',          value: 'color série 5',    description: toPlainText(tContent('tokens.table.chart5'))          },
+  { token: '--primary',          value: 'axisPointer',      description: toPlainText(tContent('tokens.table.primary'))         },
+  { token: '--muted-foreground', value: 'axisLabel',        description: toPlainText(tContent('tokens.table.mutedForeground')) },
+  { token: '--border',           value: 'axisLine + grid',  description: toPlainText(tContent('tokens.table.border'))          },
+  { token: '--foreground',       value: 'title + tooltip',  description: toPlainText(tContent('tokens.table.foreground'))      },
+  { token: '--card',             value: 'tooltip bg',       description: toPlainText(tContent('tokens.table.card'))            },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -324,10 +341,11 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.item6'),
 ]);
 
+// As linhas de teclado também escrevem textNode.
 const keyboardItems = computed(() => [
-  { key: 'Tab',        description: tContent('accessibility.keyboard.tab')        },
-  { key: 'Arrow Right', description: tContent('accessibility.keyboard.arrowRight') },
-  { key: 'Arrow Left',  description: tContent('accessibility.keyboard.arrowLeft')  },
+  { key: 'Tab',         description: toPlainText(tContent('accessibility.keyboard.tab'))        },
+  { key: 'Arrow Right', description: toPlainText(tContent('accessibility.keyboard.arrowRight')) },
+  { key: 'Arrow Left',  description: toPlainText(tContent('accessibility.keyboard.arrowLeft'))  },
 ]);
 
 const relatedItems = computed(() => [
@@ -356,13 +374,15 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
+// A tabela de testes escreve textNode: sem toPlainText, "Troca de tema do
+// &lt;html&gt;" chega assim mesmo à tela.
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: toPlainText(tContent('testes.functional.item1.action')), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: toPlainText(tContent('testes.functional.item2.action')), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: toPlainText(tContent('testes.functional.item3.action')), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: toPlainText(tContent('testes.functional.item6.action')), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -409,7 +429,7 @@ const visualTestItems = computed(() => [
         <ChartContainer
           :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
           class="nds-w-full nds-max-w-lg"
-          style="height: 240px"
+          :height="240"
           :aria-label="tContent('demonstration.labels.chartTitle')"
         />
       </div>
@@ -490,7 +510,7 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="nds-w-full nds-max-w-xs"
-            style="height: 120px"
+            :height="120"
             aria-label="Bar chart com legenda"
           />
         </div>
@@ -505,7 +525,7 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="nds-w-full nds-max-w-xs"
-            style="height: 120px"
+            :height="120"
           />
           <p class="nds-text-caption nds-text-muted-foreground nds-italic">
             Sem legenda — séries indistinguíveis
@@ -595,7 +615,7 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
             class="nds-w-full"
-            style="height: 180px"
+            :height="180"
             aria-label="Bar chart"
           />
         </div>
@@ -610,7 +630,7 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
             class="nds-w-full"
-            style="height: 180px"
+            :height="180"
             aria-label="Line chart"
           />
         </div>
@@ -625,7 +645,7 @@ const visualTestItems = computed(() => [
           <ChartContainer
             :option="buildAreaOption({ xAxis: xMonths, series: multiSeries })"
             class="nds-w-full"
-            style="height: 180px"
+            :height="180"
             aria-label="Area chart"
           />
         </div>
@@ -639,7 +659,7 @@ const visualTestItems = computed(() => [
         >
           <ChartContainer
             :option="buildPieOption({ data: pieData })"
-            style="height: 180px; width: 260px"
+            :height="180" style="width: 260px"
             aria-label="Pie chart"
           />
         </div>
@@ -664,7 +684,7 @@ const visualTestItems = computed(() => [
           </div>
           <ChartContainer
             :option="buildLineOption({ xAxis: xMonths, series: multiSeries })"
-            style="height: 48px; width: 120px"
+            :height="48" style="width: 120px"
             aria-label="Tendência de acessos nos últimos 6 meses"
           />
         </div>
@@ -687,7 +707,7 @@ const visualTestItems = computed(() => [
             <ChartContainer
               :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
               class="nds-w-full"
-              style="height: 200px"
+              :height="200"
               aria-label="Gráfico de barras: acessos mensais por dispositivo"
             />
           </CardContent>

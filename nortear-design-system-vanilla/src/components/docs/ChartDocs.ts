@@ -53,6 +53,11 @@ const chartData = [
   { label: 'Jun', value: 214 },
 ];
 
+const multiSeries = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
+  { name: 'Mobile', data: [120, 190, 165, 98, 174, 158] },
+];
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
@@ -65,18 +70,27 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+// Cada preview leva a SUA descrição: `label` vira o `role="img"` + `aria-label`
+// do container dentro da própria factory. Antes disso cada preview colava os
+// dois atributos à mão — e os que esqueciam ficavam mudos para o leitor de tela.
 function buildBarPreview(): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full nds-max-w-md';
-  wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
-  return wrap;
+  return createChart({
+    data: chartData,
+    type: 'bar',
+    height: 200,
+    class: 'nds-w-full nds-max-w-md',
+    label: 'Gráfico de barras: acessos mensais de janeiro a junho',
+  });
 }
 
 function buildLinePreview(): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full nds-max-w-md';
-  wrap.appendChild(createChart({ data: chartData, type: 'line', height: 200 }));
-  return wrap;
+  return createChart({
+    data: chartData,
+    type: 'line',
+    height: 200,
+    class: 'nds-w-full nds-max-w-md',
+    label: 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
+  });
 }
 
 // ─── createChartDocs ──────────────────────────────────────────────────────────
@@ -277,63 +291,52 @@ export function createChartDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair1.do')),
-              dontCaption: stripHtml(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-stack nds-w-full nds-max-w-sm';
-                wrap.dataset.spacing = 'xs';
-                wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 160 }));
-                const legend = document.createElement('div');
-                legend.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
-                legend.dataset.spacing = 'xs';
-                const dot = document.createElement('span');
-                dot.className = 'nds-rounded-full nds-bg-primary nds-inline-block';
-                dot.style.width = '0.5rem';
-                dot.style.height = '0.5rem';
-                const label = document.createElement('span');
-                label.textContent = t('demonstration.labels.bar');
-                legend.append(dot, label);
-                wrap.appendChild(legend);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                // Don't: sem legenda, difere séries só por cor
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm';
-                wrap.appendChild(
-                  createChart({
-                    data: chartData,
-                    type: 'bar',
-                    height: 160,
-                  }),
-                );
-                return wrap;
-              },
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
+              // Do: com mais de uma série a legenda aparece sozinha, e o rótulo
+              // nomeia as duas.
+              doPreviewFactory: () => createChart({
+                xAxis: chartData.map((d) => d.label),
+                series: multiSeries,
+                type: 'bar',
+                height: 160,
+                class: 'nds-w-full nds-max-w-sm',
+                label: 'Acessos mensais por dispositivo: desktop e mobile',
+              }),
+              // Don't: as mesmas duas séries, mas com a legenda desligada — só a
+              // cor separa uma da outra.
+              dontPreviewFactory: () => createChart({
+                xAxis: chartData.map((d) => d.label),
+                series: multiSeries,
+                type: 'bar',
+                height: 160,
+                showLegend: false,
+                class: 'nds-w-full nds-max-w-sm',
+                label: 'Acessos mensais',
+              }),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair2.do')),
-              dontCaption: stripHtml(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm';
-                const chart = createChart({ data: chartData, type: 'bar', height: 160 });
-                // role="img" permite aria-label no container (senão axe aponta aria-prohibited-attr).
-                chart.setAttribute('role', 'img');
-                chart.setAttribute('aria-label', 'Gráfico de barras: acessos mensais');
-                wrap.appendChild(chart);
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm';
-                const chart = createChart({ data: chartData, type: 'bar', height: 160 });
-                // No aria-label — inacessível
-                wrap.appendChild(chart);
-                return wrap;
-              },
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
+              doPreviewFactory: () => createChart({
+                data: chartData,
+                type: 'bar',
+                height: 160,
+                class: 'nds-w-full nds-max-w-sm',
+                label: 'Gráfico de barras: acessos mensais de janeiro a junho',
+              }),
+              // Don't: rótulo genérico. A factory sempre emite um, então o erro
+              // que ainda dá para cometer não é ficar sem descrição — é escrever
+              // uma que não descreve nada.
+              dontPreviewFactory: () => createChart({
+                data: chartData,
+                type: 'bar',
+                height: 160,
+                class: 'nds-w-full nds-max-w-sm',
+                label: 'Gráfico',
+              }),
             },
           ],
         });
@@ -351,8 +354,11 @@ const el = createChart({
     { label: 'Feb', value: 305 },
     { label: 'Mar', value: 237 },
   ],
-  type: 'bar',   // 'bar' | 'line'
+  type: 'bar',   // 'bar' | 'line' | 'area' | 'pie'
   height: 200,
+  // Vira o role="img" + aria-label do container. Sem ele, o desenho é
+  // conteúdo perdido para quem usa leitor de tela.
+  label: 'Acessos mensais de janeiro a março',
 });
 document.body.appendChild(el);`,
         });
@@ -362,12 +368,14 @@ document.body.appendChild(el);`,
   data: chartData,
   type: 'bar',
   height: 200,
+  label: 'Gráfico de barras: acessos mensais de janeiro a junho',
 });`;
 
         const codeLine = `const el = createChart({
   data: chartData,
   type: 'line',
   height: 200,
+  label: 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
 });`;
 
         const codeSmallInline = `const wrap = document.createElement('div');
@@ -382,10 +390,13 @@ stats.innerHTML =
   '<p class="nds-font-semibold" style="font-size:1.5rem;line-height:2rem;">1.224</p>';
 wrap.appendChild(stats);
 
-const spark = createChart({ data: chartData, type: 'line', height: 48 });
+const spark = createChart({
+  data: chartData,
+  type: 'line',
+  height: 48,
+  label: 'Tendência de acessos nos últimos seis meses',
+});
 spark.style.width = '120px';
-spark.setAttribute('role', 'img');
-spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
 wrap.appendChild(spark);`;
 
         return createDocsCompositions({
@@ -430,11 +441,13 @@ wrap.appendChild(spark);`;
                 stats.appendChild(label);
                 stats.appendChild(value);
                 wrap.appendChild(stats);
-                const spark = createChart({ data: chartData, type: 'line', height: 48 });
+                const spark = createChart({
+                  data: chartData,
+                  type: 'line',
+                  height: 48,
+                  label: 'Tendência de acessos nos últimos seis meses',
+                });
                 spark.style.width = '120px';
-                // role="img" permite aria-label no container (senão axe aponta aria-prohibited-attr).
-                spark.setAttribute('role', 'img');
-                spark.setAttribute('aria-label', 'Tendência de acessos nos últimos 6 meses');
                 wrap.appendChild(spark);
                 return wrap;
               },
@@ -451,7 +464,12 @@ header.appendChild(createCardTitle({ text: 'Acessos mensais', level: 3 }));
 header.appendChild(createCardDescription({ text: 'Janeiro — Junho' }));
 
 const content = createCardContent();
-content.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
+content.appendChild(createChart({
+  data: chartData,
+  type: 'bar',
+  height: 200,
+  label: 'Acessos mensais de janeiro a junho',
+}));
 
 card.appendChild(header);
 card.appendChild(content);`;
@@ -472,7 +490,12 @@ card.appendChild(content);`;
                 header.appendChild(createCardTitle({ text: 'Acessos mensais', level: 3 }));
                 header.appendChild(createCardDescription({ text: 'Janeiro — Junho' }));
                 const content = createCardContent();
-                content.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
+                content.appendChild(createChart({
+                  data: chartData,
+                  type: 'bar',
+                  height: 200,
+                  label: 'Acessos mensais de janeiro a junho',
+                }));
                 card.appendChild(header);
                 card.appendChild(content);
                 return card;
@@ -498,24 +521,44 @@ card.appendChild(content);`;
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createChart(options)
-export type ChartDataPoint = {
+        const interfaceCode = `// createChart(options) → HTMLElement
+export type ChartType = 'bar' | 'line' | 'area' | 'pie';
+
+export interface ChartDataPoint {
   label: string;
   value: number;
-};
+}
 
-export type ChartOptions = {
-  /** Dados do gráfico. Array de pares label/value. */
-  data: ChartDataPoint[];
-  /** Tipo do gráfico. Apenas 'bar' e 'line' são suportados no Nortear. */
-  type?: 'bar' | 'line';
-  /** Altura do SVG em pixels. */
+export interface ChartSeries {
+  name: string;
+  data: number[];
+  /** Cor autoral da série. Sobrescreve o token --chart-{n}. */
+  color?: string;
+}
+
+export interface ChartOptions {
+  type?: ChartType;
+  /** Dataset simples (1 série). Use \`series\` para multi-série. */
+  data?: ChartDataPoint[];
+  /** Multi-série: rótulos do eixo X. */
+  xAxis?: Array<string | number>;
+  /** Multi-série: séries com dados alinhados ao xAxis. */
+  series?: ChartSeries[];
+  /** Altura do container em px. Sem valor, vale o piso do bloco. */
   height?: number;
-  /** Array de cores CSS para as séries. */
-  colors?: string[];
-  /** Classes CSS adicionais no container. */
+  /** Tecnologia de desenho. */
+  renderer?: 'svg' | 'canvas';
+  /** Título desenhado acima dos eixos. */
+  title?: string;
+  /** Mostrar a legenda. Sem valor, aparece com mais de uma série. */
+  showLegend?: boolean;
+  /** Classes adicionais no container. */
   class?: string;
-};`;
+  /** Descrição do gráfico: vira o aria-label do container. */
+  label?: string;
+  /** Frase exibida no lugar do desenho quando não há dado. */
+  emptyLabel?: string;
+}`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -529,36 +572,80 @@ export type ChartOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: t('props.containerTitle'),
+              // A tabela descreve a API REAL desta stack: a factory
+              // `createChart(options)`, e não um componente de container.
+              title: 'createChart(options)',
               cols: propsCols,
               items: [
                 {
                   name: 'data',
                   type: 'ChartDataPoint[]',
                   defaultValue: '—',
-                  required: 'Sim',
-                  description: toPlainText(t('props.table.children')),
+                  required: 'Não',
+                  description: toPlainText(t('props.table.data')),
+                },
+                {
+                  name: 'xAxis',
+                  type: 'Array<string | number>',
+                  defaultValue: '—',
+                  required: 'Não',
+                  description: toPlainText(t('props.table.xAxis')),
+                },
+                {
+                  name: 'series',
+                  type: 'ChartSeries[]',
+                  defaultValue: '—',
+                  required: 'Não',
+                  description: toPlainText(t('props.table.series')),
                 },
                 {
                   name: 'type',
-                  type: "'bar' | 'line'",
+                  type: "'bar' | 'line' | 'area' | 'pie'",
                   defaultValue: "'bar'",
                   required: 'Não',
-                  description: toPlainText(t('props.table.config')),
+                  description: toPlainText(t('props.table.chartType')),
                 },
                 {
                   name: 'height',
                   type: 'number',
-                  defaultValue: '200',
+                  defaultValue: '—',
                   required: 'Não',
-                  description: toPlainText(t('props.table.initialDimension')),
+                  description: toPlainText(t('props.table.height')),
                 },
                 {
-                  name: 'colors',
-                  type: 'string[]',
-                  defaultValue: 'design system colors',
+                  name: 'title',
+                  type: 'string',
+                  defaultValue: '—',
                   required: 'Não',
-                  description: toPlainText(t('props.table.colors')),
+                  description: toPlainText(t('props.table.title')),
+                },
+                {
+                  name: 'showLegend',
+                  type: 'boolean',
+                  defaultValue: 'mais de uma série',
+                  required: 'Não',
+                  description: toPlainText(t('props.table.showLegend')),
+                },
+                {
+                  name: 'renderer',
+                  type: "'svg' | 'canvas'",
+                  defaultValue: "'svg'",
+                  required: 'Não',
+                  description: toPlainText(t('props.table.renderer')),
+                },
+                {
+                  name: 'label',
+                  type: 'string',
+                  defaultValue: "title, depois 'Gráfico'",
+                  required: 'Não',
+                  description: toPlainText(t('props.table.ariaLabel')),
+                },
+                {
+                  name: 'emptyLabel',
+                  type: 'string',
+                  defaultValue: "'Sem dados para exibir'",
+                  required: 'Não',
+                  description: toPlainText(t('props.table.emptyLabel')),
                 },
                 {
                   name: 'class',
@@ -605,20 +692,26 @@ export type ChartOptions = {
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: [
-            { token: '--chart-1', value: 'hsl(var(--chart-1))', description: t('tokens.table.chart1') },
-            { token: '--chart-2', value: 'hsl(var(--chart-2))', description: t('tokens.table.chart2') },
-            { token: '--chart-3', value: 'hsl(var(--chart-3))', description: t('tokens.table.chart3') },
-            { token: '--chart-4', value: 'hsl(var(--chart-4))', description: t('tokens.table.chart4') },
-            { token: '--chart-5', value: 'hsl(var(--chart-5))', description: t('tokens.table.chart5') },
-            { token: '--primary', value: 'hsl(var(--primary))', description: t('tokens.table.primary') },
-            { token: '--secondary', value: 'hsl(var(--secondary))', description: t('tokens.table.secondary') },
-            { token: '--muted', value: 'hsl(var(--muted))', description: t('tokens.table.muted') },
-            { token: '--muted-foreground', value: 'hsl(var(--muted-foreground))', description: t('tokens.table.mutedForeground') },
-            { token: '--border', value: 'hsl(var(--border))', description: t('tokens.table.border') },
-            { token: '--background', value: 'hsl(var(--background))', description: t('tokens.table.background') },
-            { token: '--foreground', value: 'hsl(var(--foreground))', description: t('tokens.table.foreground') },
-          ],
+          // A tabela de tokens escreve textNode: `toPlainText` para a marcação
+          // do conteúdo não chegar literal à tela.
+          items: ([
+            ['--chart-1', 'chart1'],
+            ['--chart-2', 'chart2'],
+            ['--chart-3', 'chart3'],
+            ['--chart-4', 'chart4'],
+            ['--chart-5', 'chart5'],
+            ['--primary', 'primary'],
+            ['--secondary', 'secondary'],
+            ['--muted', 'muted'],
+            ['--muted-foreground', 'mutedForeground'],
+            ['--border', 'border'],
+            ['--background', 'background'],
+            ['--foreground', 'foreground'],
+          ] as const).map(([token, chave]) => ({
+            token,
+            value: `hsl(var(${token}))`,
+            description: toPlainText(t(`tokens.table.${chave}`)),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
         });
@@ -632,10 +725,12 @@ export type ChartOptions = {
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5, 6].map((i) => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
+          // As linhas de teclado escrevem textNode — daí `toPlainText` e não
+          // `stripHtml`: sem decodificar, a entidade apareceria literal.
           keyboardItems: [
-            { key: 'Tab', description: t('accessibility.keyboard.tab') },
-            { key: 'Arrow Right', description: t('accessibility.keyboard.arrowRight') },
-            { key: 'Arrow Left', description: t('accessibility.keyboard.arrowLeft') },
+            { key: 'Tab', description: toPlainText(t('accessibility.keyboard.tab')) },
+            { key: 'Arrow Right', description: toPlainText(t('accessibility.keyboard.arrowRight')) },
+            { key: 'Arrow Left', description: toPlainText(t('accessibility.keyboard.arrowLeft')) },
           ],
         });
 

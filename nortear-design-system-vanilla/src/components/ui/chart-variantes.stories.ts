@@ -1,23 +1,39 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
+import {
+  desenhoEscreve,
+  desenhoPintado,
+  exigirRaiz,
+  formasDeDado,
+} from '@shared/testing/chart-probe';
 import { createChart } from './chart';
 
-// ─── Shared data ──────────────────────────────────────────────────────────────
+// ─── Dados ────────────────────────────────────────────────────────────────────
 
-const chartData = [
-  { label: 'Jan', value: 186 },
-  { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 },
-  { label: 'Apr', value: 73 },
-  { label: 'May', value: 209 },
-  { label: 'Jun', value: 214 },
+const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const ACESSOS = [186, 305, 237, 73, 209, 214];
+
+const chartData = MESES.map((label, i) => ({ label, value: ACESSOS[i] }));
+
+const SERIES_MULTI = [
+  { name: 'Desktop', data: ACESSOS },
+  { name: 'Mobile', data: [120, 190, 165, 98, 174, 158] },
 ];
 
 const pieData = [
   { label: 'Desktop', value: 580 },
-  { label: 'Mobile',  value: 420 },
-  { label: 'Tablet',  value: 180 },
+  { label: 'Mobile', value: 420 },
+  { label: 'Tablet', value: 180 },
 ];
+
+/** Traçado: caminho sem preenchimento e com espessura de série (o eixo usa 1px). */
+function tracados(raiz: HTMLElement): SVGPathElement[] {
+  return [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+    const s = getComputedStyle(p);
+    return s.fill === 'none' && parseFloat(s.strokeWidth || '0') >= 2;
+  });
+}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -33,94 +49,202 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// Helper: aguarda echarts terminar a init (deferida via MutationObserver).
-async function expectChartRendered(canvasElement: HTMLElement): Promise<void> {
-  await waitFor(() => {
-    const renderedNode = canvasElement.querySelector('.nds-chart svg, .nds-chart canvas');
-    expect(renderedNode).not.toBeNull();
-  }, { timeout: 2000 });
-}
-
-// ─── Bar ──────────────────────────────────────────────────────────────────────
+// A dica sob o ponteiro (functional.item4) NÃO é declarada aqui.
+//
+// Medido: nesta stack o evento de ponteiro sintético não chega ao motor de
+// desenho — o mesmo passo, com o mesmo alvo e as mesmas coordenadas, abre a
+// dica nas outras três. Foram descartadas a forma do dado, a largura do bloco,
+// o recorte do container (o desenho passou a morar num elemento interno por
+// causa disto) e o par pointer/mouse. Declarar cobertura sem verificação seria
+// pior que não declarar: o auditor passaria a mentir. Fica como divergência
+// escrita até alguém achar a causa.
 
 export const Bar: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createChart({ data: chartData, type: 'bar', height: 200 }));
-    return wrap;
-  },
   parameters: {
+    covers: ['functional.item2', 'visual.item1'],
+    // Declarado como NÃO VERIFICADO, com o motivo, em vez de omitido: omitir
+    // deixaria o item sumir do relatório, e reivindicá-lo faria o auditor
+    // mentir. Medido: o evento de ponteiro sintético não chega ao motor de
+    // desenho nesta stack — o mesmo passo, com o mesmo alvo e as mesmas
+    // coordenadas, abre a dica nas outras três. Foram descartadas a forma do
+    // dado, a largura do bloco, o par pointer/mouse e o recorte do container
+    // (o desenho passou a morar num elemento interno por causa desta caça).
+    // A dica funciona no produto; o que falta é o caminho de verificação.
+    coversNotApplicable: {
+      'functional.item4': 'dica sob o ponteiro não alcançável por evento sintético nesta stack — verificação em aberto',
+    },
     docs: {
       description: {
         story: 'Tipo bar — comparação entre categorias discretas. Use para dados não contínuos.',
       },
     },
   },
+  render: () => createChart({
+    data: chartData,
+    type: 'bar',
+    height: 240,
+    class: 'nds-max-w-md',
+    label: 'Gráfico de barras: acessos mensais no desktop, de janeiro a junho',
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('O desenho sai, com uma forma por categoria', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    });
+
+    await step('Toda categoria aparece escrita no eixo', async () => {
+      for (const mes of MESES) {
+        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      }
+    });
+
   },
 };
 
-// ─── Linha ────────────────────────────────────────────────────────────────────
+// ─── Line ─────────────────────────────────────────────────────────────────────
 
-export const Row: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createChart({ data: chartData, type: 'line', height: 200 }));
-    return wrap;
-  },
+export const Line: Story = {
   parameters: {
+    covers: ['functional.item3', 'visual.item2'],
     docs: {
       description: {
-        story: 'Tipo line — tendência contínua ao longo do tempo. Linha suave com pontos por dado.',
+        story: 'Tipo line — tendência contínua ao longo do tempo. Uma linha por série, com ponto por dado.',
       },
     },
   },
+  render: () => createChart({
+    xAxis: MESES,
+    series: SERIES_MULTI,
+    type: 'line',
+    height: 240,
+    class: 'nds-max-w-md',
+    label: 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('Uma linha traçada por série', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(
+        () => expect(tracados(raiz).length).toBeGreaterThanOrEqual(SERIES_MULTI.length),
+        { timeout: 3000 },
+      );
+      for (const traco of tracados(raiz)) {
+        // Comprimento zero é caminho vazio: o nó existiria e nada teria sido
+        // desenhado.
+        await expect(traco.getTotalLength()).toBeGreaterThan(0);
+      }
+    });
+
+    await step('A legenda nomeia cada série por escrito', async () => {
+      for (const serie of SERIES_MULTI) {
+        await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      }
+    });
+
+    await step('Toda categoria aparece escrita no eixo', async () => {
+      for (const mes of MESES) {
+        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      }
+    });
   },
 };
 
-// ─── Área ─────────────────────────────────────────────────────────────────────
+// ─── Area ─────────────────────────────────────────────────────────────────────
 
 export const Area: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createChart({ data: chartData, type: 'area', height: 200 }));
-    return wrap;
-  },
   parameters: {
     docs: {
       description: {
-        story: 'Tipo area — linha com região preenchida embaixo. Para enfatizar volume/magnitude ao longo do tempo.',
+        story: 'Tipo area — linha com a região preenchida embaixo. Enfatiza volume ao longo do tempo.',
       },
     },
   },
+  render: () => createChart({
+    xAxis: MESES,
+    series: SERIES_MULTI,
+    type: 'area',
+    height: 240,
+    class: 'nds-max-w-md',
+    label: 'Gráfico de área: volume mensal de acessos por dispositivo',
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('O traçado continua lá — a área é acréscimo, não troca', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(
+        () => expect(tracados(raiz).length).toBeGreaterThanOrEqual(SERIES_MULTI.length),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('Cada série ganha uma região preenchida sob a linha', async () => {
+      // Preenchimento translúcido: opaco esconderia a série de baixo, e é por
+      // isso que a área se distingue do traçado por `fill-opacity`, não por cor.
+      const areas = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
+        const s = getComputedStyle(p);
+        const opacidade = parseFloat(s.fillOpacity || '1');
+        return s.fill !== 'none' && opacidade > 0 && opacidade < 1;
+      });
+      await expect(areas.length).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+    });
+
+    await step('Toda categoria aparece escrita no eixo', async () => {
+      for (const mes of MESES) {
+        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      }
+    });
   },
 };
 
 // ─── Pie ──────────────────────────────────────────────────────────────────────
 
 export const Pie: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createChart({ data: pieData, type: 'pie', height: 240 }));
-    return wrap;
-  },
   parameters: {
+    covers: ['functional.item5'],
     docs: {
       description: {
-        story: 'Tipo pie (donut) — composição de um total dividido em categorias. Use para até ~6 segmentos.',
+        story: 'Tipo pie (rosca) — composição de um total. Limite a cinco ou seis fatias para continuar legível.',
       },
     },
   },
+  render: () => createChart({
+    data: pieData,
+    type: 'pie',
+    height: 280,
+    class: 'nds-max-w-md',
+    label: 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Chart renderizado', () => expectChartRendered(canvasElement));
+    const raiz = exigirRaiz(canvasElement);
+
+    await step('O desenho sai com uma forma por fatia', async () => {
+      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(
+        () => expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(pieData.length),
+        { timeout: 3000 },
+      );
+    });
+
+    await step('A legenda escreve o nome de CADA fatia', async () => {
+      // Numa rosca a fatia não tem eixo que a nomeie: sem a legenda escrita, a
+      // única pista da categoria seria a cor.
+      for (const ponto of pieData) {
+        await expect(desenhoEscreve(raiz, ponto.label)).toBe(true);
+      }
+    });
+
+    await step('Cada fatia usa um token de cor distinto', async () => {
+      const cores = new Set(
+        formasDeDado(raiz)
+          .map((f) => getComputedStyle(f).fill)
+          // A trama sobreposta entra como `url(#…)` e não é cor de série.
+          .filter((cor) => !cor.startsWith('url')),
+      );
+      await expect(cores.size).toBeGreaterThanOrEqual(pieData.length);
+    });
   },
 };
