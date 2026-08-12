@@ -612,7 +612,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       <span>Configurações avançadas</span>
       <ChevronDown
         aria-hidden="true"
-        className="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
+        className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
       />
     </button>
   </CollapsibleTrigger>
@@ -637,7 +637,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
                     <span>Configurações avançadas</span>
                     <ChevronDown
                       aria-hidden="true"
-                      className="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
+                      className="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
                     />
                   </button>
                 </CollapsibleTrigger>
@@ -887,7 +887,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
           { token: "--radius",     value: "rounded-md",              description: tContent("tokens.table.radius") },
           { token: "--accent",     value: "nds-hover-bg-accent",         description: tContent("tokens.table.triggerHover") },
           { token: "--ring",       value: "nds-focus-ring", description: tContent("tokens.table.triggerFocus") },
-          { token: "transition",   value: "transition-[height]",     description: tContent("tokens.table.transition") },
+          { token: "--duration-base", value: ".nds-collapsible",       description: tContent("tokens.table.transition") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

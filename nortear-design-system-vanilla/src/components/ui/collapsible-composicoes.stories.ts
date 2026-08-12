@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
@@ -19,6 +19,12 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
+const PAINEL_CLASSES =
+  'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+// `nds-icon` (16px) e não `nds-icon-sm` (14px): é a medida que as outras quatro
+// stacks renderizam neste componente.
+const ICONE_CLASSES = 'nds-icon nds-shrink-0';
+
 function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -28,7 +34,7 @@ function createIcon(nodes: LucideIconNode[], extraClass = ''): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', `nds-icon-sm nds-shrink-0${extraClass ? ' ' + extraClass : ''}`);
+  svg.setAttribute('class', `${ICONE_CLASSES}${extraClass ? ' ' + extraClass : ''}`);
   for (const [tag, attrs] of nodes) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -50,7 +56,7 @@ function makeTriggerWithIcon(nodes: LucideIconNode[], label: string): HTMLElemen
 
 function makeContent(items: string[]): HTMLElement {
   const div = document.createElement('div');
-  div.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+  div.className = PAINEL_CLASSES;
   div.dataset.spacing = 'sm';
   for (const text of items) {
     const p = document.createElement('p');
@@ -60,16 +66,28 @@ function makeContent(items: string[]): HTMLElement {
   return div;
 }
 
+// Idempotentes — ver a nota em collapsible.stories.ts.
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+};
+
+const painelDe = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]')!;
+
 // ─── Com Botão Customizado ────────────────────────────────────────────────────
 
 export const WithCustomButton: Story = {
   render: () => {
     const btn = document.createElement('button');
-    btn.className =
-      'nds-cluster nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
-    btn.dataset.spacing = 'sm';
-    btn.style.display = 'inline-flex';
+    btn.className = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
+    btn.dataset.justify = 'between';
     btn.textContent = 'Exibir opções avançadas';
+    btn.appendChild(createIcon(ChevronDown as unknown as LucideIconNode[], 'nds-transition-transform nds-chevron'));
 
     return createCollapsible({
       trigger: btn,
@@ -78,6 +96,7 @@ export const WithCustomButton: Story = {
     });
   },
   parameters: {
+    covers: ['functional.item5'],
     docs: {
       description: {
         story: 'Trigger customizado passando um <code>HTMLButtonElement</code> diretamente. O Collapsible mantém o ARIA (aria-expanded, aria-controls) no elemento passado.',
@@ -86,15 +105,22 @@ export const WithCustomButton: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button');
+    const trigger = canvas.getByRole('button', { name: /Exibir opções avançadas/ });
 
-    await step('Trigger customizado possui aria-expanded=false', async () => {
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await step('O botão do design system E o trigger são o MESMO elemento', async () => {
+      // A factory não embrulha o botão passado: ela escreve o ARIA nele. É por
+      // isso que o botão estilizado carrega aria-expanded e aria-controls.
+      await expect(trigger).toHaveClass(/nds-button-outline/);
+      await expect(trigger).toHaveAttribute('data-slot', 'collapsible-trigger');
+      await expect(trigger).toHaveAttribute('aria-expanded');
     });
 
-    await step('Clicar expande o painel', async () => {
-      await userEvent.click(trigger);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await step('Aberto, o mesmo botão aponta para o painel', async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      const id = trigger.getAttribute('aria-controls');
+      await expect(id).toBeTruthy();
+      await expect(document.getElementById(id!)).toBe(painelDe(canvasElement));
     });
   },
 };
@@ -115,16 +141,30 @@ export const WithIconInTrigger: Story = {
     });
   },
   parameters: {
+    covers: ['accessibility.item4'],
     docs: {
       description: {
         story: 'Ícone no trigger. O ícone tem <code>aria-hidden="true"</code> — o texto do trigger descreve a ação para leitores de tela.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // Achado pelo NOME acessível: se o SVG entrasse no nome, este seletor já não
+    // casaria — é a asserção real por trás do aria-hidden.
+    const trigger = canvas.getByRole('button', { name: 'Filtros avançados' });
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O ícone não entra no nome acessível', async () => {
+      const svgs = trigger.querySelectorAll('svg');
+      await expect(svgs.length).toBe(1);
+      for (const svg of svgs) await expect(svg).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('O trigger continua alternando o painel', async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      await expect(canvas.getByText('Filtro por categoria')).toBeVisible();
+    });
   },
 };
 
@@ -132,28 +172,28 @@ export const WithIconInTrigger: Story = {
 
 export const WithRotatingChevron: Story = {
   render: () => {
+    // `.nds-chevron` já traz a transição E a rotação de 180° no estado aberto —
+    // não é preciso escrever transition inline nem utilitário de rotação.
     const chevron = createIcon(
       ChevronDown as unknown as LucideIconNode[],
-      'nds-collapsible-chevron',
+      'nds-transition-transform nds-chevron',
     );
-    chevron.style.transition = 'transform 200ms';
 
-    const triggerEl = document.createElement('span');
-    triggerEl.className = 'nds-cluster nds-w-full';
-    triggerEl.dataset.justify = 'between';
+    const conteudoTrigger = document.createElement('span');
+    conteudoTrigger.className = 'nds-cluster nds-w-full';
+    conteudoTrigger.dataset.justify = 'between';
     const label = document.createElement('span');
-    label.textContent = 'Configuracoes avançadas';
-    triggerEl.appendChild(label);
-    triggerEl.appendChild(chevron);
+    label.textContent = 'Configurações avançadas';
+    conteudoTrigger.appendChild(label);
+    conteudoTrigger.appendChild(chevron);
 
     const btn = document.createElement('button');
-    btn.className =
-      'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';
+    btn.className = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
     btn.dataset.justify = 'between';
-    btn.appendChild(triggerEl);
+    btn.appendChild(conteudoTrigger);
 
     const content = document.createElement('div');
-    content.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+    content.className = PAINEL_CLASSES;
     content.dataset.spacing = 'sm';
     [
       { key: 'Notificações', val: 'Ativadas' },
@@ -180,24 +220,37 @@ export const WithRotatingChevron: Story = {
     });
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
-        story: 'Chevron rotativo via CSS usando <code>[[data-state=open]_&]:rotate-180</code>. O <code>data-state</code> é aplicado automaticamente pelo Collapsible no trigger e no painel.',
+        story: 'Chevron rotativo via CSS: a classe <code>.nds-chevron</code> gira 180° sozinha quando o trigger está aberto. O <code>data-state</code> e o <code>aria-expanded</code> são aplicados pelo Collapsible.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button');
+    const trigger = canvas.getByRole('button', { name: /Configurações avançadas/ });
+    const chevron = trigger.querySelector<SVGElement>('svg')!;
 
-    await step('Trigger começa fechado', async () => {
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await step('O chevron é decorativo e carrega a classe da rotação', async () => {
+      await expect(chevron).toHaveAttribute('aria-hidden', 'true');
+      await expect(chevron.getAttribute('class')).toContain('nds-chevron');
     });
 
-    await step('Clicar expande e altera data-state para open', async () => {
-      await userEvent.click(trigger);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await step('Fechado, o ícone não está girado', async () => {
+      await fechar(trigger);
+      // waitFor porque `.nds-chevron` tem transition: transform — medido no
+      // primeiro quadro, o valor computado ainda é a matriz da animação.
+      await waitFor(() => expect(getComputedStyle(chevron).transform).toBe('none'));
+    });
+
+    await step('Aberto, o CSS gira 180° a partir do estado no trigger', async () => {
+      await abrir(trigger);
       await expect(trigger).toHaveAttribute('data-state', 'open');
+      // matrix(-1, 0, 0, -1, 0, 0) é a forma computada de rotate(180deg).
+      await waitFor(() =>
+        expect(getComputedStyle(chevron).transform).toBe('matrix(-1, 0, 0, -1, 0, 0)'),
+      );
     });
   },
 };
@@ -208,11 +261,11 @@ export const WithSettingsIcon: Story = {
   render: () => {
     const triggerEl = makeTriggerWithIcon(
       Settings as unknown as LucideIconNode[],
-      'Configuracoes do sistema',
+      'Configurações do sistema',
     );
 
     const content = document.createElement('div');
-    content.className = 'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
+    content.className = PAINEL_CLASSES;
     content.dataset.spacing = 'sm';
 
     const note = document.createElement('p');
@@ -224,15 +277,15 @@ export const WithSettingsIcon: Story = {
       'Habilitar modo de depuração',
       'Limpar cache ao sair',
       'Exportar logs automaticamente',
-    ].forEach((item) => {
+    ].forEach((item, i) => {
       const row = document.createElement('label');
       row.className = 'nds-cluster nds-cursor-pointer';
       row.dataset.spacing = 'sm';
+      row.htmlFor = `collapsible-config-${i}`;
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.className = 'nds-rounded nds-border-default';
-      checkbox.style.height = '1rem';
-      checkbox.style.width = '1rem';
+      checkbox.id = `collapsible-config-${i}`;
+      checkbox.className = 'nds-rounded nds-border-default nds-size-4';
       const text = document.createElement('span');
       text.textContent = item;
       row.appendChild(checkbox);
@@ -253,9 +306,30 @@ export const WithSettingsIcon: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Configurações do sistema' });
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O painel aceita controles de formulário completos', async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      await expect(canvas.getAllByRole('checkbox')).toHaveLength(3);
+    });
+
+    await step('E os controles de dentro continuam operáveis', async () => {
+      // O painel fechado usa `hidden`, que retira o conteúdo do fluxo E da
+      // árvore de acessibilidade: se ele estivesse inerte quando aberto, o
+      // clique abaixo não mudaria nada.
+      const primeiro = canvas.getAllByRole('checkbox')[0] as HTMLInputElement;
+      const antes = primeiro.checked;
+      await userEvent.click(primeiro);
+      await expect(primeiro.checked).not.toBe(antes);
+    });
+
+    await step('Cada checkbox é rotulado pelo texto ao lado', async () => {
+      await expect(
+        canvas.getByLabelText('Habilitar modo de depuração'),
+      ).toBeInTheDocument();
+    });
   },
 };

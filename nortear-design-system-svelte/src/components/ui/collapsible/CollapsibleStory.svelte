@@ -10,6 +10,7 @@
     defaultOpen?: boolean;
     disabled?: boolean;
     contentText?: string;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -19,28 +20,40 @@
     defaultOpen = false,
     disabled = false,
     contentText = 'Conteúdo colapsável visível quando aberto.',
-    class: className = '',
+    onOpenChange,
+    class: className = 'nds-w-full nds-max-w-sm',
   }: Props = $props();
 
   let internalOpen = $state(untrack(() => (defaultOpen || open)));
+
+  // Markup alinhado ao Vanilla (referência cross-stack): nada de `style` inline,
+  // porque inline vence a folha e a declaração sai do tema, da densidade e da
+  // escala. Tudo aqui é classe .nds-*.
 </script>
 
 {#key defaultOpen}
-  <Collapsible bind:open={internalOpen} {disabled} class={className}>
+  <Collapsible
+    bind:open={internalOpen}
+    onOpenChange={(v: boolean) => onOpenChange?.(v)}
+    {disabled}
+    class={className}
+  >
     <CollapsibleTrigger
-      class="nds-cluster nds-rounded-md nds-py-2 nds-text-body nds-font-medium nds-transition-colors nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-disabled-none nds-disabled-opacity-50" data-align="center" data-spacing="sm" style="padding-inline: 0.75rem"
+      class="nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4"
+      data-justify="between"
       {disabled}
     >
-      {@html DOMPurify.sanitize(label)}
+      <span>{@html DOMPurify.sanitize(label)}</span>
       <ChevronDown
         aria-hidden="true"
-        class="nds-shrink-0 nds-transition-transform nds-chevron" style="height: 1rem; width: 1rem"
+        class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
       />
     </CollapsibleTrigger>
-    <CollapsibleContent>
-      <div class="nds-rounded-md nds-border-default nds-bg-muted-50 nds-px-4 nds-text-body nds-mt-2" style="padding-block: 0.75rem">
-        {contentText}
-      </div>
+    <CollapsibleContent
+      class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2"
+      data-spacing="sm"
+    >
+      <p>{contentText}</p>
     </CollapsibleContent>
   </Collapsible>
 {/key}

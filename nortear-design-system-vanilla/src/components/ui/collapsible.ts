@@ -9,15 +9,29 @@ import { cn } from '@/lib/utils';
 export type CollapsibleOptions = {
   trigger: string | HTMLElement;
   content: HTMLElement;
+  /** Estado inicial no modo não-controlado. Ignorado quando `open` é passado. */
   defaultOpen?: boolean;
+  /**
+   * Estado no modo CONTROLADO. Passar este campo transfere a posse do estado
+   * para quem chamou: o clique no trigger deixa de mexer no DOM sozinho e passa
+   * só a emitir `onOpenChange`, e quem manda escreve de volta por `setOpen`.
+   * É o equivalente imperativo da prop `open` das outras stacks.
+   */
+  open?: boolean;
   disabled?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
 
+/** O wrapper devolvido, com o setter do modo controlado. */
+export type CollapsibleElement = HTMLElement & {
+  /** Escreve o estado de fora. Não reemite `onOpenChange`. */
+  setOpen: (open: boolean) => void;
+};
+
 let _collapsibleCounter = 0;
 
-export function createCollapsible(options: CollapsibleOptions): HTMLElement {
+export function createCollapsible(options: CollapsibleOptions): CollapsibleElement {
   const {
     trigger,
     content,
@@ -26,10 +40,12 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
     onOpenChange,
   } = options;
 
+  const controlado = options.open !== undefined;
+
   const id = ++_collapsibleCounter;
   const contentId = `collapsible-content-${id}`;
 
-  let isOpen = defaultOpen;
+  let isOpen = controlado ? !!options.open : defaultOpen;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'collapsible';
@@ -67,25 +83,36 @@ export function createCollapsible(options: CollapsibleOptions): HTMLElement {
   contentEl.hidden = !isOpen;
   contentEl.appendChild(content);
 
-  function setOpen(next: boolean): void {
+  /** Só o DOM. Quem notifica é o chamador. */
+  function aplicar(next: boolean): void {
     isOpen = next;
     triggerEl.setAttribute('aria-expanded', String(isOpen));
     contentEl.setAttribute('aria-hidden', String(!isOpen));
     contentEl.hidden = !isOpen;
     triggerEl.dataset.state = isOpen ? 'open' : 'closed';
     contentEl.dataset.state = isOpen ? 'open' : 'closed';
-    onOpenChange?.(isOpen);
   }
 
   triggerEl.dataset.state = isOpen ? 'open' : 'closed';
   contentEl.dataset.state = isOpen ? 'open' : 'closed';
 
   if (!disabled) {
-    triggerEl.addEventListener('click', () => setOpen(!isOpen));
+    triggerEl.addEventListener('click', () => {
+      const next = !isOpen;
+      // No modo controlado o DOM não se move sozinho: o trigger apenas propõe o
+      // novo valor, e quem é dono do estado decide se ele vale.
+      if (!controlado) aplicar(next);
+      onOpenChange?.(next);
+    });
   }
 
   wrapper.appendChild(triggerEl);
   wrapper.appendChild(contentEl);
 
-  return wrapper;
+  return Object.assign(wrapper, {
+    setOpen: (next: boolean) => {
+      if (next === isOpen) return;
+      aplicar(next);
+    },
+  });
 }

@@ -544,7 +544,7 @@ interface CollapsibleContentProps {
         code: `<Collapsible class="nds-w-full">
   <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between">
     Configurações avançadas
-    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
   </CollapsibleTrigger>
   <CollapsibleContent>
     <div class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
@@ -737,7 +737,7 @@ interface CollapsibleContentProps {
       { token: '--radius',     value: 'rounded-md',                description: $tStore('tokens.table.radius')       },
       { token: '--accent',     value: 'nds-hover-bg-accent',           description: $tStore('tokens.table.triggerHover') },
       { token: '--ring',       value: 'nds-focus-ring',      description: $tStore('tokens.table.triggerFocus') },
-      { token: '—',            value: 'transition-[height]',       description: $tStore('tokens.table.transition')   },
+      { token: '--duration-base', value: '.nds-collapsible',        description: $tStore('tokens.table.transition')   },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

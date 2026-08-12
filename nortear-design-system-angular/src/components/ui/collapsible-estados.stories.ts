@@ -140,7 +140,7 @@ export const Open: Story = {
 };
 
 export const OpenByDefault: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: { covers: ['functional.item3', 'visual.item2'] },
   render: () => ({
     template: `
       <div ndsCollapsible class="nds-w-full nds-max-w-sm" [defaultOpen]="true">
@@ -176,6 +176,13 @@ export const OpenByDefault: Story = {
     await step('E continua alternável — defaultOpen é ponto de partida, não trava', async () => {
       if (trigger.getAttribute('aria-expanded') !== 'false') await userEvent.click(trigger);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // Volta a abrir: a story cobre visual.item2 ("aberto por padrão") e o
+      // quadro do Chromatic é o FINAL da play. Terminar fechada fotografava o
+      // oposto do que a story existe para mostrar.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await waitFor(async () => {
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      });
     });
   },
 };

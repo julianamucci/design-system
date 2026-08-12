@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
-import { ChevronDown, Filter, Settings } from 'lucide-vue-next';
+import { ChevronDown, Filter } from 'lucide-vue-next';
+
+// Mesmo markup do Playground e do Vanilla (referência cross-stack).
+const PAINEL_CLASSES =
+  'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
+const CHEVRON_CLASSES = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
 
 const meta = {
   title: 'UI/Collapsible/Compositions',
@@ -13,7 +18,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Composicoes do Collapsible: com ícone no trigger, com ícone giratório e conteúdo estruturado.',
+        component: 'Composicoes do Collapsible: trigger estilizado como botão, ícone no trigger e chevron que gira ao abrir.',
       },
     },
   },
@@ -22,85 +27,137 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WithIconInTrigger: Story = {
+/** Par idempotente — ver a nota em collapsible.stories.ts. */
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'true') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'true'));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute('aria-expanded') !== 'false') await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
+};
+
+// ─── Trigger estilizado como botão ────────────────────────────────────────────
+
+export const WithCustomButton: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
-    components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
+    components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-stack" data-spacing="sm" style="width: 20rem">
-        <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring" data-align="center" data-spacing="sm">
-          <Filter aria-hidden="true" class="nds-shrink-0" style="height: 1rem; width: 1rem" />
-          <span class="nds-flex-1 nds-text-left">Filtros avançados</span>
-          <ChevronDown
-            aria-hidden="true"
-            class="nds-shrink-0 transition-transform [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
-          />
+      <Collapsible class="nds-w-full nds-max-w-sm">
+        <CollapsibleTrigger
+          class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
+          data-justify="between"
+        >
+          <span>Exibir opções avançadas</span>
+          <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent class="nds-stack" data-spacing="sm">
-          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
-            Filtro avançado 1
-          </div>
-          <div class="nds-rounded-md nds-border-default nds-border-default nds-bg-muted nds-px-4 nds-py-2 nds-text-body">
-            Filtro avançado 2
-          </div>
+        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+          <p>Opção avançada 1</p>
+          <p>Opção avançada 2</p>
+          <p>Opção avançada 3</p>
         </CollapsibleContent>
       </Collapsible>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /Exibir opções avançadas/ });
 
-    await step('Trigger com ícone está presente', async () => {
-      const trigger = canvas.getByRole('button');
-      await expect(trigger).toBeInTheDocument();
+    await step('o botão do design system E o trigger são o MESMO elemento', async () => {
+      // Não há repasse de comportamento para um filho: as classes do Button
+      // moram no próprio trigger, que por isso carrega aria-expanded e, aberto,
+      // aria-controls, sem código de ligação.
+      await expect(trigger).toHaveClass(/nds-button-outline/);
+      await expect(trigger).toHaveAttribute('data-slot', 'collapsible-trigger');
+      await expect(trigger).toHaveAttribute('aria-expanded');
     });
 
-    await step('Ícone do trigger tem aria-hidden', async () => {
-      const trigger = canvas.getByRole('button');
-      const svgs = trigger.querySelectorAll('svg');
-      for (const svg of svgs) {
-        await expect(svg).toHaveAttribute('aria-hidden', 'true');
-      }
-    });
-
-    await step('Clicar abre o painel', async () => {
-      const trigger = canvas.getByRole('button');
-      await userEvent.click(trigger);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await step('aberto, o mesmo botão aponta para o painel', async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      const id = trigger.getAttribute('aria-controls');
+      await expect(id).toBeTruthy();
+      await expect(document.getElementById(id!)).toBe(
+        canvasElement.querySelector('[data-slot="collapsible-content"]'),
+      );
     });
   },
 };
 
-export const WithRotatingIconório: Story = {
+// ─── Com ícone no trigger ─────────────────────────────────────────────────────
+
+export const WithIconInTrigger: Story = {
+  parameters: { covers: ['accessibility.item4'] },
   render: () => ({
-    components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Settings },
+    components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-rounded-md nds-border-default nds-border-default nds-bg-background" style="width: 20rem">
-        <CollapsibleTrigger class="nds-cluster nds-w-full nds-px-4 nds-text-body nds-font-medium nds-hover-bg-accent nds-hover-text-accent-foreground nds-focus-ring nds-rounded-md" data-align="center" data-justify="between" style="padding-block: 0.75rem">
-          <div class="nds-cluster" data-spacing="sm">
-            <Settings aria-hidden="true" class="" style="height: 1rem; width: 1rem" />
-            <span>Configuracoes avançadas</span>
-          </div>
-          <ChevronDown
-            aria-hidden="true"
-            class="transition-transform duration-200 [[data-state=open]_&]:rotate-180" style="height: 1rem; width: 1rem"
-          />
+      <Collapsible class="nds-w-full nds-max-w-sm">
+        <CollapsibleTrigger
+          class="nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4"
+          data-justify="between"
+        >
+          <span class="nds-cluster" data-spacing="sm">
+            <Filter aria-hidden="true" class="nds-icon nds-shrink-0 nds-text-muted-foreground" />
+            Filtros avançados
+          </span>
+          <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
         </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div class="border-t nds-border-default nds-px-4" data-spacing="sm" style="padding-block: 0.75rem">
-            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-              <span class="nds-text-muted-foreground">Modo debug</span>
-              <span class="nds-text-foreground nds-font-medium">Desativado</span>
-            </div>
-            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-              <span class="nds-text-muted-foreground">Cache</span>
-              <span class="nds-text-foreground nds-font-medium">Habilitado</span>
-            </div>
-            <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-              <span class="nds-text-muted-foreground">Timeout</span>
-              <span class="nds-text-foreground nds-font-medium">30s</span>
-            </div>
+        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+          <p class="nds-text-muted-foreground">Filtro avançado 1</p>
+          <p class="nds-text-muted-foreground">Filtro avançado 2</p>
+        </CollapsibleContent>
+      </Collapsible>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // Achado pelo NOME acessível: se algum SVG entrasse no nome, este seletor já
+    // não casaria — é a asserção real por trás do aria-hidden.
+    const trigger = canvas.getByRole('button', { name: 'Filtros avançados' });
+
+    await step('nenhum ícone entra no nome acessível', async () => {
+      const svgs = trigger.querySelectorAll('svg');
+      await expect(svgs.length).toBe(2);
+      for (const svg of svgs) await expect(svg).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('o trigger continua alternando o painel', async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      await expect(canvas.getByText('Filtro avançado 1')).toBeVisible();
+    });
+  },
+};
+
+// ─── Com chevron rotativo ─────────────────────────────────────────────────────
+//
+// Nome anterior: `WithRotatingIconório`, identificador corrompido que aparecia
+// assim na barra lateral do Storybook. `WithRotatingChevron` é o nome do Vanilla.
+export const WithRotatingChevron: Story = {
+  parameters: { covers: ['visual.item4'] },
+  render: () => ({
+    components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
+    setup() { return {}; },
+    template: `
+      <Collapsible class="nds-w-full nds-max-w-sm">
+        <CollapsibleTrigger
+          class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
+          data-justify="between"
+        >
+          <span>Configurações avançadas</span>
+          <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
+        </CollapsibleTrigger>
+        <CollapsibleContent class="${PAINEL_CLASSES}" data-spacing="sm">
+          <div class="nds-cluster" data-justify="between">
+            <span class="nds-text-muted-foreground">Notificações</span>
+            <span class="nds-font-medium">Ativadas</span>
+          </div>
+          <div class="nds-cluster" data-justify="between">
+            <span class="nds-text-muted-foreground">Privacidade</span>
+            <span class="nds-font-medium">Modo estrito</span>
           </div>
         </CollapsibleContent>
       </Collapsible>
@@ -108,23 +165,27 @@ export const WithRotatingIconório: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Configurações avançadas' });
+    const chevron = trigger.querySelector<SVGElement>('svg')!;
 
-    await step('Collapsible com painel de configurações renderizado', async () => {
-      const trigger = canvas.getByRole('button');
-      await expect(trigger).toBeInTheDocument();
+    await step('o chevron é decorativo e carrega a classe da rotação', async () => {
+      await expect(chevron).toHaveAttribute('aria-hidden', 'true');
+      await expect(chevron.getAttribute('class')).toContain('nds-chevron');
     });
 
-    await step('Expandir mostra as configurações', async () => {
-      const trigger = canvas.getByRole('button');
-      await userEvent.click(trigger);
-      await expect(canvas.getByText('Modo debug')).toBeVisible();
-      await expect(canvas.getByText('Cache')).toBeVisible();
-      await expect(canvas.getByText('Timeout')).toBeVisible();
+    await step('fechado, o ícone não está girado', async () => {
+      await fechar(trigger);
+      // waitFor porque `.nds-chevron` tem transition: transform — medido no
+      // primeiro quadro, o valor computado ainda é a matriz da animação.
+      await waitFor(() => expect(getComputedStyle(chevron).transform).toBe('none'));
     });
 
-    await step('data-state=open aplicado ao trigger', async () => {
-      const trigger = canvas.getByRole('button');
-      await expect(trigger).toHaveAttribute('data-state', 'open');
+    await step('aberto, o CSS gira 180° a partir do estado no trigger', async () => {
+      await abrir(trigger);
+      // matrix(-1, 0, 0, -1, 0, 0) é a forma computada de rotate(180deg).
+      await waitFor(() =>
+        expect(getComputedStyle(chevron).transform).toBe('matrix(-1, 0, 0, -1, 0, 0)'),
+      );
     });
   },
 };

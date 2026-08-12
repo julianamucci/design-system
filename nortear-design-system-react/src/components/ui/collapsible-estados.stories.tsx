@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, waitFor, within, expect } from "storybook/test";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import {
@@ -9,6 +9,12 @@ import {
 } from "./collapsible";
 import { Button, buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
+
+// Mesmo markup do Playground e do Vanilla (referência cross-stack).
+const PAINEL_CLASSES =
+  "nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2";
+const TRIGGER_CLASSES = "nds-cluster nds-w-full nds-px-4";
+const CHEVRON_CLASSES = "nds-icon nds-shrink-0 nds-transition-transform nds-chevron";
 
 const meta = {
   title: "UI/Collapsible/States",
@@ -30,21 +36,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Par idempotente. O painel Interactions reexecuta a play no MESMO DOM: um
+ * clique cego num toggle parte do estado que a rodada anterior deixou e inverte
+ * todas as asserções seguintes.
+ */
+const abrir = async (t: HTMLElement) => {
+  if (t.getAttribute("aria-expanded") !== "true") await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "true"));
+};
+const fechar = async (t: HTMLElement) => {
+  if (t.getAttribute("aria-expanded") !== "false") await userEvent.click(t);
+  await waitFor(() => expect(t).toHaveAttribute("aria-expanded", "false"));
+};
+
 // ─── Uncontrolled ─────────────────────────────────────────────────────────────
 
 export const Uncontrolled: Story = {
   render: () => (
-    <Collapsible defaultOpen={false} className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <Collapsible defaultOpen={false} className="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger
-        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+        className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
+        data-justify="between"
       >
         <span>Exibir filtros avançados</span>
-        <ChevronDown
-          aria-hidden="true"
-          className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
-        />
+        <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
       </CollapsibleTrigger>
-      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
         <p>Filtro avançado 1</p>
         <p>Filtro avançado 2</p>
       </CollapsibleContent>
@@ -52,22 +70,69 @@ export const Uncontrolled: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button");
+    const painel = () =>
+      canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
-    await step("estado inicial é fechado", async () => {
-      const trigger = canvas.getByRole("button");
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await step("o estado nasce e vive dentro do componente", async () => {
+      // Ninguém de fora escreveu `open`: o painel abre porque o próprio
+      // primitivo guarda o estado.
+      await fechar(trigger);
+      await expect(painel()).toBeNull();
+      await abrir(trigger);
+      await expect(painel()).toBeInTheDocument();
+      await expect(canvas.getByText("Filtro avançado 1")).toBeVisible();
     });
 
-    await step("clicar abre o painel sem controle externo", async () => {
-      const trigger = canvas.getByRole("button");
-      await userEvent.click(trigger);
+    await step("e continua alternando sem controle externo", async () => {
+      await fechar(trigger);
+      await waitFor(() => expect(painel()).toBeNull());
+    });
+  },
+};
+
+// ─── OpenByDefault ────────────────────────────────────────────────────────────
+
+export const OpenByDefault: Story = {
+  parameters: {
+    covers: ["functional.item3", "accessibility.item5", "visual.item2"],
+  },
+  render: () => (
+    <Collapsible defaultOpen className="nds-w-full nds-max-w-sm">
+      <CollapsibleTrigger
+        className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
+        data-justify="between"
+      >
+        <span>Ocultar filtros avançados</span>
+        <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
+      </CollapsibleTrigger>
+      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
+        <p>Filtro avançado 1</p>
+        <p>Filtro avançado 2</p>
+      </CollapsibleContent>
+    </Collapsible>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button");
+    const painel = () =>
+      canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
+
+    await step("monta já expandido, sem estado externo nenhum", async () => {
+      // Asserção de MONTAGEM: por isso ela mora numa story cujo passo anterior
+      // não interage. No replay do painel Interactions o DOM não remonta, então
+      // o passo seguinte devolve o estado aberto antes de terminar.
       await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      await expect(painel()).toBeInTheDocument();
+      await expect(canvas.getByText("Filtro avançado 1")).toBeVisible();
     });
 
-    await step("clicar novamente fecha o painel", async () => {
-      const trigger = canvas.getByRole("button");
-      await userEvent.click(trigger);
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await step("defaultOpen é ponto de partida, não trava", async () => {
+      await fechar(trigger);
+      await abrir(trigger);
+      // Termina aberto de propósito: é o quadro que o Chromatic fotografa e o
+      // estado que o axe varre para esta story (visual.item2).
+      await expect(painel()).toBeInTheDocument();
     });
   },
 };
@@ -77,30 +142,27 @@ export const Uncontrolled: Story = {
 function ControlledExample() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Estado externo: <strong>{open ? "aberto" : "fechado"}</strong>
       </p>
       <div className="nds-cluster" data-spacing="sm">
         <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
-          Abrir
+          Abrir pelo estado externo
         </Button>
         <Button size="sm" variant="outline" onClick={() => setOpen(false)}>
-          Fechar
+          Fechar pelo estado externo
         </Button>
       </div>
-      <Collapsible open={open} onOpenChange={setOpen} className="nds-stack" data-spacing="sm">
+      <Collapsible open={open} onOpenChange={setOpen} className="nds-w-full">
         <CollapsibleTrigger
-          className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
-          aria-label={open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}
+          className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
+          data-justify="between"
         >
           <span>{open ? "Ocultar filtros avançados" : "Exibir filtros avançados"}</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="nds-transition-transform nds-chevron" style={{ height: "1rem", width: "1rem" }}
-          />
+          <ChevronDown aria-hidden="true" className={CHEVRON_CLASSES} />
         </CollapsibleTrigger>
-        <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+        <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
           <p>Filtro avançado 1</p>
           <p>Filtro avançado 2</p>
         </CollapsibleContent>
@@ -110,27 +172,38 @@ function ControlledExample() {
 }
 
 export const Controlled: Story = {
+  parameters: { covers: ["functional.item4", "visual.item3"] },
   render: () => <ControlledExample />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const trigger = canvasElement.querySelector<HTMLButtonElement>(
+      '[data-slot="collapsible-trigger"]',
+    )!;
+    const painel = () =>
+      canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
-    await step("estado inicial é fechado", async () => {
-      const trigger = canvas.getByRole("button", { name: /exibir filtros/i });
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await step("o painel obedece ao estado externo", async () => {
+      // Nenhum clique no trigger: quem manda é a prop, e é isso que distingue o
+      // modo controlado.
+      if (trigger.getAttribute("aria-expanded") !== "true") {
+        await userEvent.click(canvas.getByRole("button", { name: "Abrir pelo estado externo" }));
+      }
+      await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+      await expect(painel()).toBeInTheDocument();
+      await expect(trigger).toHaveTextContent("Ocultar filtros avançados");
     });
 
-    await step("clicar no botão externo 'Abrir' expande o painel", async () => {
-      const openBtn = canvas.getByRole("button", { name: "Abrir" });
-      await userEvent.click(openBtn);
-      const trigger = canvas.getByRole("button", { name: /ocultar filtros/i });
-      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await step("o trigger devolve a mudança para o estado externo", async () => {
+      await fechar(trigger);
+      await expect(trigger).toHaveTextContent("Exibir filtros avançados");
+      await waitFor(() => expect(painel()).toBeNull());
     });
 
-    await step("clicar no botão externo 'Fechar' colapsa o painel", async () => {
-      const closeBtn = canvas.getByRole("button", { name: "Fechar" });
-      await userEvent.click(closeBtn);
-      const trigger = canvas.getByRole("button", { name: /exibir filtros/i });
-      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await step("e o botão externo fecha de volta", async () => {
+      if (trigger.getAttribute("aria-expanded") !== "false") {
+        await userEvent.click(canvas.getByRole("button", { name: "Fechar pelo estado externo" }));
+      }
+      await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
     });
   },
 };
@@ -138,19 +211,18 @@ export const Controlled: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
+  parameters: { covers: ["functional.item6", "visual.item5"] },
   render: () => (
-    <Collapsible className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <Collapsible className="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger
-        className={cn(buttonVariants({ variant: "ghost" }), "flex w-full items-center justify-between px-4")}
+        className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
+        data-justify="between"
         disabled
       >
-        <span>Filtros avançados</span>
-        <ChevronDown
-          aria-hidden="true"
-          className="" style={{ height: "1rem", width: "1rem" }}
-        />
+        <span>Filtros avançados (desabilitado)</span>
+        <ChevronDown aria-hidden="true" className="nds-icon nds-shrink-0" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="nds-rounded-md nds-border-default nds-bg-muted-40 nds-px-4 nds-text-body" data-spacing="xs" style={{ paddingBlock: "0.75rem" }}>
+      <CollapsibleContent className={PAINEL_CLASSES} data-spacing="sm">
         <p>Filtro avançado 1</p>
         <p>Filtro avançado 2</p>
       </CollapsibleContent>
@@ -158,16 +230,33 @@ export const Disabled: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button");
 
     await step("trigger está desabilitado", async () => {
-      const trigger = canvas.getByRole("button");
-      // base-ui usa aria-disabled em vez de attribute disabled nativo
+      // Divergência de lib, verificada em node_modules: o Trigger do base-ui usa
+      // `focusableWhenDisabled: true` e, com botão nativo, escreve APENAS
+      // `aria-disabled` — o atributo `disabled` nativo não é emitido, para o
+      // controle continuar alcançável por Tab. Vanilla, Vue, Svelte e Angular
+      // emitem o `disabled` nativo. Asserir `toBeDisabled()` aqui seria asserir
+      // um atributo que a lib não escreve; o que vale nas cinco é o
+      // comportamento, verificado nos passos abaixo.
       await expect(trigger).toHaveAttribute("aria-disabled", "true");
     });
 
-    await step("clicar no trigger desabilitado não altera aria-expanded", async () => {
-      const trigger = canvas.getByRole("button");
+    await step("clique não altera o estado do painel", async () => {
+      // Exceção legítima à idempotência: o elemento desabilitado não muda de
+      // estado em rodada nenhuma, então o clique cego é seguro aqui.
       await userEvent.click(trigger, { pointerEventsCheck: 0 });
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      await expect(
+        canvasElement.querySelector('[data-slot="collapsible-content"]'),
+      ).toBeNull();
+    });
+
+    await step("teclado também não", async () => {
+      trigger.focus();
+      await userEvent.keyboard("{Enter}");
+      await userEvent.keyboard(" ");
       await expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
   },

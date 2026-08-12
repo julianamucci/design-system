@@ -258,7 +258,7 @@ const codeIconTrigger = `<Collapsible class="nds-w-full nds-max-w-sm">
 const codeRotatingChevron = `<Collapsible class="nds-w-full nds-max-w-sm">
   <CollapsibleTrigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent" data-justify="between">
     <span>Configurações avançadas</span>
-    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron" />
+    <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron" />
   </CollapsibleTrigger>
   <CollapsibleContent class="nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2" data-spacing="sm">
     <div class="nds-cluster" data-justify="between"><span class="nds-text-muted-foreground">Notificações</span><span class="nds-font-medium">Ativadas</span></div>
@@ -354,7 +354,7 @@ const tokenRows = computed(() => [
   { token: '--radius',     value: 'rounded-md',         description: tContent('tokens.table.radius')      },
   { token: '--accent',     value: 'nds-hover-bg-accent',    description: tContent('tokens.table.triggerHover') },
   { token: '--ring',       value: 'ring-ring',          description: tContent('tokens.table.triggerFocus') },
-  { token: 'transition',   value: 'transition-all',     description: tContent('tokens.table.transition')  },
+  { token: '--duration-base', value: '.nds-collapsible',  description: tContent('tokens.table.transition')  },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -857,7 +857,7 @@ const visualTestItems = computed(() => [
             <span>Configurações avançadas</span>
             <ChevronDown
               aria-hidden="true"
-              class="nds-icon nds-shrink-0 nds-transition-transform duration-200 nds-chevron"
+              class="nds-icon nds-shrink-0 nds-transition-transform nds-chevron"
             />
           </CollapsibleTrigger>
           <CollapsibleContent

@@ -481,7 +481,7 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Composições ────────────────────────────────────────────────────
       case 'composicoes': {
         const codeIconTrigger = `const trigger = document.createElement('span');\ntrigger.className = 'nds-cluster';\ntrigger.dataset.spacing = 'sm';\ntrigger.appendChild(filterIconSvg); // aria-hidden\nconst label = document.createElement('span');\nlabel.textContent = 'Filtros avançados';\ntrigger.appendChild(label);\n\ncreateCollapsible({ trigger, content: contentEl });`;
-        const codeRotatingChevron = `const chevron = chevronDownSvg;\nchevron.classList.add('transition-transform', 'duration-200', '[[data-state=open]_&]:rotate-180');\n\nconst inner = document.createElement('span');\ninner.className = 'nds-cluster nds-w-full';\ninner.dataset.justify = 'between';\ninner.append(labelSpan, chevron);\n\nconst btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.justify = 'between';\nbtn.appendChild(inner);\n\ncreateCollapsible({ trigger: btn, content: contentEl });`;
+        const codeRotatingChevron = `const chevron = chevronDownSvg;\nchevron.classList.add('nds-transition-transform', 'nds-chevron');\n\nconst inner = document.createElement('span');\ninner.className = 'nds-cluster nds-w-full';\ninner.dataset.justify = 'between';\ninner.append(labelSpan, chevron);\n\nconst btn = document.createElement('button');\nbtn.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-bg-background nds-px-4 nds-py-2 nds-text-body nds-font-medium nds-shadow-sm nds-hover-bg-accent';\nbtn.dataset.justify = 'between';\nbtn.appendChild(inner);\n\ncreateCollapsible({ trigger: btn, content: contentEl });`;
         const codeRichContent = `const trigger = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');\n\nconst content = document.createElement('div');\ncontent.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';\ncontent.dataset.spacing = 'sm';\n// append note + checkbox labels…\n\ncreateCollapsible({ trigger, content });`;
 
         return createDocsCompositions({
@@ -511,7 +511,7 @@ export function createCollapsibleDocs(): HTMLElement {
               previewFactory: () => {
                 const chevron = createIcon(
                   ChevronDownIcon,
-                  'transition-transform duration-200 [[data-state=open]_&]:rotate-180',
+                  'nds-transition-transform nds-chevron',
                 );
                 const triggerEl = document.createElement('span');
                 triggerEl.className = 'nds-cluster nds-w-full';
@@ -667,7 +667,7 @@ export function createCollapsibleDocs(): HTMLElement {
             { token: '--radius',          value: 'rounded-md',                description: t('tokens.table.radius')      },
             { token: '--accent',          value: 'nds-hover-bg-accent',           description: t('tokens.table.triggerHover')},
             { token: '--ring',            value: 'nds-focus-ring',   description: t('tokens.table.triggerFocus')},
-            { token: 'transition-all',    value: 'transition-all duration-200', description: t('tokens.table.transition') },
+            { token: '--duration-base',   value: '.nds-collapsible',          description: t('tokens.table.transition') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: `/* Personalizar via CSS variables no tema */\n:root {\n  --radius: 0.5rem;\n  --border: oklch(...);\n  --muted: oklch(...);\n}`,

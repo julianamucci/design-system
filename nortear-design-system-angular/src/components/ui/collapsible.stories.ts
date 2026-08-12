@@ -129,21 +129,27 @@ type Story = StoryObj<CollapsibleArgs>;
 /** Abre só se estiver fechado — ver a nota de idempotência abaixo. */
 async function abrir(trigger: HTMLElement): Promise<void> {
   if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+  await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
 }
 
 /** Fecha só se estiver aberto. */
 async function fechar(trigger: HTMLElement): Promise<void> {
   if (trigger.getAttribute('aria-expanded') !== 'false') await userEvent.click(trigger);
+  await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'));
 }
 
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
+    // `visual.item2` (aberto por padrão) saiu daqui: o Playground monta com o
+    // control `open` em false, e nenhum quadro dele é "aberto por padrão" —
+    // quem cobre esse item é a story OpenByDefault, que monta expandida. Item
+    // declarado e não cumprido faz o auditor mentir.
     covers: [
       'functional.item1', 'functional.item2',
       'accessibility.item1', 'accessibility.item2',
       'accessibility.item3', 'accessibility.item4',
-      'visual.item1', 'visual.item2',
+      'visual.item1',
     ],
   },
   render: (args) => ({
@@ -270,6 +276,17 @@ export const Playground: Story = {
       trigger.focus();
       await userEvent.keyboard(' ');
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('E a story volta ao estado que ela declara', async () => {
+      // Último passo de propósito. A story cobre visual.item1 — "estado fechado
+      // por padrão" — e o quadro que o Chromatic fotografa e o axe varre é o
+      // FINAL da play, não o da montagem. Sem isto a foto saía aberta e o item
+      // do contrato ficava declarado sem nunca ter sido capturado.
+      await fechar(trigger);
+      await waitFor(async () => {
+        await expect(painel()).toBeNull();
+      });
     });
   },
 };
