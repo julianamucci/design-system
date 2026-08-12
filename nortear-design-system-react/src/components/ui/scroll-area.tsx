@@ -2,14 +2,25 @@ import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
 
 import { cn } from "@/lib/utils"
 
+// ─── ScrollArea ───────────────────────────────────────────────────────────────
+//
+// SEM `type` e SEM `scrollHideDelay`. As duas props estavam declaradas aqui e
+// não existem em `@base-ui/react/scroll-area` — conferido no
+// `root/ScrollAreaRoot.d.ts`, cuja única prop própria é `overflowEdgeThreshold`.
+// Declaradas, elas caíam no `{...props}` e chegavam ao `<div>`: `scrollHideDelay`
+// virava erro de console do React a cada render e `type` virava atributo inválido
+// no elemento. Prop que a lib ignora em silêncio é contrato falso — quem passava
+// `type="always"` recebia o comportamento padrão e não tinha como saber.
+//
+// Nesta stack a barra é montada sempre que há transbordo, e o estado de ponteiro
+// e de rolagem é publicado como `data-hovering` / `data-scrolling` na própria
+// barra, para o CSS decidir a aparência. Não há tempo de espera a configurar.
+
 function ScrollArea({
   className,
   children,
   ...props
-}: ScrollAreaPrimitive.Root.Props & {
-  type?: "auto" | "always" | "scroll" | "hover"
-  scrollHideDelay?: number
-}) {
+}: ScrollAreaPrimitive.Root.Props) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"

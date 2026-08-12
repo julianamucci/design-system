@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
+import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
 import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from './card';
 import { createBadge } from './badge';
@@ -60,17 +61,31 @@ export const TagList: Story = {
 
     outer.appendChild(createScrollArea({
       height: '300px',
+      label: 'Versões publicadas',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: list,
     }));
     return outer;
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector('[data-slot="scroll-area"]') as HTMLElement | null;
-    await expect(root).toBeTruthy();
-    await expect(root!.style.height).toBe('300px');
-    await expect(canvas.getByText('v1.0.0')).toBeInTheDocument();
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+
+    await step('A lista inteira está no DOM, dentro do viewport', async () => {
+      await expect(raiz.style.height).toBe('300px');
+      await expect(viewport.contains(canvas.getByText('v1.0.0'))).toBe(true);
+      await expect(canvas.getAllByText(/^v\d+\.\d+\.\d+$/).length).toBe(20);
+    });
+
+    await step('A lista rola sem mover a página', async () => {
+      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      await expect(transbordo(viewport).y).toBe(true);
+      viewport.scrollTop = 0;
+      viewport.scrollTop = 120;
+      await expect(viewport.scrollTop).toBe(120);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+    });
   },
 };
 
@@ -114,15 +129,29 @@ export const HorizontalCards: Story = {
 
     outer.appendChild(createScrollArea({
       width: '100%',
+      label: 'Carrossel de produtos',
       class: 'nds-rounded-md nds-border-default',
       children: row,
     }));
     return outer;
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+
+    await step('A faixa transborda na horizontal', async () => {
+      // A asserção anterior contava botões com `>= 0`: passava com a tela vazia.
+      // O que a story demonstra é o eixo que transborda.
+      await expect(transbordo(viewport).x).toBe(true);
+      await expect(canvas.getByText('Cadeira Pro')).toBeInTheDocument();
+    });
+
+    await step('O eixo horizontal responde', async () => {
+      viewport.scrollLeft = 0;
+      viewport.scrollLeft = 200;
+      await expect(viewport.scrollLeft).toBe(200);
+    });
   },
 };
 
@@ -174,15 +203,34 @@ export const WideTable: Story = {
     outer.appendChild(createScrollArea({
       height: '320px',
       width: '100%',
+      label: 'Tabela ampla',
       class: 'nds-rounded-md nds-border-default',
       children: wrap,
     }));
     return outer;
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+
+    await step('A tabela transborda nos dois eixos', async () => {
+      const eixos = transbordo(viewport);
+      await expect(eixos.x).toBe(true);
+      await expect(eixos.y).toBe(true);
+    });
+
+    await step('O cabeçalho é lido como cabeçalho e os dois eixos respondem', async () => {
+      // Célula de cabeçalho é o que dá nome à coluna no leitor de tela; sem ela
+      // a tabela ampla vira um bloco de números sem referência.
+      await expect(canvas.getAllByRole('columnheader').length).toBe(13);
+      viewport.scrollTop = 0;
+      viewport.scrollLeft = 0;
+      viewport.scrollTop = 40;
+      viewport.scrollLeft = 40;
+      await expect(viewport.scrollTop).toBe(40);
+      await expect(viewport.scrollLeft).toBe(40);
+    });
   },
 };
 
@@ -226,6 +274,7 @@ export const InsideCard: Story = {
 
     content.appendChild(createScrollArea({
       height: '240px',
+      label: 'Últimas ações do usuário',
       class: 'nds-w-full nds-border-default',
       children: list,
     }));
@@ -238,9 +287,26 @@ export const InsideCard: Story = {
     return wrap;
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+
+    await step('A área rolável fica DENTRO do card, e o título fica fora dela', async () => {
+      // O ponto da composição: o cabeçalho do card não pode rolar junto, senão
+      // quem lê perde a referência do que está vendo.
+      const titulo = canvas.getByText('Histórico de atividades');
+      await expect(viewport.contains(titulo)).toBe(false);
+      await expect(transbordo(viewport).y).toBe(true);
+    });
+
+    await step('Rolar a lista não muda a caixa do card', async () => {
+      const cartao = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+      const alturaCartao = cartao.getBoundingClientRect().height;
+      viewport.scrollTop = 0;
+      viewport.scrollTop = 100;
+      await expect(viewport.scrollTop).toBe(100);
+      await expect(cartao.getBoundingClientRect().height).toBe(alturaCartao);
+    });
   },
 };
 
@@ -284,6 +350,7 @@ export const Sidebar: Story = {
 
     const sidebar = createScrollArea({
       height: '360px',
+      label: 'Navegação lateral',
       class: 'nds-rounded-md nds-border-default',
       children: nav,
     });
@@ -298,8 +365,23 @@ export const Sidebar: Story = {
     return outer;
   },
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+
+    await step('A navegação tem nome acessível e mora dentro da área rolável', async () => {
+      const nav = canvas.getByRole('navigation', { name: 'Componentes do design system' });
+      await expect(viewport.contains(nav)).toBe(true);
+      await expect(transbordo(viewport).y).toBe(true);
+    });
+
+    await step('Os links são alcançáveis por teclado, na ordem do documento', async () => {
+      const links = canvas.getAllByRole('link');
+      await expect(links.length).toBe(44);
+      viewport.blur();
+      viewport.focus();
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(links[0]);
+    });
   },
 };

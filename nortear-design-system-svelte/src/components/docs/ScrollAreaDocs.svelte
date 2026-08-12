@@ -5,7 +5,6 @@
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
   import { createActiveSection } from '@/lib/use-active-section.svelte';
-  import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
   import {
     DocsHeader, DocsDemonstration, DocsAnatomy, DocsWhenToUse, DocsDoDont,
@@ -458,10 +457,10 @@ interface ScrollAreaRootProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'type',            type: $tStore('props.table.type_prop.type'),        defaultValue: $tStore('props.table.type_prop.default'),        required: $tStore('props.table.type_prop.required'),        description: DOMPurify.sanitize($tStore('props.table.type_prop.description'))        },
-          { name: 'scrollHideDelay', type: $tStore('props.table.scrollHideDelay.type'),  defaultValue: $tStore('props.table.scrollHideDelay.default'),  required: $tStore('props.table.scrollHideDelay.required'),  description: DOMPurify.sanitize($tStore('props.table.scrollHideDelay.description'))  },
+          { name: 'type',            type: $tStore('props.table.type_prop.type'),        defaultValue: $tStore('props.table.type_prop.default'),        required: $tStore('props.table.type_prop.required'),        description: toPlainText($tStore('props.table.type_prop.description'))        },
+          { name: 'scrollHideDelay', type: $tStore('props.table.scrollHideDelay.type'),  defaultValue: $tStore('props.table.scrollHideDelay.default'),  required: $tStore('props.table.scrollHideDelay.required'),  description: toPlainText($tStore('props.table.scrollHideDelay.description'))  },
           { name: 'orientation',     type: '"vertical" | "horizontal" | "both"',         defaultValue: '"vertical"',                                    required: 'Não',                                            description: 'Direção do scroll suportada — controla quais ScrollBars o wrapper renderiza.' },
-          { name: 'class',           type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: DOMPurify.sanitize($tStore('props.table.className.description'))        },
+          { name: 'class',           type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: toPlainText($tStore('props.table.className.description'))        },
           { name: 'children',        type: 'Snippet',                                    defaultValue: '—',                                             required: 'Sim',                                            description: 'Conteúdo renderizado dentro do Viewport.' },
         ],
       },
@@ -480,12 +479,14 @@ interface ScrollAreaRootProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--border',                  value: $tStore('tokens.table.border.class'),     description: $tStore('tokens.table.border.part')     },
-      { token: '--ring',                    value: $tStore('tokens.table.ring.class'),       description: $tStore('tokens.table.ring.part')       },
-      { token: '--background',              value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
-      { token: '--foreground',              value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
-      { token: '--muted',                   value: $tStore('tokens.table.muted.class'),      description: $tStore('tokens.table.muted.part')      },
-      { token: '--ring-offset-background',  value: $tStore('tokens.table.ringOffset.class'), description: $tStore('tokens.table.ringOffset.part') },
+      // O pegador saiu de `--border` (1.25:1 contra o fundo, medido) para
+      // `--muted-foreground`, que é o que torna verdadeiro o contraste de 3:1
+      // do contrato de teste — ver o comentário na folha compartilhada.
+      { token: '--muted-foreground', value: $tStore('tokens.table.thumb.class'),      description: $tStore('tokens.table.thumb.part')      },
+      { token: '--ring',             value: $tStore('tokens.table.ring.class'),       description: $tStore('tokens.table.ring.part')       },
+      { token: '--background',       value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
+      { token: '--foreground',       value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
+      { token: '--muted',            value: $tStore('tokens.table.muted.class'),      description: $tStore('tokens.table.muted.part')      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

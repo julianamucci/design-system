@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { expect } from "storybook/test";
+import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
 
 const meta = {
@@ -9,6 +10,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -26,17 +28,25 @@ const cards = Array.from({ length: 10 }, (_, i) => i + 1);
 const rows = Array.from({ length: 12 }, (_, i) => i + 1);
 const cols = Array.from({ length: 12 }, (_, i) => i + 1);
 
+/** Barras montadas no DOM, por eixo. */
+function barras(raiz: HTMLElement, orientation: "vertical" | "horizontal") {
+  return raiz.querySelectorAll(
+    `[data-slot="scroll-area-scrollbar"][data-orientation="${orientation}"]`
+  );
+}
+
 export const Vertical: Story = {
   parameters: {
+    covers: ["visual.item1"],
     docs: {
       description: {
         story:
-          "Scroll vertical apenas — container pai com h-[300px], ScrollArea com h-full w-full. Lista longa rola sem mover a página.",
+          "Scroll vertical apenas — container pai com altura fixa e ScrollArea ocupando toda a caixa. Lista longa rola sem mover a página.",
       },
     },
   },
   render: () => (
-    <div className="" style={{ height: "300px", width: "320px" }}>
+    <div style={{ height: "300px", width: "320px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <div className="nds-p-4" data-spacing="sm">
           {tags.map((n) => (
@@ -49,28 +59,39 @@ export const Vertical: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Apenas a scrollbar vertical é renderizada", async () => {
-      const bars = canvasElement.querySelectorAll(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
-      );
-      await expect(bars.length).toBeGreaterThanOrEqual(1);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]'
+    )!;
+
+    await step("Rola só na vertical", async () => {
+      // A direção nasce do conteúdo: afirmar a classe da barra provaria apenas
+      // que alguém escreveu a classe. O que decide é qual eixo transborda.
+      const eixos = transbordo(viewport);
+      await expect(eixos.y).toBe(true);
+      await expect(eixos.x).toBe(false);
     });
-    void canvas;
+
+    await step("Só a barra vertical é montada", async () => {
+      // A lib só monta a barra do eixo que transborda — barra horizontal aqui
+      // seria trilha inerte ocupando espaço.
+      await expect(barras(canvasElement, "vertical").length).toBe(1);
+      await expect(barras(canvasElement, "horizontal").length).toBe(0);
+    });
   },
 };
 
 export const Horizontal: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
-          'Scroll horizontal apenas — container pai com w-[500px], conteúdo com flex w-max + whitespace-nowrap e <ScrollBar orientation="horizontal" />.',
+          "Scroll horizontal apenas — faixa de cards com largura de conteúdo, itens que não encolhem e ScrollBar horizontal explícita.",
       },
     },
   },
   render: () => (
-    <div className="" style={{ height: "160px", width: "500px" }}>
+    <div style={{ height: "160px", width: "500px" }}>
       <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
         <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
           {cards.map((n) => (
@@ -87,28 +108,39 @@ export const Horizontal: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await step("Scrollbar horizontal explícita é renderizada", async () => {
-      const bars = canvasElement.querySelectorAll(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
-      );
-      await expect(bars.length).toBeGreaterThanOrEqual(1);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]'
+    )!;
+
+    await step("Rola só na horizontal", async () => {
+      const eixos = transbordo(viewport);
+      await expect(eixos.x).toBe(true);
+      await expect(eixos.y).toBe(false);
+    });
+
+    await step("A barra horizontal é montada e o eixo responde", async () => {
+      await expect(barras(canvasElement, "horizontal").length).toBe(1);
+      viewport.scrollLeft = 0;
+      viewport.scrollLeft = 60;
+      await expect(viewport.scrollLeft).toBe(60);
     });
   },
 };
 
 export const Both: Story = {
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
         story:
-          "Scroll bidirecional — tabela ampla dentro de container 500x260; renderiza ScrollBar vertical (automática) + horizontal explícita + Corner.",
+          "Scroll bidirecional — tabela ampla dentro de container fixo; renderiza a barra vertical (automática), a horizontal explícita e o canto.",
       },
     },
   },
   render: () => (
-    <div className="" style={{ height: "260px", width: "500px" }}>
+    <div style={{ height: "260px", width: "500px" }}>
       <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-        <table className="border-collapse nds-text-caption" style={{ width: "max-content" }}>
+        <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
           <tbody>
             {rows.map((r) => (
               <tr key={r}>
@@ -126,15 +158,28 @@ export const Both: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await step("Ambas scrollbars (vertical e horizontal) presentes", async () => {
-      const v = canvasElement.querySelectorAll(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
-      );
-      const h = canvasElement.querySelectorAll(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
-      );
-      await expect(v.length).toBeGreaterThanOrEqual(1);
-      await expect(h.length).toBeGreaterThanOrEqual(1);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]'
+    )!;
+
+    await step("Rola nos dois eixos", async () => {
+      const eixos = transbordo(viewport);
+      await expect(eixos.x).toBe(true);
+      await expect(eixos.y).toBe(true);
+    });
+
+    await step("As duas barras são montadas", async () => {
+      await expect(barras(canvasElement, "vertical").length).toBe(1);
+      await expect(barras(canvasElement, "horizontal").length).toBe(1);
+    });
+
+    await step("Os dois eixos respondem", async () => {
+      viewport.scrollTop = 0;
+      viewport.scrollLeft = 0;
+      viewport.scrollTop = 40;
+      viewport.scrollLeft = 40;
+      await expect(viewport.scrollTop).toBe(40);
+      await expect(viewport.scrollLeft).toBe(40);
     });
   },
 };

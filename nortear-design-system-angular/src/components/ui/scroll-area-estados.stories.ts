@@ -3,6 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent } from 'storybook/test';
 import { NdsScrollArea } from './scroll-area';
 import { NdsButton } from './button';
+// O anel de foco vivia numa cópia local desta varredura. Ele agora é do colhedor
+// compartilhado: a mesma pergunta é feita nas cinco stacks, com a mesma conta.
+import { anelDeFocoDeclarado } from '@shared/testing/scroll-area-probe';
 
 // Os estados do ScrollArea são todos do NAVEGADOR — a barra é nativa, então
 // hover e "rolando" não têm elemento próprio no DOM para provar. Sobram os dois
@@ -32,38 +35,6 @@ type Story = StoryObj;
 const TAGS = Array.from({ length: 24 }, (_, i) => `Tag ${i + 1}`);
 const POUCAS = Array.from({ length: 3 }, (_, i) => `Tag ${i + 1}`);
 const ACOES = Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`);
-
-/**
- * O anel de foco é declarado no CSS compartilhado, sob `:focus-visible`.
- *
- * Não dá para provocá-lo por evento sintético: `:focus-visible` depende da
- * modalidade de entrada que o navegador registrou, e evento não confiável não
- * atualiza essa modalidade. Então a verificação vai à fonte — a regra existe na
- * folha carregada e pinta box-shadow.
- */
-function anelDeFocoDeclarado(): boolean {
-  const varre = (folha: CSSStyleSheet): boolean => {
-    let regras: CSSRuleList;
-    try {
-      regras = folha.cssRules;
-    } catch {
-      return false; // folha de outra origem — não é do design system
-    }
-    for (const regra of Array.from(regras)) {
-      // A folha compartilhada é montada por @import; se o empacotador não
-      // tiver embutido as partes, elas continuam alcançáveis como sub-folhas.
-      if (regra instanceof CSSImportRule && regra.styleSheet && varre(regra.styleSheet)) {
-        return true;
-      }
-      if (!(regra instanceof CSSStyleRule)) continue;
-      if (!regra.selectorText.includes('.nds-scroll-area-viewport:focus-visible')) continue;
-      if (regra.style.boxShadow && regra.style.boxShadow !== 'none') return true;
-    }
-    return false;
-  };
-
-  return Array.from(document.styleSheets).some(varre);
-}
 
 export const Focus: Story = {
   parameters: { covers: ['accessibility.item3', 'visual.item4'] },

@@ -102,7 +102,7 @@ export function superficieDoApp(perto: HTMLElement): string {
  * não a composta. Sem compor com o ancestral opaco, o contraste medido é o de
  * uma cor que ninguém vê.
  */
-function fundoEfetivo(el: HTMLElement): string {
+export function fundoEfetivo(el: HTMLElement): string {
   let atual: HTMLElement | null = el;
   const camadas: string[] = [];
   while (atual) {

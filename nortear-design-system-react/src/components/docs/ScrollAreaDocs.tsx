@@ -84,7 +84,31 @@ const MATRIX_COLS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 export function ScrollAreaDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
-  const { t: tContent, locale } = useTranslation(scrollAreaTranslations);
+  // `type` e `scrollHideDelay` são propriedades da lib headless de OUTRAS
+  // stacks. Aqui elas não existem — conferido no `.d.ts` da lib, cuja única
+  // propriedade própria da raiz é o limiar de borda de transbordo. Ficam na
+  // tabela dizendo que não existem e por quê, como o `asChild` do AspectRatio:
+  // quem chega de outra stack procura por elas.
+  const { t: tContent, locale } = useTranslation(scrollAreaTranslations, {
+    "pt-BR": {
+      "props.table.typeAbsent":
+        "Não existe nesta stack. A barra fica montada enquanto houver transbordo, e o estado de ponteiro e de rolagem é publicado nela para o CSS decidir a aparência.",
+      "props.table.scrollHideDelayAbsent":
+        "Não existe nesta stack. Não há barra que se esconda sozinha, então não há tempo de espera a configurar.",
+    },
+    en: {
+      "props.table.typeAbsent":
+        "Does not exist in this stack. The bar stays mounted while there is overflow, and pointer and scrolling state are published on it for the CSS to decide the appearance.",
+      "props.table.scrollHideDelayAbsent":
+        "Does not exist in this stack. There is no bar that hides by itself, so there is no delay to configure.",
+    },
+    es: {
+      "props.table.typeAbsent":
+        "No existe en esta stack. La barra permanece montada mientras haya desbordamiento, y el estado de puntero y de desplazamiento se publica en ella para que el CSS decida la apariencia.",
+      "props.table.scrollHideDelayAbsent":
+        "No existe en esta stack. No hay una barra que se oculte sola, así que no hay tiempo de espera que configurar.",
+    },
+  });
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
@@ -178,12 +202,9 @@ export function ScrollAreaDocs() {
   </ScrollArea>
 </div>`;
 
-  const interfaceCode = `// @base-ui/react/scroll-area
-interface ScrollAreaRootProps {
-  type?: "auto" | "always" | "scroll" | "hover"; // default "hover"
-  scrollHideDelay?: number;                      // default 600
-  className?: string;
-  children: ReactNode;
+  const interfaceCode = `interface ScrollAreaProps {
+  className?: string;   // classes .nds-* extras na raiz
+  children: ReactNode;  // conteúdo renderizado dentro do Viewport
 }
 
 interface ScrollBarProps {
@@ -579,38 +600,38 @@ interface ScrollBarProps {
             items: [
               {
                 name: "type",
-                type: tContent("props.table.type_prop.type"),
-                defaultValue: tContent("props.table.type_prop.default"),
+                type: "—",
+                defaultValue: "—",
                 required: tContent("props.table.type_prop.required"),
-                description: DOMPurify.sanitize(tContent("props.table.type_prop.description")),
+                description: toPlainText(tContent("props.table.typeAbsent")),
               },
               {
                 name: "scrollHideDelay",
-                type: tContent("props.table.scrollHideDelay.type"),
-                defaultValue: tContent("props.table.scrollHideDelay.default"),
+                type: "—",
+                defaultValue: "—",
                 required: tContent("props.table.scrollHideDelay.required"),
-                description: DOMPurify.sanitize(tContent("props.table.scrollHideDelay.description")),
+                description: toPlainText(tContent("props.table.scrollHideDelayAbsent")),
               },
               {
                 name: "orientation",
                 type: tContent("props.table.orientation.type"),
                 defaultValue: tContent("props.table.orientation.default"),
                 required: tContent("props.table.orientation.required"),
-                description: DOMPurify.sanitize(tContent("props.table.orientation.description")),
+                description: toPlainText(tContent("props.table.orientation.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: DOMPurify.sanitize(tContent("props.table.className.description")),
+                description: toPlainText(tContent("props.table.className.description")),
               },
               {
                 name: "children",
                 type: tContent("props.table.children.type"),
                 defaultValue: tContent("props.table.children.default"),
                 required: tContent("props.table.children.required"),
-                description: DOMPurify.sanitize(tContent("props.table.children.description")),
+                description: toPlainText(tContent("props.table.children.description")),
               },
             ],
           },
@@ -630,9 +651,12 @@ interface ScrollBarProps {
         }}
         items={[
           {
-            token: "--border",
-            value: tContent("tokens.table.border.class"),
-            description: tContent("tokens.table.border.part"),
+            // O pegador saiu de `--border` (1.25:1 contra o fundo, medido) para
+            // `--muted-foreground`, que é o que torna verdadeiro o contraste de
+            // 3:1 do contrato de teste — ver o comentário na folha compartilhada.
+            token: "--muted-foreground",
+            value: tContent("tokens.table.thumb.class"),
+            description: tContent("tokens.table.thumb.part"),
           },
           {
             token: "--ring",
@@ -653,11 +677,6 @@ interface ScrollBarProps {
             token: "--muted",
             value: tContent("tokens.table.muted.class"),
             description: tContent("tokens.table.muted.part"),
-          },
-          {
-            token: "--ring-offset-background",
-            value: tContent("tokens.table.ringOffset.class"),
-            description: tContent("tokens.table.ringOffset.part"),
           },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

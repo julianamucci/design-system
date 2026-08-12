@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
+import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
 import { createScrollAreaDocs } from '@/components/docs/ScrollAreaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -9,6 +10,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 type ScrollAreaArgs = {
   height: string;
   width: string;
+  label: string;
   itemCount: number;
   className: string;
 };
@@ -29,6 +31,11 @@ const meta: Meta<ScrollAreaArgs> = {
       control: 'text',
       description: 'Largura do root. Útil para scroll horizontal.',
     },
+    label: {
+      control: 'text',
+      description:
+        'Nome acessível da região rolável. Vazio não emite papel algum — região anônima não ajuda ninguém.',
+    },
     itemCount: {
       control: { type: 'number', min: 1, max: 100, step: 1 },
       description: 'Número de itens da lista de demonstração.',
@@ -41,8 +48,11 @@ const meta: Meta<ScrollAreaArgs> = {
   args: {
     height: '240px',
     width: '100%',
+    label: 'Lista de itens',
     itemCount: 30,
-    className: 'rounded-md border',
+    // Era 'rounded-md border' — duas classes do Tailwind, que saiu do projeto:
+    // não pintavam nada e o control ensinava vocabulário morto.
+    className: 'nds-rounded-md nds-border-default',
   },
 };
 
@@ -53,14 +63,11 @@ type Story = StoryObj<ScrollAreaArgs>;
 
 function buildList(count: number): HTMLElement {
   const ul = document.createElement('ul');
-  ul.className = 'nds-stack nds-list-none';
+  ul.className = 'nds-stack nds-list-none nds-p-2 nds-m-0';
   ul.dataset.spacing = 'sm';
-  ul.style.padding = '0.75rem';
-  ul.style.margin = '0';
   for (let i = 1; i <= count; i++) {
     const li = document.createElement('li');
-    li.className = 'nds-text-body nds-border-b-soft';
-    li.style.paddingBottom = '0.5rem';
+    li.className = 'nds-text-body nds-border-b-soft nds-pb-2';
     li.textContent = `Item ${i}`;
     ul.appendChild(li);
   }
@@ -70,12 +77,28 @@ function buildList(count: number): HTMLElement {
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'accessibility.item1',
+      'accessibility.item5',
+    ],
+    // Os dois itens abaixo descrevem a barra CUSTOMIZADA que as libs headless
+    // desenham. Aqui a barra é a nativa do navegador: não existe nó no DOM para
+    // arrastar nem para medir contraste — quem desenha é o sistema operacional.
+    coversNotApplicable: {
+      'functional.item2': 'barra nativa: o pegador e desenhado pelo sistema, nao ha no no DOM para arrastar',
+      'accessibility.item2': 'barra nativa: o contraste do pegador e do sistema operacional, fora do DOM',
+    },
+  },
   render: (args) => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(createScrollArea({
       height: args.height || undefined,
       width: args.width || undefined,
+      label: args.label || undefined,
       class: args.className || undefined,
       children: buildList(args.itemCount),
     }));
@@ -83,27 +106,66 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
 
-    await step('Root tem data-slot="scroll-area" e classe base', async () => {
-      const root = canvasElement.querySelector('[data-slot="scroll-area"]') as HTMLElement | null;
-      await expect(root).toBeTruthy();
-      await expect(root).toHaveClass('nds-scroll-area');
-    });
-
-    await step('Viewport tem data-slot e classe base', async () => {
-      const viewport = canvasElement.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement | null;
-      await expect(viewport).toBeTruthy();
+    await step('O markup é o mesmo das outras stacks', async () => {
+      await expect(raiz.tagName).toBe('DIV');
+      await expect(raiz).toHaveClass('nds-scroll-area');
+      await expect(viewport.tagName).toBe('DIV');
       await expect(viewport).toHaveClass('nds-scroll-area-viewport');
+      await expect(raiz.style.height).toBe(args.height);
     });
 
-    await step('Altura do root é aplicada via style inline', async () => {
-      const root = canvasElement.querySelector('[data-slot="scroll-area"]') as HTMLElement | null;
-      await expect(root!.style.height).toBe(args.height);
+    await step('A rolagem é a nativa do navegador', async () => {
+      // accessibility.item5 e functional.item3: teclado (setas, PageUp/PageDown,
+      // Home/End) e inércia de toque são comportamento NATIVO de um elemento com
+      // overflow rolável e foco. Não há como provocá-los por evento sintético —
+      // evento não confiável não dispara ação padrão —, então o que se afirma é
+      // o contrato que os habilita: overflow nativo mais foco.
+      const estilo = getComputedStyle(viewport);
+      await expect(estilo.overflowY).toBe('auto');
+      await expect(estilo.overflowX).toBe('auto');
     });
 
-    await step('Conteúdo é renderizado dentro do viewport', async () => {
-      const items = canvas.getAllByText(/Item \d+/);
-      await expect(items.length).toBe(args.itemCount);
+    await step('A região rolável tem nome acessível e é alcançável por teclado', async () => {
+      // O par papel + nome: sem papel, `aria-label` seria atributo proibido;
+      // com papel e sem nome, a região não vira landmark nenhum.
+      await expect(viewport).toHaveAttribute('tabindex', '0');
+      if (args.label) {
+        await expect(canvas.getByRole('region', { name: args.label })).toBe(viewport);
+      } else {
+        await expect(viewport.getAttribute('role')).toBeNull();
+        await expect(viewport.getAttribute('aria-label')).toBeNull();
+      }
+
+      viewport.blur();
+      let alcancado = false;
+      for (let i = 0; i < 8 && !alcancado; i++) {
+        await userEvent.tab();
+        alcancado = document.activeElement === viewport;
+      }
+      await expect(alcancado).toBe(true);
+    });
+
+    await step('O conteúdo rola dentro do viewport, sem mover a página', async () => {
+      // functional.item1. A página é o alvo real do teste: rolagem que escapa
+      // para o documento é o defeito clássico deste componente.
+      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      await expect(transbordo(viewport).y).toBe(true);
+      // Cada passo estabelece a própria precondição: no replay o viewport chega
+      // rolado da rodada anterior.
+      viewport.scrollTop = 0;
+      viewport.scrollTop = 40;
+      await expect(viewport.scrollTop).toBe(40);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+    });
+
+    await step('Nada do conteúdo é escondido de tecnologia assistiva', async () => {
+      await expect(viewport.getAttribute('aria-hidden')).toBeNull();
+      await expect(canvas.getAllByText(/^Item \d+$/).length).toBe(args.itemCount);
     });
   },
 };

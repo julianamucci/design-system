@@ -78,11 +78,23 @@
  * aparência de hoje onde não há lib medindo — o Vanilla, que usa a barra nativa
  * do sistema e nem chega a renderizar estas peças.
  */
+/*
+ * A cor era `--border` — medida, dava 1.25:1 contra `--background` no claro e
+ * 1.19:1 no escuro, nos três temas de marca. Um pegador que não se distingue do
+ * fundo é um controle que não se vê: `testes.accessibility.item2` do conteúdo
+ * compartilhado pede 3:1, e WCAG 1.4.11 pede o mesmo para componente de
+ * interface. A isenção de "estilo padrão do navegador" não vale aqui justamente
+ * porque estas quatro linhas trocam o desenho do sistema pelo nosso.
+ *
+ * `--muted-foreground` fica entre 5.17:1 e 8.63:1 nas seis combinações de tema
+ * e modo, sem inventar token novo. Vanilla e Angular não chegam nesta regra:
+ * lá a barra é a nativa, e o contraste dela é do sistema operacional.
+ */
 .nds-scroll-area-thumb {
   position: relative;
   flex: 0 0 auto;
   border-radius: var(--radius-full);
-  background-color: hsl(var(--border));
+  background-color: hsl(var(--muted-foreground));
 }
 
 .nds-scroll-area-scrollbar[data-orientation="vertical"] .nds-scroll-area-thumb {

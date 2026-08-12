@@ -237,13 +237,15 @@ const scrollBarPropItems = computed(() => [
   { name: 'class',       type: tContent('props.table.className.type'),   defaultValue: tContent('props.table.className.default'),   required: tContent('props.table.className.required'),   description: toPlainText(tContent('props.table.className.description'))   },
 ]);
 
+// O pegador saiu de `--border` (1.25:1 contra o fundo, medido) para
+// `--muted-foreground`, que é o que torna verdadeiro o contraste de 3:1 do
+// contrato de teste — ver o comentário na folha compartilhada de scroll-area.
 const tokenRows = computed(() => [
-  { token: '--border',                 value: tContent('tokens.table.border.class'),     description: tContent('tokens.table.border.part')     },
-  { token: '--ring',                   value: tContent('tokens.table.ring.class'),       description: tContent('tokens.table.ring.part')       },
-  { token: '--background',             value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
-  { token: '--foreground',             value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
-  { token: '--muted',                  value: tContent('tokens.table.muted.class'),      description: tContent('tokens.table.muted.part')      },
-  { token: '--ring-offset-background', value: tContent('tokens.table.ringOffset.class'), description: tContent('tokens.table.ringOffset.part') },
+  { token: '--muted-foreground', value: tContent('tokens.table.thumb.class'),      description: tContent('tokens.table.thumb.part')      },
+  { token: '--ring',             value: tContent('tokens.table.ring.class'),       description: tContent('tokens.table.ring.part')       },
+  { token: '--background',       value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
+  { token: '--foreground',       value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
+  { token: '--muted',            value: tContent('tokens.table.muted.class'),      description: tContent('tokens.table.muted.part')      },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -503,9 +505,9 @@ const visualTestItems = computed(() => [
           dont: tContent('usage.uxWriting.table.avoid'),
         },
         items: [
-          { element: tContent('usage.uxWriting.table.container.name'), rules: tContent('usage.uxWriting.table.container.format'), do: tContent('usage.uxWriting.table.container.good'), dont: tContent('usage.uxWriting.table.container.bad') },
-          { element: tContent('usage.uxWriting.table.scrollArea.name'), rules: tContent('usage.uxWriting.table.scrollArea.format'), do: tContent('usage.uxWriting.table.scrollArea.good'), dont: tContent('usage.uxWriting.table.scrollArea.bad') },
-          { element: tContent('usage.uxWriting.table.orientation.name'), rules: tContent('usage.uxWriting.table.orientation.format'), do: tContent('usage.uxWriting.table.orientation.good'), dont: tContent('usage.uxWriting.table.orientation.bad') },
+          { element: tContent('usage.uxWriting.table.container.name'), rules: toPlainText(tContent('usage.uxWriting.table.container.format')), do: toPlainText(tContent('usage.uxWriting.table.container.good')), dont: toPlainText(tContent('usage.uxWriting.table.container.bad')) },
+          { element: tContent('usage.uxWriting.table.scrollArea.name'), rules: toPlainText(tContent('usage.uxWriting.table.scrollArea.format')), do: toPlainText(tContent('usage.uxWriting.table.scrollArea.good')), dont: toPlainText(tContent('usage.uxWriting.table.scrollArea.bad')) },
+          { element: tContent('usage.uxWriting.table.orientation.name'), rules: toPlainText(tContent('usage.uxWriting.table.orientation.format')), do: toPlainText(tContent('usage.uxWriting.table.orientation.good')), dont: toPlainText(tContent('usage.uxWriting.table.orientation.bad')) },
         ],
       }"
       :do="{

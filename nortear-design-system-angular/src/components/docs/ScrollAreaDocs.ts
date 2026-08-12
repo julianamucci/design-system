@@ -225,13 +225,14 @@ const TECLAS: Record<string, string> = {
 };
 
 /** Token de cor por chave da tabela de tokens do conteúdo. */
+// Sem `thumb` e sem `muted`: as duas linhas descrevem o pegador e a trilha da
+// barra CUSTOMIZADA, e aqui a barra é a nativa do navegador. O filtro em
+// `tokenItems` derruba a chave que não está neste mapa, então documentar peça
+// que não existe na página deixa de ser possível.
 const TOKENS: Record<string, { token: string; alvo: string }> = {
-  border:     { token: '--border',     alvo: '.nds-scroll-area-viewport' },
   ring:       { token: '--ring',       alvo: '.nds-scroll-area-viewport:focus-visible' },
   background: { token: '--background', alvo: '.nds-scroll-area' },
   foreground: { token: '--foreground', alvo: '.nds-scroll-area-viewport' },
-  muted:      { token: '--muted',      alvo: '.nds-scroll-area-viewport' },
-  ringOffset: { token: '--background', alvo: '.nds-scroll-area-viewport:focus-visible' },
 };
 
 const CAMINHOS: Record<string, string> = {

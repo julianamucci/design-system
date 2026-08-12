@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { within, expect, userEvent } from "storybook/test";
+import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
 import { ScrollAreaDocs } from "@/components/docs/ScrollAreaDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 type PlaygroundArgs = {
   orientation: "vertical" | "horizontal" | "both";
-  type: "auto" | "always" | "scroll" | "hover";
-  scrollHideDelay: number;
   itemCount: number;
 };
 
@@ -26,17 +25,6 @@ const meta = {
       description:
         "Direção do scroll do demo: vertical (lista), horizontal (cards inline) ou both (tabela).",
     },
-    type: {
-      control: "radio",
-      options: ["auto", "always", "scroll", "hover"],
-      description:
-        "Quando exibir as scrollbars. always = sempre; hover = só ao passar o mouse; scroll = só ao rolar; auto = quando há overflow.",
-    },
-    scrollHideDelay: {
-      control: { type: "number", min: 0, max: 2000, step: 100 },
-      description:
-        "Tempo em ms para esconder a scrollbar quando inativa (aplicável a type='scroll' ou 'hover').",
-    },
     itemCount: {
       control: { type: "number", min: 5, max: 60, step: 5 },
       description: "Quantidade de itens no conteúdo (apenas para o demo).",
@@ -44,8 +32,6 @@ const meta = {
   },
   args: {
     orientation: "vertical",
-    type: "hover",
-    scrollHideDelay: 600,
     itemCount: 30,
   },
 } satisfies Meta<PlaygroundArgs>;
@@ -54,20 +40,29 @@ export default meta;
 type Story = StoryObj<PlaygroundArgs>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1",
+      "functional.item3",
+      "accessibility.item1",
+      "accessibility.item5",
+    ],
+    // functional.item2 e accessibility.item2 dependem do pegador da barra: ele
+    // existe nesta stack, mas só é medido quando a barra está montada. Ficam na
+    // story AlwaysVisible, que é a que garante essa condição.
+  },
   render: (args) => {
-    const { orientation, type, scrollHideDelay, itemCount } = args;
+    const { orientation, itemCount } = args;
     const items = Array.from({ length: itemCount }, (_, i) => i + 1);
 
     if (orientation === "horizontal") {
       return (
-        // key re-monta ao mudar orientation/type (são props de montagem da lib)
+        // key re-monta ao mudar a forma do conteúdo do exemplo
         <div
-          key={`${orientation}-${type}`}
-          className="" style={{ height: "160px", width: "500px" }}
+          key={orientation}
+          style={{ height: "160px", width: "500px" }}
         >
           <ScrollArea
-            type={type}
-            scrollHideDelay={scrollHideDelay}
             className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}
           >
             <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
@@ -91,15 +86,13 @@ export const Playground: Story = {
       const rows = Array.from({ length: Math.max(8, Math.min(itemCount, 20)) }, (_, i) => i + 1);
       return (
         <div
-          key={`${orientation}-${type}`}
-          className="" style={{ height: "260px", width: "500px" }}
+          key={orientation}
+          style={{ height: "260px", width: "500px" }}
         >
           <ScrollArea
-            type={type}
-            scrollHideDelay={scrollHideDelay}
             className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
           >
-            <table className="border-collapse nds-text-caption" style={{ width: "max-content" }}>
+            <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
               <tbody>
                 {rows.map((r) => (
                   <tr key={r}>
@@ -121,12 +114,10 @@ export const Playground: Story = {
     // vertical
     return (
       <div
-        key={`${orientation}-${type}`}
-        className="" style={{ height: "300px", width: "320px" }}
+        key={orientation}
+        style={{ height: "300px", width: "320px" }}
       >
         <ScrollArea
-          type={type}
-          scrollHideDelay={scrollHideDelay}
           className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
         >
           <div className="nds-p-4" data-spacing="sm">
@@ -143,40 +134,72 @@ export const Playground: Story = {
       </div>
     );
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]'
+    )!;
 
-    await step("ScrollArea root é renderizado com data-slot", async () => {
-      const root = canvasElement.querySelector('[data-slot="scroll-area"]');
-      await expect(root).toBeInTheDocument();
+    await step("O markup é o mesmo das outras stacks", async () => {
+      // Raiz e viewport são dois `<div>` com as classes do design system: é o
+      // que faz o CSS compartilhado casar sem wrapper, com lib headless ou sem.
+      await expect(raiz.tagName).toBe("DIV");
+      await expect(raiz).toHaveClass("nds-scroll-area");
+      await expect(viewport.tagName).toBe("DIV");
+      await expect(viewport).toHaveClass("nds-scroll-area-viewport");
     });
 
-    await step("Viewport existe e é elemento rolável", async () => {
-      const viewport = canvasElement.querySelector(
-        '[data-slot="scroll-area-viewport"]'
-      );
-      await expect(viewport).toBeInTheDocument();
+    await step("A rolagem continua sendo a do navegador", async () => {
+      // accessibility.item5: a lib estiliza a barra, não substitui o mecanismo.
+      // Overflow rolável no eixo do exemplo é o que preserva roda, teclado e
+      // inércia de toque no celular — nada disso é reimplementado em JS.
+      //
+      // Só o eixo que a story rola: a lib desliga o overflow do eixo sem barra,
+      // e afirmar os dois seria afirmar detalhe de implementação de uma lib.
+      const estilo = getComputedStyle(viewport);
+      const eixo = args.orientation === "horizontal" ? estilo.overflowX : estilo.overflowY;
+      await expect(["auto", "scroll"]).toContain(eixo);
+      // `touch-action: none` no viewport mataria o gesto de arrastar no celular.
+      await expect(estilo.touchAction).not.toBe("none");
     });
 
-    await step("Pelo menos uma scrollbar está presente no DOM", async () => {
-      const bars = canvasElement.querySelectorAll(
-        '[data-slot="scroll-area-scrollbar"]'
-      );
-      await expect(bars.length).toBeGreaterThanOrEqual(1);
-    });
-
-    await step("Viewport recebe foco programático", async () => {
-      const viewport = canvasElement.querySelector(
-        '[data-slot="scroll-area-viewport"]'
-      ) as HTMLElement | null;
-      if (viewport) {
-        viewport.focus();
-        // Pode não receber foco se não houver tabIndex; checa apenas que é HTMLElement
-        await expect(viewport).toBeInTheDocument();
+    await step("O viewport é alcançável por teclado", async () => {
+      // functional.item3: setas e PageUp/PageDown são ação padrão do navegador
+      // num elemento rolável COM foco. Evento sintético não dispara ação padrão,
+      // então o que se afirma é o contrato que a habilita — e por Tab, não por
+      // `.focus()`, porque interessa estar NA ordem de tabulação.
+      await expect(viewport).toHaveAttribute("tabindex", "0");
+      viewport.blur();
+      let alcancado = false;
+      for (let i = 0; i < 8 && !alcancado; i++) {
+        await userEvent.tab();
+        alcancado = document.activeElement === viewport;
       }
+      await expect(alcancado).toBe(true);
     });
 
-    // Garante callback usado em meta.args não silencia warnings de a11y
-    void canvas;
+    await step("O conteúdo rola dentro do viewport, sem mover a página", async () => {
+      // functional.item1. A página é o alvo real: rolagem que escapa para o
+      // documento é o defeito clássico deste componente.
+      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      const eixo = args.orientation === "horizontal" ? "scrollLeft" : "scrollTop";
+      const eixos = transbordo(viewport);
+      await expect(eixo === "scrollLeft" ? eixos.x : eixos.y).toBe(true);
+
+      // Cada passo estabelece a própria precondição: no replay o viewport chega
+      // rolado da rodada anterior.
+      viewport[eixo] = 0;
+      viewport[eixo] = 40;
+      await expect(viewport[eixo]).toBe(40);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+    });
+
+    await step("Nada do conteúdo é escondido de tecnologia assistiva", async () => {
+      // O componente estiliza a caixa, não filtra conteúdo: item fora do campo
+      // visível continua no DOM e continua anunciável.
+      await expect(viewport.getAttribute("aria-hidden")).toBeNull();
+      await expect(canvas.getAllByText(/^(Tag|Card|R\d+·C\d+)/).length).toBeGreaterThan(5);
+    });
   },
 };

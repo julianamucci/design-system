@@ -149,10 +149,20 @@ export const Bidirectional: Story = {
     });
 
     await step('Os dois eixos respondem', async () => {
+      // Cada passo estabelece a própria precondição: no replay o viewport chega
+      // rolado da rodada anterior.
+      viewport.scrollTop = 0;
+      viewport.scrollLeft = 0;
       viewport.scrollTop = 24;
       viewport.scrollLeft = 24;
       await expect(viewport.scrollTop).toBe(24);
       await expect(viewport.scrollLeft).toBe(24);
+
+      // A story cobre visual.item3, e o Chromatic fotografa o FIM da play: ela
+      // volta ao canto para a foto ser a da variante, não a de um meio de
+      // rolagem escolhido por acaso.
+      viewport.scrollTop = 0;
+      viewport.scrollLeft = 0;
     });
   },
 };

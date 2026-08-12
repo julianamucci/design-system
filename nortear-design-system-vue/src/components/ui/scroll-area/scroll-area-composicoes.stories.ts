@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
+import { transbordo } from '@shared/testing/scroll-area-probe';
 import { ScrollArea, ScrollBar } from './index';
 
 const meta = {
@@ -63,16 +64,27 @@ const ROWS = Array.from({ length: 18 }, (_, i) => ({
 }));
 
 export const SidebarList: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Sidebar rolável ao lado do conteúdo principal — a lista rola sem mover a área ao lado, e os links continuam alcançáveis por teclado.',
+      },
+    },
+  },
   render: () => ({
     components: { ScrollArea },
     setup() {
       return { items: SIDEBAR_ITEMS };
     },
+    // A borda divisória ficava numa classe `border-r` que não existe no CSS
+    // do design system — não pintava nada. A sidebar passa a ser uma caixa
+    // própria com borda, como no Vanilla, que é a referência de markup.
     template: `
-      <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 640px; height: 320px">
-        <aside class="border-r nds-overflow-hidden" style="width: 200px">
+      <div class="nds-cluster" data-spacing="md" data-align="stretch" style="width: 640px">
+        <aside class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 200px; height: 320px">
           <ScrollArea class="nds-w-full" style="height: 100%">
-            <nav class="nds-p-2">
+            <nav aria-label="Seções da documentação" class="nds-p-2">
               <a
                 v-for="item in items"
                 :key="item"
@@ -84,79 +96,121 @@ export const SidebarList: Story = {
             </nav>
           </ScrollArea>
         </aside>
-        <main class="nds-flex-1 nds-p-6 nds-text-body nds-text-muted-foreground">
+        <main class="nds-flex-1 nds-rounded-md nds-border-default nds-p-6 nds-text-body nds-text-muted-foreground">
           Conteúdo principal — a sidebar rola sem mover esta área.
         </main>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('ScrollArea da sidebar é rolável', async () => {
-      const viewport = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="scroll-area-viewport"]',
-      );
-      await expect(viewport).toBeInTheDocument();
-      await expect(viewport!.scrollHeight).toBeGreaterThan(viewport!.clientHeight);
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A navegação tem nome acessível e mora dentro da área rolável', async () => {
+      const nav = canvas.getByRole('navigation', { name: 'Seções da documentação' });
+      await expect(viewport.contains(nav)).toBe(true);
+      await expect(transbordo(viewport).y).toBe(true);
+    });
+
+    await step('Os links são alcançáveis por teclado, na ordem do documento', async () => {
+      const links = canvas.getAllByRole('link');
+      await expect(links.length).toBe(SIDEBAR_ITEMS.length);
+      viewport.blur();
+      viewport.focus();
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(links[0]);
     });
   },
 };
 
 export const HorizontalGallery: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Galeria horizontal de cards — faixa com largura de conteúdo, itens que não encolhem e barra horizontal explícita.',
+      },
+    },
+  },
   render: () => ({
     components: { ScrollArea, ScrollBar },
     setup() {
       return { items: GALLERY };
     },
+    // A miniatura tinha um `style` com um objeto de binding escrito dentro da
+    // string e um `:` solto na linha seguinte — resíduo de uma conversão
+    // mecânica. Não pintava cor nenhuma e deixava um atributo inválido no
+    // markup. Agora a cor é um binding de verdade.
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px">
-        <div class="nds-overflow-hidden" style="height: 220px">
-          <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
-            <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
-              <figure
-                v-for="item in items"
-                :key="item.id"
-                class="nds-shrink-0 nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 160px"
-              >
-                <div
-                  class="" style="height: 120px; { background: 'hsl(' + item.hue + ' 60% 70%)' }"
-                  :
-                />
-                <figcaption class="nds-p-2 nds-text-caption">{{ item.title }}</figcaption>
-              </figure>
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        </div>
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px; height: 220px">
+        <ScrollArea type="always" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+          <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
+            <figure
+              v-for="item in items"
+              :key="item.id"
+              class="nds-shrink-0 nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 160px"
+            >
+              <div :style="{ height: '120px', background: 'hsl(' + item.hue + ' 60% 70%)' }" />
+              <figcaption class="nds-p-2 nds-text-caption">{{ item.title }}</figcaption>
+            </figure>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('ScrollBar horizontal presente', async () => {
-      const bars = canvasElement.querySelectorAll('[data-slot="scroll-area-scrollbar"]');
-      const hasHorizontal = Array.from(bars).some(
-        (b) => b.getAttribute('data-orientation') === 'horizontal',
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A galeria transborda na horizontal e a barra correspondente é montada', async () => {
+      await expect(transbordo(viewport).x).toBe(true);
+      const h = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]',
       );
-      await expect(hasHorizontal).toBe(true);
+      await expect(h.length).toBe(1);
+    });
+
+    await step('Todas as miniaturas estão no DOM e o eixo responde', async () => {
+      await expect(canvas.getAllByText(/^Imagem \d+$/).length).toBe(GALLERY.length);
+      viewport.scrollLeft = 0;
+      viewport.scrollLeft = 200;
+      await expect(viewport.scrollLeft).toBe(200);
     });
   },
 };
 
 export const WideTable: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Tabela ampla com scroll bidirecional — o cabeçalho acompanha o conteúdo, como no Vanilla; barra vertical e horizontal montadas.',
+      },
+    },
+  },
   render: () => ({
     components: { ScrollArea, ScrollBar },
     setup() {
       return { cols: COLS, rows: ROWS };
     },
+    // O cabeçalho usava `sticky top-0 z-10`, três classes que não existem no
+    // CSS do design system — o cabeçalho nunca grudou. Removidas: a referência
+    // cross-stack (Vanilla) também rola o cabeçalho junto.
     template: `
       <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px; height: 320px">
-        <ScrollArea class="nds-w-full" style="height: 100%">
-          <table class="border-collapse nds-text-body">
+        <ScrollArea type="always" class="nds-w-full" style="height: 100%">
+          <table class="nds-border-collapse nds-text-body">
             <thead>
               <tr>
                 <th
                   v-for="col in cols"
                   :key="col"
-                  class="sticky top-0 z-10 nds-bg-background nds-border-b nds-py-2 nds-text-left nds-whitespace-nowrap" style="padding-inline: 0.75rem"
+                  class="nds-bg-background nds-border-b nds-py-2 nds-text-left nds-whitespace-nowrap" style="padding-inline: 0.75rem"
                 >
                   {{ col }}
                 </th>
@@ -180,13 +234,25 @@ export const WideTable: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Tabela rola em ambas as direções', async () => {
-      const viewport = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="scroll-area-viewport"]',
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A tabela transborda nos dois eixos', async () => {
+      const eixos = transbordo(viewport);
+      await expect(eixos.x).toBe(true);
+      await expect(eixos.y).toBe(true);
+    });
+
+    await step('As duas barras são montadas', async () => {
+      const v = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]',
       );
-      await expect(viewport).toBeInTheDocument();
-      await expect(viewport!.scrollHeight).toBeGreaterThan(viewport!.clientHeight);
-      await expect(viewport!.scrollWidth).toBeGreaterThan(viewport!.clientWidth);
+      const h = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]',
+      );
+      await expect(v.length).toBe(1);
+      await expect(h.length).toBe(1);
     });
   },
 };

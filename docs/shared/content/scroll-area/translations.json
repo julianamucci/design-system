@@ -222,29 +222,25 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "border": {
-          "class": "bg-border",
-          "part": "Cor do thumb da scrollbar"
+        "thumb": {
+          "class": ".nds-scroll-area-thumb",
+          "part": "Cor do pegador da scrollbar"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-scroll-area-viewport:focus-visible",
           "part": "Anel de foco no viewport"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-scroll-area",
           "part": "Fundo do viewport (consumidor define)"
         },
         "foreground": {
-          "class": "text-foreground",
+          "class": ".nds-scroll-area-viewport",
           "part": "Texto dentro do viewport"
         },
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-scroll-area-scrollbar",
           "part": "Fundo da trilha da scrollbar (raro)"
-        },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Offset do anel de foco"
         }
       },
       "customizationTitle": "Customização",
@@ -629,29 +625,25 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "border": {
-          "class": "bg-border",
+        "thumb": {
+          "class": ".nds-scroll-area-thumb",
           "part": "Scrollbar thumb color"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-scroll-area-viewport:focus-visible",
           "part": "Viewport focus ring"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-scroll-area",
           "part": "Viewport background (consumer defines)"
         },
         "foreground": {
-          "class": "text-foreground",
+          "class": ".nds-scroll-area-viewport",
           "part": "Text inside viewport"
         },
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-scroll-area-scrollbar",
           "part": "Scrollbar track background (rare)"
-        },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Focus ring offset"
         }
       },
       "customizationTitle": "Customization",
@@ -1036,29 +1028,25 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "border": {
-          "class": "bg-border",
-          "part": "Color del thumb de la scrollbar"
+        "thumb": {
+          "class": ".nds-scroll-area-thumb",
+          "part": "Color del agarre de la scrollbar"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-scroll-area-viewport:focus-visible",
           "part": "Anillo de foco en el viewport"
         },
         "background": {
-          "class": "bg-background",
+          "class": ".nds-scroll-area",
           "part": "Fondo del viewport (el consumidor define)"
         },
         "foreground": {
-          "class": "text-foreground",
+          "class": ".nds-scroll-area-viewport",
           "part": "Texto dentro del viewport"
         },
         "muted": {
-          "class": "bg-muted",
+          "class": ".nds-scroll-area-scrollbar",
           "part": "Fondo de la pista de la scrollbar (raro)"
-        },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Offset del anillo de foco"
         }
       },
       "customizationTitle": "Personalización",

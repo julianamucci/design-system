@@ -58,7 +58,7 @@ function priorityLabel(raw: string): string {
 
 function buildTagList(count: number): HTMLElement {
   const list = document.createElement('div');
-  list.className = 'nds-stack nds-p-sm';
+  list.className = 'nds-stack nds-p-2';
   list.dataset.spacing = 'xs';
   const tagLabel = stripHtml(t('demonstration.labels.tag'));
   for (let i = 1; i <= count; i++) {
@@ -528,16 +528,22 @@ export interface ScrollAreaOptions {
               items: [
                 { name: 'height',   type: 'string',      defaultValue: '—', required: 'Não', description: 'Altura do root e maxHeight do viewport. Sem ela o ScrollArea NÃO rola — o conteúdo expande naturalmente.' },
                 { name: 'width',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Largura do root. Útil para scroll horizontal.' },
+                { name: 'label',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Nome acessível da região rolável. Com nome, o viewport vira uma região anunciada pelo leitor de tela; sem nome, nenhum papel é emitido — aria-label em elemento sem papel é atributo proibido.' },
                 { name: 'children', type: 'HTMLElement', defaultValue: '—', required: 'Não', description: 'Conteúdo renderizado dentro do viewport (data-slot="scroll-area-viewport").' },
-                { name: 'class',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Classes .nds-* extras no root <code>nds-relative nds-overflow-hidden nds-scrollbar</code>.' },
+                { name: 'class',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Classes .nds-* extras no root, que já carrega .nds-scroll-area (recorte e referência de posicionamento).' },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
+          // Sem citar outra stack pelo nome: cada docs page é lida sozinha, e a
+          // comparação vazaria para quem nunca viu a outra.
           extensibilityNotes:
-            'Divergência da API React: a factory Nortear NÃO expõe type, scrollHideDelay nem um subcomponente ScrollBar. ' +
-            'A estilização usa a scrollbar nativa do navegador via classe utilitária ".scrollbar" — orientation, hover/auto/always e delays seguem o comportamento padrão da plataforma.',
+            'A factory não expõe quando exibir a barra, tempo de espera nem um subcomponente de barra: ' +
+            'a barra é a NATIVA do navegador, com a aparência do sistema operacional. ' +
+            'Quando ela aparece, quanto tempo fica e como responde ao arrasto são decisões da plataforma — ' +
+            'e o que vem de graça por isso é roda do mouse, teclado (setas, PageUp/PageDown, Home/End) e inércia de toque. ' +
+            'A direção da rolagem nasce do conteúdo: o eixo que transborda é o eixo que rola.',
         });
       }
 
@@ -549,13 +555,14 @@ export interface ScrollAreaOptions {
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
+          // A barra aqui é a NATIVA do navegador: não há pegador nem trilha
+          // desenhados por nós, então as duas linhas que descrevem essas peças
+          // (`thumb` e `muted`) não têm alvo nesta stack e ficam de fora.
+          // Documentar peça que não está na página manda quem lê procurar por ela.
           items: [
-            { token: '--border',     value: 'bg-border',              description: toPlainText(t('tokens.table.border.part')) },
-            { token: '--ring',       value: 'ring-ring',              description: toPlainText(t('tokens.table.ring.part')) },
-            { token: '--background', value: 'bg-background',          description: toPlainText(t('tokens.table.background.part')) },
-            { token: '--foreground', value: 'text-foreground',        description: toPlainText(t('tokens.table.foreground.part')) },
-            { token: '--muted',      value: 'bg-muted',               description: toPlainText(t('tokens.table.muted.part')) },
-            { token: '—',            value: 'ring-offset-background', description: toPlainText(t('tokens.table.ringOffset.part')) },
+            { token: '--ring',       value: '.nds-scroll-area-viewport:focus-visible', description: toPlainText(t('tokens.table.ring.part')) },
+            { token: '--background', value: '.nds-scroll-area',                        description: toPlainText(t('tokens.table.background.part')) },
+            { token: '--foreground', value: '.nds-scroll-area-viewport',               description: toPlainText(t('tokens.table.foreground.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

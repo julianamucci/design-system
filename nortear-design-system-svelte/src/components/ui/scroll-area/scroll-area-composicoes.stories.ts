@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
+import { transbordo } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 
 const meta: Meta = {
@@ -10,6 +11,7 @@ const meta: Meta = {
   parameters: {
     layout: 'padded',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -26,23 +28,34 @@ export const SidebarList: Story = {
   render: () => ({
     Component: ScrollAreaStory,
     props: {
-      variant: 'vertical',
-      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
-      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
-      // Chromatic nem a assercao viam nada.
-      type: 'always',
+      variant: 'links',
       type: 'hover',
       height: '360px',
       width: '260px',
       itemCount: 40,
       tagLabel: 'Item',
+      navLabel: 'Seções da documentação',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Lista renderizada com 40 itens', async () => {
-      await expect(canvas.getByText(/Item 1$/)).toBeInTheDocument();
-      await expect(canvas.getByText(/Item 40$/)).toBeInTheDocument();
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A navegação tem nome acessível e mora dentro da área rolável', async () => {
+      const nav = canvas.getByRole('navigation', { name: 'Seções da documentação' });
+      await expect(viewport.contains(nav)).toBe(true);
+      await expect(transbordo(viewport).y).toBe(true);
+    });
+
+    await step('Os links são alcançáveis por teclado, na ordem do documento', async () => {
+      const links = canvas.getAllByRole('link');
+      await expect(links.length).toBe(40);
+      viewport.blur();
+      viewport.focus();
+      await userEvent.tab();
+      await expect(document.activeElement).toBe(links[0]);
     });
   },
 };
@@ -56,7 +69,6 @@ export const HorizontalGallery: Story = {
       // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
       // Chromatic nem a assercao viam nada.
       type: 'always',
-      type: 'always',
       height: '180px',
       width: '500px',
       itemCount: 10,
@@ -64,14 +76,27 @@ export const HorizontalGallery: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Conteúdo transborda na horizontal', async () => {
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A faixa transborda na horizontal', async () => {
       // Antes procurava '.flex.w-max' — Tailwind morto, a faixa usa .nds-row.
       // A asserção passa a ser o contrato real: o conteúdo é mais largo que a
-      // viewport, que é o que faz a scrollbar existir.
+      // viewport, que é o que faz a barra existir.
       const inner = canvasElement.querySelector('.nds-row');
       await expect(inner).toBeInTheDocument();
-      const vp = canvasElement.querySelector('[data-slot="scroll-area-viewport"]')!;
-      await expect(vp.scrollWidth).toBeGreaterThan(vp.clientWidth);
+      await expect(transbordo(viewport).x).toBe(true);
+    });
+
+    await step('A barra horizontal é montada e o eixo responde', async () => {
+      const h = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]',
+      );
+      await expect(h.length).toBe(1);
+      viewport.scrollLeft = 0;
+      viewport.scrollLeft = 120;
+      await expect(viewport.scrollLeft).toBe(120);
     });
   },
 };
@@ -81,10 +106,6 @@ export const WideTable: Story = {
     Component: ScrollAreaStory,
     props: {
       variant: 'both',
-      // type: 'always' — o padrao 'hover' so materializa a scrollbar durante o
-      // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
-      // Chromatic nem a assercao viam nada.
-      type: 'always',
       type: 'always',
       height: '300px',
       width: '500px',
@@ -93,18 +114,29 @@ export const WideTable: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Tabela com ambas as scrollbars renderizada', async () => {
-      const v = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]'
-      );
-      const h = canvasElement.querySelector(
-        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]'
-      );
-      await expect(v).toBeInTheDocument();
-      await expect(h).toBeInTheDocument();
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    )!;
+
+    await step('A tabela transborda nos dois eixos', async () => {
+      const eixos = transbordo(viewport);
+      await expect(eixos.x).toBe(true);
+      await expect(eixos.y).toBe(true);
     });
-    await step('Cell R1·C1 visível', async () => {
-      const canvas = within(canvasElement);
+
+    await step('As duas barras são montadas', async () => {
+      const v = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="vertical"]',
+      );
+      const h = canvasElement.querySelectorAll(
+        '[data-slot="scroll-area-scrollbar"][data-orientation="horizontal"]',
+      );
+      await expect(v.length).toBe(1);
+      await expect(h.length).toBe(1);
+    });
+
+    await step('A célula do canto continua no DOM', async () => {
       await expect(canvas.getByText('R1·C1')).toBeInTheDocument();
     });
   },
