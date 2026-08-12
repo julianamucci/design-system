@@ -57,10 +57,17 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		if (e.key === "ArrowLeft") {
+		// O par de teclas acompanha o EIXO. Um carrossel vertical que só responde
+		// a ArrowLeft/ArrowRight obriga quem navega por teclado a apertar a seta
+		// que aponta para o lado errado — e as setas naturais não fazem nada, sem
+		// erro nenhum. Vanilla e Angular já trocam o par; esta stack não trocava.
+		const voltar = orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
+		const avancar = orientation === "vertical" ? "ArrowDown" : "ArrowRight";
+
+		if (e.key === voltar) {
 			e.preventDefault();
 			scrollPrev();
-		} else if (e.key === "ArrowRight") {
+		} else if (e.key === avancar) {
 			e.preventDefault();
 			scrollNext();
 		}

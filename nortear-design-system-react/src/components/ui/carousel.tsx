@@ -75,15 +75,22 @@ function Carousel({
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "ArrowLeft") {
+      // O par de teclas acompanha o EIXO. Um carrossel vertical que só responde
+      // a ArrowLeft/ArrowRight obriga quem navega por teclado a apertar a seta
+      // que aponta para o lado errado — e as setas naturais não fazem nada, sem
+      // erro nenhum. Vanilla e Angular já trocam o par; esta stack não trocava.
+      const voltar = orientation === "vertical" ? "ArrowUp" : "ArrowLeft"
+      const avancar = orientation === "vertical" ? "ArrowDown" : "ArrowRight"
+
+      if (event.key === voltar) {
         event.preventDefault()
         scrollPrev()
-      } else if (event.key === "ArrowRight") {
+      } else if (event.key === avancar) {
         event.preventDefault()
         scrollNext()
       }
     },
-    [scrollPrev, scrollNext]
+    [orientation, scrollPrev, scrollNext]
   )
 
   React.useEffect(() => {

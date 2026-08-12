@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { waitFor, within, expect } from "storybook/test";
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +7,6 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
-import { Card, CardContent } from "./card";
 
 const meta = {
   title: "UI/Carousel/States",
@@ -20,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Estados de extremidade: primeiro slide (Previous disabled) e último slide (Next disabled) quando não há loop.",
+          "Os dois extremos do carrossel sem repetição: no primeiro slide a seta de voltar está desabilitada, no último a de avançar.",
       },
     },
   },
@@ -29,23 +28,51 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Slide sem medida cravada — proporção e cor vêm de classe, não de `style`. */
 function SlideCard({ label }: { label: string }) {
   return (
-    <Card className="" style={{boxShadow: "none", height: "10rem" }} >
-      <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
-        <span className="nds-font-semibold nds-text-muted-foreground" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>{label}</span>
-      </CardContent>
-    </Card>
+    <div className="nds-aspect-16-9">
+      <div
+        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
+        data-align="center"
+        data-justify="center"
+      >
+        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
+      </div>
+    </div>
   );
 }
 
+/**
+ * O slide divide área com o viewport?
+ *
+ * O Embla desloca o TRILHO com `transform` e nunca toca em `scrollLeft` — que
+ * fica em zero o tempo todo. Só a geometria diz onde o carrossel parou.
+ */
+function visivelNoViewport(slide: Element, viewport: Element): boolean {
+  const s = slide.getBoundingClientRect();
+  const v = viewport.getBoundingClientRect();
+  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
+}
+
+const SLIDES = [1, 2, 3];
+
 export const FirstSlide: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      description: {
+        story:
+          "Estado de entrada: nada foi navegado ainda, então voltar não leva a lugar nenhum e a seta anterior nasce desabilitada.",
+      },
+    },
+  },
   render: () => (
     <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria no primeiro slide">
       <CarouselContent>
-        {Array.from({ length: 3 }).map((_, i) => (
-          <CarouselItem key={i}>
-            <SlideCard label={`Slide ${i + 1}`} />
+        {SLIDES.map((n) => (
+          <CarouselItem key={n}>
+            <SlideCard label={`Slide ${n}`} />
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -55,30 +82,67 @@ export const FirstSlide: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
+    const anterior = canvas.getByRole("button", { name: /item anterior/i });
+    const proximo = canvas.getByRole("button", { name: /próximo item/i });
 
-    await step("Previous começa disabled no primeiro slide", async () => {
-      const prev = canvas.getByRole("button", { name: /item anterior/i });
-      await expect(prev).toBeDisabled();
+    await step("No começo só a seta de avanço leva a algum lugar", async () => {
+      await expect(anterior).toBeDisabled();
+      // `canScrollNext` nasce falso e só é sincronizado com o Embla numa
+      // microtask: a seta de avanço ACABA de sair do disabled quando o play
+      // começa, daí a espera.
+      await waitFor(async () => {
+        await expect(proximo).toBeEnabled();
+      });
     });
 
-    await step("Next está habilitado quando há próximos itens", async () => {
-      const next = canvas.getByRole("button", { name: /próximo item/i });
-      await expect(next).toBeEnabled();
+    await step("O extremo é visível, não só programático", async () => {
+      // Duas instâncias do MESMO botão, lado a lado: comparar a seta apagada
+      // com a viva prova o contraste do estado. Medir só a opacidade da
+      // desabilitada passaria numa tela onde todas estivessem apagadas.
+      //
+      // O `waitFor` não é folga: `.nds-button` declara
+      // `transition: … opacity var(--duration-fast)`, e a seta de avanço acabou
+      // de mudar de estado no passo anterior. Ler no primeiro quadro pegaria o
+      // valor de PARTIDA — 0.5 contra 0.5 — e o teste reprovaria por corrida.
+      await waitFor(async () => {
+        const apagada = Number(getComputedStyle(anterior).opacity);
+        const viva = Number(getComputedStyle(proximo).opacity);
+        await expect(apagada).toBeLessThan(viva);
+      });
+    });
+
+    await step("O trilho está no começo", async () => {
+      // A prova de que o começo é real e não só um sinalizador do componente:
+      // o primeiro slide está enquadrado e o último ficou fora.
+      const slides = canvas.getAllByRole("group");
+      await expect(slides.length).toBe(SLIDES.length);
+      await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
+      await expect(visivelNoViewport(slides[slides.length - 1], viewport)).toBe(false);
     });
   },
 };
 
 export const LastSlide: Story = {
+  parameters: {
+    covers: ["functional.item4", "visual.item4"],
+    docs: {
+      description: {
+        story:
+          "No fim do percurso sem repetição avançar deixa de ser possível e a seta seguinte fica desabilitada.",
+      },
+    },
+  },
   render: () => (
     <Carousel
       className="nds-w-full nds-max-w-md"
       aria-label="Galeria no último slide"
-      opts={{ startIndex: 2 }}
+      opts={{ startIndex: SLIDES.length - 1 }}
     >
       <CarouselContent>
-        {Array.from({ length: 3 }).map((_, i) => (
-          <CarouselItem key={i}>
-            <SlideCard label={`Slide ${i + 1}`} />
+        {SLIDES.map((n) => (
+          <CarouselItem key={n}>
+            <SlideCard label={`Slide ${n}`} />
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -88,15 +152,35 @@ export const LastSlide: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
+    const anterior = canvas.getByRole("button", { name: /item anterior/i });
+    const proximo = canvas.getByRole("button", { name: /próximo item/i });
 
-    await step("Next fica disabled no último slide sem loop", async () => {
-      const next = canvas.getByRole("button", { name: /próximo item/i });
-      await expect(next).toBeDisabled();
+    await step("No fim a seta de avanço desabilita e a de voltar acorda", async () => {
+      // O par importa: só "avançar desabilitado" também seria verdade num
+      // carrossel de um slide só, onde nada nunca avançou.
+      await waitFor(async () => {
+        await expect(proximo).toBeDisabled();
+      });
+      await expect(anterior).toBeEnabled();
     });
 
-    await step("Previous está habilitado quando há item anterior", async () => {
-      const prev = canvas.getByRole("button", { name: /item anterior/i });
-      await expect(prev).toBeEnabled();
+    await step("O extremo é visível, não só programático", async () => {
+      // Espelho da comparação do primeiro slide: agora a apagada é a outra.
+      await waitFor(async () => {
+        const apagada = Number(getComputedStyle(proximo).opacity);
+        const viva = Number(getComputedStyle(anterior).opacity);
+        await expect(apagada).toBeLessThan(viva);
+      });
+    });
+
+    await step("O trilho chegou ao fim", async () => {
+      const slides = canvas.getAllByRole("group");
+      await expect(slides.length).toBe(SLIDES.length);
+      await waitFor(async () => {
+        await expect(visivelNoViewport(slides[slides.length - 1], viewport)).toBe(true);
+      });
+      await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
     });
   },
 };

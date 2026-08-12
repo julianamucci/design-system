@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, waitFor, within, expect } from "storybook/test";
 import {
   Carousel,
   CarouselContent,
@@ -10,8 +10,6 @@ import {
   type CarouselApi,
 } from "./carousel";
 import { Card, CardContent } from "./card";
-import { Button } from "./button";
-import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Carousel/Compositions",
@@ -33,14 +31,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const TOTAL_SLIDES = 5;
+
+/** Slide sem medida cravada — proporção e cor vêm de classe, não de `style`. */
 function SlideCard({ label }: { label: string }) {
   return (
-    <Card className="" style={{boxShadow: "none", height: "10rem" }} >
-      <CardContent className="nds-cluster" data-justify="center" style={{ height: "100%" }}>
-        <span className="nds-font-semibold nds-text-muted-foreground" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>{label}</span>
-      </CardContent>
-    </Card>
+    <div className="nds-aspect-16-9">
+      <div
+        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
+        data-align="center"
+        data-justify="center"
+      >
+        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
+      </div>
+    </div>
   );
+}
+
+/** Ver a nota em carousel-estados: o Embla move o trilho, não o `scrollLeft`. */
+function visivelNoViewport(slide: Element, viewport: Element): boolean {
+  const s = slide.getBoundingClientRect();
+  const v = viewport.getBoundingClientRect();
+  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
 }
 
 function ComDotsCarousel() {
@@ -63,10 +75,10 @@ function ComDotsCarousel() {
   }, [api]);
 
   return (
-    <div className="nds-w-full nds-max-w-md">
-      <Carousel setApi={setApi} opts={{ loop: true }} aria-label="Galeria com dots">
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <Carousel setApi={setApi} className="nds-w-full" aria-label="Galeria com dots">
         <CarouselContent>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <CarouselItem key={i}>
               <SlideCard label={`Slide ${i + 1}`} />
             </CarouselItem>
@@ -75,25 +87,26 @@ function ComDotsCarousel() {
         <CarouselPrevious aria-label="Item anterior" />
         <CarouselNext aria-label="Próximo item" />
       </Carousel>
-      <div
-        className="nds-cluster nds-mt-4" data-justify="center" data-spacing="sm"
-        role="tablist"
-        aria-label="Slides do carrossel"
-      >
+
+      {/* Botões comuns, não abas: os dots não controlam painéis, e o conteúdo
+          compartilhado descreve exatamente isto — `aria-label` com posição e
+          total, `aria-current` no ativo. O inativo NÃO carrega o atributo: um
+          seletor de presença casaria com a string "false".
+
+          Todo o desenho está em `.nds-carousel-dot`: alvo de 24px com marca de
+          8px no `::before`, porque um botão do tamanho do ponto reprova no
+          `target-size` (WCAG 2.5.8). A cor do ativo sai do próprio
+          `aria-current`, então o que o leitor anuncia e o que se vê não podem
+          divergir. */}
+      <div className="nds-cluster" data-justify="center" data-spacing="sm">
         {Array.from({ length: count }).map((_, i) => (
-          <Button
+          <button
             key={i}
             type="button"
-            role="tab"
-            variant="ghost"
-            size="icon-sm"
-            aria-selected={i === current}
+            className="nds-carousel-dot"
+            aria-current={i === current ? "true" : undefined}
             aria-label={`Ir para o slide ${i + 1} de ${count}`}
             onClick={() => api?.scrollTo(i)}
-            className={cn(
-              "h-2 w-2 rounded-full p-0 nds-transition-colors",
-              i === current ? "bg-primary" : "bg-muted-foreground/30 nds-hover-bg-muted-foreground-50"
-            )}
           />
         ))}
       </div>
@@ -102,39 +115,104 @@ function ComDotsCarousel() {
 }
 
 export const WithDots: Story = {
+  parameters: {
+    covers: ["visual.item5"],
+    docs: {
+      description: {
+        story:
+          "Os dots trazem posição e total no nome — \"2\" sozinho não diz para onde leva — e o ativo se distingue por cor, não só por posição.",
+      },
+    },
+  },
   render: () => <ComDotsCarousel />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
+    const dot = (posicao: number) =>
+      canvas.getByRole("button", { name: `Ir para o slide ${posicao} de ${TOTAL_SLIDES}` });
 
-    await step("Tablist com dots está presente", async () => {
-      const tablist = canvas.getByRole("tablist", { name: /slides do carrossel/i });
-      await expect(tablist).toBeInTheDocument();
+    /**
+     * Par idempotente: só clica quando o dot ainda não é o atual. O replay do
+     * painel Interactions roda no MESMO DOM, então um clique cego partiria do
+     * estado que a rodada anterior deixou.
+     */
+    const irPara = async (posicao: number) => {
+      if (dot(posicao).getAttribute("aria-current") !== "true") await userEvent.click(dot(posicao));
+      await waitFor(async () => {
+        await expect(dot(posicao)).toHaveAttribute("aria-current", "true");
+      });
+    };
+
+    await step("Há um dot por slide, e o primeiro é o atual", async () => {
+      // Total contado a partir dos slides renderizados: um número escrito à mão
+      // continuaria batendo depois de alguém tirar um slide da lista.
+      const slides = canvas.getAllByRole("group");
+      await expect(slides.length).toBe(TOTAL_SLIDES);
+      // Os dots só existem depois que o Embla entrega a lista de snaps.
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole("button", { name: /ir para o slide/i })).toHaveLength(
+          slides.length,
+        );
+      });
+      await irPara(1);
+      await expect(dot(2).hasAttribute("aria-current")).toBe(false);
     });
 
-    await step("Primeiro dot começa selecionado", async () => {
-      const firstDot = canvas.getAllByRole("tab")[0];
-      await expect(firstDot).toHaveAttribute("aria-selected", "true");
+    await step("O dot atual se distingue dos outros por mais do que a posição", async () => {
+      // Comparação entre dois dots, e não medida absoluta de um só: "tem fundo"
+      // é verdade para os cinco. O que prova o destaque é o atual ter um fundo
+      // DIFERENTE do inativo.
+      //
+      // A leitura é no `::before`: o botão em si é só o alvo de 24px e é
+      // transparente nos dois estados — medir o elemento daria a MESMA cor para
+      // ativo e inativo, e a asserção reprovaria um componente correto.
+      const cor = (el: Element) => getComputedStyle(el, "::before").backgroundColor;
+      await expect(cor(dot(1))).not.toBe(cor(dot(2)));
     });
 
-    await step("Clicar em outro dot muda o slide ativo", async () => {
-      const dots = canvas.getAllByRole("tab");
-      await userEvent.click(dots[2]);
-      await expect(dots[2]).toHaveAttribute("aria-selected", "true");
+    await step("Clicar num dot salta direto para aquele slide", async () => {
+      const slides = canvas.getAllByRole("group");
+      await irPara(3);
+      // Salto, não passo: a prova é o slide alvo entrar no enquadramento.
+      await waitFor(async () => {
+        await expect(visivelNoViewport(slides[2], viewport)).toBe(true);
+      });
+      await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
+      await expect(dot(1).hasAttribute("aria-current")).toBe(false);
+    });
+
+    await step("E a story termina no começo, como na captura", async () => {
+      const slides = canvas.getAllByRole("group");
+      await irPara(1);
+      await waitFor(async () => {
+        await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
+      });
+      await expect(dot(3).hasAttribute("aria-current")).toBe(false);
     });
   },
 };
 
 export const Gallery: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Fotos em Card: cada imagem carrega alt próprio, não um rótulo genérico repetido.",
+      },
+    },
+  },
   render: () => (
     <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, i) => (
+        {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
           <CarouselItem key={i}>
-            <Card className="" style={{ boxShadow: "none" }}>
+            <Card>
               <img
                 src={`https://picsum.photos/seed/carousel-${i + 1}/640/360`}
                 alt={`Imagem de exemplo ${i + 1}`}
-                className="nds-block nds-w-full nds-aspect-16-9" style={{ objectFit: "cover" }}
+                className="nds-block nds-aspect-16-9"
+                // `object-fit` é mecânica de recorte, não valor de design: não
+                // há classe .nds-* para ele e nenhum tema o altera.
+                style={{ objectFit: "cover" }}
               />
               <CardContent>
                 <p className="nds-text-body nds-font-medium">Imagem {i + 1}</p>
@@ -153,10 +231,21 @@ export const Gallery: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Imagens da galeria têm alt descritivo", async () => {
+    await step("Toda imagem da galeria tem alt próprio", async () => {
+      // Uma por slide, e cada uma com o seu texto: alt repetido seria o mesmo
+      // que alt vazio para quem navega de imagem em imagem.
+      const slides = canvas.getAllByRole("group");
       const imgs = canvas.getAllByRole("img");
-      await expect(imgs.length).toBeGreaterThan(0);
-      await expect(imgs[0]).toHaveAttribute("alt", expect.stringMatching(/exemplo/i));
+      await expect(imgs.length).toBe(slides.length);
+      for (const [i, img] of imgs.entries()) {
+        await expect(img).toHaveAttribute("alt", `Imagem de exemplo ${i + 1}`);
+      }
+    });
+
+    await step("A região da galeria se anuncia com nome próprio", async () => {
+      const regiao = canvas.getByRole("region");
+      await expect(regiao).toHaveAttribute("aria-roledescription", "carousel");
+      await expect(regiao).toHaveAccessibleName("Galeria de fotos do produto");
     });
   },
 };

@@ -1796,3 +1796,67 @@ modos e captura no escuro.
   batem com `.nds-alert-dialog-media`.
 - **accordion, aspect-ratio, breadcrumb** — CSS só tem partes, sem variante nem
   regra `.dark`. Nada a alinhar.
+
+---
+
+## Carousel — decisões abertas (2026-08-12, rodada 8 da revisão serial)
+
+Os 51 achados da rodada foram fechados e as cinco suítes estão verdes. O que
+segue não é trabalho parado: é divergência cross-stack que precisa de decisão de
+design antes de alguém "alinhar" no sentido errado.
+
+- [ ] **Vanilla não faz múltiplos itens por vez** (`functional.item6`). O
+  deslocamento da factory é `translate` de 100% do track, que não tem como
+  resolver uma base fracionária no slide — `basis-1/2` ali não significa nada.
+  Fazer valer exige trocar o deslocamento por deslocamento MEDIDO (offset do
+  slide) com trava no fim do trilho, e o cálculo tem de sobreviver a largura
+  zero na montagem. É mudança de motor, não de story. Está declarado com motivo
+  em `coversNotApplicable` na `MultiResponsive` do Vanilla — o auditor enxerga,
+  ninguém aceita em silêncio. **Decisão: o carrossel Vanilla passa a ter motor
+  de múltiplos itens, ou o item 6 deixa de ser contrato das cinco stacks?**
+
+- [ ] **`CarouselContent` entrega `class` em nós diferentes.** Em React, Vue e
+  Svelte ela cai no TRACK; em Angular e Vanilla, no recorte. Isso muda onde a
+  altura do carrossel vertical precisa ser escrita e faz a mesma asserção de
+  altura valer numa stack e não na outra. Vanilla é a referência, então o alvo
+  seria o recorte — mas são três primitivos a mexer, com Chromatic a reboque.
+
+- [ ] **O track do Vanilla horizontal não declara `data-orientation`.** A regra
+  `.nds-carousel-track[data-orientation="horizontal"]` traz a margem negativa
+  que encosta o primeiro slide na borda; as outras quatro stacks a recebem e o
+  Vanilla não, então ele mostra um respiro de 16px que as outras não têm.
+  Deliberadamente NÃO alterado nesta rodada: ligar o atributo muda a
+  renderização do Vanilla de imediato, e alinhar os cinco é decisão de design.
+
+- [ ] **`aria-disabled` nas setas.** Vanilla e Angular escrevem o par
+  (`disabled` nativo + `aria-disabled`); React, Vue e Svelte só o nativo. O
+  nativo já basta para o leitor de tela, então isto é redundância defensiva —
+  mas é divergência contra a referência, e as asserções ficam diferentes por
+  causa dela.
+
+- [ ] **Os dots do Angular são botões numerados**, os das outras quatro são o
+  ponto redondo de `.nds-carousel-dot`. O conteúdo compartilhado descreve o
+  ponto. A numeração do Angular é legível e passa no `target-size`; não foi
+  mexida, mas as cinco não mostram a mesma composição.
+
+- [ ] **O conteúdo compartilhado descreve a API do Embla.** `props.table.opts`
+  diz "Opções do Embla", `plugins` diz "Array de plugins do Embla", e
+  `extensibility` manda usar `basis-*` — vocabulário do Tailwind, cujas classes
+  não existem mais (as reais são `nds-md-basis-half` / `nds-lg-basis-third`).
+  Angular e Vanilla não têm Embla nem `setApi`. É exatamente o que a regra de
+  texto API-neutro proíbe, e o auditor de literais não pega porque as chaves não
+  são `*Code`. Trabalho de `ux-writer`, não desta rodada.
+
+### Corrigido aqui, para registro
+
+- Os dots de 8px reprovavam no axe por `target-size` (WCAG 2.5.8, AA) assim que
+  as classes mortas que os inflavam foram trocadas por classes reais. Nasceu
+  `.nds-carousel-dot` no CSS compartilhado: alvo de 24px, marca de 8px no
+  `::before`, cor do estado vinda de `[aria-current="true"]`.
+- `stopOnInteraction` do `embla-carousel-autoplay` nunca foi disparado por
+  clique nas setas: o plugin assina o `pointerDown` do Embla, que nasce no nó
+  raiz (o viewport), e as setas ficam fora dele. Toda story de autoplay que
+  clicava na seta e afirmava "o relógio parou" afirmava algo que não acontece.
+- Carrossel vertical respondia a ArrowLeft/ArrowRight em React e Svelte.
+- A navegação por teclado do Vanilla atravessava os extremos (`%` no índice)
+  enquanto a seta ao lado estava desabilitada dizendo que não dava.

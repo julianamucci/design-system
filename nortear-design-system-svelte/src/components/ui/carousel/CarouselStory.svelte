@@ -44,7 +44,7 @@
     slideLabel = 'Slide',
     ofLabel = 'de',
     heightClass = '',
-    widthClass = 'w-full max-w-sm',
+    widthClass = 'nds-w-full nds-max-w-sm',
     images = [],
   }: Props = $props();
 
@@ -81,9 +81,12 @@
         }))
   );
 
+  // Delay curto de propósito: a story precisa ver o relógio andar dentro do
+  // orçamento de um `waitFor`, e um intervalo de segundos deixaria o teste
+  // esperando à toa (ou passando por acaso, quando o runner atrasa).
   const plugins = $derived(
     variant === 'autoplay'
-      ? [Autoplay({ delay: 3000, stopOnInteraction: true })]
+      ? [Autoplay({ delay: 400, stopOnInteraction: true })]
       : []
   );
 
@@ -92,35 +95,37 @@
     startIndex,
   });
 
+  const vertical = $derived(orientation === 'vertical' || variant === 'vertical');
+
   const defaultBasis = $derived(
-    variant === 'multi'
-      ? 'md:basis-1/2 lg:basis-1/3'
-      : variant === 'vertical'
-        ? ''
-        : ''
+    variant === 'multi' ? 'nds-md-basis-half nds-lg-basis-third' : ''
   );
 
   const effectiveBasis = $derived(itemBasis || defaultBasis);
 
-  const containerClass = $derived(
-    orientation === 'vertical' || variant === 'vertical'
-      ? `${widthClass} ${heightClass || 'h-[260px]'}`
-      : widthClass
-  );
+  // Na vertical a pilha precisa de altura DEFINIDA: sem ela a base
+  // `flex: 0 0 100%` do slide não tem contra o que resolver e o carrossel
+  // cresce em vez de recortar. A classe do `CarouselContent` pousa no TRILHO —
+  // é ele que dá a altura, e o viewport (`overflow: hidden`) a acompanha. Vem
+  // de uma classe de proporção, nunca de `style`: inline venceria a folha e
+  // sairia do tema, da densidade e da escala.
+  const trackClass = $derived(vertical ? heightClass || 'nds-aspect-4-3' : heightClass);
 </script>
 
-<div class={containerClass}>
+<div class={widthClass}>
   <Carousel
     opts={emblaOpts}
     plugins={plugins}
-    orientation={variant === 'vertical' ? 'vertical' : orientation}
+    orientation={vertical ? 'vertical' : 'horizontal'}
     setApi={setApi}
     aria-label={ariaLabel}
-    class="" style="position: relative"
   >
-    <CarouselContent class={variant === 'vertical' ? 'h-[260px]' : ''}>
+    <CarouselContent class={trackClass}>
       {#each slides as slide, i (i)}
-        <CarouselItem class={effectiveBasis}>
+        <CarouselItem
+          class={effectiveBasis}
+          aria-label={`${slideLabel} ${i + 1} ${ofLabel} ${slides.length}`}
+        >
           {#if variant === 'gallery' && slide.src}
             <div class="nds-p-1">
               <img
@@ -132,10 +137,13 @@
               />
             </div>
           {:else}
-            <div class="nds-p-1">
+            <div class="nds-p-1" class:nds-h-full={vertical}>
               <div
-                class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted text-3xl nds-font-semibold nds-text-muted-foreground" style="user-select: none" data-align="center" data-justify="center"
-                aria-label={`${slideLabel} ${i + 1} ${ofLabel} ${slides.length}`}
+                class="nds-cluster nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" style="user-select: none"
+                class:nds-aspect-square={!vertical}
+                class:nds-h-full={vertical}
+                data-align="center"
+                data-justify="center"
               >
                 {i + 1}
               </div>
@@ -149,17 +157,26 @@
   </Carousel>
 
   {#if variant === 'withDots'}
-    <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação do carrossel">
+    <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm">
       {#each scrollSnaps as _, i (i)}
+        <!--
+          Botão comum, não aba: o dot não controla um painel e o conjunto não é
+          um `tablist`. O conteúdo compartilhado documenta `aria-current="true"`
+          no dot atual, que é o que um leitor de tela usa para dizer "atual"
+          numa lista de atalhos. Inativo NÃO carrega o atributo — a string
+          "false" ainda casaria com o seletor de presença `[aria-current]`.
+
+          Toda a aparência mora em `.nds-carousel-dot`: o ALVO tem 24px e a
+          MARCA visível, desenhada no `::before`, tem 8px. Desenhar o botão com
+          os 8px da marca reprovava no axe por `target-size` (WCAG 2.5.8). O
+          estado ativo é pintado pelo próprio `aria-current`, então o que o
+          leitor anuncia e o que o olho vê não têm como divergir.
+        -->
         <button
           type="button"
-          role="tab"
-          aria-label={`${goToSlideLabel} ${i + 1}`}
-          aria-selected={selectedIndex === i}
-          class="nds-rounded-full nds-transition-colors" style="height: 0.5rem; width: 0.5rem"
-          class:bg-primary={selectedIndex === i}
-          class:bg-muted-foreground={selectedIndex !== i}
-          class:opacity-40={selectedIndex !== i}
+          class="nds-carousel-dot"
+          aria-label={`${goToSlideLabel} ${i + 1} ${ofLabel} ${scrollSnaps.length}`}
+          aria-current={selectedIndex === i ? 'true' : undefined}
           onclick={() => goTo(i)}
         ></button>
       {/each}

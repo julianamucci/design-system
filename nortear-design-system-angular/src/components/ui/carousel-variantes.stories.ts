@@ -119,5 +119,15 @@ export const Vertical: Story = {
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
     });
+
+    await step('E a pilha volta ao topo, parada', async () => {
+      // `toBeGreaterThan(0)` acima resolve no PRIMEIRO quadro em que a rolagem
+      // suave saiu do zero — a story terminava com o viewport ainda em
+      // movimento, e era esse quadro que o Chromatic fotografava. Voltar ao
+      // topo e esperar o zero dá um estado assentado para a foto e deixa a
+      // play replayável no painel Interactions.
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(viewport.scrollTop).toBe(0));
+    });
   },
 };

@@ -1,15 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent } from './card';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
 function buildSlide(label: string): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-cluster nds-bg-muted-soft' });
+  const card = createCard({ className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft' });
   card.dataset.align = 'center';
   card.dataset.justify = 'center';
-  card.style.aspectRatio = '16 / 9';
   const content = createCardContent({ className: 'nds-cluster' });
   content.dataset.align = 'center';
   content.dataset.justify = 'center';
@@ -26,6 +25,10 @@ function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
 }
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
+//
+// Os dois extremos de um carrossel sem repetição. A seta desabilitada é o que
+// conta a quem chegou lá que acabou: um botão que continua vivo e não faz nada
+// é pior do que um botão apagado.
 
 const meta: Meta = {
   tags: ['display'],
@@ -36,7 +39,8 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Estados extremos do Carousel — primeiro slide (previous aria-disabled) e último slide (next aria-disabled).',
+        component:
+          'Estados extremos do Carousel — no primeiro slide a seta de voltar está desabilitada, no último a de avançar.',
       },
     },
   },
@@ -45,52 +49,101 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+function montar(total: number, label: string): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-w-full nds-max-w-md';
+  wrap.appendChild(createCarousel({ items: buildSlides(total), label }));
+  return wrap;
+}
+
 export const FirstSlide: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createCarousel({ items: buildSlides(4) }));
-    return wrap;
-  },
+  parameters: { covers: ['visual.item4'] },
+  render: () => montar(4, 'Slides no primeiro item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const anterior = canvas.getByRole('button', { name: 'Item anterior' });
+    const proximo = canvas.getByRole('button', { name: 'Próximo item' });
 
-    await step('Previous começa aria-disabled=true no primeiro slide', async () => {
-      const prev = canvas.getByRole('button', { name: /previous slide/i });
-      await expect(prev).toHaveAttribute('aria-disabled', 'true');
+    await step('No começo só a seta de avanço leva a algum lugar', async () => {
+      await expect(anterior).toBeDisabled();
+      // `aria-disabled` acompanha o `disabled` nativo porque o leitor de tela
+      // anuncia o primeiro; o segundo é o que tira o botão da ordem de foco.
+      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
+      await expect(proximo).toBeEnabled();
+      await expect(proximo).toHaveAttribute('aria-disabled', 'false');
     });
 
-    await step('Next está habilitado', async () => {
-      const next = canvas.getByRole('button', { name: /next slide/i });
-      await expect(next).toHaveAttribute('aria-disabled', 'false');
+    await step('O extremo é visível, não só programático', async () => {
+      // Duas instâncias do MESMO botão, lado a lado: comparar a seta apagada
+      // com a seta viva prova o contraste do estado. Medir só a opacidade da
+      // desabilitada passaria numa tela onde todas estivessem apagadas.
+      //
+      // Leitura direta aqui, e envolvida por `waitFor` no passo espelhado do
+      // último slide: a diferença é real. Neste ponto o botão NASCEU
+      // desabilitado, e transição não anima valor inicial — não há nada em
+      // curso para esperar.
+      const apagada = Number(getComputedStyle(anterior).opacity);
+      const viva = Number(getComputedStyle(proximo).opacity);
+      await expect(apagada).toBeLessThan(viva);
     });
   },
 };
 
 export const LastSlide: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createCarousel({ items: buildSlides(3) }));
-    return wrap;
-  },
+  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  render: () => montar(3, 'Slides no último item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
+    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
+    const proximo = () =>
+      canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
-    await step('Avança até o último slide', async () => {
-      const next = canvas.getByRole('button', { name: /next slide/i });
-      await userEvent.click(next);
-      await userEvent.click(next);
+    // Quanto o track já saiu do recorte. Valor ABSOLUTO: "andou mais do que
+    // antes" resolve no primeiro quadro da transição, e a medida seguinte
+    // partiria de um número ainda em movimento.
+    const deslocamento = () =>
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const slides = () => canvas.getAllByRole('group') as HTMLElement[];
+
+    await step('Avançar até onde o carrossel deixa', async () => {
+      // Avança ENQUANTO der, em vez de clicar um número fixo de vezes: no
+      // replay do painel Interactions o carrossel já está no fim, e o clique
+      // cego cairia num botão desabilitado — o `userEvent` recusa, e a story
+      // quebraria só na segunda rodada.
+      const total = slides().length;
+      for (let passo = 0; passo < total; passo++) {
+        const botao = proximo();
+        if (botao.disabled) break;
+        await userEvent.click(botao);
+      }
+
+      // Assenta no último slide antes de medir qualquer estado.
+      const ultimo = slides().length - 1;
+      const alvo = ultimo * (slides()[1].offsetLeft - slides()[0].offsetLeft);
+      await waitFor(() => expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2));
     });
 
-    await step('Next fica aria-disabled=true no último slide', async () => {
-      const next = canvas.getByRole('button', { name: /next slide/i });
-      await expect(next).toHaveAttribute('aria-disabled', 'true');
-    });
+    await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
+      // functional.item4 — o par importa: só "next desabilitado" também seria
+      // verdade num carrossel de um slide só, onde nada nunca avançou.
+      await expect(proximo()).toBeDisabled();
+      await expect(proximo()).toHaveAttribute('aria-disabled', 'true');
 
-    await step('Previous está habilitado no último slide', async () => {
-      const prev = canvas.getByRole('button', { name: /previous slide/i });
-      await expect(prev).toHaveAttribute('aria-disabled', 'false');
+      const anterior = canvas.getByRole('button', { name: 'Item anterior' });
+      await expect(anterior).toBeEnabled();
+      await expect(anterior).toHaveAttribute('aria-disabled', 'false');
+
+      // Espelho da comparação do primeiro slide: agora a apagada é a outra.
+      // O `waitFor` não é folga — `.nds-carousel-button` declara
+      // `transition: … opacity var(--duration-fast)`, e o botão só ficou
+      // desabilitado no clique anterior. Ler no primeiro quadro pega o valor de
+      // PARTIDA (1 contra 1) e o teste reprova por corrida, não por defeito.
+      await waitFor(async () => {
+        const apagada = Number(getComputedStyle(proximo()).opacity);
+        const viva = Number(getComputedStyle(anterior).opacity);
+        await expect(apagada).toBeLessThan(viva);
+      });
     });
   },
 };

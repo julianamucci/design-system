@@ -4,6 +4,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CAROUSEL } from './carousel';
 import { NdsAspectRatio } from './aspect-ratio';
 import { NdsButton } from './button';
+import { NDS_CARD } from './card';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -14,7 +15,7 @@ import { NdsButton } from './button';
 
 const meta: Meta = {
   title: 'UI/Carousel/Compositions',
-  decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton] })],
+  decorators: [moduleMetadata({ imports: [...NDS_CAROUSEL, NdsAspectRatio, NdsButton, ...NDS_CARD] })],
   parameters: {
     layout: 'centered',
     // Sem argTypes: sem isto o painel Controls abre vazio.
@@ -157,6 +158,82 @@ export const WithDots: Story = {
       await userEvent.click(primeiro);
       await waitFor(() => expect(viewport.scrollLeft).toBe(0));
       await expect(dot(1)).toHaveAttribute('aria-current', 'true');
+    });
+  },
+};
+
+// ─── Galeria ──────────────────────────────────────────────────────────────────
+//
+// A composição "Galeria de imagens" do conteúdo compartilhado existia como
+// story nas outras quatro stacks e não nesta — então o Chromatic nunca a
+// fotografou aqui, e o axe nunca a varreu. Cada slide junta uma capa em
+// proporção fixa a um título e uma legenda.
+
+const FOTOS = [
+  { titulo: 'Foto 1', legenda: 'Paisagem natural ao amanhecer' },
+  { titulo: 'Foto 2', legenda: 'Detalhe arquitetônico em pedra' },
+  { titulo: 'Foto 3', legenda: 'Cidade iluminada à noite' },
+  { titulo: 'Foto 4', legenda: 'Praia vista do alto' },
+];
+
+export const Gallery: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'O nome da região descreve o contexto da galeria — "Galeria de fotos do produto" diz o que a pessoa vai percorrer antes de ela percorrer.',
+      },
+    },
+  },
+  render: () => ({
+    props: { fotos: FOTOS },
+    template: `
+      <nds-carousel class="nds-w-full nds-max-w-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
+        <div ndsCarouselContent>
+          @for (foto of fotos; track foto.titulo) {
+            <div ndsCarouselItem>
+              <div ndsCard class="nds-overflow-hidden">
+                <div ndsAspectRatio [ratio]="16 / 9">
+                  <div class="nds-cluster nds-bg-muted-soft" data-justify="center">
+                    <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ foto.titulo }}</span>
+                  </div>
+                </div>
+                <div ndsCardHeader>
+                  <h3 ndsCardTitle>{{ foto.titulo }}</h3>
+                  <p ndsCardDescription>{{ foto.legenda }}</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <button ndsCarouselPrevious label="Foto anterior"></button>
+        <button ndsCarouselNext label="Próxima foto"></button>
+      </nds-carousel>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A região diz de que galeria se trata', async () => {
+      await expect(canvas.getByRole('region')).toHaveAccessibleName('Galeria de fotos do produto');
+    });
+
+    await step('Cada slide traz capa, título e legenda', async () => {
+      const slides = canvas.getAllByRole('group');
+      await expect(slides.length).toBe(FOTOS.length);
+      for (const [i, slide] of slides.entries()) {
+        await expect(within(slide).getByRole('heading', { level: 3 })).toHaveTextContent(
+          FOTOS[i].titulo,
+        );
+        await expect(slide).toHaveTextContent(FOTOS[i].legenda);
+      }
+    });
+
+    await step('As setas desta galeria falam de fotos, não de itens', async () => {
+      // O rótulo acompanha o conteúdo: "Próximo item" numa galeria de fotos
+      // obriga quem ouve a adivinhar o que é o item.
+      await expect(canvas.getByRole('button', { name: 'Foto anterior' })).toBeDisabled();
+      await expect(canvas.getByRole('button', { name: 'Próxima foto' })).toBeEnabled();
     });
   },
 };

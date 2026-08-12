@@ -168,5 +168,39 @@ export const Playground: Story = {
       await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
       await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(antes));
     });
+
+    await step('E a story termina onde diz que termina: no primeiro slide', async () => {
+      // Sem este passo a story reivindicava `visual.item1` — "estado inicial com
+      // 3+ slides" — e entregava o TERCEIRO slide: dois passos de navegação
+      // acontecem acima, e é o quadro final que o Chromatic fotografa e que o
+      // axe varre. O contrato dizia uma coisa e a foto mostrava outra, com os
+      // dois portões verdes.
+      //
+      // O mesmo passo conserta o replay. O painel Interactions reexecuta a play
+      // no MESMO DOM: na segunda rodada o carrossel já estaria no terceiro
+      // slide, e o passo "No primeiro slide só a seta de avanço está ativa"
+      // encontraria a seta de voltar habilitada. A suíte não pegava porque o
+      // vitest remonta a cada teste.
+      const anterior = () =>
+        canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
+
+      // Volta ENQUANTO der, nunca um número fixo de cliques: quantos passos
+      // foram dados acima depende da orientação escolhida no control.
+      //
+      // Sem asserção de movimento POR CLIQUE. "Andou em relação à medida de
+      // agora" lê um número tirado no meio da rolagem suave — a espera do passo
+      // anterior resolve no primeiro quadro além do limiar, com o viewport
+      // ainda em curso — e a comparação inverte (1216 contra 19). O estado de
+      // chegada é absoluto e não tem esse ruído: o começo do trilho é zero.
+      const total = canvas.getAllByRole('group').length;
+      for (let passo = 0; passo < total; passo++) {
+        const botao = anterior();
+        if (botao.disabled) break;
+        await userEvent.click(botao);
+      }
+
+      await expect(anterior()).toBeDisabled();
+      await waitFor(() => expect(viewport[eixo]).toBe(0));
+    });
   },
 };

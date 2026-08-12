@@ -64,6 +64,19 @@
 .nds-carousel-button-prev { left: var(--spacing-2); }
 .nds-carousel-button-next { right: var(--spacing-2); }
 
+/* Em vertical as setas trocam de eixo: acima e abaixo do viewport, e giradas
+ * para que o chevron aponte para onde ele leva. Especificidade 0-2-0 vence as
+ * regras de posição acima sem precisar de !important. */
+.nds-carousel-button[data-orientation="vertical"] {
+  top: auto;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.nds-carousel-button-prev[data-orientation="vertical"] { top: var(--spacing-2); }
+.nds-carousel-button-next[data-orientation="vertical"] { bottom: var(--spacing-2); }
+
 .nds-carousel-button:hover:not(:disabled) {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
@@ -97,6 +110,10 @@
 .nds-carousel-track[data-orientation="vertical"] {
   flex-direction: column;
   margin-top: calc(var(--spacing-4) * -1);
+  /* Herda a altura do recorte. Sem isto o track mede o conteúdo, a base
+   * `flex: 0 0 100%` do slide resolve contra `auto` e a pilha inteira aparece
+   * de uma vez em vez de um slide por vez — sem erro nenhum no console. */
+  height: 100%;
 }
 
 .nds-carousel-slide[data-orientation="vertical"] {
@@ -134,9 +151,57 @@
   transform: translateX(-50%) rotate(90deg);
 }
 
+/*
+ * ─── nds-carousel-dot ───────────────────────────────────────────────────────
+ * Atalho para um slide, na fileira abaixo do viewport.
+ *
+ *   <button class="nds-carousel-dot" aria-label="Ir para o slide 2 de 5"
+ *           aria-current="true"></button>
+ *
+ * O ALVO tem 24px e a MARCA visível tem 8px, e a diferença é o ponto da regra:
+ * encolher o botão até o tamanho do ponto deixa o alvo menor que o dedo, e o
+ * axe reprova por `target-size` (WCAG 2.5.8, AA) — foi o que aconteceu quando
+ * as quatro stacks desenharam o dot à mão com 8px de altura e largura.
+ *
+ * O estado ativo é `aria-current="true"`, e não uma classe: o mesmo atributo
+ * que o leitor de tela anuncia é o que pinta o ponto, então os dois nunca
+ * divergem.
+ */
+.nds-carousel-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-6, 1.5rem);                /* 24px — alvo */
+  height: var(--spacing-6, 1.5rem);
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.nds-carousel-dot::before {
+  content: "";
+  width: var(--spacing-2, 0.5rem);                /* 8px — marca */
+  height: var(--spacing-2, 0.5rem);
+  border-radius: var(--radius-full);
+  background-color: hsl(var(--muted-foreground) / 0.3);
+  transition: background-color var(--duration-fast);
+}
+
+.nds-carousel-dot[aria-current="true"]::before {
+  background-color: hsl(var(--primary));
+}
+
+.nds-carousel-dot:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-carousel-track,
-  .nds-carousel-button {
+  .nds-carousel-button,
+  .nds-carousel-dot::before {
     transition: none;
   }
 }

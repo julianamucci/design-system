@@ -171,5 +171,41 @@ export const Autoplay: Story = {
       await userEvent.click(canvas.getByRole('button', { name: 'Retomar apresentação' }));
       await expect(canvas.getByRole('button', { name: 'Pausar apresentação' })).toBeInTheDocument();
     });
+
+    await step('E a story termina com o relógio parado', async () => {
+      // Autoplay é temporizador, e a story terminava com ele LIGADO: o
+      // carrossel seguia andando durante a foto do Chromatic e durante a
+      // varredura do axe, que rodam depois da play. Cada execução fotografava
+      // um slide diferente e a diferença lia como regressão visual.
+      //
+      // Parar no fim também é o que torna a story replayável: a segunda rodada
+      // recomeça de um componente parado, não de um que já andou sozinho
+      // enquanto ninguém olhava.
+      await userEvent.click(canvas.getByRole('button', { name: 'Pausar apresentação' }));
+      await expect(canvas.getByRole('button', { name: 'Retomar apresentação' })).toBeInTheDocument();
+
+      // O rótulo é o estado declarado; a prova é o viewport não sair do lugar
+      // depois de um intervalo inteiro de autoplay (400ms) ter passado.
+      //
+      // A medida de referência só vale depois que a rolagem assenta: parar o
+      // relógio não cancela o quadro que já estava em curso, e ler o valor no
+      // instante do clique compararia contra um número ainda em movimento —
+      // a mesma corrida do contraste ~1.0 em elemento a meio do fade.
+      // `NaN` na semente não é descuido, é o que obriga a espera a comparar
+      // duas amostras SEPARADAS NO TEMPO. Semeando com a posição atual, a
+      // primeira verificação — que roda no mesmo quadro — compararia o valor
+      // consigo mesmo, daria "assentou" e a espera sairia sem provar nada.
+      let anterior = NaN;
+      await waitFor(async () => {
+        const agora = viewport.scrollLeft;
+        const assentou = agora === anterior;
+        anterior = agora;
+        await expect(assentou).toBe(true);
+      }, { timeout: 3000 });
+      const parado = anterior;
+
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      await expect(viewport.scrollLeft).toBe(parado);
+    });
   },
 };
