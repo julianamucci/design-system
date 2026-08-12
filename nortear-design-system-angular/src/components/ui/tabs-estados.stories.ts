@@ -95,7 +95,11 @@ export const Keyboard: Story = {
  * por três abas com a seta faria três buscas que ninguém pediu.
  */
 export const ManualActivation: Story = {
-  parameters: { covers: ['functional.item2'] },
+  // Sem `covers`: `functional.item2` documenta que a seta ANDA E ATIVA, e esta
+  // story prova exatamente o contrário — a seta só move o foco. Declará-lo aqui
+  // seria cobertura fantasma, com o auditor verde sobre uma prova invertida.
+  // O modo manual não é item do contrato porque a referência cross-stack não o
+  // expõe; ver a nota do relatório.
   render: () => ({
     template: `
       <div ndsTabs class="nds-max-w-lg" defaultValue="overview">

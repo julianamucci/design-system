@@ -1,8 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+import { Badge } from '@/components/ui/badge';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
+
+/**
+ * Ativa uma aba de forma idempotente: só clica quando ela ainda não está ativa.
+ * O painel Interactions reexecuta a play no mesmo DOM — clique cego inverteria
+ * o estado a cada rodada.
+ */
+async function ativar(aba: HTMLElement) {
+  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
+  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
+}
 
 const meta: Meta<any> = {
   title: 'UI/Tabs/Compositions',
@@ -15,7 +26,7 @@ const meta: Meta<any> = {
     docs: {
       description: {
         component:
-          'Composicoes reais de Tabs: controlado com analytics, com ícones, vertical para configurações e modo manual.',
+          'Composicoes reais de Tabs: controlado com analytics, com ícones, com contador, vertical para configurações e modo manual.',
       },
     },
   },
@@ -34,7 +45,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Tab ativa: <code>{{ value }}</code>
         </p>
@@ -62,6 +73,7 @@ export const Controlled: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item1'],
     docs: {
       description: {
         story: 'Tabs controladas — model-value + @update:model-value sincronizam o estado com a aplicação. Padrão para analytics, deep-linking e integração com router.',
@@ -70,13 +82,19 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const propriedades = canvas.getByRole('tab', { name: 'Propriedades' });
+    const visaoGeral = canvas.getByRole('tab', { name: 'Visão geral' });
 
-    await step('Trocar para "Propriedades" atualiza o estado externo', async () => {
-      await userEvent.click(tabs[1]);
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
-      const indicator = canvas.getByText('properties');
-      await expect(indicator).toBeInTheDocument();
+    await step('Trocar para "Propriedades" ativa o painel e o estado externo', async () => {
+      await ativar(propriedades);
+      await expect(visaoGeral).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', propriedades.id);
+      await expect(canvas.getByText('properties')).toBeInTheDocument();
+    });
+
+    await step('Voltar para "Visão geral" devolve o estado externo', async () => {
+      await ativar(visaoGeral);
+      await expect(canvas.getByText('overview')).toBeInTheDocument();
     });
   },
 };
@@ -104,7 +122,7 @@ export const WithIcons: Story = {
           Visualização renderizada do componente.
         </TabsContent>
         <TabsContent value="code" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          Snippet copiável em React/Vue/Svelte.
+          Snippet copiável do componente.
         </TabsContent>
         <TabsContent value="settings" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Ajustes de tema, locale e variantes.
@@ -113,14 +131,97 @@ export const WithIcons: Story = {
     `,
   }),
   parameters: {
+    covers: ['accessibility.item4'],
     docs: {
       description: {
-        story: 'Tabs com ícone à esquerda do label. Ícones têm aria-hidden="true" — o texto do trigger já descreve a tab para leitores de tela.',
+        story: 'Abas com ícone à esquerda do rótulo. O ícone é decorativo — o texto do gatilho já descreve a aba para leitores de tela.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Os três papéis do padrão estão presentes', async () => {
+      await expect(canvas.getByRole('tablist')).toHaveAttribute('aria-label', 'Modos de visualização');
+      await expect(canvas.getAllByRole('tab')).toHaveLength(3);
+      await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
+    });
+
+    await step('O nome acessível de cada aba é apenas o rótulo', async () => {
+      await expect(canvas.getByRole('tab', { name: 'Preview' })).toHaveAttribute('aria-selected', 'true');
+      await expect(canvas.getByRole('tab', { name: 'Código' })).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tab', { name: 'Ajustes' })).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Os ícones são decorativos, desenham algo e não interceptam o clique', async () => {
+      const icones = Array.from(canvasElement.querySelectorAll('[role="tab"] svg'));
+      await expect(icones).toHaveLength(3);
+      for (const icone of icones) {
+        await expect(icone).toHaveAttribute('aria-hidden', 'true');
+        await expect(icone.childElementCount).toBeGreaterThan(0);
+        await expect(getComputedStyle(icone).pointerEvents).toBe('none');
+      }
+    });
+  },
+};
+
+export const WithBadge: Story = {
+  render: () => ({
+    components: { ...sharedComponents, Badge },
+    template: `
+      <Tabs default-value="inbox" class="nds-w-full nds-max-w-md">
+        <TabsList aria-label="Caixas de mensagem">
+          <TabsTrigger value="inbox">
+            Caixa de entrada
+            <Badge as="span">12</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="spam">
+            Spam
+            <Badge as="span" variant="destructive">3</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="trash">Lixeira</TabsTrigger>
+        </TabsList>
+        <TabsContent value="inbox" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
+          Mensagens recebidas.
+        </TabsContent>
+        <TabsContent value="spam" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
+          Mensagens marcadas como spam.
+        </TabsContent>
+        <TabsContent value="trash" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
+          Mensagens excluídas.
+        </TabsContent>
+      </Tabs>
+    `,
+  }),
+  parameters: {
+    covers: ['functional.item1'],
+    docs: {
+      description: {
+        story: 'Aba com contador — o número entra no nome acessível do gatilho e não vira um segundo alvo de foco. Use para caixas de mensagem e listas com pendências.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const entrada = canvas.getByRole('tab', { name: 'Caixa de entrada 12' });
+    const spam = canvas.getByRole('tab', { name: 'Spam 3' });
+
+    await step('O contador entra no nome da aba sem criar outro alvo de foco', async () => {
+      await expect(canvas.getAllByRole('tab')).toHaveLength(3);
+      const contadores = Array.from(canvasElement.querySelectorAll('[role="tab"] [data-slot="badge"]'));
+      await expect(contadores).toHaveLength(2);
+      for (const contador of contadores) {
+        await expect(contador.getAttribute('tabindex')).toBeNull();
+        await expect(contador.getAttribute('role')).toBeNull();
+      }
+    });
+
+    await step('Clicar na aba com contador ativa o painel correspondente', async () => {
+      await ativar(spam);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', spam.id);
+      await ativar(entrada);
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Mensagens recebidas.');
+    });
   },
 };
 
@@ -128,7 +229,7 @@ export const VerticalSettings: Story = {
   render: () => ({
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="nds-w-full max-w-2xl">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-full nds-max-w-lg">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">
             <User class="nds-size-4" aria-hidden="true" />
@@ -161,23 +262,30 @@ export const VerticalSettings: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Padrão clássico de tela de configurações — orientation="vertical" com lista lateral + conteúdo extenso à direita. ↑↓ navegam entre tabs.',
+        story: 'Padrão clássico de tela de configurações — orientation="vertical" com lista lateral + conteúdo extenso à direita. ↑↓ navegam entre abas.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const list = canvas.getByRole('tablist');
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
 
-    await step('TabsList tem aria-orientation=vertical', async () => {
-      await expect(list).toHaveAttribute('aria-orientation', 'vertical');
+    await step('A lista anuncia a orientação vertical', async () => {
+      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
     });
 
-    await step('ArrowDown move para a próxima tab', async () => {
-      const tabs = canvas.getAllByRole('tab');
-      tabs[0].focus();
+    await step('ArrowDown move o foco e ativa a próxima aba', async () => {
+      abas[0].focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() => expect(abas[1]).toHaveAttribute('aria-selected', 'true'));
+      await expect(abas[1]).toHaveFocus();
+    });
+
+    await step('Home devolve o conjunto ao estado inicial', async () => {
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(abas[0]).toHaveAttribute('aria-selected', 'true'));
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[0].id);
     });
   },
 };
@@ -193,10 +301,10 @@ export const ManualMode: Story = {
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          activation-mode="manual": setas movem o foco mas não ativam a tab. Pressione Enter ou Space para ativar.
+          activation-mode="manual": setas movem o foco mas não ativam a aba. Pressione Enter ou Space para ativar.
         </TabsContent>
         <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          Indicado quando trocar de tab tem custo (fetch de dados, animação pesada).
+          Indicado quando trocar de aba tem custo (fetch de dados, animação pesada).
         </TabsContent>
         <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
           Exemplos de uso.
@@ -204,28 +312,36 @@ export const ManualMode: Story = {
       </Tabs>
     `,
   }),
+  // Sem `covers`: esta story demonstra o oposto de `functional.item2` (a seta
+  // aqui NÃO ativa). Declarar o item seria cobertura fantasma.
   parameters: {
     docs: {
       description: {
-        story: 'Modo manual — setas movem apenas o foco; Enter/Space ativa a tab focada. Use quando trocar de painel tem custo (fetch, render pesado).',
+        story: 'Modo manual — setas movem apenas o foco; Enter/Space ativa a aba focada. Use quando trocar de painel tem custo (fetch, render pesado).',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const visaoGeral = canvas.getByRole('tab', { name: 'Visão geral' });
+    const propriedades = canvas.getByRole('tab', { name: 'Propriedades' });
 
-    await step('ArrowRight move o foco sem ativar (mode manual)', async () => {
-      tabs[0].focus();
-      await userEvent.keyboard('{ArrowRight}');
-      await expect(tabs[1]).toHaveFocus();
-      await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'false');
+    await step('Ponto de partida: primeira aba ativa', async () => {
+      await ativar(visaoGeral);
     });
 
-    await step('Enter ativa a tab focada', async () => {
+    await step('ArrowRight move o foco sem ativar', async () => {
+      visaoGeral.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(propriedades).toHaveFocus());
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
+      await expect(visaoGeral).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('Enter ativa a aba focada', async () => {
       await userEvent.keyboard('{Enter}');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() => expect(propriedades).toHaveAttribute('aria-selected', 'true'));
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', propriedades.id);
     });
   },
 };

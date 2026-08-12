@@ -8,12 +8,30 @@ const meta: Meta = {
   component: TabsStory,
   tags: ['navigation'],
   parameters: {
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
   },
 };
 
 export default meta;
 type Story = StoryObj;
+
+const lista = (el: HTMLElement): HTMLElement =>
+  el.querySelector<HTMLElement>('[data-slot="tabs-list"]')!;
+
+const raiz = (el: HTMLElement): HTMLElement =>
+  el.querySelector<HTMLElement>('[data-slot="tabs"]')!;
+
+/**
+ * Idempotente: clicar numa aba já ativa a MANTÉM ativa, então o par certo é
+ * garantir o alvo e esperar o estado — o replay do painel Interactions parte do
+ * estado que a rodada anterior deixou.
+ */
+const ativar = async (aba: HTMLElement) => {
+  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
+  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
+};
 
 export const SettingsPanel: Story = {
   render: () => ({
@@ -26,30 +44,49 @@ export const SettingsPanel: Story = {
       ],
       defaultValue: 'profile',
       variant: 'default',
-      ariaLabel: 'Configuracoes',
-      class: 'w-full max-w-xl',
+      ariaLabel: 'Configurações',
+      class: 'nds-w-full nds-max-w-lg',
     },
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Painel de configurações com 3 seções paralelas: Perfil, Conta e Segurança. Labels curtos e descritivos.',
+        story:
+          'Painel de configurações com 3 seções paralelas: Perfil, Conta e Segurança. Rótulos ' +
+          'curtos e descritivos.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const perfil = canvas.getByRole('tab', { name: 'Perfil' });
+    const conta = canvas.getByRole('tab', { name: 'Conta' });
 
-    await step('TabsList tem aria-label descritivo', async () => {
-      const list = canvas.getByRole('tablist');
-      await expect(list).toHaveAttribute('aria-label', 'Configuracoes');
+    await step('A fileira tem um nome acessível próprio da composição', async () => {
+      // Sem nome, a mesma fileira aparece como "lista de abas" em toda tela que
+      // usar o componente.
+      await expect(canvas.getByRole('tablist', { name: 'Configurações' })).toBeInTheDocument();
+      await expect(canvas.getAllByRole('tab')).toHaveLength(3);
     });
 
-    await step('ArrowRight ativa próxima tab', async () => {
-      const tabs = canvas.getAllByRole('tab');
-      tabs[0].focus();
+    await step('A aba inicial mostra o painel de Perfil', async () => {
+      await ativar(perfil);
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent(
+        'Edite suas informações pessoais',
+      );
+    });
+
+    await step('A seta caminha pelas seções', async () => {
+      perfil.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+      await expect(conta).toHaveFocus();
+      await waitFor(() => expect(conta).toHaveAttribute('aria-selected', 'true'));
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Gerencie email');
+    });
+
+    await step('Home devolve o estado inicial', async () => {
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(perfil).toHaveAttribute('aria-selected', 'true'));
     });
   },
 };
@@ -65,19 +102,47 @@ export const CodePreviewLine: Story = {
       defaultValue: 'preview',
       variant: 'line',
       ariaLabel: 'Modos de visualização',
-      class: 'w-full max-w-lg',
+      class: 'nds-w-full nds-max-w-lg',
     },
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Alternância Preview/Código com variant `line`. Padrão comum em documentação técnica e playgrounds.',
+        story:
+          'Alternância Preview/Código com a variante `line`. Padrão comum em documentação ' +
+          'técnica e playgrounds.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const l = lista(canvasElement);
+    const preview = canvas.getByRole('tab', { name: 'Preview' });
+    const codigo = canvas.getByRole('tab', { name: 'Código' });
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('A composição usa a variante sem trilho', async () => {
+      await waitFor(() => expect(l).toHaveAttribute('data-variant', 'line'));
+      await expect(getComputedStyle(l).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    await step('A linha marca só a aba ativa', async () => {
+      await ativar(preview);
+      // A linha é um `::after` com `opacity`: procurar um nó no DOM não acharia
+      // nada. O `waitFor` existe porque a opacidade tem transição.
+      await waitFor(() => expect(getComputedStyle(preview, '::after').opacity).toBe('1'));
+      await expect(getComputedStyle(codigo, '::after').opacity).toBe('0');
+    });
+
+    await step('Trocar para Código troca o painel', async () => {
+      await ativar(codigo);
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('<Button>Click me</Button>');
+      await expect(preview).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Voltar para Preview devolve o estado inicial', async () => {
+      await ativar(preview);
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Visualização renderizada');
+    });
   },
 };
 
@@ -95,24 +160,45 @@ export const VerticalNavigation: Story = {
       orientation: 'vertical',
       variant: 'default',
       ariaLabel: 'Documentação',
-      class: 'w-full max-w-2xl',
+      class: 'nds-w-full nds-max-w-lg',
     },
   }),
   parameters: {
     docs: {
       description: {
-        story: 'Layout vertical para navegação lateral em painéis amplos. Setas ArrowUp/ArrowDown navegam entre tabs.',
+        story:
+          'Layout vertical para navegação lateral em painéis amplos. As setas de cima e de baixo ' +
+          'são as teclas de navegação.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const visaoGeral = canvas.getByRole('tab', { name: 'Visão geral' });
+    const propriedades = canvas.getByRole('tab', { name: 'Propriedades' });
+    const api = canvas.getByRole('tab', { name: 'API' });
 
-    await step('ArrowDown ativa próxima tab (vertical)', async () => {
-      const tabs = canvas.getAllByRole('tab');
-      tabs[0].focus();
+    await step('A orientação chega à raiz e ao tablist', async () => {
+      await waitFor(() =>
+        expect(raiz(canvasElement)).toHaveAttribute('data-orientation', 'vertical'),
+      );
+      await expect(lista(canvasElement)).toHaveAttribute('aria-orientation', 'vertical');
+    });
+
+    await step('No eixo vertical quem navega é a seta para baixo', async () => {
+      await ativar(visaoGeral);
+      visaoGeral.focus();
       await userEvent.keyboard('{ArrowDown}');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+      await expect(propriedades).toHaveFocus();
+      await waitFor(() => expect(propriedades).toHaveAttribute('aria-selected', 'true'));
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Lista completa de propriedades');
+    });
+
+    await step('End alcança a última seção e Home devolve a primeira', async () => {
+      await userEvent.keyboard('{End}');
+      await waitFor(() => expect(api).toHaveAttribute('aria-selected', 'true'));
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(visaoGeral).toHaveAttribute('aria-selected', 'true'));
     });
   },
 };
@@ -129,17 +215,60 @@ export const ManualActivation: Story = {
       defaultValue: 'overview',
       activationMode: 'manual',
       ariaLabel: 'Seções do componente',
+      class: 'nds-w-full nds-max-w-lg',
     },
   }),
+  // Sem `covers`: `functional.item2` documenta que a seta ANDA E ATIVA, e esta
+  // story prova exatamente o contrário — aqui a seta só move o foco. Declará-lo
+  // seria cobertura fantasma, com o auditor verde sobre uma prova invertida.
   parameters: {
     docs: {
       description: {
-        story: 'Modo manual: setas movem o foco sem ativar; Enter/Space ativam. Útil quando trocar de tab tem custo (fetch pesado).',
+        story:
+          'Modo manual: as setas movem o foco sem trocar de aba, e Enter ou Espaço confirmam. ' +
+          'Vale quando abrir um painel custa caro — passar por três abas com a seta faria três ' +
+          'buscas que ninguém pediu.',
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const visaoGeral = canvas.getByRole('tab', { name: 'Visão geral' });
+    const propriedades = canvas.getByRole('tab', { name: 'Propriedades' });
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('O ponto de partida é a primeira aba', async () => {
+      // O clique ativa em qualquer modo — é ele que normaliza o estado antes da
+      // prova, e é o que torna esta play idempotente no replay.
+      await ativar(visaoGeral);
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Conteúdo da visão geral');
+    });
+
+    await step('A seta move o foco SEM trocar a aba', async () => {
+      visaoGeral.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(propriedades).toHaveFocus();
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Conteúdo da visão geral');
+    });
+
+    await step('Enter ativa a aba focada', async () => {
+      await userEvent.keyboard('{Enter}');
+      await waitFor(() => expect(propriedades).toHaveAttribute('aria-selected', 'true'));
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Lista de propriedades');
+    });
+
+    await step('Espaço confirma do mesmo jeito', async () => {
+      const exemplos = canvas.getByRole('tab', { name: 'Exemplos' });
+      propriedades.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(exemplos).toHaveAttribute('aria-selected', 'false');
+      await userEvent.keyboard(' ');
+      await waitFor(() => expect(exemplos).toHaveAttribute('aria-selected', 'true'));
+    });
+
+    await step('O estado volta ao inicial', async () => {
+      await ativar(visaoGeral);
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
+    });
   },
 };

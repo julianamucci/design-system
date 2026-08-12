@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { Info, Settings, Shield, User } from "lucide-react";
+import { Settings, Shield, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
@@ -11,11 +11,15 @@ const meta: Meta = {
   component: Tabs,
   parameters: {
     layout: "padded",
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Composicoes reais do Tabs: com ícones, badges, modo controlado e activationMode manual.",
+          "Combinações canônicas do Tabs: ícone e badge dentro do trigger, estado controlado por " +
+          "fora e ativação manual. Em todas elas o rótulo textual continua sendo o que nomeia a " +
+          "aba — o ícone e o badge são reforço visual, e nenhum dos dois recebe foco próprio.",
       },
     },
   },
@@ -24,12 +28,30 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// Idempotente: o painel Interactions reexecuta a play no MESMO DOM. Clicar numa
+// aba já ativa a MANTÉM ativa, então só clicamos quando o alvo ainda não é o
+// ativo — e esperamos o estado assentar antes de seguir.
+const ativar = async (alvo: HTMLElement) => {
+  if (alvo.getAttribute("aria-selected") !== "true") await userEvent.click(alvo);
+  await waitFor(() => expect(alvo).toHaveAttribute("aria-selected", "true"));
+};
+
 // ─── Com ícones ───────────────────────────────────────────────────────────────
 
 export const WithIcons: Story = {
+  parameters: {
+    covers: ["accessibility.item4"],
+    docs: {
+      description: {
+        story:
+          "Ícone à esquerda do rótulo. O ícone é decorativo e fica escondido do leitor de tela — " +
+          "o texto do trigger já descreve a aba, e anunciar os dois duplicaria a informação.",
+      },
+    },
+  },
   render: () => (
     <Tabs defaultValue="profile" className="nds-w-full nds-max-w-lg">
-      <TabsList aria-label="Configuracoes da conta">
+      <TabsList aria-label="Configurações da conta">
         <TabsTrigger value="profile">
           <User aria-hidden="true" />
           Perfil
@@ -44,38 +66,70 @@ export const WithIcons: Story = {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="profile">Dados do perfil.</TabsContent>
-      <TabsContent value="account">Configuracoes da conta.</TabsContent>
-      <TabsContent value="security">Configuracoes de segurança.</TabsContent>
+      <TabsContent value="account">Configurações da conta.</TabsContent>
+      <TabsContent value="security">Configurações de segurança.</TabsContent>
     </Tabs>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Ícone à esquerda do label. Use aria-hidden="true" no ícone — o texto do trigger já descreve a tab para leitores de tela.',
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
-    await expect(tabs).toHaveLength(3);
-    await expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+
+    await step("O nome acessível é só o rótulo — o ícone não entra", async () => {
+      // A busca por nome exato é a prova: se o desenho fosse anunciado, o nome
+      // teria mais que a palavra e nenhuma destas buscas acharia a aba.
+      await expect(canvas.getByRole("tab", { name: "Perfil" })).toHaveAttribute(
+        "data-slot",
+        "tabs-trigger"
+      );
+      await expect(
+        canvas.getByRole("tab", { name: "Segurança" })
+      ).toHaveAttribute("aria-selected", "false");
+    });
+
+    await step("Cada ícone está marcado como decorativo", async () => {
+      const icones = canvasElement.querySelectorAll(
+        '[data-slot="tabs-trigger"] svg'
+      );
+      await expect(icones).toHaveLength(3);
+      for (const icone of icones) {
+        await expect(icone).toHaveAttribute("aria-hidden", "true");
+        // Um svg vazio seria um ícone que não desenhou nada, e ninguém veria
+        // falhar — o desenho tem que estar lá dentro.
+        await expect(icone.childElementCount).toBeGreaterThan(0);
+      }
+    });
+
+    await step("O ícone não intercepta o clique na aba", async () => {
+      // O ponteiro bloqueado no desenho é o que faz o clique cair sempre no
+      // botão: sem isso, clicar em cima do ícone teria o próprio svg como alvo.
+      const conta = canvas.getByRole("tab", { name: "Conta" });
+      await expect(
+        getComputedStyle(conta.querySelector("svg")!).pointerEvents
+      ).toBe("none");
+      await ativar(conta);
+    });
   },
 };
 
 // ─── Com badge ────────────────────────────────────────────────────────────────
 
 export const WithBadge: Story = {
+  parameters: {
+    covers: ["functional.item1"],
+    docs: {
+      description: {
+        story:
+          "Badge no trigger para indicar contagem. A contagem faz parte do que a aba significa " +
+          "(«Inbox, 12») e por isso é lida junto; o que ela não pode virar é um segundo alvo de foco.",
+      },
+    },
+  },
   render: () => (
     <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
       <TabsList aria-label="Painel do projeto">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="inbox">
           Inbox
-          <Badge variant="secondary" className="" style={{fontSize: "10px", height: "1rem" }} >
-            12
-          </Badge>
+          <Badge variant="secondary">12</Badge>
         </TabsTrigger>
         <TabsTrigger value="archived">Arquivados</TabsTrigger>
       </TabsList>
@@ -84,17 +138,30 @@ export const WithBadge: Story = {
       <TabsContent value="archived">Itens arquivados.</TabsContent>
     </Tabs>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Badge no trigger para indicar contagem. O badge é decorativo — o número deve refletir conteúdo dinâmico.",
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText("12")).toBeVisible();
+    const inbox = canvas.getByRole("tab", { name: /Inbox/ });
+
+    await step("O badge entra no nome da aba, não como controle à parte", async () => {
+      const badge = inbox.querySelector('[data-slot="badge"]')!;
+      await expect(badge).toHaveTextContent("12");
+      await expect(badge.getAttribute("tabindex")).toBeNull();
+      await expect(badge.getAttribute("role")).toBeNull();
+      // Se o badge virasse um controle, apareceria uma quarta aba na contagem.
+      await expect(canvas.getAllByRole("tab")).toHaveLength(3);
+    });
+
+    await step("Clicar na aba com badge troca o painel", async () => {
+      await ativar(inbox);
+      // `waitFor` porque o painel que SAI continua montado (com `inert`) durante
+      // a transição de entrada do novo: nesse intervalo há dois `tabpanel` no
+      // DOM e a consulta única casa os dois, de forma intermitente.
+      await waitFor(async () => {
+        await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+          "12 itens novos"
+        );
+      });
+    });
   },
 };
 
@@ -103,7 +170,7 @@ export const WithBadge: Story = {
 function ControlledTabs() {
   const [value, setValue] = useState("overview");
   return (
-    <div className="nds-w-full nds-max-w-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Tab ativa: <code>{value}</code>
       </p>
@@ -127,37 +194,49 @@ export const Controlled: Story = {
     docs: {
       description: {
         story:
-          "Modo controlado — value + onValueChange gerenciam o estado externamente. Útil para sincronizar com URL ou analytics.",
+          "Modo controlado — o estado da aba ativa vive fora do componente, que passa a apenas " +
+          "avisar a mudança. Útil para sincronizar a aba com a URL ou com analytics.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
 
-    await step("Click atualiza estado externo", async () => {
-      await userEvent.click(tabs[1]);
-      await waitFor(() =>
-        expect(canvas.getByText("properties")).toBeVisible()
-      );
+    await step("O clique chega ao estado externo", async () => {
+      await ativar(canvas.getByRole("tab", { name: "Propriedades" }));
+      // O parágrafo acima das abas é escrito pelo estado de fora: se a mudança
+      // não subisse, ele continuaria mostrando a aba anterior.
+      await waitFor(() => expect(canvas.getByText("properties")).toBeVisible());
+      await waitFor(async () => {
+        await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+          "Lista de propriedades"
+        );
+      });
     });
   },
 };
 
-// ─── Manual activation ────────────────────────────────────────────────────────
+// ─── Ativação manual ──────────────────────────────────────────────────────────
 
 export const ManualActivation: Story = {
   name: "Manual activation",
+  parameters: {
+    // Sem `covers`: o contrato do componente descreve a seta ATIVANDO a aba, e
+    // esta story demonstra justamente o comportamento oposto. Declará-la ali
+    // seria cobertura fantasma.
+    docs: {
+      description: {
+        story:
+          "Ativação manual — a seta apenas move o foco e a troca só acontece no Enter ou Space. " +
+          "Vale quando o painel custa caro (uma requisição por aba, por exemplo): passar por três " +
+          "abas com a seta faria três buscas que ninguém pediu.",
+      },
+    },
+  },
   render: () => (
-    <Tabs
-      defaultValue="overview"
-      className="nds-w-full nds-max-w-lg"
-    >
-      <TabsList aria-label="Seções do componente">
-        <TabsTrigger value="overview">
-          <Info aria-hidden="true" />
-          Visão geral
-        </TabsTrigger>
+    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
+      <TabsList aria-label="Seções do componente" activationMode="manual">
+        <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
         <TabsTrigger value="examples">Exemplos</TabsTrigger>
       </TabsList>
@@ -166,30 +245,38 @@ export const ManualActivation: Story = {
       <TabsContent value="examples">Exemplos de uso.</TabsContent>
     </Tabs>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'activationMode="manual" — setas movem foco mas só Enter/Space ativa. Útil quando a troca de tab carrega conteúdo pesado.',
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
+    const abas = canvas.getAllByRole("tab");
 
-    await step("ArrowRight move foco mas não ativa", async () => {
-      tabs[0].focus();
-      await userEvent.keyboard("{ArrowRight}");
-      // tab 1 não está selecionada ainda — foco moveu mas activation manual
-      await expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    await step("Estado de partida: a primeira aba ativa", async () => {
+      // O clique ativa em qualquer modo, então é ele que devolve a story ao
+      // ponto inicial no replay — a play anterior terminou na segunda aba.
+      await ativar(abas[0]);
     });
 
-    await step("Enter ativa a tab focada", async () => {
+    await step("A seta move o foco sem trocar a aba", async () => {
+      abas[0].focus();
+      await userEvent.keyboard("{ArrowRight}");
+      await waitFor(() => expect(abas[1]).toHaveFocus());
+      await expect(abas[1]).toHaveAttribute("aria-selected", "false");
+      await waitFor(async () => {
+        await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+          "Conteúdo da visão geral"
+        );
+      });
+    });
+
+    await step("Enter confirma a aba focada", async () => {
       await userEvent.keyboard("{Enter}");
       await waitFor(() =>
-        expect(tabs[1]).toHaveAttribute("aria-selected", "true")
+        expect(abas[1]).toHaveAttribute("aria-selected", "true")
       );
+      await waitFor(async () => {
+        await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+          "Lista de propriedades"
+        );
+      });
     });
   },
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
@@ -18,7 +18,7 @@ type Story = StoryObj;
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
+  p.className = 'nds-text-body nds-text-muted-foreground nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
@@ -44,18 +44,32 @@ function setLabel(root: HTMLElement, label = 'Seções do componente'): HTMLElem
   return root;
 }
 
+/** Só clica quando a aba ainda não está selecionada — a play reexecuta no mesmo DOM. */
+async function ativar(aba: HTMLElement): Promise<void> {
+  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
+  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
+}
+
 // ─── Default (primeira ativa) ─────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'w-full max-w-md', items: baseItems() })),
+  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
   parameters: {
-    docs: { description: { story: 'Estado inicial: primeira tab ativa, demais inativas.' } },
+    docs: { description: { story: 'Estado inicial: primeira aba ativa, demais inativas, um único painel visível.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
-    await step('Primeira tab aria-selected=true', async () => {
-      await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+    const abas = canvas.getAllByRole('tab');
+
+    await step('Só a primeira aba está selecionada', async () => {
+      await expect(abas.map((a) => a.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+      await expect(abas.map((a) => a.getAttribute('tabindex'))).toEqual(['0', '-1', '-1']);
+    });
+
+    await step('Um único painel visível, o da aba ativa', async () => {
+      const painel = canvas.getByRole('tabpanel');
+      await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
+      await expect(painel).toHaveAttribute('aria-labelledby', abas[0].id);
     });
   },
 };
@@ -63,15 +77,22 @@ export const Default: Story = {
 // ─── Active (segunda ativa via defaultValue) ──────────────────────────────────
 
 export const Active: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'properties', class: 'w-full max-w-md', items: baseItems() })),
+  render: () => setLabel(createTabs({ defaultValue: 'properties', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
   parameters: {
-    docs: { description: { story: 'Tab ativa via `defaultValue`. aria-selected=true e fundo/sombra distintos.' } },
+    docs: { description: { story: 'Aba ativa escolhida na montagem. O painel visível é o dela, e a seleção não depende de clique.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
-    await step('Segunda tab aria-selected=true', async () => {
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+    const abas = canvas.getAllByRole('tab');
+
+    await step('A aba escolhida na montagem é a selecionada', async () => {
+      await expect(abas.map((a) => a.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[1].id);
+    });
+
+    await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
+      await expect(getComputedStyle(abas[1]).backgroundColor)
+        .not.toBe(getComputedStyle(abas[0]).backgroundColor);
     });
   },
 };
@@ -79,23 +100,30 @@ export const Active: Story = {
 // ─── Focus visible ────────────────────────────────────────────────────────────
 
 export const FocusVisible: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'w-full max-w-md', items: baseItems() })),
   parameters: {
-    docs: { description: { story: 'Foco via teclado: ring visível na tab focada. Roving tabindex — apenas a tab ativa é Tab-focusable.' } },
+    covers: ['functional.item4', 'accessibility.item3'],
+    docs: { description: { story: 'Foco por teclado: anel visível na aba focada. Roving tabindex — só a aba ativa entra na ordem de Tab, e o Tab seguinte cai no painel.' } },
   },
+  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const abas = canvas.getAllByRole('tab');
+    const painel = canvas.getByRole('tabpanel');
 
-    await step('Tab ativa é focável via Tab (roving)', async () => {
-      tabs[0].focus();
-      await expect(tabs[0]).toHaveFocus();
+    // O foco tem que CHEGAR por teclado: `:focus-visible` não dispara em foco
+    // programático, e o anel apareceria ausente num CSS que está certo.
+    (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+
+    await step('Tab leva o foco à aba ativa e o anel aparece', async () => {
+      await userEvent.tab();
+      await expect(abas[0]).toHaveFocus();
+      await expect(getComputedStyle(abas[0]).boxShadow).not.toBe('none');
     });
 
-    await step('ArrowRight move foco e ativa próxima', async () => {
-      await userEvent.keyboard('{ArrowRight}');
-      await expect(tabs[1]).toHaveFocus();
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+    await step('O Tab seguinte cai no painel da aba ativa', async () => {
+      await expect(painel).toHaveAttribute('tabindex', '0');
+      await userEvent.tab();
+      await expect(painel).toHaveFocus();
     });
   },
 };
@@ -103,28 +131,39 @@ export const FocusVisible: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'w-full max-w-md', items: withDisabled() })),
   parameters: {
-    docs: { description: { story: 'Tab desabilitada: não responde a cliques, opacity-50 e pulada pela navegação por setas.' } },
+    covers: ['visual.item4'],
+    docs: { description: { story: 'Aba desabilitada: esmaecida, sem resposta ao ponteiro e pulada pela navegação por setas.' } },
   },
+  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: withDisabled() })),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const primeira = canvas.getByRole('tab', { name: 'Visão geral' });
+    const bloqueada = canvas.getByRole('tab', { name: 'Propriedades' });
+    const ultima = canvas.getByRole('tab', { name: 'Exemplos' });
 
-    await step('Segunda tab está disabled', async () => {
-      await expect(tabs[1]).toBeDisabled();
+    await step('A aba bloqueada se anuncia e se mostra desabilitada', async () => {
+      await expect(bloqueada).toBeDisabled();
+      await expect(Number(getComputedStyle(bloqueada).opacity)).toBeLessThan(1);
+      await expect(getComputedStyle(bloqueada).pointerEvents).toBe('none');
     });
 
-    await step('Clique no item disabled não muda seleção', async () => {
-      await userEvent.click(tabs[1], { pointerEventsCheck: 0 });
-      await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+    await step('Clicar nela não muda a seleção', async () => {
+      await ativar(primeira);
+      // `pointerEventsCheck: 0` é obrigatório: com pointer-events none o
+      // userEvent RECUSA o clique, e o teste passaria sem exercitar nada.
+      await userEvent.click(bloqueada, { pointerEventsCheck: 0 });
+      await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
+      await expect(primeira).toHaveAttribute('aria-selected', 'true');
     });
 
-    await step('ArrowRight pula tab disabled', async () => {
-      tabs[0].focus();
+    await step('A seta pula a aba bloqueada', async () => {
+      primeira.focus();
       await userEvent.keyboard('{ArrowRight}');
-      // Pula properties (disabled) e vai direto para examples.
-      await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() => expect(ultima).toHaveAttribute('aria-selected', 'true'));
+      // Home devolve o conjunto ao estado de montagem para o próximo replay.
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));
     });
   },
 };

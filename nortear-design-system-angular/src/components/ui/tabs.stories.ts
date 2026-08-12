@@ -115,12 +115,15 @@ type Story = StoryObj<TabsArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
+    // `visual.item1` NÃO entra aqui: ele é "Default (3 tabs, primeira ativa)" e
+    // o Chromatic fotografa o estado FINAL da play — que é a terceira aba
+    // ativa, não a primeira. Quem cobre esse item é a story `Default` de
+    // variantes, que não clica em nada.
     covers: [
       'functional.item1',
       'accessibility.item1',
       'accessibility.item4',
       'accessibility.item5',
-      'visual.item1',
     ],
   },
   render: (args) => ({

@@ -197,13 +197,13 @@ interface TabsRootProps {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: "horizontal" | "vertical";   // default "horizontal"
-  activationMode?: "automatic" | "manual";   // default "automatic"
   className?: string;
 }
 
 // TabsList
 interface TabsListProps {
   variant?: "default" | "line";              // default "default"
+  activationMode?: "automatic" | "manual";   // default "automatic"
   "aria-label": string;                      // OBRIGATÓRIO
   className?: string;
 }
@@ -227,12 +227,14 @@ interface TabsContentProps {
     { key: "defaultValue", name: "defaultValue" },
     { key: "onValueChange", name: "onValueChange" },
     { key: "orientation", name: "orientation" },
-    { key: "activationMode", name: "activationMode" },
     { key: "className", name: "className" },
   ];
 
+  // `activationMode` governa a lista de abas, não a raiz: é a lista que decide
+  // se a seta já troca a aba ou apenas move o foco.
   const propsListItems = [
     { key: "variant", name: "variant" },
+    { key: "activationMode", name: "activationMode" },
     { key: "className", name: "className" },
   ];
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
@@ -11,8 +11,10 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Vanilla: factory custom NÃO expõe prop `variant` nem `orientation`. ' +
-          'As variantes "line" e "vertical" são aplicadas via utility classes no elemento [role="tablist"] após criação.',
+          'As variantes saem das opções `variant` e `orientation` da factory: elas escrevem ' +
+          '`data-variant` na lista e `data-orientation` na raiz, e o CSS do design system ' +
+          'faz o resto. Nada de ajuste no DOM depois de criado — valor de design cravado ' +
+          'inline escapa do tema e da densidade.',
       },
     },
   },
@@ -25,7 +27,7 @@ type Story = StoryObj;
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'nds-text-body nds-text-muted-foreground nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
+  p.className = 'nds-text-body nds-text-muted-foreground nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
@@ -38,101 +40,127 @@ function items(): TabsItemDef[] {
   ];
 }
 
+const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
+
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
+  parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
+    docs: { description: { story: 'Padrão: as abas correm sobre um trilho, e a ativa ganha fundo próprio.' } },
+  },
   render: () => {
     const root = createTabs({
       defaultValue: 'overview',
-      class: 'w-full max-w-md',
+      class: 'nds-w-full nds-max-w-md',
       items: items(),
     });
     root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
     return root;
   },
-  parameters: {
-    docs: { description: { story: 'Padrão: fundo `muted` arredondado e sombra na tab ativa.' } },
-  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const tablist = await canvas.findByRole('tablist');
-    await expect(tablist).toHaveAttribute('aria-label', 'Seções do componente');
-    const active = await canvas.findByRole('tab', { selected: true });
-    await expect(active).toHaveTextContent('Visão geral');
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab');
+
+    await expect(abas).toHaveLength(3);
+    await expect(abas[0]).toHaveAttribute('aria-selected', 'true');
+    await expect(lista).toHaveAttribute('data-variant', 'default');
+    // Horizontal é o padrão implícito de `tablist`: escrever aria-orientation
+    // aqui só repetiria o que o papel já diz.
+    await expect(lista).not.toHaveAttribute('aria-orientation');
+    // O trilho existe: a lista pinta fundo próprio.
+    await expect(getComputedStyle(lista).backgroundColor).not.toBe(TRANSPARENTE);
+    // A aba ativa se distingue por FUNDO, não só por cor de texto (WCAG 1.4.1).
+    await expect(getComputedStyle(abas[0]).backgroundColor)
+      .not.toBe(getComputedStyle(abas[1]).backgroundColor);
   },
 };
 
 // ─── Line ─────────────────────────────────────────────────────────────────────
 
 export const Line: Story = {
-  render: () => {
-    const root = createTabs({
-      defaultValue: 'overview',
-      class: 'w-full max-w-md',
-      items: items(),
-    });
-    const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-    if (list) {
-      list.classList.remove('bg-muted', 'rounded-lg');
-      list.classList.add('nds-bg-transparent', 'nds-w-full');
-      list.style.borderBottom = '1px solid var(--border)';
-      list.style.borderRadius = '0';
-      list.style.justifyContent = 'flex-start';
-      list.setAttribute('aria-label', 'Seções do componente');
-    }
-    return root;
-  },
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story:
-          'Variante line: visual minimalista com linha inferior. ' +
-          'Vanilla: factory NÃO expõe prop `variant` — aplicamos classes utilitárias manualmente.',
+          'Variante line: sem trilho, o ativo é marcado por um traço fino desenhado em `::after`. ' +
+          'Boa para sub-navegação dentro de uma página, onde o trilho competiria com os containers em volta.',
       },
     },
   },
-
+  render: () => {
+    const root = createTabs({
+      defaultValue: 'overview',
+      variant: 'line',
+      class: 'nds-w-full nds-max-w-md',
+      items: items(),
+    });
+    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
+    return root;
+  },
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const lista = canvas.getByRole('tablist');
+    const [ativa, inativa] = canvas.getAllByRole('tab');
+
+    await expect(lista).toHaveAttribute('data-variant', 'line');
+    // O trilho some — é o que separa "line" de "default".
+    await expect(getComputedStyle(lista).backgroundColor).toBe(TRANSPARENTE);
+    await expect(getComputedStyle(ativa).backgroundColor).toBe(TRANSPARENTE);
+    // O indicador é pseudo-elemento: procurar nó no DOM não acha nada. O que
+    // distingue ativo de inativo é a opacidade do ::after.
+    await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+    await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
   },
 };
 
 // ─── Vertical ─────────────────────────────────────────────────────────────────
 
 export const Vertical: Story = {
-  render: () => {
-    const root = createTabs({
-      defaultValue: 'overview',
-      class: 'w-full max-w-md flex gap-4',
-      items: items(),
-    });
-    const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-    if (list) {
-      list.classList.remove('inline-flex', 'h-9', 'items-center', 'justify-center');
-      list.classList.add('nds-shrink-0');
-      list.style.display = 'flex';
-      list.style.flexDirection = 'column';
-      list.style.height = 'auto';
-      list.style.alignItems = 'stretch';
-      list.setAttribute('aria-label', 'Seções do componente');
-      list.setAttribute('aria-orientation', 'vertical');
-    }
-    return root;
-  },
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
-          'Orientação vertical: lista lateral e conteúdo à direita. ' +
-          'Vanilla: factory NÃO expõe prop `orientation` — aplicamos flex-col + aria-orientation manualmente. ' +
-          'Importante: setas continuam navegando como horizontal (Left/Right) — para suportar Up/Down nativamente seria necessário estender a factory.',
+          'Orientação vertical: lista empilhada à esquerda, painel ao lado. ' +
+          'A navegação por seta acompanha a direção — para cima e para baixo.',
       },
     },
   },
-
+  render: () => {
+    const root = createTabs({
+      defaultValue: 'overview',
+      orientation: 'vertical',
+      class: 'nds-w-full nds-max-w-md',
+      items: items(),
+    });
+    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
+    return root;
+  },
   play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector('[data-slot="tabs"]')!;
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab');
+    const painel = canvas.getByRole('tabpanel');
+
+    await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
+    await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+    // Empilhadas: todas começam na mesma coluna.
+    const bordas = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
+    await expect(bordas.size).toBe(1);
+    // O painel fica AO LADO da lista, não abaixo dela.
+    await expect(painel.getBoundingClientRect().left)
+      .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+
+    // A seta segue a orientação. ArrowUp devolve o conjunto ao estado inicial,
+    // para o replay da play começar de onde começou.
+    abas[0].focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(abas[1]).toHaveAttribute('aria-selected', 'true'));
+    await userEvent.keyboard('{ArrowUp}');
+    await waitFor(() => expect(abas[0]).toHaveAttribute('aria-selected', 'true'));
   },
 };

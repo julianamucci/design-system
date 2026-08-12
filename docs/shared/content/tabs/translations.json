@@ -168,12 +168,12 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Tab não ativa — texto <code>foreground/60</code>, sem fundo."
+        "behavior": "Tab não ativa — texto atenuado, sem fundo."
       },
       "active": {
         "label": "Active",
         "trigger": "Click / Arrow / Home/End",
-        "behavior": "Tab ativa — <code>data-active</code>, fundo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) ou linha inferior (variant line)."
+        "behavior": "Tab ativa — fundo <code>background</code>, texto <code>foreground</code>, sombra suave (variante padrão) ou linha inferior (variante line)."
       },
       "hover": {
         "label": "Hover",
@@ -183,12 +183,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab / Arrow",
-        "behavior": "Focada via teclado — anel <code>ring-[3px] ring-ring/50</code>, borda <code>ring</code>."
+        "behavior": "Focada via teclado — anel de foco visível na cor <code>ring</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>pointer-events-none</code>."
+        "behavior": "Tab desabilitada — esmaecida e fora do alcance do ponteiro."
       },
       "cols": {
         "state": "Estado",
@@ -298,7 +298,7 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
         "item4": "<code>aria-label</code> no <code>TabsList</code> obrigatório",
         "item5": "Navegação por setas com roving tabindex — só a tab ativa é focável via Tab",
-        "item6": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>"
+        "item6": "Anel de foco visível na tab focada por teclado"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
@@ -309,8 +309,8 @@
         "arrowUp": "Move para a tab anterior (vertical)",
         "home": "Vai para a primeira tab",
         "end": "Vai para a última tab",
-        "enter": "Ativa a tab focada (quando <code>activationMode=\"manual\"</code>)",
-        "space": "Ativa a tab focada (quando <code>activationMode=\"manual\"</code>)"
+        "enter": "Ativa a tab focada quando a ativação é manual",
+        "space": "Ativa a tab focada quando a ativação é manual"
       },
       "aria": {
         "title": "Atributos ARIA",
@@ -379,7 +379,7 @@
         },
         "item2": {
           "action": "Pressionar ArrowRight com tab focada",
-          "result": "Move para a próxima tab e ativa (mode automatic)",
+          "result": "Move para a próxima tab e a ativa",
           "priority": "high"
         },
         "item3": {
@@ -398,7 +398,7 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto e fundo",
-        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
+        "item3": "Focus ring visível na tab focada por teclado",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
         "item5": "aria-selected reflete a tab ativa"
       },
@@ -614,12 +614,12 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Inactive tab — <code>foreground/60</code> text, no background."
+        "behavior": "Inactive tab — dimmed text, no background."
       },
       "active": {
         "label": "Active",
         "trigger": "Click / Arrow / Home/End",
-        "behavior": "Active tab — <code>data-active</code>, <code>background</code> fill, <code>foreground</code> text, soft shadow (default variant) or bottom line (line variant)."
+        "behavior": "Active tab — <code>background</code> fill, <code>foreground</code> text, soft shadow (default variant) or bottom line (line variant)."
       },
       "hover": {
         "label": "Hover",
@@ -629,12 +629,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab / Arrow",
-        "behavior": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>, <code>ring</code> border."
+        "behavior": "Keyboard focused — visible focus ring in the <code>ring</code> colour."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>pointer-events-none</code>."
+        "behavior": "Disabled tab — dimmed and out of pointer reach."
       },
       "cols": {
         "state": "State",
@@ -744,7 +744,7 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automatic",
         "item4": "<code>aria-label</code> on <code>TabsList</code> required",
         "item5": "Arrow navigation with roving tabindex — only the active tab is Tab-focusable",
-        "item6": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>"
+        "item6": "Visible focus ring on the keyboard-focused tab"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
@@ -755,8 +755,8 @@
         "arrowUp": "Moves to previous tab (vertical)",
         "home": "Goes to the first tab",
         "end": "Goes to the last tab",
-        "enter": "Activates focused tab (when <code>activationMode=\"manual\"</code>)",
-        "space": "Activates focused tab (when <code>activationMode=\"manual\"</code>)"
+        "enter": "Activates the focused tab when activation is manual",
+        "space": "Activates the focused tab when activation is manual"
       },
       "aria": {
         "title": "ARIA Attributes",
@@ -825,7 +825,7 @@
         },
         "item2": {
           "action": "Press ArrowRight with tab focused",
-          "result": "Moves to next tab and activates (automatic mode)",
+          "result": "Moves to the next tab and activates it",
           "priority": "high"
         },
         "item3": {
@@ -844,7 +844,7 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 4.5:1 contrast between text and background",
-        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
+        "item3": "Visible focus ring on the keyboard-focused tab",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" present",
         "item5": "aria-selected reflects active tab"
       },
@@ -1060,12 +1060,12 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Tab no activa — texto <code>foreground/60</code>, sin fondo."
+        "behavior": "Tab no activa — texto atenuado, sin fondo."
       },
       "active": {
         "label": "Active",
         "trigger": "Click / Arrow / Home/End",
-        "behavior": "Tab activa — <code>data-active</code>, fondo <code>background</code>, texto <code>foreground</code>, sombra suave (variant default) o línea inferior (variant line)."
+        "behavior": "Tab activa — fondo <code>background</code>, texto <code>foreground</code>, sombra suave (variante por defecto) o línea inferior (variante line)."
       },
       "hover": {
         "label": "Hover",
@@ -1075,12 +1075,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab / Arrow",
-        "behavior": "Enfocada por teclado — <code>ring-[3px] ring-ring/50</code>, borde <code>ring</code>."
+        "behavior": "Enfocada por teclado — anillo de foco visible en el color <code>ring</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>pointer-events-none</code>."
+        "behavior": "Tab deshabilitada — atenuada y fuera del alcance del puntero."
       },
       "cols": {
         "state": "Estado",
@@ -1190,7 +1190,7 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
         "item4": "<code>aria-label</code> en <code>TabsList</code> obligatorio",
         "item5": "Navegación por flechas con roving tabindex — solo la tab activa es focalizable vía Tab",
-        "item6": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>"
+        "item6": "Anillo de foco visible en la tab enfocada por teclado"
       },
       "keyboard": {
         "title": "Navegación por Teclado",
@@ -1201,8 +1201,8 @@
         "arrowUp": "Mueve a la tab anterior (vertical)",
         "home": "Va a la primera tab",
         "end": "Va a la última tab",
-        "enter": "Activa la tab enfocada (cuando <code>activationMode=\"manual\"</code>)",
-        "space": "Activa la tab enfocada (cuando <code>activationMode=\"manual\"</code>)"
+        "enter": "Activa la tab enfocada cuando la activación es manual",
+        "space": "Activa la tab enfocada cuando la activación es manual"
       },
       "aria": {
         "title": "Atributos ARIA",
@@ -1271,7 +1271,7 @@
         },
         "item2": {
           "action": "Pulsar ArrowRight con tab enfocada",
-          "result": "Mueve a la siguiente tab y la activa (modo automatic)",
+          "result": "Mueve a la siguiente tab y la activa",
           "priority": "high"
         },
         "item3": {
@@ -1290,7 +1290,7 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto y fondo",
-        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
+        "item3": "Anillo de foco visible en la tab enfocada por teclado",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
         "item5": "aria-selected refleja la tab activa"
       },

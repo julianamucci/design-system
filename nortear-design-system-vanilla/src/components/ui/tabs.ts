@@ -2,6 +2,13 @@
 //
 // Visual: classes .nds-tabs-* (standalone).
 // Estado via data-state="active|inactive" no trigger; painéis usam hidden.
+//
+// Contrato de layout do design system (docs/shared/styles/nds/tabs.css):
+//   - `data-orientation` na raiz  → direção do fluxo e gap entre lista e painel
+//   - `data-variant` na lista     → "default" (trilho) ou "line" (indicador ::after)
+// Os dois são ESCRITOS AQUI. Antes, as stories fingiam as variantes mutando o
+// DOM com classe morta e `style.*` inline — valor de design fora do tema e da
+// densidade, e sem exercitar o CSS que o sistema já publica.
 
 import { cn } from '@/lib/utils';
 
@@ -12,9 +19,16 @@ export type TabsItemDef = {
   disabled?: boolean;
 };
 
+export type TabsVariant = 'default' | 'line';
+export type TabsOrientation = 'horizontal' | 'vertical';
+
 export type TabsOptions = {
   defaultValue: string;
   items: TabsItemDef[];
+  /** "default" desenha o trilho; "line" some com ele e marca o ativo por baixo. */
+  variant?: TabsVariant;
+  /** Direção do conjunto. Também define qual par de setas navega. */
+  orientation?: TabsOrientation;
   onValueChange?: (value: string) => void;
   class?: string;
 };
@@ -22,13 +36,20 @@ export type TabsOptions = {
 let _tabsCounter = 0;
 
 export function createTabs(options: TabsOptions): HTMLElement {
-  const { defaultValue, items, onValueChange } = options;
+  const {
+    defaultValue,
+    items,
+    onValueChange,
+    variant = 'default',
+    orientation = 'horizontal',
+  } = options;
 
   const id = ++_tabsCounter;
   let activeValue = defaultValue;
 
   const root = document.createElement('div');
   root.dataset.slot = 'tabs';
+  root.dataset.orientation = orientation;
   root.className = cn('nds-tabs', options.class);
 
   // Tab list
@@ -36,6 +57,10 @@ export function createTabs(options: TabsOptions): HTMLElement {
   listEl.setAttribute('role', 'tablist');
   listEl.className = 'nds-tabs-list';
   listEl.dataset.slot = 'tabs-list';
+  listEl.dataset.variant = variant;
+  // `aria-orientation` só no vertical: horizontal é o padrão implícito do papel
+  // `tablist`, e repetir o padrão é ruído para quem lê com leitor de tela.
+  if (orientation === 'vertical') listEl.setAttribute('aria-orientation', 'vertical');
 
   const panelMap = new Map<string, HTMLElement>();
   const triggerMap = new Map<string, HTMLButtonElement>();
@@ -132,30 +157,33 @@ export function createTabs(options: TabsOptions): HTMLElement {
   });
 
   // Keyboard navigation
+  //
+  // A tecla segue a ORIENTAÇÃO: num conjunto empilhado, Left/Right não descreve
+  // o movimento que o olho vê. Home/End valem nas duas direções.
+  // A seta ATIVA a aba (ativação automática) — é o contrato do design system.
+  const nextKey = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+  const prevKey = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
+
   listEl.addEventListener('keydown', (e) => {
     const enabledItems = items.filter(i => !i.disabled);
+    if (enabledItems.length === 0) return;
     const currentIdx = enabledItems.findIndex(i => i.value === activeValue);
 
-    if (e.key === 'ArrowRight') {
+    const irPara = (idx: number) => {
       e.preventDefault();
-      const next = (currentIdx + 1) % enabledItems.length;
-      const nextValue = enabledItems[next].value;
-      activate(nextValue);
-      triggerMap.get(nextValue)?.focus();
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      const prev = (currentIdx - 1 + enabledItems.length) % enabledItems.length;
-      const prevValue = enabledItems[prev].value;
-      activate(prevValue);
-      triggerMap.get(prevValue)?.focus();
+      const value = enabledItems[idx].value;
+      activate(value);
+      triggerMap.get(value)?.focus();
+    };
+
+    if (e.key === nextKey) {
+      irPara((currentIdx + 1) % enabledItems.length);
+    } else if (e.key === prevKey) {
+      irPara((currentIdx - 1 + enabledItems.length) % enabledItems.length);
     } else if (e.key === 'Home') {
-      e.preventDefault();
-      const firstValue = enabledItems[0]?.value;
-      if (firstValue) { activate(firstValue); triggerMap.get(firstValue)?.focus(); }
+      irPara(0);
     } else if (e.key === 'End') {
-      e.preventDefault();
-      const lastValue = enabledItems[enabledItems.length - 1]?.value;
-      if (lastValue) { activate(lastValue); triggerMap.get(lastValue)?.focus(); }
+      irPara(enabledItems.length - 1);
     }
   });
 

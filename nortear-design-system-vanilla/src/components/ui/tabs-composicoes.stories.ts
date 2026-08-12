@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
 import { createBadge } from './badge';
 import { User, Settings, Shield } from 'lucide';
@@ -13,9 +13,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais com Tabs. Demonstra ícones, badges e layout vertical. ' +
-          'DIVERGÊNCIAS Vanilla: a factory custom não expõe `variant` nem `orientation`; ' +
-          'variantes line/vertical são aplicadas via utility classes manualmente.',
+          'Composições reais com Tabs: ícone e badge no gatilho, lista lateral e sub-navegação. ' +
+          'A orientação e a variante vêm das opções da factory — o layout inteiro é responsabilidade do CSS do design system.',
       },
     },
   },
@@ -48,7 +47,7 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 
 function makePanel(text: string): HTMLElement {
   const p = document.createElement('div');
-  p.className = 'nds-text-body nds-p-3 nds-rounded-md nds-border-default nds-bg-card';
+  p.className = 'nds-text-body nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
 }
@@ -72,22 +71,42 @@ function setLabel(root: HTMLElement, label: string): HTMLElement {
   return root;
 }
 
+/** Só clica quando a aba ainda não está selecionada — a play reexecuta no mesmo DOM. */
+async function ativar(aba: HTMLElement): Promise<void> {
+  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
+  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
+}
+
+function configItems(): TabsItemDef[] {
+  return [
+    { value: 'profile',  label: 'Perfil',    content: makeRichPanel('Perfil',    'Edite suas informações públicas.') },
+    { value: 'account',  label: 'Conta',     content: makeRichPanel('Conta',     'Email, idioma e preferências.') },
+    { value: 'security', label: 'Segurança', content: makeRichPanel('Segurança', 'Senha e autenticação em dois fatores.') },
+  ];
+}
+
 // ─── Com Ícones no Trigger ────────────────────────────────────────────────────
 
 export const WithIconsInTrigger: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: {
+      description: {
+        story:
+          'Ícones no gatilho. O ícone é sempre decorativo (`aria-hidden="true"`): o rótulo textual já descreve a aba, ' +
+          'e um ícone anunciado só alongaria o nome sem acrescentar informação.',
+      },
+    },
+  },
   render: () => {
-    const items: TabsItemDef[] = [
-      { value: 'profile',  label: 'Perfil',    content: makeRichPanel('Perfil',    'Edite suas informações públicas.') },
-      { value: 'account',  label: 'Conta',     content: makeRichPanel('Conta',     'Email, idioma e preferências.') },
-      { value: 'security', label: 'Segurança', content: makeRichPanel('Segurança', 'Senha e autenticação em dois fatores.') },
-    ];
+    const items = configItems();
     const iconMap: Record<string, LucideIconNode[]> = {
       profile:  User as unknown as LucideIconNode[],
       account:  Settings as unknown as LucideIconNode[],
       security: Shield as unknown as LucideIconNode[],
     };
 
-    const root = createTabs({ defaultValue: 'profile', class: 'w-full max-w-xl', items });
+    const root = createTabs({ defaultValue: 'profile', class: 'nds-w-full nds-max-w-lg', items });
 
     // Substitui textContent do trigger por icon + label (textContent escapa automaticamente).
     items.forEach((item) => {
@@ -104,28 +123,48 @@ export const WithIconsInTrigger: Story = {
       trigger.appendChild(wrapper);
     });
 
-    return setLabel(root, 'Configuracoes');
+    return setLabel(root, 'Configurações');
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Ícones no TabsTrigger. Sempre `aria-hidden="true"` no ícone — o label textual já descreve a tab para leitores de tela.',
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tablist = await canvas.findByRole('tablist');
-    await expect(tablist).toHaveAttribute('aria-label', 'Configuracoes');
-    const tabs = await canvas.findAllByRole('tab');
-    await expect(tabs).toHaveLength(3);
+
+    await step('Os três papéis do padrão tabs continuam íntegros com ícone', async () => {
+      await expect(canvas.getByRole('tablist')).toHaveAttribute('aria-label', 'Configurações');
+      await expect(canvas.getAllByRole('tab')).toHaveLength(3);
+      await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
+    });
+
+    await step('O nome acessível da aba é só o rótulo', async () => {
+      // Nome exato: se o svg fosse anunciado, o nome teria mais que a palavra.
+      await expect(canvas.getByRole('tab', { name: 'Perfil' })).toHaveAttribute('data-value', 'profile');
+      await expect(canvas.getByRole('tab', { name: 'Segurança' })).toHaveAttribute('data-value', 'security');
+    });
+
+    await step('Cada ícone é decorativo, desenhado e transparente ao ponteiro', async () => {
+      const icones = Array.from(canvasElement.querySelectorAll<SVGSVGElement>('[role="tab"] svg'));
+      await expect(icones).toHaveLength(3);
+      await expect(icones.map((s) => s.getAttribute('aria-hidden'))).toEqual(['true', 'true', 'true']);
+      // svg sem filho é ícone que não desenhou nada.
+      await expect(icones.every((s) => s.childElementCount > 0)).toBe(true);
+      // O ícone não pode interceptar o clique destinado à aba.
+      await expect(icones.map((s) => getComputedStyle(s).pointerEvents)).toEqual(['none', 'none', 'none']);
+    });
   },
 };
 
 // ─── Com Badge no Trigger ─────────────────────────────────────────────────────
 
 export const WithBadgeInTrigger: Story = {
+  parameters: {
+    covers: ['functional.item1'],
+    docs: {
+      description: {
+        story:
+          'Badge no gatilho para contador ou status. O badge entra no nome da aba, mas não é um segundo alvo de foco — ' +
+          'quem é interativo ali é a aba. O rótulo continua autoexplicativo sem ele.',
+      },
+    },
+  },
   render: () => {
     const items: TabsItemDef[] = [
       { value: 'inbox',  label: 'Caixa de entrada', content: makeRichPanel('Caixa de entrada', '12 mensagens não lidas.') },
@@ -137,7 +176,7 @@ export const WithBadgeInTrigger: Story = {
       spam:  { text: '3',  variant: 'destructive' },
     };
 
-    const root = createTabs({ defaultValue: 'inbox', class: 'w-full max-w-xl', items });
+    const root = createTabs({ defaultValue: 'inbox', class: 'nds-w-full nds-max-w-lg', items });
 
     items.forEach((item) => {
       const badgeCfg = badgeMap[item.value];
@@ -150,104 +189,123 @@ export const WithBadgeInTrigger: Story = {
       wrapper.dataset.spacing = 'sm';
       const labelEl = document.createElement('span');
       labelEl.textContent = item.label;
-      const badge = createBadge({ text: badgeCfg.text, variant: badgeCfg.variant });
-      badge.style.fontSize = '10px';
-      badge.style.height = '1rem';
-      wrapper.append(labelEl, badge);
+      // Sem `style.fontSize`/`style.height`: altura cravada num primitivo de
+      // texto trava o componente quando o navegador aumenta a fonte.
+      wrapper.append(labelEl, createBadge({ text: badgeCfg.text, variant: badgeCfg.variant }));
       trigger.appendChild(wrapper);
     });
 
     return setLabel(root, 'Caixas de mensagem');
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Badge no trigger para contadores ou status (Novo, Beta). O badge é decorativo — o label do trigger deve ser autoexplicativo.',
-      },
-    },
-  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const abas = canvas.getAllByRole('tab');
+    const entrada = canvas.getByRole('tab', { name: /^Caixa de entrada/ });
+    const spam = canvas.getByRole('tab', { name: /^Spam/ });
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O badge não vira um segundo alvo de foco', async () => {
+      const badges = Array.from(canvasElement.querySelectorAll<HTMLElement>('[role="tab"] [data-slot="badge"]'));
+      await expect(badges).toHaveLength(2);
+      await expect(badges.map((b) => b.getAttribute('tabindex'))).toEqual([null, null]);
+      await expect(badges.map((b) => b.getAttribute('role'))).toEqual([null, null]);
+      // A contagem de abas não mudou: o badge é conteúdo do gatilho, não um par dele.
+      await expect(abas).toHaveLength(3);
+    });
+
+    await step('Clicar numa aba ativa ela e troca o painel', async () => {
+      await ativar(spam);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', spam.id);
+      // Devolve o conjunto ao estado de montagem para o próximo replay.
+      await ativar(entrada);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', entrada.id);
+    });
   },
 };
 
-// ─── Vertical (divergência Vanilla) ──────────────────────────────────────────
+// ─── Lista lateral (orientation vertical) ────────────────────────────────────
 
 export const Vertical: Story = {
-  render: () => {
-    const items: TabsItemDef[] = [
-      { value: 'profile',  label: 'Perfil',    content: makeRichPanel('Perfil',    'Edite suas informações públicas.') },
-      { value: 'account',  label: 'Conta',     content: makeRichPanel('Conta',     'Email, idioma e preferências.') },
-      { value: 'security', label: 'Segurança', content: makeRichPanel('Segurança', 'Senha e autenticação em dois fatores.') },
-    ];
-
-    const root = createTabs({ defaultValue: 'profile', class: 'w-full max-w-2xl flex gap-4', items });
-    const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-    if (list) {
-      list.classList.remove('inline-flex', 'h-9', 'items-center', 'justify-center');
-      list.classList.add('nds-shrink-0');
-      list.style.display = 'flex';
-      list.style.flexDirection = 'column';
-      list.style.height = 'auto';
-      list.style.alignItems = 'stretch';
-      list.style.minWidth = '10rem';
-      list.setAttribute('aria-orientation', 'vertical');
-    }
-    return setLabel(root, 'Configuracoes');
-  },
   parameters: {
     docs: {
       description: {
         story:
-          'Layout vertical com lista lateral. ' +
-          'DIVERGÊNCIA Vanilla: factory NÃO expõe `orientation` — aplicamos flex-col + `aria-orientation="vertical"` manualmente. ' +
-          'As setas continuam Left/Right (não Up/Down) — limitação documentada.',
+          'Lista lateral com o painel ao lado. Cabe quando os rótulos são longos ou passam de cinco — ' +
+          'empilhados eles não competem por largura. A navegação por seta acompanha a direção.',
       },
     },
   },
+  render: () =>
+    setLabel(
+      createTabs({
+        defaultValue: 'profile',
+        orientation: 'vertical',
+        class: 'nds-w-full nds-max-w-lg',
+        items: configItems(),
+      }),
+      'Configurações',
+    ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector('[data-slot="tabs"]')!;
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab');
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O conjunto se declara vertical e se desenha empilhado', async () => {
+      await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
+      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+      const bordas = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
+      await expect(bordas.size).toBe(1);
+      await expect(canvas.getByRole('tabpanel').getBoundingClientRect().left)
+        .toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+    });
+
+    await step('A seta segue a direção da lista', async () => {
+      abas[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(() => expect(abas[1]).toHaveAttribute('aria-selected', 'true'));
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(abas[0]).toHaveAttribute('aria-selected', 'true'));
+    });
   },
 };
 
 // ─── Sub-navegação (variant line) ─────────────────────────────────────────────
 
 export const SubNavigationLine: Story = {
-  render: () => {
-    const items: TabsItemDef[] = [
-      { value: 'all',     label: 'Tudo',       content: makePanel('Mostrando todos os itens.') },
-      { value: 'active',  label: 'Ativos',     content: makePanel('Mostrando apenas ativos.') },
-      { value: 'archived', label: 'Arquivados', content: makePanel('Mostrando apenas arquivados.') },
-    ];
-
-    const root = createTabs({ defaultValue: 'all', class: 'w-full max-w-2xl', items });
-    const list = root.querySelector('[role="tablist"]') as HTMLElement | null;
-    if (list) {
-      list.classList.remove('bg-muted', 'rounded-lg');
-      list.classList.add('nds-bg-transparent', 'nds-w-full');
-      list.style.borderBottom = '1px solid var(--border)';
-      list.style.borderRadius = '0';
-      list.style.justifyContent = 'flex-start';
-    }
-    return setLabel(root, 'Filtros de listagem');
-  },
   parameters: {
     docs: {
       description: {
         story:
-          'Sub-navegação minimalista (variant line). Útil dentro de páginas onde o estilo "default" competiria com outros containers. ' +
-          'DIVERGÊNCIA Vanilla: aplicado via classes utilitárias — a factory não expõe prop `variant`.',
+          'Sub-navegação minimalista. Sem trilho, o conjunto não compete com os containers da página em volta; ' +
+          'o ativo é marcado por um traço fino.',
       },
     },
   },
+  render: () => {
+    const items: TabsItemDef[] = [
+      { value: 'all',      label: 'Tudo',       content: makePanel('Mostrando todos os itens.') },
+      { value: 'active',   label: 'Ativos',     content: makePanel('Mostrando apenas ativos.') },
+      { value: 'archived', label: 'Arquivados', content: makePanel('Mostrando apenas arquivados.') },
+    ];
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    return setLabel(
+      createTabs({ defaultValue: 'all', variant: 'line', class: 'nds-w-full nds-max-w-lg', items }),
+      'Filtros de listagem',
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const lista = canvas.getByRole('tablist');
+    const [ativa, inativa] = canvas.getAllByRole('tab');
+
+    await step('Sem trilho: a lista não pinta fundo', async () => {
+      await expect(lista).toHaveAttribute('data-variant', 'line');
+      await expect(getComputedStyle(lista).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    await step('O ativo é marcado por um traço, desenhado em ::after', async () => {
+      await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+      await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
+    });
   },
 };

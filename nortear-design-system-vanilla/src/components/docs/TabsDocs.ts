@@ -116,8 +116,8 @@ function richPanel(title: string, description: string): HTMLElement {
 }
 
 function buildDemoTabs(): HTMLElement {
-  // Factory custom Nortear NÃO suporta props `variant` nem `orientation` nem `activationMode`.
-  // Documentamos em 3 camadas (notes, props divergence, composicoes).
+  // `variant` e `orientation` são opções da factory e escrevem data-variant /
+  // data-orientation. `activationMode` não existe: a seta sempre ativa a aba.
   const items: TabsItemDef[] = [
     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -389,20 +389,17 @@ export function createTabsDocs(): HTMLElement {
   ],
 });`;
         const codeLine =
-`// Nortear: factory custom NÃO expõe variant="line".
-// Para visual minimalista, aplicar classes utilitárias via .class
-// e ajustar o TabsList depois.
-const root = createTabs({ defaultValue: 'overview', items: [...] });
-const list = root.querySelector('[role="tablist"]');
-list?.classList.add('nds-border-b', 'nds-bg-transparent'); list?.style.borderRadius = '0';`;
+`createTabs({
+  defaultValue: 'overview',
+  variant: 'line',
+  items: [...],
+});`;
         const codeVertical =
-`// Nortear: factory custom NÃO expõe orientation="vertical".
-// Para orientação vertical, envolver em flex e reaplicar o layout.
-const root = createTabs({ defaultValue: 'overview', items: [...] });
-root.classList.add('nds-cluster');
-const list = root.querySelector('[role="tablist"]');
-list?.classList.add('nds-stack'); list?.style.height = 'auto';
-list?.setAttribute('aria-orientation', 'vertical');`;
+`createTabs({
+  defaultValue: 'overview',
+  orientation: 'vertical',
+  items: [...],
+});`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -428,11 +425,12 @@ list?.setAttribute('aria-orientation', 'vertical');`;
             },
             {
               name: t('variants.items.line'),
-              description: stripHtml(t('variants.styles.line')) + ' — Nortear: aplicar via .class manualmente (factory não expõe variant).',
+              description: stripHtml(t('variants.styles.line')),
               code: codeLine,
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
+                  variant: 'line',
                   class: 'nds-w-full nds-max-w-md',
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
@@ -440,34 +438,26 @@ list?.setAttribute('aria-orientation', 'vertical');`;
                     { value: 'examples',   label: t('demonstration.labels.examples'),   content: textPanel(t('demonstration.labels.examplesContent')) },
                   ],
                 });
-                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
-                if (list) {
-                  list.classList.add('nds-border-b', 'nds-bg-transparent', 'nds-w-full'); list.style.borderRadius = '0'; list.style.justifyContent = 'flex-start';
-                  list.setAttribute('aria-label', t('demonstration.title'));
-                }
+                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', t('demonstration.title'));
                 return r;
               },
             },
             {
               name: t('variants.items.vertical'),
-              description: stripHtml(t('variants.styles.vertical')) + ' — Nortear: aplicar via .class manualmente (factory não expõe orientation).',
+              description: stripHtml(t('variants.styles.vertical')),
               code: codeVertical,
               previewFactory: () => {
                 const r = createTabs({
                   defaultValue: 'overview',
-                  class: 'nds-w-full nds-max-w-md nds-cluster',
+                  orientation: 'vertical',
+                  class: 'nds-w-full nds-max-w-md',
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
                     { value: 'examples',   label: t('demonstration.labels.examples'),   content: textPanel(t('demonstration.labels.examplesContent')) },
                   ],
                 });
-                const list = r.querySelector('[role="tablist"]') as HTMLElement | null;
-                if (list) {
-                  list.classList.add('nds-stack', 'nds-shrink-0'); list.style.height = 'auto'; list.style.alignItems = 'stretch';
-                  list.setAttribute('aria-label', t('demonstration.title'));
-                  list.setAttribute('aria-orientation', 'vertical');
-                }
+                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', t('demonstration.title'));
                 return r;
               },
             },
@@ -645,7 +635,9 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           description: t('props.table.description'),
         };
 
-        const DIVERGENCE = ' (Nortear: não suportado pela factory custom — aplicar via .class manualmente)';
+        // Sobrou uma divergência só: modo controlado. `variant` e `orientation`
+        // passaram a ser opções da factory.
+        const DIVERGENCE = ' (Nortear: a factory é sempre não-controlada — use defaultValue e onValueChange)';
 
         return createDocsProps({
           title: t('props.title'),
@@ -659,9 +651,9 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
                 { name: 'onValueChange', type: '(value: string) => void',     defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
                 { name: 'class',        type: 'string',                       defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className.description')) },
                 { name: 'value',        type: 'string',                       defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.value.description')) + DIVERGENCE },
-                { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: toPlainText(t('props.table.orientation.description')) + DIVERGENCE },
+                { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: toPlainText(t('props.table.orientation.description')) + ' Também define o par de setas que navega: horizontal usa esquerda/direita, vertical usa cima/baixo.' },
                 { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: toPlainText(t('props.table.activationMode.description')) + ' Nortear: apenas "automatic" implementado.' },
-                { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant.description')) + DIVERGENCE },
+                { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant.description')) },
               ],
             },
             {
@@ -677,7 +669,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: 'Nortear usa factory custom. Para variantes "line" e "vertical", aplicar classes utilitárias no elemento [role="tablist"] após criar o componente — ver seção Variantes.',
+          extensibilityNotes: 'Nortear usa factory custom. As opções variant e orientation escrevem data-variant e data-orientation no DOM, e o CSS do design system faz o layout — não ajuste o elemento [role="tablist"] depois de criado. Para acrescentar espaçamento ou largura ao conjunto, use a opção class.',
         });
       }
 
@@ -750,8 +742,8 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             { title: '', content: t('notes.item2') },
             { title: '', content: t('notes.item3') },
             { title: '', content: t('notes.item4') },
-            // Divergência idiomática Nortear (3ª camada — ver também DocsProps e composicoes story)
-            { title: '', content: 'Nortear: factory custom NÃO expõe props variant, orientation ou activationMode="manual". Para visual line/vertical, aplicar utility classes no elemento [role="tablist"] após criar (ver Variantes e tabs-composicoes.stories.ts).' },
+            // Divergência idiomática Nortear (ver também DocsProps)
+            { title: '', content: 'Nortear: a factory é sempre não-controlada (defaultValue + onValueChange, sem value) e a ativação é sempre automática — a seta troca a aba, não só o foco. Quem precisa de ativação manual escolhe outro padrão de navegação.' },
           ],
         });
 

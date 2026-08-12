@@ -8,11 +8,15 @@ const meta: Meta = {
   component: Tabs,
   parameters: {
     layout: "padded",
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados visuais e comportamentais do componente Tabs: default, active, focus e disabled.",
+          "Estado inicial, foco por teclado e aba desabilitada. O percurso do Tab e o bloqueio " +
+          "da aba desabilitada vêm do primitivo — o que estas stories provam é que a composição " +
+          "não desfaz nada disso.",
       },
     },
   },
@@ -21,133 +25,143 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+const TresAbas = ({ desabilitada = false }: { desabilitada?: boolean }) => (
+  <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
+    <TabsList aria-label="Seções do componente">
+      <TabsTrigger value="overview">Visão geral</TabsTrigger>
+      <TabsTrigger value="properties" disabled={desabilitada}>
+        Propriedades
+      </TabsTrigger>
+      <TabsTrigger value="examples">Exemplos</TabsTrigger>
+    </TabsList>
+    <TabsContent value="overview">Conteúdo da visão geral.</TabsContent>
+    <TabsContent value="properties">Lista de propriedades.</TabsContent>
+    <TabsContent value="examples">Exemplos de uso.</TabsContent>
+  </Tabs>
+);
+
 // ─── Default + Active ─────────────────────────────────────────────────────────
 
 export const DefaultAndActive: Story = {
-  render: () => (
-    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
-      <TabsList aria-label="Seções do componente">
-        <TabsTrigger value="overview">Visão geral</TabsTrigger>
-        <TabsTrigger value="properties">Propriedades</TabsTrigger>
-        <TabsTrigger value="examples">Exemplos</TabsTrigger>
-      </TabsList>
-      <TabsContent value="overview">Conteúdo da visão geral.</TabsContent>
-      <TabsContent value="properties">Lista de propriedades.</TabsContent>
-      <TabsContent value="examples">Exemplos de uso.</TabsContent>
-    </Tabs>
-  ),
+  render: () => <TresAbas />,
   parameters: {
     docs: {
       description: {
         story:
-          'Primeira tab ativa via defaultValue — recebe data-active, aria-selected="true" e visual destacado.',
+          "Primeira aba ativa na montagem — anunciada como selecionada e destacada visualmente; " +
+          "as demais ficam disponíveis e sem destaque.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
+    const abas = canvas.getAllByRole("tab");
 
-    await step("Tab ativa tem aria-selected=true", async () => {
-      await expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    await step("Só a primeira aba se anuncia selecionada", async () => {
+      await expect(abas.map((a) => a.getAttribute("aria-selected"))).toEqual([
+        "true",
+        "false",
+        "false",
+      ]);
     });
 
-    await step("Tabs inativas têm aria-selected=false", async () => {
-      await expect(tabs[1]).toHaveAttribute("aria-selected", "false");
-      await expect(tabs[2]).toHaveAttribute("aria-selected", "false");
+    await step("E é a única cujo painel está no DOM acessível", async () => {
+      // As inativas ficam `hidden`, então `getByRole` só acha uma — é o que
+      // impede que um painel escondido continue sendo lido.
+      const painel = canvas.getByRole("tabpanel");
+      await expect(canvas.getAllByRole("tabpanel")).toHaveLength(1);
+      await expect(painel).toHaveTextContent("Conteúdo da visão geral");
     });
   },
 };
 
-// ─── Focus visible ────────────────────────────────────────────────────────────
+// ─── Foco por teclado ─────────────────────────────────────────────────────────
 
 export const FocusVisible: Story = {
-  render: () => (
-    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
-      <TabsList aria-label="Seções do componente">
-        <TabsTrigger value="overview">Visão geral</TabsTrigger>
-        <TabsTrigger value="properties">Propriedades</TabsTrigger>
-        <TabsTrigger value="examples">Exemplos</TabsTrigger>
-      </TabsList>
-      <TabsContent value="overview">Conteúdo da visão geral.</TabsContent>
-      <TabsContent value="properties">Lista de propriedades.</TabsContent>
-      <TabsContent value="examples">Exemplos de uso.</TabsContent>
-    </Tabs>
-  ),
   parameters: {
+    covers: ["functional.item4", "accessibility.item3"],
     docs: {
       description: {
         story:
-          "Navegação por teclado. Tab move foco para a tab ativa; ArrowRight/Left percorrem; Home/End vão aos extremos. Focus ring ring-[3px] visível.",
+          "Anel de foco visível ao chegar por teclado, e o Tab seguinte caindo dentro do painel " +
+          "ativo — da fileira inteira para o conteúdo, sem passar pelas abas inativas.",
       },
     },
   },
+  render: () => <TresAbas />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
+    const abas = canvas.getAllByRole("tab");
+    const doc = canvasElement.ownerDocument;
 
-    await step("ArrowRight ativa próxima tab (mode automatic)", async () => {
-      tabs[0].focus();
-      await expect(tabs[0]).toHaveFocus();
-      await userEvent.keyboard("{ArrowRight}");
-      await waitFor(() =>
-        expect(tabs[1]).toHaveAttribute("aria-selected", "true")
-      );
+    // Idempotente: no replay o foco ficou dentro do painel da rodada anterior, e
+    // um `tab()` a partir dali sairia do componente. Zerar o foco faz a
+    // sequência recomeçar do começo do documento, como na primeira rodada.
+    (doc.activeElement as HTMLElement | null)?.blur();
+
+    await step("O foco chega à fileira pelo teclado, com anel visível", async () => {
+      // O foco chega por Tab, não por `.focus()`: o estado de foco visível é
+      // reservado ao teclado, e o foco programático não o dispara — o anel
+      // ficaria ausente e a asserção reprovaria um CSS que está certo.
+      //
+      // A comparação é com a aba inativa: ela não tem sombra nenhuma, então o
+      // par mede de fato que existe pintura de foco/estado onde o Tab pousou.
+      await userEvent.tab();
+      await waitFor(() => expect(abas[0]).toHaveFocus());
+      await expect(getComputedStyle(abas[2]).boxShadow).toBe("none");
+      await expect(getComputedStyle(abas[0]).boxShadow).not.toBe("none");
     });
 
-    await step("Home volta para a primeira tab", async () => {
-      await userEvent.keyboard("{Home}");
-      await waitFor(() =>
-        expect(tabs[0]).toHaveAttribute("aria-selected", "true")
-      );
-    });
-
-    await step("End vai para a última tab", async () => {
-      await userEvent.keyboard("{End}");
-      await waitFor(() =>
-        expect(tabs[tabs.length - 1]).toHaveAttribute("aria-selected", "true")
-      );
+    await step("O Tab seguinte cai dentro do painel ativo", async () => {
+      const painel = canvas.getByRole("tabpanel");
+      await expect(painel).toHaveAttribute("tabindex", "0");
+      await userEvent.tab();
+      await waitFor(() => expect(painel).toHaveFocus());
     });
   },
 };
 
-// ─── Disabled ─────────────────────────────────────────────────────────────────
+// ─── Desabilitada ─────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
-  render: () => (
-    <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
-      <TabsList aria-label="Seções do componente">
-        <TabsTrigger value="overview">Visão geral</TabsTrigger>
-        <TabsTrigger value="properties" disabled>
-          Propriedades
-        </TabsTrigger>
-        <TabsTrigger value="examples">Exemplos</TabsTrigger>
-      </TabsList>
-      <TabsContent value="overview">Conteúdo da visão geral.</TabsContent>
-      <TabsContent value="properties">Lista de propriedades.</TabsContent>
-      <TabsContent value="examples">Exemplos de uso.</TabsContent>
-    </Tabs>
-  ),
   parameters: {
+    covers: ["visual.item4"],
     docs: {
       description: {
         story:
-          "Tab disabled — opacity-50 e pointer-events-none. Não recebe foco nem ativa por clique.",
+          "Aba desabilitada — esmaecida e fora do alcance do ponteiro, mas ainda alcançável " +
+          "pela seta para que o leitor de tela a anuncie como indisponível.",
       },
     },
   },
+  render: () => <TresAbas desabilitada />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole("tab");
+    const desabilitada = canvas.getByRole("tab", { name: "Propriedades" });
 
-    await step("Tab desabilitada expõe estado disabled", async () => {
-      await expect(tabs[1]).toBeDisabled();
+    await step("A aba se anuncia desabilitada", async () => {
+      // O primitivo NÃO usa o atributo `disabled` nativo: o padrão WAI-ARIA
+      // manda a seta poder pousar na aba desabilitada para que ela seja
+      // anunciada, e um botão nativo desabilitado sai do alcance do foco.
+      await expect(desabilitada).toHaveAttribute("aria-disabled", "true");
+      await expect(desabilitada).toHaveAttribute("data-disabled");
+      await expect(desabilitada).toHaveAttribute("aria-selected", "false");
     });
 
-    await step("Clicar em tab disabled não ativa o painel", async () => {
-      await userEvent.click(tabs[1], { pointerEventsCheck: 0 });
-      await expect(tabs[1]).toHaveAttribute("aria-selected", "false");
-      await expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    await step("E fica apagada e fora do alcance do ponteiro", async () => {
+      const estilo = getComputedStyle(desabilitada);
+      await expect(Number(estilo.opacity)).toBeLessThan(1);
+      await expect(estilo.pointerEvents).toBe("none");
+    });
+
+    await step("O clique não a ativa", async () => {
+      // `pointerEventsCheck: 0` porque o alvo tem o ponteiro bloqueado: sem
+      // isso o userEvent recusa o clique e o teste passaria sem exercitar nada.
+      await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
+      await expect(desabilitada).toHaveAttribute("aria-selected", "false");
+      await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+        "Conteúdo da visão geral"
+      );
     });
   },
 };

@@ -189,12 +189,13 @@ const codeCustomization = `/* Altura customizada do TabsList */
 
 const interfaceCode = `// Tabs (root)
 interface TabsProps {
-  value?: string;
+  modelValue?: string;
   defaultValue?: string;
   orientation?: 'horizontal' | 'vertical';
   activationMode?: 'automatic' | 'manual';
   class?: string;
 }
+// emits: (e: 'update:modelValue', value: string) => void
 
 // TabsList
 interface TabsListProps {
@@ -248,12 +249,12 @@ const codeBadgeTrigger = `<Tabs default-value="inbox" class="nds-w-full" style="
   <TabsList aria-label="Caixas de mensagem">
     <TabsTrigger value="inbox">
       <span class="nds-cluster" data-spacing="sm">
-        Caixa de entrada <Badge style="font-size: 10px; height: 1rem">12</Badge>
+        Caixa de entrada <Badge as="span">12</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="spam">
       <span class="nds-cluster" data-spacing="sm">
-        Spam <Badge variant="destructive" style="font-size: 10px; height: 1rem">3</Badge>
+        Spam <Badge as="span" variant="destructive">3</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="trash">Lixeira</TabsTrigger>
@@ -301,9 +302,11 @@ const propCols = computed(() => ({
 }));
 
 const tabsPropItems = computed(() => [
-  { name: 'value',          type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: toPlainText(tContent('props.table.value.description'))          },
+  // Nomes na API desta stack: o conteúdo compartilhado descreve o conceito, e a
+  // tabela mostra a prop/evento que existe aqui (`modelValue`/`update:modelValue`).
+  { name: 'modelValue',     type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: toPlainText(tContent('props.table.value.description'))          },
   { name: 'defaultValue',   type: tContent('props.table.defaultValue.type'),   defaultValue: tContent('props.table.defaultValue.default'),   required: tContent('props.table.defaultValue.required'),   description: toPlainText(tContent('props.table.defaultValue.description'))   },
-  { name: 'onValueChange',  type: tContent('props.table.onValueChange.type'),  defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: toPlainText(tContent('props.table.onValueChange.description'))  },
+  { name: 'update:modelValue', type: tContent('props.table.onValueChange.type'),  defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: toPlainText(tContent('props.table.onValueChange.description'))  },
   { name: 'orientation',    type: tContent('props.table.orientation.type'),    defaultValue: tContent('props.table.orientation.default'),    required: tContent('props.table.orientation.required'),    description: toPlainText(tContent('props.table.orientation.description'))    },
   { name: 'activationMode', type: tContent('props.table.activationMode.type'), defaultValue: tContent('props.table.activationMode.default'), required: tContent('props.table.activationMode.required'), description: toPlainText(tContent('props.table.activationMode.description')) },
   { name: 'class',          type: tContent('props.table.className.type'),      defaultValue: tContent('props.table.className.default'),      required: tContent('props.table.className.required'),      description: toPlainText(tContent('props.table.className.description'))      },
@@ -316,7 +319,7 @@ const listPropItems = computed(() => [
 
 const triggerPropItems = computed(() => [
   { name: 'value',    type: 'string',  defaultValue: '—', required: tNav('common.yes') as string, description: stripHtml(tContent('anatomy.item3')) },
-  { name: 'disabled', type: 'boolean', defaultValue: 'false', required: tContent('props.table.value.required'), description: tContent('states.disabled.behavior').replace(/<[^>]*>/g, '') },
+  { name: 'disabled', type: 'boolean', defaultValue: 'false', required: tContent('props.table.value.required'), description: toPlainText(tContent('states.disabled.behavior')) },
 ]);
 
 const contentPropItems = computed(() => [
@@ -893,7 +896,7 @@ function handleTabChange(value: string) {
                 class="nds-cluster"
                 data-spacing="sm"
               >
-                Caixa de entrada <Badge style="font-size: 10px; height: 1rem">12</Badge>
+                Caixa de entrada <Badge as="span">12</Badge>
               </span>
             </TabsTrigger>
             <TabsTrigger value="spam">
@@ -902,8 +905,8 @@ function handleTabChange(value: string) {
                 data-spacing="sm"
               >
                 Spam <Badge
+                  as="span"
                   variant="destructive"
-                  style="font-size: 10px; height: 1rem"
                 >3</Badge>
               </span>
             </TabsTrigger>

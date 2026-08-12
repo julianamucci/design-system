@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
 
 const meta: Meta = {
@@ -8,10 +8,17 @@ const meta: Meta = {
   component: TabsStory,
   tags: ['navigation'],
   parameters: {
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-  },
-  args: {
-    defaultValue: 'overview',
+    actions: { disable: true },
+    docs: {
+      description: {
+        component:
+          'Estilo da lista (`variant`) e direção (`orientation`). A variante decide se há ' +
+          'trilho com fundo ou apenas uma linha sob a aba ativa; a orientação decide o layout ' +
+          'e quais setas navegam.',
+      },
+    },
   },
 };
 
@@ -24,76 +31,164 @@ const ITEMS = [
   { value: 'examples',   label: 'Exemplos',     content: 'Exemplos de uso.'         },
 ];
 
+const lista = (el: HTMLElement): HTMLElement =>
+  el.querySelector<HTMLElement>('[data-slot="tabs-list"]')!;
+
+const raiz = (el: HTMLElement): HTMLElement =>
+  el.querySelector<HTMLElement>('[data-slot="tabs"]')!;
+
 export const Default: Story = {
-  render: (args) => ({
-    Component: TabsStory,
-    props: { ...args, items: ITEMS, variant: 'default', ariaLabel: 'Seções do componente' },
-  }),
   parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
     docs: {
       description: {
-        story: 'Variante default: fundo `muted` arredondado com sombra na tab ativa. Use em painéis de configuração e abas de conteúdo.',
+        story:
+          'Variante default: trilho com fundo próprio e a aba ativa em relevo por cima. ' +
+          'Use em painéis de configuração e abas de conteúdo.',
       },
     },
   },
+  render: () => ({
+    Component: TabsStory,
+    props: {
+      items: ITEMS,
+      defaultValue: 'overview',
+      variant: 'default',
+      ariaLabel: 'Seções do componente',
+      class: 'nds-w-full nds-max-w-lg',
+    },
+  }),
+  // Sem interação de propósito: esta é a story que registra o estado de
+  // montagem (três abas, a primeira ativa) para a regressão visual. Uma play
+  // que clicasse terminaria em outra aba e o retrato sairia de outro estado.
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const l = lista(canvasElement);
 
-    await step('TabsList tem data-variant=default', async () => {
-      const list = canvas.getByRole('tablist');
-      await waitFor(
-        () => expect(list).toHaveAttribute('data-variant', 'default'),
-        { timeout: 500 }
+    await step('A variante default chega ao markup', async () => {
+      // O seletor do CSS é `[data-variant="…"]`: afirmar o atributo resultante é
+      // o que impede a variante de deixar de pintar em silêncio.
+      await waitFor(() => expect(l).toHaveAttribute('data-variant', 'default'));
+      await expect(l).toHaveClass('nds-tabs-list');
+    });
+
+    await step('Três abas, e a primeira já vem ativa', async () => {
+      await expect(canvas.getAllByRole('tab')).toHaveLength(3);
+      await expect(canvas.getByRole('tab', { name: 'Visão geral' })).toHaveAttribute(
+        'aria-selected',
+        'true',
       );
     });
 
-    await step('Clicar em tab a ativa', async () => {
-      const tabs = canvas.getAllByRole('tab');
-      await userEvent.click(tabs[1]);
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+    await step('O trilho tem fundo próprio', async () => {
+      // É o que distingue esta variante da `line`: fundo sob a fileira inteira.
+      const fundo = getComputedStyle(l).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo).not.toBe('transparent');
+    });
+
+    await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
+      // Critério 1.4.1 na prática: o estado ativo não pode depender de matiz.
+      const ativa = canvas.getByRole('tab', { name: 'Visão geral' });
+      const inativa = canvas.getByRole('tab', { name: 'Exemplos' });
+      await expect(getComputedStyle(ativa).backgroundColor).not.toBe(
+        getComputedStyle(inativa).backgroundColor,
+      );
     });
   },
 };
 
 export const Line: Story = {
-  render: (args) => ({
-    Component: TabsStory,
-    props: { ...args, items: ITEMS, variant: 'line', ariaLabel: 'Seções do componente' },
-  }),
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
-        story: 'Variante line: visual minimalista com linha inferior na tab ativa. Útil para sub-navegação dentro de páginas.',
+        story:
+          'Variante line: sem trilho, com uma linha sob a aba ativa. Útil para sub-navegação ' +
+          'dentro de páginas.',
       },
     },
   },
+  render: () => ({
+    Component: TabsStory,
+    props: {
+      items: ITEMS,
+      defaultValue: 'overview',
+      variant: 'line',
+      ariaLabel: 'Seções do componente',
+      class: 'nds-w-full nds-max-w-lg',
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const l = lista(canvasElement);
+    const ativa = canvas.getByRole('tab', { name: 'Visão geral' });
+    const inativa = canvas.getByRole('tab', { name: 'Exemplos' });
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('A variante line chega ao markup', async () => {
+      await waitFor(() => expect(l).toHaveAttribute('data-variant', 'line'));
+      await expect(ativa).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('O trilho desaparece', async () => {
+      // Se o atributo não chegasse, esta asserção pegaria o fundo da variante
+      // default em vez do transparente.
+      await expect(getComputedStyle(l).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    await step('A linha marca a aba ativa e some das inativas', async () => {
+      // A linha é um `::after` com `opacity` — o único jeito de olhá-la é pelo
+      // pseudo-elemento; procurar um nó no DOM não acharia nada. O `waitFor`
+      // existe porque a opacidade tem transição.
+      await waitFor(() => expect(getComputedStyle(ativa, '::after').opacity).toBe('1'));
+      await expect(getComputedStyle(inativa, '::after').opacity).toBe('0');
+    });
   },
 };
 
 export const Vertical: Story = {
-  render: (args) => ({
-    Component: TabsStory,
-    props: {
-      ...args,
-      items: ITEMS,
-      variant: 'default',
-      orientation: 'vertical',
-      ariaLabel: 'Seções do componente',
-      class: 'w-full max-w-xl',
-    },
-  }),
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
-        story: 'Orientação vertical: lista lateral à esquerda e conteúdo à direita. Setas Up/Down navegam entre tabs.',
+        story:
+          'Orientação vertical: lista à esquerda e conteúdo à direita. As setas de cima e de ' +
+          'baixo passam a ser as teclas de navegação.',
       },
     },
   },
+  render: () => ({
+    Component: TabsStory,
+    props: {
+      items: ITEMS,
+      defaultValue: 'overview',
+      variant: 'default',
+      orientation: 'vertical',
+      ariaLabel: 'Seções do componente',
+      class: 'nds-w-full nds-max-w-lg',
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('A orientação chega à raiz e ao tablist', async () => {
+      await waitFor(() =>
+        expect(raiz(canvasElement)).toHaveAttribute('data-orientation', 'vertical'),
+      );
+      await expect(lista(canvasElement)).toHaveAttribute('aria-orientation', 'vertical');
+    });
+
+    await step('As abas ficam empilhadas', async () => {
+      const abas = canvas.getAllByRole('tab');
+      await expect(abas).toHaveLength(3);
+      const esquerdas = new Set(abas.map((a) => Math.round(a.getBoundingClientRect().left)));
+      await expect(esquerdas.size).toBe(1);
+    });
+
+    await step('O painel fica ao lado da lista, não abaixo', async () => {
+      const l = lista(canvasElement).getBoundingClientRect();
+      const painel = canvas.getByRole('tabpanel').getBoundingClientRect();
+      await expect(painel.left).toBeGreaterThanOrEqual(l.right);
+    });
   },
 };

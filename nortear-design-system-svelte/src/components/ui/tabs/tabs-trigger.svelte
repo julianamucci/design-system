@@ -12,12 +12,6 @@
 <TabsPrimitive.Trigger
 	bind:ref
 	data-slot="tabs-trigger"
-	class={cn(
-		"nds-tabs-trigger",
-		"",
-		"",
-		"",
-		className
-	)}
+	class={cn("nds-tabs-trigger", className)}
 	{...restProps}
 />

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, waitFor, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+
+const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
 
 const meta: Meta<any> = {
   title: 'UI/Tabs/Variants',
@@ -13,7 +15,7 @@ const meta: Meta<any> = {
     docs: {
       description: {
         component:
-          'Variantes visuais do Tabs: Default (fundo muted + sombra), Line (linha inferior minimalista) e Vertical (orientação vertical com lista lateral).',
+          'Variantes visuais do Tabs: Default (trilho com fundo próprio), Line (indicador em linha, sem trilho) e Vertical (lista em coluna à esquerda do painel).',
       },
     },
   },
@@ -47,18 +49,35 @@ export const Default: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
     docs: {
       description: {
-        story: 'Variante default — fundo muted arredondado e sombra suave na tab ativa. Indicada para a maioria dos contextos.',
+        story: 'Variante default — trilho com fundo próprio e aba ativa destacada por fundo, não só por cor de texto. Indicada para a maioria dos contextos.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tablist = await canvas.findByRole('tablist');
-    await expect(tablist).toHaveAttribute('aria-label', 'Seções do componente');
-    const active = await canvas.findByRole('tab', { selected: true });
-    await expect(active).toHaveTextContent('Visão geral');
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+
+    await step('Três abas, a primeira ativa desde a montagem', async () => {
+      await expect(abas).toHaveLength(3);
+      await expect(abas[0]).toHaveAttribute('aria-selected', 'true');
+      await expect(canvas.getByRole('tab', { selected: true })).toHaveTextContent('Visão geral');
+    });
+
+    await step('A lista declara a variante default e desenha o trilho', async () => {
+      await expect(lista).toHaveAttribute('data-variant', 'default');
+      await expect(getComputedStyle(lista).backgroundColor).not.toBe(TRANSPARENTE);
+    });
+
+    await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
+      const fundoAtiva = getComputedStyle(abas[0]).backgroundColor;
+      const fundoInativa = getComputedStyle(abas[1]).backgroundColor;
+      await expect(fundoAtiva).not.toBe(fundoInativa);
+      await expect(fundoAtiva).not.toBe(TRANSPARENTE);
+    });
   },
 };
 
@@ -85,14 +104,30 @@ export const Line: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
-        story: 'Variante line — visual minimalista com linha inferior na tab ativa. Útil para sub-navegação dentro de páginas.',
+        story: 'Variante line — sem trilho, com uma linha sob a aba ativa. Útil para sub-navegação dentro de páginas.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const lista = canvas.getByRole('tablist');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+
+    await step('A lista declara a variante line e dispensa o trilho', async () => {
+      await expect(lista).toHaveAttribute('data-variant', 'line');
+      await expect(getComputedStyle(lista).backgroundColor).toBe(TRANSPARENTE);
+    });
+
+    await step('O indicador é a linha da aba ativa e some nas inativas', async () => {
+      await waitFor(() =>
+        expect(getComputedStyle(abas[0], '::after').opacity).toBe('1'),
+      );
+      await expect(getComputedStyle(abas[1], '::after').opacity).toBe('0');
+      await expect(getComputedStyle(abas[2], '::after').opacity).toBe('0');
+    });
   },
 };
 
@@ -100,7 +135,7 @@ export const Vertical: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="nds-w-full max-w-xl">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-full nds-max-w-lg">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="account">Conta</TabsTrigger>
@@ -119,13 +154,32 @@ export const Vertical: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
-        story: 'Variante vertical — orientation="vertical" empilha as tabs em coluna à esquerda e exibe o conteúdo à direita. Setas ↑↓ navegam entre tabs.',
+        story: 'Variante vertical — orientation="vertical" empilha as abas em coluna à esquerda e exibe o painel à direita. Setas ↑↓ navegam entre abas.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const lista = canvas.getByRole('tablist');
+    const raiz = lista.closest('[data-slot="tabs"]') as HTMLElement;
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+
+    await step('Raiz e lista anunciam a orientação vertical', async () => {
+      await expect(raiz).toHaveAttribute('data-orientation', 'vertical');
+      await expect(lista).toHaveAttribute('aria-orientation', 'vertical');
+    });
+
+    await step('As abas ficam empilhadas na mesma coluna', async () => {
+      const colunas = new Set(abas.map((aba) => Math.round(aba.getBoundingClientRect().left)));
+      await expect(colunas.size).toBe(1);
+    });
+
+    await step('O painel fica ao lado da lista, não abaixo dela', async () => {
+      const painel = canvas.getByRole('tabpanel').getBoundingClientRect();
+      await expect(painel.left).toBeGreaterThanOrEqual(lista.getBoundingClientRect().right);
+    });
   },
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 
 const meta: Meta<any> = {
@@ -45,17 +45,23 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Estado padrão — primeira tab ativa, demais inativas (texto foreground/60, sem fundo).',
+        story: 'Estado padrão — primeira aba ativa, demais inativas: texto atenuado e sem fundo próprio.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
-    await step('Apenas a primeira tab tem aria-selected=true', async () => {
-      await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'false');
-      await expect(tabs[2]).toHaveAttribute('aria-selected', 'false');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+
+    await step('Apenas a primeira aba está ativa', async () => {
+      await expect(abas[0]).toHaveAttribute('aria-selected', 'true');
+      await expect(abas[1]).toHaveAttribute('aria-selected', 'false');
+      await expect(abas[2]).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Só o painel da aba ativa fica exposto', async () => {
+      await expect(canvas.getAllByRole('tabpanel')).toHaveLength(1);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[0].id);
     });
   },
 };
@@ -72,7 +78,7 @@ export const Active: Story = {
         </TabsList>
         <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
         <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          Tab "Propriedades" ativa — data-active, fundo background, sombra suave.
+          Aba "Propriedades" ativa — fundo próprio, texto em contraste cheio e sombra suave.
         </TabsContent>
         <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
       </Tabs>
@@ -81,15 +87,22 @@ export const Active: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Estado active — data-active, fundo background, texto foreground e sombra suave na variant default.',
+        story: 'Estado ativo — a aba selecionada ganha fundo próprio, texto em contraste cheio e sombra suave na variante default.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
-    await step('Tab "Propriedades" tem aria-selected=true', async () => {
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+
+    await step('A aba indicada por defaultValue começa ativa', async () => {
+      await expect(abas[1]).toHaveAttribute('aria-selected', 'true');
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[1].id);
+    });
+
+    await step('O destaque da ativa é de fundo, não só de cor de texto', async () => {
+      await expect(getComputedStyle(abas[1]).backgroundColor)
+        .not.toBe(getComputedStyle(abas[0]).backgroundColor);
     });
   },
 };
@@ -105,7 +118,7 @@ export const Focus: Story = {
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          Navegue com Tab para ver o focus ring ring-[3px] ring-ring/50.
+          Navegue com Tab para ver o anel de foco; o Tab seguinte entra neste painel.
         </TabsContent>
         <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
         <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
@@ -113,30 +126,38 @@ export const Focus: Story = {
     `,
   }),
   parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
     docs: {
       description: {
-        story: 'Estado focus — anel ring-[3px] ring-ring/50 visível ao navegar por teclado. Roving tabindex: apenas a tab ativa é focável via Tab; setas movem entre tabs.',
+        story: 'Estado de foco — anel visível ao navegar por teclado. A lista usa roving tabindex: um único Tab entra no conjunto de abas, e o Tab seguinte alcança o painel ativo.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+    const [visaoGeral, propriedades, exemplos] = abas;
 
-    await step('Tab ativa recebe foco via Tab key', async () => {
-      tabs[0].focus();
-      await expect(tabs[0]).toHaveFocus();
+    // A play é reexecutada no mesmo DOM: o foco precisa partir de fora sempre.
+    (document.activeElement as HTMLElement | null)?.blur();
+
+    await step('Um Tab entra no conjunto de abas e pousa na ativa', async () => {
+      await userEvent.tab();
+      await waitFor(() => expect(visaoGeral).toHaveFocus());
+      await expect(getComputedStyle(visaoGeral).boxShadow).not.toBe('none');
     });
 
-    await step('ArrowRight move foco e ativa próxima tab (automatic)', async () => {
-      await userEvent.keyboard('{ArrowRight}');
-      await expect(tabs[1]).toHaveFocus();
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+    await step('Roving tabindex: só a aba ativa é alcançável por Tab', async () => {
+      await expect(visaoGeral).toHaveAttribute('tabindex', '0');
+      await expect(propriedades).toHaveAttribute('tabindex', '-1');
+      await expect(exemplos).toHaveAttribute('tabindex', '-1');
     });
 
-    await step('End vai para a última tab', async () => {
-      await userEvent.keyboard('{End}');
-      await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+    await step('O Tab seguinte move o foco para o painel ativo', async () => {
+      const painel = canvas.getByRole('tabpanel');
+      await expect(painel).toHaveAttribute('tabindex', '0');
+      await userEvent.tab();
+      await waitFor(() => expect(painel).toHaveFocus());
     });
   },
 };
@@ -152,7 +173,7 @@ export const Disabled: Story = {
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          A tab "Propriedades" está desabilitada (opacity-50 e pointer-events-none).
+          A aba "Propriedades" está desabilitada: esmaecida e fora do alcance do ponteiro.
         </TabsContent>
         <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
         <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Exemplos.</TabsContent>
@@ -160,23 +181,32 @@ export const Disabled: Story = {
     `,
   }),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
-        story: 'Tab disabled — opacity-50 e pointer-events-none. Use para seções temporariamente indisponíveis.',
+        story: 'Aba desabilitada — esmaecida e fora do alcance do ponteiro. Use para seções temporariamente indisponíveis.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const tabs = canvas.getAllByRole('tab');
+    const abas = canvas.getAllByRole('tab') as HTMLElement[];
+    const desabilitada = abas[1];
 
-    await step('Segunda tab está desabilitada', async () => {
-      await expect(tabs[1]).toBeDisabled();
+    await step('A segunda aba se anuncia desabilitada', async () => {
+      await expect(desabilitada).toBeDisabled();
+      await expect(desabilitada).toHaveAttribute('data-disabled');
     });
 
-    await step('Clicar na disabled não ativa a tab', async () => {
-      await userEvent.click(tabs[1], { pointerEventsCheck: 0 });
-      await expect(tabs[1]).toHaveAttribute('aria-selected', 'false');
+    await step('E aparece esmaecida e inerte ao ponteiro', async () => {
+      await expect(Number(getComputedStyle(desabilitada).opacity)).toBeLessThan(1);
+      await expect(getComputedStyle(desabilitada).pointerEvents).toBe('none');
+    });
+
+    await step('Clicar nela não ativa a aba nem troca o painel', async () => {
+      await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
+      await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[0].id);
     });
   },
 };

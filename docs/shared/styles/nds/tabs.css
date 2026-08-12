@@ -188,6 +188,32 @@
   opacity: 1;
 }
 
+/* ── Foco visível vence o realce de ativo ────────────────────────────────────
+ * `:focus-visible` é declarado lá em cima com especificidade (0,2,0), e TODAS as
+ * regras de aba ativa que vêm depois sobrescrevem `box-shadow` por inteiro:
+ * `[data-state="active"]` (0,2,0, ganha por ordem), `[data-active]:not(…)`
+ * (0,3,0) e, na variante line, `box-shadow: none` (0,4,0).
+ *
+ * O efeito era foco INVISÍVEL em toda aba: o roving tabindex só deixa a aba
+ * ativa no percurso do Tab, e sob ativação automática a seta ativa a aba que
+ * acabou de focar — ou seja, a aba focada é sempre a ativa, justamente a que
+ * perdia o anel. Na variante line não sobrava sombra nenhuma.
+ *
+ * WCAG 2.4.7 (Focus Visible, AA) e o item `accessibility.item3` do contrato, que
+ * a documentação prometia nas 5 stacks sem nenhuma entregar. As reafirmações
+ * abaixo cobrem as duas formas de "ativo" — `data-state` (factory) e
+ * `data-active` (libs headless) — com especificidade acima da regra de line.
+ */
+.nds-tabs-trigger[data-state="active"]:focus-visible,
+.nds-tabs-trigger[data-active]:not([data-active="false"]):focus-visible,
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-state="active"]:focus-visible,
+.nds-tabs-list[data-variant="line"] .nds-tabs-trigger[data-active]:not([data-active="false"]):focus-visible {
+  /* Mesmo valor da regra base lá em cima. Repetido de propósito: uma custom
+   * property aqui viraria superfície de customização pública do componente,
+   * que teria de ser documentada no conteúdo compartilhado. */
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.5);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nds-tabs-trigger,
   .nds-tabs-trigger::after {
