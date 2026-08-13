@@ -278,6 +278,10 @@
         "ring": {
           "class": ".nds-tabs-trigger:focus-visible",
           "part": "Anel de foco no trigger"
+        },
+        "radius": {
+          "class": ".nds-tabs-list",
+          "part": "Raio das bordas da lista de abas"
         }
       },
       "customizationTitle": "Customização",
@@ -720,6 +724,10 @@
         "ring": {
           "class": ".nds-tabs-trigger:focus-visible",
           "part": "Trigger focus ring"
+        },
+        "radius": {
+          "class": ".nds-tabs-list",
+          "part": "Corner radius of the tab list"
         }
       },
       "customizationTitle": "Customization",
@@ -1162,6 +1170,10 @@
         "ring": {
           "class": ".nds-tabs-trigger:focus-visible",
           "part": "Anillo de foco en el trigger"
+        },
+        "radius": {
+          "class": ".nds-tabs-list",
+          "part": "Radio de las esquinas de la lista de tabs"
         }
       },
       "customizationTitle": "Personalización",

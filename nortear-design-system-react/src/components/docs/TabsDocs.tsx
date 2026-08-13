@@ -245,7 +245,7 @@ interface TabsContentProps {
     { key: "background", token: "--background" },
     { key: "foreground", token: "--foreground" },
     { key: "ring", token: "--ring" },
-    { key: "border", token: "--border" },
+    { key: "radius", token: "--radius" },
   ];
 
   return (

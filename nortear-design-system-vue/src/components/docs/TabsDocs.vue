@@ -332,6 +332,7 @@ const tokenRows = computed(() => [
   { token: '--background',       value: tContent('tokens.table.background.class'),      description: tContent('tokens.table.background.part')      },
   { token: '--foreground',       value: tContent('tokens.table.foreground.class'),      description: tContent('tokens.table.foreground.part')      },
   { token: '--ring',             value: tContent('tokens.table.ring.class'),            description: tContent('tokens.table.ring.part')            },
+  { token: '--radius',           value: tContent('tokens.table.radius.class'),          description: tContent('tokens.table.radius.part')          },
 ]);
 
 const accessibilityItems = computed(() => [

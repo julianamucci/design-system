@@ -583,6 +583,7 @@ interface TabsContentProps {
       { token: '--background',       value: $tStore('tokens.table.background.class'),       description: $tStore('tokens.table.background.part')       },
       { token: '--foreground',       value: $tStore('tokens.table.foreground.class'),       description: $tStore('tokens.table.foreground.part')       },
       { token: '--ring',             value: $tStore('tokens.table.ring.class'),             description: $tStore('tokens.table.ring.part')             },
+      { token: '--radius',           value: $tStore('tokens.table.radius.class'),           description: $tStore('tokens.table.radius.part')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

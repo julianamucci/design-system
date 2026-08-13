@@ -688,6 +688,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             { token: '--background',       value: t('tokens.table.background.class'),       description: t('tokens.table.background.part') },
             { token: '--foreground',       value: t('tokens.table.foreground.class'),       description: t('tokens.table.foreground.part') },
             { token: '--ring',             value: t('tokens.table.ring.class'),             description: t('tokens.table.ring.part') },
+            { token: '--radius',           value: t('tokens.table.radius.class'),           description: t('tokens.table.radius.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
