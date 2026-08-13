@@ -341,8 +341,8 @@ export function createCheckboxDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: DOMPurify.sanitize(t('doDont.pair2.do')),
-              dontCaption: DOMPurify.sanitize(t('doDont.pair2.dont')),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildFieldset('Notificações', [
                 'Receber novidades por email',
                 'Receber notificações push',
@@ -685,8 +685,10 @@ label.textContent = 'Aceito os termos e condições';`,
         const interfaceCode = `// createCheckbox(options)
 export type CheckboxOptions = {
   checked?: boolean;
+  indeterminate?: boolean;
   disabled?: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  onIndeterminateChange?: (indeterminate: boolean) => void;
   id?: string;
   class?: string;
   'aria-label'?: string;
@@ -707,18 +709,20 @@ export type CheckboxOptions = {
               title: t('props.vanillaTitle'),
               cols: propsCols,
               items: [
-                { name: 'checked',          type: 'boolean',                    defaultValue: 'false', required: 'Não', description: 'Estado inicial marcado.' },
-                { name: 'disabled',         type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml(t('props.items.disabled')) },
-                { name: 'onCheckedChange',  type: '(checked: boolean) => void', defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.onCheckedChange')) },
-                { name: 'id',               type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.vanillaId')) },
-                { name: 'class',            type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.className')) },
-                { name: 'aria-label',       type: 'string',                     defaultValue: '—',     required: 'Condicional', description: stripHtml(t('props.items.vanillaAriaLabel')) },
+                { name: 'checked',               type: 'boolean',                          defaultValue: 'false', required: 'Não', description: 'Estado inicial marcado.' },
+                { name: 'indeterminate',         type: 'boolean',                          defaultValue: 'false', required: 'Não', description: stripHtml(t('props.items.indeterminate')) },
+                { name: 'disabled',               type: 'boolean',                          defaultValue: 'false', required: 'Não', description: stripHtml(t('props.items.disabled')) },
+                { name: 'onCheckedChange',        type: '(checked: boolean) => void',       defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.onCheckedChange')) },
+                { name: 'onIndeterminateChange',  type: '(indeterminate: boolean) => void', defaultValue: '—',     required: 'Não', description: 'Disparado quando o estado misto é resolvido por interação (primeiro clique ou Space marca o checkbox).' },
+                { name: 'id',                      type: 'string',                          defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.vanillaId')) },
+                { name: 'class',                   type: 'string',                          defaultValue: '—',     required: 'Não', description: stripHtml(t('props.items.className')) },
+                { name: 'aria-label',              type: 'string',                          defaultValue: '—',     required: 'Condicional', description: stripHtml(t('props.items.vanillaAriaLabel')) },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: 'Nota sobre o estado indeterminate',
-          extensibilityNotes: 'O Nortear não suporta estado indeterminate. Use createCheckbox() apenas para checked/unchecked/disabled. O estado indeterminate está disponível exclusivamente no Svelte via prop bindable.',
+          extensibilityNotes: 'O estado indeterminate é ativado via <code>createCheckbox({ indeterminate: true })</code>. Ele vale sobre <code>checked</code> enquanto durar, e o primeiro clique ou <kbd>Space</kbd> o resolve para marcado — disparando <code>onIndeterminateChange(false)</code> seguido de <code>onCheckedChange(true)</code>, a mesma semântica da propriedade <code>indeterminate</code> do input nativo.',
         });
       }
 
@@ -746,12 +750,12 @@ export type CheckboxOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--primary',            value: 'data-[state=checked]:bg-primary',         description: t('tokens.table.primary') },
-            { token: '--primary-foreground', value: 'data-[state=checked]:text-primary-foreground', description: t('tokens.table.primaryForeground') },
-            { token: '--input',              value: 'border-primary',                           description: t('tokens.table.input') },
-            { token: '--ring',               value: 'nds-focus-ring',                  description: t('tokens.table.ring') },
-            { token: '--destructive',        value: 'aria-invalid:border-destructive',          description: t('tokens.table.destructive') },
-            { token: '--border',             value: 'border',                                   description: t('tokens.table.border') },
+            { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: t('tokens.table.primary') },
+            { token: '--primary-foreground', value: '.nds-checkbox-indicator',              description: t('tokens.table.primaryForeground') },
+            { token: '--input',              value: '.nds-checkbox',                        description: t('tokens.table.input') },
+            { token: '--ring',               value: '.nds-checkbox:focus-visible',          description: toPlainText(t('tokens.table.ring')) },
+            { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',   description: t('tokens.table.destructive') },
+            { token: '--border',             value: '.nds-checkbox',                        description: t('tokens.table.border') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -784,8 +788,8 @@ export type CheckboxOptions = {
         return createDocsRelated({
           title: t('related.title'),
           items: [
-            { name: 'Switch',     description: stripHtml(t('related.switch')),     path: '?path=/docs/ui-switch--docs'      },
-            { name: 'RadioGroup', description: stripHtml(t('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs'  },
+            { name: 'Switch',     description: toPlainText(t('related.switch')),     path: '?path=/docs/ui-switch--docs'      },
+            { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/ui-radiogroup--docs'  },
             { name: 'Form',       description: stripHtml(t('related.form')),       path: '?path=/docs/ui-form--docs'        },
             { name: 'Select',     description: stripHtml(t('related.select')),     path: '?path=/docs/ui-select--docs'      },
           ],

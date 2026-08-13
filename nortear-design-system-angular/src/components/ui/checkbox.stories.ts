@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NdsCheckbox } from './checkbox';
 import { NdsLabel } from './label';
 import { NdsCheckboxDocs } from '@/components/docs/CheckboxDocs';
@@ -11,6 +11,7 @@ type CheckboxArgs = {
   indeterminate: boolean;
   disabled: boolean;
   label: string;
+  onCheckedChange: (checked: boolean) => void;
 };
 
 /** Ver a nota em separator.stories.ts. */
@@ -58,8 +59,18 @@ const meta: Meta<CheckboxArgs> = {
     },
     disabled: { control: 'boolean', description: 'Desabilita o controle.' },
     label: { control: 'text', description: 'Texto do rótulo associado.' },
+    // Espião de output. Sem entrada aqui o renderer Angular não repassa a
+    // função em `props` e o `(checkedChange)` do template fica ligado a nada —
+    // sem erro nenhum (armadilha 5 do CLAUDE.md deste stack).
+    onCheckedChange: { control: false, table: { disable: true } },
   },
-  args: { checked: false, indeterminate: false, disabled: false, label: 'Aceito os termos' },
+  args: {
+    checked: false,
+    indeterminate: false,
+    disabled: false,
+    label: 'Aceito os termos',
+    onCheckedChange: fn(),
+  },
 };
 
 export default meta;
@@ -68,7 +79,10 @@ type Story = StoryObj<CheckboxArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    covers: ['functional.item1', 'functional.item2', 'accessibility.item1'],
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3',
+      'accessibility.item1', 'accessibility.item3', 'accessibility.item5',
+    ],
   },
   render: (args) => ({
     props: { ...args },
@@ -80,6 +94,7 @@ export const Playground: Story = {
           [checked]="checked"
           [indeterminate]="indeterminate"
           [disabled]="disabled"
+          (checkedChange)="onCheckedChange($event)"
         ></button>
         <label ndsLabel for="pg-check">{{ label }}</label>
       </div>
@@ -109,18 +124,56 @@ export const Playground: Story = {
     });
 
     await step('O rótulo alcança o controle', async () => {
-      await expect(canvas.getByLabelText(args.label)).toBeTruthy();
+      // getByRole com `name` é o método que o critério de a11y pede
+      // literalmente — não getByLabelText, que passaria mesmo sem o `role`.
+      await expect(canvas.getByRole('checkbox', { name: args.label })).toBeTruthy();
     });
 
     if (!args.disabled) {
-      await step('Space alterna o estado', async () => {
+      const cb = canvasElement.querySelector<HTMLElement>('[data-slot="checkbox"]')!;
+      const spy = args.onCheckedChange as ReturnType<typeof fn>;
+
+      // Idempotentes por design (`!==`, não `===`): o painel Interactions
+      // reexecuta esta play no mesmo DOM sem remontar, então cada helper só
+      // clica quando o estado atual ainda não é o alvo.
+      const marcar = async () => {
+        if (cb.getAttribute('aria-checked') !== 'true') await userEvent.click(cb);
+        await waitFor(async () => {
+          await expect(cb).toHaveAttribute('aria-checked', 'true');
+        });
+      };
+      const desmarcar = async () => {
+        if (cb.getAttribute('aria-checked') !== 'false') await userEvent.click(cb);
+        await waitFor(async () => {
+          await expect(cb).toHaveAttribute('aria-checked', 'false');
+        });
+      };
+
+      await step('Clicar em Checkbox desmarcado marca, e o callback dispara com true', async () => {
+        // `desmarcar` primeiro normaliza o estado de entrada (que o replay
+        // pode herdar marcado); o clique que prova o item é o de `marcar`.
+        await desmarcar();
+        await marcar();
+        await expect(cb).toHaveAttribute('data-state', 'checked');
+        await expect(spy).toHaveBeenLastCalledWith(true);
+      });
+
+      await step('Clicar em Checkbox marcado desmarca, e o callback dispara com false', async () => {
+        await marcar();
+        await desmarcar();
+        await expect(cb).toHaveAttribute('data-state', 'unchecked');
+        await expect(spy).toHaveBeenLastCalledWith(false);
+      });
+
+      await step('Space alterna o estado e também dispara o callback', async () => {
         // É o teclado que o primitivo entrega e que o Vanilla precisa
         // reimplementar — a asserção confirma que a composição funcionou.
-        const cb = canvasElement.querySelector<HTMLElement>('[data-slot="checkbox"]')!;
         const antes = cb.getAttribute('aria-checked');
+        const chamadasAntes = spy.mock.calls.length;
         cb.focus();
         await userEvent.keyboard(' ');
         await expect(cb.getAttribute('aria-checked')).not.toBe(antes);
+        await expect(spy.mock.calls.length).toBe(chamadasAntes + 1);
       });
     }
   },

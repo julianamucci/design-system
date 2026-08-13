@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
+import CheckboxFormStory from './CheckboxFormStory.svelte';
 
 const meta: Meta = {
   title: 'UI/Checkbox/Compositions',
@@ -71,16 +72,20 @@ export const WithLabel: Story = {
       await expect(label).toBeVisible();
     });
 
-    await step('Checkbox começa desmarcado', async () => {
+    await step('Estado inicial idempotente: garante desmarcado', async () => {
       const checkbox = canvas.getByRole('checkbox');
-      await expect(checkbox).not.toBeChecked();
+      const label = canvas.getByText('Aceito os termos e condições');
+      if (checkbox.getAttribute('aria-checked') !== 'false') {
+        await userEvent.click(label);
+      }
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'false'));
     });
 
     await step('Clicar na label alterna o checkbox', async () => {
       const label = canvas.getByText('Aceito os termos e condições');
       await userEvent.click(label);
       const checkbox = canvas.getByRole('checkbox');
-      await expect(checkbox).toBeChecked();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
     });
   },
 };
@@ -169,6 +174,43 @@ export const Indeterminate: Story = {
     await step('Checkbox tem aria-checked="mixed"', async () => {
       const checkbox = canvas.getByRole('checkbox');
       await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+    });
+  },
+};
+
+const inFormOnSubmit = fn();
+
+export const InForm: Story = {
+  parameters: {
+    covers: ['functional.item5'],
+    docs: {
+      description: {
+        story:
+          'Checkbox marcado dentro de um formulário nativo. O bits-ui renderiza um input escondido quando há `name`, então o valor participa do FormData no submit.',
+      },
+    },
+  },
+  render: () => ({
+    Component: CheckboxFormStory,
+    props: {
+      checked: true,
+      name: 'termos',
+      value: 'aceito',
+      labelText: 'Aceito os termos e condições',
+      id: 'cb-in-form',
+      onSubmit: inFormOnSubmit,
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Enviar' });
+
+    await step('Submeter com o checkbox marcado inclui name/value no FormData', async () => {
+      inFormOnSubmit.mockClear();
+      await userEvent.click(button);
+      await waitFor(() => expect(inFormOnSubmit).toHaveBeenCalledTimes(1));
+      const formData = inFormOnSubmit.mock.calls[0][0] as FormData;
+      await expect(formData.get('termos')).toBe('aceito');
     });
   },
 };

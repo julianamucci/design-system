@@ -102,7 +102,7 @@ export const Indeterminate: Story = {
     docs: {
       description: {
         story:
-          'Seleção parcial de grupo. Fundo `--primary`, ícone `MinusIcon`. Disponível apenas no Svelte via prop `indeterminate`.',
+          'Seleção parcial de grupo. Fundo `--primary`, ícone `MinusIcon`, `aria-checked="mixed"`.',
       },
     },
   },

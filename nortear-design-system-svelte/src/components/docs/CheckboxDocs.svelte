@@ -127,13 +127,16 @@ import { Label } from "@/components/ui/label";`;
 
   const interfaceCode = `// Checkbox (Svelte 5 — bits-ui)
 // Props disponíveis (além de todos os atributos HTML nativos):
-//   checked        = $bindable(false)   — estado controlado
-//   indeterminate  = $bindable(false)   — estado indeterminado (Svelte only)
-//   disabled       — desabilita o componente
-//   required       — propaga aria-required
-//   name           — nome do campo para formulários nativos
-//   value          — valor enviado no submit (padrão "on")
-//   class          — classes .nds-* mescladas via cn()`;
+//   checked                = $bindable(false)   — estado controlado
+//   indeterminate          = $bindable(false)   — estado indeterminado (seleção parcial de grupo)
+//   onCheckedChange        — callback de mudança do estado marcado
+//   onIndeterminateChange  — callback de mudança do estado indeterminado
+//   disabled               — desabilita o componente
+//   required               — propaga aria-required
+//   readonly               — focável, mas não alterável por interação
+//   name                   — nome do campo para formulários nativos
+//   value                  — valor enviado no submit (padrão "on")
+//   class                  — classes .nds-* mescladas via cn()`;
 
   // ─── Reactive checked states for demo ────────────────────────────────────────
 
@@ -356,8 +359,8 @@ import { Label } from "@/components/ui/label";`;
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair2.do')),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2Do,
         dontPreview: doPair2Dont,
       },
@@ -592,13 +595,14 @@ import { Label } from "@/components/ui/label";`;
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'checked',       type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.checked')) },
-          { name: 'indeterminate', type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.indeterminate')) },
-          { name: 'disabled',      type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.disabled')) },
-          { name: 'required',      type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.required')) },
-          { name: 'name',          type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.items.name')) },
-          { name: 'value',         type: 'string',                     defaultValue: '"on"',  required: 'Não', description: stripHtml($tStore('props.items.value')) },
-          { name: 'class',         type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.items.className')) },
+          { name: 'checked',                type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.checked')) },
+          { name: 'indeterminate',          type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.indeterminate')) },
+          { name: 'onCheckedChange',        type: '(checked: boolean) => void', defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.items.onCheckedChange')) },
+          { name: 'disabled',               type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.disabled')) },
+          { name: 'required',               type: 'boolean',                    defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.required')) },
+          { name: 'name',                   type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.items.name')) },
+          { name: 'value',                  type: 'string',                     defaultValue: '"on"',  required: 'Não', description: stripHtml($tStore('props.items.value')) },
+          { name: 'class',                  type: 'string',                     defaultValue: '—',     required: 'Não', description: stripHtml($tStore('props.items.className')) },
         ],
       },
     ]}
@@ -614,12 +618,12 @@ import { Label } from "@/components/ui/label";`;
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--primary',            value: 'bg-primary / border-primary',         description: $tStore('tokens.table.primary') },
-      { token: '--primary-foreground', value: 'text-primary-foreground',             description: $tStore('tokens.table.primaryForeground') },
-      { token: '--input',              value: 'border-input',                        description: $tStore('tokens.table.input') },
-      { token: '--ring',               value: 'nds-focus-ring',          description: $tStore('tokens.table.ring') },
-      { token: '--destructive',        value: 'border-destructive ring-destructive', description: $tStore('tokens.table.destructive') },
-      { token: '--border',             value: 'border',                              description: $tStore('tokens.table.border') },
+      { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: $tStore('tokens.table.primary') },
+      { token: '--primary-foreground', value: '.nds-checkbox-indicator',             description: $tStore('tokens.table.primaryForeground') },
+      { token: '--input',              value: '.nds-checkbox',                       description: $tStore('tokens.table.input') },
+      { token: '--ring',               value: '.nds-checkbox:focus-visible',         description: toPlainText($tStore('tokens.table.ring')) },
+      { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  description: $tStore('tokens.table.destructive') },
+      { token: '--border',             value: '.nds-checkbox',                       description: $tStore('tokens.table.border') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeTokens}
@@ -650,8 +654,8 @@ import { Label } from "@/components/ui/label";`;
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'Switch',      description: stripHtml($tStore('related.switch')),      path: '?path=/docs/ui-switch--docs' },
-      { name: 'RadioGroup',  description: stripHtml($tStore('related.radioGroup')),  path: '?path=/docs/ui-radiogroup--docs' },
+      { name: 'Switch',      description: toPlainText($tStore('related.switch')),      path: '?path=/docs/ui-switch--docs' },
+      { name: 'RadioGroup',  description: toPlainText($tStore('related.radioGroup')),  path: '?path=/docs/ui-radiogroup--docs' },
       { name: 'Form',        description: $tStore('related.form'),                   path: '?path=/docs/ui-form--docs' },
       { name: 'Select',      description: stripHtml($tStore('related.select')),      path: '?path=/docs/ui-select--docs' },
     ]}

@@ -37,8 +37,20 @@
   box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
 }
 
+/*
+ * Marcado E misto pintam igual: o que distingue os dois é o desenho do
+ * indicador (marca de seleção × traço), não o fundo. Cada lib anuncia o misto
+ * de um jeito — `data-state="indeterminate"` na maioria, `data-indeterminate`
+ * onde a convenção é atributo de presença — e `aria-checked="mixed"` fecha o
+ * conjunto porque é o único que TODAS emitem. Sem estas linhas o estado misto
+ * saía com fundo do tema e ícone em --primary-foreground: invisível.
+ * `:not([…="false"])` porque atributo de presença casa o valor "false".
+ */
 .nds-checkbox[data-state="checked"],
-.nds-checkbox[data-checked] {
+.nds-checkbox[data-state="indeterminate"],
+.nds-checkbox[data-checked],
+.nds-checkbox[data-indeterminate]:not([data-indeterminate="false"]),
+.nds-checkbox[aria-checked="mixed"] {
   background-color: hsl(var(--primary));
   border-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
@@ -96,8 +108,10 @@
 }
 
 .nds-checkbox[data-state="checked"] .nds-checkbox-indicator > svg,
+.nds-checkbox[data-state="indeterminate"] .nds-checkbox-indicator > svg,
 .nds-checkbox[data-checked] .nds-checkbox-indicator > svg,
-.nds-checkbox[aria-checked="true"] .nds-checkbox-indicator > svg {
+.nds-checkbox[aria-checked="true"] .nds-checkbox-indicator > svg,
+.nds-checkbox[aria-checked="mixed"] .nds-checkbox-indicator > svg {
   animation: nds-indicator-pop var(--duration-fast) var(--ease-entrance);
 }
 

@@ -507,16 +507,18 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
+    // Seletor real lido de docs/shared/styles/nds/checkbox.css — cada token
+    // pinta uma regra diferente, não `.nds-checkbox` para todas as seis.
     return [
-      { token: '--primary',            k: 'primary'           },
-      { token: '--primary-foreground', k: 'primaryForeground' },
-      { token: '--input',              k: 'input'             },
-      { token: '--ring',               k: 'ring'              },
-      { token: '--destructive',        k: 'destructive'       },
-      { token: '--border',             k: 'border'            },
-    ].map(({ token, k }) => ({
+      { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', k: 'primary'           },
+      { token: '--primary-foreground', value: '.nds-checkbox-indicator',             k: 'primaryForeground' },
+      { token: '--input',              value: '.nds-checkbox',                       k: 'input'             },
+      { token: '--ring',               value: '.nds-checkbox:focus-visible',         k: 'ring'              },
+      { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  k: 'destructive'       },
+      { token: '--border',             value: '.nds-checkbox',                       k: 'border'            },
+    ].map(({ token, value, k }) => ({
       token,
-      value: '.nds-checkbox',
+      value,
       description: toPlainText(t(`tokens.table.${k}`)),
     }));
   });

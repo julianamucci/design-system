@@ -141,8 +141,6 @@ function handleDemoCheckboxChange(fieldName: string, value: boolean | 'indetermi
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Checkbox } from "@/components/ui/checkbox";`;
-const codeImportWithLabel = `import { Checkbox } from "@/components/ui/checkbox";
-// Label é um elemento HTML nativo ou componente Label de @/components/ui/label`;
 
 const codeDefault = `<div class="nds-cluster" data-spacing="xs">
   <Checkbox id="terms" />
@@ -187,15 +185,17 @@ const codeCustomizationTokens = `/* Em globals.css — sobrescrever tokens de co
 }`;
 
 const interfaceCode = `interface CheckboxProps {
-  checked?: boolean | 'indeterminate';
-  defaultChecked?: boolean;
+  checked?: boolean | 'indeterminate'; // alias do wrapper para defaultValue — estado inicial, não controlado
+  defaultValue?: boolean | 'indeterminate';
   disabled?: boolean;
   required?: boolean;
   name?: string;
-  value?: string;
+  value?: string | number;
+  trueValue?: unknown;
+  falseValue?: unknown;
   class?: string;
   // Emits
-  'onUpdate:checked'?: (value: boolean | 'indeterminate') => void;
+  'onUpdate:modelValue'?: (value: boolean | 'indeterminate') => void;
 }`;
 
 // ─── Reactive state — Select All preview ──────────────────────────────────────
@@ -279,8 +279,8 @@ const propCols = computed(() => ({
 
 const checkboxPropItems = computed(() => [
   { name: 'checked',             type: 'boolean | "indeterminate"',    defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.items.checked'))            },
-  { name: 'defaultChecked',      type: 'boolean',                      defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.items.defaultChecked'))     },
-  { name: '@update:checked',     type: '(value: boolean | "indeterminate") => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.items.onCheckedChange')) },
+  { name: 'defaultValue',        type: 'boolean | "indeterminate"',    defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.items.defaultChecked'))     },
+  { name: '@update:modelValue',  type: '(value: boolean | "indeterminate") => void', defaultValue: '—', required: 'Não', description: stripHtml(tContent('props.items.onCheckedChange')) },
   { name: 'disabled',            type: 'boolean',                      defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.items.disabled'))           },
   { name: 'required',            type: 'boolean',                      defaultValue: 'false',     required: 'Não', description: stripHtml(tContent('props.items.required'))           },
   { name: 'name',                type: 'string',                       defaultValue: '—',         required: 'Não', description: stripHtml(tContent('props.items.name'))               },
@@ -289,12 +289,12 @@ const checkboxPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--primary',            value: 'bg-primary',                 description: tContent('tokens.table.primary')            },
-  { token: '--primary-foreground', value: 'text-primary-foreground',    description: tContent('tokens.table.primaryForeground')  },
-  { token: '--input',              value: 'border-input',               description: tContent('tokens.table.input')              },
-  { token: '--ring',               value: 'nds-focus-ring', description: tContent('tokens.table.ring')               },
-  { token: '--destructive',        value: 'aria-invalid:border-destructive', description: tContent('tokens.table.destructive')   },
-  { token: '--border',             value: 'border',                     description: tContent('tokens.table.border')             },
+  { token: '--primary',            value: '.nds-checkbox[data-state="checked"]', description: tContent('tokens.table.primary')            },
+  { token: '--primary-foreground', value: '.nds-checkbox-indicator',             description: tContent('tokens.table.primaryForeground')  },
+  { token: '--input',              value: '.nds-checkbox',                       description: tContent('tokens.table.input')              },
+  { token: '--ring',               value: '.nds-checkbox:focus-visible',         description: toPlainText(tContent('tokens.table.ring'))  },
+  { token: '--destructive',        value: '.nds-checkbox[aria-invalid="true"]',  description: tContent('tokens.table.destructive')        },
+  { token: '--border',             value: '.nds-checkbox',                       description: tContent('tokens.table.border')             },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -339,12 +339,12 @@ const a11yCritCols = computed(() => ({
 }));
 
 const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: toPlainText(tContent('testes.functional.item1.action')), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
+  { action: toPlainText(tContent('testes.functional.item2.action')), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
+  { action: toPlainText(tContent('testes.functional.item3.action')), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
+  { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
+  { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
+  { action: toPlainText(tContent('testes.functional.item6.action')), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -629,8 +629,6 @@ const visualTestItems = computed(() => [
       :title="tContent('import.title')"
       :description="tContent('import.vue')"
       :code="codeImportBasic"
-      :secondary-description="tContent('import.svelte')"
-      :secondary-code="`import { Checkbox } from '@/components/ui/checkbox';`"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->

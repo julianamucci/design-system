@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.svelte';
@@ -21,7 +21,7 @@ const meta: Meta = {
     },
     indeterminate: {
       control: 'boolean',
-      description: 'Estado indeterminado (bits-ui — Svelte only).',
+      description: 'Estado indeterminado — seleção parcial de grupo (aria-checked="mixed").',
     },
     disabled: {
       control: 'boolean',
@@ -43,6 +43,11 @@ const meta: Meta = {
       control: 'text',
       description: 'Texto da label associada.',
     },
+    onCheckedChange: {
+      control: false,
+      description: 'Callback disparado quando o estado marcado muda.',
+      table: { type: { summary: '(checked: boolean) => void' } },
+    },
   },
   args: {
     checked: false,
@@ -52,45 +57,72 @@ const meta: Meta = {
     withLabel: true,
     withDescription: false,
     labelText: 'Aceito os termos e condições',
+    onCheckedChange: fn(),
   },
 };
 
 export default meta;
 type Story = StoryObj;
 
+const marcar = async (cb: HTMLElement) => {
+  if (cb.getAttribute('aria-checked') !== 'true') await userEvent.click(cb);
+  await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'true'));
+};
+const desmarcar = async (cb: HTMLElement) => {
+  if (cb.getAttribute('aria-checked') !== 'false') await userEvent.click(cb);
+  await waitFor(() => expect(cb).toHaveAttribute('aria-checked', 'false'));
+};
+
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'functional.item3',
+      'accessibility.item1',
+      'accessibility.item3',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => ({
     Component: CheckboxStory,
     props: { ...args },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+
+    await step('getByRole("checkbox") devolve o elemento', async () => {
+      await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    });
+
+    await step('getByRole("checkbox", { name }) devolve o elemento', async () => {
+      await expect(
+        canvas.getByRole('checkbox', { name: 'Aceito os termos e condições' }),
+      ).toBeInTheDocument();
+    });
+
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox está presente no DOM', async () => {
-      await expect(checkbox).toBeInTheDocument();
+    await desmarcar(checkbox);
+
+    await step('Clicar em desmarcado marca e dispara o callback com true', async () => {
+      await marcar(checkbox);
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
     });
 
-    await step('Checkbox começa desmarcado', async () => {
-      await expect(checkbox).not.toBeChecked();
+    await step('Clicar em marcado desmarca e dispara o callback com false', async () => {
+      await desmarcar(checkbox);
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
-    await step('Clicar no checkbox o marca', async () => {
-      await userEvent.click(checkbox);
-      await expect(checkbox).toBeChecked();
-    });
-
-    await step('Clicar novamente desmarca o checkbox', async () => {
-      await userEvent.click(checkbox);
-      await expect(checkbox).not.toBeChecked();
-    });
-
-    await step('Space alterna o estado via teclado', async () => {
+    await step('Space com foco alterna o estado e dispara o callback', async () => {
       checkbox.focus();
       await userEvent.keyboard(' ');
-      await expect(checkbox).toBeChecked();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
       await userEvent.keyboard(' ');
-      await expect(checkbox).not.toBeChecked();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'false'));
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
   },
 };

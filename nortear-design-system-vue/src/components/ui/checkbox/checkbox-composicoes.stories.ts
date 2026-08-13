@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const meta = {
   title: 'UI/Checkbox/Compositions',
@@ -29,10 +32,7 @@ export const WithLabel: Story = {
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="with-label" />
-        <label
-          for="with-label"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
+        <label for="with-label" class="nds-label">
           Aceito os termos e condições
         </label>
       </div>
@@ -51,16 +51,18 @@ export const WithLabel: Story = {
       await expect(label).toBeVisible();
     });
 
-    await step('Checkbox começa desmarcado', async () => {
-      const checkbox = canvas.getByRole('checkbox');
-      await expect(checkbox).not.toBeChecked();
-    });
-
     await step('Clicar na label marca o checkbox', async () => {
-      const label = canvas.getByText('Aceito os termos e condições');
-      await userEvent.click(label);
+      // O painel Interactions reexecuta a play no mesmo DOM: cada clique
+      // checa o estado atual antes de disparar, então nunca é "clique cego"
+      // que inverte o resultado no replay (par abrir/fechar).
       const checkbox = canvas.getByRole('checkbox');
-      await expect(checkbox).toBeChecked();
+      const label = canvas.getByText('Aceito os termos e condições');
+
+      if (checkbox.getAttribute('aria-checked') !== 'false') await userEvent.click(checkbox);
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'false'));
+
+      if (checkbox.getAttribute('aria-checked') !== 'true') await userEvent.click(label);
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
     });
   },
 };
@@ -73,10 +75,7 @@ export const WithDescription: Story = {
       <div class="nds-cluster" data-align="start" data-spacing="sm">
         <Checkbox id="with-description" class="nds-mt-0-5" aria-describedby="desc-help" />
         <div class="nds-stack" data-spacing="xs">
-          <label
-            for="with-description"
-            class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-          >
+          <label for="with-description" class="nds-label">
             Receber novidades por email
           </label>
           <p id="desc-help" class="nds-text-body">
@@ -103,11 +102,6 @@ export const WithDescription: Story = {
       const checkbox = canvas.getByRole('checkbox');
       await expect(checkbox).toHaveAttribute('aria-describedby', 'desc-help');
     });
-
-    await step('Checkbox começa desmarcado', async () => {
-      const checkbox = canvas.getByRole('checkbox');
-      await expect(checkbox).not.toBeChecked();
-    });
   },
 };
 
@@ -116,23 +110,23 @@ export const FieldsetGroup: Story = {
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm">
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm">
         <legend class="nds-text-body nds-font-semibold nds-px-1">Preferências de notificação</legend>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-email" />
-          <label for="notif-email" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="notif-email" class="nds-label">
             Receber novidades por email
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-push" />
-          <label for="notif-push" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="notif-push" class="nds-label">
             Receber notificações push
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="notif-session" />
-          <label for="notif-session" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="notif-session" class="nds-label">
             Manter sessão ativa
           </label>
         </div>
@@ -157,50 +151,37 @@ export const FieldsetGroup: Story = {
       await expect(canvas.getByRole('checkbox', { name: 'Receber notificações push' })).toBeInTheDocument();
       await expect(canvas.getByRole('checkbox', { name: 'Manter sessão ativa' })).toBeInTheDocument();
     });
-
-    await step('Checkboxes começam desmarcados', async () => {
-      const checkboxes = canvas.getAllByRole('checkbox');
-      for (const checkbox of checkboxes) {
-        await expect(checkbox).not.toBeChecked();
-      }
-    });
   },
 };
 
 export const SelectAll: Story = {
   render: () => ({
     components: { Checkbox },
-    setup() {
-      const { ref, computed } = (window as any).Vue ?? {};
-      // Fallback for Storybook environment
-      const items = ['Receber novidades por email', 'Receber notificações push', 'Manter sessão ativa'];
-      const checked = [false, false, false];
-      return { items, checked };
-    },
+    setup() { return {}; },
     template: `
-      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm">
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm">
         <legend class="nds-text-body nds-font-semibold nds-px-1">Preferências</legend>
         <div class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="padding-bottom: 0.5rem">
           <Checkbox id="select-all" />
-          <label for="select-all" class="nds-text-body nds-font-semibold" style="line-height: 1">
+          <label for="select-all" class="nds-label">
             Selecionar todos os itens
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-email" />
-          <label for="item-email" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="item-email" class="nds-label">
             Receber novidades por email
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-push" />
-          <label for="item-push" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="item-push" class="nds-label">
             Receber notificações push
           </label>
         </div>
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="item-session" />
-          <label for="item-session" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
+          <label for="item-session" class="nds-label">
             Manter sessão ativa
           </label>
         </div>
@@ -220,13 +201,6 @@ export const SelectAll: Story = {
       await expect(checkboxes).toHaveLength(4);
     });
 
-    await step('Todos os checkboxes começam desmarcados', async () => {
-      const checkboxes = canvas.getAllByRole('checkbox');
-      for (const checkbox of checkboxes) {
-        await expect(checkbox).not.toBeChecked();
-      }
-    });
-
     await step('Itens individuais estão associados às suas labels', async () => {
       await expect(canvas.getByRole('checkbox', { name: 'Receber novidades por email' })).toBeInTheDocument();
       await expect(canvas.getByRole('checkbox', { name: 'Receber notificações push' })).toBeInTheDocument();
@@ -236,44 +210,33 @@ export const SelectAll: Story = {
 };
 
 export const InForm: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
-    components: { Checkbox },
+    // Componentes reais do design system em vez de markup cru: reimplementar
+    // <button>/<input> perde o que Button/Input já garantem (WCAG 1.4.4 — sem
+    // altura cravada — e as classes .nds-* corretas), e diverge de silêncio.
+    components: { Checkbox, Button, Input, Label },
     setup() { return {}; },
     template: `
-      <form class="" data-spacing="md" style="width: 18rem" @submit.prevent>
+      <form class="nds-stack" data-spacing="md" style="width: 18rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
-          <label class="nds-text-body nds-font-medium">Nome</label>
-          <input
-            type="text"
-            placeholder="Seu nome"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
-          />
+          <Label for="form-name">Nome</Label>
+          <Input id="form-name" type="text" placeholder="Seu nome" />
         </div>
         <div class="nds-stack" data-spacing="sm">
-          <label class="nds-text-body nds-font-medium">Email</label>
-          <input
-            type="email"
-            placeholder="seu@email.com"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
-          />
+          <Label for="form-email">Email</Label>
+          <Input id="form-email" type="email" placeholder="seu@email.com" />
         </div>
         <div class="nds-cluster" data-align="start" data-spacing="sm">
-          <Checkbox id="form-terms" value="accepted" required class="nds-mt-0-5" />
+          <Checkbox id="form-terms" name="terms" value="accepted" required class="nds-mt-0-5" />
           <div class="nds-stack" data-spacing="xs">
-            <label for="form-terms" class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1">
-              Aceito os termos e condições
-            </label>
+            <Label for="form-terms">Aceito os termos e condições</Label>
             <p class="nds-text-caption nds-text-muted-foreground">
               Campo obrigatório para criar a conta.
             </p>
           </div>
         </div>
-        <button
-          type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
-        >
-          Criar conta
-        </button>
+        <Button type="submit" class="nds-w-full">Criar conta</Button>
       </form>
     `,
   }),
@@ -298,6 +261,20 @@ export const InForm: Story = {
     await step('Botão de submit está presente', async () => {
       const button = canvas.getByRole('button', { name: 'Criar conta' });
       await expect(button).toBeInTheDocument();
+    });
+
+    await step('Marcar o checkbox inclui name/value no FormData do submit', async () => {
+      // reka-ui só renderiza o <input> oculto quando há `name` E o Root está
+      // dentro de um <form> real — daí o form de verdade neste template.
+      const checkbox = canvas.getByRole('checkbox');
+      if (checkbox.getAttribute('aria-checked') !== 'true') await userEvent.click(checkbox);
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+
+      const form = canvasElement.querySelector('form') as HTMLFormElement;
+      await waitFor(() => {
+        const data = new FormData(form);
+        expect(data.get('terms')).toBe('accepted');
+      });
     });
   },
 };

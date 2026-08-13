@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, fn, userEvent, expect } from 'storybook/test';
+import { within, fn, userEvent, expect, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -12,34 +12,63 @@ const meta = {
     docs: { page: withAutoDocsTab(CheckboxDocs) },
   },
   argTypes: {
+    // Alias do wrapper para `defaultValue`: estado INICIAL, não controlado —
+    // reka-ui não tem `defaultChecked`. É também onde mora o indeterminado,
+    // por isso o control é 'select' com os três valores possíveis, e não
+    // 'boolean'. Prop de montagem: sem :key no <Checkbox>, trocar o control
+    // não teria efeito nenhum (é o que fazia `defaultChecked` ser morto).
     checked: {
-      control: 'boolean',
-      description: 'Estado controlado do checkbox',
-    },
-    defaultChecked: {
-      control: 'boolean',
-      description: 'Estado inicial não controlado',
+      control: 'select',
+      options: [false, true, 'indeterminate'],
+      description:
+        'Estado inicial do checkbox (alias do wrapper para defaultValue). O indeterminado é o terceiro valor do próprio estado — reka-ui não expõe uma prop `indeterminate` dedicada.',
+      table: { type: { summary: 'boolean | "indeterminate"' }, defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
       description: 'Desabilita o checkbox',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     required: {
       control: 'boolean',
       description: 'Marca o campo como obrigatório',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     name: {
       control: 'text',
       description: 'Nome do campo para formulários HTML',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     value: {
       control: 'text',
       description: 'Valor enviado no submit quando marcado',
+      table: { type: { summary: 'string | number | Record<string, unknown>' }, defaultValue: { summary: '"on"' } },
+    },
+    trueValue: {
+      control: false,
+      description: 'Valor do estado quando marcado — comparado contra modelValue para decidir aria-checked/data-state.',
+      table: { type: { summary: 'unknown' }, defaultValue: { summary: 'true' } },
+    },
+    falseValue: {
+      control: false,
+      description: 'Valor do estado quando desmarcado — comparado contra modelValue para decidir aria-checked/data-state.',
+      table: { type: { summary: 'unknown' }, defaultValue: { summary: 'false' } },
+    },
+    // Nome real do reka-ui é `update:modelValue` — não existe `onUpdate:checked`.
+    // control:false para não virar um controle morto: esta prop só faz sentido
+    // como espião (fn()) no Playground, nunca como valor editável.
+    'onUpdate:modelValue': {
+      control: false,
+      description: 'Emitido quando o estado muda (clique, teclado ou toggle programático). Recebe o novo valor.',
+      table: { type: { summary: '(value: boolean | "indeterminate") => void' } },
     },
   },
   args: {
+    checked: false,
     disabled: false,
     required: false,
+    name: 'terms',
+    value: 'accepted',
   },
 } satisfies Meta<any>;
 
@@ -47,56 +76,79 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'functional.item3',
+      'accessibility.item1',
+      'accessibility.item3',
+      'accessibility.item5',
+    ],
+  },
   args: {
-    'onUpdate:checked': fn(),
+    'onUpdate:modelValue': fn(),
   } as never,
   render: (args) => ({
     components: { Checkbox },
     setup() { return { args }; },
+    // :key força remontagem quando o control `checked` muda — é prop de
+    // montagem (default-value), sem :key o control fica morto.
     template: `
       <div class="nds-cluster" data-spacing="sm">
-        <Checkbox id="playground-checkbox" v-bind="args" />
-        <label
-          for="playground-checkbox"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
+        <Checkbox id="playground-checkbox" :key="String(args.checked)" v-bind="args" />
+        <label for="playground-checkbox" class="nds-label">
           Aceito os termos e condições
         </label>
       </div>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
+    const onUpdate = (args as { 'onUpdate:modelValue': ReturnType<typeof fn> })['onUpdate:modelValue'];
+
+    // O painel Interactions reexecuta a play no mesmo DOM: cada helper checa
+    // o estado atual antes de clicar, então nunca afirma o oposto do que fez.
+    const marcar = async () => {
+      if (checkbox.getAttribute('aria-checked') !== 'true') await userEvent.click(checkbox);
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+    };
+    const desmarcar = async () => {
+      if (checkbox.getAttribute('aria-checked') !== 'false') await userEvent.click(checkbox);
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'false'));
+    };
 
     await step('Checkbox está presente e visível', async () => {
       await expect(checkbox).toBeInTheDocument();
       await expect(checkbox).toBeVisible();
     });
 
-    await step('Checkbox começa desmarcado', async () => {
-      await expect(checkbox).not.toBeChecked();
+    await step('getByRole retorna o elemento pelo nome acessível', async () => {
+      await expect(canvas.getByRole('checkbox', { name: 'Aceito os termos e condições' })).toBeInTheDocument();
     });
 
-    await step('Clique marca o checkbox', async () => {
-      await userEvent.click(checkbox);
-      await expect(checkbox).toBeChecked();
+    await step('Clique em desmarcado marca, e o callback dispara com true', async () => {
+      await desmarcar();
+      onUpdate.mockClear();
+      await marcar();
+      await expect(onUpdate).toHaveBeenCalledWith(true);
     });
 
-    await step('Clique novamente desmarca o checkbox', async () => {
-      await userEvent.click(checkbox);
-      await expect(checkbox).not.toBeChecked();
+    await step('Clique em marcado desmarca, e o callback dispara com false', async () => {
+      await marcar();
+      onUpdate.mockClear();
+      await desmarcar();
+      await expect(onUpdate).toHaveBeenCalledWith(false);
     });
 
-    await step('Focus via teclado', async () => {
+    await step('Space com foco alterna o estado e dispara o callback', async () => {
+      await desmarcar();
       (checkbox as HTMLElement).focus();
-      await expect(checkbox).toHaveFocus();
-    });
-
-    await step('Space alterna o estado', async () => {
-      (checkbox as HTMLElement).focus();
+      onUpdate.mockClear();
       await userEvent.keyboard(' ');
-      await expect(checkbox).toBeChecked();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+      await expect(onUpdate).toHaveBeenCalledWith(true);
     });
   },
 };

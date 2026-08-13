@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Checkbox: unchecked, checked, indeterminate (Svelte only), disabled e error (aria-invalid).',
+          'Estados do Checkbox: unchecked, checked, indeterminate (seleção parcial de grupo), disabled, foco visível via teclado e error (aria-invalid).',
       },
     },
   },
@@ -25,6 +25,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Unchecked: Story = {
+  parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -49,6 +52,9 @@ export const Unchecked: Story = {
 };
 
 export const Checked: Story = {
+  parameters: {
+    covers: ['visual.item2', 'functional.item6'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -62,7 +68,7 @@ export const Checked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox está marcado', async () => {
+    await step('Checkbox renderiza marcado sem controle externo', async () => {
       await expect(checkbox).toBeChecked();
     });
 
@@ -73,6 +79,9 @@ export const Checked: Story = {
 };
 
 export const Indeterminate: Story = {
+  parameters: {
+    covers: ['visual.item3'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -93,7 +102,12 @@ export const Indeterminate: Story = {
   },
 };
 
+const disabledOnCheckedChange = fn();
+
 export const Disabled: Story = {
+  parameters: {
+    covers: ['functional.item4'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -102,6 +116,7 @@ export const Disabled: Story = {
       withLabel: true,
       labelText: 'Aceito os termos e condições',
       id: 'cb-disabled',
+      onCheckedChange: disabledOnCheckedChange,
     },
   }),
   play: async ({ canvasElement, step }) => {
@@ -112,14 +127,19 @@ export const Disabled: Story = {
       await expect(checkbox).toBeDisabled();
     });
 
-    await step('Clicar não altera o estado', async () => {
+    await step('Clicar não altera o estado nem dispara o callback', async () => {
+      disabledOnCheckedChange.mockClear();
       await userEvent.click(checkbox, { pointerEventsCheck: 0 });
       await expect(checkbox).not.toBeChecked();
+      await expect(disabledOnCheckedChange).not.toHaveBeenCalled();
     });
   },
 };
 
 export const DisabledChecked: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -141,7 +161,48 @@ export const DisabledChecked: Story = {
   },
 };
 
+export const FocusVisible: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: {
+      description: {
+        story: 'Foco via teclado exibe o anel de foco (--ring) no elemento com role="checkbox".',
+      },
+    },
+  },
+  render: () => ({
+    Component: CheckboxStory,
+    props: {
+      checked: false,
+      withLabel: true,
+      labelText: 'Aceito os termos e condições',
+      id: 'cb-focus-visible',
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole('checkbox');
+
+    await step('Tab move o foco para o checkbox', async () => {
+      // Reseta o foco antes de tabular: no replay o checkbox já pode estar
+      // focado da rodada anterior, e um Tab a partir dele sairia do elemento
+      // em vez de confirmar que ele é alcançável.
+      (document.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await waitFor(() => expect(checkbox).toHaveFocus());
+    });
+
+    await step('Anel de foco visível (outline ou box-shadow)', async () => {
+      const style = getComputedStyle(checkbox);
+      await expect(style.outlineStyle !== 'none' || style.boxShadow !== 'none').toBe(true);
+    });
+  },
+};
+
 export const Error: Story = {
+  parameters: {
+    covers: ['visual.item5'],
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {

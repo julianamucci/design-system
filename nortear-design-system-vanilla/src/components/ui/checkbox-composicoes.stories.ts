@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
@@ -172,17 +172,68 @@ export const InFieldsetGroup: Story = {
 };
 
 // ─── SelecionarTodos ──────────────────────────────────────────────────────────
+//
+// Padrão real de "select all": o pai fica indeterminado com seleção parcial,
+// marcado quando todos os filhos estão marcados e desmarcado quando nenhum
+// está. createCheckbox() não expõe o estado interno para mutação externa —
+// cada mudança de filho recria o nó do pai com o `indeterminate`/`checked`
+// computado, e o clique no pai usa a própria semântica de resolução do
+// indeterminate do componente (primeiro clique de um misto sempre marca).
 
 export const SelectAll: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const checkboxes = () => canvas.getAllByRole('checkbox');
+
     await step('Quatro checkboxes presentes (1 pai + 3 filhos)', async () => {
-      const checkboxes = canvas.getAllByRole('checkbox');
-      await expect(checkboxes).toHaveLength(4);
+      await expect(checkboxes()).toHaveLength(4);
     });
-    await step('Checkbox "selecionar todos" inicia desmarcado', async () => {
-      const [allCb] = canvas.getAllByRole('checkbox');
-      await expect(allCb).toHaveAttribute('aria-checked', 'false');
+
+    // Baseline conhecida: garante todos os filhos desmarcados antes de provar
+    // as transições — sem isso, um replay que herda o DOM da rodada anterior
+    // parte de um estado indeterminado e invalida as asserções seguintes.
+    await step('Estado inicial: todos os filhos desmarcados e pai desmarcado', async () => {
+      const [, ...children] = checkboxes();
+      for (const child of children) {
+        if (child.getAttribute('aria-checked') !== 'false') await userEvent.click(child);
+      }
+      await waitFor(() => expect(checkboxes()[0]).toHaveAttribute('aria-checked', 'false'));
+    });
+
+    await step('Marcar um filho deixa o pai indeterminado', async () => {
+      const [, child1] = checkboxes();
+      // Garantido desmarcado pelo passo anterior: o clique é uma transição real.
+      await userEvent.click(child1);
+      await waitFor(() => {
+        const [allCb] = checkboxes();
+        expect(allCb).toHaveAttribute('aria-checked', 'mixed');
+        expect(allCb).toHaveAttribute('data-state', 'indeterminate');
+      });
+    });
+
+    await step('Marcar todos os filhos marca o pai', async () => {
+      const [, child1, child2, child3] = checkboxes();
+      for (const child of [child1, child2, child3]) {
+        if (child.getAttribute('aria-checked') !== 'true') await userEvent.click(child);
+      }
+      await waitFor(() => expect(checkboxes()[0]).toHaveAttribute('aria-checked', 'true'));
+    });
+
+    await step('Desmarcar todos os filhos desmarca o pai', async () => {
+      const [, child1, child2, child3] = checkboxes();
+      for (const child of [child1, child2, child3]) {
+        if (child.getAttribute('aria-checked') !== 'false') await userEvent.click(child);
+      }
+      await waitFor(() => expect(checkboxes()[0]).toHaveAttribute('aria-checked', 'false'));
+    });
+
+    await step('Clique no pai desmarcado marca todos os filhos', async () => {
+      const [allCb] = checkboxes();
+      await userEvent.click(allCb);
+      await waitFor(() => {
+        const [, ...children] = checkboxes();
+        children.forEach((child) => expect(child).toHaveAttribute('aria-checked', 'true'));
+      });
     });
   },
   render: () => {
@@ -190,22 +241,6 @@ export const SelectAll: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
     wrapper.style.width = '18rem';
-
-    // "Select all" row
-    const allRow = document.createElement('div');
-    allRow.className = 'nds-cluster nds-border-b';
-    allRow.dataset.spacing = 'sm';
-    allRow.style.paddingBottom = 'var(--spacing-2, 0.5rem)';
-
-    const cbAll = createCheckbox({ id: 'cb-select-all' });
-    const labelAll = document.createElement('label');
-    labelAll.id = 'cb-select-all-label';
-    cbAll.setAttribute('aria-labelledby', 'cb-select-all-label');
-    labelAll.htmlFor = 'cb-select-all';
-    labelAll.addEventListener('click', (e) => { e.preventDefault(); cbAll.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
-    labelAll.textContent = 'Selecionar todos os itens';
-    labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
-    allRow.append(cbAll, labelAll);
 
     const items = [
       { id: 'item-1', label: 'Manter sessão ativa' },
@@ -215,12 +250,65 @@ export const SelectAll: Story = {
 
     const childCheckboxes: HTMLElement[] = [];
 
-    const itemRows = items.map(({ id, label: labelText }) => {
+    function computeParentState(): 'checked' | 'unchecked' | 'indeterminate' {
+      const checkedCount = childCheckboxes.filter((cb) => cb.getAttribute('aria-checked') === 'true').length;
+      if (checkedCount === 0) return 'unchecked';
+      if (checkedCount === childCheckboxes.length) return 'checked';
+      return 'indeterminate';
+    }
+
+    // "Select all" row
+    const allRow = document.createElement('div');
+    allRow.className = 'nds-cluster nds-border-b';
+    allRow.dataset.spacing = 'sm';
+    allRow.style.paddingBottom = 'var(--spacing-2, 0.5rem)';
+
+    let cbAll: HTMLElement;
+
+    function makeParentCheckbox(): HTMLElement {
+      const state = computeParentState();
+      const el = createCheckbox({
+        id: 'cb-select-all',
+        checked: state === 'checked',
+        indeterminate: state === 'indeterminate',
+        // Clicar num misto o resolve para marcado (semântica do componente):
+        // combinado com o toggle normal, cobre tanto "selecionar todos" a
+        // partir do misto quanto a partir do desmarcado/marcado.
+        onCheckedChange: (nextChecked) => {
+          childCheckboxes.forEach((cb) => {
+            const current = cb.getAttribute('aria-checked') === 'true';
+            if (current !== nextChecked) cb.click();
+          });
+        },
+      });
+      el.setAttribute('aria-labelledby', 'cb-select-all-label');
+      return el;
+    }
+
+    function syncParent(): void {
+      const fresh = makeParentCheckbox();
+      cbAll.replaceWith(fresh);
+      cbAll = fresh;
+    }
+
+    cbAll = makeParentCheckbox();
+    const labelAll = document.createElement('label');
+    labelAll.id = 'cb-select-all-label';
+    labelAll.htmlFor = 'cb-select-all';
+    labelAll.addEventListener('click', (e) => { e.preventDefault(); cbAll.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+    labelAll.textContent = 'Selecionar todos os itens';
+    labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
+    allRow.append(cbAll, labelAll);
+
+    const sublist = document.createElement('div');
+    sublist.className = 'nds-stack nds-checkbox-sublist';
+    sublist.dataset.spacing = 'sm';
+
+    items.forEach(({ id, label: labelText }) => {
       const row = document.createElement('div');
       row.className = 'nds-cluster';
       row.dataset.spacing = 'sm';
-      row.style.paddingLeft = 'var(--spacing-2, 0.5rem)';
-      const cb = createCheckbox({ id });
+      const cb = createCheckbox({ id, onCheckedChange: () => syncParent() });
       childCheckboxes.push(cb);
       const label = document.createElement('label');
       label.id = `${id}-label`;
@@ -230,25 +318,16 @@ export const SelectAll: Story = {
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
       row.append(cb, label);
-      return row;
+      sublist.appendChild(row);
     });
 
-    // Wire "select all" to toggle children
-    cbAll.addEventListener('click', () => {
-      const nextState = cbAll.getAttribute('aria-checked') === 'true';
-      childCheckboxes.forEach((cb) => {
-        const currentState = cb.getAttribute('aria-checked') === 'true';
-        if (currentState !== nextState) cb.click();
-      });
-    });
-
-    wrapper.append(allRow, ...itemRows);
+    wrapper.append(allRow, sublist);
     return wrapper;
   },
   parameters: {
     docs: {
       description: {
-        story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos. O estado indeterminado não está disponível no Vanilla; use o marcado/desmarcado para o pai.',
+        story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos, recuados com `.nds-checkbox-sublist`. Com seleção parcial dos filhos o pai fica indeterminado; com todos marcados, o pai marca; com nenhum, o pai desmarca.',
       },
     },
   },

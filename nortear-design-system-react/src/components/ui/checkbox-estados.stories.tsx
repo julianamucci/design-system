@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect } from "storybook/test";
+import { fn, userEvent, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 
 const meta = {
@@ -10,6 +10,12 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
   },
+  argTypes: {
+    onCheckedChange: { control: false },
+  },
+  args: {
+    onCheckedChange: fn(),
+  },
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;
@@ -19,12 +25,13 @@ export const Unchecked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="unchecked" />
-      <label htmlFor="unchecked" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+      <label htmlFor="unchecked" className="nds-label">
         Receber novidades por email
       </label>
     </div>
   ),
   parameters: {
+    covers: ["visual.item1", "accessibility.item2"],
     docs: {
       description: {
         story:
@@ -40,6 +47,10 @@ export const Unchecked: Story = {
       await expect(checkbox).not.toBeChecked();
     });
 
+    await step("aria-checked reflete o estado desmarcado", async () => {
+      await expect(checkbox).toHaveAttribute("aria-checked", "false");
+    });
+
     await step("Não possui atributo data-checked", async () => {
       await expect(checkbox).not.toHaveAttribute("data-checked");
     });
@@ -50,12 +61,13 @@ export const Checked: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="checked" defaultChecked />
-      <label htmlFor="checked" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+      <label htmlFor="checked" className="nds-label">
         Manter sessão ativa
       </label>
     </div>
   ),
   parameters: {
+    covers: ["visual.item2", "functional.item6"],
     docs: {
       description: {
         story:
@@ -67,8 +79,9 @@ export const Checked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
-    await step("Checkbox está marcado", async () => {
+    await step("Checkbox renderiza marcado via defaultChecked, sem controle externo", async () => {
       await expect(checkbox).toBeChecked();
+      await expect(checkbox).toHaveAttribute("aria-checked", "true");
     });
 
     await step("Possui atributo data-checked", async () => {
@@ -77,23 +90,21 @@ export const Checked: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const Indeterminate: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
-      <Checkbox id="disabled" disabled />
-      <label
-        htmlFor="disabled"
-        className="nds-text-body nds-font-medium nds-peer-label" style={{ lineHeight: 1 }}
-      >
-        Receber notificações push
+      <Checkbox id="indeterminate" indeterminate />
+      <label htmlFor="indeterminate" className="nds-label">
+        Selecionar todos os itens
       </label>
     </div>
   ),
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
         story:
-          "Estado desabilitado. opacity-50, cursor-not-allowed. Não responde a interações.",
+          "Estado misto (seleção parcial). Fundo --primary, traço (MinusIcon) visível no indicador, aria-checked=\"mixed\". Não é atributo HTML nativo — é propriedade dedicada do base-ui.",
       },
     },
   },
@@ -101,31 +112,62 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
+    await step("aria-checked é mixed", async () => {
+      await expect(checkbox).toHaveAttribute("aria-checked", "mixed");
+    });
+
+    await step("Carrega o atributo de presença emitido pela lib para o estado misto", async () => {
+      await expect(checkbox).toHaveAttribute("data-indeterminate");
+    });
+  },
+};
+
+export const Disabled: Story = {
+  render: (args) => (
+    <div className="nds-cluster" data-spacing="sm" data-disabled="true">
+      <Checkbox id="disabled" disabled onCheckedChange={args.onCheckedChange} />
+      <label htmlFor="disabled" className="nds-label">
+        Receber notificações push
+      </label>
+    </div>
+  ),
+  parameters: {
+    covers: ["functional.item4"],
+    docs: {
+      description: {
+        story:
+          "Estado desabilitado. opacity-50, cursor-not-allowed. Não responde a interações.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+
     await step("Checkbox está desabilitado", async () => {
       await expect(checkbox).toHaveAttribute("aria-disabled", "true");
     });
 
-    await step("Clique não altera estado quando disabled", async () => {
-      const wasChecked = checkbox.getAttribute("data-checked");
+    await step("Clique não altera o estado nem dispara o callback quando disabled", async () => {
+      const wasChecked = checkbox.getAttribute("aria-checked");
       await userEvent.click(checkbox, { pointerEventsCheck: 0 });
-      await expect(checkbox.getAttribute("data-checked")).toBe(wasChecked);
+      await expect(checkbox).toHaveAttribute("aria-checked", wasChecked ?? "false");
+      await expect(args.onCheckedChange).not.toHaveBeenCalled();
     });
   },
 };
 
 export const DisabledChecked: Story = {
   render: () => (
-    <div className="nds-cluster" data-spacing="sm">
+    <div className="nds-cluster" data-spacing="sm" data-disabled="true">
       <Checkbox id="disabled-checked" disabled defaultChecked />
-      <label
-        htmlFor="disabled-checked"
-        className="nds-text-body nds-font-medium nds-peer-label" style={{ lineHeight: 1 }}
-      >
+      <label htmlFor="disabled-checked" className="nds-label">
         Selecionar todos os itens
       </label>
     </div>
   ),
   parameters: {
+    covers: ["visual.item4"],
     docs: {
       description: {
         story:
@@ -152,7 +194,7 @@ export const Error: Story = {
     <div className="nds-stack" data-spacing="xs">
       <div className="nds-cluster" data-spacing="sm">
         <Checkbox id="error" aria-invalid="true" />
-        <label htmlFor="error" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+        <label htmlFor="error" className="nds-label">
           Aceito os termos e condições
         </label>
       </div>
@@ -162,6 +204,7 @@ export const Error: Story = {
     </div>
   ),
   parameters: {
+    covers: ["visual.item5"],
     docs: {
       description: {
         story:
@@ -190,12 +233,13 @@ export const FocusVisible: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="focus" />
-      <label htmlFor="focus" className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+      <label htmlFor="focus" className="nds-label">
         Foco visível via teclado
       </label>
     </div>
   ),
   parameters: {
+    covers: ["accessibility.item4"],
     docs: {
       description: {
         story:
@@ -207,9 +251,13 @@ export const FocusVisible: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
-    await step("Checkbox recebe foco via teclado", async () => {
-      checkbox.focus();
+    await step("Checkbox recebe foco visível ao navegar por teclado", async () => {
+      await userEvent.tab();
       await expect(checkbox).toHaveFocus();
+
+      const style = getComputedStyle(checkbox);
+      const temAnelVisivel = style.outlineStyle !== "none" || style.boxShadow !== "none";
+      await expect(temAnelVisivel).toBe(true);
     });
   },
 };

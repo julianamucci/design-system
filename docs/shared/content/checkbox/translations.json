@@ -6,8 +6,8 @@
     "description": "Caixa de seleção para escolhas independentes em formulários. Suporta estados marcado, desmarcado, indeterminado e desabilitado.",
     "seo": {
       "title": "Checkbox — Formulário",
-      "description": "Documentação do Checkbox: estados checked, indeterminate e disabled, integração com Form, acessibilidade WCAG e suporte a React, Vue, Svelte e Vanilla.",
-      "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate (Svelte), disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
+      "description": "Documentação do Checkbox: estados marcado, indeterminado e desabilitado, integração com formulário, acessibilidade WCAG 2.2 AA e navegação por teclado.",
+      "aiSummary": "Componente Checkbox com estados checked, unchecked, indeterminate, disabled e aria-invalid. Integra com FormField via callback de mudança. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, FormField"
     },
     "demonstration": {
@@ -23,9 +23,9 @@
     "anatomy": {
       "title": "Anatomia",
       "item1": "<strong>Root</strong> — elemento interativo com <code>role=\"checkbox\"</code> e <code>data-slot=\"checkbox\"</code>. Gerencia estado e teclado.",
-      "item2": "<strong>Indicator</strong> — ícone interno com <code>data-slot=\"checkbox-indicator\"</code>. Exibe <code>CheckIcon</code> quando marcado ou <code>MinusIcon</code> quando indeterminado (Svelte).",
+      "item2": "<strong>Indicator</strong> — ícone interno com <code>data-slot=\"checkbox-indicator\"</code>. Desenha a marca de seleção quando marcado e um traço quando indeterminado.",
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> associado via <code>htmlFor</code>/<code>for</code>. Obrigatório para acessibilidade.",
-      "item4": "<strong>Hidden input</strong> — input nativo oculto para participação em formulários HTML (Vanilla). Carrega <code>name</code> e <code>value</code>.",
+      "item4": "<strong>Input oculto</strong> — quando a implementação delega a uma biblioteca headless, ela mantém um <code>&lt;input&gt;</code> escondido que carrega <code>name</code> e <code>value</code> no submit. Sem biblioteca, o campo é sincronizado pelo callback de mudança.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"termos\" />        {/* Root + Indicator */}\n  <Label htmlFor=\"termos\">        {/* Label externo */}\n    Aceito os termos\n  </Label>\n</div>",
@@ -38,7 +38,7 @@
         "title": "Guidelines Obrigatórias",
         "item1": "Checkbox sempre acompanhado de <code>&lt;label&gt;</code> visível associado via <code>htmlFor</code>/<code>id</code>.",
         "item2": "Para grupos de checkboxes relacionados, envolva em <code>&lt;fieldset&gt;</code> com <code>&lt;legend&gt;</code>.",
-        "item3": "Use <code>checked=\"indeterminate\"</code> (ou prop <code>indeterminate</code> no Svelte) para seleção parcial de grupo.",
+        "item3": "Use o estado indeterminado para representar seleção parcial de um grupo — a forma de ativá-lo está na tabela de propriedades desta página.",
         "item4": "Label descreve o estado ativo — \"Receber notificações por email\", não apenas \"Email\"."
       },
       "scenarios": {
@@ -66,7 +66,7 @@
         "item4": {
           "s": "Seleção parcial de grupo",
           "u": "Checkbox indeterminate",
-          "a": "Somente Svelte nativo"
+          "a": "Anuncia o estado misto"
         },
         "item5": {
           "s": "Seleção de 3+ opções em lista",
@@ -109,7 +109,7 @@
     },
     "variants": {
       "title": "Variantes",
-      "note": "Checkbox não possui variantes <code>cva</code>. As composições visuais abaixo representam os estados e padrões de uso mais comuns.",
+      "note": "Checkbox não possui variantes de estilo. As composições visuais abaixo representam os estados e padrões de uso mais comuns.",
       "items": {
         "default": "Estado desmarcado padrão. Borda <code>--input</code>, fundo transparente. Pronto para interação.",
         "withLabel": "Checkbox + Label lado a lado. Par obrigatório — sempre usar <code>htmlFor</code>/<code>id</code> para associação.",
@@ -124,12 +124,12 @@
         },
         "selectAll": {
           "name": "Selecionar todos",
-          "description": "Checkbox \"pai\" que controla múltiplos filhos. Quando o pai é alternado, todos os filhos seguem o novo estado.",
-          "use": "Listas com seleção em massa (e-mails, itens de carrinho, registros). Considere indeterminate quando alguns filhos estão marcados (disponível no Svelte)."
+          "description": "Checkbox \"pai\" que controla múltiplos checkboxes filhos, recuados sob ele com <code>.nds-checkbox-sublist</code>. Quando o pai é alternado, todos os filhos seguem o novo estado; com seleção parcial, o pai fica indeterminado.",
+          "use": "Listas com seleção em massa (e-mails, itens de carrinho, registros). O rótulo do pai descreve o conjunto, não um item."
         },
         "inList": {
           "name": "Em lista de itens",
-          "description": "Checkboxes integrados em linhas com borda e padding, formando lista de preferências/configurações. Cada linha é um row independente.",
+          "description": "Checkbox + <code>&lt;label&gt;</code> integrados em linhas com borda e padding, formando lista de preferências. Cada linha é independente das demais.",
           "use": "Painel de preferências, configurações de conta, opt-ins. Mantenha consistência de espaçamento e densidade entre as linhas."
         }
       }
@@ -153,13 +153,13 @@
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "<code>checked=\"indeterminate\"</code> ou prop <code>indeterminate</code> (Svelte)",
-        "behavior": "Fundo <code>--primary</code>, <code>MinusIcon</code> visível, <code>aria-checked=\"mixed\"</code>. Apenas Svelte."
+        "trigger": "Estado misto ativado pela implementação",
+        "behavior": "Fundo <code>--primary</code>, traço visível no indicador, <code>aria-checked=\"mixed\"</code>"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>opacity-50</code>, <code>cursor-not-allowed</code>, não responde a interações"
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "Opacidade reduzida, cursor bloqueado, não responde a interações"
       },
       "error": {
         "label": "Error",
@@ -181,17 +181,17 @@
         "description": "Descrição"
       },
       "items": {
-        "checked": "<code>checked</code> — estado controlado. Aceita <code>boolean</code> ou <code>\"indeterminate\"</code>.",
-        "defaultChecked": "<code>defaultChecked</code> — estado inicial não controlado. Aceita <code>boolean</code>.",
+        "checked": "<code>checked</code> — estado marcado. Onde o estado misto é um terceiro valor do próprio campo, aceita também o valor indeterminado.",
+        "defaultChecked": "Estado inicial não controlado, aplicado apenas na montagem. O nome exato varia por stack (ver tabela abaixo).",
         "onCheckedChange": "Callback de mudança disparado ao alternar o estado. Recebe <code>boolean | \"indeterminate\"</code>. O nome da prop varia por stack (ver tabela de divergências).",
-        "disabled": "<code>disabled</code> — desabilita o componente. Aplica <code>opacity-50</code> e bloqueia interações.",
+        "disabled": "<code>disabled</code> — desabilita o componente. Reduz a opacidade, bloqueia o cursor e impede a interação.",
         "required": "<code>required</code> — marca o campo como obrigatório. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nome do campo para participação em formulários HTML nativos.",
         "value": "<code>value</code> — valor enviado no submit do formulário quando marcado. Padrão <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — classes .nds-* adicionais mescladas via <code>cn()</code>.",
-        "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla o estado indeterminado independentemente de <code>checked</code>.",
-        "vanillaId": "<code>id</code> (Vanilla) — ID do elemento. Usado para associação com label externo.",
-        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — label acessível quando não há <code>&lt;label&gt;</code> externo visível."
+        "indeterminate": "Estado misto, para seleção parcial de grupo. Exposto como propriedade dedicada, ou como um terceiro valor do estado de marcação.",
+        "vanillaId": "<code>id</code> — identificador do elemento. Usado para associação com o label externo.",
+        "vanillaAriaLabel": "<code>aria-label</code> — label acessível quando não há <code>&lt;label&gt;</code> externo visível."
       }
     },
     "tokens": {
@@ -215,7 +215,7 @@
       "item1": "<strong>role=\"checkbox\"</strong> — a biblioteca headless aplica sozinha; sem lib, o papel é declarado no próprio elemento.",
       "item2": "<strong>aria-checked</strong> — atualizado automaticamente: <code>\"false\"</code>, <code>\"true\"</code> ou <code>\"mixed\"</code> (indeterminado).",
       "item3": "<strong>Label visível obrigatório</strong> — associe via <code>htmlFor</code>/<code>id</code>. Nunca omitir o texto de label para cumprir WCAG 1.3.1.",
-      "item4": "<strong>Foco visível</strong> — ring via <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Atende WCAG 2.4.7.",
+      "item4": "<strong>Foco visível</strong> — anel de foco desenhado em <code>:focus-visible</code>, na cor do token <code>--ring</code>. Atende WCAG 2.4.7.",
       "item5": "<strong>Grupos de checkboxes</strong> — agrupar em <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para WCAG 1.3.1 (informação em estrutura).",
       "keyboard": {
         "tab": "Move o foco para o checkbox na ordem natural do DOM.",
@@ -229,7 +229,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> ou atributo <code>disabled</code> — informa que a interação está bloqueada.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado via prop <code>required</code>. Informar campos obrigatórios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado pelo <code>FormControl</code> quando há erro de validação.",
-        "ariaLabel": "<code>aria-label</code> — obrigatório quando não há <code>&lt;label&gt;</code> externo visível (ex: Vanilla sem label)."
+        "ariaLabel": "<code>aria-label</code> — obrigatório quando não há <code>&lt;label&gt;</code> externo visível associado por <code>id</code>."
       },
       "screenReader": {
         "onFocus": "Ao focar: leitor anuncia \"[texto do label], caixa de seleção, [estado]\" (ex: \"Aceitar termos, caixa de seleção, desmarcada\").",
@@ -243,15 +243,15 @@
       "title": "Componentes Relacionados",
       "switch": "Para toggle on/off com efeito imediato — use <code>Switch</code> em vez de Checkbox.",
       "radioGroup": "Para seleção exclusiva entre opções — use <code>RadioGroup</code>.",
-      "form": "Para integração com validação e mensagens de erro via React Hook Form + Zod.",
+      "form": "Para integração com validação de formulário e exibição de mensagens de erro.",
       "select": "Para seleção de múltiplos itens em lista compacta com muitas opções."
     },
     "notes": {
       "title": "Notas de Implementação",
       "tip1": "Dentro de <code>FormField</code>, conecte o estado controlado e o callback de mudança ao <code>field</code>. O <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente.",
       "tip2": "O estado <code>indeterminate</code> é exposto de duas formas conforme a biblioteca: por propriedade dedicada, ou como um terceiro valor do estado de marcação. Consulte a tabela de propriedades desta página.",
-      "tip3": "No Vanilla, <code>createCheckbox()</code> retorna um elemento DOM com <code>role=\"checkbox\"</code> e um input nativo oculto. Use <code>aria-label</code> quando não houver label visível associado via <code>id</code>.",
-      "tip4": "Label do peer: a classe <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> no <code>&lt;Label&gt;</code> garante que o cursor e opacidade do label acompanhem o estado do checkbox."
+      "tip3": "Sem biblioteca headless, o papel <code>role=\"checkbox\"</code>, o <code>aria-checked</code> e a ativação por <kbd>Space</kbd> ficam no próprio elemento. Use <code>aria-label</code> quando não houver label visível associado por <code>id</code>.",
+      "tip4": "Rótulo de controle desabilitado: marque o contêiner do par com <code>data-disabled=\"true\"</code> e use a classe <code>.nds-label</code> no rótulo. O CSS compartilhado esmaece o texto e bloqueia o cursor junto com o controle — não existe utilitário de estado de irmão neste sistema."
     },
     "analytics": {
       "title": "Analytics",
@@ -352,7 +352,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Estado indeterminado — Svelte apenas",
+          "story": "Estado indeterminado (misto)",
           "priority": "medium"
         },
         "item4": {
@@ -393,8 +393,8 @@
     "description": "Selection control for independent choices in forms. Supports checked, unchecked, indeterminate, and disabled states.",
     "seo": {
       "title": "Checkbox — Form",
-      "description": "Checkbox documentation: checked, indeterminate and disabled states, Form integration, WCAG accessibility, React, Vue, Svelte and Vanilla support.",
-      "aiSummary": "Checkbox component with checked, unchecked, indeterminate (Svelte), disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
+      "description": "Checkbox documentation: checked, indeterminate and disabled states, form integration, WCAG 2.2 AA accessibility and keyboard navigation.",
+      "aiSummary": "Checkbox component with checked, unchecked, indeterminate, disabled and aria-invalid states. Integrates with FormField via change callback. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, FormField"
     },
     "demonstration": {
@@ -410,9 +410,9 @@
     "anatomy": {
       "title": "Anatomy",
       "item1": "<strong>Root</strong> — interactive element with <code>role=\"checkbox\"</code> and <code>data-slot=\"checkbox\"</code>. Manages state and keyboard behavior.",
-      "item2": "<strong>Indicator</strong> — inner icon with <code>data-slot=\"checkbox-indicator\"</code>. Shows <code>CheckIcon</code> when checked or <code>MinusIcon</code> when indeterminate (Svelte).",
+      "item2": "<strong>Indicator</strong> — inner icon with <code>data-slot=\"checkbox-indicator\"</code>. Draws a tick when checked and a dash when indeterminate.",
       "item3": "<strong>Label (external)</strong> — <code>&lt;label&gt;</code> element associated via <code>htmlFor</code>/<code>for</code>. Required for accessibility.",
-      "item4": "<strong>Hidden input</strong> — native hidden input for HTML form participation (Vanilla). Carries <code>name</code> and <code>value</code>.",
+      "item4": "<strong>Hidden input</strong> — when the implementation delegates to a headless library, it keeps a hidden <code>&lt;input&gt;</code> carrying <code>name</code> and <code>value</code> on submit. Without a library, the field is synced through the change callback.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"terms\" />          {/* Root + Indicator */}\n  <Label htmlFor=\"terms\">          {/* External label */}\n    I accept the terms\n  </Label>\n</div>",
@@ -425,7 +425,7 @@
         "title": "Required Guidelines",
         "item1": "Checkbox must always be paired with a visible <code>&lt;label&gt;</code> associated via <code>htmlFor</code>/<code>id</code>.",
         "item2": "For related checkbox groups, wrap in <code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code>.",
-        "item3": "Use <code>checked=\"indeterminate\"</code> (or the <code>indeterminate</code> prop in Svelte) for partial group selection.",
+        "item3": "Use the indeterminate state to represent partial selection of a group — how to turn it on is in the properties table on this page.",
         "item4": "Label describes the active state — \"Receive email notifications\", not just \"Email\"."
       },
       "scenarios": {
@@ -453,7 +453,7 @@
         "item4": {
           "s": "Partial group selection",
           "u": "Checkbox indeterminate",
-          "a": "Native Svelte only"
+          "a": "Announces the mixed state"
         },
         "item5": {
           "s": "Selection from 3+ options in list",
@@ -496,7 +496,7 @@
     },
     "variants": {
       "title": "Variants",
-      "note": "Checkbox has no <code>cva</code> variants. The visual compositions below represent the most common states and usage patterns.",
+      "note": "Checkbox has no style variants. The visual compositions below represent the most common states and usage patterns.",
       "items": {
         "default": "Default unchecked state. <code>--input</code> border, transparent background. Ready for interaction.",
         "withLabel": "Checkbox + Label side by side. Required pair — always use <code>htmlFor</code>/<code>id</code> for association.",
@@ -511,12 +511,12 @@
         },
         "selectAll": {
           "name": "Select all",
-          "description": "\"Parent\" checkbox that controls multiple children. When the parent is toggled, all children follow the new state.",
-          "use": "Lists with bulk selection (emails, cart items, records). Consider indeterminate when only some children are checked (available in Svelte)."
+          "description": "\"Parent\" checkbox controlling multiple child checkboxes, indented below it with <code>.nds-checkbox-sublist</code>. When the parent is toggled, all children follow the new state; with partial selection, the parent goes indeterminate.",
+          "use": "Lists with bulk selection (emails, cart items, records). The parent label describes the set, not one item."
         },
         "inList": {
           "name": "In an item list",
-          "description": "Checkboxes integrated in bordered, padded rows, forming a preference/settings list. Each row is an independent row.",
+          "description": "Checkbox + <code>&lt;label&gt;</code> integrated in bordered, padded rows, forming a preferences list. Each row is independent from the others.",
           "use": "Preferences panel, account settings, opt-ins. Keep spacing and density consistent across rows."
         }
       }
@@ -540,13 +540,13 @@
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "<code>checked=\"indeterminate\"</code> or <code>indeterminate</code> prop (Svelte)",
-        "behavior": "<code>--primary</code> background, <code>MinusIcon</code> visible, <code>aria-checked=\"mixed\"</code>. Svelte only."
+        "trigger": "Mixed state turned on by the implementation",
+        "behavior": "<code>--primary</code> background, dash visible in the indicator, <code>aria-checked=\"mixed\"</code>"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>opacity-50</code>, <code>cursor-not-allowed</code>, does not respond to interactions"
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "Reduced opacity, blocked cursor, does not respond to interactions"
       },
       "error": {
         "label": "Error",
@@ -568,17 +568,17 @@
         "description": "Description"
       },
       "items": {
-        "checked": "<code>checked</code> — controlled state. Accepts <code>boolean</code> or <code>\"indeterminate\"</code>.",
-        "defaultChecked": "<code>defaultChecked</code> — uncontrolled initial state. Accepts <code>boolean</code>.",
+        "checked": "<code>checked</code> — checked state. Where the mixed state is a third value of the field itself, it also accepts the indeterminate value.",
+        "defaultChecked": "Uncontrolled initial state, applied on mount only. The exact name varies per stack (see the table below).",
         "onCheckedChange": "Change callback fired on toggle. Receives <code>boolean | \"indeterminate\"</code>. Prop name varies per stack (see divergence table).",
-        "disabled": "<code>disabled</code> — disables the component. Applies <code>opacity-50</code> and blocks interactions.",
+        "disabled": "<code>disabled</code> — disables the component. Reduces opacity, blocks the cursor and prevents interaction.",
         "required": "<code>required</code> — marks the field as required. Propagates <code>aria-required</code>.",
         "name": "<code>name</code> — field name for native HTML form participation.",
         "value": "<code>value</code> — value submitted on form submit when checked. Default <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — additional .nds-* classes merged via <code>cn()</code>.",
-        "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controls the indeterminate state independently of <code>checked</code>.",
-        "vanillaId": "<code>id</code> (Vanilla) — element ID. Used for association with an external label.",
-        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — accessible label when no visible external <code>&lt;label&gt;</code> is present."
+        "indeterminate": "Mixed state, for partial group selection. Exposed as a dedicated property, or as a third value of the checked state.",
+        "vanillaId": "<code>id</code> — element identifier. Used for association with the external label.",
+        "vanillaAriaLabel": "<code>aria-label</code> — accessible label when no visible external <code>&lt;label&gt;</code> is present."
       }
     },
     "tokens": {
@@ -602,7 +602,7 @@
       "item1": "<strong>role=\"checkbox\"</strong> — the headless library applies it; without a library, the role is declared on the element itself.",
       "item2": "<strong>aria-checked</strong> — updated automatically: <code>\"false\"</code>, <code>\"true\"</code>, or <code>\"mixed\"</code> (indeterminate).",
       "item3": "<strong>Visible label required</strong> — associate via <code>htmlFor</code>/<code>id</code>. Never omit the label text to comply with WCAG 1.3.1.",
-      "item4": "<strong>Visible focus</strong> — ring via <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Meets WCAG 2.4.7.",
+      "item4": "<strong>Visible focus</strong> — focus ring drawn on <code>:focus-visible</code>, in the <code>--ring</code> token colour. Meets WCAG 2.4.7.",
       "item5": "<strong>Checkbox groups</strong> — wrap in <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for WCAG 1.3.1 (info in structure).",
       "keyboard": {
         "tab": "Moves focus to the checkbox in natural DOM order.",
@@ -616,7 +616,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> or <code>disabled</code> attribute — indicates interaction is blocked.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagated via the <code>required</code> prop. Marks mandatory fields.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — applied by <code>FormControl</code> when there is a validation error.",
-        "ariaLabel": "<code>aria-label</code> — required when no visible external <code>&lt;label&gt;</code> is present (e.g., Vanilla without a label)."
+        "ariaLabel": "<code>aria-label</code> — required when no visible external <code>&lt;label&gt;</code> is associated by <code>id</code>."
       },
       "screenReader": {
         "onFocus": "On focus: reader announces \"[label text], checkbox, [state]\" (e.g., \"Accept terms, checkbox, unchecked\").",
@@ -630,15 +630,15 @@
       "title": "Related Components",
       "switch": "For on/off toggles with immediate effect — use <code>Switch</code> instead of Checkbox.",
       "radioGroup": "For exclusive selection among options — use <code>RadioGroup</code>.",
-      "form": "For validation integration and error messages via React Hook Form + Zod.",
+      "form": "For form validation integration and error message display.",
       "select": "For selecting multiple items from a compact list with many options."
     },
     "notes": {
       "title": "Implementation Notes",
       "tip1": "Inside <code>FormField</code>, wire the controlled state and the change callback to <code>field</code>. <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically.",
       "tip2": "The <code>indeterminate</code> state is exposed in two ways depending on the library: as a dedicated property, or as a third value of the checked state. See the properties table on this page.",
-      "tip3": "In Vanilla, <code>createCheckbox()</code> returns a DOM element with <code>role=\"checkbox\"</code> and a hidden native input. Use <code>aria-label</code> when no visible label is associated via <code>id</code>.",
-      "tip4": "Peer label: the class <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> on <code>&lt;Label&gt;</code> ensures the label cursor and opacity follow the checkbox disabled state."
+      "tip3": "Without a headless library, the <code>role=\"checkbox\"</code>, the <code>aria-checked</code> and <kbd>Space</kbd> activation live on the element itself. Use <code>aria-label</code> when no visible label is associated by <code>id</code>.",
+      "tip4": "Label of a disabled control: mark the pair container with <code>data-disabled=\"true\"</code> and use the <code>.nds-label</code> class on the label. The shared CSS dims the text and blocks the cursor along with the control — there is no sibling-state utility in this system."
     },
     "analytics": {
       "title": "Analytics",
@@ -739,7 +739,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Indeterminate state — Svelte only",
+          "story": "Indeterminate (mixed) state",
           "priority": "medium"
         },
         "item4": {
@@ -780,8 +780,8 @@
     "description": "Control de selección para opciones independientes en formularios. Soporta estados marcado, desmarcado, indeterminado y deshabilitado.",
     "seo": {
       "title": "Checkbox — Formulario",
-      "description": "Documentación del Checkbox: estados checked, indeterminate y disabled, integración con Form, accesibilidad WCAG, soporte React, Vue, Svelte y Vanilla.",
-      "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate (Svelte), disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
+      "description": "Documentación del Checkbox: estados marcado, indeterminado y deshabilitado, integración con formulario, accesibilidad WCAG 2.2 AA y navegación por teclado.",
+      "aiSummary": "Componente Checkbox con estados checked, unchecked, indeterminate, disabled y aria-invalid. Integra con FormField vía callback de cambio. Tokens: --primary, --input, --ring, --destructive.",
       "aiEntities": "Checkbox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, FormField"
     },
     "demonstration": {
@@ -797,9 +797,9 @@
     "anatomy": {
       "title": "Anatomía",
       "item1": "<strong>Root</strong> — elemento interactivo con <code>role=\"checkbox\"</code> y <code>data-slot=\"checkbox\"</code>. Gestiona el estado y el teclado.",
-      "item2": "<strong>Indicator</strong> — ícono interno con <code>data-slot=\"checkbox-indicator\"</code>. Muestra <code>CheckIcon</code> cuando está marcado o <code>MinusIcon</code> cuando es indeterminado (Svelte).",
+      "item2": "<strong>Indicator</strong> — ícono interno con <code>data-slot=\"checkbox-indicator\"</code>. Dibuja la marca de selección cuando está marcado y un guion cuando es indeterminado.",
       "item3": "<strong>Label (externo)</strong> — elemento <code>&lt;label&gt;</code> asociado vía <code>htmlFor</code>/<code>for</code>. Obligatorio para accesibilidad.",
-      "item4": "<strong>Input oculto</strong> — input nativo oculto para participación en formularios HTML (Vanilla). Transporta <code>name</code> y <code>value</code>.",
+      "item4": "<strong>Input oculto</strong> — cuando la implementación delega en una biblioteca headless, esta mantiene un <code>&lt;input&gt;</code> oculto que transporta <code>name</code> y <code>value</code> en el submit. Sin biblioteca, el campo se sincroniza por el callback de cambio.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"terminos\" />       {/* Root + Indicator */}\n  <Label htmlFor=\"terminos\">       {/* Label externo */}\n    Acepto los términos\n  </Label>\n</div>",
@@ -812,7 +812,7 @@
         "title": "Guías Obligatorias",
         "item1": "Checkbox siempre debe ir acompañado de un <code>&lt;label&gt;</code> visible asociado vía <code>htmlFor</code>/<code>id</code>.",
         "item2": "Para grupos de checkboxes relacionados, envuelve en <code>&lt;fieldset&gt;</code> con <code>&lt;legend&gt;</code>.",
-        "item3": "Usa <code>checked=\"indeterminate\"</code> (o la prop <code>indeterminate</code> en Svelte) para selección parcial de grupo.",
+        "item3": "Usa el estado indeterminado para representar la selección parcial de un grupo — cómo activarlo está en la tabla de propiedades de esta página.",
         "item4": "El label describe el estado activo — \"Recibir notificaciones por correo\", no solo \"Correo\"."
       },
       "scenarios": {
@@ -840,7 +840,7 @@
         "item4": {
           "s": "Selección parcial de grupo",
           "u": "Checkbox indeterminate",
-          "a": "Solo Svelte nativo"
+          "a": "Anuncia el estado mixto"
         },
         "item5": {
           "s": "Selección de 3+ opciones en lista",
@@ -883,7 +883,7 @@
     },
     "variants": {
       "title": "Variantes",
-      "note": "Checkbox no tiene variantes <code>cva</code>. Las composiciones visuales a continuación representan los estados y patrones de uso más comunes.",
+      "note": "Checkbox no tiene variantes de estilo. Las composiciones visuales a continuación representan los estados y patrones de uso más comunes.",
       "items": {
         "default": "Estado desmarcado por defecto. Borde <code>--input</code>, fondo transparente. Listo para interacción.",
         "withLabel": "Checkbox + Label uno al lado del otro. Par obligatorio — siempre usar <code>htmlFor</code>/<code>id</code> para la asociación.",
@@ -898,12 +898,12 @@
         },
         "selectAll": {
           "name": "Seleccionar todos",
-          "description": "Checkbox \"padre\" que controla múltiples hijos. Al alternar el padre, todos los hijos siguen el nuevo estado.",
-          "use": "Listas con selección masiva (correos, ítems de carrito, registros). Considera indeterminate cuando solo algunos hijos están marcados (disponible en Svelte)."
+          "description": "Checkbox \"padre\" que controla múltiples checkboxes hijos, sangrados debajo con <code>.nds-checkbox-sublist</code>. Al alternar el padre, todos los hijos siguen el nuevo estado; con selección parcial, el padre queda indeterminado.",
+          "use": "Listas con selección masiva (correos, ítems de carrito, registros). El label del padre describe el conjunto, no un ítem."
         },
         "inList": {
           "name": "En lista de ítems",
-          "description": "Checkboxes integrados en filas con borde y padding, formando una lista de preferencias/configuraciones. Cada fila es independiente.",
+          "description": "Checkbox + <code>&lt;label&gt;</code> integrados en filas con borde y padding, formando una lista de preferencias. Cada fila es independiente de las demás.",
           "use": "Panel de preferencias, configuraciones de cuenta, opt-ins. Mantén consistencia de espaciado y densidad entre filas."
         }
       }
@@ -927,13 +927,13 @@
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "<code>checked=\"indeterminate\"</code> o prop <code>indeterminate</code> (Svelte)",
-        "behavior": "Fondo <code>--primary</code>, <code>MinusIcon</code> visible, <code>aria-checked=\"mixed\"</code>. Solo Svelte."
+        "trigger": "Estado mixto activado por la implementación",
+        "behavior": "Fondo <code>--primary</code>, guion visible en el indicador, <code>aria-checked=\"mixed\"</code>"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Prop <code>disabled={true}</code>",
-        "behavior": "<code>opacity-50</code>, <code>cursor-not-allowed</code>, no responde a interacciones"
+        "trigger": "Prop <code>disabled</code>",
+        "behavior": "Opacidad reducida, cursor bloqueado, no responde a interacciones"
       },
       "error": {
         "label": "Error",
@@ -955,17 +955,17 @@
         "description": "Descripción"
       },
       "items": {
-        "checked": "<code>checked</code> — estado controlado. Acepta <code>boolean</code> o <code>\"indeterminate\"</code>.",
-        "defaultChecked": "<code>defaultChecked</code> — estado inicial no controlado. Acepta <code>boolean</code>.",
+        "checked": "<code>checked</code> — estado marcado. Donde el estado mixto es un tercer valor del propio campo, acepta también el valor indeterminado.",
+        "defaultChecked": "Estado inicial no controlado, aplicado solo en el montaje. El nombre exacto varía por stack (ver la tabla abajo).",
         "onCheckedChange": "Callback de cambio que se dispara al alternar el estado. Recibe <code>boolean | \"indeterminate\"</code>. El nombre de la prop varía por stack (ver tabla de divergencias).",
-        "disabled": "<code>disabled</code> — deshabilita el componente. Aplica <code>opacity-50</code> y bloquea interacciones.",
+        "disabled": "<code>disabled</code> — deshabilita el componente. Reduce la opacidad, bloquea el cursor e impide la interacción.",
         "required": "<code>required</code> — marca el campo como obligatorio. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nombre del campo para participación en formularios HTML nativos.",
         "value": "<code>value</code> — valor enviado en el submit cuando está marcado. Por defecto <code>\"on\"</code>.",
         "className": "<code>className</code>/<code>class</code> — clases .nds-* adicionales combinadas vía <code>cn()</code>.",
-        "indeterminate": "<code>indeterminate</code> (Svelte) — bindable. Controla el estado indeterminado independientemente de <code>checked</code>.",
-        "vanillaId": "<code>id</code> (Vanilla) — ID del elemento. Usado para asociación con un label externo.",
-        "vanillaAriaLabel": "<code>aria-label</code> (Vanilla) — label accesible cuando no hay <code>&lt;label&gt;</code> externo visible."
+        "indeterminate": "Estado mixto, para selección parcial de grupo. Se expone como propiedad dedicada, o como un tercer valor del estado de marcado.",
+        "vanillaId": "<code>id</code> — identificador del elemento. Usado para la asociación con el label externo.",
+        "vanillaAriaLabel": "<code>aria-label</code> — label accesible cuando no hay <code>&lt;label&gt;</code> externo visible."
       }
     },
     "tokens": {
@@ -989,7 +989,7 @@
       "item1": "<strong>role=\"checkbox\"</strong> — la biblioteca headless lo aplica sola; sin biblioteca, el rol se declara en el propio elemento.",
       "item2": "<strong>aria-checked</strong> — actualizado automáticamente: <code>\"false\"</code>, <code>\"true\"</code> o <code>\"mixed\"</code> (indeterminado).",
       "item3": "<strong>Label visible obligatorio</strong> — asocia vía <code>htmlFor</code>/<code>id</code>. Nunca omitir el texto del label para cumplir WCAG 1.3.1.",
-      "item4": "<strong>Foco visible</strong> — ring vía <code>focus-visible:ring-2 focus-visible:ring-ring</code>. Cumple WCAG 2.4.7.",
+      "item4": "<strong>Foco visible</strong> — anillo de foco dibujado en <code>:focus-visible</code>, en el color del token <code>--ring</code>. Cumple WCAG 2.4.7.",
       "item5": "<strong>Grupos de checkboxes</strong> — agrupar en <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para WCAG 1.3.1 (información en estructura).",
       "keyboard": {
         "tab": "Mueve el foco al checkbox en el orden natural del DOM.",
@@ -1003,7 +1003,7 @@
         "ariaDisabled": "<code>aria-disabled=\"true\"</code> o atributo <code>disabled</code> — indica que la interacción está bloqueada.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado vía prop <code>required</code>. Informa campos obligatorios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado por <code>FormControl</code> cuando hay error de validación.",
-        "ariaLabel": "<code>aria-label</code> — obligatorio cuando no hay <code>&lt;label&gt;</code> externo visible (ej: Vanilla sin label)."
+        "ariaLabel": "<code>aria-label</code> — obligatorio cuando no hay <code>&lt;label&gt;</code> externo visible asociado por <code>id</code>."
       },
       "screenReader": {
         "onFocus": "Al enfocar: el lector anuncia \"[texto del label], casilla de verificación, [estado]\" (ej: \"Aceptar términos, casilla, desmarcada\").",
@@ -1017,15 +1017,15 @@
       "title": "Componentes Relacionados",
       "switch": "Para toggles on/off con efecto inmediato — usa <code>Switch</code> en lugar de Checkbox.",
       "radioGroup": "Para selección exclusiva entre opciones — usa <code>RadioGroup</code>.",
-      "form": "Para integración con validación y mensajes de error vía React Hook Form + Zod.",
+      "form": "Para integración con validación de formulario y visualización de mensajes de error.",
       "select": "Para seleccionar múltiples ítems en una lista compacta con muchas opciones."
     },
     "notes": {
       "title": "Notas de Implementación",
       "tip1": "Dentro de <code>FormField</code>, conecta el estado controlado y el callback de cambio al <code>field</code>. <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente.",
       "tip2": "El estado <code>indeterminate</code> se expone de dos formas según la biblioteca: como propiedad dedicada, o como un tercer valor del estado de marcado. Consulta la tabla de propiedades de esta página.",
-      "tip3": "En Vanilla, <code>createCheckbox()</code> devuelve un elemento DOM con <code>role=\"checkbox\"</code> y un input nativo oculto. Usa <code>aria-label</code> cuando no haya label visible asociado vía <code>id</code>.",
-      "tip4": "Peer label: la clase <code>peer-disabled:cursor-not-allowed peer-disabled:opacity-70</code> en <code>&lt;Label&gt;</code> asegura que el cursor y opacidad del label acompañen el estado disabled del checkbox."
+      "tip3": "Sin biblioteca headless, el <code>role=\"checkbox\"</code>, el <code>aria-checked</code> y la activación por <kbd>Space</kbd> viven en el propio elemento. Usa <code>aria-label</code> cuando no haya label visible asociado por <code>id</code>.",
+      "tip4": "Label de un control deshabilitado: marca el contenedor del par con <code>data-disabled=\"true\"</code> y usa la clase <code>.nds-label</code> en el label. El CSS compartido atenúa el texto y bloquea el cursor junto con el control — no existe utilidad de estado de hermano en este sistema."
     },
     "analytics": {
       "title": "Analytics",
@@ -1126,7 +1126,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Estado indeterminado — solo Svelte",
+          "story": "Estado indeterminado (mixto)",
           "priority": "medium"
         },
         "item4": {

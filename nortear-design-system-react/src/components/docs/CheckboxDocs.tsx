@@ -178,8 +178,6 @@ export function CheckboxDocs() {
 
   const codeImportBasic = `import { Checkbox } from "@/components/ui/checkbox";`;
 
-  const codeImportWithLabel = `import { Checkbox } from "@/components/ui/checkbox";`;
-
   const codeDefault = `<Checkbox id="termos" />`;
 
   const codeWithLabel = `<div className="nds-cluster" data-spacing="xs">
@@ -438,8 +436,6 @@ export function CheckboxDocs() {
             title={tContent("import.title")}
             description={tContent("import.react")}
             code={codeImportBasic}
-            secondaryDescription={tContent("import.react")}
-            secondaryCode={codeImportWithLabel}
           />
 
           {/* ── Variantes ─────────────────────────────────────────────── */}
@@ -688,6 +684,13 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                     description: stripHtml(tContent("props.items.defaultChecked")),
                   },
                   {
+                    name: "indeterminate",
+                    type: "boolean",
+                    defaultValue: "false",
+                    required: "Não",
+                    description: stripHtml(tContent("props.items.indeterminate")),
+                  },
+                  {
                     name: "onCheckedChange",
                     type: "(checked: boolean) => void",
                     defaultValue: "—",
@@ -744,12 +747,12 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
               description: tContent("tokens.table.part"),
             }}
             items={[
-              { token: "--primary",            value: "data-checked:bg-primary",               description: tContent("tokens.table.primary") },
-              { token: "--primary-foreground",  value: "data-checked:text-primary-foreground",  description: tContent("tokens.table.primaryForeground") },
-              { token: "--input",               value: "border-input",                          description: tContent("tokens.table.input") },
-              { token: "--ring",                value: "nds-focus-ring",             description: tContent("tokens.table.ring") },
-              { token: "--destructive",         value: "aria-invalid:border-destructive",        description: tContent("tokens.table.destructive") },
-              { token: "--border",              value: "border",                                description: tContent("tokens.table.border") },
+              { token: "--primary",            value: '.nds-checkbox[data-state="checked"]',   description: toPlainText(tContent("tokens.table.primary")) },
+              { token: "--primary-foreground",  value: ".nds-checkbox-indicator",               description: toPlainText(tContent("tokens.table.primaryForeground")) },
+              { token: "--input",               value: ".nds-checkbox",                         description: toPlainText(tContent("tokens.table.input")) },
+              { token: "--ring",                value: ".nds-checkbox:focus-visible",           description: toPlainText(tContent("tokens.table.ring")) },
+              { token: "--destructive",         value: '.nds-checkbox[aria-invalid="true"]',    description: toPlainText(tContent("tokens.table.destructive")) },
+              { token: "--border",              value: ".nds-checkbox",                         description: toPlainText(tContent("tokens.table.border")) },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={codeCustomizationTokens}
@@ -783,12 +786,12 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
             items={[
               {
                 name: "Switch",
-                description: stripHtml(tContent("related.switch")),
+                description: toPlainText(tContent("related.switch")),
                 path: "?path=/docs/ui-switch--docs",
               },
               {
                 name: "RadioGroup",
-                description: stripHtml(tContent("related.radioGroup")),
+                description: toPlainText(tContent("related.radioGroup")),
                 path: "?path=/docs/ui-radiogroup--docs",
               },
               {

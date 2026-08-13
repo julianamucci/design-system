@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect } from "storybook/test";
+import { fn, userEvent, waitFor, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
+import { Button } from "./button";
 
 const meta = {
   title: "UI/Checkbox/Compositions",
@@ -15,14 +16,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// O painel Interactions reexecuta a play no mesmo DOM. Cada helper estabelece
+// a própria precondição (o `!==` é intencional) antes de clicar, e só então
+// alterna — assim o clique desta rodada fica provado mesmo quando o replay
+// começa a partir do estado final da rodada anterior. `clickEl` é opcional
+// porque WithLabel/InsideCard clicam no <label>, não no checkbox.
+const desmarcar = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
+  if (assertEl.getAttribute("aria-checked") !== "false") await userEvent.click(clickEl);
+  await waitFor(() => expect(assertEl).toHaveAttribute("aria-checked", "false"));
+};
+const marcar = async (assertEl: HTMLElement, clickEl: HTMLElement = assertEl) => {
+  if (assertEl.getAttribute("aria-checked") !== "true") await userEvent.click(clickEl);
+  await waitFor(() => expect(assertEl).toHaveAttribute("aria-checked", "true"));
+};
+
 export const WithLabel: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="with-label" />
-      <label
-        htmlFor="with-label"
-        className="nds-text-body nds-font-medium nds-peer-label" style={{ lineHeight: 1 }}
-      >
+      <label htmlFor="with-label" className="nds-label">
         Aceito os termos e condições
       </label>
     </div>
@@ -37,25 +49,34 @@ export const WithLabel: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    const label = canvas.getByText("Aceito os termos e condições");
 
-    await step("Label está associada — clique no label aciona checkbox", async () => {
-      const label = canvas.getByText("Aceito os termos e condições");
-      const checkbox = canvas.getByRole("checkbox");
-      await userEvent.click(label);
-      await expect(checkbox).toBeChecked();
+    await step("Checkbox está presente", async () => {
+      await expect(checkbox).toBeInTheDocument();
+    });
+
+    await step("Nome acessível vem do label associado via htmlFor/id", async () => {
+      await expect(canvas.getByRole("checkbox", { name: "Aceito os termos e condições" })).toBe(checkbox);
+    });
+
+    await step("Estado inicial é desmarcado", async () => {
+      await expect(checkbox).toHaveAttribute("aria-checked", "false");
+    });
+
+    await step("Clique no label alterna o checkbox — desmarca e marca de novo", async () => {
+      await desmarcar(checkbox, label);
+      await marcar(checkbox, label);
     });
   },
 };
 
 export const WithDescription: Story = {
   render: () => (
-    <div className="nds-cluster" data-spacing="sm">
+    <div className="nds-cluster" data-spacing="sm" data-align="start">
       <Checkbox id="with-desc" className="nds-mt-0-5" />
       <div className="nds-stack" data-spacing="xs">
-        <label
-          htmlFor="with-desc"
-          className="nds-text-body nds-font-medium nds-cursor-pointer" style={{ lineHeight: 1 }}
-        >
+        <label htmlFor="with-desc" className="nds-label nds-cursor-pointer">
           Receber novidades por email
         </label>
         <p className="nds-text-body">
@@ -86,8 +107,8 @@ export const WithDescription: Story = {
 
 export const GroupWithFieldset: Story = {
   render: () => (
-    <fieldset className="border-none nds-p-0 m-0" data-spacing="sm">
-      <legend className="nds-text-body nds-font-semibold mb-3">Preferências de contato</legend>
+    <fieldset className="nds-stack nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm">
+      <legend className="nds-text-body nds-font-semibold nds-px-1">Preferências de contato</legend>
       {[
         { id: "contact-email", label: "Email" },
         { id: "contact-sms", label: "SMS" },
@@ -95,7 +116,7 @@ export const GroupWithFieldset: Story = {
       ].map(({ id, label }) => (
         <div key={id} className="nds-cluster" data-spacing="sm">
           <Checkbox id={id} />
-          <label htmlFor={id} className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+          <label htmlFor={id} className="nds-label">
             {label}
           </label>
         </div>
@@ -132,10 +153,7 @@ export const SelectAll: Story = {
       <div className="nds-stack" data-spacing="sm">
         <div className="nds-cluster nds-border-b" style={{ paddingBottom: "0.5rem" }} data-align="center" data-spacing="sm">
           <Checkbox id="select-all" />
-          <label
-            htmlFor="select-all"
-            className="nds-text-body nds-font-semibold nds-cursor-pointer" style={{ lineHeight: 1 }}
-          >
+          <label htmlFor="select-all" className="nds-label nds-font-semibold nds-cursor-pointer">
             Selecionar todos os itens
           </label>
         </div>
@@ -146,7 +164,7 @@ export const SelectAll: Story = {
         ].map(({ id, label }) => (
           <div key={id} className="nds-cluster" style={{ paddingLeft: "1rem" }} data-align="center" data-spacing="sm">
             <Checkbox id={id} />
-            <label htmlFor={id} className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
+            <label htmlFor={id} className="nds-label">
               {label}
             </label>
           </div>
@@ -158,7 +176,7 @@ export const SelectAll: Story = {
     docs: {
       description: {
         story:
-          "Padrão de seleção em massa: checkbox pai + checkboxes filhos. O pai usaria estado indeterminate (disponível nativamente no Svelte) quando alguns itens estão selecionados.",
+          "Padrão de seleção em massa: checkbox pai + checkboxes filhos. O pai usa o estado indeterminate (propriedade dedicada) quando alguns itens estão selecionados — ver a story Indeterminate em States.",
       },
     },
   },
@@ -169,6 +187,20 @@ export const SelectAll: Story = {
       const checkboxes = canvas.getAllByRole("checkbox");
       await expect(checkboxes).toHaveLength(4);
     });
+
+    await step("Todos iniciam desmarcados", async () => {
+      const checkboxes = canvas.getAllByRole("checkbox");
+      for (const cb of checkboxes) {
+        await expect(cb).toHaveAttribute("aria-checked", "false");
+      }
+    });
+
+    await step("Cada checkbox tem rótulo associado via htmlFor/id", async () => {
+      await expect(canvas.getByRole("checkbox", { name: "Selecionar todos os itens" })).toBeInTheDocument();
+      await expect(canvas.getByRole("checkbox", { name: "Relatório mensal" })).toBeInTheDocument();
+      await expect(canvas.getByRole("checkbox", { name: "Relatório trimestral" })).toBeInTheDocument();
+      await expect(canvas.getByRole("checkbox", { name: "Relatório anual" })).toBeInTheDocument();
+    });
   },
 };
 
@@ -178,10 +210,7 @@ export const InsideCard: Story = {
       <div className="nds-cluster" data-align="start" data-spacing="sm">
         <Checkbox id="card-checkbox" className="nds-mt-0-5" />
         <div className="nds-stack" data-spacing="xs">
-          <label
-            htmlFor="card-checkbox"
-            className="nds-text-body nds-font-medium nds-cursor-pointer" style={{ lineHeight: 1 }}
-          >
+          <label htmlFor="card-checkbox" className="nds-label nds-cursor-pointer">
             Plano Pro
           </label>
           <p className="nds-text-body">
@@ -201,16 +230,75 @@ export const InsideCard: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    const label = canvas.getByText("Plano Pro");
 
     await step("Checkbox e label estão visíveis dentro do card", async () => {
-      await expect(canvas.getByRole("checkbox")).toBeVisible();
-      await expect(canvas.getByText("Plano Pro")).toBeVisible();
+      await expect(checkbox).toBeVisible();
+      await expect(label).toBeVisible();
     });
 
-    await step("Clique no label seleciona o checkbox", async () => {
-      const label = canvas.getByText("Plano Pro");
-      await userEvent.click(label);
-      await expect(canvas.getByRole("checkbox")).toBeChecked();
+    await step("Clique no label alterna o checkbox — desmarca e marca de novo", async () => {
+      await desmarcar(checkbox, label);
+      await marcar(checkbox, label);
+    });
+  },
+};
+
+export const InForm: Story = {
+  parameters: {
+    covers: ["functional.item5"],
+    docs: {
+      description: {
+        story:
+          "Integração com <form>. O base-ui mantém um <input> oculto ao lado do Root, que carrega name/value no submit — leia o estado real via FormData, não via state de React.",
+      },
+    },
+  },
+  render: () => {
+    function FormCheckbox() {
+      const onSubmit = fn();
+      return (
+        <form
+          className="nds-stack"
+          data-spacing="md"
+          style={{ minWidth: "280px" }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(new FormData(e.currentTarget));
+          }}
+        >
+          <div className="nds-cluster" data-spacing="sm">
+            <Checkbox id="form-terms" name="terms" value="accepted" />
+            <label htmlFor="form-terms" className="nds-label">
+              Aceito os termos e condições
+            </label>
+          </div>
+          <Button type="submit">Enviar</Button>
+        </form>
+      );
+    }
+    return <FormCheckbox />;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    const submitBtn = canvas.getByRole("button", { name: /Enviar/ });
+    const form = canvasElement.querySelector("form") as HTMLFormElement;
+
+    await step("Marcar o checkbox antes de enviar", async () => {
+      await marcar(checkbox);
+    });
+
+    await step("FormData inclui name/value do checkbox marcado", async () => {
+      const data = new FormData(form);
+      await expect(data.get("terms")).toBe("accepted");
+    });
+
+    await step("Submit dispara sem reload (preventDefault) com o input oculto presente", async () => {
+      const hiddenInput = form.querySelector('input[name="terms"]');
+      await expect(hiddenInput).not.toBeNull();
+      await userEvent.click(submitBtn);
     });
   },
 };

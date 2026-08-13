@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, fn } from 'storybook/test';
 import { Checkbox } from './index';
 
 const meta = {
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Estados do Checkbox: unchecked (padrão), checked, disabled e error (aria-invalid). O estado indeterminate está disponível apenas no Svelte (prop `indeterminate` bindable).',
+          'Estados do Checkbox: unchecked (padrão), checked, indeterminate, disabled e error (aria-invalid). O indeterminado é o terceiro valor do próprio estado (checked="indeterminate"), não uma propriedade dedicada.',
       },
     },
   },
@@ -22,17 +22,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Story de estado visual — não interage; o Chromatic fotografa o final.
 export const Unchecked: Story = {
+  parameters: { covers: ['visual.item1', 'accessibility.item2'] },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="unchecked" />
-        <label
-          for="unchecked"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
+        <label for="unchecked" class="nds-label">
           Aceito os termos e condições
         </label>
       </div>
@@ -53,17 +52,17 @@ export const Unchecked: Story = {
   },
 };
 
+// Story de estado visual — não interage; cobre functional.item6 (estado
+// inicial marcado sem controle externo) pela própria montagem.
 export const Checked: Story = {
+  parameters: { covers: ['visual.item2', 'functional.item6'] },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
     template: `
       <div class="nds-cluster" data-spacing="sm">
         <Checkbox id="checked" :checked="true" />
-        <label
-          for="checked"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
+        <label for="checked" class="nds-label">
           Aceito os termos e condições
         </label>
       </div>
@@ -73,7 +72,7 @@ export const Checked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox presente e marcado', async () => {
+    await step('Checkbox presente e marcado — estado inicial sem controle externo', async () => {
       await expect(checkbox).toBeInTheDocument();
       await expect(checkbox).toBeChecked();
     });
@@ -84,18 +83,20 @@ export const Checked: Story = {
   },
 };
 
-export const Disabled: Story = {
+// Story de estado visual — não interage. O indeterminado é o terceiro valor
+// do próprio checked (:checked="'indeterminate'"), não um atributo HTML: a
+// asserção correta é aria-checked="mixed" (ou data-state), nunca
+// toHaveAttribute('indeterminate').
+export const Indeterminate: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
     template: `
       <div class="nds-cluster" data-spacing="sm">
-        <Checkbox id="disabled" :disabled="true" />
-        <label
-          for="disabled"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
-          Manter sessão ativa
+        <Checkbox id="indeterminate" :checked="'indeterminate'" />
+        <label for="indeterminate" class="nds-label">
+          Selecionar todos os itens
         </label>
       </div>
     `,
@@ -104,29 +105,64 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
+    await step('Checkbox presente com estado indeterminado (aria-checked=mixed)', async () => {
+      await expect(checkbox).toBeInTheDocument();
+      await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+    });
+  },
+};
+
+export const Disabled: Story = {
+  parameters: { covers: ['functional.item4'] },
+  args: {
+    'onUpdate:modelValue': fn(),
+  } as never,
+  render: (args) => ({
+    components: { Checkbox },
+    setup() { return { args }; },
+    // data-disabled="true" no contêiner do par é o que esmaece o rótulo de
+    // verdade — .nds-label não tem equivalente a peer-disabled, e a raiz do
+    // Checkbox nunca é um <input disabled> (então .nds-peer:disabled fica inerte aqui).
+    template: `
+      <div class="nds-cluster" data-spacing="sm" data-disabled="true">
+        <Checkbox id="disabled" :disabled="true" v-bind="args" />
+        <label for="disabled" class="nds-label">
+          Manter sessão ativa
+        </label>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole('checkbox');
+    const onUpdate = (args as { 'onUpdate:modelValue': ReturnType<typeof fn> })['onUpdate:modelValue'];
+
     await step('Checkbox presente e desabilitado', async () => {
       await expect(checkbox).toBeInTheDocument();
       await expect(checkbox).toBeDisabled();
     });
 
-    await step('Clique não altera o estado', async () => {
+    await step('Clique não altera o estado nem dispara o callback', async () => {
+      // Exceção legítima à idempotência: clique num controle disabled não
+      // deveria fazer nada em run nenhum, então não há precondição a montar.
+      onUpdate.mockClear();
       await userEvent.click(checkbox, { pointerEventsCheck: 0 });
       await expect(checkbox).not.toBeChecked();
+      await expect(onUpdate).not.toHaveBeenCalled();
     });
   },
 };
 
+// Story de estado visual — não interage.
 export const DisabledChecked: Story = {
+  parameters: { covers: ['visual.item4'] },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="sm" data-disabled="true">
         <Checkbox id="disabled-checked" :disabled="true" :checked="true" />
-        <label
-          for="disabled-checked"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
+        <label for="disabled-checked" class="nds-label">
           Receber notificações push
         </label>
       </div>
@@ -143,7 +179,9 @@ export const DisabledChecked: Story = {
   },
 };
 
+// Story de estado visual — não interage.
 export const Error: Story = {
+  parameters: { covers: ['visual.item5'] },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -151,10 +189,7 @@ export const Error: Story = {
       <div class="nds-stack" data-spacing="xs">
         <div class="nds-cluster" data-spacing="sm">
           <Checkbox id="error" aria-invalid="true" aria-describedby="error-msg" />
-          <label
-            for="error"
-            class="nds-text-body nds-font-medium" style="line-height: 1"
-          >
+          <label for="error" class="nds-label">
             Aceito os termos e condições
           </label>
         </div>
@@ -184,22 +219,8 @@ export const Error: Story = {
 };
 
 export const FocusVisible: Story = {
-  render: () => ({
-    components: { Checkbox },
-    setup() { return {}; },
-    template: `
-      <div class="nds-cluster" data-spacing="sm">
-        <Checkbox id="focus" />
-        <label
-          for="focus"
-          class="nds-text-body nds-font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" style="line-height: 1"
-        >
-          Foco visível via teclado
-        </label>
-      </div>
-    `,
-  }),
   parameters: {
+    covers: ['accessibility.item4'],
     docs: {
       description: {
         story:
@@ -207,13 +228,32 @@ export const FocusVisible: Story = {
       },
     },
   },
+  render: () => ({
+    components: { Checkbox },
+    setup() { return {}; },
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <Checkbox id="focus" />
+        <label for="focus" class="nds-label">
+          Foco visível via teclado
+        </label>
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
     await step('Checkbox recebe foco via teclado', async () => {
-      (checkbox as HTMLElement).focus();
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(checkbox).toHaveFocus();
+    });
+
+    await step('Anel de foco visível após navegação por teclado', async () => {
+      const style = getComputedStyle(checkbox);
+      const anelVisivel = style.outlineStyle !== 'none' || style.boxShadow !== 'none';
+      await expect(anelVisivel).toBe(true);
     });
   },
 };

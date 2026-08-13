@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, fn } from 'storybook/test';
 import { createCheckbox } from './checkbox';
 
 const meta: Meta = {
@@ -9,10 +9,16 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
+    // functional.item5 (submeter formulário) não se aplica a este stack: a
+    // factory não insere o input nativo no DOM de propósito — dois elementos
+    // interativos aninhados quebram nested-interactive no axe. Ver checkbox.ts.
+    coversNotApplicable: {
+      'functional.item5': 'a factory não insere o input nativo no DOM — dois elementos interativos aninhados quebram nested-interactive; o campo é sincronizado pelo callback de mudança',
+    },
     docs: {
       description: {
         component:
-          'Estados do Checkbox: unchecked, checked, disabled (desmarcado), disabled (marcado) e error (aria-invalid). O estado indeterminate não é suportado no Vanilla — disponível apenas no Svelte.',
+          'Estados do Checkbox: unchecked, checked, indeterminate (misto), disabled (desmarcado e marcado) e error (aria-invalid).',
       },
     },
   },
@@ -27,6 +33,7 @@ function wrapWithLabel(cb: HTMLElement, labelText: string, id: string, disabled 
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-cluster';
   wrapper.dataset.spacing = 'sm';
+  if (disabled) wrapper.dataset.disabled = 'true';
   cb.id = id;
   const labelId = `${id}-label`;
   cb.setAttribute('aria-labelledby', labelId);
@@ -34,12 +41,11 @@ function wrapWithLabel(cb: HTMLElement, labelText: string, id: string, disabled 
   label.id = labelId;
   label.htmlFor = id;
   label.textContent = labelText;
-  label.className = 'nds-text-body nds-font-medium nds-leading-none ' + (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
+  label.className = 'nds-label nds-text-body nds-font-medium nds-leading-none ' + (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
   label.addEventListener('click', (e) => {
     e.preventDefault();
     cb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   });
-  if (disabled) { label.style.opacity = '0.7'; label.style.cursor = 'not-allowed'; }
   wrapper.append(cb, label);
   return wrapper;
 }
@@ -53,6 +59,7 @@ export const Unchecked: Story = {
     'cb-unchecked',
   ),
   parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
     docs: { description: { story: 'Estado padrão desmarcado. Borda `--input`, fundo transparente, `aria-checked="false"`.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -75,7 +82,8 @@ export const Checked: Story = {
     'cb-checked',
   ),
   parameters: {
-    docs: { description: { story: 'Estado marcado. Fundo `--primary`, CheckIcon visível, `aria-checked="true"`.' } },
+    covers: ['visual.item2', 'functional.item6'],
+    docs: { description: { story: 'Estado marcado, renderizado direto sem controle externo. Fundo `--primary`, CheckIcon visível, `aria-checked="true"`.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -88,16 +96,49 @@ export const Checked: Story = {
   },
 };
 
+// ─── Indeterminate ─────────────────────────────────────────────────────────────
+
+export const Indeterminate: Story = {
+  render: () => wrapWithLabel(
+    createCheckbox({ indeterminate: true }),
+    'Selecionar todos os itens',
+    'cb-indeterminate',
+  ),
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Estado misto (seleção parcial de um grupo). Fundo `--primary`, `aria-checked="mixed"`, `data-state="indeterminate"`. O indicador desenha um traço, não a marca de seleção.' } },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole('checkbox');
+
+    await step('aria-checked é "mixed"', async () => {
+      await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+    });
+    await step('data-state é "indeterminate"', async () => {
+      await expect(checkbox).toHaveAttribute('data-state', 'indeterminate');
+    });
+    await step('Indicador desenha o traço (line), não a marca de seleção (polyline)', async () => {
+      const indicator = checkbox.querySelector('[data-slot="checkbox-indicator"]');
+      await expect(indicator?.querySelector('line')).toBeInTheDocument();
+      await expect(indicator?.querySelector('polyline')).not.toBeInTheDocument();
+    });
+  },
+};
+
 // ─── DisabledUnchecked ────────────────────────────────────────────────────────
+
+const onDisabledUncheckedChange = fn();
 
 export const DisabledUnchecked: Story = {
   render: () => wrapWithLabel(
-    createCheckbox({ checked: false, disabled: true }),
+    createCheckbox({ checked: false, disabled: true, onCheckedChange: onDisabledUncheckedChange }),
     'Manter sessão ativa',
     'cb-disabled-unchecked',
     true,
   ),
   parameters: {
+    covers: ['functional.item4'],
     docs: { description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado, não responde a interações.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -112,9 +153,13 @@ export const DisabledUnchecked: Story = {
       await expect(checkbox).toHaveAttribute('tabindex', '-1');
     });
 
-    await step('Clique não altera o estado', async () => {
-      await userEvent.click(checkbox);
+    await step('Clique não altera o estado nem dispara o callback', async () => {
+      // pointerEventsCheck: 0 — clique em elemento desabilitado é a exceção
+      // legítima ao par idempotente: não há transição possível em rodada
+      // nenhuma, então não há estado anterior para "vazar" no replay.
+      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
       await expect(checkbox).toHaveAttribute('aria-checked', 'false');
+      await expect(onDisabledUncheckedChange).not.toHaveBeenCalled();
     });
   },
 };
@@ -129,6 +174,7 @@ export const DisabledChecked: Story = {
     true,
   ),
   parameters: {
+    covers: ['visual.item4'],
     docs: { description: { story: 'Estado desabilitado marcado. Não pode ser alterado pelo usuário.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -140,7 +186,7 @@ export const DisabledChecked: Story = {
     });
 
     await step('Clique não altera o estado', async () => {
-      await userEvent.click(checkbox);
+      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
       await expect(checkbox).toHaveAttribute('aria-checked', 'true');
     });
   },
@@ -169,7 +215,7 @@ export const Error: Story = {
     label.htmlFor = id;
     label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Aceito os termos e condições';
-    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
+    label.className = 'nds-label nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
     row.append(cb, label);
 
@@ -182,6 +228,7 @@ export const Error: Story = {
     return wrapper;
   },
   parameters: {
+    covers: ['visual.item5'],
     docs: { description: { story: 'Estado de erro via `aria-invalid="true"`. Ring e borda `--destructive`. Mensagem de erro associada via `aria-describedby`.' } },
   },
   play: async ({ canvasElement, step }) => {
@@ -204,15 +251,26 @@ export const FocusVisible: Story = {
     'cb-focus',
   ),
   parameters: {
+    covers: ['accessibility.item4'],
     docs: { description: { story: 'Estado de foco via teclado. Use Tab para navegar e verificar o ring de foco `--ring`.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const checkbox = canvas.getByRole('checkbox');
+    const checkbox = canvas.getByRole('checkbox') as HTMLElement;
 
-    await step('Checkbox recebe foco via teclado', async () => {
-      (checkbox as HTMLElement).focus();
+    await step('Tab leva o foco ao checkbox', async () => {
+      // .focus() programático não é navegação por teclado: passaria até com
+      // tabindex="-1". É o Tab que caracteriza a modalidade de entrada, sem a
+      // qual o :focus-visible desta story não existe.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(checkbox).toHaveFocus();
+    });
+
+    await step('O anel de foco por teclado está aplicado', async () => {
+      // accessibility.item4 — o item promete anel VISÍVEL ao navegar por
+      // teclado; toHaveFocus sozinho não distingue foco de mouse.
+      await expect(checkbox.matches(':focus-visible')).toBe(true);
     });
   },
 };
