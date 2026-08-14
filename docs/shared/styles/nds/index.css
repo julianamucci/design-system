@@ -10,7 +10,6 @@
 @import "./pill.css";
 @import "./code.css";
 @import "./code-block.css";
-@import "./utilities.css";
 @import "./spacing.css";
 @import "./app-shell.css";
 @import "./button.css";
@@ -74,4 +73,20 @@
 @import "./sidebar.css";
 @import "./form.css";
 @import "./chart.css";
-@import "./tw-compat.css";
+
+/*
+ * As utilities entram POR ÚLTIMO, e isso é desenho, não acidente.
+ *
+ * Elas existem para ajustar instâncias de componente nas docs pages e stories
+ * — `.nds-lg-basis-third` num slide, `.nds-w-sm` num painel. Carregadas antes
+ * do CSS de componente, perdem no desempate por ordem e não ajustam nada:
+ * medido, o slide do carrossel voltava a 100% porque o `flex` do componente é
+ * shorthand e redefine `flex-basis` depois.
+ *
+ * Foi esta a posição do antigo arquivo de compatibilidade, e a única parte
+ * dela que era correta. O que estava errado era ele conter regra de
+ * COMPONENTE: aí a mesma ordem que faz a utility funcionar vira sobrescrita
+ * silenciosa. Utility genérica por último, regra de componente no CSS do
+ * componente.
+ */
+@import "./utilities.css";

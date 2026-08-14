@@ -245,7 +245,7 @@ não numa troca silenciosa:
 |---|---|---|
 | `0.8125rem` (13px) | code-block, docs-swatches, select (6×) | 12 ou 14 |
 | `0.8rem` (12.8px) | calendar (3×) | 12 |
-| `1.875rem` (30px) | app-shell, tw-compat (2×) | prosa, não controle |
+| `1.875rem` (30px) | app-shell, utilities (2×) | prosa, não controle |
 | `1.75rem` (28px) | docs-swatches (1×) | prosa, não controle |
 | `0.6875rem` (11px) | kbd (1×) | 10 ou 12 |
 

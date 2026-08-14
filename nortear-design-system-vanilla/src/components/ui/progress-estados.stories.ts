@@ -153,7 +153,7 @@ export const Indeterminate: Story = {
 
     await step('O traço é o do design system, não o de um homônimo', async () => {
       // Discriminador do defeito que estava vivo: um segundo
-      // `@keyframes nds-progress-indeterminate` morava em `tw-compat.css`, o
+      // `@keyframes nds-progress-indeterminate` morava em `utilities.css`, o
       // último import da folha, e vencia calado — mesmo NOME, outro conteúdo.
       // Afirmar o nome da animação não separa os dois; o efeito separa. O ciclo
       // do design system desloca `margin-inline-start` e deixa `transform` em

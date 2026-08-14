@@ -17,7 +17,7 @@
 }
 
 /* ── Motion — alinhado ao Accordion (transição de altura via vars das libs;
-      chevron rotativo já é global via .nds-chevron em tw-compat.css) ───────── */
+      chevron rotativo já é global via .nds-chevron em utilities.css) ───────── */
 .nds-collapsible [data-slot="collapsible-content"] {
   overflow: hidden;
   /* base-ui expõe --collapsible-panel-height; reka --reka-collapsible-content-height;

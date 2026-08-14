@@ -180,7 +180,7 @@ export const Indeterminate: Story = {
       // Esta era a metade que faltava do `functional.item4`: a story declarava
       // cobertura de "animação infinita" e a própria descrição dizia que a
       // animação não existia. Existia — o `@keyframes` do design system estava
-      // sendo sobrescrito por um homônimo em `tw-compat.css`, que é o último
+      // sendo sobrescrito por um homônimo em `utilities.css`, que é o último
       // import da folha. Medir POSIÇÃO no meio de uma animação infinita é racy
       // por construção; afirmar o nome do keyframes não é.
       await waitFor(async () => {
@@ -190,7 +190,7 @@ export const Indeterminate: Story = {
 
     await step('O traço é o do design system, não o de um homônimo', async () => {
       // Discriminador do defeito que estava vivo: um segundo
-      // `@keyframes nds-progress-indeterminate` morava em `tw-compat.css`, o
+      // `@keyframes nds-progress-indeterminate` morava em `utilities.css`, o
       // último import da folha, e vencia calado — mesmo NOME, outro conteúdo.
       // Afirmar o nome da animação não separa os dois; o efeito separa. O ciclo
       // do design system desloca `margin-inline-start` e deixa `transform` em

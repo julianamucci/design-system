@@ -1565,9 +1565,12 @@ function auditDeadLibInfra() {
     const content = readFile(file);
     if (!content) continue;
     const rel = relative(ROOT, file);
-    // `tw-compat.css` é a ponte declarada de compatibilidade: nomear o
-    // vocabulário antigo é a razão de ela existir.
-    if (/tw-compat\.css$/.test(rel)) continue;
+    // Havia aqui uma exceção para `tw-compat.css`, justificada por ele ser a
+    // ponte declarada de compatibilidade. O arquivo foi fundido no
+    // `utilities.css` e a exceção saiu junto: as duas menções afirmativas que
+    // ela cobria viraram prosa negada, que é o que a regra já aceita. Exceção
+    // por nome de arquivo é pior que negação no texto — ela isenta o arquivo
+    // inteiro, para sempre, inclusive do que ainda vai ser escrito nele.
     // Escape hatch explícito, para a dívida ficar visível NO arquivo em vez de
     // numa exceção escondida aqui. Exige motivo na mesma linha.
     if (/audit-ignore:\s*dead-lib\b/.test(content)) continue;
@@ -2954,9 +2957,9 @@ function auditFocusRingSobrescrito() {
  *   isso que é armadilha: quem editar um dos dois cria a divergência acima sem
  *   perceber que existe um gêmeo.
  *
- * Comentários são removidos antes da busca. Sem isso, a regra acusaria o
- * próprio docblock que explica o defeito — o `tw-compat.css` cita o nome
- * antigo em prosa, de propósito, para ele não voltar.
+ * Comentários são removidos antes da busca. Sem isso, a regra acusaria os
+ * próprios docblocks que explicam o defeito: eles citam o nome do keyframes
+ * em prosa, de propósito, para ele não voltar.
  */
 function auditKeyframesDuplicado() {
   const violations = [];

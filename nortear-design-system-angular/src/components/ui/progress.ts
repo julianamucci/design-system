@@ -48,7 +48,7 @@ import {
 // O desenho é do CSS compartilhado, que casa `.nds-progress[data-indeterminate]`
 // — a trilha — e dá ao indicador largura de 40% e uma animação em ciclo. A regra
 // existia e não valia: um segundo `@keyframes nds-progress-indeterminate`, de
-// mesmo nome, morava em `tw-compat.css`, que é o último import da folha e por
+// mesmo nome, morava em `utilities.css`, que é o último import da folha e por
 // isso vencia. Removido de lá, o ciclo desenhado é o que este arquivo descreve.
 //
 // ─── Cor da barra ────────────────────────────────────────────────────────────
