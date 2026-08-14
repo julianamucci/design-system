@@ -2933,6 +2933,64 @@ function auditFocusRingSobrescrito() {
   return violations;
 }
 
+/**
+ * `@keyframes` de mesmo nome definido em mais de um arquivo.
+ *
+ * Nome de keyframes é global e NÃO colide com aviso: o último a ser importado
+ * vence, calado. Não há especificidade envolvida, então nem ler o seletor
+ * ajuda — só saber a ordem dos `@import`.
+ *
+ * O caso real: `progress.css` definia `nds-progress-indeterminate`, e
+ * `tw-compat.css` — que é o ÚLTIMO import do `index.css` — definia outro com o
+ * mesmo nome e outro conteúdo. A barra indeterminada pedia a animação certa e
+ * recebia a de lá, com outro deslocamento e sem respeitar
+ * `prefers-reduced-motion`. Ninguém viu por meses.
+ *
+ * Duas severidades, porque os dois casos têm consequências diferentes:
+ *
+ * - **conteúdo divergente** → `high`. É sobrescrita silenciosa: alguém está
+ *   recebendo uma animação que não pediu.
+ * - **conteúdo idêntico** → `low`. Hoje não quebra nada, e é justamente por
+ *   isso que é armadilha: quem editar um dos dois cria a divergência acima sem
+ *   perceber que existe um gêmeo.
+ *
+ * Comentários são removidos antes da busca. Sem isso, a regra acusaria o
+ * próprio docblock que explica o defeito — o `tw-compat.css` cita o nome
+ * antigo em prosa, de propósito, para ele não voltar.
+ */
+function auditKeyframesDuplicado() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles');
+  if (!existsSync(dir)) return violations;
+
+  const porNome = new Map();
+  for (const file of walkDir(dir, ['.css'])) {
+    const src = readFile(file);
+    if (!src) continue;
+    const semComentario = src.replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const m of semComentario.matchAll(/@keyframes\s+([\w-]+)\s*\{([\s\S]*?)\n\}/g)) {
+      const nome = m[1];
+      if (!porNome.has(nome)) porNome.set(nome, []);
+      porNome.get(nome).push({ file: relative(ROOT, file), corpo: m[2].replace(/\s+/g, ' ').trim() });
+    }
+  }
+
+  for (const [nome, defs] of porNome) {
+    if (defs.length < 2) continue;
+    const divergem = new Set(defs.map((d) => d.corpo)).size > 1;
+    violations.push({
+      category: 'quality',
+      severity: divergem ? 'high' : 'low',
+      slug: '_infra', stack: 'shared',
+      file: defs[0].file, rule: 'keyframes_duplicado',
+      message: divergem
+        ? `@keyframes "${nome}" é definido com conteúdos DIFERENTES em ${defs.map((d) => d.file).join(' e ')} — o último import vence sem aviso, e quem pede a animação recebe a do outro arquivo`
+        : `@keyframes "${nome}" é definido em ${defs.map((d) => d.file).join(' e ')} com o mesmo conteúdo — editar um dos dois cria sobrescrita silenciosa`,
+    });
+  }
+  return violations;
+}
+
 function auditTranslateComposto() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -3325,7 +3383,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditKeyframesDuplicado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

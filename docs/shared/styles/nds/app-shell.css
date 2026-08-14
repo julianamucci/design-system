@@ -214,9 +214,8 @@
 }
 .nds-spinner[data-size="sm"] { width: 1.25rem; height: 1.25rem; }
 
-@keyframes nds-spin {
-  to { transform: rotate(360deg); }
-}
+/* `@keyframes nds-spin` mora em `utilities.css` — nome de keyframes é global,
+ * e defini-lo aqui criava um gêmeo que o último import sobrescrevia calado. */
 
 
 /* ── Locale switcher (sandbox header) ───────────────────────────────────── */

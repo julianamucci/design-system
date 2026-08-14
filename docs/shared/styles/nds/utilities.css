@@ -180,7 +180,22 @@
   }
 }
 
-/* ── Animação de rotação (spinners) ──────────────────────────────────────── */
+/* ── Animação de rotação (spinners) ──────────────────────────────────────────
+ * A definição mora AQUI, e não em cada componente que gira alguma coisa.
+ *
+ * Nome de `@keyframes` é global e não colide com aviso: o último import vence,
+ * calado. Este mesmo nome estava definido duas vezes — em `app-shell.css` e em
+ * `button.css` —, com conteúdo idêntico, o que não quebrava nada e por isso
+ * mesmo era armadilha: bastava alguém ajustar a curva de um dos dois para o
+ * outro passar a receber uma animação que não pediu. Foi exatamente assim que
+ * o progresso indeterminado rodou a coreografia errada por meses.
+ *
+ * Três arquivos consomem (`app-shell`, `button` e este) e nenhum precisa
+ * redefinir: a resolução é por nome, não por proximidade. */
+@keyframes nds-spin {
+  to { transform: rotate(360deg); }
+}
+
 .nds-animate-spin {
   animation: nds-spin 1s linear infinite;
 }
