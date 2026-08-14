@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Card possui prop `size="default" | "sm"` que propaga via `data-size` para subcomponentes (padding, fonte).',
+          'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',
       },
     },
   },
@@ -24,7 +24,26 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Mede a mesma propriedade com o outro `data-size` e devolve o atributo ao
+ * valor original. É o único jeito de comparar os dois tamanhos numa story que
+ * mostra um só — e prova que a regra de CSS existe, em vez de afirmar que o
+ * atributo está escrito. Restaura o estado, então sobrevive ao replay.
+ */
+function medirNoOutroTamanho(
+  card: HTMLElement,
+  outro: 'default' | 'sm',
+  ler: () => number,
+): number {
+  const original = card.getAttribute('data-size')!;
+  card.setAttribute('data-size', outro);
+  const valor = ler();
+  card.setAttribute('data-size', original);
+  return valor;
+}
+
 export const Default: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     Component: CardStory,
     props: {
@@ -33,40 +52,50 @@ export const Default: Story = {
       title: 'Cadeira Gamer Pro',
       description: 'Estrutura ergonômica com ajuste de altura e apoio lombar.',
       productPrice: 'R$ 1.299,00',
-      productStock: 'Em estoque',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Card com data-size="default"', async () => {
-      const card = canvasElement.querySelector('[data-slot="card"]');
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+
+    await step('O tamanho padrão é o declarado quando ninguém escolhe', async () => {
       await expect(card).toHaveAttribute('data-size', 'default');
     });
-    await step('CardTitle visível', async () => {
-      await expect(canvas.getByText('Cadeira Gamer Pro')).toBeVisible();
+
+    await step('O título continua sendo heading no tamanho padrão', async () => {
+      await expect(canvas.getByRole('heading', { name: 'Cadeira Gamer Pro' })).toBeInTheDocument();
     });
   },
 };
 
 export const Small: Story = {
+  parameters: { covers: ['functional.item2'] },
   render: () => ({
     Component: CardStory,
-    props: {
-      variant: 'small',
-      size: 'sm',
-      title: 'Assinantes ativos',
-      description: '+12% no mês',
-      metricValue: '8.742',
-    },
+    props: { variant: 'small' },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Card com data-size="sm"', async () => {
-      const card = canvasElement.querySelector('[data-slot="card"]');
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+    const title = card.querySelector<HTMLElement>('[data-slot="card-title"]')!;
+
+    await step('data-size="sm" chega ao root', async () => {
       await expect(card).toHaveAttribute('data-size', 'sm');
     });
-    await step('Valor da métrica visível', async () => {
-      await expect(canvas.getByText('8.742')).toBeVisible();
+
+    await step('O tamanho sm reduz o padding de verdade', async () => {
+      const padSm = Number.parseFloat(getComputedStyle(card).paddingTop);
+      const padDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(card).paddingTop),
+      );
+      await expect(padSm).toBeLessThan(padDefault);
+    });
+
+    await step('O tamanho sm reduz o título de verdade', async () => {
+      const fonteSm = Number.parseFloat(getComputedStyle(title).fontSize);
+      const fonteDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(title).fontSize),
+      );
+      await expect(fonteSm).toBeLessThan(fonteDefault);
     });
   },
 };

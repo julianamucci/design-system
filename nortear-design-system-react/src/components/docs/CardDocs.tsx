@@ -487,8 +487,8 @@ interface CardProps extends React.ComponentProps<"div"> {
                 </CardContent>
               </Card>
             ),
-            doCaption: stripHtml(tContent("doDont.pair1.do")),
-            dontCaption: stripHtml(tContent("doDont.pair1.dont")),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -527,8 +527,8 @@ interface CardProps extends React.ComponentProps<"div"> {
                 </CardFooter>
               </Card>
             ),
-            doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: stripHtml(tContent("doDont.pair2.dont")),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -843,9 +843,9 @@ interface CardProps extends React.ComponentProps<"div"> {
           { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/ui-separator--docs" },
           { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/ui-accordion--docs" },
           { name: "Alert",     description: toPlainText(tContent("related.alert")),                path: "?path=/docs/ui-alert--docs" },
-          { name: "Button",    description: stripHtml(tContent("related.button")),    path: "?path=/docs/ui-button--docs" },
-          { name: "Badge",     description: stripHtml(tContent("related.badge")),     path: "?path=/docs/ui-badge--docs" },
-          { name: "Avatar",    description: stripHtml(tContent("related.avatar")),    path: "?path=/docs/ui-avatar--docs" },
+          { name: "Button",    description: toPlainText(tContent("related.button")),    path: "?path=/docs/ui-button--docs" },
+          { name: "Badge",     description: toPlainText(tContent("related.badge")),     path: "?path=/docs/ui-badge--docs" },
+          { name: "Avatar",    description: toPlainText(tContent("related.avatar")),    path: "?path=/docs/ui-avatar--docs" },
         ]}
       />
 
@@ -876,7 +876,7 @@ interface CardProps extends React.ComponentProps<"div"> {
           },
           {
             event: tContent("analytics.table.cardClick"),
-            trigger: stripHtml(tContent("analytics.table.cardClickTrigger")),
+            trigger: toPlainText(tContent("analytics.table.cardClickTrigger")),
             payload: tContent("analytics.table.cardClickPayload"),
           },
           {

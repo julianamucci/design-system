@@ -358,16 +358,16 @@ interface CardPartProps {
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair1.do'),
-        dontCaption: $tStore('doDont.pair1.dont'),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair2.do')),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
@@ -685,9 +685,9 @@ interface CardPartProps {
       { name: 'Separator', description: $tStore('related.separator'), path: '?path=/docs/ui-separator--docs' },
       { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/ui-accordion--docs' },
       { name: 'Alert',     description: $tStore('related.alert'),     path: '?path=/docs/ui-alert--docs'     },
-      { name: 'Button',    description: stripHtml($tStore('related.button')), path: '?path=/docs/ui-button--docs' },
-      { name: 'Badge',     description: stripHtml($tStore('related.badge')),  path: '?path=/docs/ui-badge--docs' },
-      { name: 'Avatar',    description: stripHtml($tStore('related.avatar')), path: '?path=/docs/ui-avatar--docs' },
+      { name: 'Button',    description: toPlainText($tStore('related.button')), path: '?path=/docs/ui-button--docs' },
+      { name: 'Badge',     description: toPlainText($tStore('related.badge')),  path: '?path=/docs/ui-badge--docs' },
+      { name: 'Avatar',    description: toPlainText($tStore('related.avatar')), path: '?path=/docs/ui-avatar--docs' },
     ]}
   />
 
@@ -729,14 +729,11 @@ interface CardPartProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { action: $tStore('testes.functional.item1.action'), result: toPlainText($tStore('testes.functional.item1.result')), priority: localPriority($tStore('testes.functional.item1.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'), result: toPlainText($tStore('testes.functional.item2.result')), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'), result: toPlainText($tStore('testes.functional.item3.result')), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'),            priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
-        { action: toPlainText($tStore('testes.functional.item6.action')), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
-      ],
+      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
+        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
+        priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
+      })),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -745,14 +742,11 @@ interface CardPartProps {
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: $tStore('testes.accessibility.item1.criterion'),             level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: toPlainText($tStore('testes.accessibility.item2.criterion')),  level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: toPlainText($tStore('testes.accessibility.item3.criterion')),  level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-        { criterion: $tStore('testes.accessibility.item4.criterion'),             level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
-        { criterion: $tStore('testes.accessibility.item5.criterion'),             level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
-        { criterion: $tStore('testes.accessibility.item6.criterion'),             level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
-      ],
+      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+        criterion: toPlainText($tStore(`testes.accessibility.item${i}.criterion`)),
+        level: $tStore(`testes.accessibility.item${i}.level`),
+        how: toPlainText($tStore(`testes.accessibility.item${i}.how`)),
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -760,13 +754,10 @@ interface CardPartProps {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-      ],
+      items: [1, 2, 3, 4, 5].map((i) => ({
+        story: toPlainText($tStore(`testes.visual.item${i}.story`)),
+        priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
+      })),
     }}
   />
 </DocsPageLayout>

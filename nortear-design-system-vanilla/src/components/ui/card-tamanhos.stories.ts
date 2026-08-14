@@ -18,7 +18,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tamanhos disponíveis do Card. A API vanilla expõe `size: "default" | "sm"`, que propaga via `data-size` e ajusta padding/fonte via `group-data-[size=sm]/card:*`.',
+          'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',
       },
     },
   },
@@ -27,14 +27,34 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Mede a mesma propriedade com o outro `data-size` e devolve o atributo ao
+ * valor original. É o único jeito de comparar os dois tamanhos numa story que
+ * mostra um só — e prova que a regra de CSS existe, em vez de afirmar que o
+ * atributo está escrito. Restaura o estado, então sobrevive ao replay.
+ */
+function medirNoOutroTamanho(
+  card: HTMLElement,
+  outro: 'default' | 'sm',
+  ler: () => number,
+): number {
+  const original = card.getAttribute('data-size')!;
+  card.setAttribute('data-size', outro);
+  const valor = ler();
+  card.setAttribute('data-size', original);
+  return valor;
+}
+
 function buildProductCard(): HTMLElement {
   const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
-  header.appendChild(createCardDescription({ text: 'Estrutura ergonômica com ajuste de altura e apoio lombar.' }));
+  header.appendChild(
+    createCardDescription({ text: 'Estrutura ergonômica com ajuste de altura e apoio lombar.' }),
+  );
   const content = createCardContent();
   const price = document.createElement('p');
-  price.className = 'nds-text-h4 nds-font-semibold';
+  price.className = 'nds-text-h4';
   price.textContent = 'R$ 1.299,00';
   content.appendChild(price);
   card.append(header, content);
@@ -44,10 +64,11 @@ function buildProductCard(): HTMLElement {
 function buildSmallCard(): HTMLElement {
   const card = createCard({ size: 'sm', className: 'nds-w-full nds-max-w-xs' });
   const header = createCardHeader();
-  header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 4 }));
+  header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
+  header.appendChild(createCardDescription({ text: '+12% no mês' }));
   const content = createCardContent();
   const value = document.createElement('p');
-  value.className = 'nds-text-h4 nds-font-semibold';
+  value.className = 'nds-text-h4 nds-tabular-nums';
   value.textContent = '8.742';
   content.appendChild(value);
   card.append(header, content);
@@ -56,37 +77,61 @@ function buildSmallCard(): HTMLElement {
 
 export const Default: Story = {
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
-        story: 'Tamanho padrão do Card — `data-size="default"`, padding `py-4 px-4` e título em `text-base`.',
+        story: 'Tamanho padrão do Card — padding e título na escala base.',
       },
     },
   },
   render: () => buildProductCard(),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const card = canvasElement.querySelector('[data-slot="card"]') as HTMLElement | null;
-    await expect(card).toBeInTheDocument();
-    await expect(card?.getAttribute('data-size')).toBe('default');
-    await expect(canvas.getByRole('heading', { name: 'Cadeira Gamer Pro' })).toBeInTheDocument();
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+
+    await step('O tamanho padrão é o declarado quando ninguém escolhe', async () => {
+      await expect(card).toHaveAttribute('data-size', 'default');
+    });
+
+    await step('O título continua sendo heading no tamanho padrão', async () => {
+      await expect(canvas.getByRole('heading', { name: 'Cadeira Gamer Pro' })).toBeInTheDocument();
+    });
   },
 };
 
 export const Small: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       description: {
         story:
-          'Card compacto via `createCard({ size: "sm" })` — propaga `data-size="sm"`, reduz padding/gap e ajusta o título para `text-sm`. Ideal para listas densas e dashboards.',
+          'Card compacto: o tamanho sm propaga por data-size, reduz padding e diminui o título. Ideal para listas densas e dashboards.',
       },
     },
   },
   render: () => buildSmallCard(),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const card = canvasElement.querySelector('[data-slot="card"]') as HTMLElement | null;
-    await expect(card).toBeInTheDocument();
-    await expect(card?.getAttribute('data-size')).toBe('sm');
-    await expect(canvas.getByRole('heading', { name: 'Assinantes ativos' })).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+    const title = card.querySelector<HTMLElement>('[data-slot="card-title"]')!;
+
+    await step('data-size="sm" chega ao root', async () => {
+      await expect(card).toHaveAttribute('data-size', 'sm');
+    });
+
+    await step('O tamanho sm reduz o padding de verdade', async () => {
+      const padSm = Number.parseFloat(getComputedStyle(card).paddingTop);
+      const padDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(card).paddingTop),
+      );
+      await expect(padSm).toBeLessThan(padDefault);
+    });
+
+    await step('O tamanho sm reduz o título de verdade', async () => {
+      const fonteSm = Number.parseFloat(getComputedStyle(title).fontSize);
+      const fonteDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(title).fontSize),
+      );
+      await expect(fonteSm).toBeLessThan(fonteDefault);
+    });
   },
 };

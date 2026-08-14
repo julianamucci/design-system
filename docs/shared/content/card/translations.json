@@ -290,7 +290,7 @@
         "buttonClickTrigger": "Clique em botão dentro do CardFooter ou CardAction",
         "buttonClickPayload": "{ component: 'button', label, location, variant }",
         "cardClick": "card_click",
-        "cardClickTrigger": "Clique no Card quando a unidade inteira é navegável (<a> ou <button>)",
+        "cardClickTrigger": "Clique no Card quando a unidade inteira é navegável (&lt;a&gt; ou &lt;button&gt;)",
         "cardClickPayload": "{ component: 'card', label, destination, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
@@ -330,11 +330,11 @@
         },
         "item5": {
           "action": "Clicar em botão no CardFooter",
-          "result": "Handler do botão é chamado; evento não borbulha para o Card raiz se houver wrapper clicável",
+          "result": "Handler do botão é chamado uma única vez; o Card raiz permanece passivo — sem handler próprio e sem foco",
           "priority": "high"
         },
         "item6": {
-          "action": "Card envolvido em <a> com aria-label",
+          "action": "Card envolvido em &lt;a&gt; com aria-label",
           "result": "<kbd>Tab</kbd> foca o Card; <kbd>Enter</kbd> navega; leitor anuncia o <code>aria-label</code>",
           "priority": "medium"
         }
@@ -381,11 +381,11 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Tamanhos — default e sm lado a lado",
+          "story": "Tamanhos — default e sm",
           "priority": "high"
         },
         "item3": {
-          "story": "Composições — com CardAction, com imagem, sem footer",
+          "story": "Composições — Card com CardAction no header",
           "priority": "medium"
         },
         "item4": {
@@ -393,7 +393,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Composições — dentro de grid (catálogo/dashboard)",
+          "story": "Composições — Card com imagem como primeiro filho",
           "priority": "medium"
         }
       }
@@ -710,7 +710,7 @@
         "buttonClickTrigger": "Click on a button inside CardFooter or CardAction",
         "buttonClickPayload": "{ component: 'button', label, location, variant }",
         "cardClick": "card_click",
-        "cardClickTrigger": "Click on the Card when the whole unit is navigable (<a> or <button>)",
+        "cardClickTrigger": "Click on the Card when the whole unit is navigable (&lt;a&gt; or &lt;button&gt;)",
         "cardClickPayload": "{ component: 'card', label, destination, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
@@ -750,11 +750,11 @@
         },
         "item5": {
           "action": "Click a button in CardFooter",
-          "result": "Button handler fires; event doesn't bubble to Card root if there's a clickable wrapper",
+          "result": "Button handler fires exactly once; the Card root stays passive — no handler of its own and no focus",
           "priority": "high"
         },
         "item6": {
-          "action": "Card wrapped in <a> with aria-label",
+          "action": "Card wrapped in &lt;a&gt; with aria-label",
           "result": "<kbd>Tab</kbd> focuses the Card; <kbd>Enter</kbd> navigates; reader announces the <code>aria-label</code>",
           "priority": "medium"
         }
@@ -801,11 +801,11 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Sizes — default and sm side by side",
+          "story": "Sizes — default and sm",
           "priority": "high"
         },
         "item3": {
-          "story": "Compositions — with CardAction, with image, no footer",
+          "story": "Compositions — Card with CardAction in the header",
           "priority": "medium"
         },
         "item4": {
@@ -813,7 +813,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Compositions — inside a grid (catalog/dashboard)",
+          "story": "Compositions — Card with image as first child",
           "priority": "medium"
         }
       }
@@ -1130,7 +1130,7 @@
         "buttonClickTrigger": "Clic en un botón dentro de CardFooter o CardAction",
         "buttonClickPayload": "{ component: 'button', label, location, variant }",
         "cardClick": "card_click",
-        "cardClickTrigger": "Clic en el Card cuando la unidad completa es navegable (<a> o <button>)",
+        "cardClickTrigger": "Clic en el Card cuando la unidad completa es navegable (&lt;a&gt; o &lt;button&gt;)",
         "cardClickPayload": "{ component: 'card', label, destination, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
@@ -1170,11 +1170,11 @@
         },
         "item5": {
           "action": "Hacer clic en botón del CardFooter",
-          "result": "El handler del botón se llama; el evento no burbujea al Card raíz si hay wrapper clicable",
+          "result": "El handler del botón se llama una sola vez; el Card raíz permanece pasivo — sin handler propio y sin foco",
           "priority": "high"
         },
         "item6": {
-          "action": "Card envuelto en <a> con aria-label",
+          "action": "Card envuelto en &lt;a&gt; con aria-label",
           "result": "<kbd>Tab</kbd> enfoca el Card; <kbd>Enter</kbd> navega; el lector anuncia el <code>aria-label</code>",
           "priority": "medium"
         }
@@ -1221,11 +1221,11 @@
           "priority": "high"
         },
         "item2": {
-          "story": "Tamaños — default y sm lado a lado",
+          "story": "Tamaños — default y sm",
           "priority": "high"
         },
         "item3": {
-          "story": "Composiciones — con CardAction, con imagen, sin footer",
+          "story": "Composiciones — Card con CardAction en el header",
           "priority": "medium"
         },
         "item4": {
@@ -1233,7 +1233,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Composiciones — dentro de grid (catálogo/dashboard)",
+          "story": "Composiciones — Card con imagen como primer hijo",
           "priority": "medium"
         }
       }

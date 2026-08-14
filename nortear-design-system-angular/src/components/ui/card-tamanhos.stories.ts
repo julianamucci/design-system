@@ -16,7 +16,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Sizes: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item1', 'visual.item2'] },
+  parameters: { covers: ['functional.item2', 'visual.item2'] },
   render: () => ({
     template: `
       <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">

@@ -423,8 +423,8 @@ export function createCardDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair1.do')),
-              dontCaption: stripHtml(t('doDont.pair1.dont')),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildProductCardPreview(),
               dontPreviewFactory: () => {
                 const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
@@ -440,8 +440,8 @@ export function createCardDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair2.do')),
-              dontCaption: stripHtml(t('doDont.pair2.dont')),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildProductCardPreview(),
               dontPreviewFactory: () => {
                 const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
@@ -737,9 +737,9 @@ export interface CardFooterOptions      { className?: string; }`;
             { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/ui-separator--docs' },
             { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/ui-accordion--docs' },
             { name: 'Alert', description: toPlainText(t('related.alert')), path: '?path=/docs/ui-alert--docs' },
-            { name: 'Button', description: stripHtml(t('related.button')), path: '?path=/docs/ui-button--docs' },
-            { name: 'Badge', description: stripHtml(t('related.badge')), path: '?path=/docs/ui-badge--docs' },
-            { name: 'Avatar', description: stripHtml(t('related.avatar')), path: '?path=/docs/ui-avatar--docs' },
+            { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/ui-button--docs' },
+            { name: 'Badge', description: toPlainText(t('related.badge')), path: '?path=/docs/ui-badge--docs' },
+            { name: 'Avatar', description: toPlainText(t('related.avatar')), path: '?path=/docs/ui-avatar--docs' },
           ],
         });
 

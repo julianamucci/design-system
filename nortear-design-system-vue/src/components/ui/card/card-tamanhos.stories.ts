@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Tamanhos do Card (prop size): "default" para uso geral e "sm" para listas densas/dashboards. O size propaga via data-size e ajusta padding (py-4 → py-3) e fonte do título (text-base → text-sm).',
+          'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',
       },
     },
   },
@@ -28,51 +28,94 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Mede a mesma propriedade com o outro `data-size` e devolve o atributo ao
+ * valor original. É o único jeito de comparar os dois tamanhos numa story que
+ * mostra um só — e prova que a regra de CSS existe, em vez de afirmar que o
+ * atributo está escrito. Restaura o estado, então sobrevive ao replay.
+ */
+function medirNoOutroTamanho(
+  card: HTMLElement,
+  outro: 'default' | 'sm',
+  ler: () => number,
+): number {
+  const original = card.getAttribute('data-size')!;
+  card.setAttribute('data-size', outro);
+  const valor = ler();
+  card.setAttribute('data-size', original);
+  return valor;
+}
+
 export const Default: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
       <Card class="nds-w-full nds-max-w-sm">
         <CardHeader>
-          <CardTitle>Cadeira Gamer Pro</CardTitle>
+          <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>
             Estrutura ergonômica com ajuste de altura e apoio lombar.
           </CardDescription>
         </CardHeader>
-        <CardContent class="nds-text-base nds-font-semibold">R$ 1.299,00</CardContent>
-      </Card>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    await step('Card tem data-size="default" (padding py-4 e título text-base)', async () => {
-      const card = canvasElement.querySelector('[data-slot="card"]');
-      await expect(card).toHaveAttribute('data-size', 'default');
-    });
-  },
-};
-
-export const Small: Story = {
-  render: () => ({
-    components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
-    template: `
-      <Card size="sm" class="nds-w-full nds-max-w-sm">
-        <CardHeader>
-          <CardTitle>Assinantes ativos</CardTitle>
-          <CardDescription>+12% no mês</CardDescription>
-        </CardHeader>
-        <CardContent class="nds-font-semibold" style="font-size: 1.5rem; line-height: 2rem">8.742</CardContent>
+        <CardContent>
+          <p class="nds-text-h4">R$ 1.299,00</p>
+        </CardContent>
       </Card>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Card tem data-size="sm" (subcomponentes reagem via group-data-[size=sm])', async () => {
-      const card = canvasElement.querySelector('[data-slot="card"]');
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+
+    await step('O tamanho padrão é o declarado quando ninguém escolhe', async () => {
+      await expect(card).toHaveAttribute('data-size', 'default');
+    });
+
+    await step('O título continua sendo heading no tamanho padrão', async () => {
+      await expect(canvas.getByRole('heading', { name: 'Cadeira Gamer Pro' })).toBeInTheDocument();
+    });
+  },
+};
+
+export const Small: Story = {
+  parameters: { covers: ['functional.item2'] },
+  render: () => ({
+    components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
+    template: `
+      <Card size="sm" class="nds-w-full nds-max-w-xs">
+        <CardHeader>
+          <CardTitle as="h3">Assinantes ativos</CardTitle>
+          <CardDescription>+12% no mês</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p class="nds-text-h4 nds-tabular-nums">8.742</p>
+        </CardContent>
+      </Card>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
+    const title = card.querySelector<HTMLElement>('[data-slot="card-title"]')!;
+
+    await step('data-size="sm" chega ao root', async () => {
       await expect(card).toHaveAttribute('data-size', 'sm');
     });
 
-    await step('CardTitle é renderizado', async () => {
-      await expect(canvas.getByText('Assinantes ativos')).toBeVisible();
+    await step('O tamanho sm reduz o padding de verdade', async () => {
+      const padSm = Number.parseFloat(getComputedStyle(card).paddingTop);
+      const padDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(card).paddingTop),
+      );
+      await expect(padSm).toBeLessThan(padDefault);
+    });
+
+    await step('O tamanho sm reduz o título de verdade', async () => {
+      const fonteSm = Number.parseFloat(getComputedStyle(title).fontSize);
+      const fonteDefault = medirNoOutroTamanho(card, 'default', () =>
+        Number.parseFloat(getComputedStyle(title).fontSize),
+      );
+      await expect(fonteSm).toBeLessThan(fonteDefault);
     });
   },
 };

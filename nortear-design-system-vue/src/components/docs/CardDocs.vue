@@ -323,9 +323,9 @@ const relatedItems = computed(() => [
   { name: 'Separator', description: toPlainText(tContent('related.separator')), path: '?path=/docs/ui-separator--docs' },
   { name: 'Accordion', description: toPlainText(tContent('related.accordion')), path: '?path=/docs/ui-accordion--docs' },
   { name: 'Alert',     description: toPlainText(tContent('related.alert')),     path: '?path=/docs/ui-alert--docs'     },
-  { name: 'Button',    description: stripHtml(tContent('related.button')), path: '?path=/docs/ui-button--docs'    },
-  { name: 'Badge',     description: stripHtml(tContent('related.badge')),  path: '?path=/docs/ui-badge--docs'     },
-  { name: 'Avatar',    description: stripHtml(tContent('related.avatar')), path: '?path=/docs/ui-avatar--docs'    },
+  { name: 'Button',    description: toPlainText(tContent('related.button')), path: '?path=/docs/ui-button--docs'    },
+  { name: 'Badge',     description: toPlainText(tContent('related.badge')),  path: '?path=/docs/ui-badge--docs'     },
+  { name: 'Avatar',    description: toPlainText(tContent('related.avatar')), path: '?path=/docs/ui-avatar--docs'    },
 ]);
 
 const noteItems = computed(() => [
@@ -349,31 +349,32 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: toPlainText(tContent('testes.functional.item1.result')), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: toPlainText(tContent('testes.functional.item2.result')), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: toPlainText(tContent('testes.functional.item3.result')), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
-  { action: tContent('testes.functional.item5.action'), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
-  { action: tContent('testes.functional.item6.action'), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
-]);
+// toPlainText em TODA célula: estas três tabelas escrevem textNode, e o
+// conteúdo compartilhado guarda <code>/&lt;a&gt; escapados para as seções que
+// renderizam HTML. Interpolar o índice mantém as seis linhas iguais — foi a
+// divergência linha a linha que deixou item6.action com a tag apagada.
+const functionalTestItems = computed(() =>
+  [1, 2, 3, 4, 5, 6].map((i) => ({
+    action: toPlainText(tContent(`testes.functional.item${i}.action`)),
+    result: toPlainText(tContent(`testes.functional.item${i}.result`)),
+    priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
+  })),
+);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'),            level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: toPlainText(tContent('testes.accessibility.item2.criterion')), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: toPlainText(tContent('testes.accessibility.item3.criterion')), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'),            level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
-  { criterion: tContent('testes.accessibility.item5.criterion'),            level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
-  { criterion: tContent('testes.accessibility.item6.criterion'),            level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
-]);
+const a11yTestItems = computed(() =>
+  [1, 2, 3, 4, 5, 6].map((i) => ({
+    criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
+    level: tContent(`testes.accessibility.item${i}.level`),
+    how: toPlainText(tContent(`testes.accessibility.item${i}.how`)),
+  })),
+);
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
-]);
+const visualTestItems = computed(() =>
+  [1, 2, 3, 4, 5].map((i) => ({
+    story: toPlainText(tContent(`testes.visual.item${i}.story`)),
+    priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
+  })),
+);
 </script>
 
 <template>
@@ -542,7 +543,7 @@ const visualTestItems = computed(() => [
       :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: stripHtml(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>

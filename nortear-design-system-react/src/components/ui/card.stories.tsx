@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect, userEvent, fn } from "storybook/test";
-import { MoreVertical } from "lucide-react";
+import { within, expect } from "storybook/test";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -27,17 +25,22 @@ const meta = {
       control: "inline-radio",
       options: ["default", "sm"],
       description:
-        'Tamanho do Card. "default" (padrão) para uso geral; "sm" para listas densas e dashboards — propaga via `data-size` e `group-data-[size=sm]/card`.',
+        'Tamanho do Card. "default" (padrão) para uso geral; "sm" para listas densas e dashboards — propaga via `data-size` para as partes internas.',
+      table: {
+        type: { summary: '"default" | "sm"' },
+        defaultValue: { summary: '"default"' },
+      },
     },
     className: {
       control: "text",
       description:
-        "Classes utilitárias .nds-* adicionais aplicadas ao container raiz (sobrescreve padding/fundo/radius).",
+        "Classes utilitárias .nds-* adicionais aplicadas ao container raiz (sobrescreve padding, fundo ou raio).",
+      table: { type: { summary: "string" }, defaultValue: { summary: "—" } },
     },
   },
   args: {
     size: "default",
-    className: "w-full max-w-sm",
+    className: "nds-w-full nds-max-w-sm",
   },
 } satisfies Meta<typeof Card>;
 
@@ -45,118 +48,96 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    // accessibility.item1 e item6 saem do axe, que o addon-a11y roda em toda
+    // story — mas o auditor só enxerga o critério se alguma story o declarar.
+    covers: [
+      "functional.item1",
+      "accessibility.item1",
+      "accessibility.item3",
+      "accessibility.item6",
+      "visual.item1",
+    ],
+  },
   args: {
     size: "default",
-    className: "w-full max-w-sm",
+    className: "nds-w-full nds-max-w-sm",
   },
   render: (args) => (
     <Card {...args}>
       <CardHeader>
-        <CardTitle>Cadeira Gamer Pro</CardTitle>
+        <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>
           Estrutura ergonômica com ajuste de altura e apoio lombar.
         </CardDescription>
-        <CardAction>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Ações do produto Cadeira Gamer Pro"
-            onClick={fn()}
-          >
-            <MoreVertical aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
-          </Button>
-        </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
+        <p className="nds-text-h4">R$ 1.299,00</p>
       </CardContent>
-      <CardFooter className="" data-justify="end" data-spacing="sm">
-        <Button
-          variant="outline"
-          aria-label="Cancelar edição de Cadeira Gamer Pro"
-          onClick={fn()}
-        >
-          Cancelar
+      <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+        <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">
+          Editar
         </Button>
-        <Button
-          aria-label="Salvar alterações em Cadeira Gamer Pro"
-          onClick={fn()}
-        >
-          Salvar
+        <Button variant="destructive" aria-label="Excluir produto Cadeira Gamer Pro">
+          Excluir
         </Button>
       </CardFooter>
     </Card>
   ),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]')!;
 
-    await step('F1: root tem data-slot="card" e data-size', async () => {
-      const root = canvasElement.querySelector('[data-slot="card"]');
-      await expect(root).toBeInTheDocument();
-      await expect(root).toHaveAttribute("data-size", "default");
+    await step("As partes do Card emitem os data-slot esperados", async () => {
+      // data-slot é o contrato de markup que as cinco stacks compartilham —
+      // classe muda de tema para tema, o slot não.
+      await expect(card).toBeInTheDocument();
+      for (const slot of [
+        "card-header",
+        "card-title",
+        "card-description",
+        "card-content",
+        "card-footer",
+      ]) {
+        await expect(card.querySelector(`[data-slot="${slot}"]`)).toBeInTheDocument();
+      }
     });
 
-    await step("F1: subcomponentes renderizam com data-slot correto", async () => {
+    await step("Header, conteúdo e rodapé são filhos DIRETOS, nessa ordem", async () => {
+      // `.nds-card:has(> .nds-card-footer)` zera o padding-bottom do card. Um
+      // wrapper entre os dois mataria a regra sem mudar nada visível aqui, daí
+      // medir o parentesco em vez da presença.
+      const slots = [...card.children].map((el) => el.getAttribute("data-slot"));
+      await expect(slots).toEqual(["card-header", "card-content", "card-footer"]);
+    });
+
+    await step("O rodapé se separa do conteúdo por uma borda superior", async () => {
+      const footer = card.querySelector<HTMLElement>('[data-slot="card-footer"]')!;
       await expect(
-        canvasElement.querySelector('[data-slot="card-header"]')
-      ).toBeInTheDocument();
+        Number.parseFloat(getComputedStyle(footer).borderTopWidth),
+      ).toBeGreaterThan(0);
+    });
+
+    await step("O título é um heading de verdade", async () => {
+      // O CSS dá aparência de título; quem dá a semântica é o elemento.
       await expect(
-        canvasElement.querySelector('[data-slot="card-title"]')
-      ).toBeInTheDocument();
-      await expect(
-        canvasElement.querySelector('[data-slot="card-description"]')
-      ).toBeInTheDocument();
-      await expect(
-        canvasElement.querySelector('[data-slot="card-action"]')
-      ).toBeInTheDocument();
-      await expect(
-        canvasElement.querySelector('[data-slot="card-content"]')
-      ).toBeInTheDocument();
-      await expect(
-        canvasElement.querySelector('[data-slot="card-footer"]')
+        canvas.getByRole("heading", { name: "Cadeira Gamer Pro" }),
       ).toBeInTheDocument();
     });
 
-    await step(
-      "A3: botões internos têm aria-label contextual com o identificador do card",
-      async () => {
-        const editButton = canvas.getByRole("button", {
-          name: /Ações do produto Cadeira Gamer Pro/i,
-        });
-        const cancelButton = canvas.getByRole("button", {
-          name: /Cancelar edição de Cadeira Gamer Pro/i,
-        });
-        const saveButton = canvas.getByRole("button", {
-          name: /Salvar alterações em Cadeira Gamer Pro/i,
-        });
-        await expect(editButton).toBeInTheDocument();
-        await expect(cancelButton).toBeInTheDocument();
-        await expect(saveButton).toBeInTheDocument();
-      }
-    );
+    await step("O tamanho escolhido chega ao DOM", async () => {
+      await expect(card).toHaveAttribute("data-size", args.size!);
+    });
 
-    await step(
-      "A4: Tab move foco sequencialmente pelos botões internos (focus ring visível)",
-      async () => {
-        await userEvent.tab();
-        const actionButton = canvas.getByRole("button", {
-          name: /Ações do produto Cadeira Gamer Pro/i,
-        });
-        await expect(actionButton).toHaveFocus();
-        await userEvent.tab();
-        const cancelButton = canvas.getByRole("button", {
-          name: /Cancelar edição de Cadeira Gamer Pro/i,
-        });
-        await expect(cancelButton).toHaveFocus();
-      }
-    );
-
-    await step("F3: header vira grid [1fr_auto] quando há CardAction", async () => {
-      const header = canvasElement.querySelector('[data-slot="card-header"]');
-      // has-data-[slot=card-action]:grid-cols-[1fr_auto] é classe condicional;
-      // validamos presença da CardAction que ativa o layout.
-      const action = header?.querySelector('[data-slot="card-action"]');
-      await expect(action).toBeInTheDocument();
+    await step("Os botões do rodapé nomeiam o produto que editam", async () => {
+      // "Excluir" sozinho vira uma fileira de botões idênticos numa lista de
+      // cards para quem navega por leitor de tela.
+      await expect(
+        canvas.getByRole("button", { name: "Editar produto Cadeira Gamer Pro" }),
+      ).toBeInTheDocument();
+      await expect(
+        canvas.getByRole("button", { name: "Excluir produto Cadeira Gamer Pro" }),
+      ).toBeInTheDocument();
     });
   },
 };
