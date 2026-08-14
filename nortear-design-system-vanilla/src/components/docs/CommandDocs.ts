@@ -73,6 +73,7 @@ function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
   wrap.appendChild(
     createCommand({
       placeholder,
+      emptyMessage: t('demonstration.labels.emptyMessage'),
       items,
       onSelect: (value) => {
         const item = items.find((i) => i.value === value);
@@ -84,6 +85,33 @@ function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
       },
     })
   );
+  return wrap;
+}
+
+/**
+ * A paleta já com uma busca sem correspondência — o estado que o par de
+ * Do & Don't compara. `emptyMessage: ''` é o lado errado: a região viva
+ * continua lá, sem nada para anunciar nem para ler.
+ */
+function buildDemoVazio(emptyMessage: string): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
+  wrap.appendChild(
+    createCommand({
+      placeholder: t('demonstration.labels.searchPlaceholder'),
+      emptyMessage,
+      items: [
+        { value: 'button', label: t('demonstration.labels.itemButton') },
+        { value: 'input',  label: t('demonstration.labels.itemInput')  },
+      ],
+    })
+  );
+
+  const inp = wrap.querySelector('input');
+  if (inp) {
+    inp.value = 'xyz';
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  }
   return wrap;
 }
 
@@ -253,40 +281,12 @@ export function createCommandDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
-                wrap.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.searchPlaceholder'),
-                    items: [
-                      { value: 'button', label: t('demonstration.labels.itemButton') },
-                      { value: 'input',  label: t('demonstration.labels.itemInput')  },
-                    ],
-                  })
-                );
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                // Empty state sem mensagem de feedback (sem CommandEmpty)
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
-                const cmd = createCommand({
-                  placeholder: t('demonstration.labels.searchPlaceholder'),
-                  items: [
-                    { value: 'button', label: t('demonstration.labels.itemButton') },
-                    { value: 'input',  label: t('demonstration.labels.itemInput')  },
-                  ],
-                });
-                wrap.appendChild(cmd);
-                // Força empty state para demonstrar o problema
-                const inp = wrap.querySelector('input');
-                if (inp) {
-                  inp.value = 'xyznotfound';
-                  inp.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                return wrap;
-              },
+              // Os dois lados mostram a MESMA busca sem correspondência: o que
+              // muda é haver ou não uma frase para ler. Antes o lado errado
+              // exibia a mensagem padrão da factory e desmentia a própria
+              // legenda ("omitir CommandEmpty").
+              doPreviewFactory: () => buildDemoVazio(t('demonstration.labels.emptyMessage')),
+              dontPreviewFactory: () => buildDemoVazio(''),
             },
             {
               doLabel: tNav('common.do'),
@@ -304,7 +304,7 @@ export function createCommandDocs(): HTMLElement {
                 hint.style.padding = '0.375rem 0.75rem';
                 hint.innerHTML = `
                   <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <kbd class="nds-kbd">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 return outer;
@@ -339,16 +339,16 @@ export function createCommandDocs(): HTMLElement {
 
       // ─── 6. Variantes (Padrões de Uso) ─────────────────────────────────
       case 'variantes': {
-        const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
-        const codeCombobox = `// Command inline como combobox dentro de Popover\nconst cmd = createCommand({\n  placeholder: 'Buscar item...',\n  items: listItems,\n  onSelect: (value) => {\n    setSelected(value);\n    closePopover();\n  },\n});`;
-        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  items: globalActions,\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
+        const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
+        const codeCombobox = `// Command inline como combobox dentro de Popover\nconst cmd = createCommand({\n  placeholder: 'Buscar item...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: listItems,\n  onSelect: (value) => {\n    setSelected(value);\n    closePopover();\n  },\n});`;
+        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
 
         const codeWithGroups = `const wrap = document.createElement('div');
-wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-wrap.style.width = '320px';
+wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
 wrap.appendChild(
   createCommand({
     placeholder: 'Buscar componente...',
+    emptyMessage: 'Nenhum resultado encontrado.',
     items: [
       { value: 'button',    label: 'Button',    group: 'Componentes' },
       { value: 'input',     label: 'Input',     group: 'Componentes' },
@@ -394,6 +394,7 @@ wrap.appendChild(
                 popover.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.comboboxSearch'),
+                    emptyMessage: t('demonstration.labels.emptyMessage'),
                     items: [
                       { value: 'button',    label: t('demonstration.labels.itemButton')    },
                       { value: 'input',     label: t('demonstration.labels.itemInput')     },
@@ -421,7 +422,7 @@ wrap.appendChild(
                 hint.innerHTML = `
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                   <span class="nds-flex-1">${DOMPurify.sanitize(t('demonstration.labels.openPalette'))}</span>
-                  <kbd class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style="display:inline-flex;align-items:center;justify-content:center;padding:0.125rem 0.375rem;">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
+                  <kbd class="nds-kbd">${DOMPurify.sanitize(t('demonstration.labels.shortcutKey'))}</kbd>
                 `;
                 outer.appendChild(hint);
                 const dialog = document.createElement('div');
@@ -429,9 +430,10 @@ wrap.appendChild(
                 dialog.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.dialogDescription'),
+                    emptyMessage: t('demonstration.labels.emptyMessage'),
                     items: [
-                      { value: 'button',    label: t('demonstration.labels.itemButton'),    group: t('demonstration.labels.groupComponents') },
-                      { value: 'input',     label: t('demonstration.labels.itemInput'),     group: t('demonstration.labels.groupComponents') },
+                      { value: 'button', label: t('demonstration.labels.itemButton'), group: t('demonstration.labels.groupComponents'), shortcut: '⌘B' },
+                      { value: 'input',  label: t('demonstration.labels.itemInput'),  group: t('demonstration.labels.groupComponents'), shortcut: '⌘I' },
                     ],
                   })
                 );
@@ -447,11 +449,11 @@ wrap.appendChild(
               code: codeWithGroups,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-                wrap.style.width = '320px';
+                wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
                 wrap.appendChild(
                   createCommand({
                     placeholder: t('demonstration.labels.searchPlaceholder'),
+                    emptyMessage: t('demonstration.labels.emptyMessage'),
                     items: [
                       { value: 'button',    label: 'Button',    group: t('demonstration.labels.groupComponents') },
                       { value: 'input',     label: 'Input',     group: t('demonstration.labels.groupComponents') },
@@ -513,6 +515,7 @@ wrap.appendChild(
         const interfaceCode = `// CommandOptions
 export type CommandOptions = {
   placeholder?: string;
+  emptyMessage?: string;
   items: CommandItem[];
   onSelect?: (value: string) => void;
   class?: string;
@@ -524,6 +527,8 @@ export type CommandItem = {
   label: string;
   group?: string;
   disabled?: boolean;
+  checked?: boolean;
+  shortcut?: string;
 };`;
 
         const propsCols = {
@@ -544,10 +549,11 @@ export type CommandItem = {
               title: t('props.commandTitle'),
               cols: propsCols,
               items: [
-                { name: 'placeholder', type: 'string',                defaultValue: '"Search…"', required: 'Não', description: toPlainText(t('props.table.inputPlaceholder')) },
-                { name: 'items',       type: 'CommandItem[]',          defaultValue: '—',         required: 'Sim', description: 'Lista de itens renderizados e filtrados.' },
-                { name: 'onSelect',    type: '(value: string) => void', defaultValue: '—',        required: 'Não', description: toPlainText(t('props.table.itemOnSelect')) },
-                { name: 'class',       type: 'string',                defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'placeholder',  type: 'string',                 defaultValue: '"Search…"',           required: 'Não', description: toPlainText(t('props.table.inputPlaceholder')) },
+                { name: 'emptyMessage', type: 'string',                 defaultValue: '"No results found."', required: 'Não', description: 'Frase anunciada pela região viva quando a busca não encontra nada.' },
+                { name: 'items',        type: 'CommandItem[]',          defaultValue: '—',                   required: 'Sim', description: 'Lista de itens renderizados e filtrados.' },
+                { name: 'onSelect',     type: '(value: string) => void', defaultValue: '—',                  required: 'Não', description: toPlainText(t('props.table.itemOnSelect')) },
+                { name: 'class',        type: 'string',                 defaultValue: '—',                   required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
             },
             {
@@ -558,6 +564,8 @@ export type CommandItem = {
                 { name: 'label',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Texto exibido no item.'                  },
                 { name: 'group',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Nome do grupo para agrupar itens.'        },
                 { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.itemDisabled'))  },
+                { name: 'checked',  type: 'boolean', defaultValue: '—',     required: 'Não', description: 'Estado de marcação. Sem valor, o item não é marcável e não ganha a marca à direita.' },
+                { name: 'shortcut', type: 'string',  defaultValue: '—',     required: 'Não', description: 'Atalho exibido à direita. Entra no nome acessível do item e esconde a marca.' },
               ],
             },
           ],
@@ -588,16 +596,19 @@ export type CommandItem = {
             value:       t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
+          // A coluna do meio traz o SELETOR REAL da folha compartilhada
+          // (`docs/shared/styles/nds/command.css`). Antes trazia `bg-accent`,
+          // `rounded-md / rounded-sm` e companhia — vocabulário do framework
+          // que saiu do projeto, que não casa com nada no CSS de hoje.
           items: [
-            { token: '--popover',            value: 'bg-popover',              description: t('tokens.table.popoverBg')   },
-            { token: '--popover-foreground', value: 'text-popover-foreground', description: t('tokens.table.popoverFg')   },
-            { token: '--muted-foreground',   value: 'nds-text-muted-foreground',   description: t('tokens.table.mutedFg')     },
-            { token: '--background',         value: 'bg-transparent',          description: t('tokens.table.inputBg')     },
-            { token: '--border',             value: 'border-b',                description: t('tokens.table.inputBorder') },
-            { token: '--accent',             value: 'bg-accent',               description: t('tokens.table.selectedBg')  },
-            { token: '--accent-foreground',  value: 'text-accent-foreground',  description: t('tokens.table.selectedFg')  },
-            { token: '--border',             value: 'border',                  description: t('tokens.table.border')      },
-            { token: '--radius',             value: 'rounded-md / rounded-sm', description: t('tokens.table.radius')      },
+            { token: '--popover',            value: '.nds-command',                                description: toPlainText(t('tokens.table.popoverBg'))   },
+            { token: '--popover-foreground', value: '.nds-command',                                description: toPlainText(t('tokens.table.popoverFg'))   },
+            { token: '--muted-foreground',   value: '.nds-command-group-heading',                  description: toPlainText(t('tokens.table.mutedFg'))     },
+            { token: '--border',             value: '.nds-command-input-wrapper',                  description: toPlainText(t('tokens.table.inputBorder')) },
+            { token: '--accent',             value: '.nds-command-item[aria-selected="true"]',     description: toPlainText(t('tokens.table.selectedBg'))  },
+            { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]',     description: toPlainText(t('tokens.table.selectedFg'))  },
+            { token: '--border',             value: '.nds-command-separator',                      description: toPlainText(t('tokens.table.border'))      },
+            { token: '--radius',             value: '.nds-command · .nds-command-item',            description: toPlainText(t('tokens.table.radius'))      },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

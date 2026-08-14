@@ -1,11 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, waitFor, expect, fn, screen } from 'storybook/test';
 import { Root as Command } from '@/components/ui/command';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
 import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.svelte';
 import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.svelte';
+import CommandComposicaoComboboxStory from './CommandComposicaoComboboxStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
+
+// Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela
+// play, e a aba Actions nasceria vazia.
+const aoEscolherNoCombobox = fn();
+const aoRodarComando = fn();
 
 const meta: Meta = {
   title: 'UI/Command/Compositions',
@@ -18,7 +25,10 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Padrões de composição do Command: com grupos e separadores, com shortcuts, com CommandLinkItem e command palette.',
+          'Padrões de composição do Command: com grupos e separadores, com atalhos, com ' +
+          'CommandLinkItem, dentro de um Popover (combobox) e dentro de um Dialog ' +
+          '(command palette). A paleta em si não flutua — quem flutua é o Popover e o ' +
+          'Dialog, e os dois já existem no sistema.',
       },
     },
   },
@@ -27,28 +37,70 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ─── Com grupos ───────────────────────────────────────────────────────────────
+
 export const WithGroups: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => ({
     Component: CommandComposicaoGruposStory,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
+    const campo = canvas.getByRole('combobox');
 
-    await step('grupos são renderizados com headings', async () => {
-      const input = canvas.getByRole('combobox');
-      await expect(input).toBeInTheDocument();
+    await userEvent.clear(campo);
+    await waitFor(async () => {
+      // Com o campo vazio: 4 componentes + 3 utilitários.
+      await expect(canvas.getAllByRole('option')).toHaveLength(7);
     });
 
-    await step('filtro fuzzy funciona entre grupos', async () => {
-      const input = canvas.getByRole('combobox');
-      await userEvent.type(input, 'button');
-      const item = canvas.getByText('Button');
-      await expect(item).toBeInTheDocument();
-      await userEvent.clear(input);
+    await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
+      // Sem o `aria-labelledby` o leitor anuncia "grupo" e a pessoa não sabe de
+      // qual bloco se trata.
+      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
+      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+    });
+
+    await step('O cabeçalho não é opção da lista', async () => {
+      // Cabeçalho navegável seria pior que inútil: a seta pararia nele como se
+      // fosse comando. Os 7 contados acima são exatamente os comandos.
+      const cabecalhos = raiz.querySelectorAll('.nds-command-group-heading');
+      await expect(cabecalhos).toHaveLength(2);
+      for (const cabecalho of cabecalhos) {
+        await expect(cabecalho.getAttribute('role')).not.toBe('option');
+      }
+    });
+
+    await step('O divisor é desenho, não estrutura', async () => {
+      const divisor = raiz.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
+      await expect(divisor).toHaveClass(/nds-command-separator/);
+      // `role="separator"` não é filho permitido de um listbox; quem separa os
+      // blocos para quem não vê a tela é o rótulo do grupo.
+      await expect(divisor).toHaveAttribute('aria-hidden', 'true');
+      await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
+    });
+
+    await step('O filtro atravessa os grupos', async () => {
+      await userEvent.type(campo, 'n');
+      await waitFor(async () => {
+        // Buscando "n": button, input (Componentes) e cn (Utilitários).
+        await expect(canvas.getAllByRole('option')).toHaveLength(3);
+      });
+      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
+      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+
+      // A story TERMINA com a lista inteira: é o quadro de `visual.item1`.
+      await userEvent.clear(campo);
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(7);
+      });
     });
   },
 };
+
+// ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
   render: () => ({
@@ -57,13 +109,49 @@ export const WithShortcuts: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
 
-    await step('shortcuts são renderizados nos itens', async () => {
-      const shortcut = canvas.getByText('⌘N');
-      await expect(shortcut).toBeInTheDocument();
+    await userEvent.clear(campo);
+    await waitFor(async () => {
+      await expect(canvas.getAllByRole('option')).toHaveLength(6);
+    });
+
+    const novo = canvas.getByRole('option', { name: /Novo arquivo/ });
+
+    await step('O atalho faz parte do nome do comando', async () => {
+      // Sem isso o leitor anunciaria "Novo arquivo" e a pessoa nunca saberia
+      // que existe uma tecla — o atalho é informação, não decoração.
+      await expect(novo).toHaveAccessibleName(/⌘N/);
+      const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      await expect(atalho.getAttribute('aria-hidden')).toBeNull();
+      await expect(atalho).toHaveClass(/nds-command-shortcut/);
+    });
+
+    await step('O atalho fica encostado à direita do comando', async () => {
+      const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      const caixaItem = novo.getBoundingClientRect();
+      const caixaAtalho = atalho.getBoundingClientRect();
+      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
+        caixaAtalho.left - caixaItem.left,
+      );
+    });
+
+    await step('O atalho não entra no filtro', async () => {
+      // Quem busca "⌘" está procurando a tecla, não o comando: o filtro roda
+      // sobre o `value`, e nenhum deles carrega o símbolo.
+      await userEvent.type(campo, '⌘');
+      await waitFor(async () => {
+        await expect(canvas.queryByRole('option', { name: /Novo arquivo/ })).toBeNull();
+      });
+      await userEvent.clear(campo);
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(6);
+      });
     });
   },
 };
+
+// ─── Com CommandLinkItem ──────────────────────────────────────────────────────
 
 export const WithLinkItem: Story = {
   name: 'With CommandLinkItem',
@@ -73,26 +161,259 @@ export const WithLinkItem: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
 
-    await step('link items estão presentes', async () => {
-      const input = canvas.getByRole('combobox');
-      await expect(input).toBeInTheDocument();
+    await userEvent.clear(campo);
+    await waitFor(async () => {
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
+    });
+
+    await step('O comando de link é uma âncora de verdade', async () => {
+      const docs = canvas.getByRole('option', { name: /Button — Docs/ });
+      await expect(docs.tagName).toBe('A');
+      await expect(docs).toHaveAttribute('href', '/docs/button');
+      await expect(docs).toHaveClass(/nds-command-item/);
+      await expect(docs).toHaveAttribute('data-slot', 'command-item');
+    });
+
+    await step('Link externo abre em outra aba sem entregar a janela', async () => {
+      const github = canvas.getByRole('option', { name: /GitHub/ });
+      await expect(github).toHaveAttribute('target', '_blank');
+      await expect(github).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    await step('Os ícones não entram no nome do comando', async () => {
+      const docs = canvas.getByRole('option', { name: /Button — Docs/ });
+      await expect(docs).toHaveAccessibleName('Button — Docs');
+      for (const svg of docs.querySelectorAll('svg')) {
+        await expect(svg).toHaveAttribute('aria-hidden', 'true');
+      }
+    });
+
+    await step('O ícone de saída fica encostado à direita', async () => {
+      // Por geometria, não por classe: `ml-auto` (que morava aqui) não existe no
+      // CSS e empurrava coisa nenhuma — a asserção precisa cair se a classe
+      // certa sair de novo.
+      const docs = canvas.getByRole('option', { name: /Button — Docs/ });
+      const saida = docs.querySelector<HTMLElement>('.nds-spacer-start')!;
+      const caixaItem = docs.getBoundingClientRect();
+      const caixaSaida = saida.getBoundingClientRect();
+      await expect(caixaItem.right - caixaSaida.right).toBeLessThan(
+        caixaSaida.left - caixaItem.left,
+      );
     });
   },
 };
 
-// Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
-export const CommandPalette: StoryObj<Record<string, never>> = {
+// ─── Combobox (Command dentro de Popover) ─────────────────────────────────────
+
+export const AsCombobox: Story = {
+  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
   render: () => ({
-    Component: CommandComposicaoPaletteStory,
-    props: {},
+    Component: CommandComposicaoComboboxStory,
+    props: { onValueChange: aoEscolherNoCombobox },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('combobox');
 
-    await step('botão de abertura do command palette está presente', async () => {
-      const btn = canvas.getByRole('button', { name: /buscar/i });
-      await expect(btn).toBeInTheDocument();
+    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria o
+    // popover a partir do estado que a rodada anterior deixou.
+    const abrir = async (): Promise<HTMLElement> => {
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      return await waitForPortal('dialog');
+    };
+
+    await step('O gatilho anuncia que abre uma lista para escolher', async () => {
+      // O primitivo do Popover trata o gatilho como botão comum: sem estes
+      // atributos o leitor de tela não diz que há uma escolha do outro lado.
+      await expect(gatilho).toHaveAttribute('role', 'combobox');
+      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(gatilho).toHaveAttribute('aria-expanded');
+      // `role="combobox"` não aceita nome vindo do conteúdo — sem o
+      // `aria-labelledby` o gatilho ficaria anônimo.
+      await expect(gatilho).toHaveAccessibleName(/Componente/);
+    });
+
+    await step('Abrir revela a paleta dentro do popover', async () => {
+      const painel = await abrir();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+
+      const dentro = within(painel);
+      await expect(dentro.getByRole('listbox')).toBeVisible();
+      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
+      // o campo com Tab.
+      await waitFor(async () => {
+        await expect(busca).toHaveFocus();
+      });
+    });
+
+    await step('A busca filtra dentro do popover', async () => {
+      const painel = await abrir();
+      const busca = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+      await userEvent.clear(busca);
+      await userEvent.type(busca, 'text');
+      await waitFor(async () => {
+        await expect(within(painel).getAllByRole('option')).toHaveLength(1);
+      });
+      await expect(within(painel).getByRole('option', { name: 'Textarea' })).toBeVisible();
+      await userEvent.clear(busca);
+      await waitFor(async () => {
+        await expect(within(painel).getAllByRole('option')).toHaveLength(5);
+      });
+    });
+
+    await step('Escolher fecha o popover e leva o valor para o gatilho', async () => {
+      const painel = await abrir();
+      const antes = aoEscolherNoCombobox.mock.calls.length;
+      await userEvent.click(within(painel).getByRole('option', { name: 'Input' }));
+
+      await waitForPortalGone('dialog');
+      await expect(aoEscolherNoCombobox.mock.calls.length).toBe(antes + 1);
+      await expect(aoEscolherNoCombobox.mock.calls[antes][0]).toBe('input');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(gatilho).toHaveTextContent('Input');
+      // O nome acessível acompanha o valor visível (WCAG 2.5.3).
+      await expect(gatilho).toHaveAccessibleName(/Input/);
+    });
+  },
+};
+
+// ─── Command Palette (Command dentro de Dialog) ───────────────────────────────
+
+export const CommandPalette: Story = {
+  parameters: {
+    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+  },
+  render: () => ({
+    Component: CommandComposicaoPaletteStory,
+    props: { onCommandRun: aoRodarComando },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // O gatilho da paleta é um botão comum (o CommandDialog não expõe trigger),
+    // então a idempotência se apoia na presença do painel, não em aria-expanded.
+    const painelNoDom = () => document.querySelector('[data-slot="dialog-content"]');
+    const fechar = async (): Promise<void> => {
+      if (painelNoDom()) await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+      // O portal sumir não basta: enquanto o diálogo é modal, a lib põe
+      // `pointer-events: none` no `body` para tornar o resto da página inerte, e
+      // devolve isso DEPOIS de remover o nó. Clicar no gatilho nesse intervalo
+      // falha com "element has pointer-events: none" — que foi exatamente o que
+      // reprovou aqui. A espera termina quando a página volta a aceitar ponteiro.
+      await waitFor(() => {
+        if (getComputedStyle(document.body).pointerEvents === 'none') {
+          throw new Error('a página ainda está inerte pelo diálogo');
+        }
+      });
+    };
+
+    // Primeiro de tudo: a story TERMINA aberta, e com o diálogo modal montado o
+    // resto da página fica inerte — uma consulta por papel no gatilho falharia
+    // na segunda rodada do painel Interactions.
+    await fechar();
+
+    const gatilho = canvas.getByRole('button', { name: /Buscar/ });
+    const abrirPorBotao = async (): Promise<HTMLElement> => {
+      if (!painelNoDom()) await userEvent.click(gatilho);
+      return await waitForPortal('dialog');
+    };
+
+    await step('A dica do atalho fica visível no gatilho', async () => {
+      // Atalho escondido é atalho que ninguém descobre.
+      const dica = gatilho.querySelector<HTMLElement>('.nds-kbd')!;
+      await expect(dica).toBeVisible();
+      await expect(dica).toHaveTextContent('⌘K');
+      await expect(dica.tagName).toBe('KBD');
+    });
+
+    await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
+      const painel = await abrirPorBotao();
+      const idTitulo = painel.getAttribute('aria-labelledby');
+      await expect(idTitulo).toBeTruthy();
+
+      const titulo = document.getElementById(idTitulo!)!;
+      await expect(titulo).toHaveTextContent('Command Palette');
+      // DENTRO do painel: fora dele o título ficava no fluxo da página o tempo
+      // todo, mesmo com a paleta fechada.
+      await expect(painel.contains(titulo)).toBe(true);
+      const cabecalho = titulo.closest<HTMLElement>('[data-slot="dialog-header"]')!;
+      await expect(cabecalho).toHaveClass(/nds-sr-only/);
+      // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
+      // apagaria o nome do diálogo.
+      await expect(cabecalho.getBoundingClientRect().width).toBeLessThan(4);
+    });
+
+    await step('O foco vai direto para a busca', async () => {
+      const painel = await abrirPorBotao();
+      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      await waitFor(async () => {
+        await expect(busca).toHaveFocus();
+      });
+      await expect(within(painel).getAllByRole('option')).toHaveLength(4);
+    });
+
+    await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
+      // Par fechar→abrir por CLIQUE: o foco volta para quem estava focado quando
+      // o painel montou, então só um clique real nesta rodada prova que o
+      // destino é o gatilho.
+      await fechar();
+      await userEvent.click(gatilho);
+      await waitForPortal('dialog');
+
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+      await waitFor(async () => {
+        await expect(gatilho).toHaveFocus();
+      });
+    });
+
+    await step('Cmd+K abre a paleta de qualquer lugar da página', async () => {
+      // O passo anterior deixou fechado; a guarda mantém o passo autossuficiente.
+      await fechar();
+      await userEvent.keyboard('{Meta>}k{/Meta}');
+
+      const painel = await waitForPortal('dialog');
+      const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
+      await waitFor(async () => {
+        await expect(busca).toHaveFocus();
+      });
+      // Os atalhos de cada comando aparecem à direita, encostados na borda.
+      const atalho = painel.querySelector<HTMLElement>(
+        '[data-value="dashboard"] [data-slot="command-shortcut"]',
+      )!;
+      await expect(atalho).toHaveTextContent('⌘D');
+      const caixaItem = atalho
+        .closest<HTMLElement>('[data-slot="command-item"]')!
+        .getBoundingClientRect();
+      const caixaAtalho = atalho.getBoundingClientRect();
+      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
+        caixaAtalho.left - caixaItem.left,
+      );
+    });
+
+    await step('Escolher um comando executa e fecha', async () => {
+      const painel = await waitForPortal('dialog');
+      const antes = aoRodarComando.mock.calls.length;
+      await userEvent.click(within(painel).getByRole('option', { name: /Documentos/ }));
+
+      await waitForPortalGone('dialog');
+      await expect(aoRodarComando.mock.calls.length).toBe(antes + 1);
+      await expect(aoRodarComando.mock.calls[antes][0]).toBe('documents');
+      await expect(canvas.getByTestId('palette-executado')).toHaveTextContent('documents');
+
+      // A story TERMINA com a paleta ABERTA: é o quadro que o Chromatic captura
+      // e é o que `visual.item4` descreve.
+      await userEvent.keyboard('{Meta>}k{/Meta}');
+      const reaberto = await waitForPortal('dialog');
+      await waitFor(async () => {
+        await expect(
+          reaberto.querySelector<HTMLElement>('[data-slot="command-input"]'),
+        ).toHaveFocus();
+      });
+      await expect(screen.getByRole('dialog')).toBeVisible();
     });
   },
 };

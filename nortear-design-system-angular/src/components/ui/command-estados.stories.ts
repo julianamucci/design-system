@@ -26,8 +26,11 @@ type Story = StoryObj;
 
 // ─── Sem resultados ───────────────────────────────────────────────────────────
 
-export const Empty: Story = {
-  parameters: { covers: ['visual.item2'] },
+export const EmptyState: Story = {
+  // `functional.item1` também é daqui: a metade "a frase de vazio aparece
+  // quando nada sobra" é verificada nesta story, e não no Playground — lá ela
+  // era a mesma asserção escrita duas vezes.
+  parameters: { covers: ['functional.item1', 'visual.item2'] },
   render: () => ({
     template: `
       <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
@@ -52,11 +55,18 @@ export const Empty: Story = {
     const campo = canvas.getByRole('combobox');
     const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
 
-    // Idempotente: a busca parte sempre do zero.
+    // Idempotente: a busca parte sempre do zero — a play REEXECUTA no mesmo
+    // DOM, e esta story TERMINA com texto no campo.
     await userEvent.clear(campo);
-    await userEvent.type(campo, 'xyz');
+    // Com o campo vazio há dois comandos. Os itens só se registram no render
+    // seguinte ao da montagem, e sem esta espera a contagem de zero logo
+    // adiante passaria só por ter chegado cedo demais.
+    await waitFor(async () => {
+      await expect(canvas.getAllByRole('option')).toHaveLength(2);
+    });
 
-    await step('Nenhum comando sobra e a lista fica vazia', async () => {
+    await step('Buscando "xyz", nenhum comando sobra e a lista fica vazia', async () => {
+      await userEvent.type(campo, 'xyz');
       await waitFor(async () => {
         await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       });
@@ -65,13 +75,14 @@ export const Empty: Story = {
         .not.toBeVisible();
     });
 
-    await step('A frase é anunciada, não só desenhada', async () => {
+    await step('A frase é ANUNCIADA, não só desenhada', async () => {
       await expect(vazio).toBeVisible();
       await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
       await expect(vazio).toHaveClass(/nds-command-empty/);
       await expect(vazio).toHaveAttribute('data-empty', '');
-      // Sem a região viva, quem usa leitor de tela digitaria no vazio sem
-      // nunca saber que a busca não achou nada.
+      // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
+      // de tela anuncia, e criá-la só quando a busca esvazia não anunciaria
+      // nada — quem usa leitor digitaria no vazio sem saber que não achou.
       await expect(vazio).toHaveAttribute('role', 'status');
       await expect(vazio).toHaveAttribute('aria-live', 'polite');
       await expect(vazio).toHaveAttribute('aria-atomic', 'true');
@@ -84,19 +95,34 @@ export const Empty: Story = {
       await expect(lista.contains(vazio)).toBe(false);
     });
 
-    await step('Apagar a busca traz os comandos de volta', async () => {
+    await step('Apagar a busca traz os comandos, e a região viva volta a zero', async () => {
       await userEvent.clear(campo);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(2);
       });
+      // Continua no DOM (é o que preserva o anúncio), mas sem a classe que
+      // traz 24px de respiro em cima e embaixo.
       await expect(vazio).not.toHaveAttribute('data-empty');
+      await expect(vazio).not.toHaveClass(/nds-command-empty/);
+      await expect(vazio.getBoundingClientRect().height).toBe(0);
+    });
+
+    await step('E a story termina SEM resultados — é o quadro que o Chromatic tira', async () => {
+      // Terminar cheia faria a foto do estado vazio ser a foto do estado
+      // cheio: o Chromatic captura o FIM da play, não o meio.
+      await userEvent.type(campo, 'xyz');
+      await waitFor(async () => {
+        await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+      });
+      await expect(vazio).toBeVisible();
+      await expect(vazio).toHaveAttribute('data-empty', '');
     });
   },
 };
 
 // ─── Comando desabilitado ─────────────────────────────────────────────────────
 
-export const DisabledItem: Story = {
+export const ItemDisabled: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item5'] },
   render: () => ({
     props: { ultimo: '' },
@@ -140,6 +166,10 @@ export const DisabledItem: Story = {
       const estilo = getComputedStyle(arquivar);
       await expect(estilo.pointerEvents).toBe('none');
       await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+      // O contrato diz "cursor não permitido", e a folha entrega os dois: o
+      // `pointer-events: none` barra o clique, e o `cursor` é o que a pessoa vê
+      // antes de tentar. Sem esta linha, metade do item ficava sem verificação.
+      await expect(estilo.cursor).toBe('not-allowed');
     });
 
     await step('Clicar não executa o comando', async () => {
@@ -172,7 +202,11 @@ export const DisabledItem: Story = {
 // ─── Comando marcado ──────────────────────────────────────────────────────────
 
 export const CheckedItem: Story = {
-  parameters: { covers: ['functional.item5'] },
+  // `visual.item5` é "estado disabled E estado checked": o quadro do
+  // desabilitado está em `ItemDisabled`, o do marcado é este. Declarar só lá
+  // deixava metade do item sem story declarada — e esta não interage, então o
+  // Chromatic fotografa exatamente a marca acesa.
+  parameters: { covers: ['functional.item5', 'visual.item5'] },
   render: () => ({
     template: `
       <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">

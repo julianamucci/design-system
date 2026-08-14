@@ -191,27 +191,35 @@ type Story = StoryObj;
 
 // ─── Combobox ─────────────────────────────────────────────────────────────────
 
-export const Combobox: Story = {
+export const AsCombobox: Story = {
   parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
   render: () => ({ template: '<demo-command-combobox />' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('combobox');
 
-    // Idempotente: a play REEXECUTA no mesmo DOM, e um clique cego alternaria
-    // o popover a partir do estado que a rodada anterior deixou.
+    // Par idempotente nos DOIS sentidos: a play REEXECUTA no mesmo DOM e esta
+    // story termina com o popover aberto, então nem "abrir" nem "fechar" pode
+    // ser clique cego — na segunda rodada ele inverteria o resultado.
     const abrir = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       return await esperarPortal('dialog');
     };
+    const fechar = async (): Promise<void> => {
+      if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
+      await esperarPortalSumir('dialog');
+    };
 
-    await step('O gatilho anuncia que abre uma lista para escolher', async () => {
+    await step('Fechado, o gatilho anuncia que abre uma lista para escolher', async () => {
+      await fechar();
       // É o que o conteúdo compartilhado cobra: o primitivo do Popover trata o
       // gatilho como botão comum, e sem estes dois atributos o leitor de tela
       // não diz que há uma escolha do outro lado.
       await expect(gatilho).toHaveAttribute('role', 'combobox');
       await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(gatilho).toHaveAttribute('aria-expanded');
+      // O estado fechado é metade do item visual — e o `aria-expanded` tem de
+      // dizer "false", não apenas existir.
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Abrir revela a paleta dentro do popover', async () => {
@@ -236,6 +244,17 @@ export const Combobox: Story = {
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await expect(gatilho).toHaveTextContent('Input');
     });
+
+    await step('E a story termina ABERTA — é o quadro que o Chromatic tira', async () => {
+      // O item visual pede o gatilho "fechado e aberto". Terminar depois da
+      // escolha fotografava só o fechado, e o quadro aberto — a paleta dentro
+      // do popover, que é o que este padrão tem de próprio — nunca era
+      // capturado. O gatilho segue visível no quadro, já com o valor escolhido.
+      const painel = await abrir();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(gatilho).toHaveTextContent('Input');
+      await expect(within(painel).getByRole('listbox')).toBeVisible();
+    });
   },
 };
 
@@ -243,7 +262,19 @@ export const Combobox: Story = {
 
 export const CommandPalette: Story = {
   parameters: {
-    covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    // `accessibility.item1` pede "sem violações axe no estado padrão (inline e
+    // dialog)". O Playground cobre o inline; o dialog é aqui — a story termina
+    // com a paleta aberta e o axe roda sobre ela. A única regra desligada no
+    // `meta` é `aria-hidden-focus`, que reprova as âncoras de foco do próprio
+    // primitivo (defeito de lib, documentado em `wait-for-portal.ts`); as
+    // outras noventa e tantas valem, inclusive as do padrão de diálogo.
+    covers: [
+      'functional.item3',
+      'functional.item6',
+      'accessibility.item1',
+      'accessibility.item3',
+      'visual.item4',
+    ],
   },
   render: () => ({ template: '<demo-command-palette />' }),
   play: async ({ canvasElement, step }) => {

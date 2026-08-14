@@ -228,10 +228,11 @@ const codeImportWithPopover = `import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";`;
 
+// CommandEmpty fica FORA do CommandList: ele é uma região viva (role="status"),
+// e região viva não é filha permitida de role="listbox".
 const codeInline = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button">Button</CommandItem>
       <CommandItem value="input">Input</CommandItem>
@@ -241,6 +242,7 @@ const codeInline = `<Command>
       <CommandItem value="badge">Badge</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
 
 const codeCombobox = `<script setup>
@@ -258,8 +260,7 @@ const selected = ref('');
     <Command>
       <CommandInput placeholder="Buscar item..." />
       <CommandList>
-        <CommandEmpty>Nenhum resultado.</CommandEmpty>
-        <CommandGroup>
+        <CommandGroup heading="Componentes">
           <CommandItem
             v-for="item in items"
             :key="item.value"
@@ -270,6 +271,7 @@ const selected = ref('');
           </CommandItem>
         </CommandGroup>
       </CommandList>
+      <CommandEmpty>Nenhum resultado.</CommandEmpty>
     </Command>
   </PopoverContent>
 </Popover>`;
@@ -281,7 +283,6 @@ const open = ref(false);
 <CommandDialog v-model:open="open" title="Command Palette" description="Busque por um comando ou ação...">
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Ações">
       <CommandItem value="salvar" @select="() => open = false">
         Salvar
@@ -289,6 +290,7 @@ const open = ref(false);
       </CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </CommandDialog>`;
 
 const codeCustomizationTokens = `/* Em globals.css */
@@ -316,6 +318,7 @@ interface CommandInputProps {
 
 // CommandItem
 interface CommandItemProps extends ListboxItemProps {
+  checked?: boolean;       // vira data-checked; acende a marca à direita
   class?: string;
 }
 
@@ -332,7 +335,6 @@ interface CommandDialogProps extends DialogRootProps {
 const codeCompWithGroups = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
     <CommandGroup heading="Componentes">
       <CommandItem value="button">Button</CommandItem>
       <CommandItem value="input">Input</CommandItem>
@@ -346,6 +348,7 @@ const codeCompWithGroups = `<Command>
       <CommandItem value="twmerge">twMerge()</CommandItem>
     </CommandGroup>
   </CommandList>
+  <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
@@ -424,6 +427,7 @@ const commandInputPropItems = computed(() => [
 
 const commandItemPropItems = computed(() => [
   { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.itemValue'))    },
+  { name: 'checked',  type: 'boolean',             defaultValue: '—',     required: 'Não', description: toPlainText(tContent('states.selected.behavior')) },
   { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.itemDisabled')) },
   { name: 'onSelect', type: '() => void',          defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.itemOnSelect')) },
   { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className'))    },
@@ -437,15 +441,19 @@ const commandDialogPropItems = computed(() => [
   { name: 'class',           type: 'string',     defaultValue: '—',                        required: 'Não', description: toPlainText(tContent('props.table.className'))                 },
 ]);
 
+// A coluna do meio traz SELETOR REAL, lido de `docs/shared/styles/nds/command.css`.
+// O que morava aqui (`bg-popover`, `data-selected:bg-muted`, `rounded-xl`) era
+// vocabulário do framework que saiu do projeto: classe que não existe em lugar
+// nenhum, e customização que ninguém consegue reproduzir.
 const tokenRows = computed(() => [
-  { token: '--popover',            value: 'bg-popover',          description: tContent('tokens.table.popoverBg')   },
-  { token: '--popover-foreground', value: 'text-popover-foreground', description: tContent('tokens.table.popoverFg') },
-  { token: '--muted-foreground',   value: 'nds-text-muted-foreground', description: tContent('tokens.table.mutedFg')   },
-  { token: '--input',              value: 'border-input',         description: tContent('tokens.table.inputBorder') },
-  { token: '--accent',             value: 'data-selected:bg-muted', description: tContent('tokens.table.selectedBg') },
-  { token: '--foreground',         value: 'data-selected:text-foreground', description: tContent('tokens.table.selectedFg') },
-  { token: '--border',             value: 'border',               description: tContent('tokens.table.border')     },
-  { token: '--radius',             value: 'rounded-xl / rounded-sm', description: tContent('tokens.table.radius')  },
+  { token: '--popover',            value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverBg'))  },
+  { token: '--popover-foreground', value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverFg'))  },
+  { token: '--muted-foreground',   value: '.nds-command-group-heading',                description: toPlainText(tContent('tokens.table.mutedFg'))    },
+  { token: '--border',             value: '.nds-command-input-wrapper',                description: toPlainText(tContent('tokens.table.inputBorder')) },
+  { token: '--accent',             value: '.nds-command-item[aria-selected="true"]',   description: toPlainText(tContent('tokens.table.selectedBg'))  },
+  { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]',   description: toPlainText(tContent('tokens.table.selectedFg'))  },
+  { token: '--border',             value: '.nds-command-separator',                    description: toPlainText(tContent('tokens.table.border'))      },
+  { token: '--radius',             value: '.nds-command · .nds-command-item',          description: toPlainText(tContent('tokens.table.radius'))      },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -455,13 +463,16 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.item4'),
 ]);
 
+// A tabela de teclado escreve textNode: sem `toPlainText` o `<code>` de
+// `enter` chegaria literal à tela. Vale para a linha inteira, não só para as
+// que hoje trazem tag — o conteúdo é compartilhado e ganha markup sem aviso.
 const keyboardItems = computed(() => [
-  { key: 'Arrow Down',      description: tContent('accessibility.keyboard.arrowDown') },
-  { key: 'Arrow Up',      description: tContent('accessibility.keyboard.arrowUp')   },
-  { key: 'Enter',  description: tContent('accessibility.keyboard.enter')     },
-  { key: 'Escape', description: tContent('accessibility.keyboard.escape')    },
-  { key: 'Tab',    description: tContent('accessibility.keyboard.tab')       },
-  { key: '⌘K',    description: tContent('accessibility.keyboard.cmdK')       },
+  { key: 'Arrow Down', description: toPlainText(tContent('accessibility.keyboard.arrowDown')) },
+  { key: 'Arrow Up',   description: toPlainText(tContent('accessibility.keyboard.arrowUp'))   },
+  { key: 'Enter',      description: toPlainText(tContent('accessibility.keyboard.enter'))     },
+  { key: 'Escape',     description: toPlainText(tContent('accessibility.keyboard.escape'))    },
+  { key: 'Tab',        description: toPlainText(tContent('accessibility.keyboard.tab'))       },
+  { key: '⌘K',         description: toPlainText(tContent('accessibility.keyboard.cmdK'))      },
 ]);
 
 const relatedItems = computed(() => [
@@ -552,7 +563,6 @@ const visualTestItems = computed(() => [
             <Command>
               <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
               <CommandList>
-                <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
                 <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
                   <CommandItem
                     value="button"
@@ -577,6 +587,9 @@ const visualTestItems = computed(() => [
                   </CommandItem>
                 </CommandGroup>
               </CommandList>
+              <!-- Fora do CommandList: é uma região viva (role="status"), e
+                   região viva não é filha permitida de role="listbox". -->
+              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
             </Command>
           </div>
         </div>
@@ -598,9 +611,8 @@ const visualTestItems = computed(() => [
                 role="combobox"
                 :aria-expanded="comboboxOpen"
                 :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-                class="nds-cluster"
+                class="nds-cluster nds-w-xs"
                 data-justify="between"
-                style="width: 14rem"
               >
                 {{
                   comboboxValue
@@ -609,15 +621,11 @@ const visualTestItems = computed(() => [
                 }}
               </Button>
             </PopoverTrigger>
-            <PopoverContent
-              class="nds-p-0"
-              style="width: 14rem"
-            >
+            <PopoverContent class="nds-p-0 nds-w-xs">
               <Command>
                 <CommandInput :placeholder="tContent('demonstration.labels.comboboxSearch')" />
                 <CommandList>
-                  <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-                  <CommandGroup>
+                  <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
                     <CommandItem
                       v-for="item in comboboxItems"
                       :key="item.value"
@@ -628,6 +636,7 @@ const visualTestItems = computed(() => [
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
+                <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               </Command>
             </PopoverContent>
           </Popover>
@@ -657,12 +666,7 @@ const visualTestItems = computed(() => [
               data-spacing="xs"
             >
               {{ tContent('demonstration.labels.shortcutHint') }}
-              <kbd
-                class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
-                style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
-              >
-                {{ tContent('demonstration.labels.shortcutKey') }}
-              </kbd>
+              <kbd class="nds-kbd">{{ tContent('demonstration.labels.shortcutKey') }}</kbd>
             </span>
           </div>
           <CommandDialog
@@ -672,7 +676,6 @@ const visualTestItems = computed(() => [
           >
             <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
             <CommandList>
-              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
                 <CommandItem
                   value="button"
@@ -698,6 +701,7 @@ const visualTestItems = computed(() => [
                 </CommandItem>
               </CommandGroup>
             </CommandList>
+            <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
           </CommandDialog>
         </div>
       </div>
@@ -761,13 +765,13 @@ const visualTestItems = computed(() => [
               model-value="zzz"
             />
             <CommandList>
-              <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
               <CommandGroup heading="Componentes">
                 <CommandItem value="button">
                   Button
                 </CommandItem>
               </CommandGroup>
             </CommandList>
+            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           </Command>
         </div>
       </template>
@@ -807,10 +811,7 @@ const visualTestItems = computed(() => [
             data-spacing="xs"
           >
             Pressione
-            <kbd
-              class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
-              style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
-            >⌘K</kbd>
+            <kbd class="nds-kbd">⌘K</kbd>
           </span>
         </div>
       </template>
@@ -848,7 +849,6 @@ const visualTestItems = computed(() => [
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
-              <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
               <CommandGroup heading="Componentes">
                 <CommandItem value="button">
                   Button
@@ -858,6 +858,7 @@ const visualTestItems = computed(() => [
                 </CommandItem>
               </CommandGroup>
             </CommandList>
+            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           </Command>
         </div>
       </template>
@@ -873,22 +874,17 @@ const visualTestItems = computed(() => [
               role="combobox"
               aria-expanded="false"
               :aria-label="tContent('demonstration.labels.selectPlaceholder')"
-              class="nds-cluster"
+              class="nds-cluster nds-w-xs"
               data-justify="between"
-              style="width: 12rem"
             >
               Selecione um item...
             </Button>
           </PopoverTrigger>
-          <PopoverContent
-            class="nds-p-0"
-            style="width: 12rem"
-          >
+          <PopoverContent class="nds-p-0 nds-w-xs">
             <Command>
               <CommandInput placeholder="Buscar item..." />
               <CommandList>
-                <CommandEmpty>Nenhum resultado.</CommandEmpty>
-                <CommandGroup>
+                <CommandGroup heading="Componentes">
                   <CommandItem value="button">
                     Button
                   </CommandItem>
@@ -897,6 +893,7 @@ const visualTestItems = computed(() => [
                   </CommandItem>
                 </CommandGroup>
               </CommandList>
+              <CommandEmpty>Nenhum resultado.</CommandEmpty>
             </Command>
           </PopoverContent>
         </Popover>
@@ -915,23 +912,16 @@ const visualTestItems = computed(() => [
           >
             Buscar
           </Button>
-          <kbd
-            class="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold"
-            style="display: inline-flex; align-items: center; justify-content: center; padding: 0.125rem 0.375rem"
-          >⌘K</kbd>
+          <kbd class="nds-kbd">⌘K</kbd>
         </div>
       </template>
 
       <!-- withGroups preview -->
       <template #variant-preview-3>
-        <div
-          class="nds-border-default nds-rounded-md nds-shadow-md"
-          style="width: 320px"
-        >
+        <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
           <Command>
             <CommandInput placeholder="Buscar componente..." />
             <CommandList>
-              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
               <CommandGroup heading="Componentes">
                 <CommandItem value="button">
                   Button
@@ -959,6 +949,7 @@ const visualTestItems = computed(() => [
                 </CommandItem>
               </CommandGroup>
             </CommandList>
+            <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
           </Command>
         </div>
       </template>

@@ -1,41 +1,52 @@
 <script lang="ts">
-  import * as Command from '@/components/ui/command';
+  // Nomes achatados: é a API que a docs page ensina, e `CommandShortcut` só
+  // existia exportado — nenhuma story o renderizava por esse nome.
+  import {
+    Command,
+    CommandInput,
+    CommandList,
+    CommandEmpty,
+    CommandGroup,
+    CommandItem,
+    CommandSeparator,
+    CommandShortcut,
+  } from '@/components/ui/command';
 </script>
 
-<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default nds-shadow-md">
-  <Command.Root>
-    <Command.Input placeholder="Buscar ação..." aria-controls="cmd-shortcuts-listbox" />
-    <Command.List id="cmd-shortcuts-listbox">
-      <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
-      <Command.Group heading="Ações">
-        <Command.Item value="new-file">
+<div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+  <Command>
+    <CommandInput placeholder="Buscar ação..." />
+    <CommandList>
+      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+      <CommandGroup heading="Ações">
+        <CommandItem value="new-file">
           Novo arquivo
-          <Command.Shortcut>⌘N</Command.Shortcut>
-        </Command.Item>
-        <Command.Item value="open-file">
+          <CommandShortcut>⌘N</CommandShortcut>
+        </CommandItem>
+        <CommandItem value="open-file">
           Abrir arquivo
-          <Command.Shortcut>⌘O</Command.Shortcut>
-        </Command.Item>
-        <Command.Item value="save-file">
+          <CommandShortcut>⌘O</CommandShortcut>
+        </CommandItem>
+        <CommandItem value="save-file">
           Salvar
-          <Command.Shortcut>⌘S</Command.Shortcut>
-        </Command.Item>
-        <Command.Item value="find">
+          <CommandShortcut>⌘S</CommandShortcut>
+        </CommandItem>
+        <CommandItem value="find">
           Buscar
-          <Command.Shortcut>⌘F</Command.Shortcut>
-        </Command.Item>
-      </Command.Group>
-      <Command.Separator />
-      <Command.Group heading="Navegação">
-        <Command.Item value="settings">
+          <CommandShortcut>⌘F</CommandShortcut>
+        </CommandItem>
+      </CommandGroup>
+      <CommandSeparator />
+      <CommandGroup heading="Navegação">
+        <CommandItem value="settings">
           Configurações
-          <Command.Shortcut>⌘,</Command.Shortcut>
-        </Command.Item>
-        <Command.Item value="command-palette">
+          <CommandShortcut>⌘,</CommandShortcut>
+        </CommandItem>
+        <CommandItem value="command-palette">
           Command Palette
-          <Command.Shortcut>⌘K</Command.Shortcut>
-        </Command.Item>
-      </Command.Group>
-    </Command.List>
-  </Command.Root>
+          <CommandShortcut>⌘K</CommandShortcut>
+        </CommandItem>
+      </CommandGroup>
+    </CommandList>
+  </Command>
 </div>

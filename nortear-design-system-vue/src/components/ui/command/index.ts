@@ -12,6 +12,12 @@ export { default as CommandSeparator } from './CommandSeparator.vue'
 export { default as CommandShortcut } from './CommandShortcut.vue'
 
 export const [useCommand, provideCommandContext] = createContext<{
+  /**
+   * Id do `CommandList`. O campo de busca aponta para ele em `aria-controls`,
+   * que é o que fecha o par combobox → listbox do padrão ARIA. Nasce na raiz
+   * porque campo e lista são IRMÃOS: nenhum dos dois alcança o id do outro.
+   */
+  listId: string
   allItems: Ref<Map<string, string>>
   allGroups: Ref<Map<string, Set<string>>>
   filterState: {

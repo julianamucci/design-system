@@ -2,7 +2,7 @@
 import type { ListboxRootEmits, ListboxRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
-import { ListboxRoot, useFilter, useForwardPropsEmits } from 'reka-ui'
+import { ListboxRoot, useFilter, useForwardPropsEmits, useId } from 'reka-ui'
 import { reactive, ref, watch } from 'vue'
 import { cn } from '@/lib/utils'
 import { provideCommandContext } from './index'
@@ -19,6 +19,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const allItems = ref<Map<string, string>>(new Map())
 const allGroups = ref<Map<string, Set<string>>>(new Map())
+
+const listId = useId(undefined, 'nds-command-list')
 
 const { contains } = useFilter({ sensitivity: 'base' })
 const filterState = reactive({
@@ -70,6 +72,7 @@ watch(() => filterState.search, () => {
 })
 
 provideCommandContext({
+  listId,
   allItems,
   allGroups,
   filterState,

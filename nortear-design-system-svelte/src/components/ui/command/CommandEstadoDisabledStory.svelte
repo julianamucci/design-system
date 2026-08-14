@@ -1,16 +1,26 @@
 <script lang="ts">
   import * as Command from '@/components/ui/command';
+
+  let { onItemSelect }: { onItemSelect?: (value: string) => void } = $props();
 </script>
 
-<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default nds-shadow-md">
+<div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar componente..." aria-controls="cmd-disabled-listbox" />
-    <Command.List id="cmd-disabled-listbox">
+    <Command.Input placeholder="Buscar comando..." />
+    <Command.List>
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
-      <Command.Group heading="Componentes">
-        <Command.Item value="button">Button</Command.Item>
-        <Command.Item value="input" disabled={true}>Input (desabilitado)</Command.Item>
-        <Command.Item value="select">Select</Command.Item>
+      <Command.Group heading="Arquivo">
+        <Command.Item value="novo" onSelect={() => onItemSelect?.('novo')}>Novo</Command.Item>
+        <Command.Item
+          value="arquivar"
+          disabled={true}
+          onSelect={() => onItemSelect?.('arquivar')}
+        >
+          Arquivar
+        </Command.Item>
+        <Command.Item value="renomear" onSelect={() => onItemSelect?.('renomear')}>
+          Renomear
+        </Command.Item>
       </Command.Group>
     </Command.List>
   </Command.Root>

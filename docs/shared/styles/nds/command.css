@@ -50,11 +50,17 @@
 }
 
 /* ── Input ───────────────────────────────────────────────────────────────── */
+/*
+ * Sem altura fixa (WCAG 1.4.4, Resize Text 200%): a altura é RESULTADO de
+ * `padding-block` + `line-height`, como em `.nds-input`. O `height: 2.5rem` que
+ * morava aqui travava o campo em 40px — aumentar a fonte do navegador cortava o
+ * texto da busca em vez de fazer a paleta crescer.
+ */
 .nds-command-input {
   display: flex;
   width: 100%;
-  height: 2.5rem;                                  /* 40px */
-  padding-block: var(--spacing-3, 0.75rem);
+  padding-block: var(--spacing-2);                 /* 8px */
+  line-height: 1.5;
   background: transparent;
   border: 0;
   font-family: inherit;

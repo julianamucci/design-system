@@ -23,6 +23,19 @@ export type DialogOptions = {
    * disfarçavam com classes `flex` do Tailwind, que não existem mais.
    */
   footer?: HTMLElement | HTMLElement[];
+  /**
+   * Deixa o cabeçalho (título + descrição) só para leitor de tela.
+   *
+   * O diálogo PRECISA de nome — `aria-labelledby` aponta para o título, e um
+   * diálogo anônimo o axe reprova. Há arranjos em que desenhá-lo seria
+   * redundância pura: na paleta de comandos, "Command Palette" escrito em cima
+   * do campo de busca repete o que a busca já diz para quem enxerga. Aqui o
+   * cabeçalho recebe `.nds-sr-only` — sai da tela e FICA na árvore de
+   * acessibilidade, ao contrário de `display: none`, que apagaria o nome.
+   *
+   * Aditivo: sem a opção, nada muda para quem já usa a factory.
+   */
+  headerHidden?: boolean;
   showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: DialogCloseReason) => void;
@@ -108,7 +121,9 @@ export function createDialog(options: DialogOptions): HTMLElement {
 
     // Header
     const headerEl = document.createElement('div');
-    headerEl.className = 'nds-dialog-header';
+    headerEl.className = options.headerHidden
+      ? 'nds-dialog-header nds-sr-only'
+      : 'nds-dialog-header';
     headerEl.dataset.slot = 'dialog-header';
 
     const titleEl = document.createElement('h2');

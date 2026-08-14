@@ -96,6 +96,10 @@ type Story = StoryObj<CommandArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
+    // `functional.item1` tem duas metades — o filtro esconder o que não casa, e
+    // a frase de vazio aparecer quando nada sobra. A primeira é verificada
+    // aqui; a segunda mora em `EmptyState`, que declara o mesmo id e é a story
+    // que termina no quadro sem resultados.
     covers: [
       'functional.item1',
       'functional.item2',
@@ -210,65 +214,57 @@ export const Playground: Story = {
       // sem isso a paleta mostraria "Utilitários" com nada embaixo.
       const grupos = raiz.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
       await expect(grupos[1]).not.toBeVisible();
-    });
 
-    await step('Sem resultado, a frase é ANUNCIADA e não só desenhada', async () => {
+      // Apagar devolve a lista inteira. Também é o que zera o destaque: o
+      // primitivo solta o item que o filtro escondeu, então o passo das setas
+      // adiante parte sempre de "nenhum destaque", inclusive no replay.
       await userEvent.clear(campo);
-      await userEvent.type(campo, 'zzz');
-
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await waitFor(async () => {
-        await expect(vazio).toHaveAttribute('data-empty', '');
+        await expect(canvas.getAllByRole('option')).toHaveLength(5);
       });
-      await expect(vazio).toHaveTextContent(args.emptyMessage);
-      // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
-      // de tela anuncia. Criá-la só na hora não anunciaria nada.
-      await expect(vazio).toHaveAttribute('role', 'status');
-      await expect(vazio).toHaveAttribute('aria-live', 'polite');
-      await expect(vazio).toHaveClass(/nds-command-empty/);
-      await expect(canvas.queryAllByRole('option')).toHaveLength(0);
     });
 
-    await step('Com resultado, a região viva volta a ocupar zero', async () => {
-      await userEvent.clear(campo);
-      const vazio = raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
-      await waitFor(async () => {
-        await expect(vazio).not.toHaveAttribute('data-empty');
-      });
-      // Continua no DOM (é o que preserva o anúncio), mas sem a classe que
-      // traz 24px de respiro em cima e embaixo.
-      await expect(vazio).not.toHaveClass(/nds-command-empty/);
-      await expect(vazio.getBoundingClientRect().height).toBe(0);
-    });
-
-    await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
+    await step('As setas percorrem TODOS os comandos, sem tirar o foco do campo', async () => {
       campo.focus();
-      await userEvent.keyboard('{ArrowDown}');
 
-      await waitFor(async () => {
-        await expect(campo.getAttribute('aria-activedescendant')).toBeTruthy();
-      });
+      const emDestaque = async (texto: string) => {
+        await waitFor(async () => {
+          const id = campo.getAttribute('aria-activedescendant');
+          await expect(id).toBeTruthy();
+          await expect(document.getElementById(id!)).toHaveTextContent(texto);
+        });
+      };
+
+      // O item do contrato diz "percorre todos os comandos habilitados em
+      // sequência": descer dois e subir um deixaria a travessia entre os dois
+      // grupos — que é onde a sequência quebraria — sem verificação nenhuma.
+      const ordem = ['Button', 'Input', 'Separator', 'cn()', 'clsx()'];
+
+      for (const texto of ordem) {
+        await userEvent.keyboard('{ArrowDown}');
+        await emDestaque(texto);
+      }
+
+      const ultimo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+      await expect(ultimo).toHaveAttribute('role', 'option');
+      await expect(ultimo).toHaveAttribute('aria-selected', 'true');
       // O foco NÃO se move: é o que separa a paleta de um menu, e é o que
       // permite continuar digitando enquanto se navega.
       await expect(campo).toHaveFocus();
 
-      const ativo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
-      await expect(ativo).toHaveAttribute('role', 'option');
-      await expect(ativo).toHaveAttribute('aria-selected', 'true');
-      await expect(ativo).toHaveTextContent('Button');
+      // E de volta, na ordem inversa, até o primeiro.
+      for (const texto of ['cn()', 'Separator', 'Input', 'Button']) {
+        await userEvent.keyboard('{ArrowUp}');
+        await emDestaque(texto);
+      }
 
-      await userEvent.keyboard('{ArrowDown}');
-      await waitFor(async () => {
-        const seguinte = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
-        await expect(seguinte).toHaveTextContent('Input');
-      });
-      // O anterior deixou de ser o selecionado — um destaque por vez.
-      await expect(ativo).toHaveAttribute('aria-selected', 'false');
-
-      await userEvent.keyboard('{ArrowUp}');
-      await waitFor(async () => {
-        await expect(ativo).toHaveAttribute('aria-selected', 'true');
-      });
+      // Um destaque por vez: quem estava marcado no fim da descida não está
+      // mais.
+      await expect(ultimo).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('option', { name: 'Button' })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
     });
 
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {

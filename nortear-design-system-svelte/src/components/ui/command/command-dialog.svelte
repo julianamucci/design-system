@@ -28,15 +28,24 @@
 </script>
 
 <Dialog.Root bind:open {...restProps}>
-	<Dialog.Header class="nds-sr-only">
-		<Dialog.Title>{title}</Dialog.Title>
-		<Dialog.Description>{description}</Dialog.Description>
-	</Dialog.Header>
 	<Dialog.Content
 		class={cn("nds-command-dialog-content", className)}
 		{showCloseButton}
 		{portalProps}
 	>
+		<!--
+			Cabeçalho DENTRO do conteúdo. Fora dele o título e a descrição
+			ficavam no fluxo da página o tempo todo — mesmo com o diálogo
+			fechado — e quem lê a página linearmente esbarrava em "Command
+			Palette" antes do gatilho. Dentro, eles nascem junto com o painel,
+			que é quando o leitor de tela deve anunciá-los, e continuam
+			`sr-only`: desenhar "Command Palette" em cima da busca seria
+			redundante para quem enxerga.
+		-->
+		<Dialog.Header class="nds-sr-only">
+			<Dialog.Title>{title}</Dialog.Title>
+			<Dialog.Description>{description}</Dialog.Description>
+		</Dialog.Header>
 		<Command {...restProps} bind:value bind:ref {children} />
 	</Dialog.Content>
 </Dialog.Root>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand } from './command';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -14,7 +14,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados específicos do Command: empty state (query sem resultados) e item desabilitado.',
+          'Os estados que a paleta assume sozinha (sem resultados) e os que cada comando ' +
+          'assume (marcado, desabilitado).',
       },
     },
   },
@@ -23,18 +24,41 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const WRAPPER = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
+
+/** O item pelo `value`, e não pelo nome acessível: atalho e marca entram no nome. */
+const comando = (raiz: ParentNode, value: string): HTMLElement =>
+  raiz.querySelector<HTMLElement>(`[data-slot="command-item"][data-value="${value}"]`)!;
+
+const regiaoVazia = (raiz: ParentNode): HTMLElement =>
+  raiz.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+
+/**
+ * Deixa a busca vazia E o destaque zerado.
+ *
+ * O item em destaque só volta a "nenhum" num re-render do filtro, e
+ * `userEvent.clear` num campo JÁ vazio não dispara `input`. No REPLAY (a play
+ * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
+ * primeira seta partiria do meio da lista.
+ */
+async function zerarBusca(campo: HTMLElement): Promise<void> {
+  await userEvent.type(campo, 'zzz');
+  await userEvent.clear(campo);
+}
+
+// ─── Sem resultados ───────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
-  name: 'Empty state — no results',
+  parameters: { covers: ['visual.item2'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-    wrap.style.width = '320px';
+    wrap.className = WRAPPER;
 
-    // Cria command com query que não retorna resultados via input pre-preenchido
     const cmd = createCommand({
       placeholder: 'Buscar componente...',
+      emptyMessage: 'Nenhum resultado encontrado.',
       items: [
         { value: 'button',    label: 'Button'    },
         { value: 'input',     label: 'Input'     },
@@ -43,7 +67,8 @@ export const EmptyState: Story = {
     });
     wrap.appendChild(cmd);
 
-    // Pré-preenche o input para forçar empty state
+    // A busca já nasce sem correspondência: é o estado que esta story
+    // documenta, e o quadro que o Chromatic captura.
     const input = wrap.querySelector('input');
     if (input) {
       input.value = 'xyznotfound';
@@ -54,35 +79,137 @@ export const EmptyState: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
+    const lista = canvas.getByRole('listbox');
+    const vazio = regiaoVazia(canvasElement);
 
-    await step('Mensagem de empty state está visível', async () => {
-      const empty = canvas.getByText('No results found.');
-      await expect(empty).toBeInTheDocument();
-      await expect(empty).toBeVisible();
+    await step('Buscando "xyznotfound" não sobra nenhum comando', async () => {
+      await userEvent.clear(campo);
+      await userEvent.type(campo, 'xyznotfound');
+      await expect(canvas.queryAllByRole('option')).toHaveLength(0);
     });
 
-    await step('Nenhum item option está visível', async () => {
-      const options = canvas.queryAllByRole('option');
-      await expect(options.length).toBe(0);
+    await step('A frase é anunciada, não só desenhada', async () => {
+      await expect(vazio).toBeVisible();
+      await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
+      await expect(vazio).toHaveClass(/nds-command-empty/);
+      await expect(vazio).toHaveAttribute('data-empty', '');
+      // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
+      // saber que a busca não achou nada.
+      await expect(vazio).toHaveAttribute('role', 'status');
+      await expect(vazio).toHaveAttribute('aria-live', 'polite');
+      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
+      // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
+      // axe reprova por aria-required-children.
+      await expect(lista.contains(vazio)).toBe(false);
+    });
+
+    await step('Apagar a busca traz os 3 comandos de volta', async () => {
+      await userEvent.clear(campo);
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
+      await expect(vazio).not.toHaveAttribute('data-empty');
+      await expect(vazio).not.toHaveClass(/nds-command-empty/);
+    });
+
+    await step('A story termina SEM resultados', async () => {
+      // O Chromatic fotografa o estado final: terminar com a lista cheia
+      // capturaria outra story.
+      await userEvent.type(campo, 'xyznotfound');
+      await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+      await expect(vazio).toHaveAttribute('data-empty', '');
     });
   },
 };
 
-// ─── Disabled Item ────────────────────────────────────────────────────────────
+// ─── Comando desabilitado ─────────────────────────────────────────────────────
 
-export const DisabledItem: Story = {
-  name: 'Disabled item',
+const aoEscolherComDesabilitado = fn();
+
+export const ItemDisabled: Story = {
+  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item5'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-border-default nds-rounded-md nds-shadow-md';
-    wrap.style.width = '320px';
+    wrap.className = WRAPPER;
     wrap.appendChild(
       createCommand({
-        placeholder: 'Buscar...',
+        placeholder: 'Buscar comando...',
+        emptyMessage: 'Nenhum resultado encontrado.',
         items: [
-          { value: 'button',    label: 'Button'           },
-          { value: 'input',     label: 'Input (disabled)', disabled: true },
-          { value: 'separator', label: 'Separator'         },
+          { value: 'novo',     label: 'Novo'      },
+          { value: 'arquivar', label: 'Arquivar', disabled: true },
+          { value: 'renomear', label: 'Renomear'  },
+        ],
+        onSelect: (value) => aoEscolherComDesabilitado(value),
+      })
+    );
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
+
+    await userEvent.clear(campo);
+    await expect(canvas.getAllByRole('option')).toHaveLength(3);
+    // Consultado a cada passo: o filtro reconstrói a lista, e um nó guardado
+    // antes de um re-render vira uma asserção sobre elemento solto no ar.
+    const arquivar = () => comando(canvasElement, 'arquivar');
+
+    await step('O estado chega ao markup e ao desenho', async () => {
+      await expect(arquivar()).toHaveAttribute('aria-disabled', 'true');
+      const estilo = getComputedStyle(arquivar());
+      await expect(estilo.pointerEvents).toBe('none');
+      await expect(Number.parseFloat(estilo.opacity)).toBeLessThan(1);
+    });
+
+    await step('Clicar não executa o comando', async () => {
+      const antes = aoEscolherComDesabilitado.mock.calls.length;
+      // `pointerEventsCheck: 0` porque a folha bloqueia o ponteiro: sem isso o
+      // user-event recusa o clique antes de a factory ter chance de errar.
+      await userEvent.click(arquivar(), { pointerEventsCheck: 0 });
+      await expect(aoEscolherComDesabilitado.mock.calls.length).toBe(antes);
+    });
+
+    await step('As setas pulam o comando desabilitado', async () => {
+      await zerarBusca(campo);
+      campo.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(
+        document.getElementById(campo.getAttribute('aria-activedescendant')!),
+      ).toHaveTextContent('Novo');
+
+      await userEvent.keyboard('{ArrowDown}');
+      // "Arquivar" não é destino de navegação — quem usa teclado nunca para num
+      // comando que não pode executar.
+      await expect(
+        document.getElementById(campo.getAttribute('aria-activedescendant')!),
+      ).toHaveTextContent('Renomear');
+      await expect(arquivar()).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Enter no comando habilitado seguinte executa normalmente', async () => {
+      const antes = aoEscolherComDesabilitado.mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(aoEscolherComDesabilitado.mock.calls.length).toBe(antes + 1);
+      await expect(aoEscolherComDesabilitado.mock.calls[antes][0]).toBe('renomear');
+    });
+  },
+};
+
+// ─── Comando marcado ──────────────────────────────────────────────────────────
+
+export const CheckedItem: Story = {
+  parameters: { covers: ['functional.item5', 'visual.item5'] },
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = WRAPPER;
+    wrap.appendChild(
+      createCommand({
+        placeholder: 'Buscar tema...',
+        emptyMessage: 'Nenhum resultado encontrado.',
+        items: [
+          { value: 'claro',   label: 'Claro',   group: 'Aparência', checked: true  },
+          { value: 'escuro',  label: 'Escuro',  group: 'Aparência', checked: false },
+          { value: 'sistema', label: 'Sistema', group: 'Aparência', checked: true, shortcut: '⌘S' },
         ],
       })
     );
@@ -90,17 +217,43 @@ export const DisabledItem: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
 
-    await step('Item desabilitado está presente no DOM', async () => {
-      const disabledItem = canvas.getByText('Input (disabled)');
-      await expect(disabledItem).toBeInTheDocument();
+    await userEvent.clear(campo);
+    await expect(canvas.getAllByRole('option')).toHaveLength(3);
+
+    const claro = comando(canvasElement, 'claro');
+    const escuro = comando(canvasElement, 'escuro');
+    const sistema = comando(canvasElement, 'sistema');
+    const marca = (item: HTMLElement) =>
+      getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
+
+    await step('O estado chega ao markup', async () => {
+      await expect(claro).toHaveAttribute('data-checked', 'true');
+      await expect(escuro).toHaveAttribute('data-checked', 'false');
     });
 
-    await step('Item desabilitado tem pointer-events-none e opacidade reduzida', async () => {
-      const disabledItem = canvas.getByText('Input (disabled)').closest('[data-slot="command-item"]');
-      await expect(disabledItem).not.toBeNull();
-      // O item desabilitado deve ter aria-disabled
-      await expect(disabledItem?.getAttribute('aria-disabled')).toBe('true');
+    await step('A marca aparece só no comando marcado', async () => {
+      // O ícone fica no DOM nos dois casos — é a opacidade que muda, para a
+      // largura do item não pular a cada troca.
+      await expect(marca(claro).opacity).toBe('1');
+      await expect(marca(escuro).opacity).toBe('0');
+    });
+
+    await step('Com atalho no item, a marca some', async () => {
+      // Os dois disputariam a borda direita. A folha resolve por `:has()`, e a
+      // guideline é escolher um dos dois por item.
+      await expect(sistema).toHaveAttribute('data-checked', 'true');
+      await expect(marca(sistema).display).toBe('none');
+    });
+
+    await step('O atalho faz parte do nome do comando', async () => {
+      // Sem isso o leitor anunciaria "Sistema" e a pessoa nunca saberia que há
+      // uma tecla — o atalho é informação, não decoração.
+      const atalho = sistema.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      await expect(atalho).toHaveClass(/nds-command-shortcut/);
+      await expect(atalho.getAttribute('aria-hidden')).toBeNull();
+      await expect(sistema).toHaveAccessibleName(/⌘S/);
     });
   },
 };

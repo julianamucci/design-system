@@ -2,10 +2,10 @@
   import * as Command from '@/components/ui/command';
 </script>
 
-<div class="nds-w-full nds-max-w-sm rounded-xl nds-border-default nds-shadow-md">
+<div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
   <Command.Root>
-    <Command.Input placeholder="Buscar componente..." aria-controls="cmd-empty-listbox" />
-    <Command.List id="cmd-empty-listbox">
+    <Command.Input placeholder="Buscar componente..." />
+    <Command.List>
       <Command.Empty>Nenhum resultado encontrado.</Command.Empty>
       <Command.Group heading="Componentes">
         <Command.Item value="button">Button</Command.Item>

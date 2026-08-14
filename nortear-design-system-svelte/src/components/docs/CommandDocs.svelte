@@ -178,16 +178,21 @@ import uiTranslations from '@/i18n/ui.json';
 
 <Command.Root>
   <Command.Input placeholder="Buscar..." />
+
+  <!-- Fora da List: Loading tem role="progressbar", que nao e filho
+       permitido de role="listbox". -->
+  {#if loading}
+    <Command.Loading>
+      <div class="nds-cluster nds-p-4 nds-text-body nds-text-muted-foreground" data-spacing="sm" data-align="center" data-justify="center">
+        <Loader2 class="nds-size-4 nds-animate-spin" aria-hidden="true" />
+        <span>Carregando resultados...</span>
+      </div>
+    </Command.Loading>
+  {/if}
+
   <Command.List>
     <Command.Empty>Nenhum resultado.</Command.Empty>
-    {#if loading}
-      <Command.Loading>
-        <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" role="progressbar" style="padding-block: 1rem">
-          <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
-          <span>Carregando resultados...</span>
-        </div>
-      </Command.Loading>
-    {:else}
+    {#if !loading}
       <Command.Group heading="Resultados">
         <Command.Item value="item1">Item 1</Command.Item>
       </Command.Group>
@@ -417,14 +422,18 @@ interface CommandLoadingProps {
         <div class="nds-rounded-md nds-border-default nds-shadow-md">
           <Command.Root>
             <Command.Input placeholder={$tStore('demonstration.labels.searchPlaceholder')} />
+            <!-- Loading FORA da List: a lib dá `role="progressbar"` ao Loading, e
+                 progressbar não é filho permitido de `role="listbox"` (axe
+                 aria-required-children). O `role` do container interno também
+                 saiu: era um segundo progressbar aninhado no primeiro. -->
+            <Command.Loading>
+              <div class="nds-cluster nds-p-4 nds-text-body nds-text-muted-foreground" data-spacing="sm" data-align="center" data-justify="center">
+                <Loader2 class="nds-size-4 nds-animate-spin" aria-hidden="true" />
+                <span>Carregando resultados...</span>
+              </div>
+            </Command.Loading>
             <Command.List>
               <Command.Empty>{$tStore('demonstration.labels.emptyMessage')}</Command.Empty>
-              <Command.Loading>
-                <div class="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="sm" data-justify="center" role="progressbar" aria-label="Carregando resultados" style="padding-block: 1rem">
-                  <Loader2 class="nds-size-4 nds-spin" aria-hidden="true" />
-                  <span>Carregando resultados...</span>
-                </div>
-              </Command.Loading>
             </Command.List>
           </Command.Root>
         </div>
@@ -808,11 +817,14 @@ interface CommandLoadingProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.itemValue'))    },
-          { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: toPlainText($tStore('props.table.itemDisabled')) },
-          { name: 'onselect', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.itemOnSelect')) },
-          { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.className'))    },
-          { name: 'children', type: 'Snippet',             defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.children'))    },
+          { name: 'value',    type: 'string',   defaultValue: '—',     required: 'Sim', description: toPlainText($tStore('props.table.itemValue'))    },
+          { name: 'disabled', type: 'boolean',  defaultValue: 'false', required: 'Não', description: toPlainText($tStore('props.table.itemDisabled')) },
+          { name: 'checked',  type: 'boolean',  defaultValue: '—',     required: 'Não', description: toPlainText($tStore('states.selected.behavior')) },
+          // `onSelect` (camelCase) e sem argumento: o valor escolhido é o
+          // `value` do próprio item, que o call site já tem em mãos.
+          { name: 'onSelect', type: '() => void', defaultValue: '—',   required: 'Não', description: toPlainText($tStore('props.table.itemOnSelect')) },
+          { name: 'class',    type: 'string',   defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.className'))    },
+          { name: 'children', type: 'Snippet',  defaultValue: '—',     required: 'Não', description: toPlainText($tStore('props.table.children'))    },
         ],
       },
       {
@@ -848,15 +860,14 @@ interface CommandLoadingProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--popover',            value: 'bg-popover',          description: $tStore('tokens.table.popoverBg')   },
-      { token: '--popover-foreground', value: 'text-popover-foreground', description: $tStore('tokens.table.popoverFg') },
-      { token: '--muted-foreground',   value: 'nds-text-muted-foreground',  description: $tStore('tokens.table.mutedFg')   },
-      { token: '--input',              value: 'bg-input/30',            description: $tStore('tokens.table.inputBg')   },
-      { token: '--input',              value: 'border-input/30',        description: $tStore('tokens.table.inputBorder') },
-      { token: '--muted',              value: 'data-selected:bg-muted', description: $tStore('tokens.table.selectedBg') },
-      { token: '--foreground',         value: 'data-selected:text-foreground', description: $tStore('tokens.table.selectedFg') },
-      { token: '--border',             value: 'border',                description: $tStore('tokens.table.border')    },
-      { token: '--radius',             value: 'rounded-xl / rounded-sm', description: $tStore('tokens.table.radius') },
+      { token: '--popover',            value: '.nds-command',                            description: toPlainText($tStore('tokens.table.popoverBg'))   },
+      { token: '--popover-foreground', value: '.nds-command',                            description: toPlainText($tStore('tokens.table.popoverFg'))   },
+      { token: '--muted-foreground',   value: '.nds-command-group-heading',              description: toPlainText($tStore('tokens.table.mutedFg'))     },
+      { token: '--border',             value: '.nds-command-input-wrapper',              description: toPlainText($tStore('tokens.table.inputBorder')) },
+      { token: '--accent',             value: '.nds-command-item[aria-selected="true"]', description: toPlainText($tStore('tokens.table.selectedBg'))  },
+      { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]', description: toPlainText($tStore('tokens.table.selectedFg'))  },
+      { token: '--border',             value: '.nds-command-separator',                  description: toPlainText($tStore('tokens.table.border'))      },
+      { token: '--radius',             value: '.nds-command · .nds-command-item',        description: toPlainText($tStore('tokens.table.radius'))      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}
@@ -876,12 +887,12 @@ interface CommandLoadingProps {
     ]}
     keyboardTitle="Navegação por Teclado"
     keyboardItems={[
-      { key: 'Arrow Down',       description: $tStore('accessibility.keyboard.arrowDown') },
-      { key: 'Arrow Up',       description: $tStore('accessibility.keyboard.arrowUp')   },
-      { key: 'Enter',   description: $tStore('accessibility.keyboard.enter')     },
-      { key: 'Escape',  description: $tStore('accessibility.keyboard.escape')    },
-      { key: 'Tab',     description: $tStore('accessibility.keyboard.tab')       },
-      { key: '⌘K',      description: $tStore('accessibility.keyboard.cmdK')      },
+      { key: 'Arrow Down', description: toPlainText($tStore('accessibility.keyboard.arrowDown')) },
+      { key: 'Arrow Up',   description: toPlainText($tStore('accessibility.keyboard.arrowUp'))   },
+      { key: 'Enter',      description: toPlainText($tStore('accessibility.keyboard.enter'))     },
+      { key: 'Escape',     description: toPlainText($tStore('accessibility.keyboard.escape'))    },
+      { key: 'Tab',        description: toPlainText($tStore('accessibility.keyboard.tab'))       },
+      { key: '⌘K',         description: toPlainText($tStore('accessibility.keyboard.cmdK'))      },
     ]}
   />
 

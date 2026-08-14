@@ -4,7 +4,6 @@ import {
   TypeIcon,
   MinusIcon,
   SearchIcon,
-  CheckIcon,
   ChevronsUpDownIcon,
 } from "lucide-react";
 
@@ -123,13 +122,15 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
           role="combobox"
           aria-expanded={open}
           aria-label={selectPlaceholder}
-          className="nds-cluster" data-justify="between" style={{ width: "12rem" }}
+          className="nds-w-xs"
         >
           {value ? DEMO_ITEMS.find((f) => f.value === value)?.label : selectPlaceholder}
-          <ChevronsUpDownIcon className="nds-text-muted-foreground" />
+          {/* `nds-spacer-start` empurra o ícone para a borda direita.
+              `data-justify` só existe em `.nds-cluster`, não no botão. */}
+          <ChevronsUpDownIcon className="nds-spacer-start nds-text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="nds-p-0" style={{ width: "12rem" }}>
+      <PopoverContent className="nds-p-0 nds-w-xs">
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
@@ -139,8 +140,11 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
                 <CommandItem
                   key={item.value}
                   value={item.value}
+                  // A marca de escolhido é do próprio componente: `checked` vira
+                  // `data-checked` e a folha cuida da opacidade.
+                  checked={value === item.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setValue(currentValue);
                     setOpen(false);
                     track("command_item_select", {
                       label: item.label,
@@ -150,9 +154,6 @@ function ComboboxDemo({ searchPlaceholder, selectPlaceholder }: { searchPlacehol
                   }}
                 >
                   {item.label}
-                  <CheckIcon
-                    style={{ marginLeft: "auto", opacity: value === item.value ? 1 : 0 }}
-                  />
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -196,9 +197,9 @@ function CommandPaletteDemo({
 
   return (
     <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
-      <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
+      <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-spacing="xs">
         <span>{shortcutHint}</span>
-        <kbd className="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.125rem 0.375rem" }}>{shortcutKey}</kbd>
+        <kbd className="nds-kbd">{shortcutKey}</kbd>
       </div>
       <Button
         variant="outline"
@@ -401,11 +402,12 @@ const [value, setValue] = useState("");
       variant="outline"
       role="combobox"
       aria-expanded={open}
+      className="nds-w-xs"
     >
       {value ? items.find((i) => i.value === value)?.label : "Selecione..."}
     </Button>
   </PopoverTrigger>
-  <PopoverContent className="nds-p-0" style={{ width: "12rem" }}>
+  <PopoverContent className="nds-p-0 nds-w-xs">
     <Command>
       <CommandInput placeholder="Buscar item..." />
       <CommandList>
@@ -415,6 +417,7 @@ const [value, setValue] = useState("");
             <CommandItem
               key={item.value}
               value={item.value}
+              checked={item.value === value}
               onSelect={(v) => { setValue(v); setOpen(false); }}
             >
               {item.label}
@@ -463,14 +466,16 @@ useEffect(() => {
 :root {
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --muted: 240 4.8% 95.9%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
   --border: 240 5.9% 90%;
 }
 
 .dark {
   --popover: 240 10% 3.9%;
   --popover-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
   --border: 240 3.7% 15.9%;
 }`;
 
@@ -496,6 +501,8 @@ interface CommandItemProps
   extends React.ComponentProps<typeof CommandPrimitive.Item> {
   value: string;
   disabled?: boolean;
+  /** Vira data-checked no elemento; a folha acende a marca à direita. */
+  checked?: boolean;
   onSelect?: (value: string) => void;
   keywords?: string[];
 }
@@ -749,9 +756,9 @@ interface CommandDialogProps
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div className="nds-stack nds-p-2" data-spacing="xs" style={{ alignItems: "flex-start" }}>
-                <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-spacing="xs">
+                <div className="nds-cluster nds-text-body nds-text-muted-foreground" data-align="center" data-spacing="xs">
                   <span>{labels.shortcutHint}</span>
-                  <kbd className="nds-rounded nds-border-default nds-bg-muted nds-text-caption nds-font-mono nds-font-semibold" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.125rem 0.375rem" }}>{labels.shortcutKey}</kbd>
+                  <kbd className="nds-kbd">{labels.shortcutKey}</kbd>
                 </div>
                 <Button variant="outline" size="sm">
                   <SearchIcon />
@@ -880,7 +887,7 @@ interface CommandDialogProps
   </CommandList>
 </Command>`,
             preview: (
-              <div className="nds-border-default nds-rounded-md nds-shadow-md" style={{ width: "320px" }}>
+              <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
                 <Command>
                   <CommandInput placeholder="Buscar componente..." />
                   <CommandList>
@@ -1051,6 +1058,18 @@ interface CommandDialogProps
                 description: toPlainText(tContent("props.table.itemDisabled")),
               },
               {
+                // O conteúdo compartilhado ainda não tem chave de descrição
+                // para esta propriedade, embora documente o estado em
+                // "Estados" e na Anatomia. Literal aqui, como já é o caso de
+                // open/onOpenChange no CommandDialog.
+                name: "checked",
+                type: "boolean",
+                defaultValue: "—",
+                required: "Não",
+                description:
+                  toPlainText(tContent("states.selected.behavior")),
+              },
+              {
                 name: "className",
                 type: "string",
                 defaultValue: "—",
@@ -1127,16 +1146,20 @@ interface CommandDialogProps
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
+        // Seletor REAL lido de docs/shared/styles/nds/command.css. A coluna
+        // trazia vocabulário do framework que saiu do projeto (`bg-popover`,
+        // `data-selected:bg-muted`, `rounded-xl`), que não existe em lugar
+        // nenhum da folha — customização inerte para quem copiasse.
         items={[
-          { token: "--popover", value: "bg-popover", description: tContent("tokens.table.popoverBg") },
-          { token: "--popover-foreground", value: "text-popover-foreground", description: tContent("tokens.table.popoverFg") },
-          { token: "--muted-foreground", value: "nds-text-muted-foreground", description: tContent("tokens.table.mutedFg") },
-          { token: "--input", value: "bg-input/30", description: tContent("tokens.table.inputBg") },
-          { token: "--input", value: "border-input/30", description: tContent("tokens.table.inputBorder") },
-          { token: "--muted", value: "data-selected:bg-muted", description: toPlainText(tContent("tokens.table.selectedBg")) },
-          { token: "--foreground", value: "data-selected:text-foreground", description: tContent("tokens.table.selectedFg") },
-          { token: "--border", value: "bg-border", description: tContent("tokens.table.border") },
-          { token: "--radius", value: "rounded-xl / rounded-sm", description: tContent("tokens.table.radius") },
+          { token: "--popover", value: ".nds-command", description: toPlainText(tContent("tokens.table.popoverBg")) },
+          { token: "--popover-foreground", value: ".nds-command", description: toPlainText(tContent("tokens.table.popoverFg")) },
+          { token: "--muted-foreground", value: ".nds-command-group-heading", description: toPlainText(tContent("tokens.table.mutedFg")) },
+          { token: "--popover", value: ".nds-command-input", description: toPlainText(tContent("tokens.table.inputBg")) },
+          { token: "--border", value: ".nds-command-input-wrapper", description: toPlainText(tContent("tokens.table.inputBorder")) },
+          { token: "--accent", value: '.nds-command-item[aria-selected="true"]', description: toPlainText(tContent("tokens.table.selectedBg")) },
+          { token: "--accent-foreground", value: '.nds-command-item[aria-selected="true"]', description: toPlainText(tContent("tokens.table.selectedFg")) },
+          { token: "--border", value: ".nds-command-separator", description: toPlainText(tContent("tokens.table.border")) },
+          { token: "--radius", value: ".nds-command · .nds-command-item", description: toPlainText(tContent("tokens.table.radius")) },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}
@@ -1155,13 +1178,16 @@ interface CommandDialogProps
           tContent("accessibility.item4"),
         ]}
         keyboardTitle={tNav("common.keyboard")}
+        // As linhas de teclado escrevem textNode: toda descrição passa por
+        // toPlainText, senão um <code> no conteúdo compartilhado apareceria
+        // literal na tela.
         keyboardItems={[
-          { key: "Arrow Down", description: tContent("accessibility.keyboard.arrowDown") },
-          { key: "Arrow Up", description: tContent("accessibility.keyboard.arrowUp") },
+          { key: "Arrow Down", description: toPlainText(tContent("accessibility.keyboard.arrowDown")) },
+          { key: "Arrow Up", description: toPlainText(tContent("accessibility.keyboard.arrowUp")) },
           { key: "Enter", description: toPlainText(tContent("accessibility.keyboard.enter")) },
-          { key: "Esc", description: tContent("accessibility.keyboard.escape") },
-          { key: "Tab", description: tContent("accessibility.keyboard.tab") },
-          { key: "⌘K", description: tContent("accessibility.keyboard.cmdK") },
+          { key: "Esc", description: toPlainText(tContent("accessibility.keyboard.escape")) },
+          { key: "Tab", description: toPlainText(tContent("accessibility.keyboard.tab")) },
+          { key: "⌘K", description: toPlainText(tContent("accessibility.keyboard.cmdK")) },
         ]}
       />
 

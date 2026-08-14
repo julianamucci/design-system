@@ -46,88 +46,32 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 /**
  * Sobrescritas de call site.
  *
- * O conteúdo compartilhado deste slug foi escrito sobre a implementação React,
- * e cita pelo nome uma biblioteca (`cmdk`) e um hook (`useEffect`) que não
- * existem aqui — nem em Vue, Svelte ou Vanilla. Texto de acessibilidade que
- * manda "implementar via useEffect" não é impreciso, é inexecutável.
+ * O conteúdo compartilhado deste slug passou a ser prosa API-neutra e absorveu
+ * quase tudo o que morava aqui — dez chaves que repetiam palavra por palavra o
+ * texto compartilhado saíram. Override que duplica o comum não protege nada:
+ * ele só garante que, na próxima correção do conteúdo, esta página fique para
+ * trás sozinha e sem erro nenhum.
  *
- * Só entram chaves de PROSA cujo conteúdo nomeia API de outro stack; os
- * snippets continuam vindo da variante `angular` do JSON compartilhado, como
- * manda a convenção. A correção de fundo é no conteúdo compartilhado, e está
- * reportada.
+ * Sobra UMA chave, e por divergência real de comportamento. A guideline 6
+ * afirma que nenhuma biblioteca aplica <code>role="combobox"</code> nem
+ * <code>aria-expanded</code> a um botão comum. A primeira metade vale aqui; a
+ * segunda não — o gatilho do Popover deste stack já mantém `aria-expanded`,
+ * `aria-controls` e `aria-haspopup` sozinho (é o que a story `AsCombobox`
+ * afirma), e mandar escrever à mão o que o primitivo entrega faria quem lê
+ * duplicar um atributo de estado, que é como ele passa a mentir.
  */
 const { t, dict } = useTranslation(commandTranslations as Record<string, unknown>, {
   'pt-BR': {
-    'accessibility.summary':
-      'A paleta implementa o padrão ARIA de Combobox (WAI-ARIA 1.2): campo de busca com papel de combobox, lista com papel de listbox e cada comando com papel de opção. Navegação por setas, Enter para selecionar e Escape para fechar já vêm prontos. Cumpre WCAG 2.2 AA: 1.3.1 (informação e relações), 2.1.1 (teclado).',
-    'accessibility.item1':
-      '<strong>Filtro embutido</strong> — o componente mantém <code>aria-selected</code> e o papel de opção em cada item; o que sai do filtro deixa a árvore de acessibilidade.',
-    'accessibility.item2':
-      '<strong>O atalho do item é só visual</strong> — registrar a tecla é da aplicação. O texto do atalho entra no nome do comando, então o leitor de tela o anuncia junto.',
-    'accessibility.keyboard.cmdK':
-      'Atalho global para abrir a paleta — registrado pela aplicação, não pelo componente.',
-    'accessibility.aria.roleListbox':
-      '<code>role="listbox"</code> — aplicado automaticamente na lista.',
-    'accessibility.aria.roleOption':
-      '<code>role="option"</code> — aplicado automaticamente em cada comando.',
-    'accessibility.aria.ariaSelected':
-      '<code>aria-selected</code> — acompanha o comando em destaque, que é também o apontado por <code>aria-activedescendant</code>.',
-    'accessibility.screenReader.onFilter':
-      'Ao digitar na busca: os comandos que não casam saem da árvore de acessibilidade e a região viva anuncia quando não sobra nenhum.',
-    'usage.guidelines.item3':
-      'O atalho Cmd+K não é nativo — registre um listener de <code>keydown</code> na janela, na página que hospeda a paleta.',
     'usage.guidelines.item6':
-      'No Combobox: escreva <code>role="combobox"</code> no gatilho do Popover — o primitivo trata o gatilho como botão comum.',
-    'states.loading.trigger':
-      'Exibir um indicador de carregamento dentro da lista enquanto os resultados remotos chegam',
+      'No Combobox: escreva <code>role="combobox"</code> no gatilho do Popover — o primitivo trata o gatilho como botão comum e não lhe dá papel de campo de escolha.',
   },
   en: {
-    'accessibility.summary':
-      'The palette implements the ARIA Combobox pattern (WAI-ARIA 1.2): a search field with the combobox role, a list with the listbox role, and each command with the option role. Arrow navigation, Enter to select, and Escape to close come built in. Meets WCAG 2.2 AA: 1.3.1 (info and relationships), 2.1.1 (keyboard).',
-    'accessibility.item1':
-      '<strong>Built-in filtering</strong> — the component keeps <code>aria-selected</code> and the option role on every item; whatever the filter drops leaves the accessibility tree.',
-    'accessibility.item2':
-      '<strong>The item shortcut is visual only</strong> — registering the key is the application’s job. The shortcut text is part of the command name, so screen readers announce it too.',
-    'accessibility.keyboard.cmdK':
-      'Global shortcut to open the palette — registered by the application, not by the component.',
-    'accessibility.aria.roleListbox':
-      '<code>role="listbox"</code> — applied automatically to the list.',
-    'accessibility.aria.roleOption':
-      '<code>role="option"</code> — applied automatically to each command.',
-    'accessibility.aria.ariaSelected':
-      '<code>aria-selected</code> — follows the highlighted command, which is also the one referenced by <code>aria-activedescendant</code>.',
-    'accessibility.screenReader.onFilter':
-      'When typing in the search field: non-matching commands leave the accessibility tree, and the live region announces when none are left.',
-    'usage.guidelines.item3':
-      'The Cmd+K shortcut is not native — register a window <code>keydown</code> listener on the page hosting the palette.',
     'usage.guidelines.item6':
-      'In the Combobox pattern: write <code>role="combobox"</code> on the Popover trigger — the primitive treats it as a plain button.',
-    'states.loading.trigger':
-      'Show a loading indicator inside the list while remote results are fetched',
+      'In the Combobox pattern: write <code>role="combobox"</code> on the Popover trigger — the primitive treats it as a plain button and gives it no choice-field role.',
   },
   es: {
-    'accessibility.summary':
-      'La paleta implementa el patrón ARIA Combobox (WAI-ARIA 1.2): campo de búsqueda con rol combobox, lista con rol listbox y cada comando con rol option. La navegación por flechas, Enter para seleccionar y Escape para cerrar ya vienen listos. Cumple WCAG 2.2 AA: 1.3.1 (información y relaciones), 2.1.1 (teclado).',
-    'accessibility.item1':
-      '<strong>Filtro integrado</strong> — el componente mantiene <code>aria-selected</code> y el rol de opción en cada ítem; lo que sale del filtro deja el árbol de accesibilidad.',
-    'accessibility.item2':
-      '<strong>El atajo del ítem es solo visual</strong> — registrar la tecla es tarea de la aplicación. El texto del atajo forma parte del nombre del comando, así que el lector de pantalla lo anuncia también.',
-    'accessibility.keyboard.cmdK':
-      'Atajo global para abrir la paleta — lo registra la aplicación, no el componente.',
-    'accessibility.aria.roleListbox':
-      '<code>role="listbox"</code> — aplicado automáticamente en la lista.',
-    'accessibility.aria.roleOption':
-      '<code>role="option"</code> — aplicado automáticamente en cada comando.',
-    'accessibility.aria.ariaSelected':
-      '<code>aria-selected</code> — acompaña al comando resaltado, que es también el referenciado por <code>aria-activedescendant</code>.',
-    'accessibility.screenReader.onFilter':
-      'Al escribir en la búsqueda: los comandos que no coinciden salen del árbol de accesibilidad y la región viva anuncia cuando no queda ninguno.',
-    'usage.guidelines.item3':
-      'El atajo Cmd+K no es nativo — registra un listener de <code>keydown</code> en la ventana, en la página que hospeda la paleta.',
     'usage.guidelines.item6':
-      'En el patrón Combobox: escribe <code>role="combobox"</code> en el trigger del Popover — el primitivo lo trata como un botón común.',
-    'states.loading.trigger':
-      'Mostrar un indicador de carga dentro de la lista mientras llegan los resultados remotos',
+      'En el patrón Combobox: escribe <code>role="combobox"</code> en el trigger del Popover — el primitivo lo trata como un botón común y no le da rol de campo de elección.',
   },
 });
 
@@ -632,8 +576,8 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: d['usage.guidelines.title'] ?? '',
-      // `t` porque as guidelines 3 e 6 são sobrescritas no call site; `dict`
-      // devolve o texto cru do conteúdo compartilhado.
+      // `t` porque a guideline 6 é sobrescrita no call site; `dict` devolve o
+      // texto cru do conteúdo compartilhado.
       items: itensNumerados(d, 'usage.guidelines').map((_v, i) =>
         t(`usage.guidelines.item${i + 1}`),
       ),
@@ -832,16 +776,25 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
+    // Seletor REAL, lido de `docs/shared/styles/nds/command.css`. A coluna
+    // existe para quem vai abrir a folha e achar a regra: um seletor que não
+    // está lá manda a pessoa procurar o que não existe.
+    //
+    // `inputBg` ficou de fora: `.nds-command-input` declara
+    // `background: transparent` e quem pinta é o container. Uma linha dizendo
+    // que o campo tem fundo próprio seria falsa, e repetir `.nds-command`
+    // duplicaria a primeira.
     return [
       { token: '--popover',            k: 'popoverBg',   alvo: '.nds-command' },
       { token: '--popover-foreground', k: 'popoverFg',   alvo: '.nds-command' },
       { token: '--muted-foreground',   k: 'mutedFg',     alvo: '.nds-command-group-heading' },
-      { token: '--popover',            k: 'inputBg',     alvo: '.nds-command-input' },
       { token: '--border',             k: 'inputBorder', alvo: '.nds-command-input-wrapper' },
-      { token: '--accent',             k: 'selectedBg',  alvo: '.nds-command-item' },
-      { token: '--accent-foreground',  k: 'selectedFg',  alvo: '.nds-command-item' },
+      // O destaque é pintado pelo seletor de estado, não pela classe base — a
+      // regra do item sem destaque não tem cor de fundo nenhuma.
+      { token: '--accent',             k: 'selectedBg',  alvo: '.nds-command-item[aria-selected="true"]' },
+      { token: '--accent-foreground',  k: 'selectedFg',  alvo: '.nds-command-item[aria-selected="true"]' },
       { token: '--border',             k: 'border',      alvo: '.nds-command-separator' },
-      { token: '--radius',             k: 'radius',      alvo: '.nds-command' },
+      { token: '--radius',             k: 'radius',      alvo: '.nds-command · .nds-command-item' },
     ].map(({ token, k, alvo }) => ({
       token,
       value: alvo,

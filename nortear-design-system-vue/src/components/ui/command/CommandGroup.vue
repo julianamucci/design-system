@@ -30,17 +30,29 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <!--
+    Sem `heading` o rótulo não é renderizado, e o `aria-labelledby` que o
+    primitivo escreve sozinho passa a apontar para um id que não existe. O
+    `null` REMOVE o atributo (atributo fantasma é referência quebrada na árvore
+    de acessibilidade); grupo sem rótulo simplesmente não tem nome.
+  -->
   <ListboxGroup
-    v-bind="delegatedProps"
+    v-bind="{ ...delegatedProps, ...(heading ? {} : { 'aria-labelledby': null }) }"
     :id="id"
     data-slot="command-group"
     :class="cn('nds-command-group', props.class)"
     :hidden="isRender ? undefined : true"
   >
+    <!--
+      A classe é o contrato: o CSS compartilhado estiliza
+      `.nds-command-group-heading` (12px, peso médio, `--muted-foreground`).
+      Com `class=""` o cabeçalho de grupo desta stack não recebia estilo nenhum
+      e saía do tamanho e da cor que as outras stacks mostram.
+    -->
     <ListboxGroupLabel
       v-if="heading"
       data-slot="command-group-heading"
-      class=""
+      class="nds-command-group-heading"
     >
       {{ heading }}
     </ListboxGroupLabel>
