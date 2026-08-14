@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Drawer,
   DrawerClose,
@@ -21,10 +21,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do Drawer: Fechado (default), Aberto (defaultOpen), Controlado (open + onOpenChange) e NaoDismissible (dismissible=false).",
+          "Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.",
       },
     },
   },
@@ -41,10 +42,11 @@ const wrapperStyle: React.CSSProperties = {
 
 export const Closed: Story = {
   parameters: {
+    covers: ["accessibility.item1"],
     docs: {
       description: {
         story:
-          "Estado inicial — apenas o trigger visível. Portal vazio: nenhum dialog renderizado.",
+          "Estado inicial — apenas o gatilho está na tela. O painel não existe no DOM, e o gatilho anuncia que há um diálogo atrás dele sem afirmar que já está aberto.",
       },
     },
   },
@@ -70,21 +72,29 @@ export const Closed: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Apenas trigger visível", async () => {
+    await step("Fechado, o painel não existe no DOM", async () => {
       const trigger = canvas.getByRole("button", { name: /Abrir/i });
       await expect(trigger).toBeVisible();
-      const dialog = within(document.body).queryByRole("dialog");
-      await expect(dialog).toBeNull();
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
+      await expect(document.querySelector("[data-slot='drawer-content']")).toBeNull();
+      await expect(document.querySelector("[data-slot='drawer-overlay']")).toBeNull();
+    });
+
+    await step("O gatilho é o único caminho de entrada, e está alcançável", async () => {
+      const trigger = canvas.getByRole("button", { name: /Abrir/i });
+      await expect(trigger).toHaveAttribute("data-slot", "drawer-trigger");
+      await expect(trigger).toBeEnabled();
     });
   },
 };
 
 export const Open: Story = {
   parameters: {
+    covers: ["accessibility.item2"],
     docs: {
       description: {
         story:
-          "Drawer aberto via defaultOpen. Overlay ativo, focus trap funcional, ESC e overlay click fecham.",
+          "Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.",
       },
     },
   },
@@ -109,22 +119,35 @@ export const Open: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await step("Drawer aberto com role=dialog", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAttribute("role", "dialog");
-      await expect(dialog).toHaveAttribute("aria-modal", "true");
-      await expect(dialog).toHaveAccessibleName();
+    const painel = await waitForPortal("dialog");
+
+    await step("Monta já aberto, com o contrato de markup completo", async () => {
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute("role", "dialog");
+      await expect(painel).toHaveAttribute("aria-modal", "true");
+      await expect(painel).toHaveAttribute("data-slot", "drawer-content");
+      await expect(painel).toHaveAccessibleName("Editar perfil");
+      await expect(document.querySelector("[data-slot='drawer-overlay']")).not.toBeNull();
+    });
+
+    await step("O foco está dentro do painel", async () => {
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error("o foco não entrou no painel");
+        }
+      });
+      await expect(painel.contains(document.activeElement)).toBe(true);
     });
   },
 };
 
 export const Controlled: Story = {
   parameters: {
+    covers: ["functional.item6"],
     docs: {
       description: {
         story:
-          "Estado controlado via open + onOpenChange. Botões externos abrem e fecham o drawer programaticamente.",
+          "Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.",
       },
     },
   },
@@ -146,7 +169,6 @@ export const Controlled: Story = {
                 <DrawerDescription>Atualize seus dados.</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
-                <Button onClick={() => setOpen(false)}>Confirmar</Button>
                 <DrawerClose asChild>
                   <Button variant="outline">Cancelar</Button>
                 </DrawerClose>
@@ -160,20 +182,31 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const abrirBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
+    const fecharBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
 
-    await step("Botão externo abre o drawer", async () => {
-      const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
-      await userEvent.click(openBtn);
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
+    await step("Sem gatilho interno, o painel nasce fechado", async () => {
+      if (within(document.body).queryAllByRole("dialog").length > 0) {
+        await userEvent.click(fecharBtn);
+        await waitForPortalGone("dialog");
+      }
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
 
-    await step("ESC fecha o drawer controlado", async () => {
-      await userEvent.keyboard("{Escape}");
-      await waitFor(() => {
-        const dialog = within(document.body).queryByRole("dialog");
-        if (dialog) throw new Error("ainda aberto");
-      }, { timeout: 1000 });
+    await step("O estado externo abre o painel", async () => {
+      await userEvent.click(abrirBtn);
+      const painel = await waitForPortal("dialog");
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAccessibleName("Editar perfil");
+    });
+
+    await step("Fechar por dentro devolve o valor a quem é dono dele", async () => {
+      const painel = await waitForPortal("dialog");
+      await userEvent.click(within(painel).getByRole("button", { name: /Cancelar/i }));
+      await waitForPortalGone("dialog");
+      // Se o callback não tivesse chegado, `open` continuaria true e o painel
+      // reabriria no render seguinte.
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
   },
 };
@@ -183,7 +216,7 @@ export const NotDismissible: Story = {
     docs: {
       description: {
         story:
-          "dismissible=false — ESC e overlay click não fecham. Usuário precisa usar o botão DrawerClose explicitamente.",
+          "Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.",
       },
     },
   },
@@ -196,9 +229,7 @@ export const NotDismissible: Story = {
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Confirmação obrigatória</DrawerTitle>
-            <DrawerDescription>
-              Use o botão Confirmar para prosseguir.
-            </DrawerDescription>
+            <DrawerDescription>Use o botão Confirmar para prosseguir.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose asChild>
@@ -210,14 +241,29 @@ export const NotDismissible: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await step("Drawer permanece aberto após ESC", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
+    const painel = await waitForPortal("dialog");
+
+    await step("Escape não fecha", async () => {
       await userEvent.keyboard("{Escape}");
-      // Aguarda um tick para garantir que ESC não fechou
-      await new Promise((r) => setTimeout(r, 200));
-      const stillOpen = within(document.body).queryByRole("dialog");
-      await expect(stillOpen).toBeInTheDocument();
+      // Espera ATIVA por um fechamento que não deve acontecer: se fechasse, a
+      // transição de saída levaria menos que isto.
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(1);
+      await expect(painel).toBeVisible();
+    });
+
+    await step("Clique no overlay não fecha", async () => {
+      const overlay = document.querySelector<HTMLElement>("[data-slot='drawer-overlay']");
+      await expect(overlay).not.toBeNull();
+      await userEvent.click(overlay!, { pointerEventsCheck: 0 });
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(1);
+    });
+
+    await step("A saída explícita do rodapé continua funcionando", async () => {
+      await expect(
+        within(painel).getByRole("button", { name: /Confirmar e fechar/i }),
+      ).toBeVisible();
     });
   },
 };

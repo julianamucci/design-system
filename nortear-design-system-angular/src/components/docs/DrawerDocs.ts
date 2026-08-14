@@ -1041,14 +1041,17 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna do meio leva a classe .nds-* REAL, não o utilitário da era
-    // Tailwind que o conteúdo compartilhado ainda guarda em `*.class`.
+    // A coluna do meio leva a classe .nds-* REAL. O conteúdo compartilhado
+    // guardava utilitário da era Tailwind aqui e passou a guardar a mesma
+    // classe — a lista continua explícita porque o TOKEN de cada linha não
+    // mora no JSON.
     return [
       { token: '--background',       classe: 'nds-drawer-content',  k: 'background' },
       { token: '--foreground',       classe: 'nds-drawer-content',  k: 'foreground' },
       { token: '--border',           classe: 'nds-drawer-content',  k: 'border'     },
       { token: '--z-modal-backdrop', classe: 'nds-sheet-overlay',   k: 'overlay'    },
       { token: '--muted',            classe: 'nds-drawer-handle',   k: 'handle'     },
+      { token: '--radius-xl',        classe: 'nds-drawer-content',  k: 'rounded'    },
     ].map(({ token, classe, k }) => ({
       token,
       value: classe,

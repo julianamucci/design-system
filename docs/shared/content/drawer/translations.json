@@ -6,9 +6,9 @@
     "description": "Painel deslizante mobile-first que entra por uma das bordas da tela com gestos de arrastar e fechamento por swipe.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentação do Drawer: painel deslizante via vaul/vaul-vue/vaul-svelte com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
-      "aiSummary": "Componente Drawer mobile-first construído sobre vaul (React/Vue/Svelte) que renderiza painel deslizante com 4 direções (bottom/top/left/right), suporta swipe-to-close, focus trap e ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
+      "description": "Documentação do Drawer: painel deslizante com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
+      "aiSummary": "Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com fechamento por Escape, por clique fora e por botão explícito, focus trap e overlay.",
+      "aiEntities": "Drawer, painel deslizante, focus trap, gesto de arrastar, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -163,7 +163,7 @@
       "compositions": {
         "withForm": {
           "name": "Com formulário",
-          "description": "Drawer contendo um formulário de edição com campos de texto e ações de confirmar/cancelar no footer. Título e descrição comunicam o objetivo da edição.",
+          "description": "Drawer contendo um formulário de edição montado com <code>Label</code> e <code>Input</code>, mais ações de confirmar e cancelar no rodapé. Título e descrição comunicam o objetivo da edição.",
           "use": "Edição de perfil, criação rápida de registros e fluxos mobile com múltiplos campos. Sempre inclua <code>DrawerTitle</code> e ação de cancelar visível no footer."
         },
         "withConfirmation": {
@@ -187,7 +187,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "open + onOpenChange",
+        "trigger": "Estado externo + callback de mudança",
         "behavior": "Estado controlado + callback de mudança permitem gerenciar o estado externamente (útil para abrir via lógica de negócio)."
       },
       "cols": {
@@ -254,28 +254,28 @@
         "class": "Classe",
         "part": "Aplicação",
         "background": {
-          "class": "bg-popover",
-          "part": "Fundo do DrawerContent"
+          "class": "nds-drawer-content",
+          "part": "Fundo do painel"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Cor do texto no Content"
+          "class": "nds-drawer-content",
+          "part": "Cor do texto dentro do painel"
         },
         "border": {
-          "class": "border-border",
-          "part": "Borda da direção de entrada (border-t/b/l/r)"
+          "class": "nds-drawer-content",
+          "part": "Borda no lado por onde o painel entra"
         },
         "overlay": {
-          "class": "bg-black/10",
-          "part": "Overlay com backdrop-blur-xs"
+          "class": "nds-sheet-overlay",
+          "part": "Camada escura sobre a página enquanto o painel está aberto"
         },
         "handle": {
-          "class": "bg-muted",
-          "part": "Handle de drag visível em direction=bottom"
+          "class": "nds-drawer-handle",
+          "part": "Alça de arraste, visível apenas na direção de baixo"
         },
         "rounded": {
-          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
-          "part": "Cantos arredondados oposto à borda de entrada"
+          "class": "nds-drawer-content",
+          "part": "Cantos arredondados no lado oposto ao da entrada"
         }
       },
       "customizationTitle": "Customização",
@@ -338,7 +338,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos nativos. <strong>Vanilla</strong> usa factory custom (<code>createDrawer</code> sobre <code>createSheet</code>) sem suporte a gestos.",
+      "item1": "<strong>Gesto de arrastar</strong>: o fechamento por arraste é um extra de ponteiro, nunca o único caminho. Escape, clique no overlay e o botão de fechar do rodapé cobrem o mesmo objetivo por teclado, então nenhuma ação depende de movimento de ponteiro (WCAG 2.5.7).",
       "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra focus trap e gestos. Para fluxos multi-step, use Stepper dentro do Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> é o padrão; outros valores funcionam mas são exceções para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fora de #storybook-root — testes com axe podem precisar checar <code>document.body</code>.",
@@ -392,7 +392,7 @@
         "item3": "DrawerTitle conectado via aria-labelledby ao Content",
         "item4": "Focus trap funcional: Tab não escapa do DrawerContent",
         "item5": "ESC fecha o drawer e retorna foco ao trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -448,9 +448,9 @@
     "description": "Mobile-first sliding panel that enters from any screen edge with drag gestures and swipe-to-dismiss support.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Drawer documentation: sliding panel via vaul/vaul-vue/vaul-svelte with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
-      "aiSummary": "Mobile-first Drawer component built on vaul (React/Vue/Svelte) renders a sliding panel with 4 directions (bottom/top/left/right), supports swipe-to-close, focus trap, and ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
+      "description": "Drawer documentation: sliding panel with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
+      "aiSummary": "Mobile-first Drawer component renders a sliding panel with 4 directions (bottom/top/left/right), closing via Escape, outside click, and an explicit button, with focus trap and overlay.",
+      "aiEntities": "Drawer, sliding panel, focus trap, drag gesture, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -605,7 +605,7 @@
       "compositions": {
         "withForm": {
           "name": "With form",
-          "description": "Drawer containing an edit form with text fields and confirm/cancel actions in the footer. Title and description communicate the goal of the edit.",
+          "description": "Drawer containing an edit form built with <code>Label</code> and <code>Input</code>, plus confirm and cancel actions in the footer. Title and description communicate the goal of the edit.",
           "use": "Profile editing, quick record creation, and mobile flows with multiple fields. Always include <code>DrawerTitle</code> and a visible cancel action in the footer."
         },
         "withConfirmation": {
@@ -629,7 +629,7 @@
       },
       "controlled": {
         "label": "Controlled",
-        "trigger": "open + onOpenChange",
+        "trigger": "External state + change callback",
         "behavior": "A controlled state + change callback manage state externally (useful for opening via business logic)."
       },
       "cols": {
@@ -696,28 +696,28 @@
         "class": "Class",
         "part": "Application",
         "background": {
-          "class": "bg-popover",
-          "part": "DrawerContent background"
+          "class": "nds-drawer-content",
+          "part": "Panel background"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Text color in Content"
+          "class": "nds-drawer-content",
+          "part": "Text color inside the panel"
         },
         "border": {
-          "class": "border-border",
-          "part": "Entry edge border (border-t/b/l/r)"
+          "class": "nds-drawer-content",
+          "part": "Border on the edge the panel enters from"
         },
         "overlay": {
-          "class": "bg-black/10",
-          "part": "Overlay with backdrop-blur-xs"
+          "class": "nds-sheet-overlay",
+          "part": "Dark layer over the page while the panel is open"
         },
         "handle": {
-          "class": "bg-muted",
-          "part": "Drag handle visible in direction=bottom"
+          "class": "nds-drawer-handle",
+          "part": "Drag handle, visible only in the bottom direction"
         },
         "rounded": {
-          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
-          "part": "Rounded corners opposite the entry edge"
+          "class": "nds-drawer-content",
+          "part": "Rounded corners on the side opposite the entry edge"
         }
       },
       "customizationTitle": "Customization",
@@ -780,7 +780,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: Drawer uses <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — native drag gestures. <strong>Vanilla</strong> uses a custom factory (<code>createDrawer</code> on top of <code>createSheet</code>) without gesture support.",
+      "item1": "<strong>Drag gesture</strong>: closing by dragging is a pointer extra, never the only path. Escape, overlay click, and the footer close button cover the same goal from the keyboard, so no action depends on pointer movement (WCAG 2.5.7).",
       "item2": "<strong>Nesting</strong>: never nest Drawers — breaks focus trap and gestures. For multi-step flows, use Stepper inside Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> is the default; other values work but are exceptions for specific cases.",
       "item4": "<strong>Portal</strong>: DrawerContent renders outside #storybook-root — axe tests may need to check <code>document.body</code>.",
@@ -834,7 +834,7 @@
         "item3": "DrawerTitle connected via aria-labelledby to Content",
         "item4": "Working focus trap: Tab does not escape DrawerContent",
         "item5": "ESC closes drawer and returns focus to trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
+        "item6": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -890,9 +890,9 @@
     "description": "Panel deslizante mobile-first que entra desde cualquier borde de pantalla con gestos de arrastrar y cierre por swipe.",
     "seo": {
       "title": "Drawer — Disclosure",
-      "description": "Documentación de Drawer: panel deslizante vía vaul/vaul-vue/vaul-svelte con 4 direcciones, gestos, focus trap y WCAG 2.2 AA.",
-      "aiSummary": "Componente Drawer mobile-first construido sobre vaul (React/Vue/Svelte) que renderiza panel deslizante con 4 direcciones (bottom/top/left/right), soporta swipe-to-close, focus trap y ESC.",
-      "aiEntities": "Drawer, vaul, React, Vue, Svelte, Vanilla, focus trap, swipe gesture, WCAG 2.2, role=dialog, aria-modal"
+      "description": "Documentación de Drawer: panel deslizante con 4 direcciones, gestos de arrastre, focus trap y WCAG 2.2 AA.",
+      "aiSummary": "Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con cierre por Escape, clic fuera y botón explícito, focus trap y overlay.",
+      "aiEntities": "Drawer, panel deslizante, focus trap, gesto de arrastre, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1047,7 +1047,7 @@
       "compositions": {
         "withForm": {
           "name": "Con formulario",
-          "description": "Drawer que contiene un formulario de edición con campos de texto y acciones confirmar/cancelar en el footer. Título y descripción comunican el objetivo de la edición.",
+          "description": "Drawer que contiene un formulario de edición construido con <code>Label</code> e <code>Input</code>, más acciones de confirmar y cancelar en el pie. Título y descripción comunican el objetivo de la edición.",
           "use": "Edición de perfil, creación rápida de registros y flujos mobile con varios campos. Incluye siempre <code>DrawerTitle</code> y una acción cancelar visible en el footer."
         },
         "withConfirmation": {
@@ -1071,7 +1071,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "open + onOpenChange",
+        "trigger": "Estado externo + callback de cambio",
         "behavior": "Estado controlado + callback de cambio permiten gestionar el estado externamente (útil para abrir vía lógica de negocio)."
       },
       "cols": {
@@ -1138,28 +1138,28 @@
         "class": "Clase",
         "part": "Aplicación",
         "background": {
-          "class": "bg-popover",
-          "part": "Fondo del DrawerContent"
+          "class": "nds-drawer-content",
+          "part": "Fondo del panel"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Color del texto en el Content"
+          "class": "nds-drawer-content",
+          "part": "Color del texto dentro del panel"
         },
         "border": {
-          "class": "border-border",
-          "part": "Borde del lado de entrada (border-t/b/l/r)"
+          "class": "nds-drawer-content",
+          "part": "Borde en el lado por donde entra el panel"
         },
         "overlay": {
-          "class": "bg-black/10",
-          "part": "Overlay con backdrop-blur-xs"
+          "class": "nds-sheet-overlay",
+          "part": "Capa oscura sobre la página mientras el panel está abierto"
         },
         "handle": {
-          "class": "bg-muted",
-          "part": "Handle de drag visible en direction=bottom"
+          "class": "nds-drawer-handle",
+          "part": "Asa de arrastre, visible solo en la dirección inferior"
         },
         "rounded": {
-          "class": "rounded-t-xl, rounded-b-xl, rounded-l-xl, rounded-r-xl",
-          "part": "Esquinas redondeadas opuestas al borde de entrada"
+          "class": "nds-drawer-content",
+          "part": "Esquinas redondeadas en el lado opuesto al de entrada"
         }
       },
       "customizationTitle": "Personalización",
@@ -1222,7 +1222,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: Drawer usa <code>vaul</code> (React), <code>vaul-vue</code> (Vue), <code>vaul-svelte</code> (Svelte) — gestos nativos. <strong>Vanilla</strong> usa factory custom (<code>createDrawer</code> sobre <code>createSheet</code>) sin soporte de gestos.",
+      "item1": "<strong>Gesto de arrastre</strong>: el cierre por arrastre es un extra de puntero, nunca el único camino. Escape, clic en el overlay y el botón de cerrar del pie cubren el mismo objetivo desde el teclado, así que ninguna acción depende del movimiento del puntero (WCAG 2.5.7).",
       "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe focus trap y gestos. Para flujos multi-step, usa Stepper dentro del Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> es el predeterminado; otros valores funcionan pero son excepciones para casos específicos.",
       "item4": "<strong>Portal</strong>: DrawerContent renderiza fuera de #storybook-root — los tests con axe pueden necesitar revisar <code>document.body</code>.",
@@ -1276,7 +1276,7 @@
         "item3": "DrawerTitle conectado vía aria-labelledby al Content",
         "item4": "Focus trap funcional: Tab no escapa de DrawerContent",
         "item5": "ESC cierra el drawer y devuelve foco al trigger (WCAG 2.1.1, 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
+        "item6": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regresión Visual",

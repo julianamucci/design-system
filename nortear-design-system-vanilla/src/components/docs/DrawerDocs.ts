@@ -4,7 +4,6 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createDrawer } from '@/components/ui/drawer';
-import { createSheet } from '@/components/ui/sheet';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import drawerTranslations from '@shared/content/drawer/translations.json';
@@ -69,6 +68,8 @@ type DrawerDemoOptions = {
 function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
   const cancel = createButton({ variant: 'outline', label: opts.cancelLabel });
+  // O que liga o botão ao fechamento nesta stack — equivalente ao DrawerClose.
+  cancel.dataset.slot = 'drawer-close';
   const action = createButton({
     variant: opts.destructive ? 'destructive' : 'default',
     label: opts.actionLabel,
@@ -83,29 +84,18 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
   body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = opts.bodyText ?? '';
 
-  const side = opts.side ?? 'bottom';
-  let el: HTMLElement;
-  if (side === 'bottom') {
-    el = createDrawer({
-      trigger,
-      title: opts.title,
-      description: opts.description,
-      content: body,
-      footer,
-    });
-  } else {
-    el = createSheet({
-      trigger,
-      side,
-      title: opts.title,
-      description: opts.description,
-      content: body,
-      footer,
-    });
-  }
-  el.dataset.slot = 'drawer';
-  el.dataset.vaulDrawerDirection = side;
-  return el;
+  // A factory cobre as quatro direções e escreve sozinha o `data-slot` e o
+  // `data-vaul-drawer-direction` no painel. Antes, só `bottom` vinha do Drawer:
+  // as outras três chamavam o Sheet, e o atributo de direção era colado no
+  // wrapper — onde nenhuma regra do CSS o lê.
+  return createDrawer({
+    trigger,
+    direction: opts.side ?? 'bottom',
+    title: opts.title,
+    description: opts.description,
+    content: body,
+    footer,
+  });
 }
 
 // ─── createDrawerDocs ─────────────────────────────────────────────────────────
@@ -348,12 +338,10 @@ const drawer = createDrawer({
   footer,
 });`;
 
-        const codeOther = `// Para direction != bottom, use createSheet (divergência idiomática vs. vaul):
-import { createSheet } from '@/components/ui/sheet';
-
-const drawer = createSheet({
+        const codeOther = `// As outras três direções saem da mesma factory
+const drawer = createDrawer({
   trigger,
-  side: 'right', // 'top' | 'left' | 'right'
+  direction: 'right', // 'top' | 'left' | 'right'
   title: 'Filtros',
   content,
   footer,
@@ -362,11 +350,10 @@ const drawer = createSheet({
         const codeWithScroll = `const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 
 const longBody = document.createElement('div');
-longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
 longBody.dataset.spacing = 'sm';
-longBody.style.maxHeight = '16rem';
-longBody.style.paddingRight = '0.5rem';
-for (let i = 1; i <= 12; i++) {
+// Sem altura própria: o corpo do painel já rola dentro do teto de altura dele.
+for (let i = 1; i <= 30; i++) {
   const p = document.createElement('p');
   p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
   longBody.appendChild(p);
@@ -447,11 +434,9 @@ const drawer = createDrawer({
               previewFactory: () => {
                 const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
                 const longBody = document.createElement('div');
-                longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground nds-overflow-y';
+                longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
                 longBody.dataset.spacing = 'sm';
-                longBody.style.maxHeight = '16rem';
-                longBody.style.paddingRight = '0.5rem';
-                for (let i = 1; i <= 12; i++) {
+                for (let i = 1; i <= 30; i++) {
                   const p = document.createElement('p');
                   p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
                   longBody.appendChild(p);
@@ -470,8 +455,6 @@ const drawer = createDrawer({
                   content: longBody,
                   footer,
                 });
-                el.dataset.slot = 'drawer';
-                el.dataset.vaulDrawerDirection = 'bottom';
                 return el;
               },
             },
@@ -577,8 +560,6 @@ form.dataset.spacing = 'sm';
                   content: form,
                   footer,
                 });
-                el.dataset.slot = 'drawer';
-                el.dataset.vaulDrawerDirection = 'bottom';
                 return el;
               },
             },
@@ -621,11 +602,15 @@ form.dataset.spacing = 'sm';
         const interfaceCode = `// createDrawer(options)
 export type DrawerOptions = {
   trigger: HTMLElement;
+  direction?: 'bottom' | 'top' | 'left' | 'right';
   title?: string;
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement;
+  dismissible?: boolean;
+  modal?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: 'escape' | 'overlay' | 'close-button') => void;
   class?: string;
 };
 
@@ -653,9 +638,8 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
                 { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' (controlado externamente via .click() no trigger no Nortear).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
-                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.direction.description')) + ' NOTA: createDrawer fixa bottom; outras direções via createSheet.' },
+                { name: 'onClose',      type: "(reason) => void",            defaultValue: '—',     required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay ou close-button.' },
+                { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.direction.description')) },
                 { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
                 { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.dismissible.description')) },
               ],
@@ -676,10 +660,10 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--popover',            value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
-            { token: '--popover-foreground', value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
+            { token: '--background',         value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
+            { token: '--foreground',         value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
             { token: '--border',             value: t('tokens.table.border.class'),     description: t('tokens.table.border.part') },
-            { token: '—',                    value: t('tokens.table.overlay.class'),    description: t('tokens.table.overlay.part') },
+            { token: '--z-modal-backdrop',   value: t('tokens.table.overlay.class'),    description: t('tokens.table.overlay.part') },
             { token: '--muted',              value: t('tokens.table.handle.class'),     description: t('tokens.table.handle.part') },
             { token: '--radius-xl',          value: t('tokens.table.rounded.class'),    description: t('tokens.table.rounded.part') },
           ],

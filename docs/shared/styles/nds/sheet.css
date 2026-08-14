@@ -379,7 +379,18 @@
  * encolhe, então a barra de rolagem simplesmente não aparece.
  */
 .nds-drawer-body {
-  flex: 1;
+  /*
+   * `flex: 1 1 auto`, e não `flex: 1`. O atalho `flex: 1` zera a BASE
+   * (`flex-basis: 0%`), e com base zero o corpo não contribui nada para a
+   * altura automática do painel: o `max-height: 80vh` nunca chega a apertar
+   * ninguém, e o conteúdo transborda o painel em vez de rolar dentro do corpo.
+   * Medido: painel com `clientHeight` 720 e `scrollHeight` 2157.
+   *
+   * Com a base `auto`, a altura hipotética do corpo é a do conteúdo, o teto do
+   * painel entra em ação e a compressão cai sobre o corpo — que encolhe porque
+   * `min-height: 0` desliga o mínimo automático do item flex.
+   */
+  flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   padding-inline: var(--spacing-4);

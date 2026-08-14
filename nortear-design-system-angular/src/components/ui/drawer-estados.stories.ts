@@ -214,3 +214,59 @@ export const Controlled: Story = {
     });
   },
 };
+
+export const NotDismissible: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Sem dispensa por ponteiro: clique fora e perda de foco não fecham. Escape CONTINUA fechando, ' +
+          'e é diferença deliberada deste stack — o primitivo não oferece desligar o teclado, e um painel ' +
+          'modal que engole Escape é armadilha de teclado (WCAG 2.1.2). A saída explícita do rodapé fica.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      rotuloGatilho: ROTULO.gatilho(),
+      tituloPainel: ROTULO.titulo(),
+      descricaoPainel: ROTULO.descricao(),
+      rotuloFechar: ROTULO.fechar(),
+    },
+    template: `
+      <nds-drawer [defaultOpen]="true" [disablePointerDismissal]="true">
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsDrawerContent>
+          <div ndsDrawerHeader>
+            <h2 ndsDrawerTitle>{{ tituloPainel }}</h2>
+            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsDrawerFooter>
+            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+          </div>
+        </ng-template>
+      </nds-drawer>
+    `,
+  }),
+  play: async ({ step }) => {
+    const painel = await esperarPortal('dialog');
+
+    await step('Clique no overlay não fecha', async () => {
+      const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
+      await expect(overlay).not.toBeNull();
+      await userEvent.click(overlay!, { pointerEventsCheck: 0 });
+      // Espera ATIVA por um fechamento que não deve acontecer: se fechasse, a
+      // transição de saída levaria menos que isto.
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+      await expect(painel).toBeVisible();
+    });
+
+    await step('A saída explícita do rodapé continua no painel', async () => {
+      await expect(within(painel).getByRole('button', { name: ROTULO.fechar() })).toBeVisible();
+      await expect(painel).toHaveAccessibleName(ROTULO.titulo());
+    });
+  },
+};

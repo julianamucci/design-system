@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -26,7 +27,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Drawer: formulário inline, confirmação destrutiva e conteúdo com scroll interno. Cada composição usa Title+Description para acessibilidade e Footer para ações primárias/secundárias.',
+          'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação de ação destrutiva e corpo mais alto que o painel.',
       },
     },
   },
@@ -37,6 +38,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -51,58 +53,11 @@ const sharedComponents = {
 
 export const WithForm: Story = {
   parameters: {
-    docs: {
-      description: { story: 'Drawer com formulário inline em direction=bottom — padrão mobile-first para edição.' },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <div style="contain: layout">
-        <Drawer :default-open="true" direction="bottom">
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Editar perfil</DrawerTitle>
-              <DrawerDescription>Atualize seu nome e email. As mudanças entram em vigor após salvar.</DrawerDescription>
-            </DrawerHeader>
-            <form class="nds-grid nds-px-4" data-spacing="sm" style="padding-bottom: 1rem">
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="drawer-name">Nome</Label>
-                <Input id="drawer-name" defaultValue="Juliana Mucci" />
-              </div>
-              <div class="nds-grid" data-spacing="xs">
-                <Label for="drawer-email">Email</Label>
-                <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
-              </div>
-            </form>
-            <DrawerFooter>
-              <Button type="submit">Salvar alterações</Button>
-              <DrawerClose as-child>
-                <Button variant="outline">Cancelar</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </div>
-    `,
-  }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const nameInput = await body.findByLabelText(/Nome/i);
-    await expect(nameInput).toBeVisible();
-    const submit = await body.findByRole('button', { name: /Salvar alterações/i });
-    await expect(submit).toBeVisible();
-  },
-};
-
-export const WithConfirmation: Story = {
-  parameters: {
+    covers: ['visual.item5'],
     docs: {
       description: {
         story:
-          'Drawer com ação destrutiva secundária. Para confirmações irreversíveis principais, prefira AlertDialog. Aqui a destrutividade é parte de um fluxo maior (remover item de lista).',
+          'Formulário curto no corpo e par de ações no rodapé. Título e descrição dizem o que está sendo editado — juntos formam o nome e a descrição acessíveis do painel.',
       },
     },
   },
@@ -113,11 +68,23 @@ export const WithConfirmation: Story = {
         <Drawer :default-open="true" direction="bottom">
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Remover anexo</DrawerTitle>
-              <DrawerDescription>O anexo será removido desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
+              <DrawerTitle>Editar perfil</DrawerTitle>
+              <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
             </DrawerHeader>
+            <DrawerBody>
+              <form class="nds-grid" data-spacing="sm">
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="drawer-name">Nome</Label>
+                  <Input id="drawer-name" model-value="Juliana Mucci" />
+                </div>
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="drawer-email">E-mail</Label>
+                  <Input id="drawer-email" type="email" model-value="juliana@example.com" />
+                </div>
+              </form>
+            </DrawerBody>
             <DrawerFooter>
-              <Button variant="destructive">Remover anexo</Button>
+              <Button type="submit">Confirmar</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </DrawerClose>
@@ -127,19 +94,84 @@ export const WithConfirmation: Story = {
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const action = await body.findByRole('button', { name: /Remover anexo/i });
-    await expect(action).toHaveClass('bg-destructive');
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const dentro = within(painel);
+
+    await step('O painel carrega nome, descrição e os campos do formulário', async () => {
+      await expect(painel).toHaveAccessibleName('Editar perfil');
+      await expect(painel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
+      // Os campos são achados pelo RÓTULO: se `for`/`id` não casassem, o input
+      // ficaria sem nome acessível e a busca falharia.
+      await expect(dentro.getByLabelText(/Nome/i)).toBeInTheDocument();
+      await expect(dentro.getByLabelText(/E-mail/i)).toBeInTheDocument();
+    });
+
+    await step('O rodapé oferece confirmar e cancelar', async () => {
+      const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+      await expect(rodape).not.toBeNull();
+      const nomes = within(rodape).getAllByRole('button').map((b) => b.textContent?.trim());
+      await expect(nomes).toContain('Confirmar');
+      await expect(nomes).toContain('Cancelar');
+    });
+  },
+};
+
+export const WithConfirmation: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <div style="contain: layout">
+        <Drawer :default-open="true" direction="bottom">
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Remover anexo?</DrawerTitle>
+              <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <Button variant="destructive">Remover</Button>
+              <DrawerClose as-child>
+                <Button variant="outline">Cancelar</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const dentro = within(painel);
+
+    await step('A consequência está escrita, não subentendida', async () => {
+      await expect(painel).toHaveAccessibleName('Remover anexo?');
+      await expect(painel).toHaveAccessibleDescription(/adicioná-lo novamente depois/i);
+    });
+
+    await step('A ação principal carrega a variante destrutiva', async () => {
+      const destrutivo = dentro.getByRole('button', { name: /^Remover$/i });
+      await expect(destrutivo).toHaveClass('nds-button-destructive');
+      const cancelar = dentro.getByRole('button', { name: /Cancelar/i });
+      await expect(cancelar).toHaveClass('nds-button-outline');
+    });
   },
 };
 
 export const WithScroll: Story = {
   parameters: {
     docs: {
-      description: { story: 'Drawer com conteúdo longo e scroll interno; Header e Footer fixos.' },
+      description: {
+        story:
+          'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',
+      },
     },
   },
   render: () => ({
@@ -152,13 +184,12 @@ export const WithScroll: Story = {
               <DrawerTitle>Termos de serviço</DrawerTitle>
               <DrawerDescription>Leia atentamente os termos antes de aceitar.</DrawerDescription>
             </DrawerHeader>
-            <div tabindex="0" role="region" aria-label="Conteúdo dos termos" class="nds-text-body nds-text-muted-foreground max-h-72 nds-overflow-y nds-px-4" data-spacing="sm">
-              <p v-for="i in 12" :key="i">
-                Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            <DrawerBody class="nds-text-body nds-text-muted-foreground">
+              <p v-for="i in 30" :key="i">
+                Parágrafo {{ i }} — conteúdo extenso para demonstrar a rolagem interna do painel
+                sem que o rodapé com as ações saia da tela.
               </p>
-            </div>
+            </DrawerBody>
             <DrawerFooter>
               <Button>Aceitar termos</Button>
               <DrawerClose as-child>
@@ -170,11 +201,39 @@ export const WithScroll: Story = {
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const accept = await body.findByRole('button', { name: /Aceitar termos/i });
-    await expect(accept).toBeVisible();
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const corpo = painel.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+    const rodape = painel.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(corpo).not.toBeNull();
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      // O painel em si não rola: o mínimo automático zero de um item com
+      // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
+      // O painel NÃO é contêiner de rolagem, e é isso que prova o contrato.
+      // Medir `scrollHeight <= clientHeight` nele não provava nada: sem
+      // `overflow` declarado o computado é `visible`, e elemento visível não
+      // rola por maior que seja o `scrollHeight`. Sonda no navegador com o
+      // corpo já correto: painel client 719 / scroll 2157, corpo client 559 /
+      // scroll 1524 — ou seja, o corpo cede altura e rola, e o número do painel
+      // era só a caixa de conteúdo não recortada.
+      await expect(['auto', 'scroll']).not.toContain(
+        getComputedStyle(painel).overflowY,
+      );
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex, quem navega por teclado não consegue rolar
+      // o corpo. É a regra scrollable-region-focusable do axe.
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const caixaRodape = rodape.getBoundingClientRect();
+      const caixaPainel = painel.getBoundingClientRect();
+      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
+      await expect(caixaRodape.height).toBeGreaterThan(0);
+    });
   },
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     Drawer,
+    DrawerBody,
     DrawerClose,
     DrawerContent,
     DrawerDescription,
@@ -10,6 +11,8 @@
     DrawerTrigger,
   } from './index';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
 
   type Direction = 'bottom' | 'top' | 'left' | 'right';
   type Variant = 'default' | 'withForm' | 'withConfirmation' | 'withScroll';
@@ -29,7 +32,7 @@
     onCancel?: () => void;
   }
 
-  // `defaultOpen` não existe no vaul-svelte nem no bits-ui: a prop era passada,
+  // `defaultOpen` não existe no primitivo desta stack: a prop era passada,
   // ignorada, e o overlay nunca abria — as stories que dependiam dela falhavam
   // todas. A API real é `open` (bindable). Inicializar `open` com `defaultOpen`
   // cobre os dois usos e apaga o ramo duplicado que existia só para o caso não
@@ -65,46 +68,31 @@
           </DrawerHeader>
 
           {#if variant === 'withForm'}
-            <form class="nds-grid nds-px-4" data-spacing="sm">
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Nome</span>
-                <input
-                  type="text"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  defaultValue="Maria Silva"
-                />
-              </label>
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Email</span>
-                <input
-                  type="email"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  defaultValue="maria@exemplo.com"
-                />
-              </label>
-            </form>
+            <DrawerBody>
+              <form class="nds-grid" data-spacing="sm">
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="drawer-story-nome">Nome</Label>
+                  <Input id="drawer-story-nome" type="text" value="Maria Silva" />
+                </div>
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="drawer-story-email">E-mail</Label>
+                  <Input id="drawer-story-email" type="email" value="maria@exemplo.com" />
+                </div>
+              </form>
+            </DrawerBody>
           {:else if variant === 'withConfirmation'}
-            <div class="nds-px-4 nds-text-body nds-text-muted-foreground">
-              <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita posteriormente.</p>
-            </div>
+            <DrawerBody class="nds-text-body nds-text-muted-foreground">
+              <p>Confirme a ação para prosseguir. Esta operação pode ser desfeita depois.</p>
+            </DrawerBody>
           {:else if variant === 'withScroll'}
-            <!-- tabindex="0" + role/label: região rolável precisa ser alcançável
-                 por teclado (axe scrollable-region-focusable). O defeito existia
-                 desde sempre, escondido porque `max-h-[50vh]` era classe morta —
-                 sem altura máxima nada rolava e a regra não se aplicava. -->
-            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-            <div
-              class="nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground"
-              data-spacing="sm"
-              style="max-block-size: 50vh"
-              tabindex="0"
-              role="region"
-              aria-label={title}
-            >
-              {#each Array.from({ length: 12 }) as _, i (i)}
-                <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno do Drawer.</p>
+            <!-- Sem altura inline: `.nds-drawer-body` já rola dentro do teto de
+                 altura do painel, e o `min-height: 0` dele é o que faz o corpo
+                 ceder altura em vez de empurrar o rodapé para fora da tela. -->
+            <DrawerBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
+              {#each Array.from({ length: 30 }) as _, i (i)}
+                <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar a rolagem interna do painel.</p>
               {/each}
-            </div>
+            </DrawerBody>
           {/if}
 
           <DrawerFooter>

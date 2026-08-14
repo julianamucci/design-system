@@ -748,12 +748,12 @@ interface DrawerProps {
         }}
         items={[
           {
-            token: "--popover",
+            token: "--background",
             value: tContent("tokens.table.background.class"),
             description: tContent("tokens.table.background.part"),
           },
           {
-            token: "--popover-foreground",
+            token: "--foreground",
             value: tContent("tokens.table.foreground.class"),
             description: tContent("tokens.table.foreground.part"),
           },
@@ -763,7 +763,7 @@ interface DrawerProps {
             description: tContent("tokens.table.border.part"),
           },
           {
-            token: "overlay",
+            token: "--z-modal-backdrop",
             value: tContent("tokens.table.overlay.class"),
             description: tContent("tokens.table.overlay.part"),
           },
@@ -773,7 +773,7 @@ interface DrawerProps {
             description: tContent("tokens.table.handle.part"),
           },
           {
-            token: "--radius",
+            token: "--radius-xl",
             value: tContent("tokens.table.rounded.class"),
             description: tContent("tokens.table.rounded.part"),
           },

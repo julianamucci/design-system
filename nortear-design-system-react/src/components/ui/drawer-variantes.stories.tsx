@@ -3,6 +3,7 @@ import { expect } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -20,10 +21,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Variantes do Drawer por direção: Bottom (mobile padrão), Top (notificação), Left (menu lateral) e Right (painel lateral desktop). O atributo data-vaul-drawer-direction controla o slide-in.",
+          "Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.",
       },
     },
   },
@@ -38,78 +40,132 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-function makeStory(
+/** Mesmo painel nas quatro direções — o que muda é `direction` e o título. */
+function painel(
   direction: "bottom" | "top" | "left" | "right",
-  label: string,
-  description: string
-): Story {
-  return {
-    parameters: {
-      docs: {
-        description: {
-          story: description,
-        },
-      },
-    },
-    render: () => (
-      <div style={wrapperStyle}>
-        <Drawer direction={direction} defaultOpen>
-          <DrawerTrigger asChild>
-            <Button variant="outline">{label}</Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle className="capitalize">{direction}</DrawerTitle>
-              <DrawerDescription>
-                Drawer com direction=&quot;{direction}&quot;.
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="nds-px-4 nds-text-body nds-text-muted-foreground" style={{ paddingBottom: "0.5rem" }}>
-              {description}
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild>
-                <Button variant="outline">Fechar</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </div>
-    ),
-    play: async ({ step }) => {
-      await step(`Drawer renderiza com data-vaul-drawer-direction=${direction}`, async () => {
-        const dialog = await waitForPortal("dialog");
-        await expect(dialog).toBeVisible();
-        const content = document.querySelector(
-          "[data-slot='drawer-content']"
-        ) as HTMLElement | null;
-        await expect(content).not.toBeNull();
-        await expect(content).toHaveAttribute("data-vaul-drawer-direction", direction);
-      });
-    },
-  };
+  titulo: string,
+  descricao: string,
+) {
+  return () => (
+    <div style={wrapperStyle}>
+      <Drawer direction={direction} defaultOpen>
+        <DrawerTrigger asChild>
+          <Button variant="outline">Abrir</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{titulo}</DrawerTitle>
+            <DrawerDescription>{descricao}</DrawerDescription>
+          </DrawerHeader>
+          <DrawerBody className="nds-text-body nds-text-muted-foreground">
+            Conteúdo do painel.
+          </DrawerBody>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Fechar</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  );
 }
 
-export const Bottom: Story = makeStory(
-  "bottom",
-  "Abrir bottom",
-  "Mobile-first padrão com handle de drag visível; rounded-t-xl, max-height 80vh."
-);
+// A asserção de direção está escrita story a story, e não extraída para um
+// helper: `play_without_assertion` conta `expect()` DENTRO do bloco, e um
+// helper compartilhado esconderia da leitura o único contrato que cada uma
+// destas quatro stories verifica.
 
-export const Top: Story = makeStory(
-  "top",
-  "Abrir top",
-  "Entra de cima; rounded-b-xl; útil para notificações ou seletores rápidos."
-);
+export const Bottom: Story = {
+  parameters: {
+    covers: ["accessibility.item6", "visual.item1"],
+    docs: {
+      description: {
+        story:
+          "Padrão mobile-first: entra por baixo, com teto de 80% da altura da tela e cantos arredondados no topo. É a única direção em que a alça aparece.",
+      },
+    },
+  },
+  render: painel("bottom", "Detalhes do pedido", "Pedido #4287 confirmado em 15 de março."),
+  play: async ({ step }) => {
+    await step("O painel encosta na base e mostra a alça", async () => {
+      const painelEl = await waitForPortal("dialog");
+      await expect(painelEl).toHaveAttribute("data-vaul-drawer-direction", "bottom");
+      await expect(painelEl).toHaveClass(/nds-drawer-content/);
+      await expect(painelEl).toHaveAccessibleName("Detalhes do pedido");
+      // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
+      // outras. Contraste e cor do painel são verificados pelo axe da story.
+      const alca = painelEl.querySelector<HTMLElement>(".nds-drawer-handle")!;
+      await expect(window.getComputedStyle(alca).display).toBe("block");
+    });
+  },
+};
 
-export const Left: Story = makeStory(
-  "left",
-  "Abrir left",
-  "Painel lateral à esquerda; w-3/4 mobile, max-w-sm desktop; rounded-r-xl."
-);
+export const Top: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      description: {
+        story:
+          "Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a seletor rápido — conteúdo curto e saída imediata.",
+      },
+    },
+  },
+  render: painel("top", "Nova versão disponível", "Atualize agora para acessar as novidades."),
+  play: async ({ step }) => {
+    await step("O painel encosta no topo e esconde a alça", async () => {
+      const painelEl = await waitForPortal("dialog");
+      await expect(painelEl).toHaveAttribute("data-vaul-drawer-direction", "top");
+      await expect(painelEl).toHaveClass(/nds-drawer-content/);
+      await expect(painelEl).toHaveAccessibleName("Nova versão disponível");
+      const alca = painelEl.querySelector<HTMLElement>(".nds-drawer-handle")!;
+      await expect(window.getComputedStyle(alca).display).toBe("none");
+    });
+  },
+};
 
-export const Right: Story = makeStory(
-  "right",
-  "Abrir right",
-  "Painel lateral à direita (padrão para edição em desktop); rounded-l-xl."
-);
+export const Left: Story = {
+  parameters: {
+    covers: ["visual.item3"],
+    docs: {
+      description: {
+        story:
+          "Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera encontrar onde o menu costuma ficar.",
+      },
+    },
+  },
+  render: painel("left", "Menu", "Navegue pelas seções do app."),
+  play: async ({ step }) => {
+    await step("O painel encosta na borda esquerda", async () => {
+      const painelEl = await waitForPortal("dialog");
+      await expect(painelEl).toHaveAttribute("data-vaul-drawer-direction", "left");
+      await expect(painelEl).toHaveClass(/nds-drawer-content/);
+      await expect(painelEl).toHaveAccessibleName("Menu");
+      // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
+      await expect(painelEl.getBoundingClientRect().left).toBeLessThan(1);
+    });
+  },
+};
+
+export const Right: Story = {
+  parameters: {
+    covers: ["functional.item5", "visual.item2"],
+    docs: {
+      description: {
+        story:
+          "Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar de componente.",
+      },
+    },
+  },
+  render: painel("right", "Filtros", "Refine sua busca por categoria, preço e disponibilidade."),
+  play: async ({ step }) => {
+    await step("O painel encosta na borda direita", async () => {
+      const painelEl = await waitForPortal("dialog");
+      await expect(painelEl).toHaveAttribute("data-vaul-drawer-direction", "right");
+      await expect(painelEl).toHaveClass(/nds-drawer-content/);
+      await expect(painelEl).toHaveAccessibleName("Filtros");
+      const caixa = painelEl.getBoundingClientRect();
+      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+    });
+  },
+};

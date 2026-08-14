@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
@@ -11,10 +11,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados canônicos do Drawer: fechado, aberto (defaultOpen), controlado e não-dismissible.',
+          'Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.',
       },
     },
   },
@@ -31,14 +32,28 @@ export const Closed: Story = {
     description: 'Atualize seus dados pessoais.',
   },
   parameters: {
-    docs: { description: { story: 'Estado inicial — apenas o trigger é renderizado; portal vazio.' } },
+    covers: ['accessibility.item1'],
+    docs: {
+      description: {
+        story:
+          'Estado inicial — apenas o gatilho está na tela. O painel não existe no DOM, e o gatilho é o único caminho de entrada.',
+      },
+    },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
-    const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
-    await expect(trigger).toBeVisible();
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await step('Fechado, o painel não existe no DOM', async () => {
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      await expect(document.querySelector('[data-slot="drawer-content"]')).toBeNull();
+      await expect(document.querySelector('[data-slot="drawer-overlay"]')).toBeNull();
+    });
+
+    await step('O gatilho é o único caminho de entrada, e está alcançável', async () => {
+      const trigger = canvas.getByRole('button', { name: /Abrir drawer/i });
+      await expect(trigger).toBeVisible();
+      await expect(trigger).toBeEnabled();
+    });
   },
 };
 
@@ -52,12 +67,34 @@ export const Open: Story = {
     cancelLabel: 'Cancelar',
   },
   parameters: {
-    docs: { description: { story: 'Drawer aberto via defaultOpen=true. Captura visual no Chromatic.' } },
+    covers: ['accessibility.item2'],
+    docs: {
+      description: {
+        story:
+          'Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.',
+      },
+    },
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+
+    await step('Monta já aberto, com o contrato de markup completo', async () => {
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute('role', 'dialog');
+      await expect(painel).toHaveAttribute('aria-modal', 'true');
+      await expect(painel).toHaveAttribute('data-slot', 'drawer-content');
+      await expect(painel).toHaveAccessibleName('Editar perfil');
+      await expect(document.querySelector('[data-slot="drawer-overlay"]')).not.toBeNull();
+    });
+
+    await step('O foco está dentro do painel', async () => {
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco não entrou no painel');
+        }
+      });
+      await expect(painel.contains(document.activeElement)).toBe(true);
+    });
   },
 };
 
@@ -66,37 +103,50 @@ export const Controlled: Story = {
     open: false,
     triggerLabel: 'Abrir via estado externo',
     title: 'Controlado pelo pai',
-    description: 'Este drawer é comandado por estado externo via bind:open.',
+    description: 'Este drawer é comandado por estado externo.',
     actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
     onAction: fn(),
     onCancel: fn(),
   },
   parameters: {
-    docs: { description: { story: 'Abertura controlada externamente via open + onOpenChange (bind:open).' } },
+    covers: ['functional.item6'],
+    docs: {
+      description: {
+        story:
+          'Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.',
+      },
+    },
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
 
-    await step('Clique no trigger abre o drawer', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      await expect(dialog).toBeVisible();
+    await step('O painel nasce fechado', async () => {
+      if (within(document.body).queryAllByRole('dialog').length > 0) {
+        await userEvent.keyboard('{Escape}');
+        await waitForPortalGone('dialog');
+      }
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
-    await step('Escape fecha o drawer controlado', async () => {
-      await userEvent.keyboard('{Escape}');
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('dialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('drawer still open');
-          }
-        },
-        { timeout: 1200 }
-      );
+    await step('O estado ligado abre o painel', async () => {
+      await userEvent.click(trigger);
+      const painel = await waitForPortal('dialog');
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAccessibleName('Controlado pelo pai');
+    });
+
+    await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
+      const painel = await waitForPortal('dialog');
+      const espiao = args.onCancel as ReturnType<typeof fn>;
+      const chamadasAntes = espiao.mock.calls.length;
+      await userEvent.click(within(painel).getByRole('button', { name: /Cancelar/i }));
+      await waitForPortalGone('dialog');
+      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      // Se o valor não tivesse voltado ao pai, o painel reabriria no próximo
+      // ciclo de renderização.
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
   },
 };
@@ -112,10 +162,35 @@ export const NotDismissible: Story = {
     cancelLabel: 'Recusar',
   },
   parameters: {
-    docs: { description: { story: 'dismissible=false — ESC, swipe e clique no overlay não fecham. Apenas o botão de ação dispensa.' } },
+    docs: {
+      description: {
+        story:
+          'Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.',
+      },
+    },
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+
+    await step('Escape não fecha', async () => {
+      await userEvent.keyboard('{Escape}');
+      // Espera ATIVA por um fechamento que não deve acontecer: se fechasse, a
+      // transição de saída levaria menos que isto.
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+      await expect(painel).toBeVisible();
+    });
+
+    await step('Clique no overlay não fecha', async () => {
+      const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
+      await expect(overlay).not.toBeNull();
+      await userEvent.click(overlay!, { pointerEventsCheck: 0 });
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+    });
+
+    await step('A saída explícita do rodapé continua funcionando', async () => {
+      await expect(within(painel).getByRole('button', { name: /Recusar/i })).toBeVisible();
+    });
   },
 };

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { createDrawer } from './drawer';
-import { createSheet, type SheetSide } from './sheet';
+import { createDrawer, type DrawerDirection } from './drawer';
 import { createButton } from './button';
+import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -15,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Drawer por direção (bottom/top/left/right). NOTA: createDrawer (Vanilla) é hardcoded para bottom; outras direções usam createSheet diretamente — divergência idiomática vs. vaul.',
+          'Direção de entrada pela opção direction da factory. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.',
       },
     },
   },
@@ -26,67 +26,143 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildVariant(side: SheetSide, triggerLabel: string, title: string): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: triggerLabel });
+function buildVariant(direction: DrawerDirection, titulo: string, descricao: string): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: 'Abrir' });
 
   const content = document.createElement('div');
   content.className = 'nds-text-body nds-text-muted-foreground';
-  content.textContent = 'Conteúdo do drawer.';
+  content.textContent = 'Conteúdo do painel.';
 
-  const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-  const action = createButton({ variant: 'default', label: 'Confirmar' });
+  const cancel = createButton({ variant: 'outline', label: 'Fechar' });
+  cancel.dataset.slot = 'drawer-close';
   const footer = document.createElement('div');
-  footer.className = 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2';
-  footer.append(cancel, action);
+  footer.className = 'nds-cluster';
+  footer.dataset.justify = 'end';
+  footer.dataset.spacing = 'xs';
+  footer.append(cancel);
 
-  let el: HTMLElement;
-  if (side === 'bottom') {
-    el = createDrawer({ trigger, title, description: 'Descrição complementar.', content, footer });
-  } else {
-    el = createSheet({ trigger, side, title, description: 'Descrição complementar.', content, footer });
-  }
-  el.dataset.slot = 'drawer';
-  el.dataset.vaulDrawerDirection = side;
+  const drawer = createDrawer({
+    trigger,
+    direction,
+    title: titulo,
+    description: descricao,
+    content,
+    footer,
+  });
 
   const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full';
   wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '160px';
-  wrapper.appendChild(el);
-  queueMicrotask(() => trigger.click());
+  wrapper.appendChild(drawer);
   return wrapper;
 }
 
-async function expectDirection(side: SheetSide, step: (name: string, fn: () => Promise<void> | void) => Promise<void> | void) {
-  const dialog = await waitForPortal('dialog');
-  await step(`Renderiza com direção ${side}`, async () => {
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
-  });
-  await step('Fecha via ESC', async () => {
-    await userEvent.keyboard('{Escape}');
-  });
+/** Abre pelo gatilho, e só se ainda estiver fechado (a play é reexecutável). */
+async function abrirPeloGatilho(canvasElement: HTMLElement): Promise<HTMLElement> {
+  limparPortaisDoDrawer();
+  if (within(document.body).queryAllByRole('dialog').length === 0) {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: /^abrir$/i }));
+  }
+  return await waitForPortal('dialog');
 }
+
+// A asserção de direção está escrita story a story, e não extraída para um
+// helper: `play_without_assertion` conta `expect()` DENTRO do bloco, e um helper
+// compartilhado esconderia da leitura o único contrato que cada uma destas
+// quatro stories verifica.
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Bottom: Story = {
-  render: () => buildVariant('bottom', 'Abrir bottom', 'Editar perfil'),
-  play: async ({ step }) => { await expectDirection('bottom', step); },
+  parameters: {
+    covers: ['accessibility.item6', 'visual.item1'],
+    docs: {
+      description: {
+        story:
+          'Padrão mobile-first: entra por baixo, com teto de 80% da altura da tela e cantos arredondados no topo. É a única direção em que a alça aparece.',
+      },
+    },
+  },
+  render: () => buildVariant('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
+  play: async ({ canvasElement, step }) => {
+    const painel = await abrirPeloGatilho(canvasElement);
+    await step('O painel encosta na base e mostra a alça', async () => {
+      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(painel).toHaveAccessibleName('Detalhes do pedido');
+      // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
+      // outras. Contraste e cor do painel são verificados pelo axe da story.
+      const alca = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(alca).display).toBe('block');
+    });
+  },
 };
 
 export const Top: Story = {
-  render: () => buildVariant('top', 'Abrir top', 'Notificação'),
-  play: async ({ step }) => { await expectDirection('top', step); },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      description: {
+        story:
+          'Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a seletor rápido — conteúdo curto e saída imediata.',
+      },
+    },
+  },
+  render: () => buildVariant('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
+  play: async ({ canvasElement, step }) => {
+    const painel = await abrirPeloGatilho(canvasElement);
+    await step('O painel encosta no topo e esconde a alça', async () => {
+      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(painel).toHaveAccessibleName('Nova versão disponível');
+      const alca = painel.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      await expect(window.getComputedStyle(alca).display).toBe('none');
+    });
+  },
 };
 
 export const Left: Story = {
-  render: () => buildVariant('left', 'Abrir left', 'Menu'),
-  play: async ({ step }) => { await expectDirection('left', step); },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      description: {
+        story:
+          'Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera encontrar onde o menu costuma ficar.',
+      },
+    },
+  },
+  render: () => buildVariant('left', 'Menu', 'Navegue pelas seções do app.'),
+  play: async ({ canvasElement, step }) => {
+    const painel = await abrirPeloGatilho(canvasElement);
+    await step('O painel encosta na borda esquerda', async () => {
+      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(painel).toHaveAccessibleName('Menu');
+      // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
+      await expect(painel.getBoundingClientRect().left).toBeLessThan(1);
+    });
+  },
 };
 
 export const Right: Story = {
-  render: () => buildVariant('right', 'Abrir right', 'Filtros'),
-  play: async ({ step }) => { await expectDirection('right', step); },
+  parameters: {
+    covers: ['functional.item5', 'visual.item2'],
+    docs: {
+      description: {
+        story:
+          'Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar de componente.',
+      },
+    },
+  },
+  render: () => buildVariant('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
+  play: async ({ canvasElement, step }) => {
+    const painel = await abrirPeloGatilho(canvasElement);
+    await step('O painel encosta na borda direita', async () => {
+      await expect(painel).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(painel).toHaveClass(/nds-drawer-content/);
+      await expect(painel).toHaveAccessibleName('Filtros');
+      const caixa = painel.getBoundingClientRect();
+      await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
+    });
+  },
 };
