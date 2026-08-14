@@ -2841,6 +2841,98 @@ function definedClasses() {
   return _definedClasses;
 }
 
+/**
+ * Anel de foco apagado por especificidade.
+ *
+ * `:focus-visible` define o anel com `box-shadow`, e uma regra POSTERIOR de
+ * especificidade igual ou maior redefine `box-shadow` no mesmo elemento sem
+ * repetir o `:focus-visible` — o anel some, e some justamente no estado em que
+ * o componente está sendo usado por teclado. É WCAG 2.4.7 (nível AA) quebrado
+ * sem nada na tela denunciando, porque quem enxerga e usa mouse nunca vê.
+ *
+ * A regra nasceu de duas ocorrências reais nesta revisão: no `tabs` o anel
+ * nunca aparecia em aba nenhuma (o roving tabindex põe o foco sempre na aba
+ * ATIVA, e era a regra de ativa que apagava), e no `toggle-group` sumia na
+ * variante outline. Nas duas o defeito era invisível para o audit e para a
+ * suíte.
+ *
+ * Três exclusões, todas medidas contra falso positivo:
+ *
+ * - **Troca deliberada de anel.** `[aria-invalid="true"]` pinta o próprio anel
+ *   em cor destrutiva; o foco continua visível. Declaração que cita `--ring` ou
+ *   `--destructive` é substituição, não apagamento — 8 dos 12 primeiros
+ *   achados eram disto.
+ * - **Restauração posterior.** Uma regra `:focus-visible` mais forte depois do
+ *   sobrescritor devolve o anel. É o conserto aplicado no `tabs`, e sem esta
+ *   exclusão a regra acusaria o que ela mesma mandou corrigir.
+ * - **Pseudo-elemento.** `::picker(select)` e afins são outra caixa de
+ *   renderização, não o mesmo elemento — comparar só a última classe os
+ *   confundia com o alvo.
+ */
+function auditFocusRingSobrescrito() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+
+  const especificidade = (sel) => {
+    const ids = (sel.match(/#[\w-]+/g) || []).length;
+    const cls = (sel.match(/\.[\w-]+|\[[^\]]+\]|:[a-z-]+(\([^)]*\))?/g) || []).length;
+    return ids * 100 + cls * 10;
+  };
+  const alvo = (sel) => {
+    const m = sel.match(/\.[\w-]+/g);
+    return m ? m[m.length - 1] : null;
+  };
+  const sombra = (corpo) => {
+    const m = corpo.match(/box-shadow\s*:[^;]*/);
+    return m ? m[0] : null;
+  };
+
+  for (const file of walkDir(dir, ['.css'])) {
+    const src = readFile(file);
+    if (!src) continue;
+    const rel = relative(ROOT, file);
+    const regras = [...src.matchAll(/([^{}]+)\{([^}]*)\}/g)].map((m, i) => ({
+      sel: m[1].trim().split('\n').pop().trim(),
+      corpo: m[2],
+      ordem: i,
+    }));
+
+    for (const anel of regras) {
+      if (!/:focus-visible/.test(anel.sel) || !sombra(anel.corpo)) continue;
+      const alvoAnel = alvo(anel.sel);
+      if (!alvoAnel) continue;
+      const espAnel = especificidade(anel.sel);
+
+      for (const r of regras) {
+        if (r.ordem <= anel.ordem) continue;
+        if (/:focus-visible/.test(r.sel) || /::/.test(r.sel)) continue;
+        const decl = sombra(r.corpo);
+        if (!decl) continue;
+        if (alvo(r.sel) !== alvoAnel) continue;
+        if (especificidade(r.sel) < espAnel) continue;
+        if (/--ring|--destructive/.test(decl)) continue;
+        const restaurado = regras.some(
+          (z) =>
+            z.ordem > r.ordem &&
+            /:focus-visible/.test(z.sel) &&
+            alvo(z.sel) === alvoAnel &&
+            sombra(z.corpo) &&
+            especificidade(z.sel) >= especificidade(r.sel),
+        );
+        if (restaurado) continue;
+
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: rel, rule: 'focus_ring_sobrescrito',
+          message: `"${r.sel}" redefine box-shadow depois de "${anel.sel}" e com especificidade igual ou maior — o anel de foco não aparece nesse estado (WCAG 2.4.7)`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditTranslateComposto() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -3227,7 +3319,7 @@ if (!category || category === 'analytics') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditStorybookInfra(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
