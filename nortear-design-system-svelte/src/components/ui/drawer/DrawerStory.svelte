@@ -99,7 +99,23 @@
             <Button onclick={onAction}>{actionLabel}</Button>
             <DrawerClose>
               {#snippet child({ props })}
-                <Button variant="outline" {...props} onclick={onCancel}>{cancelLabel}</Button>
+                <!--
+                `onclick` DEPOIS do spread sobrescrevia o handler que o
+                primitivo entrega em `props` — o que fecha o painel. O Cancelar
+                avisava o callback e não fechava nada: o painel seguia no DOM, e
+                quem esperava o portal sumir esperava até estourar o tempo.
+                Encadear os dois preserva o comportamento do primitivo.
+              -->
+              <Button
+                variant="outline"
+                {...props}
+                onclick={(event: MouseEvent) => {
+                  (props.onclick as ((e: MouseEvent) => void) | undefined)?.(event);
+                  onCancel?.();
+                }}
+              >
+                {cancelLabel}
+              </Button>
               {/snippet}
             </DrawerClose>
           </DrawerFooter>

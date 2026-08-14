@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { onBeforeUnmount, onMounted, nextTick, ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { useForwardPropsEmits } from 'reka-ui'
 import { DrawerContent, DrawerPortal } from 'vaul-vue'
 import { cn } from '@/lib/utils'
@@ -65,60 +65,67 @@ const modal = useDrawerModal()
  * Só que um diálogo modal que não recebe o foco deixa quem navega por teclado
  * do lado de fora: o próximo Tab continua na página atrás do painel. As outras
  * quatro stacks levam o foco para dentro, e a referência do projeto é uma
- * delas. Então o foco é movido aqui, uma vez, na montagem.
+ * delas. Então o foco é movido aqui, uma vez por abertura.
  *
  * O alvo é o próprio painel (o primitivo já lhe dá `tabindex="-1"`), e não o
  * primeiro focável: focar direto um campo faria o leitor de tela anunciar o
  * campo sem antes anunciar o nome do diálogo.
  */
-const painel = ref<{ $el?: HTMLElement } | null>(null)
+const painel = ref<{ $el?: unknown } | null>(null)
 
-async function levarFocoParaODentro(el: HTMLElement) {
-  // Insiste por alguns quadros, e a razão é o FECHAMENTO, não a abertura.
+async function levarFocoParaODentro(instancia: { $el?: unknown }) {
+  // Acompanha alguns quadros em vez de agir num instante só, porque a abertura
+  // não acontece toda de uma vez: o elemento aparece num quadro, o
+  // `data-state` vira `open` em outro, e o fechamento anterior ainda pode
+  // devolver o foco ao gatilho no meio do caminho — devolução correta, só
+  // atrasada, quando alguém fecha e reabre em seguida (duplo clique no gatilho,
+  // e o par idempotente que as plays usam).
   //
-  // Ao fechar, o primitivo devolve o foco ao gatilho — comportamento correto.
-  // Quando alguém fecha e reabre em seguida (o par idempotente que as plays
-  // usam, e um duplo clique no uso real), essa devolução chega DEPOIS de o
-  // painel já estar aberto e rouba o foco que acabamos de colocar. Medido com
-  // sonda: painel `data-state="open"`, `tabindex="-1"`, e o foco no botão do
-  // gatilho.
-  //
-  // Focar uma vez só perde essa corrida. O laço para assim que o foco entra,
-  // e desiste se o painel fechar no meio — nunca fica competindo com quem
-  // fechou de propósito.
-  // O quadro em que o painel ainda não está `open` é PULADO, não encerra o
-  // laço: na reabertura o estado leva alguns quadros para virar, e sair na
-  // primeira leitura desistia antes de haver o que focar.
-  for (let quadro = 0; quadro < 20; quadro++) {
+  // Cada quadro é uma condição só: sem elemento ainda, PULA; painel ainda não
+  // aberto, PULA; foco já dentro, encerra; painel saiu do documento (alguém
+  // fechou de propósito), encerra — nunca fica competindo com quem fechou.
+  for (let quadro = 0; quadro < 30; quadro++) {
     await new Promise((r) => requestAnimationFrame(r))
+    // `$el` é lido A CADA quadro de propósito: ele começa como o nó de
+    // COMENTÁRIO que marca o lugar do painel e só vira o elemento quando o
+    // primitivo troca a presença. Lido uma vez só, no instante em que a
+    // referência aparece, ele é sempre o comentário — e era aí que a versão
+    // anterior desistia.
+    const el = instancia.$el
+    if (!(el instanceof HTMLElement)) continue
+    if (!el.isConnected) return
     if (el.getAttribute('data-state') !== 'open') continue
     if (el.contains(document.activeElement)) return
     el.focus()
   }
 }
 
-onMounted(async () => {
-  await nextTick()
-  // `$el` de um componente que renderiza fragmento pode vir como nó de
-  // comentário; a consulta pelo `data-slot` é a reserva que sempre resolve.
-  const doRef = painel.value?.$el
-  const el =
-    doRef instanceof HTMLElement
-      ? doRef
-      : document.querySelector<HTMLElement>('[data-slot="drawer-content"]')
-  if (!el) return
-
-  // A montagem cobre o painel que nasce aberto; o observador cobre o resto.
-  // Reabrir pelo gatilho NÃO remonta este componente — o primitivo mantém o nó
-  // e alterna `data-state` —, então um `onMounted` sozinho focava na primeira
-  // abertura e nunca mais. Medido: a story que monta aberta passava e a que
-  // fecha e reabre continuava reprovando.
-  void levarFocoParaODentro(el)
-
-  const observador = new MutationObserver(() => void levarFocoParaODentro(el))
-  observador.observe(el, { attributes: true, attributeFilter: ['data-state'] })
-  onBeforeUnmount(() => observador.disconnect())
-})
+/**
+ * O gancho é a MONTAGEM DO PAINEL, não a deste componente.
+ *
+ * Este componente é o portal, e ele existe desde que a página monta — inclusive
+ * com o drawer fechado, quando o portal não renderiza painel nenhum. Um
+ * `onMounted` aqui rodava no instante em que o painel ainda NÃO existia, saía
+ * sem fazer nada, e nada depois disso reagia: abrir pelo gatilho não remonta
+ * este componente, remonta o conteúdo dentro dele. Por isso o painel que nasce
+ * aberto recebia o foco (na montagem o conteúdo já estava lá) e o que abre pelo
+ * gatilho nunca recebia. Medido: era essa a diferença entre as duas stories, e
+ * não o ciclo de fechar e reabrir.
+ *
+ * O portal desta lib não usa `forceMount`: o conteúdo é montado a cada abertura
+ * e desmontado ao fechar. Então observar a referência do painel dá exatamente
+ * um disparo por abertura — na primeira, na reabertura pelo gatilho e no painel
+ * que já nasce aberto.
+ */
+watch(
+  painel,
+  async (instancia) => {
+    if (!instancia) return
+    await nextTick()
+    void levarFocoParaODentro(instancia)
+  },
+  { flush: 'post' },
+)
 </script>
 
 <template>

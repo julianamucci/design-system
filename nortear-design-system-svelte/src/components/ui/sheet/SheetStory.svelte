@@ -101,7 +101,21 @@
             <SheetFooter>
               <SheetClose>
                 {#snippet child({ props })}
-                  <Button variant="outline" {...props} onclick={onCancel}>{cancelLabel}</Button>
+                  <!--
+                    O `onclick` ENCADEIA o do primitivo em vez de substituí-lo.
+                    Escrito depois do `{...props}`, ele vencia o handler que o
+                    `SheetClose` injeta — o botão avisava quem escuta e não
+                    fechava o painel. Mesmo defeito já corrigido no dialog e no
+                    drawer; esta é a terceira ocorrência do padrão.
+                  -->
+                  <Button
+                    variant="outline"
+                    {...props}
+                    onclick={(event: MouseEvent) => {
+                      (props.onclick as ((e: MouseEvent) => void) | undefined)?.(event);
+                      onCancel?.();
+                    }}
+                  >{cancelLabel}</Button>
                 {/snippet}
               </SheetClose>
               <Button
