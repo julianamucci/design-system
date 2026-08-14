@@ -5,6 +5,7 @@
     value?: number | null;
     max?: number;
     class?: string;
+    variant?: 'success' | 'destructive';
     'aria-label'?: string;
     animated?: boolean;
     intervalMs?: number;
@@ -18,6 +19,7 @@
     value: initialValue = 0,
     max = 100,
     class: className = '',
+    variant,
     'aria-label': ariaLabel = 'Progresso',
     animated = false,
     intervalMs = 500,
@@ -43,7 +45,9 @@
   );
 </script>
 
-<div class="" data-spacing="sm" style="width: 18rem">
+<!-- `nds-w-sm` no lugar de `style="width: 18rem"`: largura inline vence a folha
+     e sai do tema, da densidade e da escala. -->
+<div class="nds-stack nds-w-sm" data-spacing="sm">
   {#if showLabel || showValue}
     <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
       {#if showLabel}
@@ -58,6 +62,7 @@
     value={current}
     {max}
     class={className}
+    data-variant={variant}
     aria-label={ariaLabel}
   />
 </div>

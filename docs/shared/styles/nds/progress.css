@@ -9,7 +9,7 @@
  * O indicador usa `transform: translateX` controlado pela CSS custom property
  * `--value` (0–100), permitindo transição suave sem JS adicional.
  *
- * Tokens: --primary (preenchimento), --radius-full
+ * Tokens: --primary (preenchimento), --radius-full, --spacing-2
  */
 
 .nds-progress {
@@ -24,7 +24,7 @@
 .nds-progress-indicator {
   width: 100%;
   height: 100%;
-  background-color: hsl(var(--primary));
+  background-color: hsl(var(--nds-progress-color, var(--primary)));
   transform: translateX(calc((var(--value, 0) - 100) * 1%));
   transition: transform var(--duration-base) var(--ease-entrance);
 }
@@ -44,12 +44,12 @@
 .nds-progress-root {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-3, 0.75rem);
+  gap: var(--spacing-2);
 }
 
 .nds-progress-bar {
   height: 100%;
-  background-color: hsl(var(--primary));
+  background-color: hsl(var(--nds-progress-color, var(--primary)));
   transition: width var(--duration-base) var(--ease-entrance);
 }
 
@@ -63,6 +63,39 @@
   font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
   font-variant-numeric: tabular-nums;
+}
+
+/*
+ * ─── Variantes semânticas ───────────────────────────────────────────────────
+ * `data-variant` troca a cor da BARRA; a trilha continua neutra.
+ *
+ *   <div class="nds-progress" data-variant="success" role="progressbar" …>
+ *
+ * A trilha não acompanha a variante de propósito. WCAG 1.4.11 pede 3:1 entre a
+ * parte cheia e a vazia — é o único jeito de ver onde a barra termina —, e
+ * tingir a trilha com a MESMA cor a 20% derruba a razão justamente na variante
+ * mais clara (medido: `warning` a 2.66:1 no tema claro padrão). Com a trilha
+ * fixa, o contraste não depende de qual variante alguém escolheu.
+ *
+ * Medido nos três temas × claro/escuro, barra contra trilha:
+ *   padrão  5.47–4.54 (success) · 4.18–3.44 (destructive) · 11.70–9.27 (padrão)
+ *   frio    7.30–4.07 (success) · 4.48–4.09 (destructive)
+ *   quente  6.48–4.29 (success) · 3.92–4.59 (destructive)
+ *
+ * `--warning` NÃO tem variante aqui: no tema padrão claro ele é um amarelo de
+ * luminância alta (45 95% 36%) e não alcança 3:1 contra trilha nenhuma que
+ * ainda se distinga do fundo da página. Entregar a variante seria entregar uma
+ * barra que não informa. Mesmo raciocínio (e mesma medição) que levou o
+ * code-block a abandonar os tokens semânticos na paleta de sintaxe.
+ */
+.nds-progress[data-variant="success"],
+.nds-progress-root[data-variant="success"] {
+  --nds-progress-color: var(--success);
+}
+
+.nds-progress[data-variant="destructive"],
+.nds-progress-root[data-variant="destructive"] {
+  --nds-progress-color: var(--destructive);
 }
 
 /*
@@ -80,6 +113,11 @@
  *
  * Sem `aria-valuenow`: é assim que o leitor de tela anuncia "ocupado" em vez
  * de um número que ninguém sabe.
+ *
+ * `data-indeterminate` é o atributo que as cinco stacks emitem — três libs o
+ * publicam sozinhas (Base UI, Bits UI, Radix NG) e as outras duas o escrevem no
+ * próprio componente. Ele é o gancho, e não uma classe de animação: classe
+ * aplicada pela story deixava o estado do DOM e o desenho livres para divergir.
  */
 .nds-progress[data-indeterminate] .nds-progress-indicator,
 .nds-progress[data-indeterminate] .nds-progress-bar {

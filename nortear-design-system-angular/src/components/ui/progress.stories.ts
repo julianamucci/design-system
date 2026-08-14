@@ -4,6 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
 import { NdsProgressDocs } from '@/components/docs/ProgressDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { percentualDesenhado } from '@shared/testing/progress-probe';
 
 type ProgressArgs = {
   value: number;
@@ -76,7 +77,11 @@ type Story = StoryObj<ProgressArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    covers: ['accessibility.item1', 'accessibility.item3', 'accessibility.item4', 'accessibility.item5'],
+    // `accessibility.item5` saiu daqui: ele fala de nome acessível em TODO
+    // exemplo, e o exemplo que exercita o caminho difícil — nome vindo do
+    // rótulo, via `aria-labelledby`, sem `aria-label` nenhum — é o WithLabel.
+    // Declarado no Playground, o item passava por um único `aria-label`.
+    covers: ['accessibility.item1', 'accessibility.item3', 'accessibility.item4'],
   },
   render: (args) => ({
     props: { ...args },
@@ -133,16 +138,9 @@ export const Playground: Story = {
     await step('A barra desenhada corresponde ao percentual pedido', async () => {
       // Medir é o único jeito de saber que a custom property foi CONSUMIDA:
       // `--value` correto com o CSS ausente passaria no passo anterior.
-      const trilha = canvasElement.querySelector<HTMLElement>('[data-slot="progress-track"]')!;
-      const indicador = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="progress-indicator"]',
-      )!;
       const esperado = ((args.value - args.min) / (args.max - args.min)) * 100;
-
       await waitFor(async () => {
-        const caixaTrilha = trilha.getBoundingClientRect();
-        const preenchido = indicador.getBoundingClientRect().right - caixaTrilha.left;
-        await expect(Math.abs((preenchido / caixaTrilha.width) * 100 - esperado)).toBeLessThan(2);
+        await expect(Math.abs(percentualDesenhado(canvasElement) - esperado)).toBeLessThan(2);
       });
     });
   },

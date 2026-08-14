@@ -46,9 +46,12 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // stacks pelo nome. Cada docs page é consumida isoladamente: aqui a nota tem
 // que falar do primitivo que ESTA página usa.
 //
-// `notes.item2` e `notes.item3` ensinam sintaxe de variante utilitária
-// (`[&>div]:…`) que saiu do projeto — e, no caso do indeterminate, prometem uma
-// animação que o CSS compartilhado ainda não tem.
+// `notes.item2` e `notes.item3` já foram overrides aqui, porque o texto
+// compartilhado ensinava sintaxe de variante utilitária (`[&>div]:…`) e
+// prometia uma animação que o CSS não tinha. As duas coisas foram corrigidas na
+// fonte — o mecanismo agora é `data-indeterminate` e `data-variant`, igual nas
+// cinco stacks —, e o override saiu junto: override que repete a fonte só
+// duplica manutenção.
 //
 // `props.table.getAriaValueText` descreve a assinatura de uma prop de outra
 // forma de API: aqui o formatador recebe também `min` e `max`, e o texto que
@@ -57,10 +60,6 @@ const { t, dict } = useTranslation(progressTranslations as Record<string, unknow
   'pt-BR': {
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — entrega <code>role</code>, a família <code>aria-value*</code>, o vínculo com o rótulo e o texto formatado do valor.',
-    'notes.item2':
-      '<strong>Indeterminate</strong> — sem valor, o estado chega ao DOM em <code>data-indeterminate</code>, mas o CSS compartilhado ainda não anima a barra: ela fica vazia em vez de correr.',
-    'notes.item3':
-      '<strong>Cor customizada</strong> — acrescente uma classe própria no indicador e pinte <code>background-color</code> nela; o valor da barra continua vindo da custom property <code>--value</code>.',
     'props.table.getAriaValueText.type': '(value, min, max) => string',
     'props.table.getAriaValueText.description':
       'Formata o valor. O texto devolvido vai para o anúncio do leitor de tela e para a parte de valor visível.',
@@ -70,10 +69,6 @@ const { t, dict } = useTranslation(progressTranslations as Record<string, unknow
   en: {
     'notes.item1':
       '<strong>Primitive</strong>: <code>@radix-ng/primitives/progress</code> — provides <code>role</code>, the <code>aria-value*</code> family, the link to the label and the formatted value text.',
-    'notes.item2':
-      '<strong>Indeterminate</strong> — with no value the state reaches the DOM as <code>data-indeterminate</code>, but the shared CSS does not animate the bar yet: it stays empty instead of running.',
-    'notes.item3':
-      '<strong>Custom color</strong> — add your own class on the indicator and paint <code>background-color</code> there; the bar position still comes from the <code>--value</code> custom property.',
     'props.table.getAriaValueText.type': '(value, min, max) => string',
     'props.table.getAriaValueText.description':
       'Formats the value. The returned text feeds both the screen reader announcement and the visible value part.',
@@ -83,10 +78,6 @@ const { t, dict } = useTranslation(progressTranslations as Record<string, unknow
   es: {
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — aporta <code>role</code>, la familia <code>aria-value*</code>, el vínculo con la etiqueta y el texto formateado del valor.',
-    'notes.item2':
-      '<strong>Indeterminate</strong> — sin valor, el estado llega al DOM en <code>data-indeterminate</code>, pero el CSS compartido aún no anima la barra: queda vacía en vez de correr.',
-    'notes.item3':
-      '<strong>Color personalizado</strong> — agrega una clase propia en el indicador y pinta <code>background-color</code> ahí; la posición de la barra sigue viniendo de la custom property <code>--value</code>.',
     'props.table.getAriaValueText.type': '(value, min, max) => string',
     'props.table.getAriaValueText.description':
       'Formatea el valor. El texto devuelto alimenta tanto el anuncio del lector de pantalla como la parte de valor visible.',
@@ -141,11 +132,11 @@ export class NdsProgress {}
 //   host: { '[style.--value]': 'valueCss()' }   // 0–100, do primitivo
 // Sem largura nem transform inline — o desenho continua sendo do design system.`;
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// escreve a raiz como elemento (`<nds-progress>`). Aqui a raiz é diretiva de
-// atributo num `<div>`, como no Card e no Slider: markup é o que a auditoria
-// cross-stack compara, e as outras quatro stacks renderizam `<div>`. Enquanto o
-// conteúdo compartilhado não for corrigido, a estrutura mostrada é a real.
+// Mesma estrutura que a variante `angular` de `anatomy.structureCode` no
+// conteúdo compartilhado — que escrevia a raiz como elemento (`<nds-progress>`)
+// e foi corrigida na fonte. A raiz é diretiva de atributo num `<div>`, como no
+// Card e no Slider: markup é o que a auditoria cross-stack compara, e as outras
+// quatro stacks renderizam `<div>`.
 const ANATOMY_CODE = `<div ndsProgress [value]="42">
   <span ndsProgressLabel>Enviando arquivo</span>
   <span ndsProgressValue></span>
@@ -155,6 +146,27 @@ const ANATOMY_CODE = `<div ndsProgress [value]="42">
 </div>`;
 
 const CODE_DETERMINATE = `<div ndsProgress [value]="42" aria-label="Progresso do upload">
+  <div ndsProgressTrack>
+    <div ndsProgressIndicator></div>
+  </div>
+</div>`;
+
+// Tabela de tokens — cada linha corresponde a uma declaração de
+// `docs/shared/styles/nds/progress.css`.
+const TOKEN_ROWS = [
+  { token: '--primary',           k: 'track' },
+  { token: '--primary',           k: 'indicator' },
+  { token: '--success',           k: 'success' },
+  { token: '--destructive',       k: 'destructive' },
+  { token: '--spacing-2',         k: 'height' },
+  { token: '--radius-full',       k: 'radius' },
+  { token: '--muted-foreground',  k: 'value' },
+  { token: '--text-control',      k: 'label' },
+  { token: '--duration-base',     k: 'motion' },
+  { token: '--duration-stately',  k: 'motionIndeterminate' },
+] as const;
+
+const CODE_SEMANTIC = `<div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
   <div ndsProgressTrack>
     <div ndsProgressIndicator></div>
   </div>
@@ -237,6 +249,25 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
         <div ndsProgress [value]="42">
           <span ndsProgressLabel>{{ t('demonstration.labels.upload') }}</span>
           <span ndsProgressValue></span>
+          <div ndsProgressTrack>
+            <div ndsProgressIndicator></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #tplVarSemantic>
+      <div class="nds-stack nds-w-full" data-spacing="sm">
+        <div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
+          <div ndsProgressTrack>
+            <div ndsProgressIndicator></div>
+          </div>
+        </div>
+        <div
+          ndsProgress
+          [value]="92"
+          data-variant="destructive"
+          aria-label="Espaço de armazenamento quase esgotado"
+        >
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
           </div>
@@ -394,6 +425,7 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   private readonly tplDoDont2Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont2Dont');
   private readonly tplVarDeterminate = viewChild.required<TemplateRef<unknown>>('tplVarDeterminate');
   private readonly tplVarWithLabel = viewChild.required<TemplateRef<unknown>>('tplVarWithLabel');
+  private readonly tplVarSemantic = viewChild.required<TemplateRef<unknown>>('tplVarSemantic');
 
   protected readonly navGroups = computed(() => {
     dict();
@@ -482,8 +514,8 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
 
   protected readonly variantItems = computed(() => {
     dict();
-    // Só duas entradas: o conteúdo compartilhado não descreve estilo para
-    // `indeterminate` — ele é estado, e está descrito na seção Estados.
+    // `indeterminate` não entra aqui: é ESTADO (alcançável pelos dados) e está
+    // descrito na seção Estados — guideline 14, regra de não-duplicação.
     return [
       {
         name: t('variants.items.determinate'),
@@ -498,6 +530,13 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
         code: CODE_WITH_LABEL,
         trackId: 'with-label',
         preview: this.tplVarWithLabel(),
+      },
+      {
+        name: t('variants.items.semantic'),
+        description: stripHtml(t('variants.styles.semantic')),
+        code: CODE_SEMANTIC,
+        trackId: 'semantic',
+        preview: this.tplVarSemantic(),
       },
     ];
   });
@@ -538,6 +577,7 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
           { key: 'min', nome: 'min' },
           { key: 'max', nome: 'max' },
           { key: 'getAriaValueText', nome: 'getAriaValueText' },
+          { key: 'variant', nome: 'data-variant' },
           { key: 'className', nome: 'class' },
         ].map(({ key, nome }) => ({
           name: nome,
@@ -561,19 +601,12 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // O conteúdo compartilhado nomeia a coluna do meio como "classe"; aqui ela
-    // recebe a classe .nds-* onde o token é consumido, e a primeira coluna, o
-    // token de verdade.
-    return [
-      { token: '--primary',            classe: '.nds-progress',           k: 'muted'             },
-      { token: '--primary',            classe: '.nds-progress-indicator', k: 'primary'           },
-      { token: '--primary-foreground', classe: '.nds-progress-indicator', k: 'primaryForeground' },
-      { token: '--foreground',         classe: '.nds-progress-label',     k: 'foreground'        },
-      { token: '--muted-foreground',   classe: '.nds-progress-value',     k: 'mutedForeground'   },
-      { token: '--ring',               classe: '.nds-progress-root',      k: 'ring'              },
-    ].map(({ token, classe, k }) => ({
+    // Cada linha é uma declaração de `docs/shared/styles/nds/progress.css`. O
+    // conteúdo compartilhado passou a trazer a própria classe, então esta stack
+    // não precisa mais corrigi-la no lugar dele.
+    return TOKEN_ROWS.map(({ token, k }) => ({
       token,
-      value: classe,
+      value: t(`tokens.table.${k}.class`),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

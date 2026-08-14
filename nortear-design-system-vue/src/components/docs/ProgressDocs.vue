@@ -171,14 +171,34 @@ const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
   <Progress :model-value="42" aria-label="Progresso do upload" />
 </div>`;
 
+const codeSemantic = `<Progress :model-value="100" data-variant="success" aria-label="Sincronização concluída" />
+<Progress :model-value="92" data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+
 const interfaceCode = `// Progress (Vue)
 interface ProgressProps {
   modelValue?: number | null;  // 0–100; null = indeterminate
   max?: number;                // default 100
   getValueLabel?: (value: number | null | undefined, max: number) => string | undefined;
   getValueText?:  (value: number | null | undefined, max: number) => string | undefined;
+  'data-variant'?: 'success' | 'destructive';
   class?: string;
 }`;
+
+// Tabela de tokens — cada linha é uma declaração de
+// `docs/shared/styles/nds/progress.css`. O token é o mesmo nas cinco stacks; a
+// classe e a aplicação vêm do conteúdo compartilhado.
+const TOKEN_ROWS = [
+  { token: '--primary',           key: 'track' },
+  { token: '--primary',           key: 'indicator' },
+  { token: '--success',           key: 'success' },
+  { token: '--destructive',       key: 'destructive' },
+  { token: '--spacing-2',         key: 'height' },
+  { token: '--radius-full',       key: 'radius' },
+  { token: '--muted-foreground',  key: 'value' },
+  { token: '--text-control',      key: 'label' },
+  { token: '--duration-base',     key: 'motion' },
+  { token: '--duration-stately',  key: 'motionIndeterminate' },
+] as const;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -193,6 +213,7 @@ const anatomyItems = computed(() => [
 const variantItems = computed(() => [
   { name: tContent('variants.items.determinate'),   description: stripHtml(tContent('variants.styles.determinate')),   code: codeDeterminate   },
   { name: tContent('variants.items.withLabel'),     description: stripHtml(tContent('variants.styles.withLabel')),     code: codeWithLabel     },
+  { name: tContent('variants.items.semantic'),      description: stripHtml(tContent('variants.styles.semantic')),      code: codeSemantic      },
 ]);
 
 const stateItems = computed(() => [
@@ -214,18 +235,18 @@ const progressPropItems = computed(() => [
   { name: 'modelValue',       type: tContent('props.table.value.type'),            defaultValue: tContent('props.table.value.default'),            required: tContent('props.table.value.required'),            description: toPlainText(tContent('props.table.value.description')) },
   { name: 'max',              type: tContent('props.table.max.type'),              defaultValue: tContent('props.table.max.default'),              required: tContent('props.table.max.required'),              description: toPlainText(tContent('props.table.max.description')) },
   { name: 'getValueLabel',    type: '(value, max) => string | undefined',          defaultValue: '—',                                              required: tContent('props.table.getAriaValueText.required'),    description: toPlainText(tContent('props.table.getAriaValueText.description')) },
+  { name: 'data-variant',     type: tContent('props.table.variant.type'),          defaultValue: tContent('props.table.variant.default'),          required: tContent('props.table.variant.required'),          description: toPlainText(tContent('props.table.variant.description')) },
   { name: 'class',            type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: toPlainText(tContent('props.table.className.description')) },
   { name: 'aria-label',       type: 'string',                                       defaultValue: '—',                                              required: 'Sim',                                                 description: stripHtml(tContent('accessibility.aria.label')) },
 ]);
 
-const tokenRows = computed(() => [
-  { token: '--muted',              value: tContent('tokens.table.muted.class'),             description: tContent('tokens.table.muted.part')             },
-  { token: '--primary',            value: tContent('tokens.table.primary.class'),           description: tContent('tokens.table.primary.part')           },
-  { token: '--primary-foreground', value: tContent('tokens.table.primaryForeground.class'), description: tContent('tokens.table.primaryForeground.part') },
-  { token: '--foreground',         value: tContent('tokens.table.foreground.class'),        description: tContent('tokens.table.foreground.part')        },
-  { token: '--muted-foreground',   value: tContent('tokens.table.mutedForeground.class'),   description: tContent('tokens.table.mutedForeground.part')   },
-  { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
-]);
+const tokenRows = computed(() =>
+  TOKEN_ROWS.map(({ token, key }) => ({
+    token,
+    value: tContent(`tokens.table.${key}.class`),
+    description: tContent(`tokens.table.${key}.part`),
+  })),
+);
 
 const accessibilityItems = computed(() => [
   tContent('accessibility.items.item1'),
@@ -386,7 +407,6 @@ const visualTestItems = computed(() => [
           </div>
           <Progress
             :model-value="null"
-            class="nds-progress-indeterminate-wrap"
             :aria-label="tContent('demonstration.labels.indeterminate')"
           />
         </div>
@@ -408,7 +428,7 @@ const visualTestItems = computed(() => [
           </div>
           <Progress
             :model-value="75"
-            class="nds-progress-success-wrap"
+            data-variant="success"
             :aria-label="tContent('demonstration.labels.upload')"
           />
         </div>
@@ -604,6 +624,23 @@ const visualTestItems = computed(() => [
           <Progress
             :model-value="42"
             aria-label="Progresso do upload"
+          />
+        </div>
+      </template>
+      <template #variant-preview-2>
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="sm"
+        >
+          <Progress
+            :model-value="100"
+            data-variant="success"
+            aria-label="Sincronização concluída"
+          />
+          <Progress
+            :model-value="92"
+            data-variant="destructive"
+            aria-label="Espaço de armazenamento quase esgotado"
           />
         </div>
       </template>

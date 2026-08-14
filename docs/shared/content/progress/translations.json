@@ -30,7 +30,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -135,12 +135,13 @@
       "title": "Variantes",
       "items": {
         "determinate": "Determinate",
-        "indeterminate": "Indeterminate",
-        "withLabel": "With label"
+        "withLabel": "With label",
+        "semantic": "Cor semântica"
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra preenchida proporcionalmente.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> acima da trilha."
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> acima da trilha.",
+        "semantic": "<code>data-variant</code> troca a cor da barra por <code>success</code> ou <code>destructive</code>; a trilha continua neutra para o contraste não depender da escolha."
       }
     },
     "states": {
@@ -163,7 +164,7 @@
       "indeterminate": {
         "label": "Indeterminate",
         "trigger": "value=null",
-        "behavior": "Sem valor definido — animação infinita no indicador via CSS."
+        "behavior": "Sem valor definido — <code>aria-valuenow</code> ausente e um traço curto percorrendo a trilha em ciclo."
       },
       "cols": {
         "state": "Estado",
@@ -207,13 +208,22 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Classes .nds-* adicionais. Use uma classe utilitária dedicada para customizar a cor do indicador."
+          "description": "Classes .nds-* adicionais. A cor da barra não se troca por classe — use a propriedade de variante."
+        },
+        "variant": {
+          "type": "\"success\" | \"destructive\"",
+          "default": "—",
+          "required": "Não",
+          "description": "Cor semântica da barra. Ausente, a barra usa o primário."
         }
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Cor customizada via classe .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>",
-        "angular": "<!-- Cor customizada via classe .nds-* -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Texto acessível customizado -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
+        "react": "// Cor semântica da barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>",
+        "vue": "<!-- Cor semântica da barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\" />\n\n<!-- Texto acessível customizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 arquivos processados`\"\n/>",
+        "svelte": "<!-- Cor semântica da barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />",
+        "vanilla": "// Cor semântica da barra\nconst bar = createProgress({ value: progresso, variant: 'success' });\nbar.setAttribute('aria-label', 'Sincronização');",
+        "angular": "<!-- Cor semântica da barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "tokens": {
@@ -222,34 +232,50 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fundo da trilha (ProgressTrack)"
+        "track": {
+          "class": ".nds-progress",
+          "part": "Fundo da trilha — o primário a 20% de opacidade"
         },
-        "primary": {
-          "class": "bg-primary",
-          "part": "Cor padrão do indicador"
+        "indicator": {
+          "class": ".nds-progress-indicator .nds-progress-bar",
+          "part": "Cor padrão da barra preenchida"
         },
-        "primaryForeground": {
-          "class": "text-primary-foreground",
-          "part": "Texto sobre o indicador (raro)"
+        "success": {
+          "class": ".nds-progress[data-variant=\"success\"]",
+          "part": "Cor da barra na variante de sucesso"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto do ProgressLabel"
+        "destructive": {
+          "class": ".nds-progress[data-variant=\"destructive\"]",
+          "part": "Cor da barra na variante destrutiva"
         },
-        "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Texto do ProgressValue"
+        "height": {
+          "class": ".nds-progress",
+          "part": "Altura da trilha"
         },
-        "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco quando interativo"
+        "radius": {
+          "class": ".nds-progress",
+          "part": "Arredondamento das pontas"
+        },
+        "value": {
+          "class": ".nds-progress-value",
+          "part": "Cor do valor numérico"
+        },
+        "label": {
+          "class": ".nds-progress-label",
+          "part": "Tamanho do rótulo e do valor"
+        },
+        "motion": {
+          "class": ".nds-progress-indicator",
+          "part": "Duração da transição quando o valor muda"
+        },
+        "motionIndeterminate": {
+          "class": ".nds-progress[data-indeterminate]",
+          "part": "Duração de um ciclo do traço indeterminado"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de cor do indicador via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+        "web": "/* Cor da barra numa instância só: a folha lê --nds-progress-color e cai\n   no primário quando ela não existe. */\n.upload-progress { --nds-progress-color: var(--info); }\n\n/* Ciclo do traço indeterminado nesta instância */\n.upload-progress[data-indeterminate] { --duration-stately: 2s; }"
       }
     },
     "accessibility": {
@@ -306,8 +332,8 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>Indeterminate</strong> — sem prop nativa; passe <code>value={null}</code> e anime o indicador via CSS (<code>[&>div]:animate-indeterminate</code>).",
-      "item3": "<strong>Cor customizada</strong> — via <code>[&>div]:bg-*</code> ou classe utilitária no className do Progress.",
+      "item2": "<strong>Indeterminate</strong> — sem valor, a raiz perde <code>aria-valuenow</code> e ganha <code>data-indeterminate</code>. É desse atributo que o CSS compartilhado tira a largura do traço e a animação; não há classe de animação para aplicar.",
+      "item3": "<strong>Cor da barra</strong> — <code>data-variant=\"success\"</code> e <code>data-variant=\"destructive\"</code> são as variantes medidas. Para outra cor, defina <code>--nds-progress-color</code> na instância e confira o contraste de 3:1 contra a trilha.",
       "item4": "<strong>Não interativo</strong> — Progress é passivo. Para rastrear conclusão, dispare evento no callback da operação, não no componente."
     },
     "analytics": {
@@ -349,7 +375,7 @@
         },
         "item4": {
           "action": "Passar value=null",
-          "result": "Modo indeterminate — animação infinita",
+          "result": "Modo indeterminate — aria-valuenow ausente e traço em animação infinita",
           "priority": "medium"
         }
       },
@@ -360,7 +386,7 @@
         "item2": "Contraste mínimo 3:1 entre indicador e trilha",
         "item3": "role=\"progressbar\" presente",
         "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes quando value é definido",
-        "item5": "aria-label presente em todos os exemplos"
+        "item5": "Nome acessível em todo exemplo — aria-label, ou o rótulo associado quando existe"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -436,7 +462,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Uploading file</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -541,12 +567,13 @@
       "title": "Variants",
       "items": {
         "determinate": "Determinate",
-        "indeterminate": "Indeterminate",
-        "withLabel": "With label"
+        "withLabel": "With label",
+        "semantic": "Semantic colour"
       },
       "styles": {
         "determinate": "Numeric value 0–100 — bar filled proportionally.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> above the track."
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> above the track.",
+        "semantic": "<code>data-variant</code> switches the bar colour to <code>success</code> or <code>destructive</code>; the track stays neutral so contrast never depends on the choice."
       }
     },
     "states": {
@@ -569,7 +596,7 @@
       "indeterminate": {
         "label": "Indeterminate",
         "trigger": "value=null",
-        "behavior": "No defined value — infinite indicator animation via CSS."
+        "behavior": "No defined value — <code>aria-valuenow</code> absent and a short sweep running the track in a loop."
       },
       "cols": {
         "state": "State",
@@ -613,13 +640,22 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Additional .nds-* classes. Use a dedicated utility class to customize the indicator color."
+          "description": "Additional .nds-* classes. The bar colour is not switched by class — use the variant property."
+        },
+        "variant": {
+          "type": "\"success\" | \"destructive\"",
+          "default": "—",
+          "required": "No",
+          "description": "Semantic colour of the bar. When absent, the bar uses the primary colour."
         }
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Custom color via .nds-* class\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Completion progress\"\n/>\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>",
-        "angular": "<!-- Custom color via .nds-* class -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Custom accessible text -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
+        "react": "// Semantic bar colour\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>",
+        "vue": "<!-- Semantic bar colour -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sync\" />\n\n<!-- Custom accessible text -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} of 100 files processed`\"\n/>",
+        "svelte": "<!-- Semantic bar colour -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />",
+        "vanilla": "// Semantic bar colour\nconst bar = createProgress({ value: progress, variant: 'success' });\nbar.setAttribute('aria-label', 'Sync');",
+        "angular": "<!-- Semantic bar colour -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sync\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "tokens": {
@@ -627,35 +663,51 @@
       "table": {
         "token": "Token",
         "class": "Class",
-        "part": "Application",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Track background (ProgressTrack)"
+        "part": "Applies to",
+        "track": {
+          "class": ".nds-progress",
+          "part": "Track background — the primary colour at 20% opacity"
         },
-        "primary": {
-          "class": "bg-primary",
-          "part": "Default indicator color"
+        "indicator": {
+          "class": ".nds-progress-indicator .nds-progress-bar",
+          "part": "Default colour of the filled bar"
         },
-        "primaryForeground": {
-          "class": "text-primary-foreground",
-          "part": "Text over the indicator (rare)"
+        "success": {
+          "class": ".nds-progress[data-variant=\"success\"]",
+          "part": "Bar colour in the success variant"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "ProgressLabel text"
+        "destructive": {
+          "class": ".nds-progress[data-variant=\"destructive\"]",
+          "part": "Bar colour in the destructive variant"
         },
-        "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "ProgressValue text"
+        "height": {
+          "class": ".nds-progress",
+          "part": "Track height"
         },
-        "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring when interactive"
+        "radius": {
+          "class": ".nds-progress",
+          "part": "Rounding of the ends"
+        },
+        "value": {
+          "class": ".nds-progress-value",
+          "part": "Colour of the numeric value"
+        },
+        "label": {
+          "class": ".nds-progress-label",
+          "part": "Size of the label and of the value"
+        },
+        "motion": {
+          "class": ".nds-progress-indicator",
+          "part": "Transition duration when the value changes"
+        },
+        "motionIndeterminate": {
+          "class": ".nds-progress[data-indeterminate]",
+          "part": "Duration of one cycle of the indeterminate sweep"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Override indicator color via .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Indeterminate animation */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+        "web": "/* Bar colour on a single instance: the stylesheet reads\n   --nds-progress-color and falls back to the primary colour. */\n.upload-progress { --nds-progress-color: var(--info); }\n\n/* Sweep cycle of the indeterminate state on this instance */\n.upload-progress[data-indeterminate] { --duration-stately: 2s; }"
       }
     },
     "accessibility": {
@@ -712,8 +764,8 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
-      "item2": "<strong>Indeterminate</strong> — no native prop; pass <code>value={null}</code> and animate the indicator via CSS (<code>[&>div]:animate-indeterminate</code>).",
-      "item3": "<strong>Custom color</strong> — via <code>[&>div]:bg-*</code> or utility class on the Progress className.",
+      "item2": "<strong>Indeterminate</strong> — with no value the root loses <code>aria-valuenow</code> and gains <code>data-indeterminate</code>. The shared CSS derives the sweep width and the animation from that attribute; there is no animation class to apply.",
+      "item3": "<strong>Bar colour</strong> — <code>data-variant=\"success\"</code> and <code>data-variant=\"destructive\"</code> are the measured variants. For any other colour, set <code>--nds-progress-color</code> on the instance and check the 3:1 contrast against the track.",
       "item4": "<strong>Non-interactive</strong> — Progress is passive. To track completion, fire the event on the operation callback, not on the component."
     },
     "analytics": {
@@ -755,7 +807,7 @@
         },
         "item4": {
           "action": "Pass value=null",
-          "result": "Indeterminate mode — infinite animation",
+          "result": "Indeterminate mode — aria-valuenow absent and sweep animating without end",
           "priority": "medium"
         }
       },
@@ -766,7 +818,7 @@
         "item2": "Minimum 3:1 contrast between indicator and track",
         "item3": "role=\"progressbar\" present",
         "item4": "aria-valuenow, aria-valuemin, aria-valuemax present when value is defined",
-        "item5": "aria-label present on all examples"
+        "item5": "Accessible name on every example — aria-label, or the associated label when there is one"
       },
       "visual": {
         "title": "Visual Regression",
@@ -842,7 +894,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<nds-progress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</nds-progress>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -947,12 +999,13 @@
       "title": "Variantes",
       "items": {
         "determinate": "Determinate",
-        "indeterminate": "Indeterminate",
-        "withLabel": "With label"
+        "withLabel": "With label",
+        "semantic": "Color semántico"
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra llena proporcionalmente.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> sobre la pista."
+        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> sobre la pista.",
+        "semantic": "<code>data-variant</code> cambia el color de la barra a <code>success</code> o <code>destructive</code>; la pista sigue neutra para que el contraste no dependa de la elección."
       }
     },
     "states": {
@@ -975,7 +1028,7 @@
       "indeterminate": {
         "label": "Indeterminate",
         "trigger": "value=null",
-        "behavior": "Sin valor definido — animación infinita del indicador vía CSS."
+        "behavior": "Sin valor definido — <code>aria-valuenow</code> ausente y un trazo corto recorriendo la pista en ciclo."
       },
       "cols": {
         "state": "Estado",
@@ -1019,13 +1072,22 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Clases .nds-* adicionales. Usa una clase utilitaria dedicada para personalizar el color del indicador."
+          "description": "Clases .nds-* adicionales. El color de la barra no se cambia por clase — usa la propiedad de variante."
+        },
+        "variant": {
+          "type": "\"success\" | \"destructive\"",
+          "default": "—",
+          "required": "No",
+          "description": "Color semántico de la barra. Ausente, la barra usa el primario."
         }
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Color personalizado vía clase .nds-*\n<Progress\n  value={progress}\n  className=\"nds-progress-success\"\n  aria-label=\"Progreso de finalización\"\n/>\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>",
-        "angular": "<!-- Color personalizado con clase .nds-* -->\n<nds-progress\n  [value]=\"progress\"\n  class=\"nds-progress-success\"\n  aria-label=\"Progresso de conclusão\"\n/>\n\n<!-- Texto accesible personalizado -->\n<nds-progress\n  [value]=\"42\"\n  [getAriaValueText]=\"ariaValueText\"\n/>"
+        "react": "// Color semántico de la barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>",
+        "vue": "<!-- Color semántico de la barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\" />\n\n<!-- Texto accesible personalizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 archivos procesados`\"\n/>",
+        "svelte": "<!-- Color semántico de la barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />",
+        "vanilla": "// Color semántico de la barra\nconst bar = createProgress({ value: progreso, variant: 'success' });\nbar.setAttribute('aria-label', 'Sincronización');",
+        "angular": "<!-- Color semántico de la barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
     "tokens": {
@@ -1034,34 +1096,50 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fondo de la pista (ProgressTrack)"
+        "track": {
+          "class": ".nds-progress",
+          "part": "Fondo de la pista — el primario al 20% de opacidad"
         },
-        "primary": {
-          "class": "bg-primary",
-          "part": "Color por defecto del indicador"
+        "indicator": {
+          "class": ".nds-progress-indicator .nds-progress-bar",
+          "part": "Color predeterminado de la barra llena"
         },
-        "primaryForeground": {
-          "class": "text-primary-foreground",
-          "part": "Texto sobre el indicador (raro)"
+        "success": {
+          "class": ".nds-progress[data-variant=\"success\"]",
+          "part": "Color de la barra en la variante de éxito"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto del ProgressLabel"
+        "destructive": {
+          "class": ".nds-progress[data-variant=\"destructive\"]",
+          "part": "Color de la barra en la variante destructiva"
         },
-        "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Texto del ProgressValue"
+        "height": {
+          "class": ".nds-progress",
+          "part": "Altura de la pista"
         },
-        "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco cuando interactivo"
+        "radius": {
+          "class": ".nds-progress",
+          "part": "Redondeo de los extremos"
+        },
+        "value": {
+          "class": ".nds-progress-value",
+          "part": "Color del valor numérico"
+        },
+        "label": {
+          "class": ".nds-progress-label",
+          "part": "Tamaño de la etiqueta y del valor"
+        },
+        "motion": {
+          "class": ".nds-progress-indicator",
+          "part": "Duración de la transición cuando cambia el valor"
+        },
+        "motionIndeterminate": {
+          "class": ".nds-progress[data-indeterminate]",
+          "part": "Duración de un ciclo del trazo indeterminado"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override del color del indicador vía .nds-* */\n.upload-progress > div {\n  background-color: var(--color-blue-500);\n}\n\n/* Animación indeterminate */\n@keyframes progress-indeterminate {\n  0%   { transform: translateX(-100%); }\n  100% { transform: translateX(100%); }\n}\n.animate-indeterminate {\n  animation: progress-indeterminate 1.5s ease-in-out infinite;\n}"
+        "web": "/* Color de la barra en una sola instancia: la hoja lee\n   --nds-progress-color y recurre al primario si no existe. */\n.upload-progress { --nds-progress-color: var(--info); }\n\n/* Ciclo del trazo indeterminado en esta instancia */\n.upload-progress[data-indeterminate] { --duration-stately: 2s; }"
       }
     },
     "accessibility": {
@@ -1118,8 +1196,8 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>Indeterminate</strong> — sin prop nativa; pasa <code>value={null}</code> y anima el indicador vía CSS (<code>[&>div]:animate-indeterminate</code>).",
-      "item3": "<strong>Color personalizado</strong> — vía <code>[&>div]:bg-*</code> o clase utilitaria en el className del Progress.",
+      "item2": "<strong>Indeterminate</strong> — sin valor, la raíz pierde <code>aria-valuenow</code> y gana <code>data-indeterminate</code>. De ese atributo el CSS compartido saca el ancho del trazo y la animación; no hay clase de animación que aplicar.",
+      "item3": "<strong>Color de la barra</strong> — <code>data-variant=\"success\"</code> y <code>data-variant=\"destructive\"</code> son las variantes medidas. Para otro color, define <code>--nds-progress-color</code> en la instancia y verifica el contraste de 3:1 contra la pista.",
       "item4": "<strong>No interactivo</strong> — Progress es pasivo. Para rastrear finalización, dispara el evento en el callback de la operación, no en el componente."
     },
     "analytics": {
@@ -1161,7 +1239,7 @@
         },
         "item4": {
           "action": "Pasar value=null",
-          "result": "Modo indeterminate — animación infinita",
+          "result": "Modo indeterminate — aria-valuenow ausente y trazo en animación infinita",
           "priority": "medium"
         }
       },
@@ -1172,7 +1250,7 @@
         "item2": "Contraste mínimo 3:1 entre indicador y pista",
         "item3": "role=\"progressbar\" presente",
         "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes cuando value está definido",
-        "item5": "aria-label presente en todos los ejemplos"
+        "item5": "Nombre accesible en cada ejemplo — aria-label, o la etiqueta asociada cuando existe"
       },
       "visual": {
         "title": "Regresión Visual",

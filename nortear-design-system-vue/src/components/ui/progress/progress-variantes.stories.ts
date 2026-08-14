@@ -1,6 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { Progress } from './index';
+import {
+  barrasDeProgresso,
+  contrasteBarraTrilha,
+  indicadorDoProgresso,
+  nomeAcessivel,
+  percentualDesenhado,
+} from '@shared/testing/progress-probe';
 
 const meta = {
   title: 'UI/Progress/Variants',
@@ -13,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Variantes do Progress: Determinate (value 0–100), Indeterminate (value=null + [&>div]:animate-indeterminate) e With label (Label + Value acima da trilha).',
+          'As formas de uso: valor conhecido, valor com rótulo e cor semântica. O indeterminate é estado, e mora na seção Estados.',
       },
     },
   },
@@ -23,25 +30,28 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Determinate: Story = {
+  parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     components: { Progress },
     template: `
-      <div class="" style="width: 360px">
-        <Progress :model-value="50" aria-label="Progresso do upload" />
+      <div style="width: 360px">
+        <Progress :model-value="42" aria-label="Progresso do upload" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Progress renderiza com aria-valuenow=50', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toBeInTheDocument();
-      await expect(progress).toHaveAttribute('aria-valuenow', '50');
+    const canvas = within(canvasElement);
+
+    await step('O valor conhecido é anunciado e desenhado', async () => {
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 42)).toBeLessThan(2);
+      });
     });
 
-    await step('Indicator aplica transform translateX(-50%)', async () => {
-      const indicator = canvasElement.querySelector('[data-slot="progress-indicator"]') as HTMLElement;
-      await expect(indicator).toBeInTheDocument();
-      await expect(indicator.getAttribute('style') ?? '').toContain('translateX(-50%)');
+    await step('Indicador e trilha se distinguem com pelo menos 3:1', async () => {
+      // WCAG 1.4.11: a barra só informa se for possível ver onde ela termina.
+      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -50,62 +60,94 @@ export const Indeterminate: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="" style="width: 360px">
-        <Progress
-          :model-value="null"
-          class="[&>div]:animate-indeterminate"
-          aria-label="Processando dados"
-        />
+      <div style="width: 360px">
+        <Progress :model-value="null" aria-label="Processando dados" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Progress renderiza sem aria-valuenow (indeterminate)', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toBeInTheDocument();
-      await expect(progress).not.toHaveAttribute('aria-valuenow');
+    const canvas = within(canvasElement);
+
+    await step('Valor desconhecido não vira valor zero', async () => {
+      const bar = canvas.getByRole('progressbar', { name: 'Processando dados' });
+      await expect(bar).not.toHaveAttribute('aria-valuenow');
+      await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
 
-    await step('Classe animate-indeterminate aplicada via arbitrary variant', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]') as HTMLElement;
-      await expect(progress.className).toContain('[&>div]:animate-indeterminate');
-    });
-
-    await step('aria-label descreve a operação', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toHaveAttribute('aria-label', 'Processando dados');
+    await step('Sem valor não há transform inline para posicionar a barra', async () => {
+      // O desenho passa a ser da animação, não de uma posição calculada.
+      const indicador = indicadorDoProgresso(canvasElement);
+      await expect(indicador.getAttribute('style') ?? '').not.toContain('translateX');
     });
   },
 };
 
 export const WithLabel: Story = {
+  parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     components: { Progress },
     template: `
-      <div class="" data-spacing="xs" style="width: 360px">
+      <div class="nds-stack" data-spacing="xs" style="width: 360px">
         <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
           <span class="nds-text-foreground">Enviando arquivo</span>
-          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">42%</span>
+          <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>
         </div>
-        <Progress :model-value="42" aria-label="Progresso do upload" />
+        <Progress :model-value="42" aria-label="Enviando arquivo" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Label textual visível acima da trilha', async () => {
-      const label = canvasElement.querySelector('span.text-foreground');
-      await expect(label?.textContent).toBe('Enviando arquivo');
+    const canvas = within(canvasElement);
+
+    await step('Rótulo textual visível acima da trilha', async () => {
+      await expect(canvas.getByText('Enviando arquivo')).toBeVisible();
     });
 
-    await step('Value 42% com aria-live polite', async () => {
+    await step('Valor 42% com aria-live polite', async () => {
       const value = canvasElement.querySelector('[aria-live="polite"]');
       await expect(value).toBeInTheDocument();
       await expect(value?.textContent).toBe('42%');
     });
 
-    await step('aria-valuenow=42', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toHaveAttribute('aria-valuenow', '42');
+    await step('Toda barra da tela tem nome acessível', async () => {
+      for (const bar of barrasDeProgresso(canvasElement)) {
+        await expect(nomeAcessivel(bar)).not.toBe('');
+      }
+    });
+  },
+};
+
+export const SemanticColor: Story = {
+  render: () => ({
+    components: { Progress },
+    template: `
+      <div class="nds-stack" data-spacing="sm" style="width: 360px">
+        <Progress :model-value="100" data-variant="success" aria-label="Sincronização concluída" />
+        <Progress :model-value="92" data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Cada variante pinta a barra de uma cor diferente', async () => {
+      const [ok, critico] = canvas.getAllByRole('progressbar');
+      const corDe = (raiz: HTMLElement) =>
+        getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor;
+      await expect(corDe(ok)).not.toBe(corDe(critico));
+    });
+
+    await step('As duas variantes mantêm 3:1 contra a trilha', async () => {
+      // O contraste não pode depender de qual variante alguém escolheu — é o
+      // motivo de a trilha continuar neutra em vez de acompanhar a cor.
+      for (const raiz of canvas.getAllByRole('progressbar')) {
+        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+      }
+    });
+
+    await step('A cor sai do atributo, não de uma classe morta', async () => {
+      const [ok] = canvas.getAllByRole('progressbar');
+      await expect(ok).toHaveAttribute('data-variant', 'success');
     });
   },
 };

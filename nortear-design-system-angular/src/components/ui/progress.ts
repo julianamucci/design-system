@@ -43,11 +43,19 @@ import {
 //
 // `value` ausente (ou `null`) é o modo indeterminate: o primitivo remove
 // `aria-valuenow`, anuncia `aria-valuetext` próprio e marca `data-indeterminate`
-// na raiz, na trilha e no indicador. Aqui `--value` deixa de ser escrita, e o
-// CSS cai no fallback `0`. O CSS compartilhado ainda NÃO tem regra de animação
-// para `[data-indeterminate]` — a barra fica vazia em vez de correr. Nenhuma das
-// cinco stacks tem essa regra; criá-la só aqui faria esta divergir. Está
-// registrado em `notes` da docs page.
+// na raiz, na trilha e no indicador. Aqui `--value` deixa de ser escrita.
+//
+// O desenho é do CSS compartilhado, que casa `.nds-progress[data-indeterminate]`
+// — a trilha — e dá ao indicador largura de 40% e uma animação em ciclo. A regra
+// existia e não valia: um segundo `@keyframes nds-progress-indeterminate`, de
+// mesmo nome, morava em `tw-compat.css`, que é o último import da folha e por
+// isso vencia. Removido de lá, o ciclo desenhado é o que este arquivo descreve.
+//
+// ─── Cor da barra ────────────────────────────────────────────────────────────
+//
+// `data-variant="success"` ou `"destructive"` no mesmo elemento da diretiva: o
+// CSS define `--nds-progress-color` na raiz e o indicador herda. Nada a fazer
+// aqui — é atributo escrito por quem compõe.
 
 /**
  * Raiz do progresso — recebe o valor e carrega `role="progressbar"`.

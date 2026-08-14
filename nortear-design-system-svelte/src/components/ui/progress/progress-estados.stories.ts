@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
+import {
+  animacaoDoIndicador,
+  indicadorDoProgresso,
+  percentualDesenhado,
+} from '@shared/testing/progress-probe';
 
 const meta: Meta = {
   title: 'UI/Progress/States',
@@ -10,10 +15,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do Progress — default (0), loading (intermediário), complete (100) e indeterminate (null).',
+          'Estados derivados do valor: default (0), loading (parcial), complete (100) e indeterminate (sem valor, com o traço em ciclo).',
       },
     },
   },
@@ -28,6 +34,7 @@ export const Default: Story = {
     'aria-label': 'Progresso',
   },
   parameters: {
+    covers: ['functional.item1', 'visual.item1'],
     docs: {
       description: {
         story: 'value=0 — estado inicial, indicador em 0% (barra vazia).',
@@ -36,9 +43,18 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-valuenow=0', async () => {
-      const bar = canvas.getByRole('progressbar');
-      await expect(bar).toHaveAttribute('aria-valuenow', '0');
+
+    await step('value=0 anuncia zero e não desenha preenchimento', async () => {
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+      await waitFor(async () => {
+        await expect(percentualDesenhado(canvasElement)).toBeLessThan(1);
+      });
+    });
+
+    await step('Zero não é o mesmo que indeterminate', async () => {
+      // Sem esta linha, um bug que trocasse 0 por null passaria: as duas telas
+      // são idênticas, mas só uma delas informa o progresso ao leitor.
+      await expect(canvas.getByRole('progressbar')).not.toHaveAttribute('data-indeterminate');
     });
   },
 };
@@ -49,6 +65,7 @@ export const Loading: Story = {
     'aria-label': 'Carregando dados',
   },
   parameters: {
+    covers: ['functional.item2', 'visual.item2'],
     docs: {
       description: {
         story: 'value=50 — em progresso, indicador preenchido pela metade.',
@@ -57,9 +74,16 @@ export const Loading: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-valuenow=50', async () => {
-      const bar = canvas.getByRole('progressbar');
-      await expect(bar).toHaveAttribute('aria-valuenow', '50');
+
+    await step('value=50 preenche metade da trilha', async () => {
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '50');
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 50)).toBeLessThan(2);
+      });
+    });
+
+    await step('O estado em progresso chega ao DOM', async () => {
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('data-state', 'loading');
     });
   },
 };
@@ -68,9 +92,10 @@ export const Complete: Story = {
   args: {
     value: 100,
     'aria-label': 'Concluído',
-    class: '[&>div]:bg-success',
+    variant: 'success',
   },
   parameters: {
+    covers: ['functional.item3', 'visual.item3'],
     docs: {
       description: {
         story:
@@ -80,9 +105,18 @@ export const Complete: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-valuenow=100', async () => {
-      const bar = canvas.getByRole('progressbar');
-      await expect(bar).toHaveAttribute('aria-valuenow', '100');
+
+    await step('value=100 preenche a trilha inteira', async () => {
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 100)).toBeLessThan(2);
+      });
+    });
+
+    await step('A conclusão é um estado próprio no DOM', async () => {
+      // Gancho de quem quer trocar cor ou remover a barra ao fim — sem ele, o
+      // consumidor teria que comparar value com max.
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('data-state', 'loaded');
     });
   },
 };
@@ -91,22 +125,47 @@ export const Indeterminate: Story = {
   args: {
     value: null,
     'aria-label': 'Processando…',
-    class: '[&>div]:animate-indeterminate',
   },
   parameters: {
+    covers: ['functional.item4', 'visual.item4'],
     docs: {
       description: {
         story:
-          'value=null — sem valor definido, animação infinita no indicador via CSS (classe animate-indeterminate).',
+          'value=null — sem valor definido. O primitivo marca data-indeterminate e o CSS compartilhado anima o traço a partir desse atributo.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('role=progressbar sem aria-valuenow', async () => {
-      const bar = canvas.getByRole('progressbar');
-      await expect(bar).toBeInTheDocument();
+
+    await step('Sem valor, aria-valuenow some e o nome permanece', async () => {
+      // Um `aria-valuenow` fixo em 0 mentiria: diria "zero por cento" quando a
+      // verdade é "não sei quanto falta".
+      const bar = canvas.getByRole('progressbar', { name: 'Processando…' });
       await expect(bar).not.toHaveAttribute('aria-valuenow');
+      await expect(bar).toHaveAttribute('data-indeterminate', '');
+    });
+
+    await step('O traço corre de verdade', async () => {
+      // Medir POSIÇÃO no meio de uma animação infinita é racy por construção —
+      // o traço está sempre em outro lugar. Afirmar a existência da animação,
+      // pelo nome do keyframes do design system, é o que dá para provar sem
+      // sorte. Foi assim que se descobriu que não havia animação nenhuma.
+      await waitFor(async () => {
+        await expect(animacaoDoIndicador(canvasElement)).toBe('nds-progress-indeterminate');
+      });
+    });
+
+    await step('O traço é o do design system, não o de um homônimo', async () => {
+      // Discriminador do defeito que estava vivo: um segundo
+      // `@keyframes nds-progress-indeterminate` morava em `tw-compat.css`, o
+      // último import da folha, e vencia calado — mesmo NOME, outro conteúdo.
+      // Afirmar o nome da animação não separa os dois; o efeito separa. O ciclo
+      // do design system desloca `margin-inline-start` e deixa `transform` em
+      // `none`; o homônimo animava `transform`, e aqui apareceria uma matriz.
+      await expect(
+        getComputedStyle(indicadorDoProgresso(canvasElement)).transform,
+      ).toBe('none');
     });
   },
 };

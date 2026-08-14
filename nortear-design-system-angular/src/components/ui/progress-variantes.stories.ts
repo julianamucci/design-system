@@ -1,54 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
+import {
+  barrasDeProgresso,
+  contrasteBarraTrilha,
+  indicadorDoProgresso,
+  nomeAcessivel,
+  percentualDesenhado,
+} from '@shared/testing/progress-probe';
 
-// ─── Contraste medido, não presumido ─────────────────────────────────────────
-//
-// O conteúdo compartilhado pede 3:1 entre indicador e trilha (WCAG 1.4.11). A
-// trilha é o primário a 20% de opacidade, então o valor real depende do que
-// está ATRÁS dela — comparar as duas cores declaradas daria um número que
-// ninguém vê. Por isso a composição é refeita aqui, do jeito que o navegador faz.
-
-type Rgba = [number, number, number, number];
-
-function parseRgba(cor: string): Rgba {
-  const n = cor.match(/-?[\d.]+/g) ?? [];
-  return [Number(n[0] ?? 0), Number(n[1] ?? 0), Number(n[2] ?? 0), n[3] === undefined ? 1 : Number(n[3])];
-}
-
-function compor([r, g, b, a]: Rgba, fundo: Rgba): Rgba {
-  return [
-    a * r + (1 - a) * fundo[0],
-    a * g + (1 - a) * fundo[1],
-    a * b + (1 - a) * fundo[2],
-    1,
-  ];
-}
-
-/** Primeira cor opaca subindo a árvore — o que de fato está atrás do elemento. */
-function fundoEfetivo(el: HTMLElement): Rgba {
-  let atual: HTMLElement | null = el.parentElement;
-  while (atual) {
-    const cor = parseRgba(getComputedStyle(atual).backgroundColor);
-    if (cor[3] === 1) return cor;
-    atual = atual.parentElement;
-  }
-  return [255, 255, 255, 1];
-}
-
-function luminancia([r, g, b]: Rgba): number {
-  const canal = (c: number) => {
-    const v = c / 255;
-    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
-}
-
-function contraste(a: Rgba, b: Rgba): number {
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
-}
+// O contraste entre indicador e trilha é medido, não presumido: a trilha é o
+// primário a 20% de opacidade, então o valor real depende do que está ATRÁS
+// dela. A composição, a conta e a busca pelo primeiro ancestral opaco moram no
+// colhedor compartilhado — as cinco stacks medem com o mesmo código.
 
 const meta: Meta = {
   title: 'UI/Progress/Variants',
@@ -59,7 +24,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'As três formas de uso: valor conhecido, valor desconhecido e valor com rótulo. ' +
+          'As formas de uso: valor conhecido, valor com rótulo e cor semântica. ' +
           'Rótulo e valor formatado são partes do próprio componente — não texto solto ao lado.',
       },
     },
@@ -87,25 +52,16 @@ export const Determinate: Story = {
 
     await step('O valor conhecido é anunciado e desenhado', async () => {
       await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
-      const indicador = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="progress-indicator"]',
-      )!;
+      const indicador = indicadorDoProgresso(canvasElement);
       await expect(indicador.style.getPropertyValue('--value')).toBe('42');
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 42)).toBeLessThan(2);
+      });
     });
 
     await step('Indicador e trilha se distinguem com pelo menos 3:1', async () => {
       // WCAG 1.4.11: a barra só informa se for possível ver onde ela termina.
-      const trilha = canvasElement.querySelector<HTMLElement>('[data-slot="progress-track"]')!;
-      const indicador = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="progress-indicator"]',
-      )!;
-      const atras = fundoEfetivo(trilha);
-      const corTrilha = compor(parseRgba(getComputedStyle(trilha).backgroundColor), atras);
-      const corIndicador = compor(
-        parseRgba(getComputedStyle(indicador).backgroundColor),
-        corTrilha,
-      );
-      await expect(contraste(corIndicador, corTrilha)).toBeGreaterThanOrEqual(3);
+      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -140,10 +96,16 @@ export const Indeterminate: Story = {
       await expect(bar).not.toHaveAttribute('aria-valuenow');
       await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
+
+    await step('Sem valor não há --value para o CSS consumir', async () => {
+      const indicador = indicadorDoProgresso(canvasElement);
+      await expect(indicador.style.getPropertyValue('--value')).toBe('');
+    });
   },
 };
 
 export const WithLabel: Story = {
+  parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     template: `
       <div class="nds-w-full nds-max-w-md">
@@ -162,10 +124,17 @@ export const WithLabel: Story = {
 
     await step('O rótulo visível vira o nome acessível da barra', async () => {
       // Com rótulo presente, o nome sai de `aria-labelledby` — não é preciso
-      // repetir a frase num `aria-label`, que só duplicaria a manutenção.
+      // repetir a frase num `aria-label`, que só duplicaria a manutenção. É por
+      // isso que o critério fala em NOME ACESSÍVEL, e não em `aria-label`.
       const bar = canvas.getByRole('progressbar', { name: 'Enviando arquivo' });
       const rotulo = canvasElement.querySelector<HTMLElement>('[data-slot="progress-label"]')!;
       await expect(bar.getAttribute('aria-labelledby')).toBe(rotulo.id);
+    });
+
+    await step('Toda barra da tela tem nome acessível', async () => {
+      for (const bar of barrasDeProgresso(canvasElement)) {
+        await expect(nomeAcessivel(bar)).not.toBe('');
+      }
     });
 
     await step('O valor formatado é escrito pelo componente, não pela aplicação', async () => {
@@ -178,6 +147,60 @@ export const WithLabel: Story = {
       // visual, e o primitivo o esconde do leitor de propósito.
       const valor = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
       await expect(valor).toHaveAttribute('aria-hidden', 'true');
+    });
+  },
+};
+
+export const SemanticColor: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`data-variant` troca a cor da barra; a trilha continua neutra, para o contraste ' +
+          'não depender da variante escolhida.',
+      },
+    },
+  },
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
+          <div ndsProgressTrack>
+            <div ndsProgressIndicator></div>
+          </div>
+        </div>
+        <div
+          ndsProgress
+          [value]="92"
+          data-variant="destructive"
+          aria-label="Espaço de armazenamento quase esgotado"
+        >
+          <div ndsProgressTrack>
+            <div ndsProgressIndicator></div>
+          </div>
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Cada variante pinta a barra de uma cor diferente', async () => {
+      const [ok, critico] = canvas.getAllByRole('progressbar');
+      const corDe = (raiz: HTMLElement) =>
+        getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor;
+      await expect(corDe(ok)).not.toBe(corDe(critico));
+    });
+
+    await step('As duas variantes mantêm 3:1 contra a trilha', async () => {
+      for (const raiz of canvas.getAllByRole('progressbar')) {
+        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+      }
+    });
+
+    await step('A cor sai do atributo, não de uma classe morta', async () => {
+      const [ok] = canvas.getAllByRole('progressbar');
+      await expect(ok).toHaveAttribute('data-variant', 'success');
     });
   },
 };

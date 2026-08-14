@@ -2,14 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
-
-/** Percentual efetivamente DESENHADO, medido no DOM. */
-function percentualDesenhado(raiz: HTMLElement): number {
-  const trilha = raiz.querySelector<HTMLElement>('[data-slot="progress-track"]')!;
-  const indicador = raiz.querySelector<HTMLElement>('[data-slot="progress-indicator"]')!;
-  const caixa = trilha.getBoundingClientRect();
-  return ((indicador.getBoundingClientRect().right - caixa.left) / caixa.width) * 100;
-}
+import {
+  animacaoDoIndicador,
+  indicadorDoProgresso,
+  percentualDesenhado,
+} from '@shared/testing/progress-probe';
 
 const meta: Meta = {
   title: 'UI/Progress/States',
@@ -136,9 +133,9 @@ export const Indeterminate: Story = {
     docs: {
       description: {
         story:
-          'Sem `value` o progresso é indeterminate. O CSS compartilhado ainda não tem regra ' +
-          'de animação para `[data-indeterminate]`, então a barra fica vazia em vez de correr — ' +
-          'o estado existe no DOM e no anúncio, falta o desenho.',
+          'Sem `value` o progresso é indeterminate: `aria-valuenow` some e o estado chega ao ' +
+          'DOM em `data-indeterminate`, de onde o CSS compartilhado tira a largura do traço e ' +
+          'a animação em ciclo.',
       },
     },
   },
@@ -177,6 +174,30 @@ export const Indeterminate: Story = {
         '[data-slot="progress-indicator"]',
       )!;
       await expect(indicador.style.getPropertyValue('--value')).toBe('');
+    });
+
+    await step('O traço corre de verdade', async () => {
+      // Esta era a metade que faltava do `functional.item4`: a story declarava
+      // cobertura de "animação infinita" e a própria descrição dizia que a
+      // animação não existia. Existia — o `@keyframes` do design system estava
+      // sendo sobrescrito por um homônimo em `tw-compat.css`, que é o último
+      // import da folha. Medir POSIÇÃO no meio de uma animação infinita é racy
+      // por construção; afirmar o nome do keyframes não é.
+      await waitFor(async () => {
+        await expect(animacaoDoIndicador(canvasElement)).toBe('nds-progress-indeterminate');
+      });
+    });
+
+    await step('O traço é o do design system, não o de um homônimo', async () => {
+      // Discriminador do defeito que estava vivo: um segundo
+      // `@keyframes nds-progress-indeterminate` morava em `tw-compat.css`, o
+      // último import da folha, e vencia calado — mesmo NOME, outro conteúdo.
+      // Afirmar o nome da animação não separa os dois; o efeito separa. O ciclo
+      // do design system desloca `margin-inline-start` e deixa `transform` em
+      // `none`; o homônimo animava `transform`, e aqui apareceria uma matriz.
+      await expect(
+        getComputedStyle(indicadorDoProgresso(canvasElement)).transform,
+      ).toBe('none');
     });
   },
 };

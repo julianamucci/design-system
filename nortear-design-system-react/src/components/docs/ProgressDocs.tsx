@@ -39,6 +39,22 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+// Tabela de tokens — cada linha corresponde a uma declaração de
+// `docs/shared/styles/nds/progress.css`. O token fica aqui (é o mesmo nas cinco
+// stacks) e a classe e a aplicação vêm do conteúdo compartilhado.
+const TOKEN_ROWS = [
+  { token: "--primary",           key: "track" },
+  { token: "--primary",           key: "indicator" },
+  { token: "--success",           key: "success" },
+  { token: "--destructive",       key: "destructive" },
+  { token: "--spacing-2",         key: "height" },
+  { token: "--radius-full",       key: "radius" },
+  { token: "--muted-foreground",  key: "value" },
+  { token: "--text-control",      key: "label" },
+  { token: "--duration-base",     key: "motion" },
+  { token: "--duration-stately",  key: "motionIndeterminate" },
+] as const;
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -197,12 +213,16 @@ export function ProgressDocs() {
   </ProgressTrack>
 </Progress>`;
 
+  const codeSemantic = `<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />
+<Progress value={92} data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+
   const interfaceCode = `// Progress (root)
 interface ProgressProps extends Progress.Root.Props {
   value?: number | null;
   max?: number;
   min?: number;
   getAriaValueText?: (value: number) => string;
+  "data-variant"?: "success" | "destructive";
   className?: string;
   "aria-label": string;
 }`;
@@ -269,7 +289,7 @@ interface ProgressProps extends Progress.Root.Props {
               <Progress
                 value={100}
                 aria-label={tContent("demonstration.labels.complete")}
-                className="nds-progress-success-wrap"
+                data-variant="success"
               />
             </div>
           </div>
@@ -283,7 +303,6 @@ interface ProgressProps extends Progress.Root.Props {
               <Progress
                 value={null}
                 aria-label={tContent("demonstration.labels.indeterminate")}
-                className="nds-progress-indeterminate-wrap"
               />
             </div>
           </div>
@@ -459,6 +478,25 @@ interface ProgressProps extends Progress.Root.Props {
               </div>
             ),
           },
+          {
+            name: tContent("variants.items.semantic"),
+            description: stripHtml(tContent("variants.styles.semantic")),
+            code: codeSemantic,
+            preview: (
+              <div className="nds-stack nds-w-full" data-spacing="sm">
+                <Progress
+                  value={100}
+                  data-variant="success"
+                  aria-label="Sincronização concluída"
+                />
+                <Progress
+                  value={92}
+                  data-variant="destructive"
+                  aria-label="Espaço de armazenamento quase esgotado"
+                />
+              </div>
+            ),
+          },
         ]}
       />
 
@@ -536,6 +574,13 @@ interface ProgressProps extends Progress.Root.Props {
                 description: tContent("props.table.getAriaValueText.description"),
               },
               {
+                name: "data-variant",
+                type: tContent("props.table.variant.type"),
+                defaultValue: tContent("props.table.variant.default"),
+                required: tContent("props.table.variant.required"),
+                description: toPlainText(tContent("props.table.variant.description")),
+              },
+              {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
@@ -570,38 +615,11 @@ interface ProgressProps extends Progress.Root.Props {
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={[
-          {
-            token: "--muted",
-            value: tContent("tokens.table.muted.class"),
-            description: tContent("tokens.table.muted.part"),
-          },
-          {
-            token: "--primary",
-            value: tContent("tokens.table.primary.class"),
-            description: tContent("tokens.table.primary.part"),
-          },
-          {
-            token: "--primary-foreground",
-            value: tContent("tokens.table.primaryForeground.class"),
-            description: tContent("tokens.table.primaryForeground.part"),
-          },
-          {
-            token: "--foreground",
-            value: tContent("tokens.table.foreground.class"),
-            description: tContent("tokens.table.foreground.part"),
-          },
-          {
-            token: "--muted-foreground",
-            value: tContent("tokens.table.mutedForeground.class"),
-            description: tContent("tokens.table.mutedForeground.part"),
-          },
-          {
-            token: "--ring",
-            value: tContent("tokens.table.ring.class"),
-            description: tContent("tokens.table.ring.part"),
-          },
-        ]}
+        items={TOKEN_ROWS.map(({ token, key }) => ({
+          token,
+          value: tContent(`tokens.table.${key}.class`),
+          description: tContent(`tokens.table.${key}.part`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}
       />

@@ -1,7 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Progress } from './index';
+import {
+  barrasDeProgresso,
+  contrasteBarraTrilha,
+  indicadorDoProgresso,
+  nomeAcessivel,
+  percentualDesenhado,
+  trilhaDoProgresso,
+} from '@shared/testing/progress-probe';
 
 const meta = {
   title: 'UI/Progress/Compositions',
@@ -14,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Progress: upload com porcentagem animada, múltiplos progressos em lista, cor customizada via [&>div]:bg-* e indeterminate para operações sem progresso mensurável.',
+          'Composicoes reais do Progress: upload com porcentagem animada, vários progressos numa lista, cores semânticas e processamento sem progresso mensurável.',
       },
     },
   },
@@ -40,30 +48,36 @@ export const AnimatedUpload: Story = {
       return { value };
     },
     template: `
-      <div class="" data-spacing="xs" style="width: 360px">
+      <div class="nds-stack" data-spacing="xs" style="width: 360px">
         <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
           <span class="nds-text-foreground">Enviando arquivo</span>
-          <span class="nds-text-muted-foreground tabular-nums" aria-live="polite">{{ value }}%</span>
+          <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">{{ value }}%</span>
         </div>
         <Progress :model-value="value" aria-label="Progresso do upload" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Progress presente com role=progressbar', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toBeInTheDocument();
-      await expect(progress).toHaveAttribute('role', 'progressbar');
+    const canvas = within(canvasElement);
+
+    await step('Progress presente com nome próprio', async () => {
+      const bar = canvas.getByRole('progressbar', { name: 'Progresso do upload' });
+      await expect(bar).toHaveAttribute('role', 'progressbar');
     });
 
-    await step('aria-label descreve a operação', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]');
-      await expect(progress).toHaveAttribute('aria-label', 'Progresso do upload');
+    await step('O valor anunciado fica dentro da escala em toda rodada', async () => {
+      // O valor muda a cada 250ms; afirmar um número seria racy. O que vale em
+      // qualquer instante é o intervalo.
+      const agora = Number(canvas.getByRole('progressbar').getAttribute('aria-valuenow'));
+      await expect(Number.isFinite(agora)).toBe(true);
+      await expect(agora >= 0 && agora <= 100).toBe(true);
     });
 
-    await step('Texto da porcentagem usa aria-live=polite', async () => {
-      const live = canvasElement.querySelector('[aria-live="polite"]');
-      await expect(live).toBeInTheDocument();
+    await step('O texto da porcentagem usa aria-live=polite', async () => {
+      // `assertive` interromperia o leitor a cada 4% — é o par Do & Don't desta
+      // página.
+      const live = canvasElement.querySelector('[aria-live]');
+      await expect(live).toHaveAttribute('aria-live', 'polite');
     });
   },
 };
@@ -80,11 +94,11 @@ export const ProgressList: Story = {
       return { items };
     },
     template: `
-      <ul class="m-0 nds-p-0 nds-list-none" data-spacing="md" style="width: 400px">
-        <li v-for="item in items" :key="item.name" class="" data-spacing="xs">
+      <ul class="nds-stack nds-m-0 nds-p-0 nds-list-none" data-spacing="md" style="width: 400px">
+        <li v-for="item in items" :key="item.name" class="nds-stack" data-spacing="xs">
           <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
             <span class="nds-text-foreground nds-truncate">{{ item.name }}</span>
-            <span class="nds-text-muted-foreground tabular-nums">{{ item.value }}%</span>
+            <span class="nds-text-muted-foreground nds-tabular-nums">{{ item.value }}%</span>
           </div>
           <Progress :model-value="item.value" :aria-label="item.label" />
         </li>
@@ -92,23 +106,32 @@ export const ProgressList: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
     await step('3 progressbars renderizados', async () => {
-      const bars = canvasElement.querySelectorAll('[role="progressbar"]');
-      await expect(bars.length).toBe(3);
+      await expect(canvas.getAllByRole('progressbar')).toHaveLength(3);
     });
 
-    await step('Cada um com aria-label próprio', async () => {
-      const bars = canvasElement.querySelectorAll('[role="progressbar"]');
-      for (const bar of Array.from(bars)) {
-        const label = bar.getAttribute('aria-label') ?? '';
-        await expect(label.length).toBeGreaterThan(0);
-      }
+    await step('Cada um com nome acessível próprio', async () => {
+      const nomes = barrasDeProgresso(canvasElement).map(nomeAcessivel);
+      await expect(nomes.every((n) => n !== '')).toBe(true);
+      await expect(new Set(nomes).size).toBe(3);
     });
 
     await step('aria-valuenow distintos (92, 64, 28)', async () => {
-      const bars = canvasElement.querySelectorAll('[role="progressbar"]');
-      const values = Array.from(bars).map(b => b.getAttribute('aria-valuenow'));
+      const values = canvas.getAllByRole('progressbar').map((b) => b.getAttribute('aria-valuenow'));
       await expect(values).toEqual(['92', '64', '28']);
+    });
+
+    await step('Cada barra desenha o próprio valor', async () => {
+      // Três barras com o mesmo desenho e atributos diferentes é o defeito que
+      // a lista existe para pegar.
+      const barras = canvas.getAllByRole('progressbar');
+      await waitFor(async () => {
+        for (const [i, esperado] of [92, 64, 28].entries()) {
+          await expect(Math.abs(percentualDesenhado(barras[i]) - esperado)).toBeLessThan(2);
+        }
+      });
     });
   },
 };
@@ -117,44 +140,54 @@ export const CustomColor: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="" data-spacing="sm" style="width: 360px">
-        <div class="" data-spacing="xs">
+      <div class="nds-stack" data-spacing="sm" style="width: 360px">
+        <div class="nds-stack" data-spacing="xs">
+          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+            <span class="nds-text-foreground">Sincronização</span>
+            <span class="nds-text-muted-foreground nds-tabular-nums">100%</span>
+          </div>
+          <Progress :model-value="100" data-variant="success" aria-label="Sincronização concluída" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+            <span class="nds-text-foreground">Backup</span>
+            <span class="nds-text-muted-foreground nds-tabular-nums">72%</span>
+          </div>
+          <Progress :model-value="72" aria-label="Progresso do backup" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
           <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
             <span class="nds-text-foreground">Espaço usado</span>
-            <span class="nds-text-muted-foreground tabular-nums">75%</span>
+            <span class="nds-text-muted-foreground nds-tabular-nums">92%</span>
           </div>
-          <Progress
-            :model-value="75"
-            class="[&>div]:bg-success"
-            aria-label="Espaço de armazenamento usado"
-          />
-        </div>
-        <div class="" data-spacing="xs">
-          <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-            <span class="nds-text-foreground">Quota</span>
-            <span class="nds-text-muted-foreground tabular-nums">90%</span>
-          </div>
-          <Progress
-            :model-value="90"
-            class="[&>div]:bg-warning"
-            aria-label="Quota de uso"
-          />
+          <Progress :model-value="92" data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />
         </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Cor customizada via arbitrary variant aplicada', async () => {
-      const bars = canvasElement.querySelectorAll('[data-slot="progress"]');
-      await expect(bars.length).toBe(2);
-      await expect((bars[0] as HTMLElement).className).toContain('[&>div]:bg-success');
-      await expect((bars[1] as HTMLElement).className).toContain('[&>div]:bg-warning');
+    const canvas = within(canvasElement);
+
+    await step('3 progressbars, uma por cor', async () => {
+      await expect(canvas.getAllByRole('progressbar')).toHaveLength(3);
     });
 
-    await step('aria-label presente em todos', async () => {
-      const bars = canvasElement.querySelectorAll('[role="progressbar"]');
-      for (const bar of Array.from(bars)) {
-        await expect(bar).toHaveAttribute('aria-label');
+    await step('As três cores são realmente distintas', async () => {
+      const cores = canvas
+        .getAllByRole('progressbar')
+        .map((raiz) => getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor);
+      await expect(new Set(cores).size).toBe(3);
+    });
+
+    await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
+      for (const raiz of canvas.getAllByRole('progressbar')) {
+        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+      }
+    });
+
+    await step('Toda barra da lista tem nome acessível', async () => {
+      for (const bar of barrasDeProgresso(canvasElement)) {
+        await expect(nomeAcessivel(bar)).not.toBe('');
       }
     });
   },
@@ -164,32 +197,36 @@ export const IndeterminateProcessing: Story = {
   render: () => ({
     components: { Progress },
     template: `
-      <div class="" data-spacing="xs" style="width: 360px">
+      <div class="nds-stack" data-spacing="xs" style="width: 360px">
         <div class="nds-text-body">Processando…</div>
-        <Progress
-          :model-value="null"
-          class="[&>div]:animate-indeterminate"
-          aria-label="Processando dados do servidor"
-        />
+        <Progress :model-value="null" aria-label="Processando dados do servidor" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('role=progressbar presente sem aria-valuenow', async () => {
-      const progress = canvasElement.querySelector('[role="progressbar"]');
-      await expect(progress).toBeInTheDocument();
-      await expect(progress).not.toHaveAttribute('aria-valuenow');
-    });
+    const canvas = within(canvasElement);
 
-    await step('Classe animate-indeterminate aplicada', async () => {
-      const progress = canvasElement.querySelector('[data-slot="progress"]') as HTMLElement;
-      await expect(progress.className).toContain('animate-indeterminate');
+    await step('role=progressbar presente sem aria-valuenow', async () => {
+      const bar = canvas.getByRole('progressbar', { name: 'Processando dados do servidor' });
+      await expect(bar).not.toHaveAttribute('aria-valuenow');
+      await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
 
     await step('Sem inline style transform no indicator', async () => {
-      const indicator = canvasElement.querySelector('[data-slot="progress-indicator"]') as HTMLElement;
-      const style = indicator.getAttribute('style') ?? '';
-      await expect(style).not.toContain('translateX');
+      const indicador = indicadorDoProgresso(canvasElement);
+      await expect(indicador.getAttribute('style') ?? '').not.toContain('translateX');
+    });
+
+    await step('O traço ocupa parte da trilha, não a trilha toda', async () => {
+      // Uma barra cheia leria como "100%" — o oposto do que o estado quer
+      // dizer. A largura de 40% vem do CSS compartilhado. Mede-se a LARGURA, e
+      // não a posição: com a animação em curso o traço está sempre em outro
+      // lugar, e uma asserção de posição seria racy por construção.
+      const trilha = trilhaDoProgresso(canvasElement);
+      const indicador = indicadorDoProgresso(canvasElement);
+      const proporcao =
+        indicador.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+      await expect(Math.abs(proporcao - 0.4)).toBeLessThan(0.05);
     });
   },
 };

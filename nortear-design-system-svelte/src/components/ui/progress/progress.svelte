@@ -19,12 +19,14 @@
 	{max}
 	{...restProps}
 >
+	<!-- Sem classe de animação aqui: a lib já marca `data-indeterminate` na raiz
+	     quando `value` é null, e é desse atributo que o CSS compartilhado tira a
+	     largura do traço e a animação. As duas classes que moravam nesta linha
+	     (`animate-indeterminate w-1/3`) não existem em CSS nenhum do projeto —
+	     o indeterminado desenhava uma barra vazia e parada. -->
 	<div
 		data-slot="progress-indicator"
-		class={cn(
-			"nds-progress-indicator",
-			value == null && "animate-indeterminate w-1/3"
-		)}
+		class="nds-progress-indicator"
 		style={value == null ? undefined : `transform: translateX(-${100 - (100 * value) / (max ?? 1)}%)`}
 	></div>
 </ProgressPrimitive.Root>

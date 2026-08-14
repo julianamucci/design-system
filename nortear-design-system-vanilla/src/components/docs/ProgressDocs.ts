@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createProgress } from '@/components/ui/progress';
+import { createProgress, type ProgressVariant } from '@/components/ui/progress';
 import uiTranslations from '@/i18n/ui.json';
 import progressTranslations from '@shared/content/progress/translations.json';
 
@@ -54,37 +54,53 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+// Tabela de tokens — cada linha é uma declaração de
+// `docs/shared/styles/nds/progress.css`. O token é o mesmo nas cinco stacks; a
+// classe e a aplicação vêm do conteúdo compartilhado.
+const TOKEN_ROWS = [
+  { token: '--primary',           key: 'track' },
+  { token: '--primary',           key: 'indicator' },
+  { token: '--success',           key: 'success' },
+  { token: '--destructive',       key: 'destructive' },
+  { token: '--spacing-2',         key: 'height' },
+  { token: '--radius-full',       key: 'radius' },
+  { token: '--muted-foreground',  key: 'value' },
+  { token: '--text-control',      key: 'label' },
+  { token: '--duration-base',     key: 'motion' },
+  { token: '--duration-stately',  key: 'motionIndeterminate' },
+] as const;
+
 /**
  * Builds a Progress element and sets `aria-label` (REQUIRED — factory does not).
- * The custom Nortear factory accepts only `value`, `max`, `className`.
  */
 function buildProgress(opts: {
-  value: number;
+  value?: number | null;
   max?: number;
+  variant?: ProgressVariant;
   className?: string;
   ariaLabel: string;
 }): HTMLElement {
-  const el = createProgress({ value: opts.value, max: opts.max, className: opts.className });
+  const el = createProgress({
+    value: opts.value,
+    max: opts.max,
+    variant: opts.variant,
+    className: opts.className,
+  });
   el.setAttribute('aria-label', opts.ariaLabel);
   return el;
 }
 
 /**
  * Builds an indeterminate Progress.
- * DIVERGENCE: factory does not support indeterminate natively — we override the
- * indicator with an animated class and remove `aria-valuenow`.
+ *
+ * `value: null` é o modo da própria factory desde esta revisão: ela omite
+ * `aria-valuenow` e marca `data-indeterminate`, que é o gancho do CSS
+ * compartilhado. Antes disto o estado era falsificado aqui — atributo removido
+ * à mão e uma classe de animação que não existe em CSS nenhum, o que dava uma
+ * barra vazia e parada.
  */
 function buildIndeterminate(ariaLabel: string): HTMLElement {
-  const el = createProgress({ value: 0 });
-  el.setAttribute('aria-label', ariaLabel);
-  el.removeAttribute('aria-valuenow');
-  const indicator = el.firstElementChild as HTMLElement | null;
-  if (indicator) {
-    indicator.style.transform = '';
-    indicator.style.width = '33.3333%';
-    indicator.classList.add('animate-indeterminate');
-  }
-  return el;
+  return buildProgress({ value: null, ariaLabel });
 }
 
 /**
@@ -418,6 +434,11 @@ export function createProgressDocs(): HTMLElement {
           `const row = document.createElement('div');\n` +
           `// ... label + value ...\n` +
           `wrap.append(row, createProgress({ value: 42 }));`;
+        const codeSemantic =
+          `const ok = createProgress({ value: 100, variant: 'success' });\n` +
+          `ok.setAttribute('aria-label', 'Sincronização concluída');\n\n` +
+          `const cheio = createProgress({ value: 92, variant: 'destructive' });\n` +
+          `cheio.setAttribute('aria-label', 'Espaço quase esgotado');`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -434,6 +455,21 @@ export function createProgressDocs(): HTMLElement {
               code: codeWithLabel,
               previewFactory: () =>
                 buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), ariaLabel: t('demonstration.labels.upload') }),
+            },
+            {
+              name: t('variants.items.semantic'),
+              description: DOMPurify.sanitize(t('variants.styles.semantic')),
+              code: codeSemantic,
+              previewFactory: () => {
+                const wrap = document.createElement('div');
+                wrap.className = 'nds-stack nds-w-full';
+                wrap.dataset.spacing = 'sm';
+                wrap.append(
+                  buildProgress({ value: 100, variant: 'success', ariaLabel: 'Sincronização concluída' }),
+                  buildProgress({ value: 92, variant: 'destructive', ariaLabel: 'Espaço de armazenamento quase esgotado' }),
+                );
+                return wrap;
+              },
             },
           ],
         });
@@ -458,10 +494,12 @@ export function createProgressDocs(): HTMLElement {
       case 'propriedades': {
         const interfaceCode = `// createProgress(options)
 export interface ProgressOptions {
-  /** Current progress value (0 – max). */
-  value?: number;
+  /** Current progress value (0 – max). \`null\` = indeterminate. */
+  value?: number | null;
   /** Maximum value (default: 100). */
   max?: number;
+  /** Semantic colour of the bar. */
+  variant?: 'success' | 'destructive';
   /** Additional CSS classes to append to the root element. */
   className?: string;
 }
@@ -485,10 +523,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
               items: [
                 {
                   name: 'value',
-                  type: 'number',
+                  type: t('props.table.value.type'),
                   defaultValue: '0',
                   required: 'Não',
-                  description: 'Valor atual de 0 a max. Factory Nortear não aceita null — para indeterminate, ver Notas.',
+                  description: toPlainText(t('props.table.value.description')),
                 },
                 {
                   name: 'max',
@@ -496,6 +534,13 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
                   defaultValue: '100',
                   required: 'Não',
                   description: t('props.table.max.description'),
+                },
+                {
+                  name: 'variant',
+                  type: t('props.table.variant.type'),
+                  defaultValue: t('props.table.variant.default'),
+                  required: t('props.table.variant.required'),
+                  description: toPlainText(t('props.table.variant.description')),
                 },
                 {
                   name: 'className',
@@ -528,14 +573,11 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: [
-            { token: '--primary',            value: 'nds-bg-primary-20', description: 'Fundo da trilha (Nortear factory usa primary/20 ao invés de bg-muted)' },
-            { token: '--primary',            value: t('tokens.table.primary.class'),           description: t('tokens.table.primary.part') },
-            { token: '--primary-foreground', value: t('tokens.table.primaryForeground.class'), description: t('tokens.table.primaryForeground.part') },
-            { token: '--foreground',         value: t('tokens.table.foreground.class'),        description: t('tokens.table.foreground.part') },
-            { token: '--muted-foreground',   value: t('tokens.table.mutedForeground.class'),   description: t('tokens.table.mutedForeground.part') },
-            { token: '--ring',               value: t('tokens.table.ring.class'),              description: t('tokens.table.ring.part') },
-          ],
+          items: TOKEN_ROWS.map(({ token, key }) => ({
+            token,
+            value: t(`tokens.table.${key}.class`),
+            description: t(`tokens.table.${key}.part`),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
         });
@@ -581,10 +623,9 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
-            // Nortear-specific divergences
-            { title: '', content: 'DIVERGÊNCIA Nortear: a factory custom <code>createProgress</code> não aceita <code>value=null</code> nem expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>. Componha manualmente Label/Value via DOM nativo e simule indeterminate removendo <code>aria-valuenow</code> + adicionando <code>animate-indeterminate</code> no indicador.' },
-            { title: '', content: 'DIVERGÊNCIA Nortear: <code>aria-label</code> não é parâmetro da factory — a aplicação deve setá-lo via <code>el.setAttribute(\'aria-label\', ...)</code> imediatamente após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
-            { title: '', content: 'Animação <code>animate-indeterminate</code> requer keyframes <code>@keyframes progress-indeterminate</code> definidos no CSS global (ver seção Tokens — Customização).' },
+            // Divergências desta stack — API, não comportamento.
+            { title: '', content: 'A factory não expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>: o rótulo e o valor são compostos com DOM nativo acima da barra.' },
+            { title: '', content: '<code>aria-label</code> não é parâmetro da factory — a aplicação o define com <code>el.setAttribute(\'aria-label\', ...)</code> logo após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
           ],
         });
 

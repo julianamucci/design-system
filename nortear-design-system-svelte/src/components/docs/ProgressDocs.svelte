@@ -151,14 +151,34 @@
   <Progress value={42} aria-label="Enviando arquivo" />
 </div>`;
 
+  const codeSemantic = `<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />
+<Progress value={92} data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+
   const interfaceCode = `// Progress (root, bits-ui)
 interface ProgressProps {
   value?: number | null;
   max?: number;
+  'data-variant'?: 'success' | 'destructive';
   class?: string;
   'aria-label': string;
   // ...demais Progress.RootProps de bits-ui
 }`;
+
+  // Tabela de tokens — cada linha é uma declaração de
+  // `docs/shared/styles/nds/progress.css`. O token é o mesmo nas cinco stacks;
+  // a classe e a aplicação vêm do conteúdo compartilhado.
+  const TOKEN_ROWS = [
+    { token: '--primary',           key: 'track' },
+    { token: '--primary',           key: 'indicator' },
+    { token: '--success',           key: 'success' },
+    { token: '--destructive',       key: 'destructive' },
+    { token: '--spacing-2',         key: 'height' },
+    { token: '--radius-full',       key: 'radius' },
+    { token: '--muted-foreground',  key: 'value' },
+    { token: '--text-control',      key: 'label' },
+    { token: '--duration-base',     key: 'motion' },
+    { token: '--duration-stately',  key: 'motionIndeterminate' },
+  ] as const;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -201,7 +221,7 @@ interface ProgressProps {
           <Progress
             value={100}
             aria-label={$tStore('demonstration.labels.complete')}
-            class="nds-progress-success-wrap"
+            data-variant="success"
           />
         </div>
       </div>
@@ -213,7 +233,6 @@ interface ProgressProps {
           <Progress
             value={null}
             aria-label={$tStore('demonstration.labels.indeterminate')}
-            class="nds-progress-indeterminate-wrap"
           />
         </div>
       </div>
@@ -350,6 +369,7 @@ interface ProgressProps {
     items={[
       { name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
       { name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
+      { name: $tStore('variants.items.semantic'),      description: stripHtml($tStore('variants.styles.semantic')),      code: codeSemantic,      preview: variantSemantic      },
     ]}
   />
 
@@ -365,6 +385,12 @@ interface ProgressProps {
         <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">42%</span>
       </div>
       <Progress value={42} aria-label="Enviando arquivo" />
+    </div>
+  {/snippet}
+  {#snippet variantSemantic()}
+    <div class="nds-stack nds-w-full" data-spacing="sm">
+      <Progress value={100} data-variant="success" aria-label="Sincronização concluída" />
+      <Progress value={92} data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />
     </div>
   {/snippet}
 
@@ -401,6 +427,7 @@ interface ProgressProps {
           { name: 'max',              type: $tStore('props.table.max.type'),              defaultValue: $tStore('props.table.max.default'),              required: $tStore('props.table.max.required'),              description: $tStore('props.table.max.description')                          },
           { name: 'min',              type: $tStore('props.table.min.type'),              defaultValue: $tStore('props.table.min.default'),              required: $tStore('props.table.min.required'),              description: $tStore('props.table.min.description')                          },
           { name: 'getAriaValueText', type: $tStore('props.table.getAriaValueText.type'), defaultValue: $tStore('props.table.getAriaValueText.default'), required: $tStore('props.table.getAriaValueText.required'), description: $tStore('props.table.getAriaValueText.description')            },
+          { name: 'data-variant',     type: $tStore('props.table.variant.type'),          defaultValue: $tStore('props.table.variant.default'),          required: $tStore('props.table.variant.required'),          description: toPlainText($tStore('props.table.variant.description'))          },
           { name: 'class',            type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: toPlainText($tStore('props.table.className.description'))        },
           { name: 'aria-label',       type: 'string',                                     defaultValue: '—',                                             required: 'Sim',                                            description: 'Obrigatório. Descreve o que está sendo medido para leitores de tela.' },
         ],
@@ -419,14 +446,11 @@ interface ProgressProps {
       value: $tStore('tokens.table.class'),
       description: $tStore('tokens.table.part'),
     }}
-    items={[
-      { token: '--muted',              value: $tStore('tokens.table.muted.class'),             description: $tStore('tokens.table.muted.part')             },
-      { token: '--primary',            value: $tStore('tokens.table.primary.class'),           description: $tStore('tokens.table.primary.part')           },
-      { token: '--primary-foreground', value: $tStore('tokens.table.primaryForeground.class'), description: $tStore('tokens.table.primaryForeground.part') },
-      { token: '--foreground',         value: $tStore('tokens.table.foreground.class'),        description: $tStore('tokens.table.foreground.part')        },
-      { token: '--muted-foreground',   value: $tStore('tokens.table.mutedForeground.class'),   description: $tStore('tokens.table.mutedForeground.part')   },
-      { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part')              },
-    ]}
+    items={TOKEN_ROWS.map(({ token, key }) => ({
+      token,
+      value: $tStore(`tokens.table.${key}.class`),
+      description: $tStore(`tokens.table.${key}.part`),
+    }))}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
   />

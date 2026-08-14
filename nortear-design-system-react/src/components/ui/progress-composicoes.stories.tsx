@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
-import { within, expect } from "storybook/test";
+import { within, expect, waitFor } from "storybook/test";
 import {
   Progress,
   ProgressLabel,
@@ -8,6 +8,12 @@ import {
   ProgressIndicator,
   ProgressValue,
 } from "./progress";
+import {
+  barrasDeProgresso,
+  contrasteBarraTrilha,
+  nomeAcessivel,
+  percentualDesenhado,
+} from "@shared/testing/progress-probe";
 
 const meta = {
   title: "UI/Progress/Compositions",
@@ -18,10 +24,11 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composicoes do Progress: múltiplas barras lado a lado, cor customizada via [&>div]:bg-*, com label/value, e com texto aria-live para anunciar progresso.",
+          "Composicoes do Progress: várias barras lado a lado, cores semânticas numa lista, rótulo com valor formatado e texto aria-live anunciando o progresso.",
       },
     },
     controls: { disable: true },
+    actions: { disable: true },
   },
 } satisfies Meta<typeof Progress>;
 
@@ -30,7 +37,7 @@ type Story = StoryObj<typeof Progress>;
 
 export const MultipleLevels: Story = {
   render: () => (
-    <div className="" data-spacing="md" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-sm" data-spacing="md">
       <Progress value={0} aria-label="Etapa 1" />
       <Progress value={50} aria-label="Etapa 2" />
       <Progress value={100} aria-label="Etapa 3" />
@@ -40,38 +47,79 @@ export const MultipleLevels: Story = {
     const canvas = within(canvasElement);
 
     await step("3 progressbars no DOM", async () => {
-      const bars = canvas.getAllByRole("progressbar");
-      await expect(bars).toHaveLength(3);
+      await expect(canvas.getAllByRole("progressbar")).toHaveLength(3);
+    });
+
+    await step("Cada barra anuncia o próprio valor", async () => {
+      const valores = canvas
+        .getAllByRole("progressbar")
+        .map((b) => b.getAttribute("aria-valuenow"));
+      await expect(valores).toEqual(["0", "50", "100"]);
+    });
+
+    await step("Cada barra desenha o próprio valor", async () => {
+      // Três barras com o mesmo desenho e atributos diferentes é o defeito que
+      // a lista existe para pegar.
+      const barras = canvas.getAllByRole("progressbar");
+      await waitFor(async () => {
+        for (const [i, esperado] of [0, 50, 100].entries()) {
+          await expect(
+            Math.abs(percentualDesenhado(barras[i]) - esperado),
+          ).toBeLessThan(2);
+        }
+      });
     });
   },
 };
 
 export const CustomColor: Story = {
   render: () => (
-    <div className="" data-spacing="md" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-sm" data-spacing="md">
       <Progress
-        value={75}
-        aria-label="Progresso de sucesso"
-        className="nds-progress-success-wrap"
+        value={100}
+        data-variant="success"
+        aria-label="Sincronização concluída"
       />
       <Progress
-        value={40}
-        aria-label="Progresso em atenção"
-        className="[&>div]:bg-warning"
+        value={72}
+        aria-label="Progresso do backup"
       />
       <Progress
-        value={25}
-        aria-label="Progresso crítico"
-        className="[&>div]:bg-destructive"
+        value={92}
+        data-variant="destructive"
+        aria-label="Espaço de armazenamento quase esgotado"
       />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("3 progressbars com cores customizadas", async () => {
-      const bars = canvas.getAllByRole("progressbar");
-      await expect(bars).toHaveLength(3);
+    await step("3 progressbars, uma por cor", async () => {
+      await expect(canvas.getAllByRole("progressbar")).toHaveLength(3);
+    });
+
+    await step("As três cores são realmente distintas", async () => {
+      const cores = canvas
+        .getAllByRole("progressbar")
+        .map(
+          (raiz) =>
+            getComputedStyle(
+              raiz.querySelector<HTMLElement>("[data-slot='progress-indicator']")!,
+            ).backgroundColor,
+        );
+      await expect(new Set(cores).size).toBe(3);
+    });
+
+    await step("Nenhuma variante abre mão dos 3:1 contra a trilha", async () => {
+      for (const raiz of canvas.getAllByRole("progressbar")) {
+        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+      }
+    });
+
+    await step("Toda barra da lista tem nome acessível", async () => {
+      for (const bar of barrasDeProgresso(canvasElement)) {
+        await expect(nomeAcessivel(bar)).not.toBe("");
+      }
     });
   },
 };
@@ -89,7 +137,7 @@ export const WithLabelAndValue: Story = {
 
     return (
       <div className="nds-w-sm">
-        <Progress value={value} aria-label="Enviando arquivo">
+        <Progress value={value}>
           <ProgressLabel>Enviando arquivo</ProgressLabel>
           <ProgressValue />
           <ProgressTrack>
@@ -102,9 +150,24 @@ export const WithLabelAndValue: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Label e progressbar visíveis", async () => {
+    await step("Rótulo visível e nome acessível são o mesmo texto", async () => {
       await expect(canvas.getByText("Enviando arquivo")).toBeVisible();
-      await expect(canvas.getByRole("progressbar")).toBeInTheDocument();
+      await expect(
+        canvas.getByRole("progressbar", { name: "Enviando arquivo" }),
+      ).toBeInTheDocument();
+    });
+
+    await step("O valor formatado é escrito pelo componente", async () => {
+      const valor = canvasElement.querySelector<HTMLElement>(
+        "[data-slot='progress-value']",
+      )!;
+      await expect(valor.textContent?.trim()).toMatch(/^\d+%$/);
+    });
+
+    await step("A composição rende uma trilha só", async () => {
+      await expect(
+        canvasElement.querySelectorAll("[data-slot='progress-track']"),
+      ).toHaveLength(1);
     });
   },
 };
@@ -121,11 +184,8 @@ export const WithAriaLive: Story = {
     }, []);
 
     return (
-      <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
-        <p
-          className="nds-text-body"
-          aria-live="polite"
-        >
+      <div className="nds-stack nds-w-sm" data-spacing="sm">
+        <p className="nds-text-body" aria-live="polite">
           {value}% concluído
         </p>
         <Progress value={value} aria-label="Progresso do upload" />
@@ -135,13 +195,24 @@ export const WithAriaLive: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Texto aria-live presente", async () => {
-      const liveRegion = canvasElement.querySelector('[aria-live="polite"]');
-      await expect(liveRegion).toBeInTheDocument();
+    await step("O texto vive numa região polite, não assertive", async () => {
+      // `assertive` interrompe o leitor a cada ponto percentual — é a razão de
+      // o par Do & Don't desta página existir.
+      const live = canvasElement.querySelector("[aria-live]")!;
+      await expect(live).toHaveAttribute("aria-live", "polite");
     });
 
-    await step("Progressbar presente", async () => {
-      await expect(canvas.getByRole("progressbar")).toBeInTheDocument();
+    await step("O texto anunciado acompanha o valor da barra", async () => {
+      const bar = canvas.getByRole("progressbar");
+      const live = canvasElement.querySelector("[aria-live='polite']")!;
+      const doTexto = Number(live.textContent?.match(/\d+/)?.[0]);
+      await expect(String(doTexto)).toBe(bar.getAttribute("aria-valuenow"));
+    });
+
+    await step("A barra continua com nome próprio", async () => {
+      await expect(
+        canvas.getByRole("progressbar", { name: "Progresso do upload" }),
+      ).toBeInTheDocument();
     });
   },
 };

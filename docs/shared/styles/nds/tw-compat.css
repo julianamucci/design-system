@@ -228,13 +228,17 @@
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
 }
 
-/* ── animações de progresso indeterminado + accordion (auto-contidas) ────── */
-@keyframes nds-progress-indeterminate {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-.nds-animate-indeterminate { animation: nds-progress-indeterminate 1.5s ease-in-out infinite; }
-
-/* ── progress indeterminado/success: animação/cor no filho indicador ──────── */
-.nds-progress-indeterminate-wrap > div { animation: nds-progress-indeterminate 1.5s ease-in-out infinite; }
-.nds-progress-success-wrap > div { background-color: hsl(var(--success)); }
+/* ── progresso indeterminado: nada aqui ───────────────────────────────────────
+ * Este arquivo é o ÚLTIMO `@import` do index.css, e por isso três declarações
+ * de progresso que moravam aqui venciam as de `progress.css` sem que ninguém
+ * visse. A pior era um segundo `@keyframes nds-progress-indeterminate`, de
+ * mesmo nome e conteúdo diferente: o componente pedia a animação certa e
+ * recebia a daqui, com outro deslocamento e sem respeitar `prefers-reduced-
+ * motion`. Nome de keyframes não colide com aviso — o último vence, calado.
+ *
+ * As outras duas (`.nds-progress-indeterminate-wrap > div` e
+ * `.nds-progress-success-wrap > div`) miravam "o primeiro filho da raiz", que é
+ * o INDICADOR em três stacks e a TRILHA nas outras duas — a mesma classe
+ * pintava peças diferentes. O estado indeterminado agora sai de
+ * `[data-indeterminate]` e a cor de `[data-variant]`, ambos em `progress.css`,
+ * onde o seletor conhece a peça que está pintando. */

@@ -15,10 +15,16 @@ function Progress({
       className={cn("nds-progress-root", className)}
       {...props}
     >
-      {children}
-      <ProgressTrack>
-        <ProgressIndicator />
-      </ProgressTrack>
+      {/* Trilha e indicador só nascem sozinhos quando NINGUÉM os compôs.
+       * Antes eram sempre acrescentados depois de `children`, e toda composição
+       * com rótulo — que declara o próprio `ProgressTrack` — renderizava DUAS
+       * trilhas empilhadas: a do autor e esta. Nenhum teste via, porque
+       * `getByRole('progressbar')` acha a raiz e as duas trilhas são divs. */}
+      {children ?? (
+        <ProgressTrack>
+          <ProgressIndicator />
+        </ProgressTrack>
+      )}
     </ProgressPrimitive.Root>
   )
 }
