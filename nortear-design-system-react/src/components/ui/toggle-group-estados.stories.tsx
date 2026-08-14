@@ -47,18 +47,24 @@ export const Default: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Todos os items com aria-pressed=false", async () => {
-      const items = canvas.getAllByRole("button");
-      for (const item of items) {
+    await step("Sem seleção, nenhum item está pressionado", async () => {
+      for (const item of canvas.getAllByRole("button")) {
         await expect(item).toHaveAttribute("aria-pressed", "false");
       }
+    });
+
+    await step("Mesmo sem seleção, um item entra na ordem de tabulação", async () => {
+      // Roving tabindex não depende de haver item ativo: sem isto o grupo
+      // inteiro sairia da navegação por Tab.
+      const naOrdem = canvas.getAllByRole("button").filter((b) => b.tabIndex === 0);
+      await expect(naOrdem).toHaveLength(1);
     });
   },
 };
 
 export const Selected: Story = {
   render: () => (
-    <ToggleGroup defaultValue={["center"]} aria-label="Alinhamento do texto">
+    <ToggleGroup defaultValue="center" aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -71,26 +77,38 @@ export const Selected: Story = {
     </ToggleGroup>
   ),
   parameters: {
+    covers: ["accessibility.item2"],
     docs: {
       description: {
         story:
-          'Estado selecionado — item ativo via defaultValue. aria-pressed="true" e fundo --muted.',
+          'Estado selecionado — item ativo via defaultValue. aria-pressed="true" e fundo --accent.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const center = canvas.getByRole("button", { name: "Centralizar" });
+    const left = canvas.getByRole("button", { name: "Alinhar à esquerda" });
 
-    await step("Item 'center' está pressionado", async () => {
+    await step("O item do defaultValue já nasce pressionado", async () => {
       await expect(center).toHaveAttribute("aria-pressed", "true");
+      await expect(left).toHaveAttribute("aria-pressed", "false");
+    });
+
+    await step("accessibility.item2 — o item ativo tem fundo próprio, não só o atributo", async () => {
+      // O contraste de 4.5:1 é medido pelo axe; aqui a garantia é mais rasa e
+      // complementar: sem a regra de CSS, ativo e inativo pintariam igual e o
+      // estado só existiria para quem lê o DOM.
+      await expect(getComputedStyle(center).backgroundColor).not.toBe(
+        getComputedStyle(left).backgroundColor,
+      );
     });
   },
 };
 
-export const Focus: Story = {
+export const FocusVisible: Story = {
   render: () => (
-    <ToggleGroup aria-label="Alinhamento do texto">
+    <ToggleGroup defaultValue="left" aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
@@ -103,10 +121,11 @@ export const Focus: Story = {
     </ToggleGroup>
   ),
   parameters: {
+    covers: ["accessibility.item3"],
     docs: {
       description: {
         story:
-          "Foco via teclado com roving tabindex — apenas 1 item Tab-focusable; setas movem dentro do grupo. Anel ring-[3px] ring-ring/50 visível.",
+          "Foco via teclado com roving tabindex — apenas 1 item Tab-focusable; setas movem dentro do grupo. Anel de 2px na cor --ring visível.",
       },
     },
   },
@@ -116,12 +135,22 @@ export const Focus: Story = {
 
     await step("Roving tabindex — apenas 1 item com tabIndex=0", async () => {
       const focusable = items.filter((el) => el.tabIndex === 0);
-      await expect(focusable.length).toBeLessThanOrEqual(1);
+      await expect(focusable).toHaveLength(1);
     });
 
-    await step("Primeiro item recebe foco e ArrowRight move", async () => {
-      items[0].focus();
+    await step("accessibility.item3 — o anel de foco aparece na navegação por teclado", async () => {
+      // `userEvent.tab()` e não `focus()`: `:focus-visible` só casa quando o
+      // foco veio do teclado, e um `focus()` programático deixaria a regra
+      // fora — o teste passaria verde com o anel invisível na prática.
+      items[0].blur();
+      await userEvent.tab();
       await expect(items[0]).toHaveFocus();
+      const sombra = getComputedStyle(items[0]).boxShadow;
+      await expect(sombra).not.toBe("none");
+      await expect(sombra.length).toBeGreaterThan(0);
+    });
+
+    await step("ArrowRight move o foco dentro do grupo", async () => {
       await userEvent.keyboard("{ArrowRight}");
       await expect(items[1]).toHaveFocus();
     });
@@ -130,7 +159,7 @@ export const Focus: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <ToggleGroup disabled defaultValue={["center"]} aria-label="Alinhamento do texto">
+    <ToggleGroup disabled defaultValue="center" aria-label="Alinhamento do texto">
       <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>

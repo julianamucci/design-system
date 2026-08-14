@@ -210,15 +210,6 @@ interface ToggleGroupItemProps {
   class?: string;
 }`;
 
-  const customizationCode = `/* Spacing customizado entre itens */
-[data-slot="toggle-group"] {
-  --gap: 2;
-}
-
-/* Cor customizada do estado selecionado */
-.toggle-group-brand [data-state="on"] {
-  @apply bg-blue-500 text-white;
-}`;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="toggle-group">
@@ -684,14 +675,14 @@ interface ToggleGroupItemProps {
     }}
     items={[
       { token: '--muted',         value: $tStore('tokens.table.muted.class'),       description: $tStore('tokens.table.muted.part') },
-      { token: '--foreground',    value: $tStore('tokens.table.foreground.class'),  description: $tStore('tokens.table.foreground.part') },
+      { token: '--accent',        value: $tStore('tokens.table.accent.class'),      description: $tStore('tokens.table.accent.part') },
       { token: '--input',         value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
       { token: '--ring',          value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
       { token: '--destructive',   value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
       { token: '--radius-button', value: $tStore('tokens.table.radius.class'),      description: $tStore('tokens.table.radius.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={customizationCode}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->

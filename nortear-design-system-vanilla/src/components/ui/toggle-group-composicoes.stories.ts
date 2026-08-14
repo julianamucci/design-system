@@ -23,7 +23,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Vanilla** documentadas em 3 camadas (notes + DocsProps + esta composição): (1) factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `orientation`/`size`/`spacing`/`disabled` no grupo NÃO existem — aplicar manualmente; (3) `aria-label` no grupo e em items icon-only setado via `setAttribute` no elemento retornado; (4) `children` é string HTML literal — gerar SVG via `createElementNS` + `outerHTML` (NUNCA interpolar dado dinâmico).',
+          'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Vanilla**: (1) a factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `aria-label` no grupo e em items icon-only é setado via `setAttribute` no elemento retornado; (3) `children` é string literal — gerar SVG via `createElementNS` e anexar por DOM (NUNCA interpolar dado dinâmico).',
       },
     },
   },
@@ -88,6 +88,17 @@ function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
   });
 }
 
+/**
+ * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
+ * Interactions parte do estado que a rodada anterior deixou; um clique cego
+ * inverteria o resultado a cada rodada.
+ */
+async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
+  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
+    await userEvent.click(botao);
+  }
+}
+
 // ─── BarraDeAlinhamento (single) ──────────────────────────────────────────────
 
 export const AlignmentBar: Story = {
@@ -113,6 +124,7 @@ export const AlignmentBar: Story = {
     return group;
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
@@ -122,12 +134,25 @@ export const AlignmentBar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
+    const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
+
     await step('Trocar de left para right', async () => {
-      const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
-      await userEvent.click(right);
+      await definir(right, true);
       await expect(right).toHaveAttribute('aria-pressed', 'true');
-      const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
       await expect(left).toHaveAttribute('aria-pressed', 'false');
+      // Volta ao estado inicial para a próxima rodada começar igual a esta.
+      await definir(left, true);
+    });
+
+    await step('visual.item4 — a variante outline emenda os itens num container só', async () => {
+      // Um container com borda; os itens perdem a sua. É o que separa o
+      // "segmentado" de três botões soltos lado a lado.
+      const grupo = canvas.getByRole('toolbar');
+      await expect(grupo).toHaveAttribute('data-variant', 'outline');
+      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBe(0);
+      await expect(parseFloat(getComputedStyle(grupo).columnGap || '0')).toBe(0);
     });
   },
 };
@@ -165,12 +190,22 @@ export const FormattingBar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const bold = canvas.getByRole('button', { name: 'Negrito' });
+    const italic = canvas.getByRole('button', { name: 'Itálico' });
+    const ativos = () =>
+      canvas.getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true');
+
     await step('Combinar Bold + Italic', async () => {
-      const italic = canvas.getByRole('button', { name: 'Itálico' });
-      await userEvent.click(italic);
-      const btns = canvas.getAllByRole('button');
-      const pressed = btns.filter((b) => b.getAttribute('aria-pressed') === 'true');
-      await expect(pressed).toHaveLength(2);
+      await definir(bold, true);
+      await definir(italic, true);
+      await expect(ativos()).toHaveLength(2);
+      await expect(bold).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    await step('Desligar Italic subtrai só ele', async () => {
+      await definir(italic, false);
+      await expect(ativos()).toHaveLength(1);
+      await expect(bold).toHaveAttribute('data-state', 'on');
     });
   },
 };
@@ -186,6 +221,7 @@ export const ViewMode: Story = {
     const group = createToggleGroup({
       type: 'single',
       variant: 'outline',
+      orientation: 'vertical',
       items,
       defaultValue: 'grid',
     });
@@ -194,10 +230,6 @@ export const ViewMode: Story = {
       { icon: List,       text: 'Lista' },
     ]);
     group.setAttribute('aria-label', 'Modo de visualização');
-    group.setAttribute('aria-orientation', 'vertical');
-    // Divergência Vanilla: factory não expõe orientation
-    group.classList.remove('flex-row');
-    group.classList.add('flex-col', 'items-stretch');
     // Items aqui têm texto visível, então não precisam de aria-label próprio.
     return group;
   },
@@ -205,19 +237,30 @@ export const ViewMode: Story = {
     docs: {
       description: {
         story:
-          'Orientação vertical + texto visível ao lado do ícone. Quando o texto é visível, items NÃO precisam de `aria-label` (o leitor usa o texto interno). O grupo ainda precisa de `aria-label`. **Divergência Vanilla**: `orientation` não é prop — `flex-col` aplicado manualmente; `aria-orientation` setado via `setAttribute`.',
+          'Orientação vertical + texto visível ao lado do ícone. Quando o texto é visível, items NÃO precisam de `aria-label` (o leitor usa o texto interno). O grupo ainda precisa de `aria-label`.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-orientation vertical', async () => {
+    const grade = canvas.getByRole('button', { name: 'Grade' });
+    const lista = canvas.getByRole('button', { name: 'Lista' });
+
+    await step('Texto visível dispensa aria-label no item', async () => {
+      await expect(grade.getAttribute('aria-label')).toBe(null);
+      await expect(lista.getAttribute('aria-label')).toBe(null);
+    });
+
+    await step('O grupo continua nomeado — o rótulo dele é a categoria', async () => {
       const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('aria-label', 'Modo de visualização');
       await expect(group).toHaveAttribute('aria-orientation', 'vertical');
     });
-    await step('Textos visíveis presentes', async () => {
-      await expect(canvas.getByText('Grade')).toBeVisible();
-      await expect(canvas.getByText('Lista')).toBeVisible();
+
+    await step('Empilhado de verdade: o segundo item começa abaixo do primeiro', async () => {
+      const a = grade.getBoundingClientRect();
+      const b = lista.getBoundingClientRect();
+      await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
     });
   },
 };
@@ -281,7 +324,9 @@ export const WithVisibleFilter: Story = {
     ];
     const group = createToggleGroup({
       type: 'multiple',
-      variant: 'outline',
+      // Espaçamento acima de zero: os botões deixam de ser emendados e cada um
+      // mantém o próprio contorno — é o contraste do visual segmentado.
+      spacing: 1,
       items,
       defaultValue: ['compact'],
     });
@@ -289,31 +334,47 @@ export const WithVisibleFilter: Story = {
       { icon: Eye,  text: 'Ocultos'  },
       { icon: List, text: 'Compacto' },
     ]);
+    group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn) => {
+      btn.dataset.variant = 'outline';
+    });
     group.setAttribute('aria-label', 'Filtros de exibição');
     wrapper.appendChild(group);
 
     return wrapper;
   },
   parameters: {
+    covers: ['visual.item5'],
     docs: {
       description: {
         story:
-          'Conjunto de filtros booleanos independentes com texto visível — `type="multiple"` permite combinar Ocultos + Compacto. O `aria-label` do grupo descreve a categoria geral; cada item dispensa `aria-label` porque o texto está visível.',
+          'Conjunto de filtros booleanos independentes com texto visível — `type="multiple"` permite combinar Ocultos + Compacto. O `aria-label` do grupo descreve a categoria geral; cada item dispensa `aria-label` porque o texto está visível. `spacing: 1` separa os botões, e o contorno passa a ser de cada item.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Compacto inicia ativo', async () => {
-      const compact = canvas.getByRole('button', { name: 'Compacto' });
-      await expect(compact).toHaveAttribute('aria-pressed', 'true');
+    const grupo = canvas.getByRole('toolbar');
+    const hidden = canvas.getByRole('button', { name: 'Ocultos' });
+    const compact = canvas.getByRole('button', { name: 'Compacto' });
+
+    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
+      await expect(grupo).toHaveAttribute('data-spacing', '1');
+      const a = hidden.getBoundingClientRect();
+      const b = compact.getBoundingClientRect();
+      await expect(b.left).toBeGreaterThan(a.right);
     });
-    await step('Adicionar Ocultos mantém Compacto', async () => {
-      const hidden = canvas.getByRole('button', { name: 'Ocultos' });
-      await userEvent.click(hidden);
+
+    await step('Separados, os itens mantêm o próprio canto arredondado', async () => {
+      await expect(parseFloat(getComputedStyle(hidden).borderTopRightRadius)).toBeGreaterThan(0);
+    });
+
+    await step('Filtros independentes: um ativo não desliga o outro', async () => {
+      await definir(compact, true);
+      await definir(hidden, true);
       await expect(hidden).toHaveAttribute('aria-pressed', 'true');
-      const compact = canvas.getByRole('button', { name: 'Compacto' });
       await expect(compact).toHaveAttribute('aria-pressed', 'true');
+      // Restaura o estado inicial da story.
+      await definir(hidden, false);
     });
   },
 };

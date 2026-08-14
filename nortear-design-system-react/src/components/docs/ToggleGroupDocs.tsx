@@ -189,22 +189,6 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — tokens do ToggleGroup */
-:root {
-  --muted: 210 40% 96%;
-  --foreground: 222 47% 11%;
-  --input: 214 32% 91%;
-  --ring: 222 47% 11%;
-  --destructive: 0 72% 51%;
-  --radius-button: 0.5rem;
-}
-
-.dark {
-  --muted: 217 33% 17%;
-  --foreground: 210 40% 98%;
-  --input: 217 33% 17%;
-}`;
-
   const interfaceCode = `function ToggleGroup({
   type,            // "single" | "multiple" — OBRIGATÓRIO
   value,           // string (single) | string[] (multiple)
@@ -772,14 +756,14 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
         }}
         items={[
           { token: "--muted",         value: tContent("tokens.table.muted.class"),       description: tContent("tokens.table.muted.part") },
-          { token: "--foreground",    value: tContent("tokens.table.foreground.class"),  description: tContent("tokens.table.foreground.part") },
+          { token: "--accent",        value: tContent("tokens.table.accent.class"),      description: tContent("tokens.table.accent.part") },
           { token: "--input",         value: tContent("tokens.table.input.class"),       description: tContent("tokens.table.input.part") },
           { token: "--ring",          value: tContent("tokens.table.ring.class"),        description: tContent("tokens.table.ring.part") },
           { token: "--destructive",   value: tContent("tokens.table.destructive.class"), description: tContent("tokens.table.destructive.part") },
           { token: "--radius-button", value: tContent("tokens.table.radius.class"),      description: tContent("tokens.table.radius.part") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}

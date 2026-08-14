@@ -153,7 +153,7 @@
       "compositions": {
         "alignmentBar": {
           "name": "Barra de alinhamento (single)",
-          "description": "Três ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) com <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Apenas uma opção pode estar ativa.",
+          "description": "Três ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) em modo de seleção única, com <code>variant=\"outline\"</code>. Apenas uma opção pode estar ativa.",
           "use": "Editores de texto, controles de alinhamento. Sempre <code>aria-label</code> no grupo (\"Alinhamento do texto\") e em cada item (função específica)."
         },
         "viewMode": {
@@ -163,8 +163,8 @@
         },
         "filterWithText": {
           "name": "Filtros com texto visível",
-          "description": "ToggleGroup <code>type=\"multiple\"</code> com items contendo ícone + texto visível. O grupo recebe <code>aria-label</code> descrevendo a categoria; items dispensam aria-label próprio.",
-          "use": "Filtros booleanos independentes (Ocultos + Compacto podem coexistir). Para escolha exclusiva, troque para <code>type=\"single\"</code>."
+          "description": "ToggleGroup em modo de seleção múltipla, com items contendo ícone + texto visível. O grupo recebe <code>aria-label</code> descrevendo a categoria; items dispensam aria-label próprio.",
+          "use": "Filtros booleanos independentes (Ocultos + Compacto podem coexistir). Para escolha exclusiva, troque para o modo de seleção única."
         }
       }
     },
@@ -183,22 +183,22 @@
       "selected": {
         "label": "Selected",
         "trigger": "click ou Space/Enter",
-        "behavior": "Item ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code>."
+        "behavior": "Item ativo — <code>aria-pressed=\"true\"</code>, fundo <code>accent</code>."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre item inativo",
-        "behavior": "Mouse sobre item inativo — fundo <code>muted</code>, texto <code>foreground</code>."
+        "behavior": "Mouse sobre item inativo — fundo <code>muted</code>, texto <code>muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab (roving tabindex)",
-        "behavior": "Item focado via teclado (roving tabindex) — anel <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Item focado via teclado (roving tabindex) — anel de 2px na cor <code>ring</code> com 50% de opacidade."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando o item é marcado como indisponível",
-        "behavior": "<code>disabled</code> no grupo ou item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "<code>disabled</code> no grupo ou item — opacidade reduzida e item sem resposta ao ponteiro."
       },
       "cols": {
         "state": "Estado",
@@ -260,7 +260,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "Não",
-          "description": "Altura herdada pelos itens via tokens <code>--height-*</code>."
+          "description": "Tamanho herdado pelos itens — altura mínima e recuos."
         },
         "spacing": {
           "type": "number",
@@ -282,33 +282,33 @@
         "class": "Classe",
         "part": "Aplicação",
         "muted": {
-          "class": "bg-muted",
-          "part": "Fundo no estado selecionado e hover"
+          "class": ".nds-toggle:hover",
+          "part": "Fundo do item sob o ponteiro"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto/ícone em hover/selected"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Fundo do item selecionado; o texto usa --accent-foreground"
         },
         "input": {
-          "class": "border-input",
-          "part": "Borda na variante outline"
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Borda do conjunto na variante outline"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Anel de foco visível"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borda em validação falha"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Anel do item em validação falha"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Raio do grupo e dos cantos extremos"
+          "class": ".nds-toggle-group[data-spacing=\"0\"] > .nds-toggle:first-child",
+          "part": "Raio dos cantos extremos no visual segmentado"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Spacing customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+        "web": "/* Espaçamento customizado entre itens */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Cor customizada do estado selecionado */\n.toggle-group-brand .nds-toggle[data-state=\"on\"],\n.toggle-group-brand .nds-toggle[aria-pressed=\"true\"] {\n  background-color: hsl(var(--primary));\n  color: hsl(var(--primary-foreground));\n}"
       }
     },
     "accessibility": {
@@ -317,9 +317,9 @@
       "items": {
         "item1": "<code>aria-label</code> obrigatório no <code>ToggleGroup</code> descrevendo a categoria",
         "item2": "Cada <code>ToggleGroupItem</code> icon-only precisa de <code>aria-label</code> próprio",
-        "item3": "<code>aria-pressed</code> aplicado automaticamente em cada item",
+        "item3": "Atributo ARIA de estado aplicado automaticamente em cada item",
         "item4": "Roving tabindex — apenas um item focável via Tab; setas navegam dentro do grupo",
-        "item5": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Anel de foco visível — 2px na cor <code>ring</code> com 50% de opacidade",
         "item6": "Ícone interno com <code>aria-hidden=\"true\"</code>"
       },
       "keyboard": {
@@ -337,7 +337,7 @@
       "aria": {
         "title": "Atributos ARIA",
         "label": "<code>aria-label</code> obrigatório no grupo e em items icon-only",
-        "pressed": "<code>aria-pressed=\"true|false\"</code> automático nos items",
+        "pressed": "<code>aria-pressed</code> (ou <code>aria-checked</code>, quando o modo exclusivo é anunciado como grupo de rádio) reflete o estado de cada item",
         "orientation": "<code>aria-orientation</code> reflete a <code>orientation</code>",
         "hidden": "<code>aria-hidden=\"true\"</code> no ícone interno"
       },
@@ -371,7 +371,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Lib upstream</strong>: cada stack compõe a lib headless idiomática do seu ecossistema; roving tabindex e navegação por setas vêm dela.",
       "item2": "<strong>Modo define o value</strong> — seleção única usa string; seleção múltipla usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordas conectadas); spacing maior cria botões separados.",
       "item4": "<strong>Variants herdadas</strong> — <code>variant</code> e <code>size</code> do grupo se aplicam a todos os items via Context."
@@ -420,8 +420,8 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto/ícone e fundo selecionado",
-        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
-        "item4": "aria-pressed reflete o estado de cada item",
+        "item3": "Anel de foco visível ao navegar por teclado",
+        "item4": "O atributo ARIA de estado de cada item acompanha a seleção",
         "item5": "aria-label presente no grupo e em items icon-only"
       },
       "visual": {
@@ -625,7 +625,7 @@
       "compositions": {
         "alignmentBar": {
           "name": "Alignment bar (single)",
-          "description": "Three icon-only ToggleGroupItems (AlignLeft, AlignCenter, AlignRight) with <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Only one option can be active.",
+          "description": "Three icon-only ToggleGroupItems (AlignLeft, AlignCenter, AlignRight) in single selection mode, with <code>variant=\"outline\"</code>. Only one option can be active.",
           "use": "Text editors, alignment controls. Always set <code>aria-label</code> on the group (\"Text alignment\") and on each item (specific function)."
         },
         "viewMode": {
@@ -635,8 +635,8 @@
         },
         "filterWithText": {
           "name": "Filters with visible text",
-          "description": "ToggleGroup <code>type=\"multiple\"</code> with items containing icon + visible text. The group gets an <code>aria-label</code> describing the category; items don't need their own aria-label.",
-          "use": "Independent boolean filters (Hidden + Compact can coexist). For exclusive choice, switch to <code>type=\"single\"</code>."
+          "description": "ToggleGroup in multiple selection mode, with items containing icon + visible text. The group gets an <code>aria-label</code> describing the category; items don't need their own aria-label.",
+          "use": "Independent boolean filters (Hidden + Compact can coexist). For exclusive choice, switch to single selection mode."
         }
       }
     },
@@ -655,22 +655,22 @@
       "selected": {
         "label": "Selected",
         "trigger": "click or Space/Enter",
-        "behavior": "Active item — <code>aria-pressed=\"true\"</code>, <code>muted</code> background."
+        "behavior": "Active item — <code>aria-pressed=\"true\"</code>, <code>accent</code> background."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer over an inactive item",
-        "behavior": "Mouse over inactive item — <code>muted</code> background, <code>foreground</code> text."
+        "behavior": "Mouse over inactive item — <code>muted</code> background, <code>muted-foreground</code> text."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab (roving tabindex)",
-        "behavior": "Keyboard focused item (roving tabindex) — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Keyboard focused item (roving tabindex) — 2px ring in the <code>ring</code> color at 50% opacity."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the item is marked unavailable",
-        "behavior": "<code>disabled</code> on group or item — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "<code>disabled</code> on group or item — reduced opacity and no response to the pointer."
       },
       "cols": {
         "state": "State",
@@ -732,7 +732,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Height inherited by items via <code>--height-*</code> tokens."
+          "description": "Size inherited by items — minimum height and padding."
         },
         "spacing": {
           "type": "number",
@@ -754,33 +754,33 @@
         "class": "Class",
         "part": "Application",
         "muted": {
-          "class": "bg-muted",
-          "part": "Background in selected and hover states"
+          "class": ".nds-toggle:hover",
+          "part": "Background of the item under the pointer"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Text/icon on hover/selected"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Background of the selected item; text uses --accent-foreground"
         },
         "input": {
-          "class": "border-input",
-          "part": "Border on outline variant"
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Border of the set in the outline variant"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Visible focus ring"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Border on failed validation"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Ring on the item in failed validation"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Group radius and outermost corners"
+          "class": ".nds-toggle-group[data-spacing=\"0\"] > .nds-toggle:first-child",
+          "part": "Radius of the outermost corners in the segmented look"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+        "web": "/* Custom item spacing */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Custom selected state color */\n.toggle-group-brand .nds-toggle[data-state=\"on\"],\n.toggle-group-brand .nds-toggle[aria-pressed=\"true\"] {\n  background-color: hsl(var(--primary));\n  color: hsl(var(--primary-foreground));\n}"
       }
     },
     "accessibility": {
@@ -789,9 +789,9 @@
       "items": {
         "item1": "<code>aria-label</code> required on <code>ToggleGroup</code> describing the category",
         "item2": "Each icon-only <code>ToggleGroupItem</code> needs its own <code>aria-label</code>",
-        "item3": "<code>aria-pressed</code> applied automatically on each item",
+        "item3": "ARIA state attribute applied automatically on each item",
         "item4": "Roving tabindex — only one item Tab-focusable; arrows navigate within group",
-        "item5": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Visible focus ring — 2px in the <code>ring</code> color at 50% opacity",
         "item6": "Internal icon with <code>aria-hidden=\"true\"</code>"
       },
       "keyboard": {
@@ -809,7 +809,7 @@
       "aria": {
         "title": "ARIA Attributes",
         "label": "<code>aria-label</code> required on group and icon-only items",
-        "pressed": "<code>aria-pressed=\"true|false\"</code> automatic on items",
+        "pressed": "<code>aria-pressed</code> (or <code>aria-checked</code>, when the exclusive mode is announced as a radio group) reflects each item state",
         "orientation": "<code>aria-orientation</code> reflects <code>orientation</code>",
         "hidden": "<code>aria-hidden=\"true\"</code> on internal icon"
       },
@@ -843,7 +843,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Upstream lib</strong>: each stack composes the headless lib idiomatic to its ecosystem; roving tabindex and arrow navigation come from it.",
       "item2": "<strong>Mode defines value</strong> — single selection uses string; multiple selection uses array of strings.",
       "item3": "<strong>spacing=0</strong> — segmented visual (connected borders); higher spacing creates separate buttons.",
       "item4": "<strong>Inherited variants</strong> — <code>variant</code> and <code>size</code> from group apply to all items via Context."
@@ -892,8 +892,8 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 4.5:1 contrast between text/icon and selected background",
-        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
-        "item4": "aria-pressed reflects each item state",
+        "item3": "Visible focus ring when navigating by keyboard",
+        "item4": "The ARIA state attribute of each item follows the selection",
         "item5": "aria-label present on group and icon-only items"
       },
       "visual": {
@@ -1097,7 +1097,7 @@
       "compositions": {
         "alignmentBar": {
           "name": "Barra de alineación (single)",
-          "description": "Tres ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) con <code>type=\"single\"</code> + <code>variant=\"outline\"</code>. Solo una opción puede estar activa.",
+          "description": "Tres ToggleGroupItem icon-only (AlignLeft, AlignCenter, AlignRight) en modo de selección única, con <code>variant=\"outline\"</code>. Solo una opción puede estar activa.",
           "use": "Editores de texto, controles de alineación. Provee siempre <code>aria-label</code> en el grupo (\"Alineación del texto\") y en cada ítem (función específica)."
         },
         "viewMode": {
@@ -1107,8 +1107,8 @@
         },
         "filterWithText": {
           "name": "Filtros con texto visible",
-          "description": "ToggleGroup <code>type=\"multiple\"</code> con ítems que contienen ícono + texto visible. El grupo recibe <code>aria-label</code> describiendo la categoría; los ítems no necesitan aria-label propio.",
-          "use": "Filtros booleanos independientes (Ocultos + Compacto pueden coexistir). Para elección exclusiva, cambia a <code>type=\"single\"</code>."
+          "description": "ToggleGroup en modo de selección múltiple, con ítems que contienen ícono + texto visible. El grupo recibe <code>aria-label</code> describiendo la categoría; los ítems no necesitan aria-label propio.",
+          "use": "Filtros booleanos independientes (Ocultos + Compacto pueden coexistir). Para elección exclusiva, cambia al modo de selección única."
         }
       }
     },
@@ -1127,22 +1127,22 @@
       "selected": {
         "label": "Selected",
         "trigger": "click o Space/Enter",
-        "behavior": "Ítem activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code>."
+        "behavior": "Ítem activo — <code>aria-pressed=\"true\"</code>, fondo <code>accent</code>."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre un ítem inactivo",
-        "behavior": "Mouse sobre ítem inactivo — fondo <code>muted</code>, texto <code>foreground</code>."
+        "behavior": "Mouse sobre ítem inactivo — fondo <code>muted</code>, texto <code>muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab (roving tabindex)",
-        "behavior": "Ítem enfocado por teclado (roving tabindex) — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Ítem enfocado por teclado (roving tabindex) — anillo de 2px en el color <code>ring</code> con 50% de opacidad."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando el ítem se marca como no disponible",
-        "behavior": "<code>disabled</code> en grupo o ítem — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "<code>disabled</code> en grupo o ítem — opacidad reducida y sin respuesta al puntero."
       },
       "cols": {
         "state": "Estado",
@@ -1204,7 +1204,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Altura heredada por los ítems vía tokens <code>--height-*</code>."
+          "description": "Tamaño heredado por los ítems — altura mínima y espaciados."
         },
         "spacing": {
           "type": "number",
@@ -1226,33 +1226,33 @@
         "class": "Clase",
         "part": "Aplicación",
         "muted": {
-          "class": "bg-muted",
-          "part": "Fondo en estados seleccionado y hover"
+          "class": ".nds-toggle:hover",
+          "part": "Fondo del ítem bajo el puntero"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto/icono en hover/seleccionado"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Fondo del ítem seleccionado; el texto usa --accent-foreground"
         },
         "input": {
-          "class": "border-input",
-          "part": "Borde en variante outline"
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Borde del conjunto en la variante outline"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Anillo de foco visible"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borde en validación fallida"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Anillo del ítem en validación fallida"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Radio del grupo y esquinas extremas"
+          "class": ".nds-toggle-group[data-spacing=\"0\"] > .nds-toggle:first-child",
+          "part": "Radio de las esquinas extremas en el visual segmentado"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Spacing personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand [data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}"
+        "web": "/* Espaciado personalizado entre ítems */\n[data-slot=\"toggle-group\"] {\n  --gap: 2;\n}\n\n/* Color personalizado del estado seleccionado */\n.toggle-group-brand .nds-toggle[data-state=\"on\"],\n.toggle-group-brand .nds-toggle[aria-pressed=\"true\"] {\n  background-color: hsl(var(--primary));\n  color: hsl(var(--primary-foreground));\n}"
       }
     },
     "accessibility": {
@@ -1261,9 +1261,9 @@
       "items": {
         "item1": "<code>aria-label</code> obligatorio en <code>ToggleGroup</code> describiendo la categoría",
         "item2": "Cada <code>ToggleGroupItem</code> icon-only necesita su propio <code>aria-label</code>",
-        "item3": "<code>aria-pressed</code> aplicado automáticamente en cada ítem",
+        "item3": "Atributo ARIA de estado aplicado automáticamente en cada ítem",
         "item4": "Roving tabindex — solo un ítem focalizable vía Tab; las flechas navegan dentro del grupo",
-        "item5": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>",
+        "item5": "Anillo de foco visible — 2px en el color <code>ring</code> con 50% de opacidad",
         "item6": "Icono interno con <code>aria-hidden=\"true\"</code>"
       },
       "keyboard": {
@@ -1281,7 +1281,7 @@
       "aria": {
         "title": "Atributos ARIA",
         "label": "<code>aria-label</code> obligatorio en grupo e ítems icon-only",
-        "pressed": "<code>aria-pressed=\"true|false\"</code> automático en ítems",
+        "pressed": "<code>aria-pressed</code> (o <code>aria-checked</code>, cuando el modo exclusivo se anuncia como grupo de radio) refleja el estado de cada ítem",
         "orientation": "<code>aria-orientation</code> refleja la <code>orientation</code>",
         "hidden": "<code>aria-hidden=\"true\"</code> en el icono interno"
       },
@@ -1315,7 +1315,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Lib upstream</strong>: cada stack compone la lib headless idiomática de su ecosistema; roving tabindex y navegación por flechas vienen de ella.",
       "item2": "<strong>Modo define el value</strong> — selección única usa string; selección múltiple usa array de strings.",
       "item3": "<strong>spacing=0</strong> — visual segmented (bordes conectados); spacing mayor crea botones separados.",
       "item4": "<strong>Variants heredados</strong> — <code>variant</code> y <code>size</code> del grupo se aplican a todos los ítems vía Context."
@@ -1364,8 +1364,8 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto/icono y fondo seleccionado",
-        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
-        "item4": "aria-pressed refleja el estado de cada ítem",
+        "item3": "Anillo de foco visible al navegar por teclado",
+        "item4": "El atributo ARIA de estado de cada ítem acompaña la selección",
         "item5": "aria-label presente en grupo e ítems icon-only"
       },
       "visual": {

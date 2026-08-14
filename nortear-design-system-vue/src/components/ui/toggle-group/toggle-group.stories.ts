@@ -42,8 +42,12 @@ const meta = {
       description: 'Distância entre itens. 0 conecta bordas (segmented).',
     },
     'onUpdate:modelValue': {
-      action: 'update:modelValue',
+      // `control: false` porque o valor é uma função: sem isso o painel
+      // Controls mostrava um campo vazio e a regra `argtype_without_arg`
+      // cobrava um valor inicial que não existe para callback.
+      control: false,
       description: 'Disparado ao trocar a seleção.',
+      table: { type: { summary: '(value: string | string[]) => void' } },
     },
   },
   args: {
@@ -53,6 +57,7 @@ const meta = {
     variant: 'default',
     size: 'default',
     spacing: 0,
+    'onUpdate:modelValue': fn(),
   },
 } satisfies Meta<typeof ToggleGroup>;
 
@@ -60,9 +65,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  args: {
-    'onUpdate:modelValue': fn(),
-  } as never,
+  parameters: {
+    covers: [
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },
     setup() { return { args }; },
@@ -84,46 +95,79 @@ export const Playground: Story = {
       </ToggleGroup>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
     const center = canvas.getByRole('button', { name: 'Centralizar' });
     const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
+    const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
 
-    await step('Grupo renderiza 3 itens com aria-label próprio', async () => {
-      await expect(left).toBeInTheDocument();
-      await expect(center).toBeInTheDocument();
-      await expect(right).toBeInTheDocument();
+    /** Só clica quando o estado atual não é o desejado — a play tem que
+     *  sobreviver ao replay do painel Interactions, que roda no mesmo DOM. */
+    const definir = async (botao: HTMLElement, ligado: boolean) => {
+      if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
+        await userEvent.click(botao);
+      }
+    };
+
+    await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {
+      await expect(grupo).toHaveAttribute('aria-label', 'Alinhamento do texto');
+      await expect(left).toHaveAttribute('aria-label', 'Alinhar à esquerda');
+      await expect(center).toHaveAttribute('aria-label', 'Centralizar');
+      await expect(right).toHaveAttribute('aria-label', 'Alinhar à direita');
     });
 
-    await step('Itens começam não-pressionados', async () => {
-      await expect(left).toHaveAttribute('aria-pressed', 'false');
-      await expect(center).toHaveAttribute('aria-pressed', 'false');
-      await expect(right).toHaveAttribute('aria-pressed', 'false');
+    await step('Orientação e espaçamento chegam ao markup', async () => {
+      await expect(grupo).toHaveAttribute('data-orientation', String(args.orientation));
+      await expect(grupo).toHaveAttribute('data-spacing', String(args.spacing));
     });
 
-    await step('Clique em center ativa center (single)', async () => {
-      await userEvent.click(center);
+    await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {
+      for (const b of [left, center, right]) {
+        const ligado = b.getAttribute('aria-pressed') === 'true';
+        await expect(b).toHaveAttribute('data-state', ligado ? 'on' : 'off');
+      }
+    });
+
+    await step('Selecionar um item desliga o anterior (exclusivo)', async () => {
+      await definir(center, true);
       await expect(center).toHaveAttribute('aria-pressed', 'true');
       await expect(left).toHaveAttribute('aria-pressed', 'false');
+      await expect(args['onUpdate:modelValue']).toHaveBeenCalled();
     });
 
-    await step('Clique em right desativa center (seleção exclusiva)', async () => {
-      await userEvent.click(right);
-      await expect(right).toHaveAttribute('aria-pressed', 'true');
-      await expect(center).toHaveAttribute('aria-pressed', 'false');
-    });
-
-    await step('ArrowRight move foco sem ativar', async () => {
+    await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
+      const antes = [left, center, right].map((b) => b.getAttribute('aria-pressed'));
       (right as HTMLElement).focus();
-      await userEvent.keyboard('{ArrowLeft}');
+      await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowUp}' : '{ArrowLeft}');
       await expect(center).toHaveFocus();
+      const depois = [left, center, right].map((b) => b.getAttribute('aria-pressed'));
+      await expect(depois).toEqual(antes);
     });
 
-    await step('Space alterna o item focado', async () => {
+    await step('functional.item4 — Space alterna o item focado', async () => {
+      // Lido antes e comparado depois: reexecutar a play parte do estado que a
+      // rodada anterior deixou, e uma asserção absoluta inverteria de rodada
+      // em rodada.
       (center as HTMLElement).focus();
+      const antes = center.getAttribute('aria-pressed');
       await userEvent.keyboard(' ');
-      await expect(center).toHaveAttribute('aria-pressed', 'true');
+      await expect(center.getAttribute('aria-pressed')).not.toBe(antes);
+    });
+
+    await step('Enter alterna, idêntico a Space', async () => {
+      const antes = center.getAttribute('aria-pressed');
+      await userEvent.keyboard('{Enter}');
+      await expect(center.getAttribute('aria-pressed')).not.toBe(antes);
+    });
+
+    await step('Seleção devolvida ao estado inicial', async () => {
+      await definir(center, false);
+      await definir(left, false);
+      await definir(right, false);
+      await expect(
+        canvas.getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true'),
+      ).toHaveLength(0);
     });
   },
 };

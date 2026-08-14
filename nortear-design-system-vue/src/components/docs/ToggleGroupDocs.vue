@@ -211,16 +211,6 @@ const codeVertical = `<ToggleGroup
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeCustomizationTokens = `/* Spacing customizado entre itens */
-[data-slot="toggle-group"] {
-  --gap: 2;
-}
-
-/* Cor customizada do estado selecionado */
-.toggle-group-brand [data-state="on"] {
-  @apply bg-blue-500 text-white;
-}`;
-
 const interfaceCode = `interface ToggleGroupProps {
   type: 'single' | 'multiple';        // OBRIGATÓRIO
   modelValue?: string | string[];     // controlado (string single, array multiple)
@@ -358,7 +348,7 @@ const itemPropItems = computed(() => [
 
 const tokenRows = computed(() => [
   { token: '--muted',         value: tContent('tokens.table.muted.class'),       description: tContent('tokens.table.muted.part')       },
-  { token: '--foreground',    value: tContent('tokens.table.foreground.class'),  description: tContent('tokens.table.foreground.part')  },
+  { token: '--accent',        value: tContent('tokens.table.accent.class'),      description: tContent('tokens.table.accent.part')      },
   { token: '--input',         value: tContent('tokens.table.input.class'),       description: tContent('tokens.table.input.part')       },
   { token: '--ring',          value: tContent('tokens.table.ring.class'),        description: tContent('tokens.table.ring.part')        },
   { token: '--destructive',   value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
@@ -961,7 +951,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->

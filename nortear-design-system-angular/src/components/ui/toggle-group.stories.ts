@@ -283,5 +283,14 @@ export const Playground: Story = {
       await userEvent.keyboard('{Enter}');
       await expect(centro.getAttribute('aria-pressed')).not.toBe(antes);
     });
+
+    await step('Seleção devolvida ao estado inicial', async () => {
+      // O painel Interactions reexecuta a play no MESMO DOM. No modo exclusivo
+      // o par Space+Enter termina sem nenhum item ativo, e a asserção de
+      // "exatamente um pressionado" (accessibility.item4) mediria a sobra da
+      // rodada anterior.
+      if (esquerda.getAttribute('aria-pressed') !== 'true') await userEvent.click(esquerda);
+      await expect(esquerda).toHaveAttribute('aria-pressed', 'true');
+    });
   },
 };

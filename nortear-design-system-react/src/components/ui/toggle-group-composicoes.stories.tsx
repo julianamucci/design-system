@@ -27,14 +27,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
+ * Interactions parte do estado que a rodada anterior deixou; um clique cego
+ * inverteria o resultado a cada rodada.
+ */
+async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
+  if ((botao.getAttribute("aria-pressed") === "true") !== ligado) {
+    await userEvent.click(botao);
+  }
+}
+
 export const SingleAlignment: Story = {
   render: function AlinhamentoSingleRender() {
-    const [alignment, setAlignment] = useState<string[]>(["left"]);
+    const [alignment, setAlignment] = useState<string>("left");
     return (
       <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
         <ToggleGroup
+          variant="outline"
           value={alignment}
-          onValueChange={(v: string[]) => v.length && setAlignment([v[v.length - 1]])}
+          // Modo exclusivo entrega string: manter o array aqui exigia
+          // desembrulhar na mão e escondia a forma documentada do valor.
+          onValueChange={(v: string) => setAlignment(v)}
           aria-label="Alinhamento do texto"
         >
           <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
@@ -51,16 +65,17 @@ export const SingleAlignment: Story = {
           </ToggleGroupItem>
         </ToggleGroup>
         <p className="nds-text-caption nds-text-muted-foreground">
-          Atual: <code className="nds-font-mono">{alignment[0]}</code>
+          Atual: <code className="nds-font-mono">{alignment}</code>
         </p>
       </div>
     );
   },
   parameters: {
+    covers: ["visual.item4"],
     docs: {
       description: {
         story:
-          "Barra de alinhamento com seleção única controlada — type='single' garante que apenas um item esteja ativo por vez.",
+          "Barra de alinhamento com seleção única controlada — o modo exclusivo garante que apenas um item esteja ativo por vez.",
       },
     },
   },
@@ -69,14 +84,27 @@ export const SingleAlignment: Story = {
     const left = canvas.getByRole("button", { name: "Alinhar à esquerda" });
     const center = canvas.getByRole("button", { name: "Centralizar" });
 
-    await step("Inicia com 'left' ativo", async () => {
-      await expect(left).toHaveAttribute("aria-pressed", "true");
+    await step("visual.item4 — a variante outline emenda os itens num container só", async () => {
+      const grupo = canvas.getByRole("toolbar");
+      await expect(grupo).toHaveAttribute("data-variant", "outline");
+      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBe(0);
     });
 
-    await step("Clicar em 'center' troca seleção (single = exclusivo)", async () => {
-      await userEvent.click(center);
+    await step("Quatro itens icon-only, cada um com a sua função no nome", async () => {
+      const botoes = canvas.getAllByRole("button");
+      await expect(botoes).toHaveLength(4);
+      for (const b of botoes) await expect(b.getAttribute("aria-label")).toBeTruthy();
+    });
+
+    await step("Trocar a seleção desliga a anterior (exclusivo)", async () => {
+      await definir(center, true);
       await expect(center).toHaveAttribute("aria-pressed", "true");
       await expect(left).toHaveAttribute("aria-pressed", "false");
+      // O texto de apoio acompanha o estado controlado.
+      await expect(canvas.getByText("center")).toBeVisible();
+      // Volta ao estado inicial para a próxima rodada começar igual a esta.
+      await definir(left, true);
     });
   },
 };
@@ -87,6 +115,7 @@ export const MultipleFormatting: Story = {
     return (
       <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
         <ToggleGroup
+          type="multiple"
           value={formats}
           onValueChange={(v: string[]) => setFormats(v)}
           aria-label="Formatação"
@@ -111,7 +140,7 @@ export const MultipleFormatting: Story = {
     docs: {
       description: {
         story:
-          "Barra de formatação Bold/Italic/Underline com seleção múltipla — type='multiple' permite combinar items independentemente.",
+          "Barra de formatação Bold/Italic/Underline com seleção múltipla — o modo combinado permite ativar items independentemente.",
       },
     },
   },
@@ -120,14 +149,17 @@ export const MultipleFormatting: Story = {
     const bold = canvas.getByRole("button", { name: "Negrito" });
     const italic = canvas.getByRole("button", { name: "Itálico" });
 
-    await step("Inicia com 'bold' ativo", async () => {
-      await expect(bold).toHaveAttribute("aria-pressed", "true");
-    });
-
-    await step("Adiciona italic mantendo bold (multiple)", async () => {
-      await userEvent.click(italic);
+    await step("Adiciona italic mantendo bold (combinado)", async () => {
+      await definir(bold, true);
+      await definir(italic, true);
       await expect(bold).toHaveAttribute("aria-pressed", "true");
       await expect(italic).toHaveAttribute("aria-pressed", "true");
+    });
+
+    await step("Desligar italic não mexe em bold", async () => {
+      await definir(italic, false);
+      await expect(italic).toHaveAttribute("aria-pressed", "false");
+      await expect(bold).toHaveAttribute("aria-pressed", "true");
     });
   },
 };
@@ -136,7 +168,7 @@ export const Vertical: Story = {
   render: () => (
     <ToggleGroup
       orientation="vertical"
-      defaultValue={["grid"]}
+      defaultValue="grid"
       aria-label="Modo de visualização"
     >
       <ToggleGroupItem value="grid" aria-label="Grade">
@@ -165,41 +197,56 @@ export const Vertical: Story = {
       await userEvent.keyboard("{ArrowDown}");
       await expect(list).toHaveFocus();
     });
+
+    await step("Empilhado de verdade: o segundo item começa abaixo do primeiro", async () => {
+      const a = grid.getBoundingClientRect();
+      const b = list.getBoundingClientRect();
+      await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
+    });
   },
 };
 
 export const OutlineSpaced: Story = {
   render: () => (
-    <ToggleGroup
-      variant="outline"
-      spacing={1}
-      defaultValue={["center"]}
-      aria-label="Alinhamento do texto"
-    >
-      <ToggleGroupItem value="left" aria-label="Alinhar à esquerda">
+    // O contorno vai no ITEM, não no grupo: `variant="outline"` no grupo emenda
+    // os botões num container só e zera a borda de cada um — o oposto do que
+    // esta composição demonstra.
+    <ToggleGroup spacing={1} defaultValue="center" aria-label="Alinhamento do texto">
+      <ToggleGroupItem variant="outline" value="left" aria-label="Alinhar à esquerda">
         <AlignLeft aria-hidden="true" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="center" aria-label="Centralizar">
+      <ToggleGroupItem variant="outline" value="center" aria-label="Centralizar">
         <AlignCenter aria-hidden="true" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="right" aria-label="Alinhar à direita">
+      <ToggleGroupItem variant="outline" value="right" aria-label="Alinhar à direita">
         <AlignRight aria-hidden="true" />
       </ToggleGroupItem>
     </ToggleGroup>
   ),
   parameters: {
+    covers: ["visual.item5"],
     docs: {
       description: {
         story:
-          "Variant outline + spacing=1 — botões separados com borda visível em cada um. Contraste com o estilo segmented padrão (spacing=0).",
+          "spacing=1 com contorno em cada item — botões separados, cada um com a própria borda. Contraste com o estilo segmented padrão (spacing=0).",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step("Grupo tem data-variant=outline e data-spacing=1", async () => {
-      const group = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
-      await expect(group).toHaveAttribute("data-variant", "outline");
-      await expect(group).toHaveAttribute("data-spacing", "1");
+    const canvas = within(canvasElement);
+    const left = canvas.getByRole("button", { name: "Alinhar à esquerda" });
+    const center = canvas.getByRole("button", { name: "Centralizar" });
+
+    await step("visual.item5 — com espaçamento os botões deixam de ser emendados", async () => {
+      await expect(canvas.getByRole("toolbar")).toHaveAttribute("data-spacing", "1");
+      const a = left.getBoundingClientRect();
+      const b = center.getBoundingClientRect();
+      await expect(b.left).toBeGreaterThan(a.right);
+    });
+
+    await step("Separados, os itens mantêm borda e canto próprios", async () => {
+      await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(left).borderTopRightRadius)).toBeGreaterThan(0);
     });
   },
 };

@@ -152,13 +152,12 @@ export const ItemDisabled: Story = {
   },
 };
 
-// Variante default de propósito, e não a outline das outras stories: o CSS
-// compartilhado zera o `box-shadow` dos itens dentro de um grupo outline
-// (`.nds-toggle-group[data-variant="outline"] > .nds-toggle { box-shadow: none }`),
-// e essa regra tem especificidade maior que a do `.nds-toggle:focus-visible` —
-// o anel some justamente na variante mais usada. É defeito do CSS
-// compartilhado, igual nas cinco stacks, e está reportado; aqui a story mede o
-// anel onde ele existe em vez de mascarar a falha com um teste tolerante.
+// Variante default aqui; a mesma story no Vanilla mede o anel DENTRO de um
+// grupo outline. As duas medem porque o reset de sombra do grupo outline
+// (`.nds-toggle-group[data-variant="outline"] > .nds-toggle { box-shadow: none }`)
+// vencia `.nds-toggle:focus-visible` por especificidade e apagava o anel na
+// variante mais usada — a folha compartilhada passou a restaurá-lo com uma
+// regra de especificidade maior, e é essa regra que a story do Vanilla guarda.
 export const FocusVisible: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({

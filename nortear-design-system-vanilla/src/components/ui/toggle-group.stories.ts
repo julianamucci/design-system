@@ -45,7 +45,10 @@ function injectIcons(group: HTMLElement, icons: unknown[]): void {
 type ToggleGroupArgs = {
   type: 'single' | 'multiple';
   variant: 'default' | 'outline';
+  size: 'default' | 'sm' | 'lg';
   orientation: 'horizontal' | 'vertical';
+  spacing: number;
+  disabled: boolean;
   ariaLabel: string;
 };
 
@@ -66,10 +69,23 @@ const meta: Meta<ToggleGroupArgs> = {
       options: ['default', 'outline'],
       description: 'Estilo visual herdado pelos items.',
     },
+    size: {
+      control: { type: 'inline-radio' },
+      options: ['default', 'sm', 'lg'],
+      description: 'Tamanho herdado pelos items.',
+    },
     orientation: {
       control: { type: 'inline-radio' },
       options: ['horizontal', 'vertical'],
-      description: 'Orientação visual. Vanilla: factory não expõe — aplicado via classList no playground.',
+      description: 'Direção do empilhamento e das setas de navegação.',
+    },
+    spacing: {
+      control: { type: 'number', min: 0, max: 3, step: 1 },
+      description: 'Distância entre items. 0 emenda as bordas (segmentado).',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Desabilita o grupo inteiro.',
     },
     ariaLabel: {
       control: 'text',
@@ -79,7 +95,10 @@ const meta: Meta<ToggleGroupArgs> = {
   args: {
     type: 'single',
     variant: 'outline',
+    size: 'default',
     orientation: 'horizontal',
+    spacing: 0,
+    disabled: false,
     ariaLabel: 'Alinhamento do texto',
   },
 };
@@ -89,18 +108,32 @@ type Story = StoryObj<ToggleGroupArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
+const ROTULOS = ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita'];
+
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => {
     const items: ToggleGroupItem[] = [
       { value: 'left',   children: '' },
       { value: 'center', children: '' },
       { value: 'right',  children: '' },
     ];
-    const itemLabels = ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita'];
 
     const group = createToggleGroup({
       type: args.type,
       variant: args.variant,
+      size: args.size,
+      orientation: args.orientation,
+      spacing: args.spacing,
+      disabled: args.disabled,
       items,
       defaultValue: args.type === 'single' ? 'left' : ['left'],
     });
@@ -110,65 +143,103 @@ export const Playground: Story = {
 
     // aria-label OBRIGATÓRIO no grupo
     group.setAttribute('aria-label', args.ariaLabel);
-    group.setAttribute('aria-orientation', args.orientation);
-
-    if (args.orientation === 'vertical') {
-      group.classList.remove('flex-row');
-      group.style.flexDirection = 'column';
-      group.style.alignItems = 'stretch';
-    }
 
     // aria-label OBRIGATÓRIO em items icon-only
     group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-      btn.setAttribute('aria-label', itemLabels[i] ?? `Item ${i + 1}`);
+      btn.setAttribute('aria-label', ROTULOS[i] ?? `Item ${i + 1}`);
     });
 
     return group;
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const [esquerda, centro, direita] = ROTULOS.map((nome) =>
+      canvas.getByRole('button', { name: nome }),
+    );
 
-    await step('Grupo presente com aria-label', async () => {
+    await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {
       const group = canvas.getByRole('toolbar');
-      await expect(group).toBeInTheDocument();
-      await expect(group).toHaveAttribute('aria-label');
-    });
-
-    await step('Três botões com aria-label próprio', async () => {
+      await expect(group).toHaveAttribute('aria-label', args.ariaLabel);
+      await expect(group).toHaveAttribute('data-slot', 'toggle-group');
       const btns = canvas.getAllByRole('button');
       await expect(btns).toHaveLength(3);
-      btns.forEach((b) => expect(b.getAttribute('aria-label')).toBeTruthy());
+      for (const b of btns) await expect(b.getAttribute('aria-label')).toBeTruthy();
     });
 
-    await step('Item inicial pressionado', async () => {
-      const btn = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
-      await expect(btn).toHaveAttribute('data-state', 'on');
+    await step('Orientação e espaçamento chegam ao markup', async () => {
+      const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('data-orientation', args.orientation);
+      await expect(group).toHaveAttribute('aria-orientation', args.orientation);
+      await expect(group).toHaveAttribute('data-spacing', String(args.spacing));
     });
 
-    await step('Clicar em outro item alterna seleção', async () => {
-      const center = canvas.getByRole('button', { name: 'Centralizar' });
-      await userEvent.click(center);
-      await expect(center).toHaveAttribute('aria-pressed', 'true');
+    await step('accessibility.item4 — aria-pressed e data-state contam a mesma história', async () => {
+      for (const b of [esquerda, centro, direita]) {
+        const ligado = b.getAttribute('aria-pressed') === 'true';
+        await expect(b).toHaveAttribute('data-state', ligado ? 'on' : 'off');
+      }
+      // O valor inicial do grupo chega ao item: exatamente um pressionado.
+      const pressionados = [esquerda, centro, direita].filter(
+        (b) => b.getAttribute('aria-pressed') === 'true',
+      );
+      await expect(pressionados).toHaveLength(1);
     });
 
-    // O role="toolbar" promete navegação por setas — estes dois passos são o
+    if (args.disabled) {
+      await step('Grupo desabilitado propaga o estado a cada item', async () => {
+        await expect(canvas.getByRole('toolbar')).toHaveAttribute('data-disabled', '');
+        for (const b of [esquerda, centro, direita]) await expect(b).toBeDisabled();
+      });
+      return;
+    }
+
+    // O role="toolbar" promete navegação por setas — estes passos são o
     // contrato que torna o anúncio verdadeiro (WAI-ARIA APG).
     await step('Um único item na ordem de tabulação (roving tabindex)', async () => {
       const focusable = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
       await expect(focusable).toHaveLength(1);
     });
 
-    await step('ArrowRight move o foco e End vai para o último', async () => {
-      const center = canvas.getByRole('button', { name: 'Centralizar' });
-      const right = canvas.getByRole('button', { name: 'Alinhar à direita' });
-      center.focus();
-      await userEvent.keyboard('{ArrowRight}');
-      await expect(right).toHaveFocus();
-      await userEvent.keyboard('{Home}');
-      await expect(canvas.getByRole('button', { name: 'Alinhar à esquerda' })).toHaveFocus();
+    await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
+      const antes = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      esquerda.focus();
+      await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
+      await expect(centro).toHaveFocus();
+      const depois = [esquerda, centro, direita].map((b) => b.getAttribute('aria-pressed'));
+      await expect(depois).toEqual(antes);
+    });
+
+    await step('Home e End alcançam as pontas', async () => {
       await userEvent.keyboard('{End}');
-      await expect(right).toHaveFocus();
+      await expect(direita).toHaveFocus();
+      await userEvent.keyboard('{Home}');
+      await expect(esquerda).toHaveFocus();
+    });
+
+    await step('functional.item4 — Space alterna o item focado', async () => {
+      // Lido antes e comparado depois: reexecutar a play no painel Interactions
+      // parte do estado que a rodada anterior deixou, e uma asserção absoluta
+      // inverteria de rodada em rodada.
+      centro.focus();
+      const antes = centro.getAttribute('aria-pressed');
+      await userEvent.keyboard(' ');
+      const depois = centro.getAttribute('aria-pressed');
+      await expect(depois).not.toBe(antes);
+      await expect(centro.getAttribute('data-state')).toBe(depois === 'true' ? 'on' : 'off');
+    });
+
+    await step('Enter alterna, idêntico a Space', async () => {
+      const antes = centro.getAttribute('aria-pressed');
+      await userEvent.keyboard('{Enter}');
+      await expect(centro.getAttribute('aria-pressed')).not.toBe(antes);
+    });
+
+    await step('Seleção devolvida ao estado inicial', async () => {
+      // O painel Interactions reexecuta a play no MESMO DOM. No modo exclusivo
+      // o par Space+Enter termina sem nenhum item ativo, e a asserção de
+      // "exatamente um pressionado" mediria a sobra da rodada anterior.
+      if (esquerda.getAttribute('aria-pressed') !== 'true') await userEvent.click(esquerda);
+      await expect(esquerda).toHaveAttribute('aria-pressed', 'true');
     });
   },
 };

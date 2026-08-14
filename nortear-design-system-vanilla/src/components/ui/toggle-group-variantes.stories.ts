@@ -22,7 +22,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do ToggleGroup: Single (seleção exclusiva — `value` é string), Multiple (seleção combinada — `value` é array) e Vertical (orientação empilhada). **Divergência Vanilla**: factory não expõe `orientation`, `size`, `spacing` nem `disabled` no grupo — aplicar manualmente via `classList`/`setAttribute`/`item.disabled`. `aria-label` no grupo e em items icon-only é OBRIGATÓRIO e setado via `setAttribute` no elemento retornado.',
+          'Variantes do ToggleGroup: Single (seleção exclusiva — `value` é string), Multiple (seleção combinada — `value` é array) e Vertical (orientação empilhada). `aria-label` no grupo e em items icon-only é OBRIGATÓRIO e setado via `setAttribute` no elemento retornado.',
       },
     },
   },
@@ -71,6 +71,17 @@ function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
   });
 }
 
+/**
+ * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
+ * Interactions parte do estado que a rodada anterior deixou; um clique cego
+ * inverteria o resultado a cada rodada.
+ */
+async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
+  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
+    await userEvent.click(botao);
+  }
+}
+
 // ─── Single ───────────────────────────────────────────────────────────────────
 
 export const Single: Story = {
@@ -92,6 +103,7 @@ export const Single: Story = {
     return group;
   },
   parameters: {
+    covers: ['functional.item1', 'visual.item1'],
     docs: {
       description: {
         story:
@@ -101,21 +113,33 @@ export const Single: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
+    const center = canvas.getByRole('button', { name: 'Centralizar' });
+
     await step('Grupo tem aria-label', async () => {
       const group = canvas.getByRole('toolbar');
       await expect(group).toHaveAttribute('aria-label', 'Alinhamento do texto');
     });
-    await step('Apenas um pressionado inicialmente', async () => {
+    await step('O modo exclusivo nasce com exatamente um item ativo', async () => {
       const btns = canvas.getAllByRole('button');
       const pressed = btns.filter((b) => b.getAttribute('aria-pressed') === 'true');
       await expect(pressed).toHaveLength(1);
     });
-    await step('Clicar em outro alterna seleção', async () => {
-      const center = canvas.getByRole('button', { name: 'Centralizar' });
-      await userEvent.click(center);
+    await step('functional.item1 — escolher um item desliga o anterior', async () => {
+      await definir(center, true);
       await expect(center).toHaveAttribute('aria-pressed', 'true');
-      const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
       await expect(left).toHaveAttribute('aria-pressed', 'false');
+      await expect(left).toHaveAttribute('data-state', 'off');
+      // Volta ao estado inicial para a próxima rodada começar igual a esta.
+      await definir(left, true);
+    });
+    await step('Emendados: o conjunto tem uma borda só, e os cantos internos são retos', async () => {
+      // `data-variant="outline"` certo com CSS ausente daria três botões
+      // soltos — é o defeito que só a medida pega.
+      const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('data-variant', 'outline');
+      await expect(parseFloat(getComputedStyle(group).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(center).borderTopLeftRadius)).toBe(0);
     });
   },
 };
@@ -141,6 +165,7 @@ export const Multiple: Story = {
     return group;
   },
   parameters: {
+    covers: ['functional.item2', 'visual.item2'],
     docs: {
       description: {
         story:
@@ -150,17 +175,31 @@ export const Multiple: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Dois items pressionados inicialmente', async () => {
-      const btns = canvas.getAllByRole('button');
-      const pressed = btns.filter((b) => b.getAttribute('aria-pressed') === 'true');
-      await expect(pressed).toHaveLength(2);
+    const bold = canvas.getByRole('button', { name: 'Negrito' });
+    const italic = canvas.getByRole('button', { name: 'Itálico' });
+    const underline = canvas.getByRole('button', { name: 'Sublinhado' });
+    const ativos = () =>
+      canvas.getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true');
+
+    await step('O modo combinado aceita mais de um ativo ao mesmo tempo', async () => {
+      await definir(bold, true);
+      await definir(italic, true);
+      await definir(underline, false);
+      await expect(ativos()).toHaveLength(2);
     });
-    await step('Adicionar terceiro mantém os anteriores', async () => {
-      const underline = canvas.getByRole('button', { name: 'Sublinhado' });
-      await userEvent.click(underline);
-      const btns = canvas.getAllByRole('button');
-      const pressed = btns.filter((b) => b.getAttribute('aria-pressed') === 'true');
-      await expect(pressed).toHaveLength(3);
+
+    await step('functional.item2 — ligar um item soma; desligar subtrai', async () => {
+      await definir(underline, true);
+      await expect(ativos()).toHaveLength(3);
+      await expect(bold).toHaveAttribute('aria-pressed', 'true');
+
+      await definir(italic, false);
+      await expect(ativos()).toHaveLength(2);
+      await expect(italic).toHaveAttribute('data-state', 'off');
+
+      // Restaura o estado inicial da story.
+      await definir(italic, true);
+      await definir(underline, false);
     });
   },
 };
@@ -176,35 +215,50 @@ export const Vertical: Story = {
     const group = createToggleGroup({
       type: 'single',
       variant: 'outline',
+      orientation: 'vertical',
       items,
       defaultValue: 'grid',
     });
     injectIcons(group, [LayoutGrid, List]);
     group.setAttribute('aria-label', 'Modo de visualização');
-    group.setAttribute('aria-orientation', 'vertical');
-    // Divergência Vanilla: factory não expõe orientation — aplicar manualmente
-    group.classList.remove('flex-row');
-    group.classList.add('flex-col', 'items-stretch');
     applyItemAriaLabels(group, ['Grade', 'Lista']);
     return group;
   },
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
-          'Orientação vertical — items empilhados. **Divergência Vanilla**: a factory custom NÃO expõe `orientation`; aplicamos `flex-col` + `aria-orientation="vertical"` manualmente. Navegação por setas verticais requer implementação custom (roving tabindex não é automático na factory).',
+          'Orientação vertical — items empilhados via `orientation: "vertical"`, que a factory traduz em `data-orientation` (lido pelo CSS compartilhado) e `aria-orientation`. As setas cima/baixo navegam pelo roving tabindex do grupo.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-orientation é vertical', async () => {
+    const grade = canvas.getByRole('button', { name: 'Grade' });
+    const lista = canvas.getByRole('button', { name: 'Lista' });
+
+    await step('A orientação chega ao markup e ao anúncio', async () => {
       const group = canvas.getByRole('toolbar');
+      await expect(group).toHaveAttribute('data-orientation', 'vertical');
       await expect(group).toHaveAttribute('aria-orientation', 'vertical');
     });
-    await step('Container tem classe flex-col', async () => {
-      const group = canvas.getByRole('toolbar');
-      await expect(group.className).toMatch(/flex-col/);
+
+    await step('Empilhado de verdade: o segundo item começa abaixo do primeiro', async () => {
+      // `data-orientation` certo com CSS ausente deixaria os dois lado a lado —
+      // era o que acontecia quando a story aplicava `flex-col`, classe que
+      // nenhuma folha do projeto define.
+      const a = grade.getBoundingClientRect();
+      const b = lista.getBoundingClientRect();
+      await expect(b.top).toBeGreaterThanOrEqual(a.bottom - 1);
+    });
+
+    await step('As setas verticais navegam dentro do grupo', async () => {
+      grade.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(lista).toHaveFocus();
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(grade).toHaveFocus();
     });
   },
 };

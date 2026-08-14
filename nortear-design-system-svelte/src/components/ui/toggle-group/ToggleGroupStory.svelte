@@ -30,6 +30,9 @@
     ariaLabel?: string;
     kind?: GroupKind;
     items?: Item[];
+    /** Sem repassar, o `fn()` da story ficava ligado a nada e a aba Actions
+     *  nascia vazia — o espião existia e nenhum clique chegava nele. */
+    onValueChange?: (value: string | string[]) => void;
   }
 
   let {
@@ -43,6 +46,7 @@
     ariaLabel = 'Alinhamento do texto',
     kind = 'alignment',
     items,
+    onValueChange,
   }: Props = $props();
 
   const iconMap = {
@@ -92,6 +96,7 @@
   {variant}
   {size}
   {spacing}
+  onValueChange={onValueChange as never}
   aria-label={ariaLabel}
 >
   {#each resolvedItems as item (item.value)}

@@ -3,7 +3,7 @@
  * Grupo de toggles (single ou multiple). Variante outline emenda os toggles
  * em um único container com borda compartilhada.
  *
- *   <div class="nds-toggle-group" role="group" data-variant="default|outline">
+ *   <div class="nds-toggle-group" role="toolbar" data-variant="default|outline">
  *     <button class="nds-toggle" …>B</button>
  *     <button class="nds-toggle" …>I</button>
  *     <button class="nds-toggle" …>U</button>
@@ -76,4 +76,13 @@
 /* Foco visível acima dos vizinhos emendados */
 .nds-toggle-group > .nds-toggle:focus-visible {
   z-index: 1;
+}
+
+/* O `box-shadow: none` do item dentro do grupo outline tem especificidade
+ * maior que `.nds-toggle:focus-visible` — sem esta regra o anel de foco
+ * desaparecia justamente na variante mais usada (WCAG 2.4.7). Repete o anel
+ * da base em vez de removê-lo do reset: o reset é quem apaga a sombra de
+ * elevação do item, que ali é ruído. */
+.nds-toggle-group[data-variant="outline"] > .nds-toggle:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
 }

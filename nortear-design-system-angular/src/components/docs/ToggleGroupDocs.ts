@@ -622,18 +622,19 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // `--destructive` do conteúdo compartilhado fica de fora: a folha do grupo
-    // não pinta estado de validação, e listar token que nenhuma regra usa
-    // ensina o leitor a procurar o que não existe.
+    // A coluna do meio é o SELETOR real do CSS compartilhado, vindo do
+    // conteúdo: `.nds-toggle-group` em toda linha dizia menos do que a folha
+    // sabe — o hover e o anel de foco moram no item, não no grupo.
     return [
-      { token: '--muted',             k: 'muted'      },
-      { token: '--accent-foreground', k: 'foreground' },
-      { token: '--input',             k: 'input'      },
-      { token: '--ring',              k: 'ring'       },
-      { token: '--radius',            k: 'radius'     },
+      { token: '--muted',         k: 'muted'       },
+      { token: '--accent',        k: 'accent'      },
+      { token: '--input',         k: 'input'       },
+      { token: '--ring',          k: 'ring'        },
+      { token: '--destructive',   k: 'destructive' },
+      { token: '--radius-button', k: 'radius'      },
     ].map(({ token, k }) => ({
       token,
-      value: '.nds-toggle-group',
+      value: toPlainText(t(`tokens.table.${k}.class`)),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

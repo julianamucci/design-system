@@ -32,8 +32,18 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const items = canvas.getAllByRole('radio');
 
-    await step('Nenhum item selecionado (aria-checked=false)', async () => {
-      for (const it of items) await expect(it).toHaveAttribute('aria-checked', 'false');
+    await step('Sem seleção, nenhum item está marcado', async () => {
+      for (const it of items) {
+        await expect(it).toHaveAttribute('aria-checked', 'false');
+        await expect(it).toHaveAttribute('data-state', 'off');
+      }
+    });
+
+    await step('Mesmo sem seleção, um item entra na ordem de tabulação', async () => {
+      // Roving tabindex não depende de haver item ativo: sem isto o grupo
+      // inteiro sairia da navegação por Tab.
+      const naOrdem = items.filter((b) => (b as HTMLElement).tabIndex === 0);
+      await expect(naOrdem).toHaveLength(1);
     });
   },
 };
@@ -45,6 +55,7 @@ export const Selected: Story = {
     kind: 'alignment',
     ariaLabel: 'Alinhamento do texto',
   },
+  parameters: { covers: ['accessibility.item2'] },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const items = canvas.getAllByRole('radio');
@@ -57,6 +68,52 @@ export const Selected: Story = {
     await step('Demais items não selecionados', async () => {
       await expect(items[0]).toHaveAttribute('aria-checked', 'false');
       await expect(items[2]).toHaveAttribute('aria-checked', 'false');
+    });
+
+    await step('accessibility.item2 — o item ativo tem fundo próprio, não só o atributo', async () => {
+      // O contraste de 4.5:1 é medido pelo axe; aqui a garantia é mais rasa e
+      // complementar: sem a regra de CSS, ativo e inativo pintariam igual.
+      await expect(getComputedStyle(items[1]).backgroundColor).not.toBe(
+        getComputedStyle(items[0]).backgroundColor,
+      );
+    });
+  },
+};
+
+export const FocusVisible: Story = {
+  args: {
+    type: 'single',
+    value: 'left',
+    kind: 'alignment',
+    ariaLabel: 'Alinhamento do texto',
+  },
+  parameters: { covers: ['accessibility.item3'] },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const items = canvas.getAllByRole('radio');
+
+    await step('Roving tabindex — apenas 1 item na ordem de tabulação', async () => {
+      const naOrdem = items.filter((b) => (b as HTMLElement).tabIndex === 0);
+      await expect(naOrdem).toHaveLength(1);
+    });
+
+    await step('accessibility.item3 — o anel de foco aparece na navegação por teclado', async () => {
+      // `userEvent.tab()` e não `focus()`: `:focus-visible` só casa quando o
+      // foco veio do teclado, e um `focus()` programático deixaria a regra
+      // fora — o teste passaria verde com o anel invisível na prática.
+      (items[0] as HTMLElement).blur();
+      await userEvent.tab();
+      await expect(items[0]).toHaveFocus();
+      const sombra = getComputedStyle(items[0]).boxShadow;
+      await expect(sombra).not.toBe('none');
+      await expect(sombra.length).toBeGreaterThan(0);
+    });
+
+    await step('Tab sai do grupo inteiro, não item a item', async () => {
+      // É a contrapartida do roving tabindex: o segundo Tab abandona a barra.
+      await userEvent.tab();
+      await expect(items[0]).not.toHaveFocus();
+      await expect(items[1]).not.toHaveFocus();
     });
   },
 };

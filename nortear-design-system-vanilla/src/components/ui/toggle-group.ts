@@ -4,7 +4,7 @@
 // Tipo (single/multiple) via lógica TS; variante via data-variant.
 
 import { cn } from '@/lib/utils';
-import { createToggle, type ToggleVariant } from './toggle';
+import { createToggle, type ToggleSize, type ToggleVariant } from './toggle';
 
 export type ToggleGroupItem = {
   value: string;
@@ -13,9 +13,18 @@ export type ToggleGroupItem = {
   disabled?: boolean;
 };
 
+export type ToggleGroupOrientation = 'horizontal' | 'vertical';
+
 export type ToggleGroupOptions = {
   type?: 'single' | 'multiple';
   variant?: ToggleVariant;
+  size?: ToggleSize;
+  /** Direção do empilhamento e das setas de navegação. */
+  orientation?: ToggleGroupOrientation;
+  /** Distância entre itens em unidades do grid. `0` emenda as bordas. */
+  spacing?: number;
+  /** Desabilita o grupo inteiro — cada item herda. */
+  disabled?: boolean;
   items: ToggleGroupItem[];
   defaultValue?: string | string[];
   onValueChange?: (value: string | string[]) => void;
@@ -23,7 +32,16 @@ export type ToggleGroupOptions = {
 };
 
 export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
-  const { type = 'single', variant = 'default', items, onValueChange } = options;
+  const {
+    type = 'single',
+    variant = 'default',
+    size = 'default',
+    orientation = 'horizontal',
+    spacing = 0,
+    disabled = false,
+    items,
+    onValueChange,
+  } = options;
 
   const activeValues: Set<string> =
     options.defaultValue !== undefined
@@ -34,7 +52,18 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   root.dataset.slot = 'toggle-group';
   root.className = cn('nds-toggle-group', options.class);
   if (variant !== 'default') root.dataset.variant = variant;
+  if (size !== 'default') root.dataset.size = size;
   root.setAttribute('role', 'toolbar');
+
+  // A folha compartilhada lê `data-orientation` para empilhar e `data-spacing`
+  // + `--gap` para o espaçamento; `aria-orientation` conta a mesma coisa a
+  // quem ouve. Antes disso, as stories aplicavam `flex-col` — classe que não
+  // existe em CSS nenhum do projeto — e o grupo continuava horizontal.
+  root.dataset.orientation = orientation;
+  root.setAttribute('aria-orientation', orientation);
+  root.dataset.spacing = String(spacing);
+  root.style.setProperty('--gap', String(spacing));
+  if (disabled) root.dataset.disabled = '';
 
   function notifyChange(): void {
     if (!onValueChange) return;
@@ -48,8 +77,9 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   items.forEach((item) => {
     const btn = createToggle({
       pressed: activeValues.has(item.value),
-      disabled: item.disabled,
+      disabled: disabled || item.disabled,
       variant,
+      size,
       children: item.children ?? item.label ?? item.value,
       onClick: () => {
         const isActive = activeValues.has(item.value);

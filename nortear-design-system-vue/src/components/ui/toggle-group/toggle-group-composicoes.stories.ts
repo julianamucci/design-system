@@ -27,12 +27,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
+ * Interactions parte do estado que a rodada anterior deixou; um clique cego
+ * inverteria o resultado a cada rodada.
+ */
+async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
+  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
+    await userEvent.click(botao);
+  }
+}
+
 export const AlignmentBar: Story = {
+  parameters: { covers: ['visual.item4'] },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight, AlignJustify },
     setup() { return {}; },
     template: `
-      <ToggleGroup type="single" default-value="left" aria-label="Alinhamento do texto">
+      <ToggleGroup type="single" variant="outline" default-value="left" aria-label="Alinhamento do texto">
         <ToggleGroupItem value="left" aria-label="Alinhar à esquerda"><AlignLeft aria-hidden="true" /></ToggleGroupItem>
         <ToggleGroupItem value="center" aria-label="Centralizar"><AlignCenter aria-hidden="true" /></ToggleGroupItem>
         <ToggleGroupItem value="right" aria-label="Alinhar à direita"><AlignRight aria-hidden="true" /></ToggleGroupItem>
@@ -43,15 +55,25 @@ export const AlignmentBar: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const items = canvas.getAllByRole('button');
+    const center = canvas.getByRole('button', { name: 'Centralizar' });
+    const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
+
     await step('4 opções de alinhamento renderizadas', async () => {
       await expect(items).toHaveLength(4);
+      for (const b of items) await expect(b.getAttribute('aria-label')).toBeTruthy();
     });
     await step('Selecionar center desativa left', async () => {
-      const center = canvas.getByRole('button', { name: 'Centralizar' });
-      const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
-      await userEvent.click(center);
+      await definir(center, true);
       await expect(center).toHaveAttribute('aria-pressed', 'true');
       await expect(left).toHaveAttribute('aria-pressed', 'false');
+      // Volta ao estado inicial para a próxima rodada começar igual a esta.
+      await definir(left, true);
+    });
+    await step('visual.item4 — a variante outline emenda os itens num container só', async () => {
+      const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
+      await expect(grupo).toHaveAttribute('data-variant', 'outline');
+      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(left).borderTopWidth)).toBe(0);
     });
   },
 };
@@ -72,14 +94,18 @@ export const FormattingBar: Story = {
     const canvas = within(canvasElement);
     const bold = canvas.getByRole('button', { name: 'Negrito' });
     const italic = canvas.getByRole('button', { name: 'Itálico' });
-    await step('Bold já ativo, italic inativo', async () => {
+    await step('Bold ativo, italic inativo', async () => {
+      await definir(bold, true);
+      await definir(italic, false);
       await expect(bold).toHaveAttribute('aria-pressed', 'true');
       await expect(italic).toHaveAttribute('aria-pressed', 'false');
     });
-    await step('Clicar em italic adiciona à seleção (mantém bold)', async () => {
-      await userEvent.click(italic);
+    await step('Ligar italic adiciona à seleção (mantém bold)', async () => {
+      await definir(italic, true);
       await expect(italic).toHaveAttribute('aria-pressed', 'true');
       await expect(bold).toHaveAttribute('aria-pressed', 'true');
+      // Volta ao estado inicial para a próxima rodada começar igual a esta.
+      await definir(italic, false);
     });
   },
 };
@@ -118,26 +144,37 @@ export const VerticalViewMode: Story = {
 };
 
 export const WithSpacing: Story = {
+  parameters: { covers: ['visual.item5'] },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
     setup() { return {}; },
+    // O contorno vai no ITEM, não no grupo: `variant="outline"` no grupo emenda
+    // os botões num container só e zera a borda de cada um — o oposto do que
+    // esta composição demonstra.
     template: `
-      <ToggleGroup type="multiple" :spacing="1" variant="outline" aria-label="Formatação">
-        <ToggleGroupItem value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
-        <ToggleGroupItem value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
-        <ToggleGroupItem value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
+      <ToggleGroup type="multiple" :spacing="1" aria-label="Formatação">
+        <ToggleGroupItem variant="outline" value="bold" aria-label="Negrito"><Bold aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroupItem variant="outline" value="italic" aria-label="Itálico"><Italic aria-hidden="true" /></ToggleGroupItem>
+        <ToggleGroupItem variant="outline" value="underline" aria-label="Sublinhado"><Underline aria-hidden="true" /></ToggleGroupItem>
       </ToggleGroup>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Grupo com spacing > 0 renderiza itens separados', async () => {
+    const bold = canvas.getByRole('button', { name: 'Negrito' });
+    const italic = canvas.getByRole('button', { name: 'Itálico' });
+
+    await step('visual.item5 — com espaçamento os botões deixam de ser emendados', async () => {
       const group = canvasElement.querySelector('[data-slot="toggle-group"]');
       await expect(group).toHaveAttribute('data-spacing', '1');
+      const a = bold.getBoundingClientRect();
+      const b = italic.getBoundingClientRect();
+      await expect(b.left).toBeGreaterThan(a.right);
     });
-    await step('3 itens presentes', async () => {
-      const items = canvas.getAllByRole('button');
-      await expect(items).toHaveLength(3);
+    await step('Separados, os itens mantêm borda e canto próprios', async () => {
+      await expect(canvas.getAllByRole('button')).toHaveLength(3);
+      await expect(parseFloat(getComputedStyle(bold).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(bold).borderTopRightRadius)).toBeGreaterThan(0);
     });
   },
 };

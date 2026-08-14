@@ -39,6 +39,13 @@ const meta: Meta = {
       options: ['default', 'sm', 'lg'],
       description: 'Altura herdada pelos itens.',
     },
+    // Sem entrada aqui o callback ficava fora da aba API Reference: `fn()` em
+    // args e nada na tabela foi como ele sumiu da documentação.
+    onValueChange: {
+      control: false,
+      description: 'Disparado ao trocar a seleção, com o novo valor.',
+      table: { type: { summary: '(value: string | string[]) => void' } },
+    },
   },
   args: {
     type: 'single',
@@ -53,7 +60,32 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * O estado do item é anunciado por `aria-checked` no modo exclusivo (a lib
+ * anuncia o grupo como conjunto de rádio) e por `aria-pressed` no combinado.
+ * Ler os dois mantém a play honesta nos dois modos.
+ */
+function ligado(el: Element): boolean {
+  return (
+    el.getAttribute('aria-checked') === 'true' || el.getAttribute('aria-pressed') === 'true'
+  );
+}
+
+/** Clica só quando o estado atual não é o desejado — a play tem que sobreviver
+ *  ao replay do painel Interactions, que roda no mesmo DOM. */
+async function definir(el: Element, on: boolean): Promise<void> {
+  if (ligado(el) !== on) await userEvent.click(el);
+}
+
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => ({
     Component: ToggleGroupStory,
     props: {
@@ -62,42 +94,61 @@ export const Playground: Story = {
       orientation: args.orientation,
       variant: args.variant,
       size: args.size,
+      onValueChange: args.onValueChange,
       kind: 'alignment',
       ariaLabel: 'Alinhamento do texto',
     },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const group = canvas.getByRole('group');
-    const items = canvas.getAllByRole('radio');
+    const items = canvas.getAllByRole(args.type === 'multiple' ? 'button' : 'radio');
 
-    await step('ToggleGroup tem aria-label', async () => {
+    await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {
       await expect(group).toHaveAttribute('aria-label', 'Alinhamento do texto');
-    });
-
-    await step('Renderiza 3 itens', async () => {
       await expect(items).toHaveLength(3);
+      for (const it of items) await expect(it.getAttribute('aria-label')).toBeTruthy();
     });
 
-    await step('Nenhum item começa pressionado', async () => {
-      for (const it of items) await expect(it).toHaveAttribute('aria-checked', 'false');
+    await step('Estado ARIA e data-state contam a mesma história', async () => {
+      for (const it of items) {
+        await expect(it).toHaveAttribute('data-state', ligado(it) ? 'on' : 'off');
+      }
     });
 
-    await step('Clicar no primeiro item ativa-o', async () => {
-      await userEvent.click(items[0]);
-      await expect(items[0]).toHaveAttribute('aria-checked', 'true');
+    await step('Orientação chega ao markup', async () => {
+      await expect(group).toHaveAttribute('data-orientation', String(args.orientation));
     });
 
-    await step('ArrowRight move o foco para o próximo item', async () => {
+    await step('Escolher um item desliga o anterior (exclusivo)', async () => {
+      await definir(items[0], true);
+      await expect(ligado(items[0])).toBe(true);
+      await definir(items[1], true);
+      await expect(ligado(items[1])).toBe(true);
+      await expect(ligado(items[0])).toBe(false);
+      await expect(args.onValueChange).toHaveBeenCalled();
+    });
+
+    await step('functional.item3 — a seta move o foco sem ativar nada', async () => {
+      const antes = items.map(ligado);
       (items[0] as HTMLElement).focus();
-      await userEvent.keyboard('{ArrowRight}');
+      await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
       await expect(items[1]).toHaveFocus();
+      await expect(items.map(ligado)).toEqual(antes);
     });
 
-    await step('Space alterna o item focado', async () => {
+    await step('functional.item4 — Space alterna o item focado', async () => {
+      // Lido antes e comparado depois: reexecutar a play parte do estado que a
+      // rodada anterior deixou, e uma asserção absoluta inverteria de rodada
+      // em rodada.
+      const antes = ligado(items[1]);
       await userEvent.keyboard(' ');
-      await expect(items[1]).toHaveAttribute('aria-checked', 'true');
-      await expect(items[0]).toHaveAttribute('aria-checked', 'false');
+      await expect(ligado(items[1])).toBe(!antes);
+    });
+
+    await step('Seleção devolvida ao estado inicial', async () => {
+      for (const it of items) await definir(it, false);
+      await expect(items.filter(ligado)).toHaveLength(0);
     });
   },
 };
