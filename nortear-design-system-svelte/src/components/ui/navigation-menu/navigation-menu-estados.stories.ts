@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
+import { esperarPainel, painelAberto } from './navigation-menu.fixtures';
+import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'UI/NavigationMenu/States',
@@ -9,11 +11,13 @@ const meta: Meta = {
   tags: ['navigation'],
   parameters: {
     layout: 'centered',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados canônicos do NavigationMenu: fechado (apenas Triggers/Links), aberto (defaultValue) e ativo (Link com aria-current=page).',
+          'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',
       },
     },
   },
@@ -27,22 +31,32 @@ export const Closed: Story = {
     defaultValue: undefined,
     demonstration: 'default',
     ariaLabel: 'Navegação principal',
-    delayDuration: 80,
+    delayDuration: 100,
   },
   parameters: {
+    covers: ['accessibility.item1'],
     docs: {
       description: {
-        story:
-          'Estado padrão — apenas Triggers e Links visíveis na barra; Viewport não exibe Content.',
+        story: 'Estado padrão — apenas gatilhos e destinos visíveis na barra; nenhum painel aberto.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const nav = canvas.getByRole('navigation', { name: /Navegação principal/i });
-    await expect(nav).toBeVisible();
-    const trigger = canvas.getByRole('button', { name: /Produtos/i });
-    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await step('Fechado, o painel não existe no DOM', async () => {
+      // O miolo do painel é DESMONTADO ao fechar. Não é um bloco escondido:
+      // quem navega com leitor de tela não o encontra, e nenhum destino dele
+      // entra na ordem de tabulação.
+      await expect(painelAberto()).toBeNull();
+      await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
+    });
+
+    await step('O gatilho anuncia o estado recolhido', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+    });
   },
 };
 
@@ -51,21 +65,50 @@ export const Open: Story = {
     defaultValue: 'produtos',
     demonstration: 'default',
     ariaLabel: 'Navegação principal',
-    delayDuration: 80,
+    delayDuration: 100,
+    indicator: true,
   },
   parameters: {
+    covers: ['accessibility.item3', 'accessibility.item6', 'visual.item4'],
+    // Esta story termina com o painel ABERTO; ver a nota da regra.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         story:
-          'Trigger "Produtos" expandido via defaultValue. Content renderizado no Viewport com data-state="open". Captura visual no Chromatic.',
+          'O item nasce aberto e a seta indicadora aponta para o gatilho. A story termina aberta de propósito: é o estado que a regressão visual precisa capturar.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Produtos/i });
-    await waitFor(async () => {
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+    const conteudo = await esperarPainel();
+    const painel = conteudo.closest<HTMLElement>('.nds-navigation-menu-viewport-panel');
+
+    await step('O item nasce aberto e o gatilho reflete o estado', async () => {
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(conteudo).getAllByRole('link')).toHaveLength(3);
+    });
+
+    await step('O gatilho aponta para o painel que abriu', async () => {
+      const alvo = gatilho.getAttribute('aria-controls');
+      await expect(alvo).toBeTruthy();
+      await expect(document.getElementById(alvo as string)).toBeTruthy();
+    });
+
+    await step('A seta indicadora existe enquanto o painel está aberto', async () => {
+      const seta = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
+      await expect(seta).toBeTruthy();
+      await expect(seta?.querySelector('.nds-navigation-menu-indicator-arrow')).toBeTruthy();
+    });
+
+    await step('O fundo do painel é opaco', async () => {
+      // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
+      // do painel só significa alguma coisa se o fundo for opaco: sobre um
+      // painel translúcido a razão medida é a do que estiver por baixo.
+      const fundo = getComputedStyle(painel as HTMLElement).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo.startsWith('rgba(')).toBe(false);
     });
   },
 };
@@ -75,20 +118,35 @@ export const Active: Story = {
     defaultValue: undefined,
     demonstration: 'default',
     ariaLabel: 'Navegação principal',
-    delayDuration: 80,
-    activeHref: '/',
+    delayDuration: 100,
+    activeHref: '#inicio',
   },
   parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     docs: {
       description: {
         story:
-          'Link "Início" marcado com aria-current="page". bg-accent destaca a página atual; leitor anuncia "página atual".',
+          'O destino da página atual leva aria-current="page" — o leitor de tela anuncia "página atual" e o fundo muda, porque cor sozinha não informa quem não a distingue.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByRole('link', { name: /Início/i });
-    await expect(link).toHaveAttribute('aria-current', 'page');
+    const atual = canvas.getByRole('link', { name: 'Início' });
+    const outro = canvas.getByRole('link', { name: 'Sobre' });
+
+    await step('A página atual é anunciada como tal', async () => {
+      await expect(atual).toHaveAttribute('aria-current', 'page');
+      await expect(outro.hasAttribute('aria-current')).toBe(false);
+    });
+
+    await step('O destaque não depende só do texto: o fundo muda', async () => {
+      // Critério 1.4.1 na prática. O seletor do CSS é
+      // `.nds-navigation-menu-link[aria-current="page"]` — se o atributo não
+      // chegasse, esta asserção pegaria o mesmo fundo do destino vizinho.
+      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+        getComputedStyle(outro).backgroundColor,
+      );
+    });
   },
 };

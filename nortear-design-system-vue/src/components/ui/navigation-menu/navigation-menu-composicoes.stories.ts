@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import {
   NavigationMenu,
+  NavigationMenuChild,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from './index';
+import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
+import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/NavigationMenu/Compositions',
@@ -15,12 +18,13 @@ const meta = {
   tags: ['navigation'],
   parameters: {
     layout: 'centered',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes reais de NavigationMenu: LinkSimples (sem dropdown), ComDropdown (lista vertical), MegaMenuGrid (grid 2 colunas) e ComCardDestacado (card promocional + lista).',
+          'As quatro formas canônicas do painel, do mais simples ao mais denso: só destinos diretos, um item com lista vertical, um mega-menu em duas colunas com descrição e um painel com destino em destaque ao lado dos complementares.',
       },
     },
   },
@@ -31,6 +35,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   NavigationMenu,
+  NavigationMenuChild,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
@@ -38,88 +43,192 @@ const sharedComponents = {
   NavigationMenuTrigger,
 };
 
+/**
+ * Impede a navegação de verdade, como um roteador de cliente faria.
+ *
+ * Sem isto o clique tira a própria PÁGINA DE TESTE do ar — a conexão do runner
+ * com o navegador morre e a story inteira some do resultado, sem asserção
+ * nenhuma falhando.
+ */
+function aoNavegar(event: Event): void {
+  event.preventDefault();
+}
+
 export const SimpleLink: Story = {
   parameters: {
-    docs: { description: { story: 'NavigationMenuLink direto, sem Trigger nem Content — para itens sem hierarquia.' } },
+    docs: { description: { story: 'Apenas destinos diretos, sem painel — ideal para três a cinco categorias planas.' } },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-cluster nds-w-full" data-justify="center">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+      <div style="contain: layout; min-height: 120px;" class="nds-cluster nds-w-full" data-justify="center">
+        <NavigationMenu aria-label="Navegação institucional">
           <NavigationMenuList>
-            <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Preços</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Documentação</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Blog</NavigationMenuLink></NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#inicio" :active="true">Início</NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#precos">Preços</NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#contato">Contato</NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const links = canvas.getAllByRole('link');
-    await expect(links.length).toBe(4);
-    await expect(links[0]).toHaveAttribute('aria-current', 'page');
+
+    await step('Sem gatilho: cada item navega no clique', async () => {
+      // É a diferença que decide se o NavigationMenu vale a pena. Sem hierarquia
+      // não há painel — e sem painel não há botão nenhum na barra.
+      await expect(canvas.getAllByRole('link')).toHaveLength(3);
+      await expect(canvas.queryAllByRole('button')).toHaveLength(0);
+    });
+
+    await step('O foco percorre a barra pelas setas', async () => {
+      const links = canvas.getAllByRole('link');
+      links[0].focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(document.activeElement).toBe(links[1]);
+    });
   },
 };
 
 export const WithDropdown: Story = {
   parameters: {
-    docs: { description: { story: 'Item com Trigger + Content em lista vertical simples — caso típico de dropdown de produtos.' } },
+    covers: ['functional.item5'],
+    docs: { description: { story: 'Um gatilho com lista vertical de destinos — padrão comum para três a oito páginas relacionadas.' } },
   },
   render: () => ({
     components: sharedComponents,
+    setup() {
+      return { aoNavegar };
+    },
     template: `
       <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="produtos">
+        <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
-            <NavigationMenuItem><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem value="produtos">
-              <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#inicio" @click="aoNavegar">Início</NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem value="planos">
+              <NavigationMenuTrigger>Planos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid" data-spacing="sm" style="width: 320px; padding: 0.75rem">
-                  <li><NavigationMenuLink href="#">Plano Pro</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Plano Empresa</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">API</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Integrações</NavigationMenuLink></li>
+                <ul class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
+                  <li>
+                    <NavigationMenuChild href="#inicial" @click="aoNavegar">
+                      <div class="nds-navigation-menu-child-label">Plano Inicial</div>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#profissional" @click="aoNavegar">
+                      <div class="nds-navigation-menu-child-label">Plano Profissional</div>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#empresarial" @click="aoNavegar">
+                      <div class="nds-navigation-menu-child-label">Plano Empresarial</div>
+                    </NavigationMenuChild>
+                  </li>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#contato" @click="aoNavegar">Contato</NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Produtos/i });
-    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const gatilho = canvas.getByRole('button', { name: /Planos/ });
+
+    await step('O painel abre com os três destinos', async () => {
+      const conteudo = await abrir(gatilho);
+      await expect(within(conteudo).getAllByRole('link')).toHaveLength(3);
+    });
+
+    await step('Escolher um destino fecha o painel', async () => {
+      // Navegar É sair da página: um painel que sobrevive ao clique fica
+      // pendurado sobre a página seguinte.
+      const conteudo = await esperarPainel();
+      await userEvent.click(within(conteudo).getByRole('link', { name: 'Plano Profissional' }));
+      await esperarPainelSumir();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('O foco volta a ser alcançável na barra', async () => {
+      await expect(painelAberto()).toBeNull();
+      await expect(canvas.getAllByRole('link')).toHaveLength(2);
+    });
   },
 };
 
 export const MegaMenuGrid: Story = {
   parameters: {
-    docs: { description: { story: 'Mega-menu com grid 2 colunas — adequado para 6-8 sub-links agrupados.' } },
+    covers: ['visual.item2'],
+    // Esta story termina com o painel ABERTO; ver a nota da regra.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    docs: {
+      description: {
+        story:
+          'Painel em duas colunas, com título e uma linha de contexto por destino — útil para apresentar soluções sem obrigar o leitor a adivinhar o que há do outro lado.',
+      },
+    },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="solucoes">
+      <div style="contain: layout; min-height: 360px;" class="nds-cluster nds-w-full" data-justify="center">
+        <NavigationMenu aria-label="Navegação de soluções" default-value="solucoes">
           <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#inicio">Início</NavigationMenuLink>
+            </NavigationMenuItem>
+
             <NavigationMenuItem value="solucoes">
               <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid nds-p-4" data-spacing="sm" data-cols="2" style="width: 600px">
-                  <li><NavigationMenuLink href="#">Para Startups</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Para Enterprise</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Para Agências</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Para Educação</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Para Saúde</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Para Varejo</NavigationMenuLink></li>
+                <ul class="nds-grid nds-list-none nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
+                  <li>
+                    <NavigationMenuChild href="#marketing">
+                      <div class="nds-navigation-menu-child-label">Para Marketing</div>
+                      <p class="nds-navigation-menu-child-description">
+                        Campanhas, automação e atribuição num lugar só.
+                      </p>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#vendas">
+                      <div class="nds-navigation-menu-child-label">Para Vendas</div>
+                      <p class="nds-navigation-menu-child-description">
+                        Funil, previsão e histórico de cada negociação.
+                      </p>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#suporte">
+                      <div class="nds-navigation-menu-child-label">Para Suporte</div>
+                      <p class="nds-navigation-menu-child-description">
+                        Fila de atendimento, base de conhecimento e métricas.
+                      </p>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#financeiro">
+                      <div class="nds-navigation-menu-child-label">Para Financeiro</div>
+                      <p class="nds-navigation-menu-child-description">
+                        Cobrança recorrente, conciliação e relatórios fiscais.
+                      </p>
+                    </NavigationMenuChild>
+                  </li>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -128,44 +237,88 @@ export const MegaMenuGrid: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Soluções/i });
-    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    const links = within(document.body).getAllByRole('link');
-    await expect(links.length).toBeGreaterThanOrEqual(6);
+    const conteudo = await esperarPainel();
+
+    await step('Quatro destinos em duas colunas', async () => {
+      const destinos = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      await expect(destinos).toHaveLength(4);
+      // Duas colunas de verdade: o segundo destino está à direita do primeiro,
+      // na mesma linha; o terceiro desce.
+      const [a, b, c] = destinos.map((d) => d.getBoundingClientRect());
+      await expect(b.left).toBeGreaterThan(a.left);
+      await expect(Math.abs(b.top - a.top)).toBeLessThan(2);
+      await expect(c.top).toBeGreaterThan(a.top);
+    });
+
+    await step('A descrição faz parte do nome do destino', async () => {
+      // Critério 2.4.4 (Link Purpose): "Para Marketing" sozinho não diz o que
+      // há do outro lado. Por isso a descrição NÃO recebe aria-hidden.
+      const destino = within(conteudo).getByRole('link', { name: /Para Marketing/ });
+      await expect(destino.textContent).toContain('Campanhas');
+    });
+
+    await step('O gatilho continua sendo o dono do painel', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Soluções/ });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      // Esta story termina ABERTA de propósito: é o estado que a regressão
+      // visual precisa capturar.
+      await expect(painelAberto()).not.toBeNull();
+    });
   },
 };
 
 export const WithHighlightedCard: Story = {
   parameters: {
-    docs: { description: { story: 'Mega-menu com card promocional à esquerda + lista de links à direita.' } },
+    // Esta story termina com o painel ABERTO; ver a nota da regra.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    docs: {
+      description: {
+        story:
+          'Um destino em destaque ao lado dos complementares — a hierarquia aparece pelo tamanho do bloco, não por cor.',
+      },
+    },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 340px;" class="nds-cluster nds-w-full" data-justify="center">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80" default-value="recursos">
+      <div style="contain: layout; min-height: 360px;" class="nds-cluster nds-w-full" data-justify="center">
+        <NavigationMenu aria-label="Navegação de recursos">
           <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#inicio">Início</NavigationMenuLink>
+            </NavigationMenuItem>
+
             <NavigationMenuItem value="recursos">
               <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid grid-cols-[.75fr_1fr] nds-p-4" data-spacing="sm" style="width: 600px">
-                  <li class="row-span-3">
-                    <NavigationMenuLink
-                      href="#"
-                      class="nds-stack from-muted/50 to-muted nds-w-full nds-rounded-md bg-gradient-to-b nds-p-6 no-underline outline-hidden focus:shadow-md" style="user-select: none; height: 100%" data-justify="end" 
-                    >
-                      <div class="nds-mt-4 nds-mb-2 nds-text-base nds-font-medium">Novidade · v3.0</div>
-                      <p class="nds-text-body leading-tight">
-                        Conheça nossa nova plataforma de design.
-                      </p>
-                    </NavigationMenuLink>
-                  </li>
-                  <li><NavigationMenuLink href="#">Documentação</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Guias</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Tutoriais</NavigationMenuLink></li>
-                </ul>
+                <div class="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
+                  <NavigationMenuChild href="#comece" class="nds-h-full">
+                    <div class="nds-navigation-menu-child-label">Comece agora</div>
+                    <p class="nds-navigation-menu-child-description">
+                      Publique o primeiro projeto em menos de cinco minutos.
+                    </p>
+                  </NavigationMenuChild>
+
+                  <ul class="nds-stack nds-list-none" data-spacing="xs">
+                    <li>
+                      <NavigationMenuChild href="#guias">
+                        <div class="nds-navigation-menu-child-label">Guias</div>
+                      </NavigationMenuChild>
+                    </li>
+                    <li>
+                      <NavigationMenuChild href="#api">
+                        <div class="nds-navigation-menu-child-label">Referência da API</div>
+                      </NavigationMenuChild>
+                    </li>
+                    <li>
+                      <NavigationMenuChild href="#changelog">
+                        <div class="nds-navigation-menu-child-label">Novidades</div>
+                      </NavigationMenuChild>
+                    </li>
+                  </ul>
+                </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -173,11 +326,30 @@ export const WithHighlightedCard: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Recursos/i });
-    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    const featured = within(document.body).getByText(/Novidade · v3.0/i);
-    await expect(featured).toBeVisible();
+    const gatilho = canvas.getByRole('button', { name: /Recursos/ });
+    const conteudo = await abrir(gatilho);
+
+    await step('Um destino em destaque e três de apoio', async () => {
+      const destinos = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      await expect(destinos).toHaveLength(4);
+      // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
+      // complementares, que é como a hierarquia aparece sem depender de cor.
+      const destaque = destinos[0].getBoundingClientRect();
+      const apoio = destinos[1].getBoundingClientRect();
+      await expect(destaque.height).toBeGreaterThan(apoio.height);
+    });
+
+    await step('Tab alcança todo o painel', async () => {
+      const destinos = [...conteudo.querySelectorAll<HTMLElement>('a')];
+      for (const destino of destinos) {
+        await expect(destino.getAttribute('tabindex')).not.toBe('-1');
+      }
+      destinos[0].focus();
+      await expect(document.activeElement).toBe(destinos[0]);
+      await userEvent.tab();
+      await expect(conteudo.contains(document.activeElement)).toBe(true);
+    });
   },
 };

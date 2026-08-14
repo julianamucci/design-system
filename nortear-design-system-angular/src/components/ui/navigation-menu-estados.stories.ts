@@ -81,7 +81,7 @@ export const Closed: Story = {
 // ─── Open ─────────────────────────────────────────────────────────────────────
 
 export const Open: Story = {
-  parameters: { covers: ['visual.item4', 'accessibility.item6'] },
+  parameters: { covers: ['accessibility.item3', 'visual.item4', 'accessibility.item6'] },
   render: () => ({
     template: `
       <nav

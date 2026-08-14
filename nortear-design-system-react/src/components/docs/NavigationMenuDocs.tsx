@@ -892,12 +892,12 @@ interface NavigationMenuLinkProps
             description: tContent("tokens.table.viewportBg.part"),
           },
           {
-            token: "--foreground/10",
+            token: "--border",
             value: tContent("tokens.table.viewportBorder.class"),
             description: tContent("tokens.table.viewportBorder.part"),
           },
           {
-            token: "--shadow",
+            token: "--elevation-md",
             value: tContent("tokens.table.viewportShadow.class"),
             description: tContent("tokens.table.viewportShadow.part"),
           },
@@ -907,7 +907,7 @@ interface NavigationMenuLinkProps
             description: tContent("tokens.table.rounded.part"),
           },
           {
-            token: "--popover",
+            token: "--border",
             value: tContent("tokens.table.indicator.class"),
             description: tContent("tokens.table.indicator.part"),
           },

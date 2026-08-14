@@ -670,14 +670,14 @@ interface NavigationMenuLinkProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--background',  value: $tStore('tokens.table.rootBg.class'),         description: $tStore('tokens.table.rootBg.part')         },
-      { token: '--accent',      value: $tStore('tokens.table.triggerHover.class'),   description: $tStore('tokens.table.triggerHover.part')   },
-      { token: '--accent',      value: $tStore('tokens.table.linkActive.class'),     description: $tStore('tokens.table.linkActive.part')     },
-      { token: '--popover',     value: $tStore('tokens.table.viewportBg.class'),     description: $tStore('tokens.table.viewportBg.part')     },
-      { token: '--foreground',  value: $tStore('tokens.table.viewportBorder.class'), description: $tStore('tokens.table.viewportBorder.part') },
-      { token: '--shadow-md',   value: $tStore('tokens.table.viewportShadow.class'), description: $tStore('tokens.table.viewportShadow.part') },
-      { token: '--radius-lg',   value: $tStore('tokens.table.rounded.class'),        description: $tStore('tokens.table.rounded.part')        },
-      { token: '--popover',     value: $tStore('tokens.table.indicator.class'),      description: $tStore('tokens.table.indicator.part')      },
+      { token: '--background',   value: $tStore('tokens.table.rootBg.class'),       description: $tStore('tokens.table.rootBg.part')         },
+      { token: '--accent',       value: $tStore('tokens.table.triggerHover.class'), description: $tStore('tokens.table.triggerHover.part')   },
+      { token: '--accent',       value: $tStore('tokens.table.linkActive.class'),   description: $tStore('tokens.table.linkActive.part')     },
+      { token: '--popover',      value: '.nds-navigation-menu-viewport-panel',      description: $tStore('tokens.table.viewportBg.part')     },
+      { token: '--border',       value: '.nds-navigation-menu-viewport-panel',      description: $tStore('tokens.table.viewportBorder.part') },
+      { token: '--elevation-md', value: '.nds-navigation-menu-viewport-panel',      description: $tStore('tokens.table.viewportShadow.part') },
+      { token: '--radius',       value: '.nds-navigation-menu-viewport-panel',      description: $tStore('tokens.table.rounded.part')        },
+      { token: '--border',       value: $tStore('tokens.table.indicator.class'),    description: $tStore('tokens.table.indicator.part')      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

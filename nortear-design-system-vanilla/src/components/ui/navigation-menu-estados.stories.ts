@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
+import { abrir, esperarPainel, painelAberto } from './navigation-menu.fixtures';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -8,11 +9,12 @@ const meta: Meta = {
   parameters: {
     actions: { disable: true },
     layout: 'padded',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do NavigationMenu: Fechado (apenas Triggers/Links visíveis), Aberto (Content expandido) e Ativo (Link com aria-current="page" e bg-accent indicando página atual).',
+          'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',
       },
     },
   },
@@ -23,122 +25,141 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement): HTMLElement {
+function wrap(child: HTMLElement, minHeight = 240): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full nds-p-2';
   wrapper.dataset.justify = 'center';
   wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = '240px';
+  wrapper.style.minHeight = `${minHeight}px`;
   wrapper.appendChild(child);
   return wrapper;
-}
-
-async function closeAfter(scope: HTMLElement = document.body): Promise<void> {
-  await userEvent.keyboard('{Escape}');
-  await waitFor(() => {
-    if (scope.querySelector('[data-slot="navigation-menu"] button[aria-expanded="true"]')) {
-      throw new Error('Content ainda aberto');
-    }
-  });
-}
-
-function openFirstTrigger(nav: HTMLElement): void {
-  queueMicrotask(() => {
-    const trigger = nav.querySelector<HTMLButtonElement>('button[aria-haspopup]');
-    trigger?.click();
-  });
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Closed: Story = {
+  parameters: { covers: ['accessibility.item1'] },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início',  href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
         label: 'Produtos',
-        children: [{ label: 'Plano Inicial', href: '/produtos/inicial' }],
+        children: [{ label: 'Plano Inicial', href: '#inicial' }],
       },
-      { label: 'Sobre',  href: '/sobre' },
+      { label: 'Sobre', href: '#sobre' },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
     return wrap(nav);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Triggers fechados — aria-expanded=false', async () => {
-      const trigger = canvas.getByRole('menuitem', { name: /produtos/i });
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await step('Fechado, o painel não é alcançável', async () => {
+      // `hidden` tira o painel da árvore de acessibilidade E da ordem de
+      // tabulação: fechado, ele não é um bloco escondido — não existe para
+      // quem navega.
+      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
     });
-    await step('Nenhum content visível (todos hidden)', async () => {
-      const visible = canvasElement.querySelector('[role="menu"]:not([hidden])');
-      await expect(visible).toBeFalsy();
+
+    await step('O gatilho anuncia o estado recolhido', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(gatilho).toHaveAttribute('data-state', 'closed');
     });
   },
 };
 
 export const Open: Story = {
+  parameters: {
+    covers: ['accessibility.item3', 'accessibility.item6'],
+    // A factory desta stack não desenha a seta indicadora: ela depende de
+    // medir a posição do gatilho ativo, que aqui não existe sem um motor de
+    // posicionamento. Fica registrado como pendência de paridade em vez de
+    // aparecer como cobertura que ninguém verifica.
+    coversNotApplicable: {
+      'visual.item4': 'a factory não desenha a seta indicadora — não há motor de posicionamento nesta stack',
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início', href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
         label: 'Produtos',
         children: [
-          { label: 'Plano Inicial',     href: '/produtos/inicial',     description: 'Para times pequenos.'    },
-          { label: 'Plano Profissional', href: '/produtos/profissional', description: 'Para empresas em crescimento.' },
-          { label: 'Plano Empresarial',  href: '/produtos/empresarial',  description: 'Recursos avançados.' },
+          { label: 'Plano Inicial', href: '#inicial', description: 'Para times pequenos começando.' },
+          { label: 'Plano Profissional', href: '#profissional', description: 'Para empresas em crescimento.' },
+          { label: 'Plano Empresarial', href: '#empresarial', description: 'Recursos avançados e SLA.' },
         ],
       },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
-    openFirstTrigger(nav);
-    return wrap(nav);
+    return wrap(nav, 320);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Trigger Produtos aberto com aria-expanded=true', async () => {
-      const trigger = canvas.getByRole('menuitem', { name: /produtos/i });
-      await waitFor(() => {
-        if (trigger.getAttribute('aria-expanded') !== 'true') {
-          throw new Error('Trigger não abriu');
-        }
-      });
-      const panel = canvasElement.querySelector('[role="menu"]:not(.hidden)');
-      await expect(panel).toBeTruthy();
+    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+    // O painel abre por interação e a story TERMINA ABERTA: é o estado que a
+    // regressão visual precisa capturar. `abrir` é idempotente — no replay do
+    // painel Interactions ele não fecha o que a rodada anterior deixou aberto.
+    const painel = await abrir(gatilho, canvasElement);
+
+    await step('O painel aberto lista os três destinos', async () => {
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(painel).getAllByRole('link')).toHaveLength(3);
     });
-    await step('Limpa via ESC', () => closeAfter(canvasElement));
+
+    await step('O gatilho aponta para o painel que abriu', async () => {
+      const alvo = gatilho.getAttribute('aria-controls');
+      await expect(alvo).toBeTruthy();
+      await expect(painel.id).toBe(alvo);
+    });
+
+    await step('O fundo do painel é opaco', async () => {
+      // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
+      // do painel só significa alguma coisa se o fundo for opaco: sobre um
+      // painel translúcido a razão medida é a do que estiver por baixo.
+      const fundo = getComputedStyle(painel).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo.startsWith('rgba(')).toBe(false);
+    });
+
+    await step('A barra continua aberta ao final', async () => {
+      await expect(await esperarPainel(canvasElement)).toBeTruthy();
+    });
   },
 };
 
 export const Active: Story = {
-  name: 'Active (current page)',
+  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início',    href: '/' },
-      { label: 'Produtos',  href: '/produtos' },
-      { label: 'Soluções',  href: '/solucoes' },
-      { label: 'Sobre',     href: '/sobre' },
+      { label: 'Início', href: '#inicio', active: true },
+      { label: 'Produtos', href: '#produtos' },
+      { label: 'Sobre', href: '#sobre' },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
-
-    // Marcar 'Início' como página atual: aria-current="page" + bg-accent.
-    const homeLink = nav.querySelector<HTMLAnchorElement>('a[href="/"]');
-    if (homeLink) {
-      homeLink.setAttribute('aria-current', 'page');
-      homeLink.classList.add('nds-bg-accent', 'nds-text-accent-foreground');
-    }
-    return wrap(nav);
+    return wrap(nav, 160);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Link "Início" possui aria-current="page"', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toBeTruthy();
-      await expect(current?.textContent?.trim()).toMatch(/início/i);
+    const canvas = within(canvasElement);
+    const atual = canvas.getByRole('link', { name: 'Início' });
+    const outro = canvas.getByRole('link', { name: 'Sobre' });
+
+    await step('A página atual é anunciada como tal', async () => {
+      await expect(atual).toHaveAttribute('aria-current', 'page');
+      await expect(outro.hasAttribute('aria-current')).toBe(false);
     });
-    await step('Link ativo recebe bg-accent', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toHaveClass('nds-bg-accent');
+
+    await step('O destaque não depende só do texto: o fundo muda', async () => {
+      // Critério 1.4.1 na prática. O seletor do CSS é
+      // `.nds-navigation-menu-link[aria-current="page"]`. Antes o destaque
+      // vinha de duas classes utilitárias pregadas pela story — o componente
+      // não pintava nada sozinho, e nenhuma aplicação real teria o realce.
+      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+        getComputedStyle(outro).backgroundColor,
+      );
     });
   },
 };

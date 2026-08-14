@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect, waitFor } from "storybook/test";
+import { within, expect } from "storybook/test";
 import {
   NavigationMenu,
+  NavigationMenuChild,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./navigation-menu";
+import { esperarPainel, popupAberto } from "./navigation-menu.fixtures";
+import { REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal";
 
 const meta = {
   title: "UI/NavigationMenu/States",
@@ -15,11 +18,13 @@ const meta = {
   component: NavigationMenu,
   parameters: {
     layout: "centered",
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do NavigationMenu: Fechado (apenas Triggers visíveis), Aberto (Content expandido no Viewport) e Ativo (Link com aria-current=\"page\").",
+          "Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo no popup compartilhado) e Ativo (o destino da página atual).",
       },
     },
   },
@@ -36,10 +41,10 @@ const wrapperStyle: React.CSSProperties = {
 
 export const Closed: Story = {
   parameters: {
+    covers: ["accessibility.item1"],
     docs: {
       description: {
-        story:
-          "Estado padrão — sem defaultValue. Apenas Triggers e Links visíveis na barra; nenhum Content aberto.",
+        story: "Estado padrão — apenas gatilhos e destinos visíveis na barra; nenhum painel aberto.",
       },
     },
   },
@@ -48,17 +53,22 @@ export const Closed: Story = {
       <NavigationMenu aria-label="Navegação principal">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuLink href="#">Início</NavigationMenuLink>
+            <NavigationMenuLink href="#inicio">Início</NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "220px" }}>
+              <ul className="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
                 <li>
-                  <NavigationMenuLink href="#">Plano Pro</NavigationMenuLink>
+                  <NavigationMenuChild href="#inicial">
+                    <div className="nds-navigation-menu-child-label">Plano Inicial</div>
+                  </NavigationMenuChild>
                 </li>
               </ul>
             </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink href="#sobre">Sobre</NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
@@ -66,49 +76,60 @@ export const Closed: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Root tem role=navigation", async () => {
-      const nav = canvas.getByRole("navigation");
-      await expect(nav).toHaveAttribute("aria-label", "Navegação principal");
+
+    await step("Fechado, o painel não existe no DOM", async () => {
+      // O portal DESMONTA ao fechar. O painel não é um bloco escondido: quem
+      // navega com leitor de tela não o encontra, e nenhum destino dele entra
+      // na ordem de tabulação.
+      await expect(popupAberto()).toBeNull();
+      await expect(canvas.queryByRole("link", { name: "Plano Inicial" })).toBeNull();
     });
-    await step("Trigger não está expandido", async () => {
-      const trigger = canvas.getByRole("button", { name: /Produtos/i });
-      await expect(trigger.getAttribute("aria-expanded")).not.toBe("true");
+
+    await step("O gatilho anuncia o estado recolhido", async () => {
+      const gatilho = canvas.getByRole("button", { name: /Produtos/ });
+      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+      await expect(gatilho.hasAttribute("data-popup-open")).toBe(false);
     });
   },
 };
 
 export const Open: Story = {
   parameters: {
+    covers: ["accessibility.item3", "accessibility.item6", "visual.item4"],
+    // Esta story termina com o painel ABERTO; ver a nota da regra.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         story:
-          "defaultValue=\"produtos\" + delayDuration baixo — Content expandido no Viewport com data-state=\"open\".",
+          "O item nasce aberto e a seta indicadora aponta para o gatilho. A story termina aberta de propósito: é o estado que a regressão visual precisa capturar.",
       },
     },
   },
   render: () => (
     <div style={{ ...wrapperStyle, minHeight: 360 }}>
-      <NavigationMenu
-        aria-label="Navegação principal"
-        defaultValue="produtos"
-        delayDuration={50}
-      >
+      <NavigationMenu aria-label="Navegação principal" defaultValue="produtos" indicator>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuLink href="#">Início</NavigationMenuLink>
+            <NavigationMenuLink href="#inicio">Início</NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="nds-grid nds-p-2" data-spacing="xs" style={{ width: "260px" }}>
+              <ul className="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
                 <li>
-                  <NavigationMenuLink href="#">Plano Starter</NavigationMenuLink>
+                  <NavigationMenuChild href="#inicial">
+                    <div className="nds-navigation-menu-child-label">Plano Inicial</div>
+                  </NavigationMenuChild>
                 </li>
                 <li>
-                  <NavigationMenuLink href="#">Plano Pro</NavigationMenuLink>
+                  <NavigationMenuChild href="#profissional">
+                    <div className="nds-navigation-menu-child-label">Plano Profissional</div>
+                  </NavigationMenuChild>
                 </li>
                 <li>
-                  <NavigationMenuLink href="#">Plano Empresarial</NavigationMenuLink>
+                  <NavigationMenuChild href="#empresarial">
+                    <div className="nds-navigation-menu-child-label">Plano Empresarial</div>
+                  </NavigationMenuChild>
                 </li>
               </ul>
             </NavigationMenuContent>
@@ -117,22 +138,48 @@ export const Open: Story = {
       </NavigationMenu>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Content visível com sub-link Plano Pro", async () => {
-      await waitFor(async () => {
-        const link = within(document.body).queryByText(/Plano Pro/i);
-        await expect(link).toBeTruthy();
-      });
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Produtos/ });
+    const painel = await esperarPainel();
+    const popup = painel.closest<HTMLElement>(".nds-navigation-menu-popup");
+
+    await step("O item nasce aberto e o gatilho reflete o estado", async () => {
+      await expect(gatilho).toHaveAttribute("aria-expanded", "true");
+      await expect(within(painel).getAllByRole("link")).toHaveLength(3);
+    });
+
+    await step("O gatilho aponta para o painel que abriu", async () => {
+      const alvo = gatilho.getAttribute("aria-controls");
+      await expect(alvo).toBeTruthy();
+      await expect(popup?.id).toBe(alvo);
+    });
+
+    await step("A seta indicadora existe enquanto o painel está aberto", async () => {
+      const seta = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
+      await expect(seta).toBeTruthy();
+      // Decorativa: quem lê a tela já tem `aria-expanded` no gatilho.
+      await expect(seta?.getAttribute("aria-hidden")).toBe("true");
+    });
+
+    await step("O fundo do painel é opaco", async () => {
+      // O contraste de 4.5:1 que o axe mede entre o texto do destino e o fundo
+      // do painel só significa alguma coisa se o fundo for opaco: sobre um
+      // painel translúcido a razão medida é a do que estiver por baixo.
+      const fundo = getComputedStyle(popup as HTMLElement).backgroundColor;
+      await expect(fundo).not.toBe("rgba(0, 0, 0, 0)");
+      await expect(fundo.startsWith("rgba(")).toBe(false);
     });
   },
 };
 
 export const Active: Story = {
   parameters: {
+    covers: ["functional.item6", "accessibility.item4", "visual.item3"],
     docs: {
       description: {
         story:
-          "Link \"Início\" com aria-current=\"page\" — leitor de tela anuncia 'página atual'; estilo destacado via aria-[current=page]:bg-accent.",
+          'O destino da página atual leva aria-current="page" — o leitor de tela anuncia "página atual" e o fundo muda, porque cor sozinha não informa quem não a distingue.',
       },
     },
   },
@@ -141,19 +188,15 @@ export const Active: Story = {
       <NavigationMenu aria-label="Navegação principal">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuLink
-              href="#"
-              aria-current="page"
-              className="aria-[current=page]:bg-accent aria-[current=page]:font-semibold"
-            >
+            <NavigationMenuLink href="#inicio" active>
               Início
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink href="#">Produtos</NavigationMenuLink>
+            <NavigationMenuLink href="#produtos">Produtos</NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuLink href="#">Sobre</NavigationMenuLink>
+            <NavigationMenuLink href="#sobre">Sobre</NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
@@ -161,13 +204,21 @@ export const Active: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Root tem role=navigation", async () => {
-      const nav = canvas.getByRole("navigation");
-      await expect(nav).toHaveAttribute("aria-label", "Navegação principal");
+    const atual = canvas.getByRole("link", { name: "Início" });
+    const outro = canvas.getByRole("link", { name: "Sobre" });
+
+    await step("A página atual é anunciada como tal", async () => {
+      await expect(atual).toHaveAttribute("aria-current", "page");
+      await expect(outro.hasAttribute("aria-current")).toBe(false);
     });
-    await step("Link Início tem aria-current=page", async () => {
-      const link = canvas.getByRole("link", { name: /Início/i });
-      await expect(link).toHaveAttribute("aria-current", "page");
+
+    await step("O destaque não depende só do texto: o fundo muda", async () => {
+      // Critério 1.4.1 na prática. O seletor do CSS é
+      // `.nds-navigation-menu-link[aria-current="page"]` — se o atributo não
+      // chegasse, esta asserção pegaria o mesmo fundo do destino vizinho.
+      await expect(getComputedStyle(atual).backgroundColor).not.toBe(
+        getComputedStyle(outro).backgroundColor,
+      );
     });
   },
 };

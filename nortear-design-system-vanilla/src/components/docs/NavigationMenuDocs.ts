@@ -722,14 +722,16 @@ export function createNavigationMenu(
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--background',  value: t('tokens.table.rootBg.class'),         description: t('tokens.table.rootBg.part')         },
-            { token: '--accent',      value: t('tokens.table.triggerHover.class'),   description: t('tokens.table.triggerHover.part')   },
-            { token: '--accent',      value: t('tokens.table.linkActive.class'),     description: t('tokens.table.linkActive.part')     },
-            { token: '--popover',     value: t('tokens.table.viewportBg.class'),     description: t('tokens.table.viewportBg.part')     },
-            { token: '--foreground',  value: t('tokens.table.viewportBorder.class'), description: t('tokens.table.viewportBorder.part') },
-            { token: '--shadow',      value: t('tokens.table.viewportShadow.class'), description: t('tokens.table.viewportShadow.part') },
-            { token: '--radius',      value: t('tokens.table.rounded.class'),        description: t('tokens.table.rounded.part')        },
-            { token: '--popover',     value: t('tokens.table.indicator.class'),     description: t('tokens.table.indicator.part')      },
+            // O painel desta stack é o bloco absoluto `.nds-navigation-menu-content`;
+            // a seta indicadora não é desenhada aqui, então a linha dela sairia
+            // documentando peça que o componente não tem.
+            { token: '--background',   value: t('tokens.table.rootBg.class'),       description: t('tokens.table.rootBg.part')         },
+            { token: '--accent',       value: t('tokens.table.triggerHover.class'), description: t('tokens.table.triggerHover.part')   },
+            { token: '--accent',       value: t('tokens.table.linkActive.class'),   description: t('tokens.table.linkActive.part')     },
+            { token: '--popover',      value: '.nds-navigation-menu-content',       description: t('tokens.table.viewportBg.part')     },
+            { token: '--border',       value: '.nds-navigation-menu-content',       description: t('tokens.table.viewportBorder.part') },
+            { token: '--elevation-md', value: '.nds-navigation-menu-content',       description: t('tokens.table.viewportShadow.part') },
+            { token: '--radius',       value: '.nds-navigation-menu-content',       description: t('tokens.table.rounded.part')        },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

@@ -347,14 +347,14 @@ const navMenuPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--background',      value: tContent('tokens.table.rootBg.class'),         description: tContent('tokens.table.rootBg.part')         },
-  { token: '--accent (trigger)',value: tContent('tokens.table.triggerHover.class'),   description: tContent('tokens.table.triggerHover.part')   },
-  { token: '--accent (link)',   value: tContent('tokens.table.linkActive.class'),     description: tContent('tokens.table.linkActive.part')     },
-  { token: '--popover',         value: tContent('tokens.table.viewportBg.class'),     description: tContent('tokens.table.viewportBg.part')     },
-  { token: '--foreground/10',   value: tContent('tokens.table.viewportBorder.class'), description: tContent('tokens.table.viewportBorder.part') },
-  { token: '--shadow',          value: tContent('tokens.table.viewportShadow.class'), description: tContent('tokens.table.viewportShadow.part') },
-  { token: '--radius-lg',       value: tContent('tokens.table.rounded.class'),        description: tContent('tokens.table.rounded.part')        },
-  { token: '--popover (ind)',   value: tContent('tokens.table.indicator.class'),      description: tContent('tokens.table.indicator.part')      },
+  { token: '--background',   value: tContent('tokens.table.rootBg.class'),         description: tContent('tokens.table.rootBg.part')         },
+  { token: '--accent',       value: tContent('tokens.table.triggerHover.class'),   description: tContent('tokens.table.triggerHover.part')   },
+  { token: '--accent',       value: tContent('tokens.table.linkActive.class'),     description: tContent('tokens.table.linkActive.part')     },
+  { token: '--popover',      value: '.nds-navigation-menu-viewport-panel',         description: tContent('tokens.table.viewportBg.part')     },
+  { token: '--border',       value: '.nds-navigation-menu-viewport-panel',         description: tContent('tokens.table.viewportBorder.part') },
+  { token: '--elevation-md', value: '.nds-navigation-menu-viewport-panel',         description: tContent('tokens.table.viewportShadow.part') },
+  { token: '--radius',       value: '.nds-navigation-menu-viewport-panel',         description: tContent('tokens.table.rounded.part')        },
+  { token: '--border',       value: tContent('tokens.table.indicator.class'),      description: tContent('tokens.table.indicator.part')      },
 ]);
 
 const accessibilityItems = computed(() => [

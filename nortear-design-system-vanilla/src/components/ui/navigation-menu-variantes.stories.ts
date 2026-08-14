@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
+import { abrir, fechar } from './navigation-menu.fixtures';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -8,11 +9,12 @@ const meta: Meta = {
   parameters: {
     actions: { disable: true },
     layout: 'padded',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do NavigationMenu: Horizontal (padrão para header) e Vertical (sidebar/mobile). NOTA: factory createNavigationMenu (Vanilla) fixa orientação horizontal — a variante Vertical é montada manualmente sobrepondo classes .nds-* no <ul role="menubar">.',
+          'As duas direções da barra. Horizontal é o cabeçalho de site, com os itens em linha e o painel abrindo para baixo; vertical é a coluna de uma barra lateral ou gaveta, com os itens empilhados e o painel abrindo para o lado — abrir para baixo numa coluna cobriria os próprios itens seguintes.',
       },
     },
   },
@@ -23,7 +25,7 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement, minHeight = 220): HTMLElement {
+function wrap(child: HTMLElement, minHeight = 240): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full nds-p-2';
@@ -37,65 +39,127 @@ function wrap(child: HTMLElement, minHeight = 220): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início', href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
         label: 'Produtos',
         children: [
-          { label: 'Plano Inicial',     href: '/produtos/inicial'      },
-          { label: 'Plano Profissional', href: '/produtos/profissional' },
+          { label: 'Plano Inicial', href: '#inicial' },
+          { label: 'Plano Profissional', href: '#profissional' },
         ],
       },
-      { label: 'Sobre', href: '/sobre' },
+      {
+        label: 'Recursos',
+        children: [
+          { label: 'Guias', href: '#guias' },
+          { label: 'Referência da API', href: '#api' },
+        ],
+      },
+      { label: 'Preços', href: '#precos' },
+      { label: 'Sobre', href: '#sobre' },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
     return wrap(nav);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Lista é horizontal (sem aria-orientation=vertical)', async () => {
-      const ul = canvasElement.querySelector('ul[role="menubar"]');
-      await expect(ul).toBeTruthy();
-      await expect(ul).toHaveClass('nds-navigation-menu-list');
-      await expect(ul?.getAttribute('aria-orientation')).not.toBe('vertical');
+
+    await step('A orientação padrão chega ao markup e à classe da lista', async () => {
+      const lista = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
+      await expect(lista?.getAttribute('data-orientation')).toBe('horizontal');
+      await expect(lista?.classList.contains('nds-navigation-menu-list')).toBe(true);
+      await expect(lista?.classList.contains('nds-stack')).toBe(false);
     });
-    await step('Renderiza 3 items', async () => {
-      const items = canvas.getAllByRole('menuitem');
-      await expect(items.length).toBe(3);
+
+    await step('Cinco itens, dois deles com painel', async () => {
+      await expect(canvasElement.querySelectorAll('li')).toHaveLength(5);
+      await expect(canvas.getAllByRole('button')).toHaveLength(2);
+      await expect(canvas.getAllByRole('link')).toHaveLength(3);
+    });
+
+    await step('Os itens ficam lado a lado, na mesma linha', async () => {
+      const itens = [...canvasElement.querySelectorAll<HTMLElement>('li')];
+      const primeiro = itens[0].getBoundingClientRect();
+      const segundo = itens[1].getBoundingClientRect();
+      await expect(segundo.left).toBeGreaterThan(primeiro.left);
+      await expect(Math.abs(segundo.top - primeiro.top)).toBeLessThan(2);
+    });
+
+    await step('O painel abre abaixo da barra', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+      const painel = await abrir(gatilho, canvasElement);
+      await expect(painel.getBoundingClientRect().top).toBeGreaterThan(
+        gatilho.getBoundingClientRect().top,
+      );
+      await fechar(gatilho, canvasElement);
     });
   },
 };
 
 export const Vertical: Story = {
+  parameters: { covers: ['visual.item5'] },
   render: () => {
-    // Factory Vanilla fixa horizontal — aplicamos classes utilitárias para
-    // converter o <ul> em coluna (sidebar/mobile). Itens mantêm role=menuitem.
-    const nav = createNavigationMenu([
-      { label: 'Início',      href: '/' },
-      { label: 'Dashboard',   href: '/dashboard' },
-      { label: 'Configuracoes', href: '/configuracoes' },
-      { label: 'Sair',        href: '/logout' },
-    ]);
-    nav.setAttribute('aria-label', 'Navegação lateral');
-    nav.style.flexDirection = 'column';
-    nav.style.alignItems = 'stretch';
-
-    const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
-    if (ul) {
-      ul.setAttribute('aria-orientation', 'vertical');
-      ul.className = 'group nds-stack nds-list-none nds-w-full';
-      ul.dataset.spacing = 'xs';
-      ul.style.alignItems = 'stretch';
-      ul.style.maxWidth = '240px';
-    }
+    const nav = createNavigationMenu(
+      [
+        { label: 'Painel', href: '#painel' },
+        {
+          label: 'Relatórios',
+          children: [
+            { label: 'Vendas', href: '#vendas' },
+            { label: 'Assinaturas', href: '#assinaturas' },
+          ],
+        },
+        { label: 'Configurações', href: '#configuracoes' },
+      ],
+      // A orientação é opção da factory, não remendo da story: a versão antiga
+      // empilhava a barra com `style` inline e trocava a classe do `<ul>` à mão,
+      // o que tirava a coluna do tema, da densidade e da escala.
+      { orientation: 'vertical' },
+    );
+    nav.setAttribute('aria-label', 'Navegação da conta');
+    nav.classList.add('nds-w-sm');
     return wrap(nav, 260);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Lista vertical (nds-stack + aria-orientation)', async () => {
-      const ul = canvasElement.querySelector('ul[role="menubar"]');
-      await expect(ul).toHaveAttribute('aria-orientation', 'vertical');
-      await expect(ul).toHaveClass('nds-stack');
+    const canvas = within(canvasElement);
+
+    await step('A orientação vertical troca a classe da lista', async () => {
+      // A folha compartilhada só descreve a barra horizontal — não há regra por
+      // `data-orientation` na lista. Na vertical ela vira `.nds-stack`, que é a
+      // mesma saída das demais stacks.
+      const lista = canvasElement.querySelector<HTMLElement>('[data-slot="navigation-menu-list"]');
+      await expect(lista?.getAttribute('data-orientation')).toBe('vertical');
+      await expect(lista?.classList.contains('nds-stack')).toBe(true);
+      await expect(lista?.classList.contains('nds-navigation-menu-list')).toBe(false);
+    });
+
+    await step('Os itens empilham em coluna', async () => {
+      const itens = [...canvasElement.querySelectorAll<HTMLElement>('li')];
+      await expect(itens).toHaveLength(3);
+      const primeiro = itens[0].getBoundingClientRect();
+      const segundo = itens[1].getBoundingClientRect();
+      await expect(segundo.top).toBeGreaterThan(primeiro.top);
+    });
+
+    await step('As setas do eixo vertical percorrem a barra', async () => {
+      const painel = canvas.getByRole('link', { name: 'Painel' });
+      const gatilho = canvas.getByRole('button', { name: /Relatórios/ });
+      painel.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(gatilho);
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(document.activeElement).toBe(painel);
+    });
+
+    await step('O painel abre ao lado, nunca por baixo', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Relatórios/ });
+      const painel = await abrir(gatilho, canvasElement);
+      await expect(painel.getBoundingClientRect().left).toBeGreaterThan(
+        gatilho.getBoundingClientRect().left,
+      );
+      await fechar(gatilho, canvasElement);
     });
   },
 };

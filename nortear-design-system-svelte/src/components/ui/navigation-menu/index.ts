@@ -1,4 +1,5 @@
 import Root from "./navigation-menu.svelte";
+import Child from "./navigation-menu-child.svelte";
 import Content from "./navigation-menu-content.svelte";
 import Indicator from "./navigation-menu-indicator.svelte";
 import Item from "./navigation-menu-item.svelte";
@@ -9,6 +10,7 @@ import Viewport from "./navigation-menu-viewport.svelte";
 
 export {
 	Root,
+	Child,
 	Content,
 	Indicator,
 	Item,
@@ -18,6 +20,7 @@ export {
 	Viewport,
 	//
 	Root as NavigationMenuRoot,
+	Child as NavigationMenuChild,
 	Content as NavigationMenuContent,
 	Indicator as NavigationMenuIndicator,
 	Item as NavigationMenuItem,

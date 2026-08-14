@@ -54,6 +54,23 @@
   position: relative;
 }
 
+/* ── Barra vertical ───────────────────────────────────────────────────────────
+ * Coluna lateral ou gaveta. O painel abre PARA O LADO: abrir para baixo numa
+ * coluna cobriria os próprios itens seguintes. Antes isto era remendado com
+ * `style` inline na story do Vanilla, o que tirava a barra do tema e da escala. */
+.nds-navigation-menu[data-orientation="vertical"] {
+  flex-direction: column;
+  align-items: stretch;
+  max-width: none;
+}
+
+.nds-navigation-menu[data-orientation="vertical"] .nds-navigation-menu-content {
+  top: 0;
+  left: 100%;
+  margin-top: 0;
+  margin-inline-start: var(--spacing-2);
+}
+
 /* ── Trigger / Link (sem submenu) ────────────────────────────────────────── */
 .nds-navigation-menu-trigger,
 .nds-navigation-menu-link {
@@ -61,7 +78,9 @@
   align-items: center;
   justify-content: center;
 
-  height: var(--spacing-9, 2.25rem);              /* 36px */
+  /* Sem `height`: a altura é RESULTADO de padding-block + line-height, para o
+   * item crescer junto com o tamanho de fonte do navegador (WCAG 1.4.4, texto
+   * a 200%). Com `height: 2.25rem` o texto vazava da pílula em vez de esticá-la. */
   padding-inline: var(--spacing-4);                /* 16px */
   padding-block: var(--spacing-2);                 /* 8px */
 
@@ -70,6 +89,7 @@
   border-radius: var(--radius);
   font-family: inherit;
   font-size: var(--text-control);                             /* 14px */
+  line-height: var(--line-height-normal, 1.5);
   font-weight: var(--font-weight-medium, 500);
   color: inherit;
   text-decoration: none;
@@ -177,10 +197,23 @@
   transform: rotate(180deg);
 }
 
+/* ── Destino da página atual ──────────────────────────────────────────────────
+ * `aria-current="page"` é o contrato: é o que o leitor de tela anuncia e o que
+ * qualquer roteador escreve. `data-active` entra junto porque as libs headless
+ * o emitem a partir da própria prop `active` — mas quem marca a página atual só
+ * com o atributo ARIA (o Vanilla, e qualquer consumidor sem lib) recebe o mesmo
+ * destaque. Sem esta metade, a marcação existia para o leitor e não para a
+ * vista, e o critério 1.4.1 dependia de a stack usar uma lib.
+ * `:not([data-active="false"])` porque a lib emite o atributo com valor em
+ * TODOS os itens: sem o filtro, a barra inteira ficaria destacada. */
+.nds-navigation-menu-link[aria-current="page"],
 .nds-navigation-menu-link[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--accent) / 0.5);
+  font-weight: var(--font-weight-semibold, 600);
 }
 
+.nds-navigation-menu-link[aria-current="page"]:hover,
+.nds-navigation-menu-link[aria-current="page"]:focus,
 .nds-navigation-menu-link[data-active]:not([data-active="false"]):hover,
 .nds-navigation-menu-link[data-active]:not([data-active="false"]):focus {
   background-color: hsl(var(--accent));

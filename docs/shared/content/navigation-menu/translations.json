@@ -252,36 +252,36 @@
         "class": "Classe",
         "part": "Aplicação",
         "rootBg": {
-          "class": "bg-background",
-          "part": "Fundo da barra de navegação"
+          "class": ".nds-navigation-menu-link",
+          "part": "Fundo do item da barra em repouso"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Trigger ativo (Content aberto)"
+          "class": ".nds-navigation-menu-trigger:hover",
+          "part": "Gatilho sob o ponteiro, com foco ou com o painel aberto"
         },
         "linkActive": {
-          "class": "aria-[current=page]:bg-accent",
-          "part": "Link da página atual"
+          "class": ".nds-navigation-menu-link[aria-current=\"page\"]",
+          "part": "Destino marcado como página atual"
         },
         "viewportBg": {
-          "class": "bg-popover",
-          "part": "Fundo do Viewport (Content)"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Fundo do painel"
         },
         "viewportBorder": {
-          "class": "ring-foreground/10",
-          "part": "Borda sutil do Viewport (ring 1px)"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Borda de 1px do painel"
         },
         "viewportShadow": {
-          "class": "shadow-md",
-          "part": "Sombra do Viewport"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Elevação do painel"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Cantos arredondados do Viewport"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Cantos arredondados do painel"
         },
         "indicator": {
-          "class": "bg-popover ring-foreground/10",
-          "part": "Seta indicadora do Trigger ativo"
+          "class": ".nds-navigation-menu-indicator-arrow",
+          "part": "Seta que aponta para o gatilho ativo"
         }
       },
       "customizationTitle": "Customização",
@@ -291,10 +291,10 @@
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via role=navigation/list/listitem), 2.1.1 (operável por teclado: setas, Tab, Enter, ESC), 2.4.4 (Link Purpose via texto descritivo), 4.1.2 (name/role/value via aria-current/aria-expanded).",
+      "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (landmark de navegação com lista de itens), 2.1.1 (operável por teclado: setas, Tab, Enter, Escape), 2.4.4 (o texto do destino diz para onde ele leva), 4.1.2 (estado do gatilho e página atual expostos por aria-expanded e aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> recebe <code>role=\"navigation\"</code>; sempre forneça <code>aria-label</code> descrevendo o tipo (\"Navegação principal\", \"Navegação secundária\").",
-        "item2": "<code>NavigationMenuTrigger</code> recebe <code>aria-haspopup</code> e <code>aria-expanded</code> automáticos.",
+        "item2": "<code>NavigationMenuTrigger</code> recebe <code>aria-expanded</code> e <code>aria-controls</code> automáticos; o painel é uma lista de destinos, não um menu de comandos.",
         "item3": "Setas Esquerda/Direita movem foco entre Triggers (orientation horizontal); Cima/Baixo em vertical.",
         "item4": "Enter/Space abre Content; ESC fecha; Tab move o foco para fora do menu (não loop interno como Menubar).",
         "item5": "<code>NavigationMenuLink</code> com <code>aria-current=\"page\"</code> indica a página atual ao leitor de tela.",
@@ -311,14 +311,14 @@
       "aria": {
         "title": "Atributos ARIA",
         "navigation": "Root: <code>role=\"navigation\"</code> + <code>aria-label</code> obrigatório.",
-        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "trigger": "Gatilho: <code>aria-expanded</code> reflete recolhido/expandido.",
         "current": "Link da página atual: <code>aria-current=\"page\"</code>.",
-        "controls": "Trigger pode ter <code>aria-controls</code> apontando para Content."
+        "controls": "Gatilho: <code>aria-controls</code> aponta para o elemento do painel."
       },
       "screenReader": {
         "title": "Leitor de Tela",
         "navigation": "Anuncia: \"Navegação principal\" (ou aria-label customizado).",
-        "trigger": "Trigger lê: \"[texto], menu pop-up, recolhido/expandido\".",
+        "trigger": "Gatilho lê: \"[texto], botão, recolhido\" — e \"expandido\" com o painel aberto.",
         "current": "Link com aria-current=\"page\" anuncia: \"[texto], página atual\"."
       }
     },
@@ -362,38 +362,38 @@
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
         "item1": {
-          "action": "Hover/foco em NavigationMenuTrigger",
-          "result": "Content abre no Viewport após delayDuration",
+          "action": "Ponteiro sobre um gatilho da barra",
+          "result": "O painel do item abre depois da espera configurada",
           "priority": "high"
         },
         "item2": {
-          "action": "Setas Esquerda/Direita entre Triggers",
-          "result": "Foco move entre Triggers da lista",
+          "action": "Setas para os lados entre os gatilhos",
+          "result": "O foco anda de um item da barra para o vizinho",
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space em Trigger",
-          "result": "Content expande com role=menu",
+          "action": "Enter no gatilho com o painel fechado",
+          "result": "O painel abre e seus destinos ficam alcançáveis pelo teclado",
           "priority": "high"
         },
         "item4": {
-          "action": "ESC com Content aberto",
-          "result": "Content fecha e foco retorna ao Trigger",
+          "action": "Escape com o painel aberto",
+          "result": "O painel fecha e o foco volta ao gatilho",
           "priority": "high"
         },
         "item5": {
-          "action": "Click em NavigationMenuLink",
-          "result": "Navega para href; menu fecha automaticamente",
+          "action": "Escolher um destino dentro do painel",
+          "result": "O painel fecha; a navegação segue para o endereço do destino",
           "priority": "high"
         },
         "item6": {
-          "action": "Renderizar Link com aria-current=page",
-          "result": "Aplica bg-accent e leitor anuncia 'página atual'",
+          "action": "Marcar um destino como página atual",
+          "result": "O destino ganha destaque de fundo e é anunciado como página atual",
           "priority": "high"
         },
         "item7": {
-          "action": "Hover entre Triggers consecutivamente",
-          "result": "Content alterna sem fechar (skipDelayDuration)",
+          "action": "Passar o ponteiro de um gatilho ao outro",
+          "result": "O painel troca de conteúdo sem fechar no caminho",
           "priority": "medium"
         }
       },
@@ -401,34 +401,34 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Root tem role=navigation e aria-label (WCAG 1.3.1)",
-        "item3": "Trigger tem aria-haspopup e aria-expanded reflete estado",
-        "item4": "Link da página atual tem aria-current=\"page\" (WCAG 4.1.2)",
-        "item5": "Foco retorna ao Trigger ao fechar via ESC (WCAG 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto do Link e bg-popover (WCAG 1.4.3)"
+        "item2": "A barra é um landmark de navegação com nome próprio (WCAG 1.3.1)",
+        "item3": "O gatilho anuncia o estado com aria-expanded e aponta para o painel com aria-controls (WCAG 4.1.2)",
+        "item4": "O destino da página atual tem aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "O foco volta ao gatilho quando o painel fecha por Escape (WCAG 2.4.3)",
+        "item6": "Contraste mínimo de 4.5:1 entre o texto do destino e o fundo do painel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regressão Visual",
         "description": "Estados que Chromatic deve capturar.",
         "required": "Obrigatório",
         "item1": {
-          "story": "Barra horizontal com 4-5 items (alguns com dropdown)",
+          "story": "Barra horizontal com cinco itens, dois deles com painel",
           "priority": "high"
         },
         "item2": {
-          "story": "Trigger 'Produtos' aberto com mega-menu grid",
+          "story": "Painel de mega-menu aberto, em duas colunas",
           "priority": "high"
         },
         "item3": {
-          "story": "Link 'Início' com aria-current=page",
+          "story": "Barra com o destino da página atual em destaque",
           "priority": "high"
         },
         "item4": {
-          "story": "Indicator visível abaixo do Trigger ativo",
+          "story": "Seta indicadora visível com o painel aberto",
           "priority": "medium"
         },
         "item5": {
-          "story": "Vertical (orientation=vertical) em sidebar",
+          "story": "Barra vertical, como em uma coluna lateral",
           "priority": "medium"
         }
       }
@@ -708,36 +708,36 @@
         "class": "Class",
         "part": "Application",
         "rootBg": {
-          "class": "bg-background",
-          "part": "Navigation bar background"
+          "class": ".nds-navigation-menu-link",
+          "part": "Bar item background at rest"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Active Trigger (Content open)"
+          "class": ".nds-navigation-menu-trigger:hover",
+          "part": "Trigger under the pointer, focused, or with the panel open"
         },
         "linkActive": {
-          "class": "aria-[current=page]:bg-accent",
-          "part": "Current page Link"
+          "class": ".nds-navigation-menu-link[aria-current=\"page\"]",
+          "part": "Destination marked as the current page"
         },
         "viewportBg": {
-          "class": "bg-popover",
-          "part": "Viewport (Content) background"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Panel background"
         },
         "viewportBorder": {
-          "class": "ring-foreground/10",
-          "part": "Viewport subtle border (1px ring)"
+          "class": ".nds-navigation-menu-popup",
+          "part": "1px panel border"
         },
         "viewportShadow": {
-          "class": "shadow-md",
-          "part": "Viewport shadow"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Panel elevation"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Viewport rounded corners"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Panel corner radius"
         },
         "indicator": {
-          "class": "bg-popover ring-foreground/10",
-          "part": "Active Trigger indicator arrow"
+          "class": ".nds-navigation-menu-indicator-arrow",
+          "part": "Arrow pointing at the active trigger"
         }
       },
       "customizationTitle": "Customization",
@@ -747,10 +747,10 @@
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via role=navigation/list/listitem), 2.1.1 (keyboard operable: arrows, Tab, Enter, ESC), 2.4.4 (Link Purpose via descriptive text), 4.1.2 (name/role/value via aria-current/aria-expanded).",
+      "summary": "Meets WCAG 2.2 AA — 1.3.1 (navigation landmark with a list of items), 2.1.1 (keyboard operable: arrows, Tab, Enter, Escape), 2.4.4 (the destination text says where it leads), 4.1.2 (trigger state and current page exposed through aria-expanded and aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> gets <code>role=\"navigation\"</code>; always provide <code>aria-label</code> describing the type (\"Main navigation\", \"Footer navigation\").",
-        "item2": "<code>NavigationMenuTrigger</code> gets automatic <code>aria-haspopup</code> and <code>aria-expanded</code>.",
+        "item2": "<code>NavigationMenuTrigger</code> gets <code>aria-expanded</code> and <code>aria-controls</code> automatically; the panel is a list of destinations, not a command menu.",
         "item3": "Left/Right arrows move focus between Triggers (horizontal); Up/Down in vertical.",
         "item4": "Enter/Space opens Content; ESC closes; Tab moves focus out of menu (no internal loop like Menubar).",
         "item5": "<code>NavigationMenuLink</code> with <code>aria-current=\"page\"</code> indicates current page to screen reader.",
@@ -767,14 +767,14 @@
       "aria": {
         "title": "ARIA Attributes",
         "navigation": "Root: <code>role=\"navigation\"</code> + required <code>aria-label</code>.",
-        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "trigger": "Trigger: <code>aria-expanded</code> reflects collapsed/expanded.",
         "current": "Current page Link: <code>aria-current=\"page\"</code>.",
-        "controls": "Trigger may have <code>aria-controls</code> pointing to Content."
+        "controls": "Trigger: <code>aria-controls</code> points at the panel element."
       },
       "screenReader": {
         "title": "Screen Reader",
         "navigation": "Announces: \"Main navigation\" (or custom aria-label).",
-        "trigger": "Trigger reads: \"[text], menu pop-up, collapsed/expanded\".",
+        "trigger": "Trigger reads: \"[text], button, collapsed\" — and \"expanded\" once the panel opens.",
         "current": "Link with aria-current=\"page\" announces: \"[text], current page\"."
       }
     },
@@ -818,73 +818,73 @@
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
         "item1": {
-          "action": "Hover/focus on NavigationMenuTrigger",
-          "result": "Content opens in Viewport after delayDuration",
+          "action": "Pointer over a trigger in the bar",
+          "result": "The panel of that item opens after the configured delay",
           "priority": "high"
         },
         "item2": {
-          "action": "Left/Right arrows between Triggers",
-          "result": "Focus moves between list Triggers",
+          "action": "Sideways arrow keys across the triggers",
+          "result": "Focus moves from one bar item to its neighbour",
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space on Trigger",
-          "result": "Content expands with role=menu",
+          "action": "Enter on a trigger while the panel is closed",
+          "result": "The panel opens and its destinations become reachable by keyboard",
           "priority": "high"
         },
         "item4": {
-          "action": "ESC with Content open",
-          "result": "Content closes and focus returns to Trigger",
+          "action": "Escape while the panel is open",
+          "result": "The panel closes and focus returns to the trigger",
           "priority": "high"
         },
         "item5": {
-          "action": "Click on NavigationMenuLink",
-          "result": "Navigates to href; menu closes automatically",
+          "action": "Choosing a destination inside the panel",
+          "result": "The panel closes; navigation follows the address of the destination",
           "priority": "high"
         },
         "item6": {
-          "action": "Render Link with aria-current=page",
-          "result": "Applies bg-accent and reader announces 'current page'",
+          "action": "Marking a destination as the current page",
+          "result": "The destination gains a background highlight and is announced as the current page",
           "priority": "high"
         },
         "item7": {
-          "action": "Hover between Triggers consecutively",
-          "result": "Content alternates without closing (skipDelayDuration)",
+          "action": "Moving the pointer from one trigger to the next",
+          "result": "The panel swaps its content without closing on the way",
           "priority": "medium"
         }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria automated tools should confirm.",
-        "item1": "No violations reported by axe-core in default state",
-        "item2": "Root has role=navigation and aria-label (WCAG 1.3.1)",
-        "item3": "Trigger has aria-haspopup and aria-expanded reflects state",
-        "item4": "Current page Link has aria-current=\"page\" (WCAG 4.1.2)",
-        "item5": "Focus returns to Trigger on close via ESC (WCAG 2.4.3)",
-        "item6": "Minimum 4.5:1 contrast between Link text and bg-popover (WCAG 1.4.3)"
+        "item1": "No violations reported by axe-core in the default state",
+        "item2": "The bar is a navigation landmark with a name of its own (WCAG 1.3.1)",
+        "item3": "The trigger announces its state with aria-expanded and points at the panel with aria-controls (WCAG 4.1.2)",
+        "item4": "The current page destination carries aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "Focus returns to the trigger when the panel closes on Escape (WCAG 2.4.3)",
+        "item6": "At least 4.5:1 contrast between the destination text and the panel background (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Visual Regression",
         "description": "States Chromatic should capture.",
         "required": "Required",
         "item1": {
-          "story": "Horizontal bar with 4-5 items (some with dropdown)",
+          "story": "Horizontal bar with five items, two of them with a panel",
           "priority": "high"
         },
         "item2": {
-          "story": "'Products' Trigger open with mega-menu grid",
+          "story": "Mega-menu panel open, in two columns",
           "priority": "high"
         },
         "item3": {
-          "story": "'Home' Link with aria-current=page",
+          "story": "Bar with the current page destination highlighted",
           "priority": "high"
         },
         "item4": {
-          "story": "Indicator visible below active Trigger",
+          "story": "Indicator arrow visible while the panel is open",
           "priority": "medium"
         },
         "item5": {
-          "story": "Vertical (orientation=vertical) in sidebar",
+          "story": "Vertical bar, as in a side column",
           "priority": "medium"
         }
       }
@@ -1164,36 +1164,36 @@
         "class": "Clase",
         "part": "Aplicación",
         "rootBg": {
-          "class": "bg-background",
-          "part": "Fondo de la barra de navegación"
+          "class": ".nds-navigation-menu-link",
+          "part": "Fondo del elemento de la barra en reposo"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Trigger activo (Content abierto)"
+          "class": ".nds-navigation-menu-trigger:hover",
+          "part": "Disparador bajo el puntero, con foco o con el panel abierto"
         },
         "linkActive": {
-          "class": "aria-[current=page]:bg-accent",
-          "part": "Link de la página actual"
+          "class": ".nds-navigation-menu-link[aria-current=\"page\"]",
+          "part": "Destino marcado como página actual"
         },
         "viewportBg": {
-          "class": "bg-popover",
-          "part": "Fondo del Viewport (Content)"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Fondo del panel"
         },
         "viewportBorder": {
-          "class": "ring-foreground/10",
-          "part": "Borde sutil del Viewport (ring 1px)"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Borde de 1px del panel"
         },
         "viewportShadow": {
-          "class": "shadow-md",
-          "part": "Sombra del Viewport"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Elevación del panel"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Esquinas redondeadas del Viewport"
+          "class": ".nds-navigation-menu-popup",
+          "part": "Esquinas redondeadas del panel"
         },
         "indicator": {
-          "class": "bg-popover ring-foreground/10",
-          "part": "Flecha indicadora del Trigger activo"
+          "class": ".nds-navigation-menu-indicator-arrow",
+          "part": "Flecha que apunta al disparador activo"
         }
       },
       "customizationTitle": "Personalización",
@@ -1203,10 +1203,10 @@
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía role=navigation/list/listitem), 2.1.1 (operable por teclado: flechas, Tab, Enter, ESC), 2.4.4 (Link Purpose vía texto descriptivo), 4.1.2 (name/role/value vía aria-current/aria-expanded).",
+      "summary": "Cumple WCAG 2.2 AA — 1.3.1 (landmark de navegación con lista de elementos), 2.1.1 (operable por teclado: flechas, Tab, Enter, Escape), 2.4.4 (el texto del destino dice adónde lleva), 4.1.2 (estado del disparador y página actual expuestos con aria-expanded y aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> recibe <code>role=\"navigation\"</code>; proporciona siempre <code>aria-label</code> describiendo el tipo (\"Navegación principal\", \"Navegación secundaria\").",
-        "item2": "<code>NavigationMenuTrigger</code> recibe <code>aria-haspopup</code> y <code>aria-expanded</code> automáticos.",
+        "item2": "<code>NavigationMenuTrigger</code> recibe <code>aria-expanded</code> y <code>aria-controls</code> automáticos; el panel es una lista de destinos, no un menú de comandos.",
         "item3": "Flechas Izquierda/Derecha mueven foco entre Triggers (orientation horizontal); Arriba/Abajo en vertical.",
         "item4": "Enter/Space abre Content; ESC cierra; Tab mueve el foco fuera del menú (no loop interno como Menubar).",
         "item5": "<code>NavigationMenuLink</code> con <code>aria-current=\"page\"</code> indica la página actual al lector de pantalla.",
@@ -1223,14 +1223,14 @@
       "aria": {
         "title": "Atributos ARIA",
         "navigation": "Root: <code>role=\"navigation\"</code> + <code>aria-label</code> obligatorio.",
-        "trigger": "Trigger: <code>aria-haspopup</code>, <code>aria-expanded</code>.",
+        "trigger": "Disparador: <code>aria-expanded</code> refleja contraído/expandido.",
         "current": "Link de página actual: <code>aria-current=\"page\"</code>.",
-        "controls": "Trigger puede tener <code>aria-controls</code> apuntando al Content."
+        "controls": "Disparador: <code>aria-controls</code> apunta al elemento del panel."
       },
       "screenReader": {
         "title": "Lector de Pantalla",
         "navigation": "Anuncia: \"Navegación principal\" (o aria-label personalizado).",
-        "trigger": "Trigger lee: \"[texto], menú emergente, contraído/expandido\".",
+        "trigger": "El disparador lee: \"[texto], botón, contraído\" — y \"expandido\" con el panel abierto.",
         "current": "Link con aria-current=\"page\" anuncia: \"[texto], página actual\"."
       }
     },
@@ -1274,73 +1274,73 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",
         "item1": {
-          "action": "Hover/foco en NavigationMenuTrigger",
-          "result": "Content abre en el Viewport tras delayDuration",
+          "action": "Puntero sobre un disparador de la barra",
+          "result": "El panel de ese elemento se abre tras la espera configurada",
           "priority": "high"
         },
         "item2": {
-          "action": "Flechas Izquierda/Derecha entre Triggers",
-          "result": "Foco mueve entre Triggers de la lista",
+          "action": "Flechas laterales entre los disparadores",
+          "result": "El foco pasa de un elemento de la barra al vecino",
           "priority": "high"
         },
         "item3": {
-          "action": "Enter/Space en Trigger",
-          "result": "Content expande con role=menu",
+          "action": "Enter en el disparador con el panel cerrado",
+          "result": "El panel se abre y sus destinos quedan alcanzables con el teclado",
           "priority": "high"
         },
         "item4": {
-          "action": "ESC con Content abierto",
-          "result": "Content cierra y foco vuelve al Trigger",
+          "action": "Escape con el panel abierto",
+          "result": "El panel se cierra y el foco vuelve al disparador",
           "priority": "high"
         },
         "item5": {
-          "action": "Click en NavigationMenuLink",
-          "result": "Navega a href; menú cierra automáticamente",
+          "action": "Elegir un destino dentro del panel",
+          "result": "El panel se cierra; la navegación sigue a la dirección del destino",
           "priority": "high"
         },
         "item6": {
-          "action": "Renderizar Link con aria-current=page",
-          "result": "Aplica bg-accent y lector anuncia 'página actual'",
+          "action": "Marcar un destino como página actual",
+          "result": "El destino recibe realce de fondo y se anuncia como página actual",
           "priority": "high"
         },
         "item7": {
-          "action": "Hover entre Triggers consecutivamente",
-          "result": "Content alterna sin cerrar (skipDelayDuration)",
+          "action": "Pasar el puntero de un disparador a otro",
+          "result": "El panel cambia de contenido sin cerrarse por el camino",
           "priority": "medium"
         }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios que herramientas automatizadas deben confirmar.",
-        "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
-        "item2": "Root tiene role=navigation y aria-label (WCAG 1.3.1)",
-        "item3": "Trigger tiene aria-haspopup y aria-expanded refleja estado",
-        "item4": "Link de página actual tiene aria-current=\"page\" (WCAG 4.1.2)",
-        "item5": "Foco vuelve al Trigger al cerrar vía ESC (WCAG 2.4.3)",
-        "item6": "Contraste mínimo 4.5:1 entre texto del Link y bg-popover (WCAG 1.4.3)"
+        "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado",
+        "item2": "La barra es un landmark de navegación con nombre propio (WCAG 1.3.1)",
+        "item3": "El disparador anuncia su estado con aria-expanded y apunta al panel con aria-controls (WCAG 4.1.2)",
+        "item4": "El destino de la página actual lleva aria-current=\"page\" (WCAG 4.1.2)",
+        "item5": "El foco vuelve al disparador cuando el panel se cierra con Escape (WCAG 2.4.3)",
+        "item6": "Contraste mínimo de 4.5:1 entre el texto del destino y el fondo del panel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regresión Visual",
         "description": "Estados que Chromatic debe capturar.",
         "required": "Obligatorio",
         "item1": {
-          "story": "Barra horizontal con 4-5 items (algunos con dropdown)",
+          "story": "Barra horizontal con cinco elementos, dos de ellos con panel",
           "priority": "high"
         },
         "item2": {
-          "story": "Trigger 'Productos' abierto con mega-menú grid",
+          "story": "Panel de megamenú abierto, en dos columnas",
           "priority": "high"
         },
         "item3": {
-          "story": "Link 'Inicio' con aria-current=page",
+          "story": "Barra con el destino de la página actual realzado",
           "priority": "high"
         },
         "item4": {
-          "story": "Indicator visible bajo el Trigger activo",
+          "story": "Flecha indicadora visible con el panel abierto",
           "priority": "medium"
         },
         "item5": {
-          "story": "Vertical (orientation=vertical) en sidebar",
+          "story": "Barra vertical, como en una columna lateral",
           "priority": "medium"
         }
       }

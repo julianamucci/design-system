@@ -1210,20 +1210,22 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna do meio mostra a classe `.nds-*` real, não a classe utilitária
-    // que o conteúdo compartilhado guarda — é o que existe no CSS deste sistema.
+    // A coluna do meio vem do conteúdo compartilhado: desde que a tabela de
+    // tokens passou a guardar o seletor `.nds-*` real (e não mais a classe
+    // utilitária de um framework que saiu do projeto), não há o que reescrever
+    // aqui — o mapa local só duplicava o que o JSON já diz.
     return [
-      { token: '--background',         k: 'rootBg',         classe: '.nds-navigation-menu-link'    },
-      { token: '--accent',             k: 'triggerHover',   classe: '.nds-navigation-menu-trigger' },
-      { token: '--accent',             k: 'linkActive',     classe: '.nds-navigation-menu-link'    },
-      { token: '--popover',            k: 'viewportBg',     classe: '.nds-navigation-menu-popup'   },
-      { token: '--border',             k: 'viewportBorder', classe: '.nds-navigation-menu-popup'   },
-      { token: '--elevation-md',       k: 'viewportShadow', classe: '.nds-navigation-menu-popup'   },
-      { token: '--radius',             k: 'rounded',        classe: '.nds-navigation-menu-popup'   },
-      { token: '--muted-foreground',   k: 'indicator',      classe: '.nds-navigation-menu-child-description' },
-    ].map(({ token, k, classe }) => ({
+      { token: '--background',   k: 'rootBg'         },
+      { token: '--accent',       k: 'triggerHover'   },
+      { token: '--accent',       k: 'linkActive'     },
+      { token: '--popover',      k: 'viewportBg'     },
+      { token: '--border',       k: 'viewportBorder' },
+      { token: '--elevation-md', k: 'viewportShadow' },
+      { token: '--radius',       k: 'rounded'        },
+      { token: '--border',       k: 'indicator'      },
+    ].map(({ token, k }) => ({
       token,
-      value: classe,
+      value: t(`tokens.table.${k}.class`),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

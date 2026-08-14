@@ -1,6 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export { default as NavigationMenu } from './NavigationMenu.vue'
+export { default as NavigationMenuChild } from './NavigationMenuChild.vue'
 export { default as NavigationMenuContent } from './NavigationMenuContent.vue'
 export { default as NavigationMenuIndicator } from './NavigationMenuIndicator.vue'
 export { default as NavigationMenuItem } from './NavigationMenuItem.vue'

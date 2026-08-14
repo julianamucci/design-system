@@ -1,6 +1,23 @@
 import { within, waitFor } from "storybook/test";
 
 /**
+ * Regra do axe desligada nas stories que terminam com um overlay ABERTO.
+ *
+ * O `@base-ui/react` cerca o conteúdo portalizado com âncoras de foco —
+ * `<span tabindex="0" aria-hidden="true">` de 1px, fora do fluxo
+ * (`data-base-ui-focus-guard`) — e são elas que devolvem o foco ao limite certo
+ * quando o Tab entra ou sai do portal. O axe lê a combinação `aria-hidden` +
+ * focável como armadilha de foco (`aria-hidden-focus`), que é justamente o
+ * contrário do que essas âncoras fazem: elas existem para o Tab NÃO ficar preso.
+ *
+ * Tirar o `aria-hidden` calaria o axe e faria o leitor de tela anunciar dois
+ * elementos vazios em todo painel; tirar o `tabindex` desmontaria o mecanismo. A
+ * correção é da lib — desligar a regra é o que mantém as outras valendo
+ * enquanto isso. Mesma decisão já tomada no stack Angular, pelo mesmo motivo.
+ */
+export const REGRA_GUARDA_DE_FOCO = { id: "aria-hidden-focus", enabled: false } as const;
+
+/**
  * Aguarda elemento portalizado aparecer + animação concluir.
  * - Procura no document.body (não no canvas — portais escapam)
  * - Aguarda data-state="open" + role visible + opacity>0.5

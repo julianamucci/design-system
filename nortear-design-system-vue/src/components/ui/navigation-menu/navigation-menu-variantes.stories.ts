@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import {
   NavigationMenu,
+  NavigationMenuChild,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from './index';
+import { abrir, fechar } from './navigation-menu.fixtures';
 
 const meta = {
   title: 'UI/NavigationMenu/Variants',
@@ -15,12 +17,13 @@ const meta = {
   tags: ['navigation'],
   parameters: {
     layout: 'centered',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes de orientação do NavigationMenu: Horizontal (padrão para header) e Vertical (sidebar/mobile drawer).',
+          'As duas direções da barra. Horizontal é o cabeçalho de site, com os itens em linha; vertical é a coluna de uma barra lateral ou gaveta, com os itens empilhados.',
       },
     },
   },
@@ -31,6 +34,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   NavigationMenu,
+  NavigationMenuChild,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
@@ -40,60 +44,141 @@ const sharedComponents = {
 
 export const Horizontal: Story = {
   parameters: {
-    docs: { description: { story: 'Lista horizontal de items; padrão para header de site. Triggers e Content posicionados acima/abaixo.' } },
+    covers: ['visual.item1'],
+    docs: { description: { story: 'Padrão — itens lado a lado; usado em cabeçalhos de site e de produto web.' } },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 240px;" class="nds-cluster nds-w-full" data-justify="center">
-        <NavigationMenu aria-label="Navegação principal" :delay-duration="80">
+      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
+        <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
-            <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
             <NavigationMenuItem>
+              <NavigationMenuLink href="#inicio">Início</NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem value="produtos">
               <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="nds-grid" data-spacing="sm" style="width: 300px; padding: 0.75rem">
-                  <li><NavigationMenuLink href="#">Produto A</NavigationMenuLink></li>
-                  <li><NavigationMenuLink href="#">Produto B</NavigationMenuLink></li>
+                <ul class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
+                  <li>
+                    <NavigationMenuChild href="#inicial">
+                      <div class="nds-navigation-menu-child-label">Plano Inicial</div>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#profissional">
+                      <div class="nds-navigation-menu-child-label">Plano Profissional</div>
+                    </NavigationMenuChild>
+                  </li>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
+
+            <NavigationMenuItem value="recursos">
+              <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
+                  <li>
+                    <NavigationMenuChild href="#guias">
+                      <div class="nds-navigation-menu-child-label">Guias</div>
+                    </NavigationMenuChild>
+                  </li>
+                  <li>
+                    <NavigationMenuChild href="#api">
+                      <div class="nds-navigation-menu-child-label">Referência da API</div>
+                    </NavigationMenuChild>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#precos">Preços</NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#sobre">Sobre</NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const nav = canvas.getByRole('navigation', { name: /Navegação principal/i });
-    await expect(nav).toBeVisible();
-    await expect(nav).toHaveAttribute('aria-orientation', 'horizontal');
+
+    await step('Cinco itens, dois deles com painel', async () => {
+      const itens = canvasElement.querySelectorAll('[data-slot="navigation-menu-item"]');
+      await expect(itens).toHaveLength(5);
+      await expect(canvas.getAllByRole('button')).toHaveLength(2);
+      await expect(canvas.getAllByRole('link')).toHaveLength(3);
+    });
+
+    await step('Os itens ficam lado a lado, na mesma linha', async () => {
+      const itens = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]')];
+      const primeiro = itens[0].getBoundingClientRect();
+      const segundo = itens[1].getBoundingClientRect();
+      await expect(segundo.left).toBeGreaterThan(primeiro.left);
+      await expect(Math.abs(segundo.top - primeiro.top)).toBeLessThan(2);
+    });
+
+    await step('O painel abre abaixo da barra', async () => {
+      const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+      const conteudo = await abrir(gatilho);
+      const barra = canvas.getByRole('navigation', { name: 'Navegação principal' });
+      await expect(conteudo.getBoundingClientRect().top).toBeGreaterThan(
+        barra.getBoundingClientRect().top,
+      );
+      await fechar(gatilho);
+    });
   },
 };
 
 export const Vertical: Story = {
   parameters: {
-    docs: { description: { story: 'Lista vertical (orientation=vertical); usado em sidebars ou mobile drawers.' } },
+    covers: ['visual.item5'],
+    docs: {
+      description: {
+        story: 'Itens empilhados; usado em barras laterais e gavetas móveis. As setas Cima/Baixo percorrem a barra.',
+      },
+    },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 240px;" class="nds-cluster nds-w-full" data-justify="start">
-        <NavigationMenu orientation="vertical" aria-label="Navegação lateral" :delay-duration="80">
-          <NavigationMenuList class="" data-align="start" data-spacing="xs">
-            <NavigationMenuItem><NavigationMenuLink href="#" :active="true">Início</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Sobre</NavigationMenuLink></NavigationMenuItem>
-            <NavigationMenuItem><NavigationMenuLink href="#">Contato</NavigationMenuLink></NavigationMenuItem>
+      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="start">
+        <NavigationMenu orientation="vertical" aria-label="Navegação da conta">
+          <NavigationMenuList class="nds-stack nds-w-sm" data-spacing="xs">
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#painel">Painel</NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#relatorios">Relatórios</NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#configuracoes">Configurações</NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const nav = canvas.getByRole('navigation', { name: /Navegação lateral/i });
-    await expect(nav).toBeVisible();
-    await expect(nav).toHaveAttribute('aria-orientation', 'vertical');
+
+    await step('Os itens empilham em coluna', async () => {
+      const itens = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="navigation-menu-item"]')];
+      await expect(itens).toHaveLength(3);
+      const primeiro = itens[0].getBoundingClientRect();
+      const segundo = itens[1].getBoundingClientRect();
+      await expect(segundo.top).toBeGreaterThan(primeiro.top);
+    });
+
+    await step('As setas do eixo vertical percorrem a barra', async () => {
+      const links = canvas.getAllByRole('link');
+      links[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(links[1]);
+    });
   },
 };

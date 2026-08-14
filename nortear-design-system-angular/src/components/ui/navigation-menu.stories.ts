@@ -147,16 +147,6 @@ export const Playground: Story = {
       'accessibility.item2',
       'accessibility.item5',
     ],
-    // `aria-haspopup` é o único ponto do contrato que este stack NÃO cumpre, e
-    // é deliberado: a guideline 01 exige que o painel tenha o papel que o
-    // gatilho promete, e aqui o painel é uma lista de LINKS — não um menu de
-    // comandos. Anunciar `aria-haspopup` prometeria `role="menu"`, que seria
-    // errado para navegação. O que resta é o padrão de divulgação do APG:
-    // `aria-expanded` + `aria-controls`, verificados abaixo.
-    coversNotApplicable: {
-      'accessibility.item3':
-        'aria-haspopup exigiria role=menu no painel; aqui o painel é navegação (lista de links), não menu de comandos — o gatilho usa aria-expanded + aria-controls',
-    },
   },
   render: (args) => ({
     props: { ...args },
@@ -244,8 +234,10 @@ export const Playground: Story = {
 
     await step('Fechado, o gatilho anuncia apenas que está recolhido', async () => {
       await expect(produtos.getAttribute('aria-expanded')).toBe('false');
-      // Ver `coversNotApplicable` acima: `aria-haspopup` prometeria um papel de
-      // menu que o painel não tem.
+      // `aria-haspopup` prometeria um papel de menu que o painel não tem: a
+      // guideline 01 exige que o painel tenha o papel que o gatilho anuncia, e
+      // aqui o painel é navegação — uma lista de links, não comandos. O que
+      // vale é o padrão de divulgação do APG: `aria-expanded` + `aria-controls`.
       await expect(produtos.hasAttribute('aria-haspopup')).toBe(false);
     });
 

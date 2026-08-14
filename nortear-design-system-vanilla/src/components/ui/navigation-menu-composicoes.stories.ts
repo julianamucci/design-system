@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
+import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -8,11 +9,12 @@ const meta: Meta = {
   parameters: {
     actions: { disable: true },
     layout: 'padded',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes do NavigationMenu: LinkSimples (sem submenu), ComDropdown (lista vertical de sub-links), MegaMenuGrid (grid 2 colunas com descrições) e ComCardDestacado (card hero + lista de links). NOTA: a factory createNavigationMenu (Vanilla) NÃO possui Viewport compartilhado — cada Content abre em <div> próprio relativo ao Trigger. Para paridade visual com base-ui/reka-ui/bits-ui, ajustamos classes inline nos casos avançados.',
+          'As quatro formas canônicas do painel, do mais simples ao mais denso: só destinos diretos, um item com lista vertical, um mega-menu em duas colunas com descrição e um painel com destino em destaque ao lado dos complementares.',
       },
     },
   },
@@ -23,7 +25,7 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement, minHeight = 280): HTMLElement {
+function wrap(child: HTMLElement, minHeight = 300): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full nds-p-2';
@@ -34,20 +36,19 @@ function wrap(child: HTMLElement, minHeight = 280): HTMLElement {
   return wrapper;
 }
 
-async function closeAfter(): Promise<void> {
-  await userEvent.keyboard('{Escape}');
-  await waitFor(() => {
-    if (document.querySelector('[data-slot="navigation-menu"] button[aria-expanded="true"]')) {
-      throw new Error('Content ainda aberto');
-    }
-  });
-}
-
-function openFirstTrigger(nav: HTMLElement): void {
-  queueMicrotask(() => {
-    const trigger = nav.querySelector<HTMLButtonElement>('button[aria-haspopup]');
-    trigger?.click();
-  });
+/**
+ * Impede a navegação de verdade, como um roteador de cliente faria.
+ *
+ * Sem isto o clique tira a própria PÁGINA DE TESTE do ar — a conexão do runner
+ * com o navegador morre e a story inteira some do resultado, sem asserção
+ * nenhuma falhando. O fechamento do painel não depende deste `preventDefault`:
+ * o destino fecha a barra de qualquer jeito, justamente porque quem usa roteador
+ * chama `preventDefault` e continua querendo o painel fechado.
+ */
+function impedirNavegacao(nav: HTMLElement): void {
+  for (const a of nav.querySelectorAll('a')) {
+    a.addEventListener('click', (e) => e.preventDefault());
+  }
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -55,181 +56,199 @@ function openFirstTrigger(nav: HTMLElement): void {
 export const SimpleLink: Story = {
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início',   href: '/' },
-      { label: 'Preços',   href: '/precos' },
-      { label: 'Contato',  href: '/contato' },
+      { label: 'Início', href: '#inicio', active: true },
+      { label: 'Preços', href: '#precos' },
+      { label: 'Contato', href: '#contato' },
     ]);
-    nav.setAttribute('aria-label', 'Navegação principal');
-    return wrap(nav, 200);
+    nav.setAttribute('aria-label', 'Navegação institucional');
+    impedirNavegacao(nav);
+    return wrap(nav, 160);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Apenas <a> diretos, sem button[aria-haspopup]', async () => {
-      const links = canvas.getAllByRole('menuitem');
-      await expect(links.length).toBe(3);
-      const buttons = canvasElement.querySelectorAll('button[aria-haspopup]');
-      await expect(buttons.length).toBe(0);
+
+    await step('Sem gatilho: cada item navega no clique', async () => {
+      // É a diferença que decide se o NavigationMenu vale a pena. Sem hierarquia
+      // não há painel — e sem painel não há botão nenhum na barra.
+      await expect(canvas.getAllByRole('link')).toHaveLength(3);
+      await expect(canvas.queryAllByRole('button')).toHaveLength(0);
+    });
+
+    await step('O foco percorre a barra pelas setas', async () => {
+      const links = canvas.getAllByRole('link');
+      links[0].focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(document.activeElement).toBe(links[1]);
     });
   },
 };
 
 export const WithDropdown: Story = {
+  parameters: { covers: ['functional.item5'] },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início', href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
-        label: 'Produtos',
+        label: 'Planos',
         children: [
-          { label: 'Plano Inicial',      href: '/produtos/inicial'      },
-          { label: 'Plano Profissional', href: '/produtos/profissional' },
-          { label: 'Plano Empresarial',  href: '/produtos/empresarial'  },
-          { label: 'Comparar planos',    href: '/produtos/comparar'     },
+          { label: 'Plano Inicial', href: '#inicial' },
+          { label: 'Plano Profissional', href: '#profissional' },
+          { label: 'Plano Empresarial', href: '#empresarial' },
         ],
       },
+      { label: 'Contato', href: '#contato' },
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
-    openFirstTrigger(nav);
+    impedirNavegacao(nav);
     return wrap(nav);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Dropdown abre com 4 sub-links', async () => {
-      await waitFor(() => {
-        if (!canvasElement.querySelector('[role="menu"]:not(.hidden)')) {
-          throw new Error('menu não aberto');
-        }
-      });
-      const links = canvasElement.querySelectorAll('[role="menu"]:not(.hidden) a[role="menuitem"]');
-      await expect(links.length).toBe(4);
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Planos/ });
+
+    await step('O painel abre com os três destinos', async () => {
+      const painel = await abrir(gatilho, canvasElement);
+      await expect(within(painel).getAllByRole('link')).toHaveLength(3);
     });
-    await step('Limpa via ESC', closeAfter);
+
+    await step('Escolher um destino fecha o painel', async () => {
+      // Navegar É sair da página: um painel que sobrevive ao clique fica
+      // pendurado sobre a página seguinte.
+      const painel = await esperarPainel(canvasElement);
+      await userEvent.click(within(painel).getByRole('link', { name: 'Plano Profissional' }));
+      await esperarPainelSumir(canvasElement);
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('O foco volta a ser alcançável na barra', async () => {
+      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(canvas.getAllByRole('link')).toHaveLength(2);
+    });
   },
 };
 
 export const MegaMenuGrid: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início', href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
         label: 'Soluções',
         children: [
-          { label: 'Para Marketing',  href: '/solucoes/marketing',  description: 'Automação, leads e campanhas.' },
-          { label: 'Para Vendas',     href: '/solucoes/vendas',     description: 'Pipeline, CRM e propostas.'    },
-          { label: 'Para Suporte',    href: '/solucoes/suporte',    description: 'Tickets, base de conhecimento.' },
-          { label: 'Para Sucesso',    href: '/solucoes/sucesso',    description: 'Onboarding e retenção.'         },
-          { label: 'Para Operações',  href: '/solucoes/operacoes',  description: 'Workflows e integrações.'       },
-          { label: 'Para Analytics',  href: '/solucoes/analytics',  description: 'Dashboards e relatórios.'       },
+          { label: 'Para Marketing', href: '#marketing', description: 'Campanhas, automação e atribuição num lugar só.' },
+          { label: 'Para Vendas', href: '#vendas', description: 'Funil, previsão e histórico de cada negociação.' },
+          { label: 'Para Suporte', href: '#suporte', description: 'Fila de atendimento, base de conhecimento e métricas.' },
+          { label: 'Para Financeiro', href: '#financeiro', description: 'Cobrança recorrente, conciliação e relatórios fiscais.' },
         ],
       },
     ]);
-    nav.setAttribute('aria-label', 'Navegação principal');
+    nav.setAttribute('aria-label', 'Navegação de soluções');
+    impedirNavegacao(nav);
 
-    // Reorganiza Content em grid 2-cols (factory padrão é coluna única).
-    const content = nav.querySelector<HTMLElement>('[role="menu"]');
-    if (content) {
-      content.classList.remove('hidden');
-      content.style.minWidth = '560px';
-      content.classList.add('nds-grid');
-      content.dataset.cols = '2';
-      content.dataset.spacing = 'sm';
-      content.style.padding = '0.75rem';
-      // Abrir após mount
-      queueMicrotask(() => {
-        const trigger = nav.querySelector<HTMLButtonElement>('button[aria-haspopup]');
-        trigger?.click();
-      });
+    // O painel padrão é uma coluna; duas colunas são composição de quem usa, e
+    // saem das utilities compartilhadas — nada de largura em `style` inline,
+    // que ficaria de fora do tema e da escala.
+    const painel = nav.querySelector<HTMLElement>('.nds-navigation-menu-content');
+    painel?.classList.add('nds-grid', 'nds-w-lg');
+    painel?.setAttribute('data-fixed', '');
+    if (painel) {
+      painel.dataset.cols = '2';
+      painel.dataset.spacing = 'sm';
     }
-    return wrap(nav, 320);
+    return wrap(nav, 340);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Mega-menu abre com 6 sub-links em grid', async () => {
-      await waitFor(() => {
-        if (!canvasElement.querySelector('[role="menu"]:not(.hidden)')) {
-          throw new Error('menu não aberto');
-        }
-      });
-      const panel = canvasElement.querySelector<HTMLElement>('[role="menu"]:not(.hidden)');
-      await expect(panel).toHaveClass('nds-grid');
-      await expect(panel).toHaveAttribute('data-cols', '2');
-      const links = panel?.querySelectorAll('a[role="menuitem"]') ?? [];
-      await expect(links.length).toBe(6);
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Soluções/ });
+    // A story TERMINA ABERTA: é o estado que a regressão visual precisa
+    // capturar. `abrir` é idempotente e sobrevive ao replay.
+    const painel = await abrir(gatilho, canvasElement);
+
+    await step('Quatro destinos em duas colunas', async () => {
+      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
+      await expect(destinos).toHaveLength(4);
+      // Duas colunas de verdade: o segundo destino está à direita do primeiro,
+      // na mesma linha; o terceiro desce.
+      const [a, b, c] = destinos.map((d) => d.getBoundingClientRect());
+      await expect(b.left).toBeGreaterThan(a.left);
+      await expect(Math.abs(b.top - a.top)).toBeLessThan(2);
+      await expect(c.top).toBeGreaterThan(a.top);
     });
-    await step('Sub-links têm descrição', async () => {
-      const desc = canvasElement.querySelector('[role="menu"]:not(.hidden) a[role="menuitem"] p');
-      await expect(desc).toBeTruthy();
+
+    await step('A descrição faz parte do nome do destino', async () => {
+      // Critério 2.4.4 (Link Purpose): "Para Marketing" sozinho não diz o que
+      // há do outro lado. Por isso a descrição NÃO recebe aria-hidden.
+      const destino = within(painel).getByRole('link', { name: /Para Marketing/ });
+      await expect(destino.textContent).toContain('Campanhas');
     });
-    await step('Limpa via ESC', closeAfter);
+
+    await step('O gatilho continua sendo o dono do painel', async () => {
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(painelAberto(canvasElement)).not.toBeNull();
+    });
   },
 };
 
 export const WithHighlightedCard: Story = {
   render: () => {
     const nav = createNavigationMenu([
-      { label: 'Início', href: '/' },
+      { label: 'Início', href: '#inicio' },
       {
         label: 'Recursos',
         children: [
-          { label: 'Documentação',     href: '/docs',     description: 'Guias completos e referência da API.' },
-          { label: 'Tutoriais',        href: '/tutoriais', description: 'Aprenda com exemplos práticos.'       },
-          { label: 'Comunidade',       href: '/comunidade', description: 'Fóruns e Discord ativo.'             },
+          { label: 'Comece agora', href: '#comece', description: 'Publique o primeiro projeto em menos de cinco minutos.' },
+          { label: 'Guias', href: '#guias' },
+          { label: 'Referência da API', href: '#api' },
+          { label: 'Novidades', href: '#changelog' },
         ],
       },
     ]);
-    nav.setAttribute('aria-label', 'Navegação principal');
+    nav.setAttribute('aria-label', 'Navegação de recursos');
+    impedirNavegacao(nav);
 
-    // Compõe Content como flex linha: card destacado à esquerda + lista à direita.
-    const content = nav.querySelector<HTMLElement>('[role="menu"]');
-    if (content) {
-      content.style.minWidth = '560px';
-      content.classList.add('nds-cluster');
-      content.style.gap = '0.75rem';
-      content.style.padding = '0.75rem';
+    const painel = nav.querySelector<HTMLElement>('.nds-navigation-menu-content');
+    if (painel) {
+      painel.classList.add('nds-grid', 'nds-w-lg');
+      painel.setAttribute('data-fixed', '');
+      painel.dataset.cols = '2';
+      painel.dataset.spacing = 'sm';
 
-      // Card destacado (hero)
-      const card = document.createElement('a');
-      card.href = '/quickstart';
-      card.setAttribute('role', 'menuitem');
-      card.className =
-        'flex flex-col justify-end w-[220px] rounded-md bg-gradient-to-b from-muted to-accent p-4 no-underline transition-colors hover:from-accent hover:to-accent';
-      const cardTitle = document.createElement('div');
-      cardTitle.className = 'nds-text-base nds-font-semibold nds-leading-tight';
-      cardTitle.textContent = 'Comece em 5 minutos';
-      const cardDesc = document.createElement('p');
-      cardDesc.className = 'nds-mt-2 nds-text-body';
-      cardDesc.style.lineHeight = '1.375';
-      cardDesc.textContent = 'Crie sua primeira integração com nosso quickstart.';
-      card.append(cardTitle, cardDesc);
-
-      // Move card para o início do panel
-      content.insertBefore(card, content.firstChild);
-
-      // Empacota os links restantes em uma coluna lateral
-      const sideList = document.createElement('div');
-      sideList.className = 'nds-stack nds-flex-1';
-      sideList.dataset.spacing = 'xs';
-      const links = Array.from(content.querySelectorAll<HTMLElement>('a[role="menuitem"]:not(:first-child)'));
-      for (const link of links) {
-        sideList.appendChild(link);
-      }
-      content.appendChild(sideList);
-
-      queueMicrotask(() => {
-        const trigger = nav.querySelector<HTMLButtonElement>('button[aria-haspopup]');
-        trigger?.click();
-      });
+      const destinos = [...painel.querySelectorAll<HTMLElement>('.nds-navigation-menu-child')];
+      const [destaque, ...apoio] = destinos;
+      // O destaque ocupa a coluna inteira; os complementares empilham na outra.
+      destaque.classList.add('nds-h-full');
+      const coluna = document.createElement('div');
+      coluna.className = 'nds-stack';
+      coluna.dataset.spacing = 'xs';
+      for (const link of apoio) coluna.appendChild(link);
+      painel.appendChild(coluna);
     }
-    return wrap(nav, 320);
+    return wrap(nav, 340);
   },
   play: async ({ canvasElement, step }) => {
-    await step('Card destacado renderizado no mega-menu', async () => {
-      await waitFor(() => {
-        if (!canvasElement.querySelector('[role="menu"]:not(.hidden)')) {
-          throw new Error('menu não aberto');
-        }
-      });
-      const card = canvasElement.querySelector('[role="menu"]:not(.hidden) a[href="/quickstart"]');
-      await expect(card).toBeTruthy();
-      await expect(card).toHaveClass(/bg-gradient-to-b/);
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Recursos/ });
+    const painel = await abrir(gatilho, canvasElement);
+
+    await step('Um destino em destaque e três de apoio', async () => {
+      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
+      await expect(destinos).toHaveLength(4);
+      // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
+      // complementares, que é como a hierarquia aparece sem depender de cor.
+      const destaque = destinos[0].getBoundingClientRect();
+      const apoio = destinos[1].getBoundingClientRect();
+      await expect(destaque.height).toBeGreaterThan(apoio.height);
     });
-    await step('Limpa via ESC', closeAfter);
+
+    await step('Tab alcança todo o painel', async () => {
+      const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
+      for (const destino of destinos) {
+        await expect(destino.getAttribute('tabindex')).not.toBe('-1');
+      }
+      destinos[0].focus();
+      await expect(document.activeElement).toBe(destinos[0]);
+      await userEvent.tab();
+      await expect(painel.contains(document.activeElement)).toBe(true);
+    });
   },
 };
