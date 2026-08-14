@@ -3021,7 +3021,13 @@ function auditQuality(slug) {
     // sai reportada por duas regras, uma delas com diagnóstico errado.
     { id: 'variantes', label: 'variants.items', has: (pt) => hasKeys(pt.variants?.items) || hasKeys(pt.variants) },
     { id: 'composicoes', label: 'variants.compositions', has: (pt) => hasKeys(pt.variants?.compositions) },
-    { id: 'estados', label: 'states', has: (pt) => hasKeys(pt.states) },
+    // `states` aceita as mesmas DUAS formas que `variants`: os itens sob
+    // `items`, ou como chaves irmãs. Ler só as chaves irmãs dava falso em todo
+    // nó `{ title, items }` — as duas estão em SECTION_HEADERS, então `hasKeys`
+    // via nó vazio onde havia conteúdo, e cobrava a página que o renderizava
+    // como placeholder. O `sonner` é o único componente na forma com `items`, e
+    // era o único a carregar o achado nas quatro stacks que o renderizam.
+    { id: 'estados', label: 'states', has: (pt) => hasKeys(pt.states?.items) || hasKeys(pt.states) },
   ];
 
   for (const stack of STACKS) {
