@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Switch: Unchecked, Checked, Disabled (desativado), DisabledChecked, Invalid (aria-invalid) e FocoVisivel. O factory custom expõe `role="switch"` + `aria-checked` automaticamente.',
+          'Estados do Switch: Unchecked, Checked, Disabled, DisabledChecked, Invalid (aria-invalid) e FocusVisible. A factory expõe `role="switch"` + `aria-checked` automaticamente.',
       },
     },
   },
@@ -21,9 +21,48 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
+// ─── Contraste ────────────────────────────────────────────────────────────────
+// O axe do test-runner não mede o trilho: ele não é texto. A razão WCAG é conta,
+// não olhômetro — e é o que o item de contraste do contrato exige.
 
-function wrapWithLabel(sw: HTMLButtonElement, labelText: string, id: string, disabled = false): HTMLElement {
+/** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
+function fundoDoAmbiente(el: HTMLElement): string {
+  let atual: HTMLElement | null = el.parentElement;
+  while (atual) {
+    const cor = getComputedStyle(atual).backgroundColor;
+    if (cor && !/,\s*0\s*\)$/.test(cor) && cor !== 'transparent') return cor;
+    atual = atual.parentElement;
+  }
+  return 'rgb(255, 255, 255)';
+}
+
+function luminancia(cor: string): number {
+  const canais = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
+  const [r, g, b] = canais.map((v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contraste(a: string, b: string): number {
+  const la = luminancia(a);
+  const lb = luminancia(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+// ─── Helper ───────────────────────────────────────────────────────────────────
+//
+// Sem listener próprio no rótulo: `<button>` é elemento rotulável, então o
+// `<label for>` já encaminha a ativação — o handler manual que morava aqui
+// testava a si mesmo em vez de testar a associação.
+
+function wrapWithLabel(
+  sw: HTMLButtonElement,
+  labelText: string,
+  id: string,
+  disabled = false,
+): HTMLElement {
   const row = document.createElement('div');
   row.className = 'nds-cluster';
   row.dataset.spacing = 'sm';
@@ -33,13 +72,7 @@ function wrapWithLabel(sw: HTMLButtonElement, labelText: string, id: string, dis
   label.textContent = labelText;
   label.className =
     'nds-text-body nds-font-medium nds-leading-none ' +
-    (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
-  if (disabled) {
-    label.style.opacity = '0.7';
-  }
-  if (!disabled) {
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-  }
+    (disabled ? 'nds-cursor-default nds-text-muted-foreground' : 'nds-cursor-pointer');
   row.append(sw, label);
   return row;
 }
@@ -47,21 +80,30 @@ function wrapWithLabel(sw: HTMLButtonElement, labelText: string, id: string, dis
 // ─── Unchecked ────────────────────────────────────────────────────────────────
 
 export const Unchecked: Story = {
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { description: { story: 'Estado padrão desligado: trilho na cor de campo, thumb à esquerda, `aria-checked="false"`.' } },
+  },
   render: () => wrapWithLabel(
     createSwitch({ checked: false }),
     'Receber notificações por email',
     'sw-unchecked',
   ),
-  parameters: {
-    docs: { description: { story: 'Estado padrão desativado. Fundo `bg-input`, thumb à esquerda, `aria-checked="false"`.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-checked é "false"', async () => {
-      await expect(canvas.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
+    const sw = canvas.getByRole('switch');
+    const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+
+    await step('O controle é anunciado como desligado', async () => {
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+      await expect(sw).toHaveAttribute('data-state', 'unchecked');
     });
-    await step('data-state é "unchecked"', async () => {
-      await expect(canvas.getByRole('switch')).toHaveAttribute('data-state', 'unchecked');
+
+    await step('O thumb fica em repouso, encostado no início do trilho', async () => {
+      // Sem esta medida, um estado correto no atributo com a regra de transform
+      // ausente passaria: os dois desenhos ficariam idênticos.
+      const deslocamento = thumb.getBoundingClientRect().left - sw.getBoundingClientRect().left;
+      await expect(deslocamento).toBeLessThan(sw.getBoundingClientRect().width / 2);
     });
   },
 };
@@ -69,21 +111,33 @@ export const Unchecked: Story = {
 // ─── Checked ─────────────────────────────────────────────────────────────────
 
 export const Checked: Story = {
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item2'],
+    docs: { description: { story: 'Estado ligado: trilho na cor primária, thumb à direita, `aria-checked="true"`.' } },
+  },
   render: () => wrapWithLabel(
     createSwitch({ checked: true }),
     'Receber notificações por email',
     'sw-checked',
   ),
-  parameters: {
-    docs: { description: { story: 'Estado ativado. Fundo `bg-primary`, thumb à direita, `aria-checked="true"`.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('aria-checked é "true"', async () => {
-      await expect(canvas.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
+    const sw = canvas.getByRole('switch');
+    const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+
+    await step('O controle é anunciado como ligado', async () => {
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await expect(sw).toHaveAttribute('data-state', 'checked');
     });
-    await step('data-state é "checked"', async () => {
-      await expect(canvas.getByRole('switch')).toHaveAttribute('data-state', 'checked');
+
+    await step('O thumb desliza para o fim do trilho', async () => {
+      const deslocamento = thumb.getBoundingClientRect().left - sw.getBoundingClientRect().left;
+      await expect(deslocamento).toBeGreaterThan(sw.getBoundingClientRect().width / 3);
+    });
+
+    await step('O trilho ligado tem pelo menos 3:1 contra o ambiente', async () => {
+      const corTrilho = getComputedStyle(sw).backgroundColor;
+      await expect(contraste(corTrilho, fundoDoAmbiente(sw))).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -91,26 +145,33 @@ export const Checked: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: { description: { story: 'Switch desabilitado e desligado. Opacidade reduzida, cursor bloqueado, não responde a interações.' } },
+  },
   render: () => wrapWithLabel(
     createSwitch({ checked: false, disabled: true }),
     'Modo escuro',
     'sw-disabled',
     true,
   ),
-  parameters: {
-    docs: { description: { story: 'Switch desabilitado desativado. Opacidade reduzida, cursor bloqueado, não responde a interações.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('Atributo disabled presente', async () => {
+    await step('O controle é anunciado como desabilitado', async () => {
+      // A factory monta um <button> e usa o `disabled` nativo. A stack que
+      // renderiza o root como elemento não-nativo anuncia por `aria-disabled` —
+      // divergência idiomática de lib, registrada em vez de "alinhada". O
+      // comportamento exigido pelo contrato é o mesmo nas cinco.
       await expect(sw).toBeDisabled();
+      await expect(Number(getComputedStyle(sw).opacity)).toBeLessThan(1);
     });
 
-    await step('Clique não altera o estado', async () => {
-      await userEvent.click(sw);
-      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    await step('O clique não altera o estado', async () => {
+      const antes = sw.getAttribute('aria-checked');
+      await userEvent.click(sw, { pointerEventsCheck: 0 });
+      await expect(sw.getAttribute('aria-checked')).toBe(antes);
     });
   },
 };
@@ -118,26 +179,30 @@ export const Disabled: Story = {
 // ─── DisabledChecked ─────────────────────────────────────────────────────────
 
 export const DisabledChecked: Story = {
+  parameters: {
+    docs: { description: { story: 'Switch desabilitado e ligado. Estado bloqueado para edição pelo usuário.' } },
+  },
   render: () => wrapWithLabel(
     createSwitch({ checked: true, disabled: true }),
     'Modo escuro',
     'sw-disabled-checked',
     true,
   ),
-  parameters: {
-    docs: { description: { story: 'Switch desabilitado e ativado. Estado bloqueado para edição pelo usuário.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('aria-checked permanece "true"', async () => {
+    await step('Desabilitado não é o mesmo que desligado', async () => {
+      // Quem lê a tela precisa saber que a opção está ativa, ainda que não
+      // possa mudá-la.
+      await expect(sw).toBeDisabled();
       await expect(sw).toHaveAttribute('aria-checked', 'true');
     });
 
-    await step('Clique não altera o estado', async () => {
-      await userEvent.click(sw);
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
+    await step('O clique não altera o estado', async () => {
+      const antes = sw.getAttribute('aria-checked');
+      await userEvent.click(sw, { pointerEventsCheck: 0 });
+      await expect(sw.getAttribute('aria-checked')).toBe(antes);
     });
   },
 };
@@ -155,17 +220,17 @@ export const Invalid: Story = {
     row.dataset.spacing = 'sm';
 
     const id = 'sw-invalid';
+    // O anel de erro vem da própria folha (`.nds-switch[aria-invalid="true"]`);
+    // aqui só declaramos o estado. A classe e o box-shadow que moravam neste
+    // render duplicavam — e divergiam de — a regra compartilhada.
     const sw = createSwitch({ id });
     sw.setAttribute('aria-invalid', 'true');
     sw.setAttribute('aria-describedby', 'sw-invalid-msg');
-    sw.classList.add('nds-border-destructive');
-    sw.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent)';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Aceitar termos de uso';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     row.append(sw, label);
 
@@ -178,43 +243,60 @@ export const Invalid: Story = {
     return wrapper;
   },
   parameters: {
-    docs: { description: { story: 'Estado de erro via `aria-invalid="true"`. Borda e anel `destructive`. Mensagem associada via `aria-describedby`.' } },
+    docs: { description: { story: 'Estado de erro via `aria-invalid="true"`: anel na cor de erro em volta do trilho, com a mensagem associada por `aria-describedby`.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
-    await step('aria-invalid presente', async () => {
+
+    await step('O erro é anunciado e apontado para a mensagem', async () => {
       await expect(sw).toHaveAttribute('aria-invalid', 'true');
-    });
-    await step('aria-describedby aponta para a mensagem', async () => {
       await expect(sw).toHaveAttribute('aria-describedby', 'sw-invalid-msg');
+    });
+
+    await step('O estado inválido deixa marca visual própria', async () => {
+      // Sem esta medida, `aria-invalid` correto com a regra de CSS ausente
+      // passaria: o leitor de tela anunciaria o erro que ninguém vê.
+      await expect(getComputedStyle(sw).boxShadow).not.toBe('none');
     });
   },
 };
 
-// ─── FocoVisivel ──────────────────────────────────────────────────────────────
+// ─── FocusVisible ─────────────────────────────────────────────────────────────
 
 export const FocusVisible: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: { description: { story: 'Estado de foco por teclado. Tab move o foco ao Switch e o anel fica visível.' } },
+  },
   render: () => wrapWithLabel(
     createSwitch({}),
     'Foco visível via teclado',
     'sw-focus',
   ),
-  parameters: {
-    docs: { description: { story: 'Estado de foco via teclado. Pressione Tab para navegar e verificar o anel `ring-ring`.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('Switch recebe foco programaticamente', async () => {
-      (sw as HTMLElement).focus();
+    await step('Tab leva o foco ao controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(sw).toHaveFocus();
     });
 
+    await step('O foco por teclado deixa anel visível', async () => {
+      // Um `outline: 0` sem substituto passaria em qualquer teste de estado —
+      // é preciso olhar o estilo computado.
+      const estilo = getComputedStyle(sw);
+      await expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none').toBe(true);
+    });
+
     await step('Space alterna o estado quando focado', async () => {
+      const antes = sw.getAttribute('aria-checked');
       await userEvent.keyboard(' ');
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
+      await expect(sw.getAttribute('aria-checked')).not.toBe(antes);
+      await userEvent.keyboard(' ');
+      await expect(sw.getAttribute('aria-checked')).toBe(antes);
     });
   },
 };

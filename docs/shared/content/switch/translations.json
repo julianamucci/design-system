@@ -23,8 +23,8 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Switch</strong> — root com <code>role=\"switch\"</code> que alterna entre <code>data-checked</code> e <code>data-unchecked</code>.",
-      "item2": "<strong>Thumb</strong> (interno) — bola que desliza entre as duas posições; <code>translate-x</code> animado.",
+      "item1": "<strong>Switch</strong> — root com <code>role=\"switch\"</code> e <code>aria-checked</code>, que reflete ligado/desligado.",
+      "item2": "<strong>Thumb</strong> (interno) — bola que desliza entre as duas posições, com deslocamento animado.",
       "item3": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do Switch.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
@@ -96,7 +96,7 @@
           "panel": {
             "name": "Painel de configurações",
             "format": "Label + descrição à esquerda · Switch à direita",
-            "good": "Layout flex justify-between",
+            "good": "Rótulo e descrição à esquerda, controle à direita",
             "bad": "Switch acima e label sem associação"
           }
         }
@@ -138,9 +138,9 @@
         "sm": "Small"
       },
       "styles": {
-        "default": "Switch padrão — <code>32×18.4px</code>, Label à direita.",
-        "withDescription": "Switch com Label + descrição auxiliar — layout <code>flex justify-between</code> em painel.",
-        "sm": "Tamanho compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+        "default": "Switch padrão — trilho de <code>36×20px</code> com thumb de <code>16px</code>, Label à direita.",
+        "withDescription": "Switch com Label + descrição auxiliar — em painel, com o texto à esquerda e o controle à direita.",
+        "sm": "Tamanho compacto — trilho de <code>24×16px</code> com thumb de <code>12px</code>."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -156,8 +156,8 @@
         },
         "inForm": {
           "name": "Em formulário",
-          "description": "Switch dentro de um <code>&lt;form&gt;</code> com prop <code>name</code> (React/Vue/Svelte) ou sincronizado via <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) para participar do submit nativo.",
-          "use": "Aceite de termos opcionais, opt-in de newsletter em formulários multi-campo. Use o <code>onCheckedChange</code> para sincronizar o valor."
+          "description": "Switch dentro de um <code>&lt;form&gt;</code>, participando do submit nativo pelo nome do campo. Onde a implementação não emitir um campo oculto próprio, sincronize o valor em um <code>&lt;input type=\"hidden\"&gt;</code>.",
+          "use": "Aceite de termos opcionais, opt-in de newsletter em formulários multi-campo. Use o callback de mudança para sincronizar o valor."
         }
       }
     },
@@ -166,32 +166,32 @@
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
-        "behavior": "Desativado — <code>data-unchecked</code>, fundo <code>input</code>, thumb à esquerda."
+        "behavior": "Desativado — <code>aria-checked=\"false\"</code>, trilho na cor de campo e thumb à esquerda."
       },
       "checked": {
         "label": "Checked",
         "trigger": "click ou Space/Enter",
-        "behavior": "Ativado — <code>data-checked</code>, fundo <code>primary</code>, thumb à direita."
+        "behavior": "Ativado — <code>aria-checked=\"true\"</code>, trilho na cor primária e thumb à direita."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre o Switch",
-        "behavior": "Mouse sobre — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário."
+        "behavior": "Mouse sobre — sem mudança visual obrigatória; o cursor vira ponteiro."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab para o Switch",
-        "behavior": "Focado via teclado — anel <code>ring-3 ring-ring/50</code>."
+        "behavior": "Focado via teclado — anel duplo de foco desenhado a partir do token de anel."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando o consumidor desabilita o controle",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>."
+        "behavior": "Desabilitado — opacidade reduzida e cursor bloqueado; não responde a clique nem a teclado."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" no Switch",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — anel na cor de erro em volta do trilho."
       },
       "cols": {
         "state": "Estado",
@@ -241,7 +241,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "Não",
-          "description": "Tamanho do Switch. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+          "description": "Tamanho do Switch. <code>default</code> = 36×20px, <code>sm</code> = 24×16px."
         },
         "id": {
           "type": "string",
@@ -263,37 +263,29 @@
         "class": "Classe",
         "part": "Aplicação",
         "input": {
-          "class": "bg-input",
-          "part": "Fundo no estado unchecked"
+          "class": ".nds-switch",
+          "part": "Fundo do trilho no estado desligado"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Fundo no estado checked"
+          "class": ".nds-switch[data-state=\"checked\"]",
+          "part": "Fundo do trilho no estado ligado"
         },
         "background": {
-          "class": "bg-background",
-          "part": "Cor do Thumb (light)"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Cor do Thumb (dark + checked)"
+          "class": ".nds-switch-thumb",
+          "part": "Cor do Thumb"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco"
+          "class": ".nds-switch:focus-visible",
+          "part": "Anel de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borda no estado inválido"
-        },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto do Label associado"
+          "class": ".nds-switch[aria-invalid=\"true\"]",
+          "part": "Anel no estado inválido"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Cor customizada do checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamanho customizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+        "web": "/* Cor do trilho ligado — sobrescreva o token que o .nds-switch lê */\n.switch-success {\n  --primary: 142 71% 45%;\n}\n\n/* Medida própria — trilho e thumb são ajustados juntos */\n.nds-switch[data-size=\"default\"] {\n  width: 2.5rem;   /* 40px */\n  height: 1.5rem;  /* 24px */\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb {\n  width: 1.25rem;  /* 20px */\n  height: 1.25rem;\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-state=\"checked\"],\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-checked] {\n  transform: translateX(1rem);\n}"
       }
     },
     "accessibility": {
@@ -303,7 +295,7 @@
         "item1": "<code>role=\"switch\"</code> aplicado automaticamente",
         "item2": "<code>aria-checked</code> reflete o estado true/false",
         "item3": "Label OBRIGATÓRIO via <code>htmlFor</code> + <code>id</code>",
-        "item4": "Anel de foco visível com <code>ring-3 ring-ring/50</code>",
+        "item4": "Anel de foco visível no <code>:focus-visible</code>, desenhado com o token de anel",
         "item5": "<code>aria-invalid=\"true\"</code> quando há erro de validação",
         "item6": "Contraste mínimo 3:1 entre fundo checked/unchecked e ambiente"
       },
@@ -353,8 +345,8 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Efeito imediato</strong> — o Switch dispara o callback de mudança a cada toggle. Não usar dentro de form que exige submit.",
       "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
-      "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para tamanho customizado, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Vanilla</strong> — a factory <code>createSwitch()</code> não suporta <code>size</code>, <code>defaultChecked</code> nem <code>name</code> nativos. Use a prop <code>checked</code> como valor inicial e sincronize com <code>&lt;input type=\"hidden\"&gt;</code> via o callback de mudança para formulários."
+      "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para uma medida própria, sobrescreva <code>.nds-switch[data-size]</code> no CSS.",
+      "item5": "<strong>Envio em formulário</strong> — onde a implementação não emitir um campo oculto próprio, sincronize o estado em um <code>&lt;input type=\"hidden\"&gt;</code> pelo callback de mudança. O estado inicial de uma implementação não-controlada vem da prop de estado inicial."
     },
     "analytics": {
       "title": "Analytics",
@@ -391,7 +383,7 @@
         },
         "item4": {
           "action": "Clicar com disabled=true",
-          "result": "Não muda estado; aria-disabled true",
+          "result": "Não muda de estado e continua anunciado como desabilitado",
           "priority": "medium"
         }
       },
@@ -400,7 +392,7 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 3:1 entre fundo e ambiente",
-        "item3": "Focus ring visível com ring-3 ring-ring/50",
+        "item3": "Anel de foco visível ao focar por teclado",
         "item4": "role=\"switch\" presente",
         "item5": "aria-checked reflete o estado"
       },
@@ -471,8 +463,8 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Switch</strong> — root with <code>role=\"switch\"</code> that toggles between <code>data-checked</code> and <code>data-unchecked</code>.",
-      "item2": "<strong>Thumb</strong> (internal) — ball that slides between the two positions; animated <code>translate-x</code>.",
+      "item1": "<strong>Switch</strong> — root with <code>role=\"switch\"</code> and <code>aria-checked</code>, which reflects on/off.",
+      "item2": "<strong>Thumb</strong> (internal) — ball that slides between the two positions, with an animated shift.",
       "item3": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the Switch <code>id</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
@@ -544,7 +536,7 @@
           "panel": {
             "name": "Settings panel",
             "format": "Label + description on the left · Switch on the right",
-            "good": "Flex justify-between layout",
+            "good": "Label and description on the left, control on the right",
             "bad": "Switch above and label without association"
           }
         }
@@ -586,9 +578,9 @@
         "sm": "Small"
       },
       "styles": {
-        "default": "Default switch — <code>32×18.4px</code>, Label on the right.",
-        "withDescription": "Switch with Label + helper description — <code>flex justify-between</code> layout in panel.",
-        "sm": "Compact size — <code>size=\"sm\"</code>, <code>24×14px</code>."
+        "default": "Default switch — <code>36×20px</code> track with a <code>16px</code> thumb, Label on the right.",
+        "withDescription": "Switch with Label + helper description — in a panel, text on the left and control on the right.",
+        "sm": "Compact size — <code>24×16px</code> track with a <code>12px</code> thumb."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -604,8 +596,8 @@
         },
         "inForm": {
           "name": "In a form",
-          "description": "Switch inside a <code>&lt;form&gt;</code> with a <code>name</code> prop (React/Vue/Svelte) or synced via <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) so it participates in native submit.",
-          "use": "Optional terms acceptance, newsletter opt-in in multi-field forms. Use <code>onCheckedChange</code> to sync the value."
+          "description": "Switch inside a <code>&lt;form&gt;</code>, taking part in native submit through the field name. Where the implementation emits no hidden field of its own, sync the value into an <code>&lt;input type=\"hidden\"&gt;</code>.",
+          "use": "Optional terms acceptance, newsletter opt-in in multi-field forms. Use the change callback to sync the value."
         }
       }
     },
@@ -614,32 +606,32 @@
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
-        "behavior": "Off — <code>data-unchecked</code>, <code>input</code> background, thumb on the left."
+        "behavior": "Off — <code>aria-checked=\"false\"</code>, track in the field colour and thumb on the left."
       },
       "checked": {
         "label": "Checked",
         "trigger": "click or Space/Enter",
-        "behavior": "On — <code>data-checked</code>, <code>primary</code> background, thumb on the right."
+        "behavior": "On — <code>aria-checked=\"true\"</code>, track in the primary colour and thumb on the right."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer over the Switch",
-        "behavior": "Mouse over — no required visual change; apply <code>hover:</code> as needed."
+        "behavior": "Mouse over — no required visual change; the cursor becomes a pointer."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab to the Switch",
-        "behavior": "Keyboard focused — <code>ring-3 ring-ring/50</code>."
+        "behavior": "Keyboard focused — a double focus ring drawn from the ring token."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the consumer disables the control",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>."
+        "behavior": "Disabled — reduced opacity and blocked cursor; responds to neither click nor keyboard."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" on the Switch",
-        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+        "behavior": "<code>aria-invalid=\"true\"</code> — an error-coloured ring around the track."
       },
       "cols": {
         "state": "State",
@@ -689,7 +681,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Switch size. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+          "description": "Switch size. <code>default</code> = 36×20px, <code>sm</code> = 24×16px."
         },
         "id": {
           "type": "string",
@@ -711,37 +703,29 @@
         "class": "Class",
         "part": "Application",
         "input": {
-          "class": "bg-input",
-          "part": "Background in unchecked state"
+          "class": ".nds-switch",
+          "part": "Track background in the off state"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Background in checked state"
+          "class": ".nds-switch[data-state=\"checked\"]",
+          "part": "Track background in the on state"
         },
         "background": {
-          "class": "bg-background",
-          "part": "Thumb color (light)"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Thumb color (dark + checked)"
+          "class": ".nds-switch-thumb",
+          "part": "Thumb colour"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring"
+          "class": ".nds-switch:focus-visible",
+          "part": "Keyboard focus ring"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Border in invalid state"
-        },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Associated Label text"
+          "class": ".nds-switch[aria-invalid=\"true\"]",
+          "part": "Ring in the invalid state"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Custom checked color */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Custom size */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+        "web": "/* On-track colour — override the token that .nds-switch reads */\n.switch-success {\n  --primary: 142 71% 45%;\n}\n\n/* A size of your own — track and thumb are adjusted together */\n.nds-switch[data-size=\"default\"] {\n  width: 2.5rem;   /* 40px */\n  height: 1.5rem;  /* 24px */\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb {\n  width: 1.25rem;  /* 20px */\n  height: 1.25rem;\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-state=\"checked\"],\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-checked] {\n  transform: translateX(1rem);\n}"
       }
     },
     "accessibility": {
@@ -751,7 +735,7 @@
         "item1": "<code>role=\"switch\"</code> applied automatically",
         "item2": "<code>aria-checked</code> reflects true/false state",
         "item3": "Label REQUIRED via <code>htmlFor</code> + <code>id</code>",
-        "item4": "Visible focus ring with <code>ring-3 ring-ring/50</code>",
+        "item4": "Visible focus ring on <code>:focus-visible</code>, drawn with the ring token",
         "item5": "<code>aria-invalid=\"true\"</code> when validation fails",
         "item6": "Minimum 3:1 contrast between checked/unchecked background and surroundings"
       },
@@ -801,8 +785,8 @@
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>Immediate effect</strong> — Switch fires the change callback on every toggle. Don't use inside form that requires submit.",
       "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
-      "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For custom size, use CSS via <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Vanilla</strong> — the <code>createSwitch()</code> factory does not natively support <code>size</code>, <code>defaultChecked</code> or <code>name</code>. Use the <code>checked</code> prop as initial value and sync with <code>&lt;input type=\"hidden\"&gt;</code> via the change callback for forms."
+      "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For a size of your own, override <code>.nds-switch[data-size]</code> in CSS.",
+      "item5": "<strong>Form submission</strong> — where the implementation emits no hidden field of its own, sync the state into an <code>&lt;input type=\"hidden\"&gt;</code> through the change callback. The starting state of an uncontrolled implementation comes from its initial-state prop."
     },
     "analytics": {
       "title": "Analytics",
@@ -839,7 +823,7 @@
         },
         "item4": {
           "action": "Click with disabled=true",
-          "result": "Doesn't change state; aria-disabled true",
+          "result": "Does not change state and stays announced as disabled",
           "priority": "medium"
         }
       },
@@ -848,7 +832,7 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 3:1 contrast between background and surroundings",
-        "item3": "Visible focus ring with ring-3 ring-ring/50",
+        "item3": "Focus ring visible on keyboard focus",
         "item4": "role=\"switch\" present",
         "item5": "aria-checked reflects state"
       },
@@ -919,8 +903,8 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Switch</strong> — root con <code>role=\"switch\"</code> que alterna entre <code>data-checked</code> y <code>data-unchecked</code>.",
-      "item2": "<strong>Thumb</strong> (interno) — bola que se desliza entre las dos posiciones; <code>translate-x</code> animado.",
+      "item1": "<strong>Switch</strong> — root con <code>role=\"switch\"</code> y <code>aria-checked</code>, que refleja encendido/apagado.",
+      "item2": "<strong>Thumb</strong> (interno) — bola que se desliza entre las dos posiciones, con desplazamiento animado.",
       "item3": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del Switch.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
@@ -992,7 +976,7 @@
           "panel": {
             "name": "Panel de configuración",
             "format": "Label + descripción a la izquierda · Switch a la derecha",
-            "good": "Layout flex justify-between",
+            "good": "Etiqueta y descripción a la izquierda, control a la derecha",
             "bad": "Switch arriba y label sin asociación"
           }
         }
@@ -1034,9 +1018,9 @@
         "sm": "Small"
       },
       "styles": {
-        "default": "Switch por defecto — <code>32×18.4px</code>, Label a la derecha.",
-        "withDescription": "Switch con Label + descripción auxiliar — layout <code>flex justify-between</code> en panel.",
-        "sm": "Tamaño compacto — <code>size=\"sm\"</code>, <code>24×14px</code>."
+        "default": "Switch por defecto — riel de <code>36×20px</code> con thumb de <code>16px</code>, Label a la derecha.",
+        "withDescription": "Switch con Label + descripción auxiliar — en panel, con el texto a la izquierda y el control a la derecha.",
+        "sm": "Tamaño compacto — riel de <code>24×16px</code> con thumb de <code>12px</code>."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -1052,8 +1036,8 @@
         },
         "inForm": {
           "name": "En formulario",
-          "description": "Switch dentro de un <code>&lt;form&gt;</code> con prop <code>name</code> (React/Vue/Svelte) o sincronizado vía <code>&lt;input type=\"hidden\"&gt;</code> (Vanilla) para participar del submit nativo.",
-          "use": "Aceptación de términos opcionales, opt-in de newsletter en formularios multi-campo. Usa <code>onCheckedChange</code> para sincronizar el valor."
+          "description": "Switch dentro de un <code>&lt;form&gt;</code>, participando del submit nativo por el nombre del campo. Donde la implementación no emita un campo oculto propio, sincroniza el valor en un <code>&lt;input type=\"hidden\"&gt;</code>.",
+          "use": "Aceptación de términos opcionales, opt-in de newsletter en formularios multi-campo. Usa el callback de cambio para sincronizar el valor."
         }
       }
     },
@@ -1062,32 +1046,32 @@
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
-        "behavior": "Apagado — <code>data-unchecked</code>, fondo <code>input</code>, thumb a la izquierda."
+        "behavior": "Apagado — <code>aria-checked=\"false\"</code>, riel en el color de campo y thumb a la izquierda."
       },
       "checked": {
         "label": "Checked",
         "trigger": "click o Space/Enter",
-        "behavior": "Encendido — <code>data-checked</code>, fondo <code>primary</code>, thumb a la derecha."
+        "behavior": "Encendido — <code>aria-checked=\"true\"</code>, riel en el color primario y thumb a la derecha."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre el Switch",
-        "behavior": "Mouse encima — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario."
+        "behavior": "Mouse encima — sin cambio visual obligatorio; el cursor pasa a puntero."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab hasta el Switch",
-        "behavior": "Enfocado por teclado — <code>ring-3 ring-ring/50</code>."
+        "behavior": "Enfocado por teclado — anillo doble de foco dibujado a partir del token de anillo."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando el consumidor deshabilita el control",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>."
+        "behavior": "Deshabilitado — opacidad reducida y cursor bloqueado; no responde a clic ni a teclado."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" en el Switch",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — anillo del color de error alrededor del riel."
       },
       "cols": {
         "state": "Estado",
@@ -1137,7 +1121,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Tamaño del Switch. <code>default</code> = 32×18.4px, <code>sm</code> = 24×14px."
+          "description": "Tamaño del Switch. <code>default</code> = 36×20px, <code>sm</code> = 24×16px."
         },
         "id": {
           "type": "string",
@@ -1159,37 +1143,29 @@
         "class": "Clase",
         "part": "Aplicación",
         "input": {
-          "class": "bg-input",
-          "part": "Fondo en estado unchecked"
+          "class": ".nds-switch",
+          "part": "Fondo del riel en estado apagado"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Fondo en estado checked"
+          "class": ".nds-switch[data-state=\"checked\"]",
+          "part": "Fondo del riel en estado encendido"
         },
         "background": {
-          "class": "bg-background",
-          "part": "Color del Thumb (light)"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Color del Thumb (dark + checked)"
+          "class": ".nds-switch-thumb",
+          "part": "Color del Thumb"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco"
+          "class": ".nds-switch:focus-visible",
+          "part": "Anillo de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borde en estado inválido"
-        },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Texto del Label asociado"
+          "class": ".nds-switch[aria-invalid=\"true\"]",
+          "part": "Anillo en estado inválido"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Color personalizado del checked */\n.switch-success[data-checked] {\n  @apply bg-green-500;\n}\n\n/* Tamaño personalizado */\n[data-slot=\"switch\"][data-size=\"default\"] {\n  width: 40px;\n  height: 24px;\n}"
+        "web": "/* Color del riel encendido — sobrescribe el token que lee .nds-switch */\n.switch-success {\n  --primary: 142 71% 45%;\n}\n\n/* Medida propia — riel y thumb se ajustan juntos */\n.nds-switch[data-size=\"default\"] {\n  width: 2.5rem;   /* 40px */\n  height: 1.5rem;  /* 24px */\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb {\n  width: 1.25rem;  /* 20px */\n  height: 1.25rem;\n}\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-state=\"checked\"],\n.nds-switch[data-size=\"default\"] .nds-switch-thumb[data-checked] {\n  transform: translateX(1rem);\n}"
       }
     },
     "accessibility": {
@@ -1199,7 +1175,7 @@
         "item1": "<code>role=\"switch\"</code> aplicado automáticamente",
         "item2": "<code>aria-checked</code> refleja el estado true/false",
         "item3": "Label OBLIGATORIO vía <code>htmlFor</code> + <code>id</code>",
-        "item4": "Anillo de foco visible con <code>ring-3 ring-ring/50</code>",
+        "item4": "Anillo de foco visible en <code>:focus-visible</code>, dibujado con el token de anillo",
         "item5": "<code>aria-invalid=\"true\"</code> cuando hay error de validación",
         "item6": "Contraste mínimo 3:1 entre fondo checked/unchecked y ambiente"
       },
@@ -1249,8 +1225,8 @@
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>Efecto inmediato</strong> — el Switch dispara el callback de cambio en cada toggle. No usar dentro de form que requiere submit.",
       "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
-      "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para tamaño personalizado, usa CSS vía <code>[data-slot=\"switch\"]</code>.",
-      "item5": "<strong>Vanilla</strong> — la factory <code>createSwitch()</code> no soporta <code>size</code>, <code>defaultChecked</code> ni <code>name</code> nativamente. Usa la prop <code>checked</code> como valor inicial y sincroniza con <code>&lt;input type=\"hidden\"&gt;</code> vía el callback de cambio para formularios."
+      "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para una medida propia, sobrescribe <code>.nds-switch[data-size]</code> en CSS.",
+      "item5": "<strong>Envío en formulario</strong> — donde la implementación no emita un campo oculto propio, sincroniza el estado en un <code>&lt;input type=\"hidden\"&gt;</code> mediante el callback de cambio. El estado inicial de una implementación no controlada viene de su prop de estado inicial."
     },
     "analytics": {
       "title": "Analytics",
@@ -1287,7 +1263,7 @@
         },
         "item4": {
           "action": "Clic con disabled=true",
-          "result": "No cambia el estado; aria-disabled true",
+          "result": "No cambia de estado y sigue anunciado como deshabilitado",
           "priority": "medium"
         }
       },
@@ -1296,7 +1272,7 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 3:1 entre fondo y ambiente",
-        "item3": "Anillo de foco visible con ring-3 ring-ring/50",
+        "item3": "Anillo de foco visible al enfocar por teclado",
         "item4": "role=\"switch\" presente",
         "item5": "aria-checked refleja el estado"
       },

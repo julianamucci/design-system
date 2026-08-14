@@ -14,6 +14,12 @@
     descriptionText?: string;
     id?: string;
     name?: string;
+    /**
+     * Encaminhado ao primitivo. Sem esta passagem o espião declarado em `args`
+     * não alcança o componente e a aba Actions fica vazia — a play acusaria o
+     * primitivo por um fio que nunca foi ligado.
+     */
+    onCheckedChange?: (checked: boolean) => void;
   }
 
   let {
@@ -28,13 +34,16 @@
     descriptionText = 'Receba novidades e promoções da plataforma.',
     id = 'switch-story',
     name = undefined,
+    onCheckedChange = undefined,
   }: Props = $props();
 </script>
 
 {#if withDescription}
-  <div class="nds-cluster" data-align="center" data-justify="between" data-spacing="md" style="width: 20rem">
+  <!-- Largura pela utility `.nds-w-sm`, não por `style` inline: inline vence a
+       folha e a medida sai do tema, da densidade e da escala. -->
+  <div class="nds-cluster nds-w-sm" data-align="center" data-justify="between" data-spacing="md">
     <div class="nds-stack" data-spacing="xs">
-      <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
+      <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium">
         {labelText}
       </Label>
       <p id="{id}-description" class="nds-text-body">{descriptionText}</p>
@@ -45,6 +54,7 @@
       {disabled}
       {size}
       {name}
+      {onCheckedChange}
       aria-invalid={ariaInvalid || undefined}
       aria-labelledby="{id}-label"
       aria-describedby="{id}-description"
@@ -58,10 +68,11 @@
       {disabled}
       {size}
       {name}
+      {onCheckedChange}
       aria-invalid={ariaInvalid || undefined}
       aria-labelledby="{id}-label"
     />
-    <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium" style="line-height: 1">
+    <Label id="{id}-label" for={id} class="nds-text-body nds-font-medium">
       {labelText}
     </Label>
   </div>
@@ -72,6 +83,7 @@
     {disabled}
     {size}
     {name}
+    {onCheckedChange}
     aria-invalid={ariaInvalid || undefined}
     aria-label={ariaLabel}
   />

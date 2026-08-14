@@ -56,21 +56,25 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+// Nenhum listener próprio no rótulo: `<button>` é elemento rotulável, então o
+// `<label for>` já encaminha a ativação. O handler manual que morava aqui
+// duplicava o comportamento nativo e escondia uma associação quebrada.
 function buildSwitchRow(opts: {
   id: string;
   labelText: string;
   checked?: boolean;
   disabled?: boolean;
+  size?: 'default' | 'sm';
   onCheckedChange?: (v: boolean) => void;
   ariaInvalid?: boolean;
 }): HTMLElement {
-  const { id, labelText, checked = false, disabled = false, onCheckedChange, ariaInvalid } = opts;
+  const { id, labelText, checked = false, disabled = false, size, onCheckedChange, ariaInvalid } = opts;
 
   const row = document.createElement('div');
   row.className = 'nds-cluster';
   row.dataset.spacing = 'sm';
 
-  const sw = createSwitch({ id, checked, disabled, onCheckedChange });
+  const sw = createSwitch({ id, checked, disabled, size, onCheckedChange });
   if (ariaInvalid) sw.setAttribute('aria-invalid', 'true');
 
   const label = document.createElement('label');
@@ -78,18 +82,7 @@ function buildSwitchRow(opts: {
   label.textContent = labelText;
   label.className =
     'nds-text-body nds-font-medium nds-leading-none ' +
-    (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
-  if (disabled) label.style.opacity = '0.7';
-
-  // Toggle via label click (button + label htmlFor já é nativo,
-  // mas como o root é <button>, garantimos o comportamento)
-  if (!disabled) {
-    label.addEventListener('click', (e) => {
-      // O htmlFor de <label> para <button> não dispara click automaticamente em todos os browsers.
-      e.preventDefault();
-      sw.click();
-    });
-  }
+    (disabled ? 'nds-cursor-default nds-text-muted-foreground' : 'nds-cursor-pointer');
 
   row.append(sw, label);
   return row;
@@ -105,14 +98,13 @@ function buildSwitchPanel(opts: {
   const { id, labelText, descText, checked = false, onCheckedChange } = opts;
 
   const panel = document.createElement('div');
-  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
+  panel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
+  panel.dataset.align = 'center';
   panel.dataset.justify = 'between';
-  panel.style.width = '20rem';
 
   const textGroup = document.createElement('div');
-  textGroup.className = 'nds-stack';
+  textGroup.className = 'nds-stack nds-pr-4';
   textGroup.dataset.spacing = 'xs';
-  textGroup.style.paddingRight = 'var(--spacing-2)';
 
   const label = document.createElement('label');
   label.htmlFor = id;
@@ -126,12 +118,6 @@ function buildSwitchPanel(opts: {
   textGroup.append(label, desc);
 
   const sw = createSwitch({ id, checked, onCheckedChange });
-
-  // Permite clicar no label para alternar
-  label.addEventListener('click', (e) => {
-    e.preventDefault();
-    sw.click();
-  });
 
   panel.append(textGroup, sw);
   return panel;
@@ -448,7 +434,7 @@ label.textContent = 'Receber notificações';`,
               description: stripHtml(t('variants.styles.withDescription')),
               code: `// Layout em painel: Label + descrição à esquerda · Switch à direita
 const panel = document.createElement('div');
-panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+panel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
 // ... textGroup com <label htmlFor="marketing"> + <p> de descrição
 const sw = createSwitch({ id: 'marketing' });`,
               previewFactory: () => buildSwitchPanel({
@@ -460,41 +446,20 @@ const sw = createSwitch({ id: 'marketing' });`,
             },
             {
               name: stripHtml(t('variants.items.sm')),
-              description: stripHtml(t('variants.styles.sm')) +
-                ' Nota: o factory Nortear não expõe prop `size` — aplicamos as classes do tamanho `sm` via `class` (`h-4 w-7` + thumb `h-3 w-3`).',
-              code: `// Factory não expõe prop \`size\` — aplicamos as dimensões via class:
-const sw = createSwitch({
+              description: stripHtml(t('variants.styles.sm')),
+              // O degrau vem da opção `size`, que a factory traduz em
+              // `data-size` — a medida mora no CSS compartilhado, não aqui.
+              code: `const sw = createSwitch({
   id: 'sm-switch',
   checked: true,
-});
-sw.style.height = '1rem'; sw.style.width = '1.75rem';
-// ajuste manual do thumb (size sm)
-const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement;
-thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
-              previewFactory: () => {
-                const row = document.createElement('div');
-                row.className = 'nds-cluster';
-                row.dataset.spacing = 'sm';
-
-                const id = 'v-sm';
-                const sw = createSwitch({ id, checked: true });
-                sw.style.height = '1rem';
-                sw.style.width = '1.75rem';
-                const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement | null;
-                if (thumb) {
-                  thumb.style.height = '0.75rem';
-                  thumb.style.width = '0.75rem';
-                }
-
-                const label = document.createElement('label');
-                label.htmlFor = id;
-                label.textContent = t('demonstration.labels.sm');
-                label.className = 'nds-text-caption nds-font-medium nds-leading-none nds-cursor-pointer';
-                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-
-                row.append(sw, label);
-                return row;
-              },
+  size: 'sm',
+});`,
+              previewFactory: () => buildSwitchRow({
+                id: 'v-sm',
+                labelText: t('demonstration.labels.sm'),
+                checked: true,
+                size: 'sm',
+              }),
             },
           ],
         });
@@ -518,7 +483,6 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 `label.htmlFor = 'sw-email';\n` +
                 `label.textContent = 'Receber notificações por email';\n` +
                 `label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';\n` +
-                `label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });\n` +
                 `row.append(sw, label);`,
               previewFactory: () => {
                 const row = document.createElement('div');
@@ -529,7 +493,6 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 label.htmlFor = 'comp-sw-email';
                 label.textContent = 'Receber notificações por email';
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
                 row.append(sw, label);
                 return row;
               },
@@ -543,7 +506,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 `wrapper.className = 'nds-stack';\n` +
                 `wrapper.dataset.spacing = 'sm';\n` +
                 `const title = document.createElement('p');\n` +
-                `title.className = 'nds-text-body nds-font-semibold nds-mb-3';\n` +
+                `title.className = 'nds-text-body nds-font-semibold nds-mb-2';\n` +
                 `title.textContent = 'Preferências de notificação';\n` +
                 `wrapper.appendChild(title);\n` +
                 `const options = [\n` +
@@ -553,16 +516,15 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 `];\n` +
                 `options.forEach(({ id, label: labelText, desc: descText, checked }) => {\n` +
                 `  const panel = document.createElement('div');\n` +
-                `  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';\n` +
+                `  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-4';\n` +
                 `  const sw = createSwitch({ id, checked });\n` +
                 `  // ... textGroup com <label htmlFor=id> + <p> de descrição\n` +
                 `  wrapper.appendChild(panel);\n` +
                 `});`,
               previewFactory: () => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'nds-stack';
+                wrapper.className = 'nds-stack nds-w-md';
                 wrapper.dataset.spacing = 'sm';
-                wrapper.style.width = '24rem';
                 const title = document.createElement('p');
                 title.className = 'nds-text-body nds-font-semibold nds-mb-2';
                 title.textContent = 'Preferências de notificação';
@@ -574,18 +536,17 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 ];
                 options.forEach(({ id, label: labelText, desc: descText, checked }) => {
                   const panel = document.createElement('div');
-                  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-2';
+                  panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-4';
+                  panel.dataset.align = 'center';
                   panel.dataset.justify = 'between';
                   const sw = createSwitch({ id, checked });
                   const textGroup = document.createElement('div');
-                  textGroup.className = 'nds-stack';
-                textGroup.dataset.spacing = 'xs';
-                textGroup.style.paddingRight = 'var(--spacing-2)';
+                  textGroup.className = 'nds-stack nds-pr-4';
+                  textGroup.dataset.spacing = 'xs';
                   const label = document.createElement('label');
                   label.htmlFor = id;
                   label.textContent = labelText;
                   label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-                  label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
                   const desc = document.createElement('p');
                   desc.className = 'nds-text-body';
                   desc.textContent = descText;
@@ -619,9 +580,8 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 `// form.append(row, hidden, createButton({ type: 'submit', label: 'Salvar preferências' }));`,
               previewFactory: () => {
                 const form = document.createElement('form');
-                form.className = 'nds-stack';
+                form.className = 'nds-stack nds-w-sm';
                 form.dataset.spacing = 'sm';
-                form.style.width = '20rem';
                 form.addEventListener('submit', (e) => e.preventDefault());
 
                 const row = document.createElement('div');
@@ -644,7 +604,6 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
                 label.htmlFor = id;
                 label.textContent = 'Aceitar newsletter semanal';
                 label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-                label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
                 row.append(sw, label);
 
@@ -683,6 +642,7 @@ thumb.style.height = '0.75rem'; thumb.style.width = '0.75rem';`,
 export type SwitchOptions = {
   checked?: boolean;
   disabled?: boolean;
+  size?: 'default' | 'sm';
   onCheckedChange?: (checked: boolean) => void;
   id?: string;
   class?: string;
@@ -720,6 +680,13 @@ export type SwitchOptions = {
                   description: toPlainText(t('props.table.disabled.description')),
                 },
                 {
+                  name: 'size',
+                  type: `'default' | 'sm'`,
+                  defaultValue: `'default'`,
+                  required: 'Não',
+                  description: toPlainText(t('props.table.size.description')),
+                },
+                {
                   name: 'onCheckedChange',
                   type: '(checked: boolean) => void',
                   defaultValue: '—',
@@ -753,7 +720,7 @@ export type SwitchOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory custom diverge das libs upstream nos seguintes pontos: (1) não expõe prop `size` — para o tamanho `sm`, aplique classes utilitárias via `class` (`h-4 w-7`) e ajuste o thumb (`h-3 w-3`). (2) Não expõe prop `defaultChecked` — use `checked` como estado inicial. (3) Não expõe prop `name` — para envio em formulário, sincronize o estado para um `<input type="hidden" name="...">` via `onCheckedChange`. (4) É não-controlado: o estado vive internamente; passe `checked` apenas como valor inicial e ouça `onCheckedChange` para reagir a mudanças.',
+            'A factory diverge das libs upstream nos seguintes pontos: (1) não há prop `defaultChecked` separada — `checked` é o estado inicial. (2) Não emite campo oculto próprio: para envio em formulário, sincronize o estado para um `<input type="hidden" name="...">` pelo callback de mudança. (3) É não-controlada: o estado vive internamente; passe `checked` apenas como valor inicial e ouça o callback de mudança para reagir. O degrau de tamanho, que antes faltava aqui, é a opção `size` — ela vira `data-size`, e a medida mora no CSS compartilhado.',
         });
       }
 
@@ -766,13 +733,11 @@ export type SwitchOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--input',              value: toPlainText(t('tokens.table.input.class')),             description: toPlainText(t('tokens.table.input.part'))             },
-            { token: '--primary',            value: toPlainText(t('tokens.table.primary.class')),           description: toPlainText(t('tokens.table.primary.part'))           },
-            { token: '--background',         value: toPlainText(t('tokens.table.background.class')),        description: toPlainText(t('tokens.table.background.part'))        },
-            { token: '--primary-foreground', value: toPlainText(t('tokens.table.primaryForeground.class')), description: toPlainText(t('tokens.table.primaryForeground.part')) },
-            { token: '--ring',               value: toPlainText(t('tokens.table.ring.class')),              description: toPlainText(t('tokens.table.ring.part'))              },
-            { token: '--destructive',        value: toPlainText(t('tokens.table.destructive.class')),       description: toPlainText(t('tokens.table.destructive.part'))       },
-            { token: '--foreground',         value: toPlainText(t('tokens.table.foreground.class')),        description: toPlainText(t('tokens.table.foreground.part'))        },
+            { token: '--input',       value: toPlainText(t('tokens.table.input.class')),       description: toPlainText(t('tokens.table.input.part'))       },
+            { token: '--primary',     value: toPlainText(t('tokens.table.primary.class')),     description: toPlainText(t('tokens.table.primary.part'))     },
+            { token: '--background',  value: toPlainText(t('tokens.table.background.class')),  description: toPlainText(t('tokens.table.background.part'))  },
+            { token: '--ring',        value: toPlainText(t('tokens.table.ring.class')),        description: toPlainText(t('tokens.table.ring.part'))        },
+            { token: '--destructive', value: toPlainText(t('tokens.table.destructive.class')), description: toPlainText(t('tokens.table.destructive.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
@@ -821,7 +786,7 @@ export type SwitchOptions = {
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear
-            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom não expõe prop <code>size</code>; o tamanho <code>sm</code> é alcançado via <code>class</code> (<code>h-4 w-7</code>) + ajuste do thumb. Também não há prop <code>name</code>; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — a factory é não-controlada: <code>checked</code> é o estado inicial e as mudanças chegam pelo callback. Ela também não emite campo oculto próprio; sincronize o estado em um <code>&lt;input type="hidden"&gt;</code> para envio em formulário.') },
           ],
         });
 

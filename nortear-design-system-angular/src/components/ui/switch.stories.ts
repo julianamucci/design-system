@@ -139,10 +139,29 @@ export const Playground: Story = {
     });
 
     if (!args.disabled) {
+      await step('Clicar no controle alterna o estado e dispara o callback', async () => {
+        // Este passo faltava, e a story declarava `functional.item1` — o item
+        // do clique — cobrindo-o com um teste de Space. Idempotente: compara
+        // com o estado imediatamente anterior em vez de um valor absoluto, e
+        // volta ao ponto de partida, então o replay do painel Interactions dá
+        // o mesmo resultado saindo de qualquer estado.
+        const antes = sw.getAttribute('aria-checked');
+        const chamadasAntes = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
+
+        await userEvent.click(sw);
+        await expect(sw.getAttribute('aria-checked')).not.toBe(antes);
+        await expect(sw.getAttribute('data-state')).toBe(
+          sw.getAttribute('aria-checked') === 'true' ? 'checked' : 'unchecked',
+        );
+
+        await userEvent.click(sw);
+        await expect(sw.getAttribute('aria-checked')).toBe(antes);
+        await expect(
+          (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length,
+        ).toBe(chamadasAntes + 2);
+      });
+
       await step('Space alterna o estado e dispara o callback de mudança', async () => {
-        // Idempotente: compara com o estado imediatamente anterior em vez de um
-        // valor absoluto, então o replay do painel Interactions dá o mesmo
-        // resultado partindo de qualquer estado.
         const antes = sw.getAttribute('aria-checked');
         const chamadasAntes = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
         sw.focus();

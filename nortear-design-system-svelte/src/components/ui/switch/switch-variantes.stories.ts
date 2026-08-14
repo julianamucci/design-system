@@ -10,10 +10,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes visuais do Switch. Não possui variantes cva — as composições representam os padrões de uso recomendados.',
+          'Variantes do Switch: default (Label à direita), withDescription (painel com o texto à esquerda) e sm (compacto).',
       },
     },
   },
@@ -32,7 +33,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Switch padrão (32×18.4px) com Label à direita. Layout `flex items-center gap-2`.',
+        story: 'Switch padrão — trilho de 36×20px com thumb de 16px, Label à direita.',
       },
     },
   },
@@ -40,16 +41,14 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('Switch está presente no DOM', async () => {
-      await expect(sw).toBeInTheDocument();
-    });
-
-    await step('Switch tem aria-checked false', async () => {
-      await expect(sw).toHaveAttribute('aria-checked', 'false');
-    });
-
-    await step('Switch tem size default', async () => {
+    await step('O degrau padrão vira data-size', async () => {
       await expect(sw).toHaveAttribute('data-size', 'default');
+    });
+
+    await step('O controle nasce desligado e nomeado pelo rótulo', async () => {
+      await expect(sw).toHaveAttribute('aria-checked', 'false');
+      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+        .toBe(sw);
     });
   },
 };
@@ -66,22 +65,23 @@ export const WithDescription: Story = {
     docs: {
       description: {
         story:
-          'Switch em painel de configurações — Label + descrição à esquerda, Switch à direita (`flex justify-between`).',
+          'Switch em painel de configurações — texto à esquerda, controle à direita.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
 
-    await step('Switch e descrição estão visíveis', async () => {
-      const sw = canvas.getByRole('switch');
+    await step('O controle e a descrição auxiliar estão visíveis', async () => {
       await expect(sw).toBeInTheDocument();
-      const desc = canvas.getByText('Receba novidades e promoções da plataforma.');
-      await expect(desc).toBeVisible();
+      await expect(
+        canvas.getByText('Receba novidades e promoções da plataforma.'),
+      ).toBeVisible();
     });
 
-    await step('Switch tem aria-describedby associado', async () => {
-      const sw = canvas.getByRole('switch');
+    await step('Só o rótulo nomeia; a descrição entra como texto auxiliar', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Emails de marketing' })).toBe(sw);
       await expect(sw).toHaveAttribute('aria-describedby', 'var-with-desc-description');
     });
   },
@@ -96,18 +96,34 @@ export const Sm: Story = {
     id: 'var-sm',
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
-        story: 'Tamanho compacto (24×14px) — `size="sm"`. Recomendado para listas densas e menus.',
+        story: 'Degrau compacto — trilho de 24×16px com thumb de 12px.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
+    const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
 
-    await step('Switch tem size sm', async () => {
+    await step('O degrau de tamanho vira data-size', async () => {
       await expect(sw).toHaveAttribute('data-size', 'sm');
+    });
+
+    await step('A medida do trilho encolhe de fato', async () => {
+      // O atributo sozinho não prova nada: a medida vive no CSS compartilhado,
+      // e uma regra ausente deixaria o compacto do tamanho do padrão com o
+      // data-size certo. 36px é a largura do degrau `default` no CSS — o
+      // compacto tem de ficar estritamente abaixo dela.
+      await expect(sw.getBoundingClientRect().width).toBeLessThan(36);
+    });
+
+    await step('O thumb acompanha o degrau do trilho', async () => {
+      await expect(thumb.getBoundingClientRect().width).toBeLessThan(
+        sw.getBoundingClientRect().width,
+      );
     });
   },
 };

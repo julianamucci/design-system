@@ -1,6 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createSwitch } from './switch';
+import { createButton } from './button';
+
+/**
+ * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
+ * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
+ * play no mesmo DOM, e clique cego inverte o resultado no replay.
+ */
+async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
+}
 
 const meta: Meta = {
   tags: ['form'],
@@ -12,7 +23,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que o factory Vanilla não expõe prop `name`).',
+          'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que a factory não expõe campo oculto próprio).',
       },
     },
   },
@@ -21,24 +32,28 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── ComLabel ─────────────────────────────────────────────────────────────────
+// ─── Helper ───────────────────────────────────────────────────────────────────
+//
+// Sem listener próprio no rótulo: `<button>` é elemento rotulável, então o
+// `<label for>` já encaminha a ativação.
+
+function rotulo(id: string, texto: string, classe = 'nds-text-body'): HTMLLabelElement {
+  const label = document.createElement('label');
+  label.htmlFor = id;
+  label.textContent = texto;
+  label.className = `${classe} nds-font-medium nds-leading-none nds-cursor-pointer`;
+  return label;
+}
+
+// ─── WithLabel ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
   render: () => {
     const row = document.createElement('div');
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
-
     const id = 'sw-com-label';
-    const sw = createSwitch({ id });
-
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.textContent = 'Receber notificações por email';
-    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-
-    row.append(sw, label);
+    row.append(createSwitch({ id }), rotulo(id, 'Receber notificações por email'));
     return row;
   },
   parameters: {
@@ -51,43 +66,45 @@ export const WithLabel: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Switch presente', async () => {
-      await expect(canvas.getByRole('switch')).toBeInTheDocument();
+    const sw = canvas.getByRole('switch');
+    const label = canvas.getByText('Receber notificações por email');
+
+    await step('O rótulo nomeia o controle e está visível', async () => {
+      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+        .toBe(sw);
+      await expect(label).toBeVisible();
     });
-    await step('Label está presente no DOM', async () => {
-      await expect(canvas.getByText('Receber notificações por email')).toBeVisible();
+
+    await step('Clicar no rótulo liga e desliga o controle', async () => {
+      // O par (liga e depois desliga) garante DOIS cliques reais em qualquer
+      // rodada e devolve a story ao estado que o Chromatic fotografa.
+      await definir(sw, true, label);
+      await definir(sw, false, label);
     });
   },
 };
 
-// ─── ComDescricao ─────────────────────────────────────────────────────────────
+// ─── WithDescription ──────────────────────────────────────────────────────────
 
 export const WithDescription: Story = {
   render: () => {
     const panel = document.createElement('div');
-    panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+    panel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
+    panel.dataset.align = 'center';
     panel.dataset.justify = 'between';
-    panel.style.width = '20rem';
 
     const id = 'sw-com-desc';
     const sw = createSwitch({ id, checked: true });
 
     const textGroup = document.createElement('div');
-    textGroup.className = 'nds-stack';
+    textGroup.className = 'nds-stack nds-pr-4';
     textGroup.dataset.spacing = 'xs';
-    textGroup.style.paddingRight = '0.75rem';
-
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.textContent = 'Emails de marketing';
-    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
     desc.className = 'nds-text-body';
     desc.textContent = 'Receba novidades e promoções da plataforma.';
 
-    textGroup.append(label, desc);
+    textGroup.append(rotulo(id, 'Emails de marketing'), desc);
     panel.append(textGroup, sw);
     return panel;
   },
@@ -95,63 +112,61 @@ export const WithDescription: Story = {
     docs: {
       description: {
         story:
-          'Switch em painel `flex justify-between` — Label + descrição auxiliar à esquerda, Switch à direita. Use para contextualizar o efeito da configuração.',
+          'Switch em painel — Label + descrição auxiliar à esquerda, controle à direita. Use para contextualizar o efeito da configuração.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Switch presente e ativado', async () => {
-      await expect(canvas.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
+    const sw = canvas.getByRole('switch');
+
+    await step('O controle nasce ligado neste painel', async () => {
+      await expect(sw).toHaveAttribute('aria-checked', 'true');
     });
-    await step('Texto auxiliar visível', async () => {
+
+    await step('Só o rótulo nomeia o controle — a descrição fica como auxiliar', async () => {
+      await expect(canvas.getByRole('switch', { name: /Emails de marketing/i })).toBe(sw);
       await expect(canvas.getByText(/Receba novidades/)).toBeVisible();
     });
   },
 };
 
-// ─── ListaDeConfiguracoes ─────────────────────────────────────────────────────
+// ─── SettingsList ─────────────────────────────────────────────────────────────
 
 export const SettingsList: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
+    wrapper.className = 'nds-stack nds-w-md';
     wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '24rem';
 
     const title = document.createElement('p');
-    title.className = 'nds-text-body nds-font-semibold nds-mb-3';
+    title.className = 'nds-text-body nds-font-semibold nds-mb-2';
     title.textContent = 'Preferências de notificação';
     wrapper.appendChild(title);
 
     const options = [
-      { id: 'pref-email', label: 'Receber novidades por email',  desc: 'Resumo semanal sobre o produto.',           checked: true  },
-      { id: 'pref-push',  label: 'Receber notificações push',    desc: 'Alertas no dispositivo em tempo real.',     checked: false },
-      { id: 'pref-sms',   label: 'Alertas por SMS',              desc: 'Eventos críticos via mensagem de texto.',   checked: false },
+      { id: 'pref-email', label: 'Receber novidades por email', desc: 'Resumo semanal sobre o produto.',         checked: true  },
+      { id: 'pref-push',  label: 'Receber notificações push',   desc: 'Alertas no dispositivo em tempo real.',   checked: false },
+      { id: 'pref-sms',   label: 'Alertas por SMS',             desc: 'Eventos críticos via mensagem de texto.', checked: false },
     ];
 
     options.forEach(({ id, label: labelText, desc: descText, checked }) => {
       const panel = document.createElement('div');
-      panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+      panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-4';
+      panel.dataset.align = 'center';
       panel.dataset.justify = 'between';
 
       const sw = createSwitch({ id, checked });
 
       const textGroup = document.createElement('div');
-      textGroup.className = 'nds-stack';
-    textGroup.dataset.spacing = 'xs';
-    textGroup.style.paddingRight = '0.75rem';
-      const label = document.createElement('label');
-      label.htmlFor = id;
-      label.textContent = labelText;
-      label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-      label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+      textGroup.className = 'nds-stack nds-pr-4';
+      textGroup.dataset.spacing = 'xs';
 
       const desc = document.createElement('p');
       desc.className = 'nds-text-body';
       desc.textContent = descText;
 
-      textGroup.append(label, desc);
+      textGroup.append(rotulo(id, labelText), desc);
       panel.append(textGroup, sw);
       wrapper.appendChild(panel);
     });
@@ -168,79 +183,84 @@ export const SettingsList: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Três Switches presentes', async () => {
+
+    await step('Três controles independentes na lista', async () => {
       const switches = canvas.getAllByRole('switch');
       await expect(switches).toHaveLength(3);
+      const ligados = switches.filter((s) => s.getAttribute('aria-checked') === 'true');
+      await expect(ligados).toHaveLength(1);
     });
-    await step('Um Switch inicia ativado', async () => {
-      const switches = canvas.getAllByRole('switch');
-      const checked = switches.filter(s => s.getAttribute('aria-checked') === 'true');
-      await expect(checked).toHaveLength(1);
+
+    await step('Alternar um item não arrasta os vizinhos', async () => {
+      const push = canvas.getByRole('switch', { name: /Receber notificações push/i });
+      const email = canvas.getByRole('switch', { name: /Receber novidades por email/i });
+      const antesEmail = email.getAttribute('aria-checked');
+      await definir(push, true);
+      await expect(email.getAttribute('aria-checked')).toBe(antesEmail);
+      await definir(push, false);
     });
   },
 };
 
-// ─── EmFormularioComHidden ────────────────────────────────────────────────────
+// ─── InFormWithHidden ─────────────────────────────────────────────────────────
 
 export const InFormWithHidden: Story = {
   render: () => {
-    // Divergência Vanilla: o factory custom NÃO expõe prop `name`.
-    // Para envio em formulário, sincronizamos o estado em um <input type="hidden">.
+    // A factory não emite campo oculto próprio: para envio em formulário,
+    // sincronizamos o estado num <input type="hidden"> pelo callback de mudança.
     const form = document.createElement('form');
-    form.className = 'nds-stack';
+    form.className = 'nds-stack nds-w-sm';
     form.dataset.spacing = 'sm';
-    form.style.width = '20rem';
     form.addEventListener('submit', (e) => e.preventDefault());
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
 
-    const id = 'sw-form-newsletter';
-    const sw = createSwitch({
-      id,
-      checked: true,
-      onCheckedChange: (val) => {
-        hidden.value = val ? 'on' : 'off';
-      },
-    });
-
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.textContent = 'Aceitar newsletter semanal';
-    label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-
     const hidden = document.createElement('input');
     hidden.type = 'hidden';
     hidden.name = 'newsletter';
     hidden.value = 'on';
 
-    row.append(sw, label);
+    const id = 'sw-form-newsletter';
+    const sw = createSwitch({
+      id,
+      checked: true,
+      onCheckedChange: (val) => { hidden.value = val ? 'on' : 'off'; },
+    });
 
-    const submit = document.createElement('button');
-    submit.type = 'submit';
-    submit.textContent = 'Salvar preferências';
-    submit.className = 'btn btn-primary';
+    row.append(sw, rotulo(id, 'Aceitar newsletter semanal'));
 
-    form.append(row, hidden, submit);
+    form.append(row, hidden, createButton({ type: 'submit', label: 'Salvar preferências' }));
     return form;
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Padrão para envio em formulário no Vanilla: como o factory custom não expõe prop `name`, sincronize o estado do Switch para um `<input type="hidden" name="...">` via `onCheckedChange`. Em React/Vue/Svelte, basta passar a prop `name` direto no componente.',
+          'Padrão para envio em formulário: como a factory não emite campo oculto próprio, sincronize o estado do Switch para um `<input type="hidden" name="...">` pelo callback de mudança.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Form contém Switch e hidden input', async () => {
-      await expect(canvas.getByRole('switch')).toBeInTheDocument();
-      const hidden = canvasElement.querySelector('input[type="hidden"][name="newsletter"]');
-      await expect(hidden).toBeTruthy();
-      await expect((hidden as HTMLInputElement).value).toBe('on');
+    const sw = canvas.getByRole('switch');
+    const hidden = canvasElement.querySelector<HTMLInputElement>(
+      'input[type="hidden"][name="newsletter"]',
+    );
+
+    await step('O formulário reúne o controle, o campo oculto e o envio', async () => {
+      await expect(hidden).not.toBeNull();
+      await expect(canvas.getByRole('button', { name: 'Salvar preferências' })).toBeVisible();
+    });
+
+    await step('O campo oculto acompanha o controle nos dois sentidos', async () => {
+      // Só a ida provaria pouco: um valor escrito uma vez passaria igual. É a
+      // volta que mostra que o campo é sincronizado a cada mudança.
+      await definir(sw, false);
+      await expect(hidden!.value).toBe('off');
+      await definir(sw, true);
+      await expect(hidden!.value).toBe('on');
     });
   },
 };

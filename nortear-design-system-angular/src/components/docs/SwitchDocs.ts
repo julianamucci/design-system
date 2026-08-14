@@ -683,13 +683,11 @@ export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--input',              k: 'input'             },
-      { token: '--primary',            k: 'primary'           },
-      { token: '--background',         k: 'background'        },
-      { token: '--primary-foreground', k: 'primaryForeground' },
-      { token: '--ring',               k: 'ring'              },
-      { token: '--destructive',        k: 'destructive'       },
-      { token: '--foreground',         k: 'foreground'        },
+      { token: '--input',       k: 'input'       },
+      { token: '--primary',     k: 'primary'     },
+      { token: '--background',  k: 'background'  },
+      { token: '--ring',        k: 'ring'        },
+      { token: '--destructive', k: 'destructive' },
     ].map(({ token, k }) => ({
       token,
       value: toPlainText(t(`tokens.table.${k}.class`)),

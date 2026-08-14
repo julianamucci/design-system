@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+
+/**
+ * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
+ * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
+ * play no mesmo DOM, e clique cego inverte o resultado no replay.
+ */
+async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
+}
 
 const meta = {
   title: 'UI/Switch/Compositions',
@@ -28,9 +40,9 @@ export const SettingsPanel: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="" data-spacing="md" style="width: 24rem">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'pc-marketing'">Emails de marketing</Label>
             <p class="nds-text-body">
               Receba novidades e promoções da plataforma.
@@ -40,7 +52,7 @@ export const SettingsPanel: Story = {
         </div>
 
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'pc-security'">Alertas de segurança</Label>
             <p class="nds-text-body">
               Notificações sobre acessos suspeitos à sua conta.
@@ -50,7 +62,7 @@ export const SettingsPanel: Story = {
         </div>
 
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'pc-news'">Resumo semanal</Label>
             <p class="nds-text-body">
               Receba um resumo das principais novidades toda segunda.
@@ -64,10 +76,12 @@ export const SettingsPanel: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const switches = canvas.getAllByRole('switch');
-    await step('3 switches renderizados', async () => {
+
+    await step('Três controles independentes no painel', async () => {
       await expect(switches).toHaveLength(3);
     });
-    await step('Dois switches iniciam ativos', async () => {
+
+    await step('Cada linha nasce no seu próprio estado', async () => {
       await expect(switches[0]).toHaveAttribute('aria-checked', 'true');
       await expect(switches[1]).toHaveAttribute('aria-checked', 'true');
       await expect(switches[2]).toHaveAttribute('aria-checked', 'false');
@@ -80,16 +94,16 @@ export const PreferenceList: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <ul class="divide-y nds-rounded-lg nds-border-default" style="width: 20rem">
+      <ul class="nds-w-sm nds-rounded-lg nds-border-default">
         <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
           <Label :for="'lp-push'">Notificações push</Label>
           <Switch id="lp-push" :default-value="true" />
         </li>
-        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
+        <li class="nds-cluster nds-p-4 nds-border-t" data-align="center" data-justify="between">
           <Label :for="'lp-email'">Notificações por email</Label>
           <Switch id="lp-email" />
         </li>
-        <li class="nds-cluster nds-p-4" data-align="center" data-justify="between">
+        <li class="nds-cluster nds-p-4 nds-border-t" data-align="center" data-justify="between">
           <Label :for="'lp-sms'">SMS</Label>
           <Switch id="lp-sms" />
         </li>
@@ -98,32 +112,39 @@ export const PreferenceList: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Clicar no Label alterna o Switch correspondente', async () => {
-      await userEvent.click(canvas.getByText('Notificações por email'));
-      const email = canvas.getByRole('switch', { name: /Notificações por email/i });
-      await expect(email).toHaveAttribute('aria-checked', 'true');
+    const email = canvas.getByRole('switch', { name: /Notificações por email/i });
+    const rotulo = canvas.getByText('Notificações por email');
+
+    await step('A lista tem três controles, cada um no seu estado', async () => {
+      const switches = canvas.getAllByRole('switch');
+      await expect(switches).toHaveLength(3);
+      const ligados = switches.filter((s) => s.getAttribute('aria-checked') === 'true');
+      await expect(ligados).toHaveLength(1);
+    });
+
+    await step('Clicar no rótulo alterna só o controle daquela linha', async () => {
+      const push = canvas.getByRole('switch', { name: /Notificações push/i });
+      const antesPush = push.getAttribute('aria-checked');
+      await definir(email, true, rotulo);
+      await expect(push.getAttribute('aria-checked')).toBe(antesPush);
+      await definir(email, false, rotulo);
     });
   },
 };
 
 export const InForm: Story = {
   render: () => ({
-    components: { Switch, Label },
+    components: { Switch, Label, Input, Button },
     setup() { return {}; },
     template: `
-      <form class="" data-spacing="md" style="width: 24rem" @submit.prevent>
+      <form class="nds-stack nds-w-md" data-spacing="sm" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
-          <label for="form-email" class="nds-text-body nds-font-medium">Email</label>
-          <input
-            id="form-email"
-            type="email"
-            placeholder="seu@email.com"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
-          />
+          <Label :for="'form-email'">Email</Label>
+          <Input id="form-email" type="email" placeholder="seu@email.com" />
         </div>
 
         <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'form-public'">Perfil público</Label>
             <p class="nds-text-body">
               Qualquer pessoa pode visualizar seu perfil.
@@ -132,23 +153,26 @@ export const InForm: Story = {
           <Switch id="form-public" name="public" />
         </div>
 
-        <button
-          type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
-        >
-          Salvar preferências
-        </button>
+        <Button type="submit">Salvar preferências</Button>
       </form>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Form possui campo de email e Switch', async () => {
+
+    await step('O formulário reúne campo de texto, switch e envio', async () => {
       await expect(canvas.getByLabelText(/Email/i)).toBeInTheDocument();
-      await expect(canvas.getByRole('switch')).toBeInTheDocument();
-    });
-    await step('Botão de submit presente', async () => {
+      await expect(canvas.getByRole('switch', { name: /Perfil público/i })).toBeInTheDocument();
       await expect(canvas.getByRole('button', { name: 'Salvar preferências' })).toBeInTheDocument();
+    });
+
+    await step('O switch entra no envio nativo pelo nome do campo', async () => {
+      const sw = canvas.getByRole('switch', { name: /Perfil público/i });
+      await definir(sw, true);
+      const campo = canvasElement.querySelector<HTMLInputElement>('input[name="public"]');
+      await expect(campo).not.toBeNull();
+      await expect(campo!.checked).toBe(true);
+      await definir(sw, false);
     });
   },
 };
@@ -158,16 +182,16 @@ export const CompactMenuItem: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-p-2" data-spacing="xs" style="width: 16rem">
-        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+      <div class="nds-stack nds-w-xs nds-rounded-md nds-border-default nds-p-2" data-spacing="xs">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
           <Label :for="'menu-darkmode'" class="nds-text-caption">Modo escuro</Label>
           <Switch id="menu-darkmode" size="sm" />
         </div>
-        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
           <Label :for="'menu-autosave'" class="nds-text-caption">Salvar automaticamente</Label>
           <Switch id="menu-autosave" size="sm" :default-value="true" />
         </div>
-        <div class="nds-cluster nds-rounded nds-px-2 nds-hover-bg-muted-40" data-align="center" data-justify="between" style="padding-block: 0.375rem">
+        <div class="nds-cluster nds-rounded nds-px-2 nds-py-1 nds-hover-bg-muted-40" data-align="center" data-justify="between">
           <Label :for="'menu-compact'" class="nds-text-caption">Visualização compacta</Label>
           <Switch id="menu-compact" size="sm" />
         </div>
@@ -177,11 +201,10 @@ export const CompactMenuItem: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const switches = canvas.getAllByRole('switch');
-    await step('Todos os switches são size=sm', async () => {
-      for (const s of switches) await expect(s).toHaveAttribute('data-size', 'sm');
-    });
-    await step('Renderiza 3 itens de menu', async () => {
+
+    await step('O menu tem três itens, todos no degrau compacto', async () => {
       await expect(switches).toHaveLength(3);
+      for (const s of switches) await expect(s).toHaveAttribute('data-size', 'sm');
     });
   },
 };

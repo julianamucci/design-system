@@ -175,15 +175,25 @@ interface SwitchProps {
   class?: string;
 }`;
 
-  const customizationCode = `/* Cor customizada do checked */
-.switch-success[data-checked] {
-  @apply bg-green-500;
+  // O `.nds-switch` lê os tokens direto do CSS compartilhado: customizar é
+  // sobrescrever o token ou o seletor de tamanho, nunca uma diretiva de
+  // framework utilitário — nenhuma stack declara Tailwind.
+  const customizationCode = `/* Cor do trilho ligado — sobrescreva o token que o .nds-switch lê */
+.switch-success {
+  --primary: 142 71% 45%;
 }
 
-/* Tamanho customizado */
-[data-slot="switch"][data-size="default"] {
-  width: 40px;
-  height: 24px;
+/* Medida própria — trilho e thumb são ajustados juntos */
+.nds-switch[data-size="default"] {
+  width: 2.5rem;   /* 40px */
+  height: 1.5rem;  /* 24px */
+}
+.nds-switch[data-size="default"] .nds-switch-thumb {
+  width: 1.25rem;  /* 20px */
+  height: 1.25rem;
+}
+.nds-switch[data-size="default"] .nds-switch-thumb[data-state="checked"] {
+  transform: translateX(1rem);
 }`;
 </script>
 
@@ -586,13 +596,11 @@ interface SwitchProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--input',              value: $tStore('tokens.table.input.class'),             description: $tStore('tokens.table.input.part') },
-      { token: '--primary',            value: $tStore('tokens.table.primary.class'),           description: $tStore('tokens.table.primary.part') },
-      { token: '--background',         value: $tStore('tokens.table.background.class'),        description: $tStore('tokens.table.background.part') },
-      { token: '--primary-foreground', value: $tStore('tokens.table.primaryForeground.class'), description: $tStore('tokens.table.primaryForeground.part') },
-      { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part') },
-      { token: '--destructive',        value: $tStore('tokens.table.destructive.class'),       description: $tStore('tokens.table.destructive.part') },
-      { token: '--foreground',         value: $tStore('tokens.table.foreground.class'),        description: $tStore('tokens.table.foreground.part') },
+      { token: '--input',       value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
+      { token: '--primary',     value: $tStore('tokens.table.primary.class'),     description: $tStore('tokens.table.primary.part') },
+      { token: '--background',  value: $tStore('tokens.table.background.class'),  description: $tStore('tokens.table.background.part') },
+      { token: '--ring',        value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
+      { token: '--destructive', value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={customizationCode}

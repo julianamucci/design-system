@@ -5,9 +5,21 @@
 
 import { cn } from '@/lib/utils';
 
+export type SwitchSize = 'default' | 'sm';
+
 export type SwitchOptions = {
   checked?: boolean;
   disabled?: boolean;
+  /**
+   * Degrau de tamanho. Vira `data-size`, que é onde o CSS compartilhado guarda
+   * a medida do trilho e do thumb — peça sem texto tem medida explícita
+   * (guideline 12), e ela mora no CSS, não aqui.
+   *
+   * Antes de existir, as stories replicavam o degrau com `class: 'h-4 w-7'` —
+   * vocabulário do framework utilitário que saiu do projeto, inerte em runtime:
+   * o "compacto" era do mesmo tamanho do padrão e nenhum teste via.
+   */
+  size?: SwitchSize;
   onCheckedChange?: (checked: boolean) => void;
   id?: string;
   class?: string;
@@ -15,12 +27,13 @@ export type SwitchOptions = {
 };
 
 export function createSwitch(options: SwitchOptions = {}): HTMLButtonElement {
-  const { disabled = false, onCheckedChange, id } = options;
+  const { disabled = false, size = 'default', onCheckedChange, id } = options;
   let checked = options.checked ?? false;
 
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.dataset.slot = 'switch';
+  btn.dataset.size = size;
   btn.className = cn('nds-switch', options.class);
   btn.setAttribute('role', 'switch');
   btn.setAttribute('aria-checked', String(checked));

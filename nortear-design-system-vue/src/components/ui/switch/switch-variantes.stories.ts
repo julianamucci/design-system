@@ -14,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Variantes do Switch: default (Label à direita), withDescription (painel flex justify-between) e sm (compacto).',
+          'Variantes do Switch: default (Label à direita), withDescription (painel com o texto à esquerda) e sm (compacto).',
       },
     },
   },
@@ -34,15 +34,24 @@ export const Default: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Switch padrão — trilho de 36×20px com thumb de 16px, Label à direita.',
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
-    await step('Switch padrão renderiza com role=switch', async () => {
-      await expect(sw).toBeInTheDocument();
+
+    await step('O degrau padrão vira data-size', async () => {
       await expect(sw).toHaveAttribute('data-size', 'default');
     });
-    await step('Label associado anuncia o estado ativo', async () => {
-      await expect(canvas.getByText('Receber notificações por email')).toBeVisible();
+
+    await step('O rótulo nomeia o controle', async () => {
+      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+        .toBe(sw);
     });
   },
 };
@@ -52,8 +61,8 @@ export const WithDescription: Story = {
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style="width: 20rem">
-        <div class="" data-spacing="xs">
+      <div class="nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between">
+        <div class="nds-stack" data-spacing="xs">
           <Label :for="'var-marketing'">Emails de marketing</Label>
           <p class="nds-text-body">
             Receba novidades e promoções da plataforma.
@@ -63,34 +72,78 @@ export const WithDescription: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Switch em painel de configurações — texto à esquerda, controle à direita.',
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const sw = canvas.getByRole('switch');
-    await step('Switch presente no painel', async () => {
-      await expect(sw).toBeInTheDocument();
-    });
-    await step('Descrição auxiliar visível', async () => {
+
+    await step('O controle e a descrição auxiliar estão visíveis', async () => {
+      await expect(canvas.getByRole('switch')).toBeVisible();
       await expect(canvas.getByText(/Receba novidades e promoções/)).toBeVisible();
+    });
+
+    await step('Só o rótulo nomeia o controle — a descrição não entra no nome', async () => {
+      await expect(canvas.getByRole('switch', { name: /Emails de marketing/i })).toBeVisible();
     });
   },
 };
 
-export const Small: Story = {
+export const Sm: Story = {
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
-        <Switch id="var-sm" size="sm" />
-        <Label :for="'var-sm'" class="nds-text-caption">Tamanho compacto</Label>
+      <div class="nds-stack" data-spacing="sm">
+        <div class="nds-cluster" data-spacing="sm">
+          <Switch id="var-sm-referencia" />
+          <Label :for="'var-sm-referencia'">Tamanho padrão</Label>
+        </div>
+        <div class="nds-cluster" data-spacing="sm">
+          <Switch id="var-sm" size="sm" />
+          <Label :for="'var-sm'" class="nds-text-caption">Tamanho compacto</Label>
+        </div>
       </div>
     `,
   }),
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      description: {
+        story:
+          'Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação.',
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const sw = canvas.getByRole('switch');
-    await step('Switch tem data-size=sm', async () => {
-      await expect(sw).toHaveAttribute('data-size', 'sm');
+    const [padrao, compacto] = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>('[data-slot="switch"]'),
+    );
+
+    await step('O degrau de tamanho vira data-size', async () => {
+      await expect(padrao).toHaveAttribute('data-size', 'default');
+      await expect(compacto).toHaveAttribute('data-size', 'sm');
+    });
+
+    await step('O compacto é de fato menor que o padrão', async () => {
+      // O atributo sozinho não prova nada: a medida vive no CSS compartilhado,
+      // e uma regra ausente deixaria os dois do mesmo tamanho com o data-size
+      // certo em ambos.
+      await expect(compacto.getBoundingClientRect().width).toBeLessThan(
+        padrao.getBoundingClientRect().width,
+      );
+    });
+
+    await step('O thumb acompanha o degrau do trilho', async () => {
+      const thumbPadrao = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const thumbCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      await expect(thumbCompacto.getBoundingClientRect().width).toBeLessThan(
+        thumbPadrao.getBoundingClientRect().width,
+      );
     });
   },
 };

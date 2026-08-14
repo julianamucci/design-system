@@ -1,10 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect, fn } from 'storybook/test';
+import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
 import { Switch } from './index';
 import SwitchStory from './SwitchStory.svelte';
 import SwitchDocs from '@/components/docs/SwitchDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+/**
+ * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
+ *
+ * O painel Interactions reexecuta a play no MESMO DOM, sem remontar. Um clique
+ * cego alterna a partir do que a rodada anterior deixou e inverte o resultado —
+ * a suíte fica verde (o vitest remonta a cada teste) e o painel falha.
+ */
+async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
+}
 
 const meta: Meta = {
   title: 'UI/Switch',
@@ -14,41 +26,62 @@ const meta: Meta = {
     docs: { page: withAutoDocsTab(SwitchDocs) },
     layout: 'centered',
   },
+  // O docgen está desligado neste stack: `argTypes` é a ÚNICA fonte da aba
+  // API Reference, então cada prop pública precisa de entrada com type e
+  // default — sem isso as colunas saem vazias.
   argTypes: {
     checked: {
       control: 'boolean',
-      description: 'Estado controlado do switch.',
+      description: 'Estado do switch. É bindável — aceita a forma de duas vias.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
       description: 'Desabilita o componente.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     ariaInvalid: {
       control: 'boolean',
       description: 'Aplica aria-invalid para estado de erro.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    name: {
+      control: 'text',
+      description: 'Nome do campo no formulário HTML.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     size: {
       control: 'select',
       options: ['default', 'sm'],
-      description: 'Tamanho do switch.',
+      description: 'Degrau de tamanho — vira data-size, onde o CSS guarda a medida.',
+      table: { type: { summary: "'default' | 'sm'" }, defaultValue: { summary: "'default'" } },
+    },
+    onCheckedChange: {
+      control: false,
+      description: 'Callback disparado ao alternar.',
+      table: { type: { summary: '(checked: boolean) => void' } },
     },
     withLabel: {
       control: 'boolean',
       description: 'Renderiza com Label associada.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     withDescription: {
       control: 'boolean',
       description: 'Renderiza com Label e texto descritivo (layout em painel).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     labelText: {
       control: 'text',
       description: 'Texto da label associada.',
+      table: { type: { summary: 'string' } },
     },
   },
   args: {
     checked: false,
     disabled: false,
     ariaInvalid: false,
+    name: 'notificacoes',
     size: 'default',
     withLabel: true,
     withDescription: false,
@@ -61,38 +94,74 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3',
+      'accessibility.item1', 'accessibility.item3',
+      'accessibility.item4', 'accessibility.item5',
+    ],
+  },
   render: (args) => ({
     Component: SwitchStory,
     props: { ...args, id: 'pg-switch' },
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
+    const espiao = args.onCheckedChange as ReturnType<typeof fn>;
 
-    await step('Switch está presente no DOM', async () => {
-      await expect(sw).toBeInTheDocument();
+    await step('O controle é anunciado como switch e nomeado pelo rótulo', async () => {
+      await expect(sw).toHaveAttribute('data-slot', 'switch');
+      await expect(sw).toHaveAttribute('role', 'switch');
+      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+        .toBe(sw);
     });
 
-    await step('Switch começa desativado (aria-checked=false)', async () => {
-      await expect(sw).toHaveAttribute('aria-checked', 'false');
+    await step('aria-checked acompanha o estado, em vez de ficar fixo', async () => {
+      // Comparação com o estado imediatamente anterior, e não com um valor
+      // absoluto: o replay parte de onde a rodada anterior parou.
+      const antes = sw.getAttribute('aria-checked');
+      await expect(antes).toMatch(/^(true|false)$/);
+      await definir(sw, antes !== 'true');
+      await definir(sw, antes === 'true');
     });
 
-    await step('Clicar no switch alterna para ativado', async () => {
-      await userEvent.click(sw);
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
+    await step('Clicar no controle alterna e dispara o callback de mudança', async () => {
+      // A precondição fica FORA da contagem: `definir` só clica quando precisa,
+      // então contar a partir de um estado desconhecido daria 1 ou 2 conforme a
+      // rodada. Fixado o ponto de partida, o par abaixo são sempre dois cliques.
+      await definir(sw, false);
+      const chamadasAntes = espiao.mock.calls.length;
+      await definir(sw, true);
+      await definir(sw, false);
+      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 2);
+      await expect(espiao).toHaveBeenLastCalledWith(false);
     });
 
-    await step('Clicar novamente alterna para desativado', async () => {
-      await userEvent.click(sw);
-      await expect(sw).toHaveAttribute('aria-checked', 'false');
-    });
-
-    await step('Space alterna o estado via teclado', async () => {
+    await step('Space com o controle focado alterna o estado', async () => {
+      await definir(sw, false);
       sw.focus();
+      await expect(sw).toHaveFocus();
       await userEvent.keyboard(' ');
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
-      await userEvent.keyboard(' ');
-      await expect(sw).toHaveAttribute('aria-checked', 'false');
+      await waitFor(() => expect(sw).toHaveAttribute('aria-checked', 'true'));
+    });
+
+    await step('Tab leva o foco ao controle e deixa anel visível', async () => {
+      // Foco por Tab, não `focus()`: o anel vive no `:focus-visible`, que a
+      // heurística do navegador só liga em interação de teclado. E um
+      // `outline: 0` sem substituto passaria em qualquer teste de estado — é
+      // preciso olhar o estilo computado.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(sw).toHaveFocus();
+      const estilo = getComputedStyle(sw);
+      await expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none').toBe(true);
+    });
+
+    await step('Clicar no rótulo alterna o controle associado', async () => {
+      const rotulo = canvas.getByText('Receber notificações por email');
+      await definir(sw, false, rotulo);
+      await definir(sw, true, rotulo);
     });
   },
 };

@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de uso do Switch: Default (Label à direita), WithDescription (painel `flex justify-between` com Label + descrição) e Sm (tamanho compacto). O factory custom do Vanilla não expõe prop `size` — o tamanho `sm` é alcançado via `class` (`h-4 w-7`) + ajuste das classes do thumb (`h-3 w-3`, `translate-x-3`).',
+          'Variantes de uso do Switch: Default (Label à direita), WithDescription (painel com o texto à esquerda) e Sm (degrau compacto). O degrau vem da opção `size`, que a factory traduz em `data-size` — é o CSS compartilhado que guarda a medida.',
       },
     },
   },
@@ -22,17 +22,26 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers locais ───────────────────────────────────────────────────────────
+//
+// Sem listener próprio no rótulo: `<button>` é elemento rotulável, então o
+// `<label for>` já encaminha a ativação.
 
-function switchRow(opts: { id: string; labelText: string; checked?: boolean }): HTMLElement {
+function switchRow(opts: {
+  id: string;
+  labelText: string;
+  checked?: boolean;
+  size?: 'default' | 'sm';
+  labelClass?: string;
+}): HTMLElement {
   const row = document.createElement('div');
   row.className = 'nds-cluster';
   row.dataset.spacing = 'sm';
-  const sw = createSwitch({ id: opts.id, checked: opts.checked ?? false });
+  const sw = createSwitch({ id: opts.id, checked: opts.checked ?? false, size: opts.size });
   const label = document.createElement('label');
   label.htmlFor = opts.id;
   label.textContent = opts.labelText;
-  label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-  label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
+  label.className =
+    (opts.labelClass ?? 'nds-text-body') + ' nds-font-medium nds-leading-none nds-cursor-pointer';
   row.append(sw, label);
   return row;
 }
@@ -49,18 +58,21 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Layout padrão — Switch à direita do Label, alinhamento `flex items-center space-x-2`. Use para configurações simples sem necessidade de texto auxiliar.',
+          'Switch padrão — trilho de 36×20px com thumb de 16px, Label à direita. Use para configurações simples sem texto auxiliar.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Switch presente com role correto', async () => {
-      await expect(canvas.getByRole('switch')).toBeInTheDocument();
+    const sw = canvas.getByRole('switch');
+
+    await step('O degrau padrão vira data-size', async () => {
+      await expect(sw).toHaveAttribute('data-size', 'default');
     });
-    await step('Label associado via htmlFor', async () => {
-      const sw = canvas.getByRole('switch');
-      await expect(sw).toHaveAttribute('id', 'v-default-switch');
+
+    await step('O rótulo nomeia o controle', async () => {
+      await expect(canvas.getByRole('switch', { name: /Receber notificações por email/i }))
+        .toBe(sw);
     });
   },
 };
@@ -70,23 +82,21 @@ export const Default: Story = {
 export const WithDescription: Story = {
   render: () => {
     const panel = document.createElement('div');
-    panel.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-3';
+    panel.className = 'nds-cluster nds-w-sm nds-rounded-lg nds-border-default nds-p-4';
+    panel.dataset.align = 'center';
     panel.dataset.justify = 'between';
-    panel.style.width = '20rem';
 
     const id = 'v-with-desc-switch';
     const sw = createSwitch({ id, checked: false });
 
     const textGroup = document.createElement('div');
-    textGroup.className = 'nds-stack';
+    textGroup.className = 'nds-stack nds-pr-4';
     textGroup.dataset.spacing = 'xs';
-    textGroup.style.paddingRight = '0.75rem';
 
     const label = document.createElement('label');
     label.htmlFor = id;
     label.textContent = 'Emails de marketing';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
 
     const desc = document.createElement('p');
     desc.className = 'nds-text-body';
@@ -100,17 +110,21 @@ export const WithDescription: Story = {
     docs: {
       description: {
         story:
-          'Switch em painel `flex justify-between` — Label e descrição auxiliar à esquerda, Switch à direita. Padrão para configurações em listas (notificações, privacidade, preferências).',
+          'Switch em painel — Label e descrição auxiliar à esquerda, controle à direita. Padrão para listas de configurações (notificações, privacidade, preferências).',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Switch presente', async () => {
-      await expect(canvas.getByRole('switch')).toBeInTheDocument();
-    });
-    await step('Descrição auxiliar visível', async () => {
+    const sw = canvas.getByRole('switch');
+
+    await step('O controle e a descrição auxiliar estão visíveis', async () => {
+      await expect(sw).toBeInTheDocument();
       await expect(canvas.getByText(/novidades e promoções/)).toBeVisible();
+    });
+
+    await step('Só o rótulo nomeia o controle — a descrição não entra no nome', async () => {
+      await expect(canvas.getByRole('switch', { name: /Emails de marketing/i })).toBe(sw);
     });
   },
 };
@@ -119,43 +133,55 @@ export const WithDescription: Story = {
 
 export const Sm: Story = {
   render: () => {
-    const row = document.createElement('div');
-    row.className = 'nds-cluster';
-  row.dataset.spacing = 'sm';
-
-    const id = 'v-sm-switch';
-    // Factory Vanilla não expõe prop `size` — replicamos via class
-    const sw = createSwitch({ id, checked: true, class: 'h-4 w-7' });
-    const thumb = sw.querySelector('[data-slot="switch-thumb"]') as HTMLElement | null;
-    if (thumb) {
-      thumb.classList.remove('h-4', 'w-4', 'data-[state=checked]:translate-x-4');
-      thumb.classList.add('h-3', 'w-3', 'data-[state=checked]:translate-x-3');
-    }
-
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.textContent = 'Tamanho compacto';
-    label.className = 'nds-text-caption nds-font-medium nds-leading-none nds-cursor-pointer';
-    label.addEventListener('click', (e) => { e.preventDefault(); sw.click(); });
-
-    row.append(sw, label);
-    return row;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'nds-stack';
+    wrapper.dataset.spacing = 'sm';
+    wrapper.append(
+      switchRow({ id: 'v-sm-referencia', labelText: 'Tamanho padrão' }),
+      switchRow({
+        id: 'v-sm-switch',
+        labelText: 'Tamanho compacto',
+        size: 'sm',
+        labelClass: 'nds-text-caption',
+      }),
+    );
+    return wrapper;
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
-          'Tamanho compacto (24×14px aprox.) para uso em listas densas ou menus. Como o factory Vanilla não expõe prop `size`, replicamos as dimensões via `class` (`h-4 w-7`) + ajuste do thumb (`h-3 w-3`, `translate-x-3`).',
+          'Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação. Indicado para listas densas e menus.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Switch sm presente e marcado', async () => {
-      const sw = canvas.getByRole('switch');
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
-      await expect(sw.className).toMatch(/h-4/);
-      await expect(sw.className).toMatch(/w-7/);
+    const [padrao, compacto] = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>('[data-slot="switch"]'),
+    );
+
+    await step('O degrau de tamanho vira data-size', async () => {
+      await expect(padrao).toHaveAttribute('data-size', 'default');
+      await expect(compacto).toHaveAttribute('data-size', 'sm');
+    });
+
+    await step('O compacto é de fato menor que o padrão', async () => {
+      // O atributo sozinho não prova nada: a medida vive no CSS compartilhado,
+      // e uma regra ausente deixaria os dois do mesmo tamanho com o data-size
+      // certo em ambos. Foi exatamente o que a versão anterior desta story
+      // escondia, replicando o degrau com classes mortas (`h-4 w-7`).
+      await expect(compacto.getBoundingClientRect().width).toBeLessThan(
+        padrao.getBoundingClientRect().width,
+      );
+    });
+
+    await step('O thumb acompanha o degrau do trilho', async () => {
+      const thumbPadrao = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const thumbCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      await expect(thumbCompacto.getBoundingClientRect().width).toBeLessThan(
+        thumbPadrao.getBoundingClientRect().width,
+      );
     });
   },
 };

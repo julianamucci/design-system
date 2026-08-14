@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, waitFor, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
+
+/**
+ * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
+ * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
+ * play no mesmo DOM, e clique cego inverte o resultado no replay.
+ */
+async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
+  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
+  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
+}
 
 const meta: Meta = {
   title: 'UI/Switch/Compositions',
@@ -10,6 +20,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -33,12 +44,15 @@ export const WithoutLabel: Story = {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('Switch está presente no DOM', async () => {
-      await expect(sw).toBeInTheDocument();
+    await step('Sem rótulo visível, o nome acessível vem do aria-label', async () => {
+      // Anti-padrão didático: sem rótulo visível, o controle continua tendo de
+      // ser anunciado com o mesmo texto que o rótulo traria.
+      await expect(canvas.getByRole('switch', { name: 'Ativar modo escuro' })).toBe(sw);
     });
 
-    await step('Switch tem role=switch', async () => {
-      await expect(sw).toHaveAttribute('role', 'switch');
+    await step('O controle continua operável', async () => {
+      await definir(sw, true);
+      await definir(sw, false);
     });
   },
 };
@@ -52,22 +66,20 @@ export const WithLabel: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
+    const rotulo = canvas.getByText('Receber notificações por email');
 
-    await step('Switch associado à Label via for/id', async () => {
-      const sw = canvas.getByRole('switch', { name: 'Receber notificações por email' });
-      await expect(sw).toBeInTheDocument();
+    await step('O rótulo nomeia o controle e está visível', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Receber notificações por email' }))
+        .toBe(sw);
+      await expect(rotulo).toBeVisible();
     });
 
-    await step('Label está visível', async () => {
-      const label = canvas.getByText('Receber notificações por email');
-      await expect(label).toBeVisible();
-    });
-
-    await step('Clicar no Label alterna o Switch', async () => {
-      const label = canvas.getByText('Receber notificações por email');
-      await userEvent.click(label);
-      const sw = canvas.getByRole('switch');
-      await expect(sw).toHaveAttribute('aria-checked', 'true');
+    await step('Clicar no rótulo liga e desliga o controle', async () => {
+      // O par (liga e depois desliga) garante DOIS cliques reais em qualquer
+      // rodada e devolve a story ao estado que o Chromatic fotografa.
+      await definir(sw, true, rotulo);
+      await definir(sw, false, rotulo);
     });
   },
 };
@@ -82,24 +94,17 @@ export const WithDescription: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const sw = canvas.getByRole('switch');
 
-    await step('Switch está presente no DOM', async () => {
-      const sw = canvas.getByRole('switch');
-      await expect(sw).toBeInTheDocument();
+    await step('Rótulo e descrição auxiliar estão visíveis', async () => {
+      await expect(canvas.getByText('Emails de marketing')).toBeVisible();
+      await expect(
+        canvas.getByText('Receba novidades e promoções da plataforma.'),
+      ).toBeVisible();
     });
 
-    await step('Texto descritivo está visível', async () => {
-      const desc = canvas.getByText('Receba novidades e promoções da plataforma.');
-      await expect(desc).toBeVisible();
-    });
-
-    await step('Label está associado via for/id', async () => {
-      const label = canvas.getByText('Emails de marketing');
-      await expect(label).toBeVisible();
-    });
-
-    await step('Switch tem aria-describedby', async () => {
-      const sw = canvas.getByRole('switch');
+    await step('Só o rótulo nomeia; a descrição entra como texto auxiliar', async () => {
+      await expect(canvas.getByRole('switch', { name: 'Emails de marketing' })).toBe(sw);
       await expect(sw).toHaveAttribute('aria-describedby', 'comp-with-desc-description');
     });
   },
@@ -115,9 +120,15 @@ export const Activated: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch', { name: 'Modo escuro' });
+    const thumb = canvasElement.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
 
-    await step('Switch começa ativado', async () => {
+    await step('O controle nasce ligado', async () => {
       await expect(sw).toHaveAttribute('aria-checked', 'true');
+    });
+
+    await step('E o desenho acompanha: o thumb parte do fim do trilho', async () => {
+      const deslocamento = thumb.getBoundingClientRect().left - sw.getBoundingClientRect().left;
+      await expect(deslocamento).toBeGreaterThan(sw.getBoundingClientRect().width / 3);
     });
   },
 };
@@ -134,8 +145,9 @@ export const SizeSm: Story = {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
 
-    await step('Switch tem size sm', async () => {
+    await step('O degrau compacto continua operável e nomeado', async () => {
       await expect(sw).toHaveAttribute('data-size', 'sm');
+      await expect(canvas.getByRole('switch', { name: 'Notificações push' })).toBe(sw);
     });
   },
 };

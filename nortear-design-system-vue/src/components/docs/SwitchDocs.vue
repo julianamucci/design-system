@@ -307,13 +307,11 @@ const switchPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--input',              value: tContent('tokens.table.input.class'),              description: tContent('tokens.table.input.part')              },
-  { token: '--primary',            value: tContent('tokens.table.primary.class'),            description: tContent('tokens.table.primary.part')            },
-  { token: '--background',         value: tContent('tokens.table.background.class'),         description: tContent('tokens.table.background.part')         },
-  { token: '--primary-foreground', value: tContent('tokens.table.primaryForeground.class'),  description: tContent('tokens.table.primaryForeground.part')  },
-  { token: '--ring',               value: tContent('tokens.table.ring.class'),               description: tContent('tokens.table.ring.part')               },
-  { token: '--destructive',        value: tContent('tokens.table.destructive.class'),        description: tContent('tokens.table.destructive.part')        },
-  { token: '--foreground',         value: tContent('tokens.table.foreground.class'),         description: tContent('tokens.table.foreground.part')         },
+  { token: '--input',       value: tContent('tokens.table.input.class'),       description: tContent('tokens.table.input.part')       },
+  { token: '--primary',     value: tContent('tokens.table.primary.class'),     description: tContent('tokens.table.primary.part')     },
+  { token: '--background',  value: tContent('tokens.table.background.class'),  description: tContent('tokens.table.background.part')  },
+  { token: '--ring',        value: tContent('tokens.table.ring.class'),        description: tContent('tokens.table.ring.part')        },
+  { token: '--destructive', value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
 ]);
 
 const accessibilityItems = computed(() => [
