@@ -1,163 +1,228 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { expect } from "storybook/test";
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
-import { Button } from "./button";
+import { esperarTorrada, limparTorradas, PERSISTENTE, TEXTOS, tipoDaTorrada } from "./sonner.fixtures";
+
+// ─── Meta ─────────────────────────────────────────────────────────────────────
+//
+// Os seis tipos semânticos. O que muda entre eles é o ícone e — com
+// `richColors` — a cor da borda, do fundo e do ícone. O TEXTO nunca muda de cor.
+//
+// Todas as stories deste arquivo terminam com a notificação NA TELA, de prazo
+// infinito: é o que o Chromatic fotografa e o que o axe mede — sempre no mesmo
+// estado, nunca no meio de uma transição.
 
 const meta = {
   title: "UI/Sonner/Types",
   tags: ["feedback"],
-  component: Toaster,
   parameters: {
+    layout: "padded",
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    // Sonner com richColors aplica paletas semi-transparentes (success/error/warning/info)
-    // herdadas da própria lib `sonner`. Não controlamos os valores RGBA — auditoria de
-    // contraste é feita manualmente em foundations/colors.
-    // aria-prohibited-attr: o toast renderizado pela lib usa <div data-title aria-label="...">
-    // que axe reporta como prohibited; o Toaster (lib externa) gera essa estrutura.
+    actions: { disable: true },
     // Ver PATCHES.md#sonner-rich-colors-contrast.
     a11y: {
       config: {
         rules: [
-          { id: 'color-contrast', enabled: false },
-          { id: 'aria-prohibited-attr', enabled: false },
+          { id: "color-contrast", enabled: false },
+          { id: "aria-prohibited-attr", enabled: false },
         ],
       },
     },
+    docs: {
+      description: {
+        component:
+          "Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.",
+      },
+    },
   },
-} satisfies Meta<typeof Toaster>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
   render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
+    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
       <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast("Código copiado.")}
-      >
-        Disparar default
-      </Button>
     </div>
   ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar default" });
-      await expect(btn).toBeInTheDocument();
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj;
+
+// ─── Stories ──────────────────────────────────────────────────────────────────
+
+export const Default: Story = {
+  parameters: {
+    covers: ["accessibility.item4", "visual.item1"],
+    docs: {
+      description: {
+        story:
+          "Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("A notificação neutra não carrega ícone nenhum", async () => {
+      toast(TEXTOS.padrao, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: "default" });
+
+      // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
+      // a coluna e sugeriria uma severidade que a mensagem não tem.
+      await expect(torrada.querySelector("[data-icon]")).toBeNull();
+      await expect(torrada.querySelector("[data-title]")).toHaveTextContent(TEXTOS.padrao);
+      // Cada lib escreve a ausência de tipo à sua maneira: uma omite `data-type`,
+      // outra escreve `default`. O FATO é o mesmo — não há tipo semântico — e é
+      // ele que o helper normaliza, em vez de a story afirmar o detalhe de uma.
+      await expect(tipoDaTorrada(torrada)).toBe("default");
+    });
+
+    await step("A pilha nasce no canto pedido", async () => {
+      const lista = document.querySelector<HTMLElement>("[data-sonner-toaster]")!;
+      await expect(lista).toHaveAttribute("data-y-position", "top");
+      await expect(lista).toHaveAttribute("data-x-position", "right");
+      await expect(lista.querySelectorAll("[data-sonner-toast]").length).toBe(1);
     });
   },
 };
 
 export const Success: Story = {
-  render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
-      <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast.success("Alterações salvas.")}
-      >
-        Disparar success
-      </Button>
-    </div>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar success" });
-      await expect(btn).toBeInTheDocument();
+  parameters: {
+    covers: ["functional.item1", "visual.item1"],
+    docs: {
+      description: {
+        story: "Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("O tipo chega ao markup, junto do sinal de cores do tema", async () => {
+      // functional.item1 — é `data-type` + `data-rich-colors` que o CSS lê; sem
+      // os dois a cor semântica não aparece, e a story passaria mesmo assim se
+      // afirmasse só a presença do elemento. O prazo de 4000ms que o item também
+      // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
+      // notificação é persistente de propósito, para o axe e o Chromatic medirem
+      // sempre o mesmo estado.
+      toast.success(TEXTOS.sucesso, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: "success" });
+      await expect(torrada).toHaveAttribute("data-type", "success");
+      await expect(torrada).toHaveAttribute("data-rich-colors", "true");
+      await expect(torrada.querySelector("[data-icon] svg")).not.toBeNull();
+
+      const lista = document.querySelector<HTMLElement>("[data-sonner-toaster]")!;
+      await expect(lista).toHaveAttribute("data-y-position", "top");
+      await expect(lista).toHaveAttribute("data-x-position", "right");
+    });
+
+    await step("A paleta semântica chega ao fundo e ao texto da notificação", async () => {
+      // DIVERGÊNCIA REGISTRADA, não afrouxamento: a regra da casa manda o texto
+      // corrido ficar em `--foreground` mesmo em contêiner colorido, e a lib
+      // pinta título e descrição com a MESMA cor semântica do ícone
+      // (`[data-title] { color: inherit }` na folha dela). A paleta é da lib e
+      // não passa pelos tokens do tema — é o mesmo motivo de `color-contrast`
+      // estar desligado aqui (PATCHES.md#sonner-rich-colors-contrast). O que
+      // esta stack controla, e o que se afirma, é que `richColors` de fato
+      // recolore a notificação em vez de cair no neutro.
+      const torrada = await esperarTorrada({ tipo: "success" });
+      const neutro = getComputedStyle(document.body).backgroundColor;
+      await expect(getComputedStyle(torrada).backgroundColor).not.toBe(neutro);
+      await expect(getComputedStyle(torrada).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
     });
   },
 };
 
 export const Error: Story = {
-  render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
-      <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast.error("Não foi possível salvar. Tente novamente.")}
-      >
-        Disparar error
-      </Button>
-    </div>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar error" });
-      await expect(btn).toBeInTheDocument();
+  parameters: {
+    covers: ["visual.item1"],
+    docs: {
+      description: {
+        story:
+          "Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("A falha se anuncia pelo texto, não só pela cor", async () => {
+      toast.error(TEXTOS.erro, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: "error" });
+      await expect(torrada).toHaveAttribute("data-type", "error");
+      // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
+      await expect(torrada).toHaveTextContent(TEXTOS.erro);
+      await expect(torrada.querySelector("[data-icon] svg")).not.toBeNull();
     });
   },
 };
 
 export const Warning: Story = {
-  render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
-      <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast.warning("Sua sessão expira em 5 minutos.")}
-      >
-        Disparar warning
-      </Button>
-    </div>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar warning" });
-      await expect(btn).toBeInTheDocument();
+  parameters: {
+    covers: ["visual.item1"],
+    docs: {
+      description: {
+        story:
+          "Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("O aviso usa o tipo próprio, e não a falha", async () => {
+      toast.warning(TEXTOS.aviso, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: "warning" });
+      await expect(torrada).toHaveAttribute("data-type", "warning");
+      await expect(torrada).not.toHaveAttribute("data-type", "error");
+      await expect(torrada).toHaveTextContent(TEXTOS.aviso);
     });
   },
 };
 
 export const Info: Story = {
-  render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
-      <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast.info("Nova versão disponível.")}
-      >
-        Disparar info
-      </Button>
-    </div>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar info" });
-      await expect(btn).toBeInTheDocument();
+  parameters: {
+    covers: ["visual.item1"],
+    docs: {
+      description: {
+        story: "Informação contextual ou novidade — nada aconteceu de errado nem de certo.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("A informação tem tipo próprio e ícone próprio", async () => {
+      toast.info(TEXTOS.info, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: "info" });
+      await expect(torrada).toHaveAttribute("data-type", "info");
+      await expect(torrada).toHaveTextContent(TEXTOS.info);
+      await expect(torrada.querySelector("[data-icon] svg")).not.toBeNull();
     });
   },
 };
 
 export const Loading: Story = {
-  render: () => (
-    <div style={{ contain: "layout", minHeight: 100, position: "relative" }}>
-      <Toaster position="top-right" richColors />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => toast.loading("Enviando arquivo...")}
-      >
-        Disparar loading
-      </Button>
-    </div>
-  ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Botão de disparo está presente", async () => {
-      const btn = canvas.getByRole("button", { name: "Disparar loading" });
-      await expect(btn).toBeInTheDocument();
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.",
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step("O carregamento gira e não tem prazo para sair", async () => {
+      // Sem `duration` de propósito: o tipo `loading` nasce sem prazo. Fechá-lo
+      // sozinho deixaria a pessoa sem saber se a operação terminou.
+      toast.loading(TEXTOS.carregando);
+      const torrada = await esperarTorrada({ tipo: "loading" });
+      await expect(torrada).toHaveAttribute("data-type", "loading");
+
+      const icone = torrada.querySelector<SVGSVGElement>("[data-icon] svg")!;
+      await expect(icone).toHaveClass("nds-toast-icon-spin");
+      await expect(torrada).toHaveTextContent(TEXTOS.carregando);
     });
   },
 };

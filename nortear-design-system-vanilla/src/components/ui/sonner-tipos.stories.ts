@@ -1,190 +1,207 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { injectToastStyles } from './sonner';
-import DOMPurify from 'dompurify';
+import { toast } from './sonner';
+import { esperarTorrada, limparTorradas, montarToaster, PERSISTENTE, TEXTOS } from './sonner.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
+//
+// Os seis tipos semânticos. O que muda entre eles é o ícone e — com
+// `richColors` — a cor da borda, do fundo e do ícone. O TEXTO nunca muda de cor:
+// título e descrição ficam em `--foreground` em toda variante, porque cor
+// semântica sobre fundo suave raramente alcança os 4.5:1 que texto corrido
+// exige. Contraste não pode depender de qual tipo alguém escolheu.
+//
+// Todas as stories deste arquivo terminam com a notificação NA TELA, de prazo
+// infinito: é o que o Chromatic fotografa e o que o axe mede — sempre no mesmo
+// estado, nunca no meio de uma transição.
 
 const meta: Meta = {
-  tags: ['feedback'],
   title: 'UI/Sonner/Types',
+  tags: ['feedback'],
   parameters: {
-    actions: { disable: true },
+    layout: 'padded',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
-        component: 'Tipos semânticos de toast. Cada tipo carrega ícone e cor correspondentes quando richColors está ativo.',
+        component:
+          'Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.',
       },
     },
   },
+  render: () => montarToaster(),
 };
 
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const ICONS: Record<string, string> = {
-  default:  '',
-  success:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
-  error:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
-  warning:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-  info:     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-  loading:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ds-toast-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
-};
-
-type ToastStyle = { bg: string; color: string; borderColor: string };
-const RICH_COLORS: Record<string, ToastStyle> = {
-  default: { bg: 'var(--background)',  color: 'var(--foreground)', borderColor: 'var(--border)' },
-  success: { bg: '#f0fdf4',            color: '#166534',           borderColor: '#bbf7d0' },
-  error:   { bg: '#fef2f2',            color: '#991b1b',           borderColor: '#fecaca' },
-  warning: { bg: '#fefce8',            color: '#854d0e',           borderColor: '#fef08a' },
-  info:    { bg: '#eff6ff',            color: '#1e40af',           borderColor: '#bfdbfe' },
-  loading: { bg: 'var(--background)',  color: 'var(--foreground)', borderColor: 'var(--border)' },
-};
-
-function buildToastEl(type: string, message: string): HTMLElement {
-  const palette = RICH_COLORS[type] ?? RICH_COLORS.default;
-  const toastEl = document.createElement('div');
-  toastEl.setAttribute('data-sonner-toast', '');
-  toastEl.setAttribute('role', 'status');
-  toastEl.setAttribute('aria-live', 'polite');
-  toastEl.className = 'nds-cluster nds-w-full nds-max-w-sm nds-rounded-lg nds-p-4 nds-shadow-lg';
-  toastEl.dataset.spacing = 'sm';
-  toastEl.dataset.align = 'start';
-  toastEl.style.pointerEvents = 'auto';
-  toastEl.style.background = palette.bg;
-  toastEl.style.color = palette.color;
-  toastEl.style.border = `1px solid ${palette.borderColor}`;
-
-  if (ICONS[type]) {
-    const iconWrap = document.createElement('span');
-    iconWrap.className = 'nds-shrink-0';
-    iconWrap.style.marginTop = '0.125rem';
-    iconWrap.innerHTML = DOMPurify.sanitize(ICONS[type]);
-    toastEl.appendChild(iconWrap);
-  }
-
-  const contentEl = document.createElement('div');
-  contentEl.className = 'nds-flex-1 nds-min-w-0';
-  const titleEl = document.createElement('p');
-  titleEl.className = 'nds-text-body nds-font-medium';
-  titleEl.textContent = message;
-  contentEl.appendChild(titleEl);
-  toastEl.appendChild(contentEl);
-
-  return toastEl;
-}
-
-function createToastTipoStory(
-  type: string,
-  btnLabel: string,
-  message: string,
-): HTMLElement {
-  injectToastStyles();
-
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position: relative; contain: layout; min-height: 120px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;';
-
-  const toastContainer = document.createElement('div');
-  toastContainer.style.cssText = 'position: absolute; top: 4rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; max-width: 420px; width: 100%;';
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.textContent = btnLabel;
-  btn.className = 'btn btn-outline';
-  btn.style.alignSelf = 'flex-start';
-
-  btn.addEventListener('click', () => {
-    const toastEl = buildToastEl(type, message);
-    toastEl.style.opacity = '0';
-    toastEl.style.transform = 'translateY(8px)';
-    toastContainer.appendChild(toastEl);
-
-    requestAnimationFrame(() => {
-      toastEl.style.transition = 'opacity 200ms, transform 200ms';
-      toastEl.style.opacity = '1';
-      toastEl.style.transform = 'translateY(0)';
-    });
-
-    if (type !== 'loading') {
-      setTimeout(() => {
-        toastEl.style.opacity = '0';
-        toastEl.style.transform = 'translateY(8px)';
-        setTimeout(() => toastEl.remove(), 200);
-      }, 4000);
-    }
-  });
-
-  wrapper.appendChild(btn);
-  wrapper.appendChild(toastContainer);
-
-  // Show a static preview toast immediately
-  const preview = buildToastEl(type, message);
-  preview.style.maxWidth = '420px';
-  wrapper.appendChild(preview);
-
-  return wrapper;
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => createToastTipoStory('default', 'Disparar default', 'Código copiado.'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast default renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    covers: ['accessibility.item4', 'visual.item1'],
+    docs: {
+      description: {
+        story:
+          'Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('A notificação neutra não carrega ícone nenhum', async () => {
+      toast(TEXTOS.padrao, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: 'default' });
+
+      // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
+      // a coluna e sugeriria uma severidade que a mensagem não tem.
+      await expect(torrada.querySelector('.nds-toast-icon')).toBeNull();
+      await expect(torrada.querySelector('.nds-toast-title')).toHaveTextContent(TEXTOS.padrao);
+      await expect(torrada).toHaveAttribute('data-type', 'default');
+    });
+
+    await step('A pilha nasce no canto pedido', async () => {
+      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(regiao).toHaveAttribute('data-position', 'top-right');
+      await expect(regiao.querySelectorAll('.nds-toast').length).toBe(1);
     });
   },
 };
 
 export const Success: Story = {
-  render: () => createToastTipoStory('success', 'Disparar success', 'Alterações salvas.'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast success renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    docs: {
+      description: {
+        story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('O tipo chega ao markup, junto do sinal de cores do tema', async () => {
+      // functional.item1 — é `data-type` + `data-rich-colors` que o CSS lê; sem
+      // os dois a cor semântica não aparece, e a story passaria mesmo assim se
+      // afirmasse só a presença do elemento. O prazo de 4000ms que o item
+      // também descreve é exercido pela story AutoDismiss (functional.item2):
+      // aqui a notificação é persistente de propósito, para o axe e o Chromatic
+      // medirem sempre o mesmo estado.
+      toast.success(TEXTOS.sucesso, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: 'success' });
+      await expect(torrada).toHaveAttribute('data-type', 'success');
+      await expect(torrada).toHaveAttribute('data-rich-colors', 'true');
+      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+
+      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(regiao).toHaveAttribute('data-position', 'top-right');
+    });
+
+    await step('A cor semântica fica no ícone; o texto corrido não muda de cor', async () => {
+      // Regra de projeto medida, não presumida: em contêiner colorido, ícone e
+      // título curto podem carregar a cor (3:1), texto corrido não — ele fica em
+      // `--foreground` para alcançar 4.5:1 em qualquer variante.
+      const torrada = await esperarTorrada({ tipo: 'success' });
+      const icone = torrada.querySelector<HTMLElement>('.nds-toast-icon')!;
+      const titulo = torrada.querySelector<HTMLElement>('.nds-toast-title')!;
+      await expect(getComputedStyle(icone).color).not.toBe(getComputedStyle(titulo).color);
     });
   },
 };
 
 export const Error: Story = {
-  render: () => createToastTipoStory('error', 'Disparar error', 'Não foi possível salvar. Tente novamente.'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast error renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    covers: ['visual.item1'],
+    docs: {
+      description: {
+        story:
+          'Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('A falha se anuncia pelo texto, não só pela cor', async () => {
+      toast.error(TEXTOS.erro, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: 'error' });
+      await expect(torrada).toHaveAttribute('data-type', 'error');
+      // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
+      await expect(torrada).toHaveTextContent(TEXTOS.erro);
+      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
   },
 };
 
 export const Warning: Story = {
-  render: () => createToastTipoStory('warning', 'Disparar warning', 'Sua sessão expira em 5 minutos.'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast warning renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    covers: ['visual.item1'],
+    docs: {
+      description: {
+        story:
+          'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('O aviso usa o tipo próprio, e não a falha', async () => {
+      toast.warning(TEXTOS.aviso, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: 'warning' });
+      await expect(torrada).toHaveAttribute('data-type', 'warning');
+      await expect(torrada).not.toHaveAttribute('data-type', 'error');
+      await expect(torrada).toHaveTextContent(TEXTOS.aviso);
     });
   },
 };
 
 export const Info: Story = {
-  render: () => createToastTipoStory('info', 'Disparar info', 'Nova versão disponível.'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast info renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    covers: ['visual.item1'],
+    docs: {
+      description: {
+        story: 'Informação contextual ou novidade — nada aconteceu de errado nem de certo.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('A informação tem tipo próprio e ícone próprio', async () => {
+      toast.info(TEXTOS.info, PERSISTENTE);
+      const torrada = await esperarTorrada({ tipo: 'info' });
+      await expect(torrada).toHaveAttribute('data-type', 'info');
+      await expect(torrada).toHaveTextContent(TEXTOS.info);
+      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
   },
 };
 
 export const Loading: Story = {
-  render: () => createToastTipoStory('loading', 'Disparar loading', 'Enviando arquivo...'),
-  play: async ({ canvasElement, step }) => {
-    await step('Toast loading renderizado', async () => {
-      const toast = canvasElement.querySelector('[data-sonner-toast]');
-      await expect(toast).toBeTruthy();
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    await limparTorradas();
+
+    await step('O carregamento gira e não tem prazo para sair', async () => {
+      // Sem `duration` de propósito: o tipo `loading` nasce sem prazo. Fechá-lo
+      // sozinho deixaria a pessoa sem saber se a operação terminou.
+      toast.loading(TEXTOS.carregando);
+      const torrada = await esperarTorrada({ tipo: 'loading' });
+      await expect(torrada).toHaveAttribute('data-type', 'loading');
+
+      const icone = torrada.querySelector<HTMLElement>('.nds-toast-icon')!;
+      await expect(icone).toHaveClass('nds-toast-icon-spin');
+      await expect(torrada).toHaveTextContent(TEXTOS.carregando);
     });
   },
 };

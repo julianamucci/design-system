@@ -29,6 +29,7 @@ import {
   NdsDocsDoDont,
   NdsDocsImport,
   NdsDocsVariants,
+  NdsDocsStates,
   NdsDocsProps,
   NdsDocsTokens,
   NdsDocsAccessibility,
@@ -73,13 +74,14 @@ const { t, dict } = useTranslation(sonnerTranslations as Record<string, unknown>
   },
 });
 
-// A seção "Composições" (`states`) não entra: o conteúdo compartilhado só traz
-// `title` e `items` ali, e a auditoria lê essa forma como seção vazia — uma
-// página com o id e sem conteúdo reconhecido é cobrada como placeholder. As
-// quatro composições aparecem na Demonstração, onde cada uma tem um disparo.
+// A seção "Composições" (`states`) entra como as outras quatro stacks já a
+// tinham. Ela ficou de fora enquanto a auditoria lia `{ title, items }` como nó
+// vazio — `title` e `items` são cabeçalhos de seção, e a regra não descia até os
+// itens. Com a regra corrigida, omitir a seção é que passou a ser o defeito: o
+// conteúdo existe nos três idiomas e a navegação já a anunciava.
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
-  'importacao', 'variantes', 'propriedades', 'tokens',
+  'importacao', 'variantes', 'estados', 'propriedades', 'tokens',
   'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
 ] as const;
 
@@ -93,6 +95,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   { labelKey: 'nav.techRef', sections: [
     { id: 'importacao',   labelKey: 'nav.import'   },
     { id: 'variantes',    labelKey: 'nav.variants' },
+    { id: 'estados',      labelKey: 'nav.states'   },
     { id: 'propriedades', labelKey: 'nav.props'    },
     { id: 'tokens',       labelKey: 'nav.tokens'   },
   ]},
@@ -165,7 +168,7 @@ const CODIGO_POR_TIPO: Record<string, string> = {
     NdsToaster, NdsButton,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
-    NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
+    NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
   template: `
@@ -315,6 +318,12 @@ const CODIGO_POR_TIPO: Record<string, string> = {
           componentSlug="sonner"
           id="variantes"
           language="ts"
+        />
+
+        <nds-docs-states
+          [title]="t('states.title')"
+          [cols]="statesCols()"
+          [items]="stateItems()"
         />
 
         <nds-docs-props
@@ -581,6 +590,36 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         code: CODIGO_POR_TIPO[chave] ?? '',
         preview: previews[chave],
       }));
+  });
+
+  protected readonly statesCols = computed(() => {
+    dict();
+    return {
+      state: t('states.cols.state'),
+      trigger: t('states.cols.trigger'),
+      behavior: t('states.cols.behavior'),
+    };
+  });
+
+  /**
+   * As composições, com a CHAMADA que produz cada uma na coluna do meio.
+   *
+   * A tabela escreve textNode, então a descrição passa por `toPlainText`: sem
+   * isso o `<code>duration: Infinity</code>` do conteúdo compartilhado apareceria
+   * com as tags literais na tela.
+   */
+  protected readonly stateItems = computed(() => {
+    dict();
+    return [
+      { chave: 'withDescription', chamada: `toast.success(msg, { description })` },
+      { chave: 'withAction', chamada: `toast(msg, { action: { label, onClick } })` },
+      { chave: 'promise', chamada: `toast.promise(p, { loading, success, error })` },
+      { chave: 'persistent', chamada: `toast.error(msg, { duration: Infinity })` },
+    ].map(({ chave, chamada }) => ({
+      label: t(`states.items.${chave}.label`),
+      trigger: chamada,
+      behavior: toPlainText(t(`states.items.${chave}.description`)),
+    }));
   });
 
   protected readonly propTables = computed(() => {

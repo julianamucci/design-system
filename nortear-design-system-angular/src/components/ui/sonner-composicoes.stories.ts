@@ -79,7 +79,7 @@ export const WithDescription: Story = {
 
 export const WithAction: Story = {
   parameters: {
-    covers: ['functional.item5', 'accessibility.item2'],
+    covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
       description: {
         story:
@@ -144,7 +144,7 @@ export const WithAction: Story = {
 
 export const PromiseResolved: Story = {
   parameters: {
-    covers: ['functional.item3'],
+    covers: ['functional.item3', 'visual.item2'],
     docs: {
       description: {
         story:
@@ -233,7 +233,7 @@ export const PromiseRejected: Story = {
 
 export const Persistent: Story = {
   parameters: {
-    covers: ['functional.item6'],
+    covers: ['functional.item6', 'visual.item2'],
     docs: {
       description: {
         story:

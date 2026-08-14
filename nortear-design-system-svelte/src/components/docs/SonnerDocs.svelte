@@ -469,9 +469,9 @@ toast.promise(promise, {
   <DocsStates
     title={$tStore('states.title')}
     cols={{
-      state: $tNavStore('common.state') ?? 'Estado',
-      trigger: $tNavStore('common.trigger') ?? 'Gatilho',
-      behavior: $tNavStore('common.behavior') ?? 'Comportamento',
+      state: $tStore('states.cols.state'),
+      trigger: $tStore('states.cols.trigger'),
+      behavior: $tStore('states.cols.behavior'),
     }}
     items={[
       { label: $tStore('states.items.withDescription.label'), trigger: 'toast.success(msg, { description })', behavior: toPlainText($tStore('states.items.withDescription.description'))},

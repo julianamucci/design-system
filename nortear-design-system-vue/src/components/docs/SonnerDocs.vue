@@ -674,7 +674,11 @@ const visualTestItems = computed(() => [
     <!-- ── Composições (States) ───────────────────────────────────── -->
     <DocsStates
       :title="tContent('states.title')"
-      :cols="{ state: tNav('nav.states'), trigger: 'API', behavior: tNav('nav.overview') }"
+      :cols="{
+        state: tContent('states.cols.state'),
+        trigger: tContent('states.cols.trigger'),
+        behavior: tContent('states.cols.behavior'),
+      }"
       :items="stateItems"
     />
 

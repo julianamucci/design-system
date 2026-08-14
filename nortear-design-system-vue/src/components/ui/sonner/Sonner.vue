@@ -10,14 +10,37 @@ import {
   XIcon,
 } from 'lucide-vue-next'
 import { Toaster as Sonner } from 'vue-sonner'
-import { cn } from '@/lib/utils'
+import { computed } from 'vue'
+
+// A folha da lib NÃO é injetada em runtime nesta stack — o pacote a expõe como
+// `vue-sonner/style.css` e espera que quem consome a importe. Sem esta linha a
+// região saía sem posicionamento, sem fundo e sem sombra: um `<ol>` cru no meio
+// da página, e nada na tela dizia que faltava alguma coisa.
+import 'vue-sonner/style.css'
+
+/**
+ * Rótulos em português — o design system é escrito em pt-BR, e os defaults da
+ * lib ("Notifications", "Close toast") chegariam à tela em inglês.
+ */
+const ROTULO_REGIAO = 'Notificações'
+const ROTULO_FECHAR = 'Fechar notificação'
 
 const props = defineProps<ToasterProps>()
+
+/**
+ * `toastOptions` é MESCLADO, e não substituído: passar só `classNames` não pode
+ * apagar o rótulo do botão de fechar.
+ */
+const toastOptions = computed(() => ({
+  closeButtonAriaLabel: ROTULO_FECHAR,
+  ...(props.toastOptions ?? {}),
+}))
+
+const containerAriaLabel = computed(() => props.containerAriaLabel ?? ROTULO_REGIAO)
 </script>
 
 <template>
   <Sonner
-    :class="cn('toaster', props.class)"
     :style="{
       '--normal-bg': 'var(--popover)',
       '--normal-text': 'var(--popover-foreground)',
@@ -25,7 +48,8 @@ const props = defineProps<ToasterProps>()
       '--border-radius': 'var(--radius)',
     }"
     v-bind="props"
-    :toast-options="props.toastOptions ?? {}"
+    :container-aria-label="containerAriaLabel"
+    :toast-options="toastOptions"
   >
     <template #success-icon>
       <CircleCheckIcon class="nds-toast-icon" />

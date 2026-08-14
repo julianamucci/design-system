@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { injectToastStyles } from '@/components/ui/sonner';
+import { toast, createSonnerToaster, ROTULO_FECHAR } from '@/components/ui/sonner';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
@@ -55,7 +55,17 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// ─── Local toast renderer (scoped to a container — no document.body append) ──
+// ─── Espécime estático da notificação ────────────────────────────────────────
+//
+// Os previews de Do/Don't e de Tipos mostram a notificação PARADA, e não um
+// botão que a dispara: é uma foto do componente dentro do quadro da seção. Por
+// isso o nó é construído aqui em vez de sair de `toast()` — a fila real é
+// portalizada e posicionada na tela inteira, e não caberia num quadro.
+//
+// O markup é o MESMO que `toast-utils.ts` monta: `.nds-toast` e filhos. A versão
+// anterior desenhava classes de uma era anterior à migração (`bg-green-50`,
+// `text-green-800`) que não existem em CSS nenhum, então o espécime mostrava um
+// retângulo branco — a documentação divergia do componente sem ninguém ver.
 
 const TOAST_ICONS: Record<string, string> = {
   default: '',
@@ -63,59 +73,47 @@ const TOAST_ICONS: Record<string, string> = {
   error:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
   warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
   info:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-  loading: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ds-toast-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
-};
-
-const TOAST_RICH_COLORS: Record<string, string> = {
-  default: 'bg-background text-foreground border-border',
-  success: 'bg-green-50 text-green-800 border-green-200',
-  error:   'bg-red-50 text-red-800 border-red-200',
-  warning: 'bg-yellow-50 text-yellow-800 border-yellow-200',
-  info:    'bg-blue-50 text-blue-800 border-blue-200',
-  loading: 'bg-background text-foreground border-border',
+  loading: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
 };
 
 interface LocalToastOpts {
   description?: string;
   actionLabel?: string;
   onAction?: () => void;
-  persistent?: boolean;
 }
 
 function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {}): HTMLElement {
-  const colorClass = TOAST_RICH_COLORS[type] ?? TOAST_RICH_COLORS.default;
-
   const toastEl = document.createElement('div');
   toastEl.setAttribute('data-sonner-toast', '');
-  toastEl.setAttribute('role', 'status');
-  toastEl.setAttribute('aria-live', 'polite');
-  toastEl.className = `nds-w-full nds-max-w-sm nds-rounded-lg nds-border-default nds-shadow-lg nds-cluster ${colorClass}`;
-  toastEl.dataset.align = 'start';
-  toastEl.dataset.spacing = 'sm';
-  toastEl.style.pointerEvents = 'auto';
-  toastEl.style.padding = 'var(--spacing-4)';
+  toastEl.className = 'nds-toast';
+  toastEl.dataset.type = type;
+  toastEl.dataset.richColors = 'true';
+  // Espécime: já nasce assentado, sem a transição de entrada que a fila usa.
+  toastEl.dataset.visible = 'true';
+  // Sem `role="status"` nem `aria-live`: isto é uma ilustração dentro da página,
+  // não uma notificação que acabou de acontecer. Anunciá-la faria o leitor de
+  // tela ler quatro avisos ao abrir a documentação.
 
   const icon = TOAST_ICONS[type];
   if (icon) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = 'nds-shrink-0';
-    iconWrap.style.marginTop = 'var(--spacing-0-5)';
+    iconWrap.className = type === 'loading' ? 'nds-toast-icon nds-toast-icon-spin' : 'nds-toast-icon';
+    iconWrap.setAttribute('aria-hidden', 'true');
     iconWrap.innerHTML = DOMPurify.sanitize(icon);
     toastEl.appendChild(iconWrap);
   }
 
   const contentEl = document.createElement('div');
-  contentEl.className = 'nds-flex-1 nds-min-w-0';
+  contentEl.className = 'nds-toast-content';
 
   const titleEl = document.createElement('p');
-  titleEl.className = 'nds-text-body nds-font-medium';
+  titleEl.className = 'nds-toast-title';
   titleEl.textContent = message;
   contentEl.appendChild(titleEl);
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'nds-text-body';
-    descEl.style.marginTop = 'var(--spacing-1)';
+    descEl.className = 'nds-toast-description';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);
   }
@@ -123,8 +121,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   if (opts.actionLabel && opts.onAction) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'nds-text-body nds-font-medium nds-text-primary nds-hover-underline';
-    actionBtn.style.marginTop = 'var(--spacing-2)';
+    actionBtn.className = 'nds-toast-action';
     actionBtn.textContent = opts.actionLabel;
     actionBtn.addEventListener('click', () => {
       track('toast_action_click', {
@@ -133,8 +130,6 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
         location: 'docs_demo',
       });
       opts.onAction!();
-      toastEl.style.opacity = '0';
-      setTimeout(() => toastEl.remove(), 200);
     });
     contentEl.appendChild(actionBtn);
   }
@@ -143,73 +138,50 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
 
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
-  closeBtn.setAttribute('aria-label', 'Fechar');
-  closeBtn.className = 'nds-shrink-0 nds-text-muted-foreground nds-hover-text-foreground';
-  closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-  closeBtn.addEventListener('click', () => {
-    toastEl.style.opacity = '0';
-    setTimeout(() => toastEl.remove(), 200);
-  });
+  closeBtn.setAttribute('data-close-button', '');
+  closeBtn.setAttribute('aria-label', ROTULO_FECHAR);
+  closeBtn.className = 'nds-toast-close';
+  closeBtn.innerHTML = DOMPurify.sanitize('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>');
+  closeBtn.addEventListener('click', () => toastEl.remove());
   toastEl.appendChild(closeBtn);
 
   return toastEl;
 }
 
-function showLocalToast(
-  container: HTMLElement,
-  type: string,
-  message: string,
-  opts: LocalToastOpts & { duration?: number } = {},
-): void {
-  const duration = opts.persistent ? undefined : (opts.duration ?? (type === 'error' ? 8000 : 4000));
-  const toastEl = buildLocalToast(type, message, opts);
-  toastEl.style.opacity = '0';
-  toastEl.style.transform = 'translateY(8px)';
-  container.appendChild(toastEl);
-
-  requestAnimationFrame(() => {
-    toastEl.style.transition = 'opacity 200ms, transform 200ms';
-    toastEl.style.opacity = '1';
-    toastEl.style.transform = 'translateY(0)';
-  });
-
-  if (duration !== undefined) {
-    setTimeout(() => {
-      toastEl.style.opacity = '0';
-      toastEl.style.transform = 'translateY(8px)';
-      setTimeout(() => toastEl.remove(), 200);
-    }, duration);
-  }
-}
-
-function createDemoToastArea(btnConfigs: Array<{ label: string; fn: (container: HTMLElement) => void }>): HTMLElement {
-  injectToastStyles();
-
+/**
+ * Área de demonstração: botões de disparo mais a REGIÃO de verdade.
+ *
+ * `contain: layout` no invólucro é o que prende a região `position: fixed` ao
+ * quadro da demonstração em vez de ao canto da janela — mesma solução das outras
+ * stacks. E é a fila real que desenha: a demonstração precisa mostrar o
+ * componente, inclusive o prazo correndo e a pausa no ponteiro.
+ */
+function createDemoToastArea(btnConfigs: Array<{ label: string; fn: () => void }>): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'position: relative; contain: layout; min-height: 180px; padding: 1.5rem;';
-
-  const toastContainer = document.createElement('div');
-  toastContainer.setAttribute('role', 'region');
-  toastContainer.setAttribute('aria-label', 'Notifications');
-  toastContainer.style.cssText = 'position: absolute; top: 4.5rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; max-width: 420px; width: 100%;';
+  wrap.style.cssText = 'position: relative; contain: layout; min-height: 11.25rem; padding: var(--spacing-6);';
 
   const btnsRow = document.createElement('div');
-  btnsRow.style.cssText = 'display: flex; flex-wrap: wrap; gap: 0.5rem;';
+  btnsRow.className = 'nds-cluster';
+  btnsRow.dataset.spacing = 'sm';
+  btnsRow.style.flexWrap = 'wrap';
 
   for (const { label, fn } of btnConfigs) {
-    const btn = createButton({
-      variant: 'outline',
-      label,
-      onClick: () => {
-        track('toast_demo_triggered', { toast_type: label, locale: getLocale() });
-        fn(toastContainer);
-      },
-    });
-    btnsRow.appendChild(btn);
+    btnsRow.appendChild(
+      createButton({
+        variant: 'outline',
+        label,
+        onClick: () => {
+          track('toast_demo_triggered', { toast_type: label, locale: getLocale() });
+          fn();
+        },
+      }),
+    );
   }
 
   wrap.appendChild(btnsRow);
-  wrap.appendChild(toastContainer);
+  wrap.appendChild(
+    createSonnerToaster({ position: 'top-right', richColors: true, closeButton: true }),
+  );
   return wrap;
 }
 
@@ -311,16 +283,42 @@ export function createSonnerDocs(): HTMLElement {
     switch (id) {
 
       case 'demonstracao': {
-        const demoConfigs: Array<{ label: string; fn: (c: HTMLElement) => void }> = [
-          { label: t('demonstration.labels.triggerDefault'),         fn: (c) => showLocalToast(c, 'default',  t('demonstration.labels.default')) },
-          { label: t('demonstration.labels.triggerSuccess'),         fn: (c) => showLocalToast(c, 'success',  t('demonstration.labels.success')) },
-          { label: t('demonstration.labels.triggerError'),           fn: (c) => showLocalToast(c, 'error',    t('demonstration.labels.error')) },
-          { label: t('demonstration.labels.triggerWarning'),         fn: (c) => showLocalToast(c, 'warning',  t('demonstration.labels.warning')) },
-          { label: t('demonstration.labels.triggerInfo'),            fn: (c) => showLocalToast(c, 'info',     t('demonstration.labels.info')) },
-          { label: t('demonstration.labels.triggerLoading'),         fn: (c) => showLocalToast(c, 'loading',  t('demonstration.labels.loading')) },
-          { label: t('demonstration.labels.triggerWithDescription'), fn: (c) => showLocalToast(c, 'default',  t('demonstration.labels.withDescription'), { description: t('demonstration.labels.withDescriptionDesc') }) },
-          { label: t('demonstration.labels.triggerWithAction'),      fn: (c) => showLocalToast(c, 'default',  t('demonstration.labels.withAction'), { actionLabel: t('demonstration.labels.withActionLabel'), onAction: () => {} }) },
-          { label: t('demonstration.labels.triggerPersistent'),      fn: (c) => showLocalToast(c, 'error',    t('demonstration.labels.persistent'), { persistent: true }) },
+        const demoConfigs: Array<{ label: string; fn: () => void }> = [
+          { label: t('demonstration.labels.triggerDefault'),         fn: () => toast(t('demonstration.labels.default')) },
+          { label: t('demonstration.labels.triggerSuccess'),         fn: () => toast.success(t('demonstration.labels.success')) },
+          { label: t('demonstration.labels.triggerError'),           fn: () => toast.error(t('demonstration.labels.error')) },
+          { label: t('demonstration.labels.triggerWarning'),         fn: () => toast.warning(t('demonstration.labels.warning')) },
+          { label: t('demonstration.labels.triggerInfo'),            fn: () => toast.info(t('demonstration.labels.info')) },
+          { label: t('demonstration.labels.triggerLoading'),         fn: () => toast.loading(t('demonstration.labels.loading')) },
+          { label: t('demonstration.labels.triggerWithDescription'), fn: () => toast.success(t('demonstration.labels.withDescription'), { description: t('demonstration.labels.withDescriptionDesc') }) },
+          {
+            label: t('demonstration.labels.triggerWithAction'),
+            fn: () => toast(t('demonstration.labels.withAction'), {
+              action: {
+                label: t('demonstration.labels.withActionLabel'),
+                onClick: () => track('toast_action_click', {
+                  label: 'with-action-label',
+                  component: 'toast',
+                  location: 'docs_demo',
+                }),
+              },
+            }),
+          },
+          {
+            label: t('demonstration.labels.triggerPromise'),
+            fn: () => toast.promise(
+              new Promise<void>((resolve) => setTimeout(resolve, 2000)),
+              {
+                loading: t('demonstration.labels.promiseLoading'),
+                success: t('demonstration.labels.promise'),
+                error:   t('demonstration.labels.promiseError'),
+              },
+            ),
+          },
+          {
+            label: t('demonstration.labels.triggerPersistent'),
+            fn: () => toast.error(t('demonstration.labels.persistent'), { duration: Number.POSITIVE_INFINITY }),
+          },
         ];
 
         return createDocsDemonstration({
@@ -468,49 +466,32 @@ export function createSonnerDocs(): HTMLElement {
       }
 
       case 'estados': {
-        const compositionItems = [
-          {
-            label:       t('states.items.withDescription.label'),
-            description: toPlainText(t('states.items.withDescription.description')),
-            code:         `toast('Preferências atualizadas.', {\n  description: 'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',\n});`,
-            previewFactory: () => buildLocalToast('default', t('demonstration.labels.withDescription'), {
-              description: t('demonstration.labels.withDescriptionDesc'),
-            }),
-          },
-          {
-            label:       t('states.items.withAction.label'),
-            description: stripHtml(DOMPurify.sanitize(t('states.items.withAction.description'))),
-            code:         `toast('Item excluído.', {\n  action: { label: 'Desfazer', onClick: () => restoreItem() },\n});`,
-            previewFactory: () => buildLocalToast('default', t('demonstration.labels.withAction'), {
-              actionLabel: t('demonstration.labels.withActionLabel'),
-              onAction: () => {},
-            }),
-          },
-          {
-            label:       t('states.items.promise.label'),
-            description: toPlainText(t('states.items.promise.description')),
-            code:         `toast.promise(uploadFile(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
-            previewFactory: () => buildLocalToast('loading', t('demonstration.labels.promiseLoading')),
-          },
-          {
-            label:       t('states.items.persistent.label'),
-            description: stripHtml(DOMPurify.sanitize(t('states.items.persistent.description'))),
-            code:         `toast.error('Falha crítica no servidor.', {\n  duration: Infinity,\n  dismissible: true,\n});`,
-            previewFactory: () => buildLocalToast('error', t('demonstration.labels.persistent')),
-          },
+        // A tabela escreve textNode, então tudo passa por `toPlainText`: com
+        // `stripHtml` as entidades sobreviviam e a linha mostrava
+        // "&lt;code&gt;duration: Infinity&lt;/code&gt;" na tela.
+        //
+        // A coluna do meio traz a CHAMADA que produz cada composição. Antes ela
+        // repetia o rótulo da primeira coluna — duas colunas idênticas, e o
+        // cabeçalho vinha de `common.state`/`common.trigger`, que não existem em
+        // `ui.json`: a página imprimia o nome da chave como título de coluna.
+        const compositionItems: Array<{ chave: string; chamada: string }> = [
+          { chave: 'withDescription', chamada: `toast.success(msg, { description })` },
+          { chave: 'withAction',      chamada: `toast(msg, { action: { label, onClick } })` },
+          { chave: 'promise',         chamada: `toast.promise(p, { loading, success, error })` },
+          { chave: 'persistent',      chamada: `toast.error(msg, { duration: Infinity })` },
         ];
 
         return createDocsStates({
           title: t('states.title'),
           cols: {
-            state:    tNav('common.state') || 'Composição',
-            trigger:  tNav('common.trigger') || 'Código',
-            behavior: tNav('common.stateBehavior'),
+            state:    t('states.cols.state'),
+            trigger:  t('states.cols.trigger'),
+            behavior: t('states.cols.behavior'),
           },
-          items: compositionItems.map(({ label, description }) => ({
-            label,
-            trigger: label,
-            behavior: description,
+          items: compositionItems.map(({ chave, chamada }) => ({
+            label:    t(`states.items.${chave}.label`),
+            trigger:  chamada,
+            behavior: toPlainText(t(`states.items.${chave}.description`)),
           })),
         });
       }

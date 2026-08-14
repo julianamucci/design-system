@@ -170,6 +170,11 @@
     },
     "states": {
       "title": "Composições",
+      "cols": {
+        "state": "Composição",
+        "trigger": "Chamada",
+        "behavior": "Comportamento"
+      },
       "items": {
         "withDescription": {
           "label": "Com descrição",
@@ -562,6 +567,11 @@
     },
     "states": {
       "title": "Compositions",
+      "cols": {
+        "state": "Composition",
+        "trigger": "Call",
+        "behavior": "Behaviour"
+      },
       "items": {
         "withDescription": {
           "label": "With description",
@@ -954,6 +964,11 @@
     },
     "states": {
       "title": "Composiciones",
+      "cols": {
+        "state": "Composición",
+        "trigger": "Llamada",
+        "behavior": "Comportamiento"
+      },
       "items": {
         "withDescription": {
           "label": "Con descripción",

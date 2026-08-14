@@ -75,7 +75,7 @@ export const Default: Story = {
 
 export const Success: Story = {
   parameters: {
-    covers: ['functional.item1'],
+    covers: ['functional.item1', 'visual.item1'],
     docs: {
       description: {
         story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
@@ -88,12 +88,18 @@ export const Success: Story = {
     await step('O tipo chega ao markup, junto do sinal de cores do tema', async () => {
       // functional.item1 — é `data-type` + `data-rich-colors` que o CSS lê; sem
       // os dois a cor semântica não aparece, e a story passaria mesmo assim se
-      // afirmasse só a presença do elemento.
+      // afirmasse só a presença do elemento. O prazo de 4000ms que o item também
+      // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
+      // notificação é persistente de propósito, para o axe e o Chromatic
+      // medirem sempre o mesmo estado.
       toast.success(TEXTOS.sucesso, PERSISTENTE);
       const torrada = await esperarTorrada({ tipo: 'success' });
       await expect(torrada).toHaveAttribute('data-type', 'success');
       await expect(torrada).toHaveAttribute('data-rich-colors', 'true');
       await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+
+      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(regiao).toHaveAttribute('data-position', 'top-right');
     });
 
     await step('A cor semântica fica no ícone; o texto corrido não muda de cor', async () => {
@@ -110,6 +116,7 @@ export const Success: Story = {
 
 export const Error: Story = {
   parameters: {
+    covers: ['visual.item1'],
     docs: {
       description: {
         story:
@@ -133,6 +140,7 @@ export const Error: Story = {
 
 export const Warning: Story = {
   parameters: {
+    covers: ['visual.item1'],
     docs: {
       description: {
         story:
@@ -155,6 +163,7 @@ export const Warning: Story = {
 
 export const Info: Story = {
   parameters: {
+    covers: ['visual.item1'],
     docs: {
       description: {
         story: 'Informação contextual ou novidade — nada aconteceu de errado nem de certo.',

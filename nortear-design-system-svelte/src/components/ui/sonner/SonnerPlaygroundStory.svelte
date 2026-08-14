@@ -3,59 +3,51 @@
   import { Toaster } from './index.ts';
   import { Button } from '@/components/ui/button';
 
+  type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading';
+
   interface Props {
+    type?: ToastType;
+    title?: string;
+    description?: string;
+    actionLabel?: string;
     position?: 'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center';
     richColors?: boolean;
-    expand?: boolean;
+    closeButton?: boolean;
     duration?: number;
   }
 
   let {
+    type = 'success',
+    title = 'Alterações salvas.',
+    description = '',
+    actionLabel = '',
     position = 'top-right',
     richColors = true,
-    expand = false,
+    closeButton = false,
     duration = 4000,
   }: Props = $props();
+
+  function disparar() {
+    const opcoes: Record<string, unknown> = {};
+    if (description) opcoes.description = description;
+    if (actionLabel) opcoes.action = { label: actionLabel, onClick: () => undefined };
+
+    if (type === 'default') toast(title, opcoes);
+    else if (type === 'success') toast.success(title, opcoes);
+    else if (type === 'error') toast.error(title, opcoes);
+    else if (type === 'warning') toast.warning(title, opcoes);
+    else if (type === 'info') toast.info(title, opcoes);
+    else toast.loading(title, opcoes);
+  }
 </script>
 
-<div style="contain: layout; flex-wrap: wrap" class="nds-cluster nds-p-4" data-spacing="sm" >
-  <Toaster {position} {richColors} {expand} {duration} />
+<!-- `contain: layout` prende a região `position: fixed` da lib a este quadro, em
+     vez de mandá-la para o canto da janela. A altura mínima vem de classe: medida
+     escrita no elemento venceria a folha e sairia do tema e da densidade. -->
+<div class="nds-stack nds-min-h-30" data-spacing="md" style="contain: layout; position: relative;">
+  <Button variant="outline" onclick={disparar}>Disparar notificação</Button>
 
-  <Button variant="outline" onclick={() => toast('Código copiado.')}>
-    Disparar default
-  </Button>
-  <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>
-    Disparar success
-  </Button>
-  <Button variant="outline" onclick={() => toast.error('Não foi possível salvar. Tente novamente.')}>
-    Disparar error
-  </Button>
-  <Button variant="outline" onclick={() => toast.warning('Sua sessão expira em 5 minutos.')}>
-    Disparar warning
-  </Button>
-  <Button variant="outline" onclick={() => toast.info('Nova versão disponível.')}>
-    Disparar info
-  </Button>
-  <Button variant="outline" onclick={() => toast.loading('Enviando arquivo...')}>
-    Disparar loading
-  </Button>
-  <Button variant="outline" onclick={() => toast.success('Preferências atualizadas.', { description: 'Suas configurações foram salvas e entrarão em vigor na próxima sessão.' })}>
-    Com descrição
-  </Button>
-  <Button variant="outline" onclick={() => toast('Item excluído.', { action: { label: 'Desfazer', onClick: () => {} } })}>
-    Com ação
-  </Button>
-  <Button variant="outline" onclick={() => {
-    const promise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
-    toast.promise(promise, {
-      loading: 'Enviando arquivo...',
-      success: 'Arquivo enviado com sucesso.',
-      error: 'Erro ao enviar. Tente novamente.',
-    });
-  }}>
-    Com promise
-  </Button>
-  <Button variant="outline" onclick={() => toast.error('Falha crítica no servidor.', { duration: Infinity, dismissible: true })}>
-    Persistente
-  </Button>
+  <!-- O prazo vem da região, e não de cada `toast()`: é o mesmo caminho que o
+       teste usa para encurtar o tempo sem depender do relógio real. -->
+  <Toaster {position} {richColors} {closeButton} {duration} />
 </div>

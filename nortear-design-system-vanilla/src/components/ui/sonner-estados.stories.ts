@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { moduleMetadata } from '@storybook/angular-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, spyOn, userEvent, waitFor } from 'storybook/test';
-import { NdsToaster, toast } from './sonner';
+import { toast } from './sonner';
 import {
   esperarSemTorradas,
   esperarTorrada,
   limparTorradas,
+  montarToaster,
   PERSISTENTE,
   TEXTOS,
   torradasNaTela,
@@ -16,13 +16,13 @@ import {
 // Os estados que dependem de TEMPO, de POSIÇÃO e de contexto — o que sobra
 // quando o conteúdo da notificação já está resolvido.
 //
-// Todas as stories que medem prazo encurtam o relógio pelo input `duration` do
-// Toaster. Esperar o padrão de 4000ms deixaria a suíte lenta e, pior, faria o
+// Todas as stories que medem prazo encurtam o relógio pela opção `duration` da
+// região. Esperar o padrão de 4000ms deixaria a suíte lenta e, pior, faria o
 // resultado depender da carga da máquina.
 
 const meta: Meta = {
   title: 'UI/Sonner/States',
-  decorators: [moduleMetadata({ imports: [NdsToaster] })],
+  tags: ['feedback'],
   parameters: {
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
@@ -31,7 +31,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.',
+          'Prazo, pausa na leitura, empilhamento, posição e o caso sem região montada.',
       },
     },
   },
@@ -57,15 +57,13 @@ export const AutoDismiss: Story = {
       },
     },
   },
-  render: () => ({
-    template: `<div ndsToaster position="top-right" [richColors]="true" [duration]="400"></div>`,
-  }),
+  render: () => montarToaster({ duration: 400 }),
   play: async ({ step }) => {
     await limparTorradas();
 
     await step('A falha aparece com o tipo, o ícone e a cor do tema', async () => {
-      // functional.item2 — sem `duration` na chamada: quem manda é o prazo do
-      // Toaster, encurtado nesta story para 400ms.
+      // functional.item2 — sem `duration` na chamada: quem manda é o prazo da
+      // região, encurtado nesta story para 400ms.
       toast.error(TEXTOS.erro);
       const torrada = await esperarTorrada({ tipo: 'error' });
       await expect(torrada).toHaveAttribute('data-type', 'error');
@@ -89,9 +87,7 @@ export const PauseOnHover: Story = {
       },
     },
   },
-  render: () => ({
-    template: `<div ndsToaster position="top-right" [richColors]="true" [duration]="400"></div>`,
-  }),
+  render: () => montarToaster({ duration: 400 }),
   play: async ({ step }) => {
     await limparTorradas();
 
@@ -124,9 +120,7 @@ export const Stacked: Story = {
       },
     },
   },
-  render: () => ({
-    template: `<div ndsToaster position="top-right" [richColors]="true"></div>`,
-  }),
+  render: () => montarToaster(),
   play: async ({ step }) => {
     await limparTorradas();
 
@@ -166,17 +160,15 @@ export const PositionBottomCenter: Story = {
       },
     },
   },
-  render: () => ({
-    template: `<div ndsToaster position="bottom-center" [richColors]="true"></div>`,
-  }),
-  play: async ({ canvasElement, step }) => {
+  render: () => montarToaster({ position: 'bottom-center' }),
+  play: async ({ step }) => {
     await limparTorradas();
 
     await step('A região declara o canto escolhido', async () => {
       toast.success(TEXTOS.sucesso, PERSISTENTE);
       await esperarTorrada({ tipo: 'success' });
 
-      const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(regiao).toHaveAttribute('data-position', 'bottom-center');
       await expect(getComputedStyle(regiao).position).toBe('fixed');
     });
@@ -194,39 +186,43 @@ export const PositionBottomCenter: Story = {
 
 export const WithoutToaster: Story = {
   parameters: {
-    covers: ['functional.item7'],
+    // functional.item7 não se aplica aqui — ver `coversNotApplicable` abaixo.
+    coversNotApplicable: {
+      'functional.item7':
+        'nesta stack a fila cria a própria região sob demanda: toast() desenha sem ninguém montar nada, e é esse o contrato documentado. Não existe o estado "sem Toaster no root".',
+    },
     docs: {
       description: {
         story:
-          'Sem Toaster montado no root, `toast()` não desenha nada — e também não quebra. A fila existe independentemente de quem a desenha, então uma tela que ainda não montou a região não derruba o fluxo que a chamou.',
+          'Sem ninguém montar a região, `toast()` cria a dela e desenha assim mesmo — o contrário do que fazem as stacks em que o Toaster é um componente. Nada quebra, e a notificação chega.',
       },
     },
   },
-  render: () => ({
-    template: `
-      <p class="nds-text-body nds-text-muted-foreground">
-        Esta story não monta o Toaster. Nada deve aparecer, e nada deve quebrar.
-      </p>
-    `,
-  }),
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'contain: layout; position: relative; min-height: 7.5rem;';
+    const p = document.createElement('p');
+    p.className = 'nds-text-body nds-text-muted-foreground';
+    p.textContent = 'Esta story não monta região nenhuma. A fila monta a dela, e nada deve quebrar.';
+    wrapper.appendChild(p);
+    return wrapper;
+  },
   play: async ({ step }) => {
     await limparTorradas();
     const espiaoDeErro = spyOn(console, 'error');
 
-    await step('Nada é desenhado e nada estoura no console', async () => {
-      // functional.item7 — a garantia é dupla: nenhum nó e nenhum erro. Só a
+    await step('A fila monta a própria região e nada estoura no console', async () => {
+      // A garantia é dupla: a notificação chega E nenhum erro aparece. Só a
       // primeira metade passaria com uma exceção engolida em algum lugar.
       toast.success(TEXTOS.sucesso, PERSISTENTE);
-      await esperar(120);
+      const torrada = await esperarTorrada({ tipo: 'success' });
 
-      await expect(torradasNaTela().length).toBe(0);
-      await expect(document.querySelector('[data-slot="sonner-toaster"]')).toBeNull();
+      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(regiao.contains(torrada)).toBe(true);
       await expect(espiaoDeErro).not.toHaveBeenCalled();
     });
 
     espiaoDeErro.mockRestore();
-    // A notificação entrou na fila sem nó no DOM: sem esta limpeza, a próxima
-    // story montaria o Toaster a tempo de desenhá-la.
     await limparTorradas();
   },
 };
@@ -237,20 +233,16 @@ export const DarkTheme: Story = {
     docs: {
       description: {
         story:
-          'Tema escuro, com os cinco tipos na tela. Quem recolore é a cascata: os tokens do toast são lidos do tema, então trocar a classe do documento basta.',
+          'Tema escuro, com os cinco tipos na tela. Quem recolore é a cascata: os tokens da notificação são lidos do tema, então trocar a classe do documento basta.',
       },
     },
   },
   globals: { theme: 'dark' },
-  render: () => ({
-    template: `<div ndsToaster position="top-right" [richColors]="true"></div>`,
-  }),
+  render: () => montarToaster(),
   play: async ({ step }) => {
     await limparTorradas();
 
     await step('Os cinco tipos são desenhados com os tokens do tema em vigor', async () => {
-      // visual.item4 fala em "todos os tipos com richColors": com uma só na
-      // tela, a foto do Chromatic cobriria um quinto do que o item promete.
       toast(TEXTOS.padrao, PERSISTENTE);
       toast.success(TEXTOS.sucesso, PERSISTENTE);
       toast.error(TEXTOS.erro, PERSISTENTE);
