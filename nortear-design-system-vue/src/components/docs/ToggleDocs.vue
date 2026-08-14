@@ -174,16 +174,6 @@ const codeWithLabel = `<Toggle variant="outline">
   Mostrar ocultos
 </Toggle>`;
 
-const codeCustomizationTokens = `/* Override de cor do estado ativo */
-.toggle-brand[data-state="on"] {
-  @apply bg-blue-500 text-white;
-}
-
-/* Override de tamanho via tokens */
-[data-slot="toggle"][data-size="default"] {
-  --height-default: 2.5rem;
-}`;
-
 const interfaceCode = `interface ToggleProps {
   modelValue?: boolean;        // estado controlado (v-model)
   defaultValue?: boolean;      // estado inicial não-controlado
@@ -285,14 +275,21 @@ const togglePropItems = computed(() => [
   { name: 'class',              type: 'string',                        defaultValue: '—',         required: tContent('props.table.className.required'),      description: toPlainText(tContent('props.table.className.description'))      },
 ]);
 
-const tokenRows = computed(() => [
-  { token: '--muted',       value: tContent('tokens.table.muted.class'),       description: tContent('tokens.table.muted.part')       },
-  { token: '--foreground',  value: tContent('tokens.table.foreground.class'),  description: tContent('tokens.table.foreground.part')  },
-  { token: '--input',       value: tContent('tokens.table.input.class'),       description: tContent('tokens.table.input.part')       },
-  { token: '--ring',        value: tContent('tokens.table.ring.class'),        description: tContent('tokens.table.ring.part')        },
-  { token: '--destructive', value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
-  { token: '--radius-button', value: tContent('tokens.table.radius.class'),    description: tContent('tokens.table.radius.part')      },
-]);
+const tokenRows = computed(() =>
+  [
+    { token: '--accent',            k: 'accent'           },
+    { token: '--accent-foreground', k: 'accentForeground' },
+    { token: '--muted',             k: 'muted'            },
+    { token: '--input',             k: 'input'            },
+    { token: '--ring',              k: 'ring'             },
+    { token: '--destructive',       k: 'destructive'      },
+    { token: '--radius-button',     k: 'radius'           },
+  ].map(({ token, k }) => ({
+    token,
+    value: tContent(`tokens.table.${k}.class`),
+    description: tContent(`tokens.table.${k}.part`),
+  })),
+);
 
 const accessibilityItems = computed(() => [
   tContent('accessibility.items.item1'),
@@ -506,7 +503,7 @@ const visualTestItems = computed(() => [
           },
           {
             element: tContent('usage.uxWriting.table.icon.name'),
-            rules: tContent('usage.uxWriting.table.icon.format'),
+            rules: toPlainText(tContent('usage.uxWriting.table.icon.format')),
             do: toPlainText(tContent('usage.uxWriting.table.icon.good')),
             dont: tContent('usage.uxWriting.table.icon.bad'),
           },
@@ -759,7 +756,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->

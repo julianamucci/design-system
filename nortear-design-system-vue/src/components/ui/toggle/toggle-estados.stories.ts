@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
+import {
+  contrasteDoToggleNosDoisTemas,
+  descreverFalhasDeContraste,
+  medirAnelDeFoco,
+} from '@shared/testing/toggle-probe';
 import { Toggle } from './index';
-import { Bold, Underline } from 'lucide-vue-next';
+import { Bold, Italic } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Toggle/States',
@@ -9,12 +14,13 @@ const meta = {
   tags: ['form'],
   parameters: {
     layout: 'centered',
+    // Sem argTypes neste arquivo: o painel Controls ficaria vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do Toggle: off, on (pressed), focus, disabled e invalid (aria-invalid).',
+          'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',
       },
     },
   },
@@ -24,9 +30,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Off: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => ({
     components: { Toggle, Bold },
-    setup() { return {}; },
     template: `
       <Toggle aria-label="Negrito">
         <Bold aria-hidden="true" />
@@ -36,80 +42,144 @@ export const Off: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
-    await step('aria-pressed=false por padrão', async () => {
+
+    await step('Estado inativo em aria-pressed e data-state', async () => {
       await expect(toggle).toHaveAttribute('aria-pressed', 'false');
       await expect(toggle).toHaveAttribute('data-state', 'off');
+    });
+
+    await step('Fundo transparente — o estado inativo não pinta nada', async () => {
+      await expect(getComputedStyle(toggle).backgroundColor).toMatch(
+        /rgba\(0, 0, 0, 0\)|transparent/,
+      );
     });
   },
 };
 
 export const On: Story = {
+  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
   render: () => ({
     components: { Toggle, Bold },
-    setup() { return {}; },
     template: `
-      <Toggle :default-value="true" aria-label="Negrito">
-        <Bold aria-hidden="true" />
-      </Toggle>
+      <div class="nds-cluster" data-spacing="sm">
+        <Toggle aria-label="Negrito inativo">
+          <Bold aria-hidden="true" />
+        </Toggle>
+        <Toggle :default-value="true" aria-label="Negrito ativo">
+          <Bold aria-hidden="true" />
+        </Toggle>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.getByRole('button', { name: 'Negrito' });
-    await step('aria-pressed=true (data-state=on)', async () => {
-      await expect(toggle).toHaveAttribute('aria-pressed', 'true');
-      await expect(toggle).toHaveAttribute('data-state', 'on');
+    const off = canvas.getByRole('button', { name: 'Negrito inativo' });
+    const on = canvas.getByRole('button', { name: 'Negrito ativo' });
+
+    await step('O estado inicial nasce refletido nos dois atributos', async () => {
+      await expect(on).toHaveAttribute('aria-pressed', 'true');
+      await expect(on).toHaveAttribute('data-state', 'on');
+      await expect(off).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    await step('O estado ativo tem fundo próprio, não só atributo', async () => {
+      const fundoOn = getComputedStyle(on).backgroundColor;
+      await expect(fundoOn).not.toBe(getComputedStyle(off).backgroundColor);
+      await expect(fundoOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+    });
+
+    await step('O contraste do estado ATIVO passa de 4.5:1 nos DOIS temas', async () => {
+      // Contraste é aritmética, não olhômetro: o axe não mede ícone (não é
+      // texto) e só enxerga o tema claro. Sem esta conta o item de contraste do
+      // contrato ficava declarado e nunca verificado. Mede só o estado ativo —
+      // é o único par de cores que o componente define; em repouso ele herda
+      // as da página.
+      const falhas = contrasteDoToggleNosDoisTemas(canvasElement);
+      await expect(falhas.length === 0 ? '' : `\n${descreverFalhasDeContraste(falhas)}`).toBe('');
     });
   },
 };
 
 export const FocusVisible: Story = {
+  parameters: { covers: ['accessibility.item3'] },
   render: () => ({
-    components: { Toggle, Underline },
-    setup() { return {}; },
+    components: { Toggle, Bold, Italic },
     template: `
-      <Toggle aria-label="Sublinhado">
-        <Underline aria-hidden="true" />
-      </Toggle>
+      <div class="nds-cluster" data-spacing="sm">
+        <Toggle aria-label="Negrito">
+          <Bold aria-hidden="true" />
+        </Toggle>
+        <Toggle variant="outline" aria-label="Itálico">
+          <Italic aria-hidden="true" />
+        </Toggle>
+      </div>
     `,
   }),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Foco via teclado: Tab move o foco ao Toggle; o anel ring-3 ring-ring/50 fica visível.',
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.getByRole('button', { name: 'Sublinhado' });
-    await step('Toggle recebe foco programaticamente', async () => {
-      (toggle as HTMLElement).focus();
-      await expect(toggle).toHaveFocus();
+    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const contorno = canvas.getByRole('button', { name: 'Itálico' });
+
+    await step('Tab leva o foco ao toggle, na ordem natural do DOM', async () => {
+      // userEvent.tab() e não .focus(): o documentado é "recebe foco na ordem
+      // natural". Forçar o foco passaria até com tabindex="-1".
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(padrao).toHaveFocus();
+    });
+
+    await step('O anel de foco aparece nas DUAS variantes', async () => {
+      // Medir `boxShadow !== 'none'` era o que escondia o defeito: a variante
+      // outline tem sombra de elevação o tempo todo, e a asserção passava com
+      // zero anel. O que prova o anel é a sombra MUDAR ao focar.
+      for (const btn of [padrao, contorno]) {
+        await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+      }
     });
   },
 };
 
 export const Disabled: Story = {
+  parameters: { covers: ['visual.item4', 'functional.item4'] },
   render: () => ({
-    components: { Toggle, Bold },
-    setup() { return {}; },
+    components: { Toggle, Bold, Italic },
     template: `
-      <Toggle :disabled="true" aria-label="Negrito">
-        <Bold aria-hidden="true" />
-      </Toggle>
+      <div class="nds-cluster" data-spacing="sm">
+        <Toggle :disabled="true" aria-label="Negrito">
+          <Bold aria-hidden="true" />
+        </Toggle>
+        <Toggle :disabled="true" :default-value="true" aria-label="Itálico ativo e desabilitado">
+          <Italic aria-hidden="true" />
+        </Toggle>
+      </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.getByRole('button', { name: 'Negrito' });
-    await step('Toggle tem disabled e data-disabled', async () => {
-      await expect(toggle).toBeDisabled();
-      await expect(toggle).toHaveAttribute('data-disabled');
+    const off = canvas.getByRole('button', { name: 'Negrito' });
+    const on = canvas.getByRole('button', { name: 'Itálico ativo e desabilitado' });
+
+    await step('É o disabled NATIVO, não um aria-disabled', async () => {
+      // `disabled` nativo é a forma forte: além de anunciar o estado, tira o
+      // elemento da ordem de tabulação. Um `aria-disabled` sozinho anunciaria
+      // e deixaria o foco entrar.
+      await expect(off).toBeDisabled();
+      await expect(on).toBeDisabled();
+      await expect(on).toHaveAttribute('data-state', 'on');
     });
-    await step('Clicar não altera o estado', async () => {
-      await userEvent.click(toggle, { pointerEventsCheck: 0 });
-      await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+    await step('O clique não altera o estado', async () => {
+      // Elemento desabilitado não muda de estado em rodada nenhuma — este é o
+      // caso em que o clique cego é idempotente por natureza.
+      const antes = off.getAttribute('aria-pressed');
+      await userEvent.click(off, { pointerEventsCheck: 0 });
+      await expect(off.getAttribute('aria-pressed')).toBe(antes);
+    });
+
+    await step('O teclado também não alcança o controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(off).not.toHaveFocus();
     });
   },
 };
@@ -117,14 +187,13 @@ export const Disabled: Story = {
 export const Invalid: Story = {
   render: () => ({
     components: { Toggle, Bold },
-    setup() { return {}; },
     template: `
-      <div class="nds-stack" data-spacing="sm">
+      <div class="nds-stack" data-spacing="xs">
         <Toggle aria-label="Negrito" aria-invalid="true" aria-describedby="toggle-invalid-err">
           <Bold aria-hidden="true" />
         </Toggle>
         <p id="toggle-invalid-err" class="nds-text-body nds-text-destructive">
-          Este campo é obrigatório.
+          Selecione ao menos uma formatação.
         </p>
       </div>
     `,
@@ -132,11 +201,21 @@ export const Invalid: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
-    await step('Toggle tem aria-invalid=true', async () => {
+
+    await step('O erro é anunciado pelo par aria-invalid + aria-describedby', async () => {
       await expect(toggle).toHaveAttribute('aria-invalid', 'true');
+      await expect(toggle).toHaveAttribute('aria-describedby', 'toggle-invalid-err');
+      await expect(canvas.getByText('Selecione ao menos uma formatação.')).toBeVisible();
     });
-    await step('Mensagem de erro visível', async () => {
-      await expect(canvas.getByText('Este campo é obrigatório.')).toBeVisible();
+
+    await step('O anel destrutivo vem do CSS do componente, não da story', async () => {
+      // A story NÃO pinta nada: se a regra `[aria-invalid="true"]` sumir da
+      // folha compartilhada, isto reprova.
+      await expect(getComputedStyle(toggle).boxShadow).not.toBe('none');
+    });
+
+    await step('Focar o inválido continua mostrando o foco', async () => {
+      await expect(medirAnelDeFoco(toggle).mudou).toBe(true);
     });
   },
 };

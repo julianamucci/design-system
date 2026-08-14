@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import { within, userEvent, expect } from 'storybook/test';
 import { Toggle } from './index';
-import { Bold, Italic, Underline, List, Eye, LayoutGrid } from 'lucide-vue-next';
+import { Bold, Italic, Underline, List, Eye } from 'lucide-vue-next';
 
 const meta = {
   title: 'UI/Toggle/Compositions',
@@ -9,12 +10,13 @@ const meta = {
   tags: ['form'],
   parameters: {
     layout: 'centered',
+    // Sem argTypes neste arquivo: o painel Controls ficaria vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Padrões de composição do Toggle: barra de formatação, filtro de visualização, tamanhos comparados e Toggle isolado em painel.',
+          'As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.',
       },
     },
   },
@@ -23,128 +25,147 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const FormattingBar: Story = {
+/**
+ * Leva o toggle a um estado conhecido clicando SÓ quando ele ainda não está
+ * lá. O painel Interactions reexecuta a play no mesmo DOM: um clique cego
+ * partiria do estado que a rodada anterior deixou e inverteria o resultado.
+ */
+async function definir(btn: HTMLElement, alvo: boolean) {
+  if ((btn.getAttribute('aria-pressed') === 'true') !== alvo) await userEvent.click(btn);
+  await expect(btn).toHaveAttribute('aria-pressed', String(alvo));
+}
+
+export const FormattingToolbar: Story = {
   render: () => ({
     components: { Toggle, Bold, Italic, Underline, List },
-    setup() { return {}; },
     template: `
-      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-1" data-align="center" data-spacing="xs">
-        <Toggle aria-label="Negrito">
-          <Bold aria-hidden="true" />
-        </Toggle>
-        <Toggle aria-label="Itálico">
-          <Italic aria-hidden="true" />
-        </Toggle>
-        <Toggle aria-label="Sublinhado">
-          <Underline aria-hidden="true" />
-        </Toggle>
-        <Toggle aria-label="Lista">
-          <List aria-hidden="true" />
-        </Toggle>
+      <div
+        role="group"
+        aria-label="Formatação de texto"
+        class="nds-cluster nds-rounded-lg nds-border-default nds-p-1"
+        data-align="center"
+        data-spacing="xs"
+      >
+        <Toggle aria-label="Negrito"><Bold aria-hidden="true" /></Toggle>
+        <Toggle aria-label="Itálico"><Italic aria-hidden="true" /></Toggle>
+        <Toggle aria-label="Sublinhado"><Underline aria-hidden="true" /></Toggle>
+        <Toggle aria-label="Lista"><List aria-hidden="true" /></Toggle>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggles = canvas.getAllByRole('button');
-    await step('4 toggles renderizados', async () => {
-      await expect(toggles).toHaveLength(4);
+
+    await step('O conjunto é anunciado como grupo, com nome próprio', async () => {
+      const grupo = canvas.getByRole('group', { name: 'Formatação de texto' });
+      await expect(grupo).toBeVisible();
+      await expect(within(grupo).getAllByRole('button')).toHaveLength(4);
     });
-    await step('Cada toggle tem aria-label próprio', async () => {
-      await expect(toggles[0]).toHaveAttribute('aria-label', 'Negrito');
-      await expect(toggles[1]).toHaveAttribute('aria-label', 'Itálico');
-      await expect(toggles[2]).toHaveAttribute('aria-label', 'Sublinhado');
-      await expect(toggles[3]).toHaveAttribute('aria-label', 'Lista');
+
+    await step('Cada toggle icon-only tem nome acessível próprio', async () => {
+      for (const nome of ['Negrito', 'Itálico', 'Sublinhado', 'Lista']) {
+        const btn = canvas.getByRole('button', { name: nome });
+        await expect(btn).toHaveAttribute('aria-label', nome);
+        await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+      }
     });
-    await step('Toggles são independentes', async () => {
-      await userEvent.click(toggles[0]);
-      await expect(toggles[0]).toHaveAttribute('aria-pressed', 'true');
-      await expect(toggles[1]).toHaveAttribute('aria-pressed', 'false');
+
+    await step('Os toggles são independentes: ativar um não mexe no vizinho', async () => {
+      const negrito = canvas.getByRole('button', { name: 'Negrito' });
+      const italico = canvas.getByRole('button', { name: 'Itálico' });
+      await definir(negrito, false);
+      await definir(italico, false);
+      // O par idempotente também prova o clique DESTA rodada: se o toggle já
+      // estivesse ligado, o `definir` acima o teria desligado antes.
+      await definir(negrito, true);
+      await expect(italico).toHaveAttribute('aria-pressed', 'false');
     });
   },
 };
 
-export const ViewFilter: Story = {
+export const FilterList: Story = {
   render: () => ({
-    components: { Toggle, Eye, LayoutGrid },
-    setup() { return {}; },
+    components: { Toggle, Eye, List },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
-        <Toggle variant="outline">
-          <Eye aria-hidden="true" />
-          Mostrar ocultos
-        </Toggle>
-        <Toggle variant="outline" :default-value="true">
-          <LayoutGrid aria-hidden="true" />
-          Visão compacta
-        </Toggle>
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-semibold">Filtros de exibição</p>
+        <div class="nds-cluster" data-spacing="sm">
+          <Toggle variant="outline">
+            <Eye aria-hidden="true" />
+            Mostrar ocultos
+          </Toggle>
+          <Toggle variant="outline" :default-value="true">
+            <List aria-hidden="true" />
+            Visão compacta
+          </Toggle>
+        </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Toggles com label visível renderizam', async () => {
-      await expect(canvas.getByText('Mostrar ocultos')).toBeVisible();
-      await expect(canvas.getByText('Visão compacta')).toBeVisible();
+
+    await step('O rótulo visível é o nome acessível de cada filtro', async () => {
+      // Sem interação nesta story de propósito: a asserção de estado INICIAL
+      // não sobreviveria ao replay se um clique a precedesse.
+      const ocultos = canvas.getByRole('button', { name: 'Mostrar ocultos' });
+      const compacta = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(ocultos.getAttribute('aria-label')).toBe(null);
+      await expect(compacta.getAttribute('aria-label')).toBe(null);
     });
-    await step('Visão compacta começa ativa', async () => {
-      const compact = canvas.getByRole('button', { name: /Visão compacta/i });
-      await expect(compact).toHaveAttribute('aria-pressed', 'true');
+
+    await step('Cada filtro é uma escolha booleana isolada, e podem combinar', async () => {
+      const ocultos = canvas.getByRole('button', { name: 'Mostrar ocultos' });
+      const compacta = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(ocultos).toHaveAttribute('aria-pressed', 'false');
+      await expect(compacta).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    await step('Os dois filtros usam a variante outline', async () => {
+      for (const nome of ['Mostrar ocultos', 'Visão compacta']) {
+        await expect(canvas.getByRole('button', { name: nome })).toHaveAttribute(
+          'data-variant',
+          'outline',
+        );
+      }
     });
   },
 };
 
-export const SizesCompared: Story = {
+export const Controlled: Story = {
   render: () => ({
     components: { Toggle, Bold },
-    setup() { return {}; },
+    setup() {
+      const isBold = ref(false);
+      return { isBold };
+    },
     template: `
-      <div class="nds-cluster" data-spacing="sm">
-        <Toggle size="sm" aria-label="Negrito pequeno">
+      <div class="nds-stack" data-spacing="sm">
+        <Toggle v-model="isBold" aria-label="Negrito">
           <Bold aria-hidden="true" />
         </Toggle>
-        <Toggle size="default" aria-label="Negrito padrão">
-          <Bold aria-hidden="true" />
-        </Toggle>
-        <Toggle size="lg" aria-label="Negrito grande">
-          <Bold aria-hidden="true" />
-        </Toggle>
+        <p class="nds-text-caption nds-text-muted-foreground">
+          Estado atual: <code class="nds-font-mono">{{ String(isBold) }}</code>
+        </p>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggles = canvas.getAllByRole('button');
-    await step('3 tamanhos renderizados', async () => {
-      await expect(toggles).toHaveLength(3);
-    });
-  },
-};
+    const toggle = canvas.getByRole('button', { name: 'Negrito' });
 
-export const ToggleInPanel: Story = {
-  render: () => ({
-    components: { Toggle, Eye },
-    setup() { return {}; },
-    template: `
-      <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-4" data-align="center" data-justify="between" style="width: 20rem">
-        <div class="" data-spacing="xs">
-          <p class="nds-text-body nds-font-medium">Mostrar arquivados</p>
-          <p class="nds-text-body">
-            Inclui itens marcados como arquivados na lista.
-          </p>
-        </div>
-        <Toggle variant="outline" aria-label="Mostrar arquivados">
-          <Eye aria-hidden="true" />
-        </Toggle>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const toggle = canvas.getByRole('button', { name: 'Mostrar arquivados' });
-    await step('Toggle isolado em painel com descrição', async () => {
-      await expect(toggle).toBeInTheDocument();
-      await expect(canvas.getByText(/Inclui itens marcados/)).toBeVisible();
+    await step('O estado externo acompanha o toggle ao ligar', async () => {
+      // O par (desliga, liga) garante um clique REAL nesta rodada, venha o DOM
+      // de onde vier: sem ele, o replay partiria do estado que a rodada
+      // anterior deixou e a asserção absoluta inverteria.
+      await definir(toggle, false);
+      await definir(toggle, true);
+      await expect(canvas.getByText('true')).toBeVisible();
+    });
+
+    await step('E acompanha também ao desligar', async () => {
+      await definir(toggle, false);
+      await expect(canvas.getByText('false')).toBeVisible();
     });
   },
 };

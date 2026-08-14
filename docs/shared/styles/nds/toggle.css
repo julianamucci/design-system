@@ -28,7 +28,12 @@
 
   background: transparent;
   border: 0;
-  border-radius: var(--radius);
+  /* `--radius-button`, como todo primitivo em forma de botão: é o token que o
+   * tema sobrescreve para mudar a identidade de forma, e é o que a tabela de
+   * tokens documenta. Com `--radius` cru, trocar o tema mudava o botão e não
+   * mudava o toggle — e o `toggle-group` já restaurava `--radius-button` nos
+   * cantos extremos, então os dois raios conviviam no mesmo conjunto. */
+  border-radius: var(--radius-button);
   font-family: inherit;
   font-size: var(--text-control);                            /* 14px */
   font-weight: var(--font-weight-medium, 500);
@@ -93,6 +98,29 @@
 .nds-toggle[data-variant="outline"]:hover {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
+}
+
+/* A regra acima redefine `box-shadow` por inteiro e tem especificidade (0,2,0)
+ * contra os (0,1,1) de `.nds-toggle:focus-visible` — o anel de foco sumia na
+ * variante outline, que é justamente a usada quando o toggle aparece isolado.
+ * Ninguém via: quem usa mouse não tem anel, e a asserção que existia media
+ * `boxShadow !== 'none'`, satisfeita pela sombra de elevação da própria
+ * variante. WCAG 2.4.7 (Focus Visible, AA).
+ *
+ * O anel vem primeiro e a elevação depois: a sombra de elevação é parte do
+ * desenho da variante e não deve sumir enquanto o foco está no controle.
+ * Valor repetido de propósito em vez de custom property — uma variável aqui
+ * viraria superfície pública de customização e teria de ser documentada. */
+.nds-toggle[data-variant="outline"]:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5), 0 1px 2px hsl(0 0% 0% / 0.05);
+}
+
+/* Mesma história no estado inválido: o anel destrutivo é declarado depois do
+ * `:focus-visible` e com a mesma especificidade, então focar um toggle inválido
+ * não mudava nada na tela. Aqui os dois anéis convivem — o destrutivo por
+ * dentro, o de foco por fora. */
+.nds-toggle[aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.4), 0 0 0 4px hsl(var(--ring) / 0.5);
 }
 
 /* ── Ícones internos ─────────────────────────────────────────────────────── */

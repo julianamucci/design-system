@@ -1,19 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
-import { Bold } from 'lucide';
-import { createToggle } from './toggle';
+import { Bold, Italic } from 'lucide';
+import {
+  contrasteDoToggleNosDoisTemas,
+  descreverFalhasDeContraste,
+  medirAnelDeFoco,
+} from '@shared/testing/toggle-probe';
+import { createToggle, type ToggleOptions } from './toggle';
 
 const meta: Meta = {
   tags: ['form'],
   title: 'UI/Toggle/States',
   parameters: {
-    actions: { disable: true },
     layout: 'centered',
+    // Sem argTypes neste arquivo: os painéis ficariam vazios.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do Toggle: Off, On, Disabled (off), DisabledOn, Invalid (aria-invalid) e FocoVisivel. O factory custom Vanilla aplica `aria-pressed` + `data-state` automaticamente no click — para estados visuais como invalid, basta setar atributos extras no botão retornado.',
+          'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',
       },
     },
   },
@@ -22,11 +28,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Lucide helper ────────────────────────────────────────────────────────────
+// ─── Helpers locais ───────────────────────────────────────────────────────────
 
 type LucideIconNode = [string, Record<string, string>];
 
-function buildBoldIcon(): SVGSVGElement {
+function buildLucideSvg(icon: unknown): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -36,8 +42,7 @@ function buildBoldIcon(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'nds-icon-sm');
-  for (const [tag, attrs] of Bold as unknown as LucideIconNode[]) {
+  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
     svg.appendChild(child);
@@ -45,38 +50,49 @@ function buildBoldIcon(): SVGSVGElement {
   return svg;
 }
 
-function wrapBoldIcon(): HTMLSpanElement {
-  const span = document.createElement('span');
-  span.style.display = 'inline-flex';
-  span.appendChild(buildBoldIcon());
-  return span;
-}
-
-function makeToggle(opts: { pressed?: boolean; disabled?: boolean; ariaLabel?: string }): HTMLButtonElement {
+function makeToggle(opts: {
+  icon?: unknown;
+  pressed?: boolean;
+  disabled?: boolean;
+  ariaLabel: string;
+  variant?: ToggleOptions['variant'];
+}): HTMLButtonElement {
   const btn = createToggle({
     pressed: opts.pressed ?? false,
     disabled: opts.disabled ?? false,
-    children: wrapBoldIcon(),
+    variant: opts.variant ?? 'default',
+    children: buildLucideSvg(opts.icon ?? Bold),
   });
-  btn.setAttribute('aria-label', opts.ariaLabel ?? 'Negrito');
+  btn.setAttribute('aria-label', opts.ariaLabel);
   return btn;
+}
+
+function cluster(...filhos: HTMLElement[]): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-cluster';
+  wrap.dataset.spacing = 'sm';
+  wrap.append(...filhos);
+  return wrap;
 }
 
 // ─── Off ──────────────────────────────────────────────────────────────────────
 
 export const Off: Story = {
-  render: () => makeToggle({ pressed: false }),
-  parameters: {
-    docs: { description: { story: 'Estado padrão inativo (`aria-pressed="false"`, `data-state="off"`). Fundo transparente.' } },
-  },
+  parameters: { covers: ['visual.item1'] },
+  render: () => makeToggle({ ariaLabel: 'Negrito' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-    await step('aria-pressed é "false"', async () => {
+    const btn = canvas.getByRole('button', { name: 'Negrito' });
+
+    await step('Estado inativo em aria-pressed e data-state', async () => {
       await expect(btn).toHaveAttribute('aria-pressed', 'false');
-    });
-    await step('data-state é "off"', async () => {
       await expect(btn).toHaveAttribute('data-state', 'off');
+    });
+
+    await step('Fundo transparente — o estado inativo não pinta nada', async () => {
+      await expect(getComputedStyle(btn).backgroundColor).toMatch(
+        /rgba\(0, 0, 0, 0\)|transparent/,
+      );
     });
   },
 };
@@ -84,18 +100,70 @@ export const Off: Story = {
 // ─── On ───────────────────────────────────────────────────────────────────────
 
 export const On: Story = {
-  render: () => makeToggle({ pressed: true }),
-  parameters: {
-    docs: { description: { story: 'Estado ativo (`aria-pressed="true"`, `data-state="on"`). Fundo `bg-accent`.' } },
-  },
+  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
+  render: () =>
+    cluster(
+      makeToggle({ ariaLabel: 'Negrito inativo' }),
+      makeToggle({ ariaLabel: 'Negrito ativo', pressed: true }),
+    ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-    await step('aria-pressed é "true"', async () => {
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    const off = canvas.getByRole('button', { name: 'Negrito inativo' });
+    const on = canvas.getByRole('button', { name: 'Negrito ativo' });
+
+    await step('O estado inicial nasce refletido nos dois atributos', async () => {
+      await expect(on).toHaveAttribute('aria-pressed', 'true');
+      await expect(on).toHaveAttribute('data-state', 'on');
+      await expect(off).toHaveAttribute('aria-pressed', 'false');
     });
-    await step('data-state é "on"', async () => {
-      await expect(btn).toHaveAttribute('data-state', 'on');
+
+    await step('O estado ativo tem fundo próprio, não só atributo', async () => {
+      const fundoOn = getComputedStyle(on).backgroundColor;
+      await expect(fundoOn).not.toBe(getComputedStyle(off).backgroundColor);
+      await expect(fundoOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+    });
+
+    await step('O contraste do estado ATIVO passa de 4.5:1 nos DOIS temas', async () => {
+      // Contraste é aritmética, não olhômetro: o axe não mede ícone (não é
+      // texto) e só enxerga o tema claro. Sem esta conta o item de contraste do
+      // contrato ficava declarado e nunca verificado. Mede só o estado ativo —
+      // é o único par de cores que o componente define; em repouso ele herda
+      // as da página.
+      const falhas = contrasteDoToggleNosDoisTemas(canvasElement);
+      await expect(falhas.length === 0 ? '' : `\n${descreverFalhasDeContraste(falhas)}`).toBe('');
+    });
+  },
+};
+
+// ─── FocusVisible ─────────────────────────────────────────────────────────────
+
+export const FocusVisible: Story = {
+  parameters: { covers: ['accessibility.item3'] },
+  render: () =>
+    cluster(
+      makeToggle({ ariaLabel: 'Negrito' }),
+      makeToggle({ ariaLabel: 'Itálico', icon: Italic, variant: 'outline' }),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const contorno = canvas.getByRole('button', { name: 'Itálico' });
+
+    await step('Tab leva o foco ao toggle, na ordem natural do DOM', async () => {
+      // userEvent.tab() e não .focus(): o documentado é "recebe foco na ordem
+      // natural". Forçar o foco passaria até com tabindex="-1".
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(padrao).toHaveFocus();
+    });
+
+    await step('O anel de foco aparece nas DUAS variantes', async () => {
+      // Medir `boxShadow !== 'none'` era o que escondia o defeito: a variante
+      // outline tem sombra de elevação o tempo todo, e a asserção passava com
+      // zero anel. O que prova o anel é a sombra MUDAR ao focar.
+      for (const btn of [padrao, contorno]) {
+        await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+      }
     });
   },
 };
@@ -103,39 +171,43 @@ export const On: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
-  render: () => makeToggle({ pressed: false, disabled: true }),
-  parameters: {
-    docs: { description: { story: 'Toggle desabilitado em estado off. `opacity-50`, `pointer-events-none`, não responde a clique nem teclado.' } },
-  },
+  parameters: { covers: ['visual.item4', 'functional.item4'] },
+  render: () =>
+    cluster(
+      makeToggle({ ariaLabel: 'Negrito', disabled: true }),
+      makeToggle({
+        ariaLabel: 'Itálico ativo e desabilitado',
+        icon: Italic,
+        disabled: true,
+        pressed: true,
+      }),
+    ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-    await step('Atributo disabled presente', async () => {
-      await expect(btn).toBeDisabled();
-    });
-    await step('Clique não altera o estado', async () => {
-      await userEvent.click(btn, { pointerEventsCheck: 0 });
-      await expect(btn).toHaveAttribute('aria-pressed', 'false');
-    });
-  },
-};
+    const off = canvas.getByRole('button', { name: 'Negrito' });
+    const on = canvas.getByRole('button', { name: 'Itálico ativo e desabilitado' });
 
-// ─── DisabledOn ───────────────────────────────────────────────────────────────
-
-export const DisabledOn: Story = {
-  render: () => makeToggle({ pressed: true, disabled: true }),
-  parameters: {
-    docs: { description: { story: 'Toggle desabilitado em estado on. Estado preservado, mas bloqueado para edição.' } },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-    await step('Permanece pressionado', async () => {
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    await step('É o disabled NATIVO, não um aria-disabled', async () => {
+      // `disabled` nativo é a forma forte: além de anunciar o estado, tira o
+      // elemento da ordem de tabulação. Um `aria-disabled` sozinho anunciaria
+      // e deixaria o foco entrar.
+      await expect(off).toBeDisabled();
+      await expect(on).toBeDisabled();
+      await expect(on).toHaveAttribute('data-state', 'on');
     });
-    await step('Clique não muda nada', async () => {
-      await userEvent.click(btn, { pointerEventsCheck: 0 });
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
+
+    await step('O clique não altera o estado', async () => {
+      // Elemento desabilitado não muda de estado em rodada nenhuma — este é o
+      // caso em que o clique cego é idempotente por natureza.
+      const antes = off.getAttribute('aria-pressed');
+      await userEvent.click(off, { pointerEventsCheck: 0 });
+      await expect(off.getAttribute('aria-pressed')).toBe(antes);
+    });
+
+    await step('O teclado também não alcança o controle', async () => {
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(off).not.toHaveFocus();
     });
   },
 };
@@ -147,61 +219,40 @@ export const Invalid: Story = {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'xs';
-    wrapper.style.alignItems = 'flex-start';
 
-    const btn = makeToggle({ pressed: false, ariaLabel: 'Aceitar termos' });
+    // A story NÃO pinta o anel: quem pinta é a regra
+    // `.nds-toggle[aria-invalid="true"]` da folha compartilhada. Fazer isso à
+    // mão (classe extra mais `style.boxShadow`) escondia a ausência da regra e
+    // ainda punha valor de design em estilo inline.
+    const btn = createToggle({ children: buildLucideSvg(Bold) });
+    btn.setAttribute('aria-label', 'Negrito');
     btn.setAttribute('aria-invalid', 'true');
     btn.setAttribute('aria-describedby', 'toggle-invalid-msg');
-    btn.classList.add('nds-border-destructive');
-    btn.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent)';
 
     const msg = document.createElement('p');
     msg.id = 'toggle-invalid-msg';
     msg.className = 'nds-text-body nds-text-destructive';
-    msg.textContent = 'Você precisa ativar esta opção para continuar.';
+    msg.textContent = 'Selecione ao menos uma formatação.';
 
     wrapper.append(btn, msg);
     return wrapper;
   },
-  parameters: {
-    docs: { description: { story: 'Estado de erro via `aria-invalid="true"`. Adicionamos borda + anel `destructive` manualmente e associamos a mensagem via `aria-describedby`.' } },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-    await step('aria-invalid presente', async () => {
+    const btn = canvas.getByRole('button', { name: 'Negrito' });
+
+    await step('O erro é anunciado pelo par aria-invalid + aria-describedby', async () => {
       await expect(btn).toHaveAttribute('aria-invalid', 'true');
-    });
-    await step('aria-describedby aponta para a mensagem', async () => {
       await expect(btn).toHaveAttribute('aria-describedby', 'toggle-invalid-msg');
-    });
-  },
-};
-
-// ─── FocoVisivel ──────────────────────────────────────────────────────────────
-
-export const FocusVisible: Story = {
-  render: () => makeToggle({ pressed: false }),
-  parameters: {
-    docs: { description: { story: 'Estado de foco via teclado. Pressione Tab para navegar — anel `ring-1 ring-ring` visível. Space/Enter alternam.' } },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const btn = canvas.getByRole('button');
-
-    await step('Toggle recebe foco programaticamente', async () => {
-      (btn as HTMLElement).focus();
-      await expect(btn).toHaveFocus();
+      await expect(canvas.getByText('Selecione ao menos uma formatação.')).toBeVisible();
     });
 
-    await step('Space alterna o estado quando focado', async () => {
-      await userEvent.keyboard(' ');
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    await step('O anel destrutivo vem do CSS do componente, não da story', async () => {
+      await expect(getComputedStyle(btn).boxShadow).not.toBe('none');
     });
 
-    await step('Enter alterna novamente', async () => {
-      await userEvent.keyboard('{Enter}');
-      await expect(btn).toHaveAttribute('aria-pressed', 'false');
+    await step('Focar o inválido continua mostrando o foco', async () => {
+      await expect(medirAnelDeFoco(btn).mudou).toBe(true);
     });
   },
 };

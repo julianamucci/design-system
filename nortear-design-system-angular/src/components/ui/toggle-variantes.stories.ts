@@ -8,16 +8,52 @@ const meta: Meta = {
   decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {
     layout: 'padded',
-    // Sem argTypes nesta story: o painel Controls ficaria vazio.
+    // Sem argTypes neste arquivo: os painéis ficariam vazios.
     controls: { disable: true },
+    actions: { disable: true },
   },
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const Variants: Story = {
-  parameters: { covers: ['visual.item3', 'accessibility.item5'] },
+export const Default: Story = {
+  parameters: { covers: ['accessibility.item5'] },
+  render: () => ({
+    template: `
+      <button ndsToggle aria-label="Negrito">
+        <svg ndsToggleIcon kind="bold"></svg>
+      </button>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole('button', { name: 'Negrito' });
+
+    await step('A variante padrão é a AUSÊNCIA do atributo, não "default"', async () => {
+      // Esta é também a asserção que prova o binding de input: sob JIT o
+      // componente renderiza nos defaults e nenhum atributo apareceria.
+      await expect(toggle).toHaveAttribute('data-slot', 'toggle');
+      await expect(toggle.getAttribute('data-variant')).toBe(null);
+      await expect(toggle.getAttribute('data-size')).toBe(null);
+    });
+
+    await step('Sem borda, e sem estado ativo na montagem', async () => {
+      await expect(parseFloat(getComputedStyle(toggle).borderTopWidth)).toBe(0);
+      await expect(toggle.getAttribute('aria-pressed')).toBe('false');
+      await expect(toggle).toHaveAttribute('data-state', 'off');
+    });
+
+    await step('Icon-only tem nome acessível, e o ícone não é lido', async () => {
+      await expect(toggle).toHaveAttribute('aria-label', 'Negrito');
+      await expect(toggle.textContent?.trim()).toBe('');
+      await expect(toggle.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    });
+  },
+};
+
+export const Outline: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="sm">
@@ -35,33 +71,22 @@ export const Variants: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const contorno = canvas.getByRole('button', { name: 'Itálico' });
 
-    await step('"outline" vira data-variant; "default" é a ausência do atributo', async () => {
+    await step('"outline" vira data-variant; a padrão fica sem atributo', async () => {
       // Esta é a asserção que prova o binding de input: se `variant` não
       // chegasse ao componente, os três ficariam sem `data-variant` e a linha
       // do default sozinha passaria.
-      const padrao = canvas.getByRole('button', { name: 'Negrito' });
-      const contorno = canvas.getByRole('button', { name: 'Itálico' });
-      await expect(padrao.getAttribute('data-variant')).toBe(null);
       await expect(contorno).toHaveAttribute('data-variant', 'outline');
+      await expect(padrao.getAttribute('data-variant')).toBe(null);
     });
 
     await step('A borda só aparece na variante outline', async () => {
       // O que separa as duas variantes é uma regra de CSS compartilhado; sem
       // esta medida, um `data-variant` correto com CSS ausente passaria.
-      const padrao = canvas.getByRole('button', { name: 'Negrito' });
-      const contorno = canvas.getByRole('button', { name: 'Itálico' });
       await expect(parseFloat(getComputedStyle(padrao).borderTopWidth)).toBe(0);
       await expect(parseFloat(getComputedStyle(contorno).borderTopWidth)).toBeGreaterThan(0);
-    });
-
-    await step('Toggle icon-only tem nome acessível, e o ícone não é lido', async () => {
-      for (const nome of ['Negrito', 'Itálico', 'Sublinhado']) {
-        const btn = canvas.getByRole('button', { name: nome });
-        await expect(btn).toHaveAttribute('aria-label', nome);
-        await expect(btn.textContent?.trim()).toBe('');
-        await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-      }
     });
 
     await step('A classe de quem usa convive com a classe do componente', async () => {
@@ -71,6 +96,48 @@ export const Variants: Story = {
       const btn = canvas.getByRole('button', { name: 'Sublinhado' });
       await expect(btn).toHaveClass(/nds-toggle/);
       await expect(btn).toHaveClass(/nds-w-full/);
+    });
+  },
+};
+
+export const WithLabel: Story = {
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <button ndsToggle variant="outline">
+          <svg ndsToggleIcon kind="eye"></svg>
+          Mostrar ocultos
+        </button>
+        <button ndsToggle variant="outline" [defaultPressed]="true">
+          <svg ndsToggleIcon kind="list"></svg>
+          Visão compacta
+        </button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O texto visível já é o nome acessível — aria-label seria ruído', async () => {
+      const btn = canvas.getByRole('button', { name: 'Mostrar ocultos' });
+      await expect(btn.getAttribute('aria-label')).toBe(null);
+      await expect(canvas.getByText('Mostrar ocultos')).toBeVisible();
+    });
+
+    await step('defaultPressed já nasce refletido nos dois atributos', async () => {
+      // É o caso que expõe a diferença entre `pressed` (o model, ainda
+      // indefinido antes do primeiro clique) e o estado real do primitivo:
+      // lendo o model, este toggle sairia com data-state="off".
+      const ativo = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(ativo.getAttribute('aria-pressed')).toBe('true');
+      await expect(ativo).toHaveAttribute('data-state', 'on');
+    });
+
+    await step('O toggle com rótulo é mais largo que alto', async () => {
+      const caixa = canvas
+        .getByRole('button', { name: 'Mostrar ocultos' })
+        .getBoundingClientRect();
+      await expect(caixa.width).toBeGreaterThan(caixa.height);
     });
   },
 };
@@ -111,53 +178,14 @@ export const Sizes: Story = {
       await expect(alturas[1]).toBeLessThan(alturas[2]);
     });
 
-    await step('Sem texto, o toggle é ao menos quadrado', async () => {
+    await step('Sem texto, o toggle é ao menos quadrado e cabe no alvo de toque', async () => {
       // O icon-only não tem frase para ditar a largura: quem garante a caixa é
       // o `min-width` da regra compartilhada.
       for (const btn of [sm, md, lg]) {
         const caixa = btn.getBoundingClientRect();
         await expect(caixa.width).toBeGreaterThanOrEqual(caixa.height - 1);
+        await expect(caixa.height).toBeGreaterThanOrEqual(24);
       }
-    });
-  },
-};
-
-export const WithLabel: Story = {
-  render: () => ({
-    template: `
-      <div class="nds-cluster" data-spacing="sm">
-        <button ndsToggle variant="outline">
-          <svg ndsToggleIcon kind="eye"></svg>
-          Mostrar ocultos
-        </button>
-        <button ndsToggle variant="outline" [defaultPressed]="true">
-          <svg ndsToggleIcon kind="list"></svg>
-          Visão compacta
-        </button>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('O texto visível já é o nome acessível — aria-label seria ruído', async () => {
-      const btn = canvas.getByRole('button', { name: 'Mostrar ocultos' });
-      await expect(btn.getAttribute('aria-label')).toBe(null);
-    });
-
-    await step('defaultPressed já nasce refletido nos dois atributos', async () => {
-      // É o caso que expõe a diferença entre `pressed` (o model, ainda
-      // indefinido antes do primeiro clique) e o estado real do primitivo:
-      // lendo o model, este toggle sairia com data-state="off".
-      const ativo = canvas.getByRole('button', { name: 'Visão compacta' });
-      await expect(ativo.getAttribute('aria-pressed')).toBe('true');
-      await expect(ativo).toHaveAttribute('data-state', 'on');
-    });
-
-    await step('O toggle com rótulo é mais largo que alto', async () => {
-      const btn = canvas.getByRole('button', { name: 'Mostrar ocultos' });
-      const caixa = btn.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThan(caixa.height);
     });
   },
 };

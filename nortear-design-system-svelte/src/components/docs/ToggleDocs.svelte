@@ -171,15 +171,6 @@ interface ToggleProps {
   class?: string;
 }`;
 
-  const customizationCode = `/* Cor customizada do estado ativo */
-.toggle-brand[data-state="on"] {
-  @apply bg-blue-500 text-white;
-}
-
-/* Override do tamanho via tokens */
-[data-slot="toggle"][data-size="default"] {
-  --height-default: 2.5rem;
-}`;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="toggle">
@@ -320,7 +311,7 @@ interface ToggleProps {
         },
         {
           element: $tStore('usage.uxWriting.table.icon.name'),
-          rules: $tStore('usage.uxWriting.table.icon.format'),
+          rules: toPlainText($tStore('usage.uxWriting.table.icon.format')),
           do: toPlainText($tStore('usage.uxWriting.table.icon.good')),
           dont: $tStore('usage.uxWriting.table.icon.bad'),
         },
@@ -583,15 +574,20 @@ interface ToggleProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--muted',       value: $tStore('tokens.table.muted.class'),       description: $tStore('tokens.table.muted.part') },
-      { token: '--foreground',  value: $tStore('tokens.table.foreground.class'),  description: $tStore('tokens.table.foreground.part') },
-      { token: '--input',       value: $tStore('tokens.table.input.class'),       description: $tStore('tokens.table.input.part') },
-      { token: '--ring',        value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
-      { token: '--destructive', value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
-      { token: '--radius-button', value: $tStore('tokens.table.radius.class'),      description: $tStore('tokens.table.radius.part') },
-    ]}
+      { token: '--accent',            k: 'accent'           },
+      { token: '--accent-foreground', k: 'accentForeground' },
+      { token: '--muted',             k: 'muted'            },
+      { token: '--input',             k: 'input'            },
+      { token: '--ring',              k: 'ring'             },
+      { token: '--destructive',       k: 'destructive'      },
+      { token: '--radius-button',     k: 'radius'           },
+    ].map(({ token, k }) => ({
+      token,
+      value: $tStore(`tokens.table.${k}.class`),
+      description: $tStore(`tokens.table.${k}.part`),
+    }))}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={customizationCode}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->

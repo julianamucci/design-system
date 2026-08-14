@@ -587,15 +587,19 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--muted',             k: 'muted'       },
-      { token: '--accent-foreground', k: 'foreground'  },
-      { token: '--input',             k: 'input'       },
-      { token: '--ring',              k: 'ring'        },
-      { token: '--destructive',       k: 'destructive' },
-      { token: '--radius',            k: 'radius'      },
+      { token: '--accent',            k: 'accent'           },
+      { token: '--accent-foreground', k: 'accentForeground' },
+      { token: '--muted',             k: 'muted'            },
+      { token: '--input',             k: 'input'            },
+      { token: '--ring',              k: 'ring'             },
+      { token: '--destructive',       k: 'destructive'      },
+      { token: '--radius-button',     k: 'radius'           },
     ].map(({ token, k }) => ({
       token,
-      value: '.nds-toggle',
+      // O seletor vem do conteúdo compartilhado, como nas outras stacks: fixar
+      // `.nds-toggle` aqui apagava a diferença entre o estado ativo, o hover e
+      // a variante outline, que é justamente o que a coluna deve ensinar.
+      value: toPlainText(t(`tokens.table.${k}.class`)),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

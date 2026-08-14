@@ -178,22 +178,6 @@ import { Bold } from "lucide-react";`;
   Mostrar ocultos
 </Toggle>`;
 
-  const codeCustomizationTokens = `/* Em globals.css — tokens do Toggle */
-:root {
-  --muted: 210 40% 96%;
-  --foreground: 222 47% 11%;
-  --input: 214 32% 91%;
-  --ring: 222 47% 11%;
-  --destructive: 0 72% 51%;
-  --radius-button: 0.5rem;
-}
-
-.dark {
-  --muted: 217 33% 17%;
-  --foreground: 210 40% 98%;
-  --input: 217 33% 17%;
-}`;
-
   const interfaceCode = `function Toggle({
   className,
   variant = "default",
@@ -351,7 +335,7 @@ import { Bold } from "lucide-react";`;
             },
             {
               element: tContent("usage.uxWriting.table.icon.name"),
-              rules: tContent("usage.uxWriting.table.icon.format"),
+              rules: toPlainText(tContent("usage.uxWriting.table.icon.format")),
               do: toPlainText(tContent("usage.uxWriting.table.icon.good")),
               dont: tContent("usage.uxWriting.table.icon.bad"),
             },
@@ -701,15 +685,20 @@ import { Bold } from "lucide-react";`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--muted",       value: tContent("tokens.table.muted.class"),       description: tContent("tokens.table.muted.part") },
-          { token: "--foreground",  value: tContent("tokens.table.foreground.class"),  description: tContent("tokens.table.foreground.part") },
-          { token: "--input",       value: tContent("tokens.table.input.class"),       description: tContent("tokens.table.input.part") },
-          { token: "--ring",        value: tContent("tokens.table.ring.class"),        description: tContent("tokens.table.ring.part") },
-          { token: "--destructive", value: tContent("tokens.table.destructive.class"), description: tContent("tokens.table.destructive.part") },
-          { token: "--radius-button", value: tContent("tokens.table.radius.class"),    description: tContent("tokens.table.radius.part") },
-        ]}
+          { token: "--accent",            k: "accent" },
+          { token: "--accent-foreground", k: "accentForeground" },
+          { token: "--muted",             k: "muted" },
+          { token: "--input",             k: "input" },
+          { token: "--ring",              k: "ring" },
+          { token: "--destructive",       k: "destructive" },
+          { token: "--radius-button",     k: "radius" },
+        ].map(({ token, k }) => ({
+          token,
+          value: tContent(`tokens.table.${k}.class`),
+          description: tContent(`tokens.table.${k}.part`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}

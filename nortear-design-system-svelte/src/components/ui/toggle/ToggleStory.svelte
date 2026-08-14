@@ -19,6 +19,9 @@
     label?: string;
     ariaLabel?: string;
     withLabel?: boolean;
+    /** Espião da aba Actions. Sem este encaminhamento o `fn()` declarado em
+     *  `args` nunca era chamado: o andaime o recebia e o descartava. */
+    onPressedChange?: (pressed: boolean) => void;
   }
 
   let {
@@ -31,6 +34,7 @@
     label = 'Negrito',
     ariaLabel,
     withLabel = false,
+    onPressedChange,
   }: Props = $props();
 
   const iconMap = {
@@ -51,6 +55,7 @@
   {variant}
   {size}
   {disabled}
+  {onPressedChange}
   aria-label={computedAriaLabel}
   aria-invalid={ariaInvalid || undefined}
 >

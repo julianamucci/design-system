@@ -23,8 +23,8 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Toggle</strong> — botão único com <code>aria-pressed=\"true|false\"</code> e <code>data-state=\"on|off\"</code>.",
-      "item2": "<strong>Ícone interno</strong> (opcional) — <code>&lt;svg&gt;</code> com <code>aria-hidden=\"true\"</code> e tamanho <code>size-4</code>.",
+      "item1": "<strong>Toggle</strong> — botão único com <code>aria-pressed=\"true|false\"</code>, que é o contrato de estado do componente.",
+      "item2": "<strong>Ícone interno</strong> (opcional) — <code>&lt;svg&gt;</code> de 16px com <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — OBRIGATÓRIO em toggles icon-only.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
@@ -143,8 +143,8 @@
         }
       },
       "styles": {
-        "default": "Sem borda — fundo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
-        "outline": "<code>variant=\"outline\"</code> — borda <code>input</code>, mesma lógica de pressed.",
+        "default": "Sem borda — fundo transparente, hover <code>muted</code>. No estado ativo o fundo é <code>accent</code> e o texto <code>accent-foreground</code>.",
+        "outline": "<code>variant=\"outline\"</code> — borda <code>input</code> e sombra de elevação, mesma lógica de estado ativo.",
         "withLabel": "Ícone + texto visível — útil para filtros (\"Mostrar ocultos\")."
       },
       "compositionsTitle": "Composições",
@@ -156,8 +156,8 @@
         },
         "filterList": {
           "name": "Lista de filtros",
-          "description": "Conjunto de Toggles outline empilhados/agrupados onde cada um representa uma escolha booleana isolada (não exclusiva).",
-          "use": "Filtros independentes em listas (Mostrar ocultos + Visão compacta podem ser combinados). Para escolha mutuamente exclusiva, prefira <code>ToggleGroup type=\"single\"</code>."
+          "description": "Conjunto de Toggles outline com <code>&lt;svg&gt;</code> e rótulo visível, agrupados sob um título, onde cada um representa uma escolha booleana isolada (não exclusiva).",
+          "use": "Filtros independentes em listas (Mostrar ocultos + Visão compacta podem ser combinados). Para escolha mutuamente exclusiva, prefira <code>ToggleGroup</code> em modo de seleção única."
         }
       }
     },
@@ -171,27 +171,27 @@
       "on": {
         "label": "On",
         "trigger": "click ou Space/Enter",
-        "behavior": "Ativo — <code>aria-pressed=\"true\"</code>, fundo <code>muted</code> (<code>data-state=on</code>)."
+        "behavior": "Ativo — <code>aria-pressed=\"true\"</code>, fundo <code>accent</code> e texto <code>accent-foreground</code>."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre o Toggle",
-        "behavior": "Mouse sobre — fundo <code>muted</code>, texto <code>foreground</code>."
+        "behavior": "Mouse sobre — fundo <code>muted</code>, texto <code>muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab para o Toggle",
-        "behavior": "Focado via teclado — anel <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Focado via teclado — anel de 2px em <code>ring</code> a 50% de opacidade."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando o consumidor desabilita o controle",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "<code>disabled</code> nativo — opacidade reduzida, fora da ordem de tabulação e sem resposta a clique."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" no Toggle",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — anel em <code>destructive</code>; com foco por teclado o anel de foco aparece por fora dele."
       },
       "cols": {
         "state": "Estado",
@@ -241,7 +241,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "Não",
-          "description": "Altura via tokens <code>--height-*</code>."
+          "description": "Degrau de densidade — define o piso de altura e o recuo lateral (32, 36 e 40px). A altura cresce junto com a fonte do navegador."
         },
         "className": {
           "type": "string",
@@ -262,34 +262,38 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fundo no estado ativo (aria-pressed=true) e hover"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Fundo do estado ativo"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Cor do texto/ícone no hover/ativo"
+        "accentForeground": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Cor do texto e do ícone no estado ativo"
+        },
+        "muted": {
+          "class": ".nds-toggle:hover",
+          "part": "Fundo sob o ponteiro"
         },
         "input": {
-          "class": "border-input",
+          "class": ".nds-toggle[data-variant=\"outline\"]",
           "part": "Borda na variante outline"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Anel de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borda no estado inválido"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Anel em validação falha"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Raio respeita multiplicador do tema"
+          "class": ".nds-toggle",
+          "part": "Raio do botão — respeita a forma do tema"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Cor customizada do estado ativo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override do tamanho via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+        "web": "/* Cor do estado ativo numa instância só: sobrescreva os tokens que a\n   folha do componente já lê. */\n.toggle-brand {\n  --accent: 217 91% 60%;\n  --accent-foreground: 0 0% 100%;\n}\n\n/* Recuo próprio num degrau de tamanho. A altura NÃO se crava: ela nasce do\n   recuo vertical mais a tipografia, para o controle crescer junto quando a\n   pessoa aumenta a fonte do navegador. */\n.nds-toggle[data-size=\"lg\"] {\n  padding-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -299,7 +303,7 @@
         "item1": "<code>aria-pressed</code> reflete o estado on/off automaticamente",
         "item2": "<code>aria-label</code> OBRIGATÓRIO em toggles icon-only",
         "item3": "Ícone interno com <code>aria-hidden=\"true\"</code> — não é lido pelo leitor de tela",
-        "item4": "Anel de foco visível com <code>ring-[3px] ring-ring/50</code>",
+        "item4": "Anel de foco visível em todas as variantes, inclusive na outline e no estado inválido",
         "item5": "<code>aria-invalid=\"true\"</code> em validação falha",
         "item6": "Contraste mínimo 4.5:1 entre texto/ícone e fundo ativo"
       },
@@ -347,8 +351,8 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (toggle button); Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>.",
-      "item3": "<strong>Token de raio</strong> — <code>rounded-(--radius-button)</code> respeita multiplicador do tema (ver PATCHES.md).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botão de alternância), que é o contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. O atributo de estado no DOM varia com a lib headless (<code>data-state=\"on|off\"</code> ou <code>data-pressed</code>), e a folha de estilo aceita as duas formas.",
+      "item3": "<strong>Token de raio</strong> — o raio sai de <code>--radius-button</code>, o mesmo do Button, e acompanha a identidade de forma do tema.",
       "item4": "<strong>Para conjunto</strong> — use <code>ToggleGroup</code> em vez de múltiplos Toggle soltos quando representam escolha conjunta."
     },
     "analytics": {
@@ -386,7 +390,7 @@
         },
         "item4": {
           "action": "Clicar com disabled=true",
-          "result": "Não muda estado; aria-disabled true",
+          "result": "Não muda de estado, e o controle fica fora da ordem de tabulação",
           "priority": "medium"
         }
       },
@@ -395,7 +399,7 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto/ícone e fundo ativo",
-        "item3": "Focus ring visível com ring-[3px] ring-ring/50",
+        "item3": "Anel de foco visível ao focar por teclado, em qualquer variante",
         "item4": "aria-pressed reflete o estado",
         "item5": "aria-label presente em toggles icon-only"
       },
@@ -466,8 +470,8 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Toggle</strong> — single button with <code>aria-pressed=\"true|false\"</code> and <code>data-state=\"on|off\"</code>.",
-      "item2": "<strong>Internal icon</strong> (optional) — <code>&lt;svg&gt;</code> with <code>aria-hidden=\"true\"</code> and <code>size-4</code>.",
+      "item1": "<strong>Toggle</strong> — single button with <code>aria-pressed=\"true|false\"</code>, the component's state contract.",
+      "item2": "<strong>Internal icon</strong> (optional) — 16px <code>&lt;svg&gt;</code> with <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — REQUIRED on icon-only toggles.",
       "structureLabel": "Basic structure:",
       "structureCode": {
@@ -586,8 +590,8 @@
         }
       },
       "styles": {
-        "default": "No border — transparent background, <code>muted</code> hover. Aria-pressed applies <code>bg-muted</code>.",
-        "outline": "<code>variant=\"outline\"</code> — <code>input</code> border, same pressed logic.",
+        "default": "No border — transparent background, <code>muted</code> hover. The active state uses the <code>accent</code> background and <code>accent-foreground</code> text.",
+        "outline": "<code>variant=\"outline\"</code> — <code>input</code> border and elevation shadow, same active-state logic.",
         "withLabel": "Icon + visible text — useful for filters (\"Show hidden\")."
       },
       "compositionsTitle": "Compositions",
@@ -599,8 +603,8 @@
         },
         "filterList": {
           "name": "Filter list",
-          "description": "Set of outline Toggles stacked/grouped where each represents an isolated boolean choice (non-exclusive).",
-          "use": "Independent list filters (Show hidden + Compact view can combine). For mutually-exclusive choice, prefer <code>ToggleGroup type=\"single\"</code>."
+          "description": "Set of outline Toggles with an <code>&lt;svg&gt;</code> and a visible label, grouped under a heading, where each one represents an isolated boolean choice (non-exclusive).",
+          "use": "Independent list filters (Show hidden + Compact view can combine). For a mutually exclusive choice, prefer <code>ToggleGroup</code> in single-selection mode."
         }
       }
     },
@@ -614,27 +618,27 @@
       "on": {
         "label": "On",
         "trigger": "click or Space/Enter",
-        "behavior": "Active — <code>aria-pressed=\"true\"</code>, <code>muted</code> background (<code>data-state=on</code>)."
+        "behavior": "Active — <code>aria-pressed=\"true\"</code>, <code>accent</code> background and <code>accent-foreground</code> text."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer over the Toggle",
-        "behavior": "Mouse over — <code>muted</code> background, <code>foreground</code> text."
+        "behavior": "Mouse over — <code>muted</code> background, <code>muted-foreground</code> text."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab to the Toggle",
-        "behavior": "Keyboard focused — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Keyboard focused — 2px ring in <code>ring</code> at 50% opacity."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the consumer disables the control",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "Native <code>disabled</code> — reduced opacity, out of the tab order and unresponsive to clicks."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" on the Toggle",
-        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> ring; under keyboard focus the focus ring shows outside it."
       },
       "cols": {
         "state": "State",
@@ -684,7 +688,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Height via <code>--height-*</code> tokens."
+          "description": "Density step — sets the height floor and the inline padding (32, 36 and 40px). Height grows with the browser font size."
         },
         "className": {
           "type": "string",
@@ -705,34 +709,38 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Background in active state (aria-pressed=true) and hover"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Active-state background"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Text/icon color on hover/active"
+        "accentForeground": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Text and icon color in the active state"
+        },
+        "muted": {
+          "class": ".nds-toggle:hover",
+          "part": "Background under the pointer"
         },
         "input": {
-          "class": "border-input",
-          "part": "Border on outline variant"
+          "class": ".nds-toggle[data-variant=\"outline\"]",
+          "part": "Border on the outline variant"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Keyboard focus ring"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Border in invalid state"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Ring on failed validation"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Radius respects theme multiplier"
+          "class": ".nds-toggle",
+          "part": "Button radius — follows the theme shape"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Custom active state color */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override size via tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+        "web": "/* Active-state color on a single instance: override the tokens the\n   component stylesheet already reads. */\n.toggle-brand {\n  --accent: 217 91% 60%;\n  --accent-foreground: 0 0% 100%;\n}\n\n/* Custom padding on a size step. Height is NOT hardcoded: it comes from the\n   block padding plus typography, so the control grows along when the reader\n   increases the browser font size. */\n.nds-toggle[data-size=\"lg\"] {\n  padding-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -742,7 +750,7 @@
         "item1": "<code>aria-pressed</code> reflects on/off state automatically",
         "item2": "<code>aria-label</code> REQUIRED on icon-only toggles",
         "item3": "Internal icon with <code>aria-hidden=\"true\"</code> — not read by screen reader",
-        "item4": "Visible focus ring with <code>ring-[3px] ring-ring/50</code>",
+        "item4": "Focus ring visible on every variant, including outline and the invalid state",
         "item5": "<code>aria-invalid=\"true\"</code> on failed validation",
         "item6": "Minimum 4.5:1 contrast between text/icon and active background"
       },
@@ -790,8 +798,8 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
-      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle uses <code>aria-pressed</code> (toggle button); Switch uses <code>role=\"switch\"</code> + <code>aria-checked</code>.",
-      "item3": "<strong>Radius token</strong> — <code>rounded-(--radius-button)</code> respects theme multiplier (see PATCHES.md).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle uses <code>aria-pressed</code> (toggle button), which is the state contract; Switch uses <code>role=\"switch\"</code> + <code>aria-checked</code>. The DOM state attribute varies with the headless lib (<code>data-state=\"on|off\"</code> or <code>data-pressed</code>), and the stylesheet accepts both forms.",
+      "item3": "<strong>Radius token</strong> — the radius comes from <code>--radius-button</code>, the same as Button, and follows the theme shape identity.",
       "item4": "<strong>For sets</strong> — use <code>ToggleGroup</code> instead of multiple loose Toggles when they represent a joint choice."
     },
     "analytics": {
@@ -829,7 +837,7 @@
         },
         "item4": {
           "action": "Click with disabled=true",
-          "result": "Doesn't change state; aria-disabled true",
+          "result": "Doesn't change state, and the control stays out of the tab order",
           "priority": "medium"
         }
       },
@@ -838,7 +846,7 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 4.5:1 contrast between text/icon and active background",
-        "item3": "Visible focus ring with ring-[3px] ring-ring/50",
+        "item3": "Focus ring visible on keyboard focus, on any variant",
         "item4": "aria-pressed reflects state",
         "item5": "aria-label present on icon-only toggles"
       },
@@ -909,8 +917,8 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Toggle</strong> — botón único con <code>aria-pressed=\"true|false\"</code> y <code>data-state=\"on|off\"</code>.",
-      "item2": "<strong>Icono interno</strong> (opcional) — <code>&lt;svg&gt;</code> con <code>aria-hidden=\"true\"</code> y <code>size-4</code>.",
+      "item1": "<strong>Toggle</strong> — botón único con <code>aria-pressed=\"true|false\"</code>, que es el contrato de estado del componente.",
+      "item2": "<strong>Icono interno</strong> (opcional) — <code>&lt;svg&gt;</code> de 16px con <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — OBLIGATORIO en toggles icon-only.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
@@ -1029,8 +1037,8 @@
         }
       },
       "styles": {
-        "default": "Sin borde — fondo transparente, hover <code>muted</code>. Aria-pressed aplica <code>bg-muted</code>.",
-        "outline": "<code>variant=\"outline\"</code> — borde <code>input</code>, misma lógica de pressed.",
+        "default": "Sin borde — fondo transparente, hover <code>muted</code>. En el estado activo el fondo es <code>accent</code> y el texto <code>accent-foreground</code>.",
+        "outline": "<code>variant=\"outline\"</code> — borde <code>input</code> y sombra de elevación, misma lógica de estado activo.",
         "withLabel": "Icono + texto visible — útil para filtros (\"Mostrar ocultos\")."
       },
       "compositionsTitle": "Composiciones",
@@ -1042,8 +1050,8 @@
         },
         "filterList": {
           "name": "Lista de filtros",
-          "description": "Conjunto de Toggles outline donde cada uno representa una elección booleana aislada (no exclusiva).",
-          "use": "Filtros independientes en listas (Mostrar ocultos + Vista compacta pueden combinarse). Para elección mutuamente exclusiva, prefiere <code>ToggleGroup type=\"single\"</code>."
+          "description": "Conjunto de Toggles outline con <code>&lt;svg&gt;</code> y rótulo visible, agrupados bajo un título, donde cada uno representa una elección booleana aislada (no exclusiva).",
+          "use": "Filtros independientes en listas (Mostrar ocultos + Vista compacta pueden combinarse). Para elección mutuamente exclusiva, prefiere <code>ToggleGroup</code> en modo de selección única."
         }
       }
     },
@@ -1057,27 +1065,27 @@
       "on": {
         "label": "On",
         "trigger": "click o Space/Enter",
-        "behavior": "Activo — <code>aria-pressed=\"true\"</code>, fondo <code>muted</code> (<code>data-state=on</code>)."
+        "behavior": "Activo — <code>aria-pressed=\"true\"</code>, fondo <code>accent</code> y texto <code>accent-foreground</code>."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre el Toggle",
-        "behavior": "Mouse encima — fondo <code>muted</code>, texto <code>foreground</code>."
+        "behavior": "Mouse encima — fondo <code>muted</code>, texto <code>muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab hasta el Toggle",
-        "behavior": "Enfocado por teclado — <code>ring-[3px] ring-ring/50</code>."
+        "behavior": "Enfocado por teclado — anillo de 2px en <code>ring</code> al 50% de opacidad."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando el consumidor deshabilita el control",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>pointer-events-none</code>."
+        "behavior": "<code>disabled</code> nativo — opacidad reducida, fuera del orden de tabulación y sin respuesta al clic."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" en el Toggle",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — anillo en <code>destructive</code>; con foco por teclado el anillo de foco aparece por fuera."
       },
       "cols": {
         "state": "Estado",
@@ -1127,7 +1135,7 @@
           "type": "\"default\" | \"sm\" | \"lg\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Altura vía tokens <code>--height-*</code>."
+          "description": "Escalón de densidad — define el piso de altura y el margen interno lateral (32, 36 y 40px). La altura crece junto con la fuente del navegador."
         },
         "className": {
           "type": "string",
@@ -1148,34 +1156,38 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fondo en estado activo (aria-pressed=true) y hover"
+        "accent": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Fondo del estado activo"
         },
-        "foreground": {
-          "class": "text-foreground",
-          "part": "Color del texto/icono en hover/activo"
+        "accentForeground": {
+          "class": ".nds-toggle[data-state=\"on\"]",
+          "part": "Color del texto y del icono en el estado activo"
+        },
+        "muted": {
+          "class": ".nds-toggle:hover",
+          "part": "Fondo bajo el puntero"
         },
         "input": {
-          "class": "border-input",
-          "part": "Borde en variante outline"
+          "class": ".nds-toggle[data-variant=\"outline\"]",
+          "part": "Borde en la variante outline"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco"
+          "class": ".nds-toggle:focus-visible",
+          "part": "Anillo de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borde en estado inválido"
+          "class": ".nds-toggle[aria-invalid=\"true\"]",
+          "part": "Anillo en validación fallida"
         },
         "radius": {
-          "class": "rounded-(--radius-button)",
-          "part": "Radio respeta el multiplicador del tema"
+          "class": ".nds-toggle",
+          "part": "Radio del botón — respeta la forma del tema"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Color personalizado del estado activo */\n.toggle-brand[data-state=\"on\"] {\n  @apply bg-blue-500 text-white;\n}\n\n/* Override del tamaño vía tokens */\n[data-slot=\"toggle\"][data-size=\"default\"] {\n  --height-default: 2.5rem;\n}"
+        "web": "/* Color del estado activo en una sola instancia: sobrescribe los tokens\n   que la hoja del componente ya lee. */\n.toggle-brand {\n  --accent: 217 91% 60%;\n  --accent-foreground: 0 0% 100%;\n}\n\n/* Margen interno propio en un escalón de tamaño. La altura NO se fija: nace\n   del margen interno vertical más la tipografía, para que el control crezca\n   junto cuando la persona aumenta la fuente del navegador. */\n.nds-toggle[data-size=\"lg\"] {\n  padding-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -1185,7 +1197,7 @@
         "item1": "<code>aria-pressed</code> refleja el estado on/off automáticamente",
         "item2": "<code>aria-label</code> OBLIGATORIO en toggles icon-only",
         "item3": "Icono interno con <code>aria-hidden=\"true\"</code> — no es leído por el lector de pantalla",
-        "item4": "Anillo de foco visible con <code>ring-[3px] ring-ring/50</code>",
+        "item4": "Anillo de foco visible en todas las variantes, incluida la outline y el estado inválido",
         "item5": "<code>aria-invalid=\"true\"</code> en validación fallida",
         "item6": "Contraste mínimo 4.5:1 entre texto/icono y fondo activo"
       },
@@ -1233,8 +1245,8 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (toggle button); Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>.",
-      "item3": "<strong>Token de radio</strong> — <code>rounded-(--radius-button)</code> respeta el multiplicador del tema (ver PATCHES.md).",
+      "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botón de alternancia), que es el contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. El atributo de estado en el DOM varía con la lib headless (<code>data-state=\"on|off\"</code> o <code>data-pressed</code>), y la hoja de estilo acepta las dos formas.",
+      "item3": "<strong>Token de radio</strong> — el radio sale de <code>--radius-button</code>, el mismo del Button, y acompaña la identidad de forma del tema.",
       "item4": "<strong>Para conjunto</strong> — usa <code>ToggleGroup</code> en vez de múltiples Toggle sueltos cuando representan una elección conjunta."
     },
     "analytics": {
@@ -1272,7 +1284,7 @@
         },
         "item4": {
           "action": "Clic con disabled=true",
-          "result": "No cambia el estado; aria-disabled true",
+          "result": "No cambia de estado, y el control queda fuera del orden de tabulación",
           "priority": "medium"
         }
       },
@@ -1281,7 +1293,7 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto/icono y fondo activo",
-        "item3": "Anillo de foco visible con ring-[3px] ring-ring/50",
+        "item3": "Anillo de foco visible al enfocar por teclado, en cualquier variante",
         "item4": "aria-pressed refleja el estado",
         "item5": "aria-label presente en toggles icon-only"
       },

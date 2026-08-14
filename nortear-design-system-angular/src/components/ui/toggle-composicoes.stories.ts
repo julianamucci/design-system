@@ -1,28 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent } from 'storybook/test';
+import { NdsToggle, NdsToggleIcon } from './toggle';
 
-import { userEvent, within, expect } from 'storybook/test';
-import ToggleScenarioStory from './ToggleScenarioStory.svelte';
-
-const meta = {
+const meta: Meta = {
   title: 'UI/Toggle/Compositions',
-  component: ToggleScenarioStory,
-  tags: ['form'],
+  decorators: [moduleMetadata({ imports: [NdsToggle, NdsToggleIcon] })],
   parameters: {
-    layout: 'centered',
-    // Sem argTypes neste arquivo: o painel Controls ficaria vazio.
+    layout: 'padded',
+    // Sem argTypes neste arquivo: os painéis ficariam vazios.
     controls: { disable: true },
     actions: { disable: true },
-    docs: {
-      description: {
-        component:
-          'As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.',
-      },
-    },
   },
-} satisfies Meta<typeof ToggleScenarioStory>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 /**
  * Leva o toggle a um estado conhecido clicando SÓ quando ele ainda não está
@@ -31,11 +24,26 @@ type Story = StoryObj<typeof meta>;
  */
 async function definir(btn: HTMLElement, alvo: boolean) {
   if ((btn.getAttribute('aria-pressed') === 'true') !== alvo) await userEvent.click(btn);
-  await expect(btn).toHaveAttribute('aria-pressed', String(alvo));
+  await expect(btn.getAttribute('aria-pressed')).toBe(String(alvo));
 }
 
 export const FormattingToolbar: Story = {
-  args: { cenario: 'toolbar' },
+  render: () => ({
+    template: `
+      <div
+        role="group"
+        aria-label="Formatação de texto"
+        class="nds-cluster nds-rounded-lg nds-border-default nds-p-1"
+        data-align="center"
+        data-spacing="xs"
+      >
+        <button ndsToggle aria-label="Negrito"><svg ndsToggleIcon kind="bold"></svg></button>
+        <button ndsToggle aria-label="Itálico"><svg ndsToggleIcon kind="italic"></svg></button>
+        <button ndsToggle aria-label="Sublinhado"><svg ndsToggleIcon kind="underline"></svg></button>
+        <button ndsToggle aria-label="Lista"><svg ndsToggleIcon kind="list"></svg></button>
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -61,13 +69,29 @@ export const FormattingToolbar: Story = {
       // O par idempotente também prova o clique DESTA rodada: se o toggle já
       // estivesse ligado, o `definir` acima o teria desligado antes.
       await definir(negrito, true);
-      await expect(italico).toHaveAttribute('aria-pressed', 'false');
+      await expect(italico.getAttribute('aria-pressed')).toBe('false');
     });
   },
 };
 
 export const FilterList: Story = {
-  args: { cenario: 'filters' },
+  render: () => ({
+    template: `
+      <div class="nds-stack" data-spacing="sm">
+        <p class="nds-text-body nds-font-semibold">Filtros de exibição</p>
+        <div class="nds-cluster" data-spacing="sm">
+          <button ndsToggle variant="outline">
+            <svg ndsToggleIcon kind="eye"></svg>
+            Mostrar ocultos
+          </button>
+          <button ndsToggle variant="outline" [defaultPressed]="true">
+            <svg ndsToggleIcon kind="list"></svg>
+            Visão compacta
+          </button>
+        </div>
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -83,8 +107,8 @@ export const FilterList: Story = {
     await step('Cada filtro é uma escolha booleana isolada, e podem combinar', async () => {
       const ocultos = canvas.getByRole('button', { name: 'Mostrar ocultos' });
       const compacta = canvas.getByRole('button', { name: 'Visão compacta' });
-      await expect(ocultos).toHaveAttribute('aria-pressed', 'false');
-      await expect(compacta).toHaveAttribute('aria-pressed', 'true');
+      await expect(ocultos.getAttribute('aria-pressed')).toBe('false');
+      await expect(compacta.getAttribute('aria-pressed')).toBe('true');
     });
 
     await step('Os dois filtros usam a variante outline', async () => {
@@ -99,22 +123,36 @@ export const FilterList: Story = {
 };
 
 export const Controlled: Story = {
-  args: { cenario: 'controlled' },
+  render: () => ({
+    // `[(pressed)]` só funciona porque o host directive expõe o input `pressed`
+    // E o output `pressedChange` — o par é o que faz a escrita voltar.
+    props: { negrito: false },
+    template: `
+      <div class="nds-stack" data-spacing="sm">
+        <button ndsToggle [(pressed)]="negrito" aria-label="Negrito">
+          <svg ndsToggleIcon kind="bold"></svg>
+        </button>
+        <p class="nds-text-caption nds-text-muted-foreground">
+          Estado atual: <code class="nds-font-mono">{{ negrito }}</code>
+        </p>
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toggle = canvas.getByRole('button', { name: 'Negrito' });
+    const btn = canvas.getByRole('button', { name: 'Negrito' });
 
     await step('O estado externo acompanha o toggle ao ligar', async () => {
       // O par (desliga, liga) garante um clique REAL nesta rodada, venha o DOM
       // de onde vier: sem ele, o replay partiria do estado que a rodada
       // anterior deixou e a asserção absoluta inverteria.
-      await definir(toggle, false);
-      await definir(toggle, true);
+      await definir(btn, false);
+      await definir(btn, true);
       await expect(canvas.getByText('true')).toBeVisible();
     });
 
     await step('E acompanha também ao desligar', async () => {
-      await definir(toggle, false);
+      await definir(btn, false);
       await expect(canvas.getByText('false')).toBeVisible();
     });
   },

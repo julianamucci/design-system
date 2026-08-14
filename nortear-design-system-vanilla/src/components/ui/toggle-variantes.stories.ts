@@ -1,19 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
-import { Bold, Italic, Eye } from 'lucide';
-import { createToggle } from './toggle';
+import { Bold, Italic, Eye, List } from 'lucide';
+import { createToggle, type ToggleOptions } from './toggle';
 
 const meta: Meta = {
   tags: ['form'],
   title: 'UI/Toggle/Variants',
   parameters: {
-    actions: { disable: true },
     layout: 'centered',
+    // Sem argTypes neste arquivo: os painéis ficariam vazios.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes de uso do Toggle: Default (sem borda, fundo `muted` quando pressionado), Outline (borda `input`), WithLabel (ícone + texto visível). Em icon-only, `aria-label` é OBRIGATÓRIO. O factory custom Vanilla já aplica `aria-pressed` + `data-state` automaticamente no click.',
+          'Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.',
       },
     },
   },
@@ -26,14 +27,7 @@ type Story = StoryObj;
 
 type LucideIconNode = [string, Record<string, string>];
 
-function wrapIcon(icon: unknown, className = 'nds-icon-sm'): HTMLSpanElement {
-  const span = document.createElement('span');
-  span.style.display = 'inline-flex';
-  span.appendChild(buildLucideSvg(icon, className));
-  return span;
-}
-
-function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
+function buildLucideSvg(icon: unknown): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -42,8 +36,8 @@ function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement
   svg.setAttribute('stroke-width', '2');
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
+  // O ícone reforça o rótulo, nunca o substitui.
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', className);
   for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
@@ -52,36 +46,63 @@ function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement
   return svg;
 }
 
+function iconToggle(opts: {
+  icon: unknown;
+  ariaLabel?: string;
+  texto?: string;
+  pressed?: boolean;
+  variant?: ToggleOptions['variant'];
+  size?: ToggleOptions['size'];
+}): HTMLButtonElement {
+  // Ícone e texto são filhos DIRETOS: o espaço vem do `gap` do `.nds-toggle` e
+  // a medida do ícone da regra `.nds-toggle > svg`.
+  const filhos = opts.texto
+    ? [buildLucideSvg(opts.icon), opts.texto]
+    : [buildLucideSvg(opts.icon)];
+  const btn = createToggle({
+    pressed: opts.pressed ?? false,
+    variant: opts.variant ?? 'default',
+    size: opts.size ?? 'default',
+    children: filhos,
+  });
+  // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
+  if (opts.ariaLabel) btn.setAttribute('aria-label', opts.ariaLabel);
+  return btn;
+}
+
+function cluster(...filhos: HTMLElement[]): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-cluster';
+  wrap.dataset.spacing = 'sm';
+  wrap.append(...filhos);
+  return wrap;
+}
+
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => {
-    const btn = createToggle({
-      pressed: true,
-      variant: 'default',
-      children: wrapIcon(Bold),
-    });
-    btn.setAttribute('aria-label', 'Negrito');
-    return btn;
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Variante padrão (`variant="default"`) — sem borda, fundo transparente. No estado pressionado (`aria-pressed=true`), aplica `bg-accent` (data-state=on). Use em toolbars de formatação (negrito, itálico, sublinhado).',
-      },
-    },
-  },
+  parameters: { covers: ['accessibility.item5'] },
+  render: () => iconToggle({ icon: Bold, ariaLabel: 'Negrito' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Toggle pressionado por padrão', async () => {
-      const btn = canvas.getByRole('button');
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
-      await expect(btn).toHaveAttribute('data-state', 'on');
+    const toggle = canvas.getByRole('button', { name: 'Negrito' });
+
+    await step('A variante padrão é a AUSÊNCIA do atributo, não "default"', async () => {
+      await expect(toggle).toHaveAttribute('data-slot', 'toggle');
+      await expect(toggle.getAttribute('data-variant')).toBe(null);
+      await expect(toggle.getAttribute('data-size')).toBe(null);
     });
-    await step('aria-label obrigatório presente', async () => {
-      const btn = canvas.getByRole('button');
-      await expect(btn).toHaveAttribute('aria-label', 'Negrito');
+
+    await step('Sem borda, e sem estado ativo na montagem', async () => {
+      await expect(parseFloat(getComputedStyle(toggle).borderTopWidth)).toBe(0);
+      await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+      await expect(toggle).toHaveAttribute('data-state', 'off');
+    });
+
+    await step('Icon-only tem nome acessível, e o ícone não é lido', async () => {
+      await expect(toggle).toHaveAttribute('aria-label', 'Negrito');
+      await expect(toggle.textContent?.trim()).toBe('');
+      await expect(toggle.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };
@@ -89,29 +110,27 @@ export const Default: Story = {
 // ─── Outline ──────────────────────────────────────────────────────────────────
 
 export const Outline: Story = {
-  render: () => {
-    const btn = createToggle({
-      pressed: false,
-      variant: 'outline',
-      children: wrapIcon(Italic),
-    });
-    btn.setAttribute('aria-label', 'Itálico');
-    return btn;
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Variante `outline` — adiciona borda `input` e sombra `sm`. Útil quando o Toggle aparece isolado fora de uma toolbar (botão de filtro, ação solta). Mantém a mesma lógica de `aria-pressed` para estado on/off.',
-      },
-    },
-  },
+  parameters: { covers: ['visual.item3'] },
+  render: () =>
+    cluster(
+      iconToggle({ icon: Bold, ariaLabel: 'Negrito' }),
+      iconToggle({ icon: Italic, ariaLabel: 'Itálico', variant: 'outline' }),
+    ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Toggle outline presente', async () => {
-      const btn = canvas.getByRole('button');
-      await expect(btn).toBeInTheDocument();
-      await expect(btn.dataset.variant).toBe('outline');
+    const padrao = canvas.getByRole('button', { name: 'Negrito' });
+    const contorno = canvas.getByRole('button', { name: 'Itálico' });
+
+    await step('"outline" vira data-variant; a padrão fica sem atributo', async () => {
+      await expect(contorno).toHaveAttribute('data-variant', 'outline');
+      await expect(padrao.getAttribute('data-variant')).toBe(null);
+    });
+
+    await step('A borda só aparece na variante outline', async () => {
+      // O que separa as duas variantes é uma regra do CSS compartilhado; sem
+      // esta medida, um `data-variant` correto com CSS ausente passaria.
+      await expect(parseFloat(getComputedStyle(padrao).borderTopWidth)).toBe(0);
+      await expect(parseFloat(getComputedStyle(contorno).borderTopWidth)).toBeGreaterThan(0);
     });
   },
 };
@@ -119,40 +138,68 @@ export const Outline: Story = {
 // ─── WithLabel ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
-  render: () => {
-    const wrap = document.createElement('span');
-    wrap.className = 'nds-cluster';
-    wrap.dataset.spacing = 'sm';
-    wrap.style.display = 'inline-flex';
-    wrap.appendChild(buildLucideSvg(Eye));
-    const text = document.createElement('span');
-    text.textContent = 'Mostrar ocultos';
-    wrap.appendChild(text);
-
-    const btn = createToggle({
-      pressed: false,
-      variant: 'outline',
-      children: wrap,
-    });
-    // Texto visível dispensa aria-label
-    return btn;
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Toggle com ícone + texto visível — não precisa de `aria-label` (o leitor de tela usa o texto interno). Padrão para filtros e modos de exibição ("Mostrar ocultos", "Visão compacta").',
-      },
-    },
-  },
+  render: () =>
+    cluster(
+      iconToggle({ icon: Eye, texto: 'Mostrar ocultos', variant: 'outline' }),
+      iconToggle({ icon: List, texto: 'Visão compacta', variant: 'outline', pressed: true }),
+    ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Texto visível presente', async () => {
+
+    await step('O texto visível já é o nome acessível — aria-label seria ruído', async () => {
+      const btn = canvas.getByRole('button', { name: 'Mostrar ocultos' });
+      await expect(btn.getAttribute('aria-label')).toBe(null);
       await expect(canvas.getByText('Mostrar ocultos')).toBeVisible();
     });
-    await step('Toggle inicia não pressionado', async () => {
-      const btn = canvas.getByRole('button');
-      await expect(btn).toHaveAttribute('aria-pressed', 'false');
+
+    await step('O estado inicial já nasce refletido nos dois atributos', async () => {
+      const ativo = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(ativo).toHaveAttribute('aria-pressed', 'true');
+      await expect(ativo).toHaveAttribute('data-state', 'on');
+    });
+
+    await step('O toggle com rótulo é mais largo que alto', async () => {
+      const caixa = canvas
+        .getByRole('button', { name: 'Mostrar ocultos' })
+        .getBoundingClientRect();
+      await expect(caixa.width).toBeGreaterThan(caixa.height);
+    });
+  },
+};
+
+// ─── Sizes ────────────────────────────────────────────────────────────────────
+
+export const Sizes: Story = {
+  render: () =>
+    cluster(
+      iconToggle({ icon: Bold, ariaLabel: 'Negrito pequeno', size: 'sm', variant: 'outline' }),
+      iconToggle({ icon: Bold, ariaLabel: 'Negrito padrão', variant: 'outline' }),
+      iconToggle({ icon: Bold, ariaLabel: 'Negrito grande', size: 'lg', variant: 'outline' }),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const sm = canvas.getByRole('button', { name: 'Negrito pequeno' });
+    const md = canvas.getByRole('button', { name: 'Negrito padrão' });
+    const lg = canvas.getByRole('button', { name: 'Negrito grande' });
+
+    await step('Cada degrau emite seu data-size, e o padrão não emite nenhum', async () => {
+      await expect(sm).toHaveAttribute('data-size', 'sm');
+      await expect(md.getAttribute('data-size')).toBe(null);
+      await expect(lg).toHaveAttribute('data-size', 'lg');
+    });
+
+    await step('A escada cresce de verdade na tela', async () => {
+      const alturas = [sm, md, lg].map((b) => b.getBoundingClientRect().height);
+      await expect(alturas[0]).toBeLessThan(alturas[1]);
+      await expect(alturas[1]).toBeLessThan(alturas[2]);
+    });
+
+    await step('Sem texto, o toggle é ao menos quadrado e cabe no alvo de toque', async () => {
+      for (const btn of [sm, md, lg]) {
+        const caixa = btn.getBoundingClientRect();
+        await expect(caixa.width).toBeGreaterThanOrEqual(caixa.height - 1);
+        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+      }
     });
   },
 };

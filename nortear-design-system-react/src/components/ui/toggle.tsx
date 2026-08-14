@@ -33,8 +33,12 @@ function Toggle({
   return (
     <TogglePrimitive
       data-slot="toggle"
-      data-variant={variant}
-      data-size={size}
+      // `default` NÃO vira atributo: o CSS trata a ausência como padrão, e o
+      // Vanilla — a referência de markup — também o omite. Emitir
+      // `data-variant="default"` fazia o mesmo componente ter dois markups
+      // conforme a stack, sem nada na tela denunciando.
+      data-variant={variant === "default" ? undefined : variant}
+      data-size={size === "default" ? undefined : size}
       className={cn(toggleVariants({ variant, size, className }))}
       {...props}
     />

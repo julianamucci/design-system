@@ -15,8 +15,17 @@ export type ToggleOptions = {
   size?: ToggleSize;
   class?: string;
   onClick?: (pressed: boolean) => void;
-  children?: HTMLElement | string;
+  /**
+   * Filhos diretos do botão. Aceita lista porque o caso com rótulo é ícone
+   * MAIS texto lado a lado — e os dois precisam ser filhos DIRETOS: o espaço
+   * entre eles vem do `gap` do próprio `.nds-toggle`, e a medida do ícone da
+   * regra `.nds-toggle > svg`. Embrulhar os dois num `<span>` tirava os dois
+   * efeitos e obrigava a compensar com estilo inline na story.
+   */
+  children?: ToggleChild | ToggleChild[];
 };
+
+type ToggleChild = HTMLElement | SVGElement | string;
 
 export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   const { disabled = false, variant = 'default', size = 'default', onClick } = options;
@@ -35,10 +44,11 @@ export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   if (disabled) btn.disabled = true;
 
   if (options.children) {
-    if (typeof options.children === 'string') {
-      btn.textContent = options.children;
-    } else {
-      btn.appendChild(options.children);
+    const filhos = Array.isArray(options.children) ? options.children : [options.children];
+    for (const filho of filhos) {
+      // `append` com string cria nó de texto — nunca interpreta markup, então
+      // não há caminho de injeção aqui.
+      btn.append(filho);
     }
   }
 
