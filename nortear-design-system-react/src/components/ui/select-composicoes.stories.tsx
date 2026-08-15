@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn, userEvent, within, expect, waitFor } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
+import { ESTADOS_POR_VALOR } from "@shared/testing/select-probe";
 import { useState } from "react";
 import {
   Select,
@@ -50,7 +51,11 @@ export const Controlled: Story = {
           className="nds-stack" style={{minWidth: "280px", contain: "layout", minHeight: 160, position: "relative" }} data-spacing="md"
           
         >
-          <Select value={value} onValueChange={(v) => setValue(v ?? "")}>
+          <Select
+            value={value}
+            items={ESTADOS_POR_VALOR}
+            onValueChange={(v) => setValue((v ?? "") as string)}
+          >
             <SelectTrigger aria-label="Selecionar estado">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
@@ -76,12 +81,16 @@ export const Controlled: Story = {
       await expect(output).toHaveTextContent("—");
     });
     await step("Selecionar Rio de Janeiro atualiza estado controlado", async () => {
-      await userEvent.click(trigger);
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
       const option = await waitForPortal("option", { name: "Rio de Janeiro" });
       await userEvent.click(option);
       const output = canvas.getByTestId("ctrl-output");
       await waitFor(async () => {
+        // O estado externo recebe o VALOR…
         await expect(output).toHaveTextContent("rj");
+        // …e o campo passa a exibir o RÓTULO correspondente.
+        await expect(trigger).toHaveTextContent("Rio de Janeiro");
       });
     });
   },
@@ -99,19 +108,20 @@ export const InForm: Story = {
   render: () => {
     function FormSelect() {
       const [value, setValue] = useState<string>("");
-      const onSubmit = fn();
       return (
         <form
           className="nds-stack" style={{minWidth: "280px", contain: "layout", minHeight: 200, position: "relative" }} data-spacing="md"
-          
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit({ state: value });
-          }}
+
+          onSubmit={(e) => e.preventDefault()}
         >
           <div className="nds-stack" data-spacing="sm">
             <Label htmlFor="form-state">Estado</Label>
-            <Select name="state" value={value} onValueChange={(v) => setValue(v ?? "")}>
+            <Select
+              name="state"
+              value={value}
+              items={{ ...ESTADOS_POR_VALOR, rs: "Rio Grande do Sul", sc: "Santa Catarina" }}
+              onValueChange={(v) => setValue((v ?? "") as string)}
+            >
               <SelectTrigger id="form-state" aria-label="Selecionar estado">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
@@ -147,7 +157,8 @@ export const InForm: Story = {
     });
 
     await step("Selecionar opção habilita o botão", async () => {
-      await userEvent.click(trigger);
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
       const option = await waitForPortal("option", { name: "São Paulo" });
       await userEvent.click(option);
       await waitFor(async () => {
@@ -155,9 +166,16 @@ export const InForm: Story = {
       });
     });
 
-    await step("Submit dispara com o valor escolhido", async () => {
-      await userEvent.click(submitBtn);
-      // form submetido sem reload (preventDefault)
+    await step("O valor viaja no FormData do próprio formulário", async () => {
+      // Ler o `FormData` do form real é o que prova a integração: o primitivo
+      // mantém um campo escondido com `name`, e é ele que a serialização
+      // nativa enxerga. Espiar um callback provaria só o clique.
+      const form = canvasElement.querySelector("form") as HTMLFormElement;
+      await waitFor(async () => {
+        await expect(Object.fromEntries(new FormData(form).entries())).toEqual({
+          state: "sp",
+        });
+      });
     });
   },
 };
@@ -180,7 +198,11 @@ export const WithLabel: Story = {
           
         >
           <Label htmlFor="labeled-state">Estado de residência</Label>
-          <Select value={value} onValueChange={(v) => setValue(v ?? "")}>
+          <Select
+            value={value}
+            items={{ ...ESTADOS_POR_VALOR, es: "Espírito Santo" }}
+            onValueChange={(v) => setValue((v ?? "") as string)}
+          >
             <SelectTrigger id="labeled-state" aria-label="Estado de residência">
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>

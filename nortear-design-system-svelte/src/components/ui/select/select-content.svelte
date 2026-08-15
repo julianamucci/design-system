@@ -24,6 +24,18 @@
 	// Id vindo da raiz por contexto — o trigger aponta para ele em aria-controls.
 	// Descobrir o painel pelo DOM não serve: ele é portalado e só existe aberto.
 	const contentId = getContext<string | undefined>(SELECT_LISTBOX_ID);
+
+	// O `id` entregue à lib NÃO chega ao elemento da lista: some na camada de
+	// posicionamento, que o consome como prop dela. O gatilho ficava apontando
+	// `aria-controls` para um id que não existia em lugar nenhum do documento —
+	// referência quebrada, sem nada na tela para denunciar. O axe também não
+	// pega: ele só reclama quando o alvo EXISTIU e sumiu.
+	//
+	// Escrever o id no próprio elemento fecha a ponte. Não cria duplicata: foi
+	// medido que a lib não o deixa em nenhum outro nó.
+	$effect(() => {
+		if (ref && contentId) ref.id = contentId;
+	});
 </script>
 
 <SelectPortal {...portalProps}>

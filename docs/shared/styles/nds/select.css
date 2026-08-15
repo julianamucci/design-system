@@ -222,7 +222,11 @@
 }
 
 
-.nds-select-trigger[data-placeholder] {
+/* Onde o `data-placeholder` pousa depende da lib: umas marcam o gatilho, outras
+ * marcam o elemento do valor. As duas formas pintam o mesmo texto na mesma cor
+ * — sem a segunda, o placeholder saía com o peso de um valor escolhido. */
+.nds-select-trigger[data-placeholder],
+.nds-select-value[data-placeholder] {
   color: hsl(var(--muted-foreground));
 }
 

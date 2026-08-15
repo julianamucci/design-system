@@ -144,6 +144,33 @@ export function SelectDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // Mapa `valor → rótulo` do campo fechado.
+  //
+  // Sem ele o campo exibe o VALOR cru ("rj") depois da escolha: a lista é
+  // desmontada ao fechar, e o primitivo não tem de onde tirar o texto da opção.
+  // O mapa é o caminho que ele oferece para isso.
+  const rotulos = useMemo(
+    () => ({
+      sp: tContent("demonstration.labels.sp"),
+      rj: tContent("demonstration.labels.rj"),
+      mg: tContent("demonstration.labels.mg"),
+      es: tContent("demonstration.labels.es"),
+      rs: tContent("demonstration.labels.rs"),
+      sc: tContent("demonstration.labels.sc"),
+      pr: tContent("demonstration.labels.pr"),
+    }),
+    [tContent],
+  );
+
+  const canais = useMemo(
+    () => ({
+      email: "E-mail",
+      phone: locale === "en" ? "Phone" : locale === "es" ? "Teléfono" : "Telefone",
+      chat: "Chat",
+    }),
+    [locale],
+  );
+
   // Interactive demo state — não pré-seleciona
   const [stateValue, setStateValue] = useState<string>("");
   const [regionValue, setRegionValue] = useState<string>("");
@@ -161,7 +188,7 @@ export function SelectDocs() {
   SelectItem,
 } from "@/components/ui/select";`;
 
-  const codeDefault = `<Select value={value} onValueChange={setValue}>
+  const codeDefault = `<Select items={rotulos} value={value} onValueChange={setValue}>
   <SelectTrigger aria-label="Selecionar estado">
     <SelectValue placeholder="Selecione..." />
   </SelectTrigger>
@@ -172,7 +199,7 @@ export function SelectDocs() {
   </SelectContent>
 </Select>`;
 
-  const codeWithGroups = `<Select value={value} onValueChange={setValue}>
+  const codeWithGroups = `<Select items={rotulos} value={value} onValueChange={setValue}>
   <SelectTrigger aria-label="Selecionar região">
     <SelectValue placeholder="Selecione..." />
   </SelectTrigger>
@@ -190,7 +217,7 @@ export function SelectDocs() {
   </SelectContent>
 </Select>`;
 
-  const codeWithIcon = `<Select value={value} onValueChange={setValue}>
+  const codeWithIcon = `<Select items={rotulos} value={value} onValueChange={setValue}>
   <SelectTrigger aria-label="Selecionar canal">
     <SelectValue placeholder="Selecione..." />
   </SelectTrigger>
@@ -214,6 +241,9 @@ interface SelectRootProps {
   onValueChange?: (value: string) => void;
   disabled?: boolean;
   name?: string;
+  // Mapa valor -> rótulo. Sem ele o campo fechado exibe o VALOR cru:
+  // a lista é desmontada ao fechar e não há de onde tirar o texto.
+  items?: Record<string, React.ReactNode>;
 }
 
 interface SelectTriggerProps {
@@ -257,7 +287,7 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.default")}
             </p>
-            <Select value={stateValue} onValueChange={(v) => {
+            <Select items={rotulos} value={stateValue} onValueChange={(v) => {
               setStateValue(v ?? "");
               if (v) {
                 track("option_select", {
@@ -289,7 +319,7 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("variants.items.withGroups")}
             </p>
-            <Select value={regionValue} onValueChange={(v) => {
+            <Select items={rotulos} value={regionValue} onValueChange={(v) => {
               setRegionValue(v ?? "");
               if (v) {
                 track("option_select", {
@@ -329,7 +359,7 @@ interface SelectContentProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               size="sm"
             </p>
-            <Select value={smValue} onValueChange={(v) => {
+            <Select items={rotulos} value={smValue} onValueChange={(v) => {
               setSmValue(v ?? "");
               if (v) {
                 track("option_select", {
@@ -453,7 +483,7 @@ interface SelectContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={rotulos}>
                   <SelectTrigger aria-label="Selecionar estado">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -467,7 +497,7 @@ interface SelectContentProps {
             ),
             dontPreview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={{ sp: "SP", rj: tContent("demonstration.labels.rj"), mg: "MG" }}>
                   <SelectTrigger aria-label="Selecionar estado">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -487,7 +517,7 @@ interface SelectContentProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={rotulos}>
                   <SelectTrigger aria-label="Selecionar região">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -508,7 +538,7 @@ interface SelectContentProps {
             ),
             dontPreview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={rotulos}>
                   <SelectTrigger aria-label="Selecionar item">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -545,7 +575,7 @@ interface SelectContentProps {
             code: codeDefault,
             preview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={rotulos}>
                   <SelectTrigger aria-label="Selecionar estado">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -564,7 +594,7 @@ interface SelectContentProps {
             code: codeWithGroups,
             preview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={rotulos}>
                   <SelectTrigger aria-label="Selecionar região">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -590,7 +620,7 @@ interface SelectContentProps {
             code: codeWithIcon,
             preview: (
               <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-                <Select>
+                <Select items={canais}>
                   <SelectTrigger aria-label="Selecionar canal">
                     <SelectValue placeholder={tContent("demonstration.labels.placeholder")} />
                   </SelectTrigger>
@@ -633,7 +663,7 @@ interface SelectContentProps {
 >
   <div className="nds-stack" data-spacing="xs">
     <label htmlFor="form-state" className="nds-text-body nds-font-semibold">Estado</label>
-    <Select name="state" required>
+    <Select items={rotulos} name="state" required>
       <SelectTrigger id="form-state" aria-label="Estado">
         <SelectValue placeholder="Selecione..." />
       </SelectTrigger>
@@ -657,7 +687,7 @@ interface SelectContentProps {
                   <label htmlFor="comp-form-state" className="nds-text-body nds-font-semibold">
                     {tContent("demonstration.labels.stateLabel")}
                   </label>
-                  <Select name="state">
+                  <Select name="state" items={rotulos}>
                     <SelectTrigger
                       id="comp-form-state"
                       aria-label={tContent("demonstration.labels.stateLabel")}

@@ -34,11 +34,14 @@
       "item3": "<strong>SelectValue</strong> — exibe o valor selecionado ou o <code>placeholder</code>.",
       "item4": "<strong>SelectContent</strong> — popover em portal com a lista de opções.",
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupamento opcional com cabeçalho.",
-      "item6": "<strong>SelectItem</strong> — opção individual com <code>role=\"option\"</code> e <code>aria-selected</code>.",
+      "item6": "<strong>SelectItem</strong> — opção individual com <code>role=\"option\"</code>; a escolhida carrega <code>aria-selected</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
-        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
+        "react": "<Select items={rotulos} value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>",
+        "vue": "<Select v-model=\"valor\">\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    <SelectValue placeholder=\"Selecione...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "svelte": "<Select type=\"single\" bind:value>\n  <SelectTrigger aria-label=\"Selecionar estado\">\n    {rotulo || 'Selecione...'}\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectGroupHeading>Sudeste</SelectGroupHeading>\n      <SelectItem value=\"sp\" label=\"São Paulo\" />\n      <SelectItem value=\"rj\" label=\"Rio de Janeiro\" />\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "vanilla": "const campo = createSelect({\n  placeholder: 'Selecione...',\n  items: [\n    { value: 'sp', label: 'São Paulo' },\n    { value: 'rj', label: 'Rio de Janeiro' },\n  ],\n  onValueChange: (valor) => console.log(valor),\n});\ncampo.id = 'estado';\ncampo.name = 'estado';"
       }
     },
     "usage": {
@@ -169,33 +172,33 @@
       },
       "open": {
         "label": "Open",
-        "trigger": "Click ou Enter no trigger",
-        "behavior": "Dropdown aberto — <code>data-state=\"open\"</code>, lista renderizada em portal."
+        "trigger": "Click ou Enter no campo",
+        "behavior": "Lista aberta — renderizada em portal, fora do fluxo do documento."
       },
       "selected": {
         "label": "Selected",
         "trigger": "Usuário escolhe uma opção",
-        "behavior": "Item selecionado — <code>data-checked</code>, ícone <code>Check</code> à direita."
+        "behavior": "Opção escolhida — marcada na lista e com ícone de confirmação à direita."
       },
       "hover": {
         "label": "Hover",
-        "trigger": "pointer sobre item",
-        "behavior": "Cursor sobre item — fundo <code>accent</code>, texto <code>accent-foreground</code>."
+        "trigger": "pointer sobre a opção",
+        "behavior": "Cursor sobre a opção — fundo e texto trocam para o par <code>--accent</code>."
       },
       "focus": {
         "label": "Focus",
-        "trigger": "Tab até o trigger",
-        "behavior": "Trigger focado via teclado — <code>ring-3 ring-ring/50</code>."
+        "trigger": "Tab até o campo",
+        "behavior": "Campo focado por teclado — anel desenhado a partir de <code>--ring</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando a opção é marcada como indisponível",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>."
+        "behavior": "<code>disabled</code> — opacidade reduzida, cursor de bloqueio e a lista não abre."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "Quando a validação marca o campo como inválido",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda e anel a partir de <code>--destructive</code>."
       },
       "cols": {
         "state": "Estado",
@@ -245,7 +248,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "Não",
-          "description": "Altura do trigger via tokens <code>--height-default</code>/<code>--height-sm</code>."
+          "description": "Densidade do campo. A altura é resultado de <code>padding-block</code> mais a tipografia — nunca um valor cravado —, para o campo crescer junto com a fonte do navegador."
         },
         "placeholder": {
           "type": "string",
@@ -256,8 +259,9 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
-        "angular": "<!-- Integração com Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
+        "react": "// Integração com FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select items={rotulos} value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecione...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integração com Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>",
+        "vanilla": "// Agrupamento: o campo nativo aceita <optgroup> como filho\nconst campo = createSelect({ placeholder: 'Selecione...', items: [] });\n\nconst grupo = document.createElement('optgroup');\ngrupo.label = 'Sudeste';\nfor (const opcao of [{ value: 'sp', label: 'São Paulo' }]) {\n  const item = document.createElement('option');\n  item.value = opcao.value;\n  item.textContent = opcao.label;\n  grupo.appendChild(item);\n}\ncampo.appendChild(grupo);"
       }
     },
     "tokens": {
@@ -267,41 +271,41 @@
         "class": "Classe",
         "part": "Aplicação",
         "input": {
-          "class": "border-input",
-          "part": "Borda do SelectTrigger"
+          "class": ".nds-select, .nds-select-trigger",
+          "part": "Borda do campo fechado"
         },
         "popover": {
-          "class": "bg-popover",
-          "part": "Fundo do SelectContent"
+          "class": ".nds-select-content",
+          "part": "Fundo da lista de opções"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
-          "part": "Texto dentro do SelectContent"
+          "class": ".nds-select-content",
+          "part": "Texto dentro da lista de opções"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Fundo do item em hover/focus"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Fundo da opção em destaque"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Texto do item em hover/focus"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Texto da opção em destaque"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco no trigger"
+          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "part": "Anel de foco por teclado no campo"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borda no estado inválido"
+          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "part": "Borda e anel em validação falha"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Texto do placeholder e SelectLabel"
+          "class": ".nds-select-trigger[data-placeholder], .nds-select-label",
+          "part": "Texto do placeholder e do cabeçalho de grupo"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Largura mínima do dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura customizada do trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+        "web": "/* Largura mínima da lista de opções */\n.nds-select-content {\n  min-width: 12rem;\n}\n\n/* Campo mais alto sem cravar altura — o crescimento vem do padding */\n.nds-select-trigger {\n  padding-block: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -309,7 +313,7 @@
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> no trigger e <code>role=\"listbox\"</code> no content",
-        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> em cada item",
+        "item2": "<code>role=\"option\"</code> em cada opção e <code>aria-selected</code> na escolhida",
         "item3": "<code>aria-label</code> ou <code>aria-labelledby</code> obrigatório no trigger",
         "item4": "<code>aria-expanded</code> reflete o estado open/closed",
         "item5": "Navegação por setas, Home, End, busca por digitação",
@@ -331,7 +335,7 @@
         "title": "Atributos ARIA",
         "role": "<code>role=\"combobox\"</code> no trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> no content",
         "expanded": "<code>aria-expanded</code> no trigger reflete open/closed",
-        "selected": "<code>aria-selected=\"true\"</code> no item ativo",
+        "selected": "<code>aria-selected=\"true\"</code> na opção escolhida — em lista de escolha única a negativa é opcional",
         "label": "<code>aria-label</code> obrigatório no trigger quando não há Label externo",
         "invalid": "<code>aria-invalid=\"true\"</code> quando há erro de validação"
       },
@@ -365,9 +369,9 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>Portal</strong> — o <code>SelectContent</code> é renderizado em portal para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
-      "item3": "<strong>Type-ahead</strong> — digitar caractere com o trigger focado pula para o item correspondente, sem precisar abrir o dropdown.",
+      "item1": "<strong>Lib upstream</strong> — cada stack monta o campo sobre a lib headless idiomática da sua plataforma; o markup, as classes <code>.nds-*</code> e os tokens são os mesmos.",
+      "item2": "<strong>Portal</strong> — a lista de opções é renderizada em portal para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
+      "item3": "<strong>Busca por digitação</strong> — digitar a inicial de uma opção salta direto para ela, sem percorrer a lista item a item. Em algumas plataformas isso já funciona com a lista fechada.",
       "item4": "<strong>Sem busca</strong> — para filtrar por texto, use <code>Combobox</code> (Command + Popover) em vez de Select."
     },
     "analytics": {
@@ -379,7 +383,7 @@
         "payload": "Payload",
         "option_select": {
           "trigger": "Usuário seleciona uma opção diferente",
-          "payload": "{ component: \"select\", field_name, value, label, location }"
+          "payload": "{ component: \"select\", field_name, value, location }"
         }
       }
     },
@@ -389,8 +393,8 @@
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
         "item1": {
-          "action": "Clicar no trigger",
-          "result": "Abre o dropdown; foco vai ao item selecionado ou ao primeiro",
+          "action": "Clicar no campo fechado",
+          "result": "Abre a lista com todas as opções, prontas para o teclado escolher",
           "priority": "high"
         },
         "item2": {
@@ -404,8 +408,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Digitar caractere com trigger focado",
-          "result": "Type-ahead seleciona item correspondente",
+          "action": "Digitar a inicial de uma opção",
+          "result": "A busca por digitação salta para a opção correspondente",
           "priority": "medium"
         }
       },
@@ -501,11 +505,14 @@
       "item3": "<strong>SelectValue</strong> — displays selected value or <code>placeholder</code>.",
       "item4": "<strong>SelectContent</strong> — popover rendered in portal with the option list.",
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — optional grouping with header.",
-      "item6": "<strong>SelectItem</strong> — individual option with <code>role=\"option\"</code> and <code>aria-selected</code>.",
+      "item6": "<strong>SelectItem</strong> — individual option with <code>role=\"option\"</code>; the chosen one carries <code>aria-selected</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
-        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
+        "react": "<Select items={rotulos} value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>",
+        "vue": "<Select v-model=\"valor\">\n  <SelectTrigger aria-label=\"Select state\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Southeast</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "svelte": "<Select type=\"single\" bind:value>\n  <SelectTrigger aria-label=\"Select state\">\n    {rotulo || 'Select...'}\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectGroupHeading>Southeast</SelectGroupHeading>\n      <SelectItem value=\"sp\" label=\"São Paulo\" />\n      <SelectItem value=\"rj\" label=\"Rio de Janeiro\" />\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "vanilla": "const campo = createSelect({\n  placeholder: 'Select...',\n  items: [\n    { value: 'sp', label: 'São Paulo' },\n    { value: 'rj', label: 'Rio de Janeiro' },\n  ],\n  onValueChange: (valor) => console.log(valor),\n});\ncampo.id = 'estado';\ncampo.name = 'estado';"
       }
     },
     "usage": {
@@ -636,33 +643,33 @@
       },
       "open": {
         "label": "Open",
-        "trigger": "Click or Enter on the trigger",
-        "behavior": "Dropdown open — <code>data-state=\"open\"</code>, list rendered in portal."
+        "trigger": "Click or Enter on the field",
+        "behavior": "List open — rendered in a portal, outside the document flow."
       },
       "selected": {
         "label": "Selected",
         "trigger": "User picks an option",
-        "behavior": "Selected item — <code>data-checked</code>, <code>Check</code> icon on the right."
+        "behavior": "Chosen option — marked in the list and with a confirmation icon on the right."
       },
       "hover": {
         "label": "Hover",
-        "trigger": "pointer over item",
-        "behavior": "Cursor over item — <code>accent</code> background, <code>accent-foreground</code> text."
+        "trigger": "pointer over the option",
+        "behavior": "Cursor over the option — background and text switch to the <code>--accent</code> pair."
       },
       "focus": {
         "label": "Focus",
-        "trigger": "Tab to the trigger",
-        "behavior": "Trigger focused via keyboard — <code>ring-3 ring-ring/50</code>."
+        "trigger": "Tab to the field",
+        "behavior": "Field focused via keyboard — ring drawn from <code>--ring</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the option is marked unavailable",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>."
+        "behavior": "<code>disabled</code> — reduced opacity, blocked cursor and the list does not open."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "When validation marks the field invalid",
-        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+        "behavior": "<code>aria-invalid=\"true\"</code> — border and ring drawn from <code>--destructive</code>."
       },
       "cols": {
         "state": "State",
@@ -712,7 +719,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Trigger height via tokens <code>--height-default</code>/<code>--height-sm</code>."
+          "description": "Field density. Height is the result of <code>padding-block</code> plus typography — never a hard-coded value — so the field grows with the browser font size."
         },
         "placeholder": {
           "type": "string",
@@ -723,8 +730,9 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
-        "angular": "<!-- Reactive Forms integration -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
+        "react": "// FormField integration (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"state\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>State</FormLabel>\n      <Select items={rotulos} value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Select...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Reactive Forms integration -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>",
+        "vanilla": "// Agrupamento: o campo nativo aceita <optgroup> como filho\nconst campo = createSelect({ placeholder: 'Select...', items: [] });\n\nconst grupo = document.createElement('optgroup');\ngrupo.label = 'Southeast';\nfor (const opcao of [{ value: 'sp', label: 'São Paulo' }]) {\n  const item = document.createElement('option');\n  item.value = opcao.value;\n  item.textContent = opcao.label;\n  grupo.appendChild(item);\n}\ncampo.appendChild(grupo);"
       }
     },
     "tokens": {
@@ -734,41 +742,41 @@
         "class": "Class",
         "part": "Application",
         "input": {
-          "class": "border-input",
-          "part": "SelectTrigger border"
+          "class": ".nds-select, .nds-select-trigger",
+          "part": "Closed field border"
         },
         "popover": {
-          "class": "bg-popover",
-          "part": "SelectContent background"
+          "class": ".nds-select-content",
+          "part": "Option list background"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
-          "part": "Text inside SelectContent"
+          "class": ".nds-select-content",
+          "part": "Text inside the option list"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Hover/focus item background"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Highlighted option background"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Hover/focus item text"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Highlighted option text"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring on trigger"
+          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "part": "Keyboard focus ring on the field"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Invalid state border"
+          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "part": "Border and ring on failed validation"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Placeholder and SelectLabel text"
+          "class": ".nds-select-trigger[data-placeholder], .nds-select-label",
+          "part": "Placeholder and group heading text"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Minimum dropdown width */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Custom trigger height */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+        "web": "/* Minimum option list width */\n.nds-select-content {\n  min-width: 12rem;\n}\n\n/* Taller field without a fixed height — growth comes from padding */\n.nds-select-trigger {\n  padding-block: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -776,7 +784,7 @@
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> on trigger and <code>role=\"listbox\"</code> on content",
-        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> on each item",
+        "item2": "<code>role=\"option\"</code> on every option and <code>aria-selected</code> on the chosen one",
         "item3": "<code>aria-label</code> or <code>aria-labelledby</code> required on trigger",
         "item4": "<code>aria-expanded</code> reflects open/closed state",
         "item5": "Arrow navigation, Home, End, type-ahead search",
@@ -798,7 +806,7 @@
         "title": "ARIA Attributes",
         "role": "<code>role=\"combobox\"</code> on trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> on content",
         "expanded": "<code>aria-expanded</code> on trigger reflects open/closed",
-        "selected": "<code>aria-selected=\"true\"</code> on active item",
+        "selected": "<code>aria-selected=\"true\"</code> on the chosen option — in a single-choice list the negative is optional",
         "label": "<code>aria-label</code> required on trigger when there's no external Label",
         "invalid": "<code>aria-invalid=\"true\"</code> when there's a validation error"
       },
@@ -832,9 +840,9 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
-      "item2": "<strong>Portal</strong> — <code>SelectContent</code> renders in a portal to avoid <code>z-index</code> and <code>overflow</code> issues.",
-      "item3": "<strong>Type-ahead</strong> — typing a character with the trigger focused jumps to the matching item without opening the dropdown.",
+      "item1": "<strong>Upstream lib</strong> — each stack builds the field on the headless library idiomatic to its platform; markup, <code>.nds-*</code> classes and tokens are the same.",
+      "item2": "<strong>Portal</strong> — the option list renders in a portal to avoid <code>z-index</code> and <code>overflow</code> issues.",
+      "item3": "<strong>Type-ahead</strong> — typing the first letter of an option jumps straight to it instead of stepping through the list. On some platforms this already works with the list closed.",
       "item4": "<strong>No search</strong> — to filter by text, use <code>Combobox</code> (Command + Popover) instead of Select."
     },
     "analytics": {
@@ -846,7 +854,7 @@
         "payload": "Payload",
         "option_select": {
           "trigger": "User selects a different option",
-          "payload": "{ component: \"select\", field_name, value, label, location }"
+          "payload": "{ component: \"select\", field_name, value, location }"
         }
       }
     },
@@ -856,8 +864,8 @@
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
         "item1": {
-          "action": "Click the trigger",
-          "result": "Opens dropdown; focus goes to selected item or first",
+          "action": "Click the closed field",
+          "result": "Opens the list with every option, ready for the keyboard to choose",
           "priority": "high"
         },
         "item2": {
@@ -871,8 +879,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Type a character with trigger focused",
-          "result": "Type-ahead selects matching item",
+          "action": "Type the first letter of an option",
+          "result": "Type-ahead jumps to the matching option",
           "priority": "medium"
         }
       },
@@ -968,11 +976,14 @@
       "item3": "<strong>SelectValue</strong> — muestra el valor seleccionado o el <code>placeholder</code>.",
       "item4": "<strong>SelectContent</strong> — popover en portal con la lista de opciones.",
       "item5": "<strong>SelectGroup</strong> + <strong>SelectLabel</strong> — agrupación opcional con encabezado.",
-      "item6": "<strong>SelectItem</strong> — opción individual con <code>role=\"option\"</code> y <code>aria-selected</code>.",
+      "item6": "<strong>SelectItem</strong> — opción individual con <code>role=\"option\"</code>; la elegida lleva <code>aria-selected</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
-        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>"
+        "react": "<Select items={rotulos} value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "angular": "<nds-select [(value)]=\"value\">\n  <button ndsSelectTrigger aria-label=\"Selecionar estado\">\n    <span ndsSelectValue placeholder=\"Selecione...\"></span>\n  </button>\n  <ng-template ndsSelectContent>\n    <div ndsSelectGroup>\n      <div ndsSelectLabel>Sudeste</div>\n      <button ndsSelectItem value=\"sp\">São Paulo</button>\n      <button ndsSelectItem value=\"rj\">Rio de Janeiro</button>\n    </div>\n  </ng-template>\n</nds-select>",
+        "vue": "<Select v-model=\"valor\">\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    <SelectValue placeholder=\"Selecciona...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectLabel>Sudeste</SelectLabel>\n      <SelectItem value=\"sp\">São Paulo</SelectItem>\n      <SelectItem value=\"rj\">Rio de Janeiro</SelectItem>\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "svelte": "<Select type=\"single\" bind:value>\n  <SelectTrigger aria-label=\"Seleccionar estado\">\n    {rotulo || 'Selecciona...'}\n  </SelectTrigger>\n  <SelectContent>\n    <SelectGroup>\n      <SelectGroupHeading>Sudeste</SelectGroupHeading>\n      <SelectItem value=\"sp\" label=\"São Paulo\" />\n      <SelectItem value=\"rj\" label=\"Rio de Janeiro\" />\n    </SelectGroup>\n  </SelectContent>\n</Select>",
+        "vanilla": "const campo = createSelect({\n  placeholder: 'Selecciona...',\n  items: [\n    { value: 'sp', label: 'São Paulo' },\n    { value: 'rj', label: 'Rio de Janeiro' },\n  ],\n  onValueChange: (valor) => console.log(valor),\n});\ncampo.id = 'estado';\ncampo.name = 'estado';"
       }
     },
     "usage": {
@@ -1103,33 +1114,33 @@
       },
       "open": {
         "label": "Open",
-        "trigger": "Click o Enter en el trigger",
-        "behavior": "Dropdown abierto — <code>data-state=\"open\"</code>, lista en portal."
+        "trigger": "Click o Enter en el campo",
+        "behavior": "Lista abierta — renderizada en portal, fuera del flujo del documento."
       },
       "selected": {
         "label": "Selected",
         "trigger": "El usuario elige una opción",
-        "behavior": "Ítem seleccionado — <code>data-checked</code>, icono <code>Check</code> a la derecha."
+        "behavior": "Opción elegida — marcada en la lista y con icono de confirmación a la derecha."
       },
       "hover": {
         "label": "Hover",
-        "trigger": "pointer sobre el ítem",
-        "behavior": "Cursor sobre ítem — fondo <code>accent</code>, texto <code>accent-foreground</code>."
+        "trigger": "pointer sobre la opción",
+        "behavior": "Cursor sobre la opción — fondo y texto cambian al par <code>--accent</code>."
       },
       "focus": {
         "label": "Focus",
-        "trigger": "Tab hasta el trigger",
-        "behavior": "Trigger enfocado por teclado — <code>ring-3 ring-ring/50</code>."
+        "trigger": "Tab hasta el campo",
+        "behavior": "Campo enfocado por teclado — anillo dibujado a partir de <code>--ring</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando la opción se marca como no disponible",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>."
+        "behavior": "<code>disabled</code> — opacidad reducida, cursor bloqueado y la lista no abre."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "Cuando la validación marca el campo como no válido",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde y anillo a partir de <code>--destructive</code>."
       },
       "cols": {
         "state": "Estado",
@@ -1179,7 +1190,7 @@
           "type": "\"default\" | \"sm\"",
           "default": "\"default\"",
           "required": "No",
-          "description": "Altura del trigger vía tokens <code>--height-default</code>/<code>--height-sm</code>."
+          "description": "Densidad del campo. La altura es resultado de <code>padding-block</code> más la tipografía — nunca un valor fijo —, para que el campo crezca junto con la fuente del navegador."
         },
         "placeholder": {
           "type": "string",
@@ -1190,8 +1201,9 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
-        "angular": "<!-- Integración con Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>"
+        "react": "// Integración con FormField (React Hook Form)\n<FormField\n  control={form.control}\n  name=\"estado\"\n  render={({ field }) => (\n    <FormItem>\n      <FormLabel>Estado</FormLabel>\n      <Select items={rotulos} value={field.value} onValueChange={field.onChange}>\n        <FormControl>\n          <SelectTrigger>\n            <SelectValue placeholder=\"Selecciona...\" />\n          </SelectTrigger>\n        </FormControl>\n        <SelectContent>\n          {options.map((opt) => (\n            <SelectItem key={opt.value} value={opt.value}>\n              {opt.label}\n            </SelectItem>\n          ))}\n        </SelectContent>\n      </Select>\n      <FormMessage />\n    </FormItem>\n  )}\n/>",
+        "angular": "<!-- Integración con Reactive Forms -->\n<nds-form-field>\n  <label ndsFormLabel>Estado</label>\n  <nds-select formControlName=\"estado\">\n    <button ndsSelectTrigger>\n      <span ndsSelectValue placeholder=\"Selecione...\"></span>\n    </button>\n    <ng-template ndsSelectContent>\n      @for (opt of options; track opt.value) {\n        <button ndsSelectItem [value]=\"opt.value\">{{ opt.label }}</button>\n      }\n    </ng-template>\n  </nds-select>\n  <p ndsFormMessage></p>\n</nds-form-field>",
+        "vanilla": "// Agrupamento: o campo nativo aceita <optgroup> como filho\nconst campo = createSelect({ placeholder: 'Selecciona...', items: [] });\n\nconst grupo = document.createElement('optgroup');\ngrupo.label = 'Sudeste';\nfor (const opcao of [{ value: 'sp', label: 'São Paulo' }]) {\n  const item = document.createElement('option');\n  item.value = opcao.value;\n  item.textContent = opcao.label;\n  grupo.appendChild(item);\n}\ncampo.appendChild(grupo);"
       }
     },
     "tokens": {
@@ -1201,41 +1213,41 @@
         "class": "Clase",
         "part": "Aplicación",
         "input": {
-          "class": "border-input",
-          "part": "Borde del SelectTrigger"
+          "class": ".nds-select, .nds-select-trigger",
+          "part": "Borde del campo cerrado"
         },
         "popover": {
-          "class": "bg-popover",
-          "part": "Fondo del SelectContent"
+          "class": ".nds-select-content",
+          "part": "Fondo de la lista de opciones"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
-          "part": "Texto dentro del SelectContent"
+          "class": ".nds-select-content",
+          "part": "Texto dentro de la lista de opciones"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Fondo del ítem en hover/focus"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Fondo de la opción destacada"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Texto del ítem en hover/focus"
+          "class": ".nds-select-item[data-highlighted]",
+          "part": "Texto de la opción destacada"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco en el trigger"
+          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "part": "Anillo de foco por teclado en el campo"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borde en estado inválido"
+          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "part": "Borde y anillo en validación fallida"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Texto del placeholder y SelectLabel"
+          "class": ".nds-select-trigger[data-placeholder], .nds-select-label",
+          "part": "Texto del placeholder y del encabezado de grupo"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Ancho mínimo del dropdown */\n[data-slot=\"select-content\"] {\n  min-width: 12rem;\n}\n\n/* Altura personalizada del trigger */\n[data-slot=\"select-trigger\"][data-size=\"sm\"] {\n  --height-sm: 2rem;\n}"
+        "web": "/* Ancho mínimo de la lista de opciones */\n.nds-select-content {\n  min-width: 12rem;\n}\n\n/* Campo más alto sin fijar altura — el crecimiento viene del padding */\n.nds-select-trigger {\n  padding-block: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
@@ -1243,7 +1255,7 @@
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> en el trigger y <code>role=\"listbox\"</code> en el content",
-        "item2": "<code>role=\"option\"</code> + <code>aria-selected</code> en cada ítem",
+        "item2": "<code>role=\"option\"</code> en cada opción y <code>aria-selected</code> en la elegida",
         "item3": "<code>aria-label</code> o <code>aria-labelledby</code> obligatorio en el trigger",
         "item4": "<code>aria-expanded</code> refleja el estado open/closed",
         "item5": "Navegación por flechas, Home, End, búsqueda por digitación",
@@ -1265,7 +1277,7 @@
         "title": "Atributos ARIA",
         "role": "<code>role=\"combobox\"</code> en el trigger; <code>role=\"listbox\"</code> + <code>role=\"option\"</code> en el content",
         "expanded": "<code>aria-expanded</code> en el trigger refleja open/closed",
-        "selected": "<code>aria-selected=\"true\"</code> en el ítem activo",
+        "selected": "<code>aria-selected=\"true\"</code> en la opción elegida — en lista de elección única la negativa es opcional",
         "label": "<code>aria-label</code> obligatorio en el trigger cuando no hay Label externo",
         "invalid": "<code>aria-invalid=\"true\"</code> cuando hay error de validación"
       },
@@ -1299,9 +1311,9 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
-      "item2": "<strong>Portal</strong> — el <code>SelectContent</code> se renderiza en portal para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
-      "item3": "<strong>Type-ahead</strong> — escribir un carácter con el trigger enfocado salta al ítem correspondiente, sin abrir el dropdown.",
+      "item1": "<strong>Lib upstream</strong> — cada stack monta el campo sobre la lib headless idiomática de su plataforma; el markup, las clases <code>.nds-*</code> y los tokens son los mismos.",
+      "item2": "<strong>Portal</strong> — la lista de opciones se renderiza en portal para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
+      "item3": "<strong>Búsqueda por digitación</strong> — escribir la inicial de una opción salta directo a ella, sin recorrer la lista ítem a ítem. En algunas plataformas ya funciona con la lista cerrada.",
       "item4": "<strong>Sin búsqueda</strong> — para filtrar por texto, usa <code>Combobox</code> (Command + Popover) en vez de Select."
     },
     "analytics": {
@@ -1313,7 +1325,7 @@
         "payload": "Payload",
         "option_select": {
           "trigger": "El usuario selecciona una opción diferente",
-          "payload": "{ component: \"select\", field_name, value, label, location }"
+          "payload": "{ component: \"select\", field_name, value, location }"
         }
       }
     },
@@ -1323,8 +1335,8 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",
         "item1": {
-          "action": "Hacer clic en el trigger",
-          "result": "Abre el dropdown; el foco va al ítem seleccionado o al primero",
+          "action": "Hacer clic en el campo cerrado",
+          "result": "Abre la lista con todas las opciones, listas para que el teclado elija",
           "priority": "high"
         },
         "item2": {
@@ -1338,8 +1350,8 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Escribir un carácter con trigger enfocado",
-          "result": "Type-ahead selecciona ítem correspondiente",
+          "action": "Escribir la inicial de una opción",
+          "result": "La búsqueda por digitación salta a la opción correspondiente",
           "priority": "medium"
         }
       },

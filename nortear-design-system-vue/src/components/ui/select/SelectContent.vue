@@ -38,6 +38,26 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       :class="cn( 'nds-select-content', props.class, )"
     >
       <SelectScrollUpButton />
+      <!--
+        O viewport fica como a lib o entrega: `role="presentation"`, sem
+        `tabindex`. Foram medidas três saídas para o `scrollable-region-focusable`
+        do axe, que aponta este elemento porque é ele que rola, e as três trocam
+        uma violação por outra:
+
+          `tabindex` mantendo `role="presentation"` → `presentation-role-conflict`;
+          `tabindex` sem role                       → `aria-required-children`,
+                                                      `<div>` focável não é filho
+                                                      permitido de `listbox`;
+          `tabindex` com `role="group"`             → válido, mas acrescenta um
+                                                      grupo anônimo em volta de
+                                                      TODA lista, que o leitor de
+                                                      tela anuncia.
+
+        A regra do axe isenta o popup do combobox justamente porque a lista já é
+        operável por teclado; aqui o overflow mora um nó abaixo do popup e a
+        isenção não alcança. As stories que terminam abertas com lista longa
+        declaram o motivo em `parameters.a11y` — ver `wait-for-portal`.
+      -->
       <SelectViewport
         :data-position="position"
         :class="cn( 'nds-select-viewport', )"

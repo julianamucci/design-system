@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 
@@ -31,22 +31,30 @@ export const CompactSize: Story = {
       size: 'sm',
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar estado',
-      triggerClass: 'w-48',
     },
   }),
   parameters: {
     docs: {
       description: {
         story:
-          'Variante compacta (`size="sm"`) — recomendada para formulários densos e toolbars. Aplica `--height-sm`.',
+          'Densidade compacta (`size="sm"`) — para formulários densos e toolbars. A altura menor vem do `padding-block`, não de um valor cravado.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Trigger usa data-size="sm"', async () => {
-      const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+    const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+
+    await step('O campo compacto se declara pelo atributo de densidade', async () => {
       await expect(trigger).toHaveAttribute('data-size', 'sm');
+    });
+
+    await step('A altura menor nasce do padding, não de altura cravada', async () => {
+      // Altura cravada não cresce quando a pessoa aumenta a fonte do navegador
+      // (WCAG 1.4.4). O padding do tamanho compacto é o que encolhe a caixa.
+      const estilo = getComputedStyle(trigger);
+      await expect(Number.parseFloat(estilo.paddingBlockStart)).toBeGreaterThan(0);
+      await expect(Number.parseFloat(estilo.paddingBlockStart)).toBeLessThan(8);
     });
   },
 };
@@ -58,7 +66,6 @@ export const RegionSelection: Story = {
       variant: 'withGroups',
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar estado',
-      triggerClass: 'w-64',
     },
   }),
   parameters: {
@@ -71,13 +78,17 @@ export const RegionSelection: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Selecionar item dentro de grupo atualiza valor', async () => {
+    await step('Selecionar item dentro de grupo atualiza o campo', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
-      await userEvent.click(trigger);
-      await waitForPortal('listbox');
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const listbox = await waitForPortal('listbox');
+      await expect(within(listbox).getAllByRole('group')).toHaveLength(2);
       const option = await waitForPortal('option', { name: /Paraná/i });
       await userEvent.click(option);
-      await expect(canvas.getByText('Paraná')).toBeInTheDocument();
+      await waitFor(async () => {
+        await expect(trigger).toHaveTextContent(/Paraná/);
+      });
     });
   },
 };
@@ -89,7 +100,6 @@ export const WithIcons: Story = {
       variant: 'withIcon',
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar estado',
-      triggerClass: 'w-56',
     },
   }),
   parameters: {
@@ -102,12 +112,17 @@ export const WithIcons: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Ícones aparecem em cada opção', async () => {
+    await step('Toda opção traz o ícone, e ele fica fora do nome acessível', async () => {
       const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
-      await userEvent.click(trigger);
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const listbox = await waitForPortal('listbox');
-      const icons = listbox.querySelectorAll('svg.lucide-map-pin');
-      await expect(icons.length).toBeGreaterThanOrEqual(4);
+      const opcoes = within(listbox).getAllByRole('option');
+      await expect(opcoes).toHaveLength(4);
+      for (const opcao of opcoes) {
+        await expect(opcao.querySelector('svg')).toBeTruthy();
+      }
+      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
     });
   },
 };

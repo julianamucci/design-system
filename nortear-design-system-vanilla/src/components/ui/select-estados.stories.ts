@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createSelect } from './select';
+import { medirAnelDeFoco } from '@shared/testing/select-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -58,6 +59,7 @@ export const Default: Story = {
       'st-default',
     ),
   parameters: {
+    covers: ['visual.item1'],
     docs: {
       description: {
         story: 'Estado inicial — placeholder visível, nenhum valor selecionado. Recomendado para forçar confirmação explícita do usuário.',
@@ -66,9 +68,20 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Select vazio (placeholder visível)', async () => {
+    await step('Campo vazio, com o placeholder à mostra', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       await expect(select.value).toBe('');
+      await expect(select.selectedOptions[0].textContent).toBe('Selecione...');
+    });
+    await step('O placeholder não pode ser escolhido de volta', async () => {
+      // Bloqueado e escondido: aparece no campo fechado e some da lista.
+      const placeholder = (canvas.getByRole('combobox') as HTMLSelectElement)
+        .querySelector('option[value=""]') as HTMLOptionElement;
+      await expect(placeholder.disabled).toBe(true);
+      await expect(placeholder.hidden).toBe(true);
+    });
+    await step('O rótulo externo nomeia o campo', async () => {
+      await expect(canvas.getByRole('combobox')).toHaveAccessibleName('Estado');
     });
   },
 };
@@ -87,6 +100,7 @@ export const Selected: Story = {
       'st-selected',
     ),
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story: '`defaultValue: "rj"` — Rio de Janeiro selecionado inicialmente, placeholder oculto.',
@@ -95,9 +109,15 @@ export const Selected: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Valor "rj" selecionado', async () => {
+    await step('O campo exibe o rótulo do valor escolhido', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       await expect(select.value).toBe('rj');
+      await expect(select.selectedOptions[0].textContent).toBe('Rio de Janeiro');
+    });
+    await step('O placeholder deixa de ser o item exibido', async () => {
+      const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      const placeholder = select.querySelector('option[value=""]') as HTMLOptionElement;
+      await expect(placeholder.selected).toBe(false);
     });
   },
 };
@@ -116,6 +136,7 @@ export const Disabled: Story = {
       'st-disabled',
     ),
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story: '`disabled: true` no factory — `opacity-50`, cursor bloqueado, não recebe foco nem abre o dropdown.',
@@ -124,9 +145,16 @@ export const Disabled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Select está desabilitado', async () => {
+    await step('O campo se anuncia bloqueado', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      // `disabled` nativo, e não só `aria-disabled`: é o atributo que tira o
+      // campo do percurso do Tab e cancela a interação no próprio navegador.
       await expect(select).toBeDisabled();
+    });
+    await step('Bloqueado, o campo não recebe foco', async () => {
+      const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      select.focus();
+      await expect(select).not.toHaveFocus();
     });
   },
 };
@@ -197,6 +225,14 @@ export const Invalid: Story = {
     return wrap;
   },
   parameters: {
+    covers: ['visual.item5'],
+    // O estado "lista aberta" não tem story nesta stack: a lista é o popup
+    // nativo do navegador, desenhado fora do documento — não há nada para o
+    // Chromatic fotografar nem para o teste observar.
+    coversNotApplicable: {
+      'visual.item3':
+        'a lista aberta é o popup nativo do navegador, desenhado fora do documento — não existe estado capturável',
+    },
     docs: {
       description: {
         story:
@@ -214,6 +250,13 @@ export const Invalid: Story = {
       const select = canvas.getByRole('combobox');
       await expect(select).toHaveAttribute('aria-describedby', 'st-invalid-msg');
       await expect(canvas.getByText(/Selecione um estado para continuar/)).toBeVisible();
+    });
+    await step('Focar o campo inválido continua mostrando o foco', async () => {
+      // O anel destrutivo é declarado para o estado inválido e o anel de foco
+      // vem depois: sem a regra de aninhamento, focar um campo inválido não
+      // mudava nada na tela. `boxShadow !== 'none'` passaria mesmo assim — só a
+      // MUDANÇA reprova.
+      await expect(medirAnelDeFoco(canvas.getByRole('combobox')).mudou).toBe(true);
     });
   },
 };

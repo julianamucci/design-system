@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Select: Default (lista plana), WithGroups (<optgroup> agrupando opções) e WithIcon — **indisponível** no Vanilla porque o factory custom é um wrapper do `<select>` HTML nativo, que não suporta ícones inline em `<option>`. Para a variante de ícone, use `Combobox` ou um componente custom.',
+          'Variantes do Select: lista plana e lista agrupada por categoria (`<optgroup>`). A variante com ícone não existe aqui: o campo é o `<select>` do navegador, e `<option>` não aceita elemento filho — para listas com ícone, use `Combobox`.',
       },
     },
   },
@@ -65,11 +65,14 @@ export const Default: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Select renderizado como combobox', async () => {
-      const select = canvas.getByRole('combobox');
-      await expect(select).toBeTruthy();
+    await step('Lista plana: quatro opções e nenhum agrupamento', async () => {
+      const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      const opcoes = Array.from(select.querySelectorAll('option')).filter((o) => !o.hidden);
+      await expect(opcoes).toHaveLength(4);
+      await expect(opcoes[0].textContent).toBe('São Paulo');
+      await expect(select.querySelectorAll('optgroup')).toHaveLength(0);
     });
-    await step('Nenhum valor pré-selecionado', async () => {
+    await step('Nenhum valor pré-escolhido', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       await expect(select.value).toBe('');
     });
@@ -84,7 +87,10 @@ export const WithGroups: Story = {
     // Para agrupar, montamos o <select> + <optgroup> diretamente,
     // reaproveitando as classes do tema Vanilla.
     const select = document.createElement('select');
-    select.className = 'select';
+    // A classe leva o prefixo do design system. Antes era "select", sem
+    // prefixo — classe que não existe em folha nenhuma, e o campo montado à
+    // mão saía SEM estilo, ao lado de outros idênticos que tinham estilo.
+    select.className = 'nds-select';
     select.dataset.slot = 'select';
 
     const ph = document.createElement('option');
@@ -139,48 +145,23 @@ export const WithGroups: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Select renderizado e contém optgroups', async () => {
+    await step('Cada categoria vira um grupo nomeado', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      const optgroups = select.querySelectorAll('optgroup');
-      await expect(optgroups.length).toBe(2);
+      const grupos = Array.from(select.querySelectorAll('optgroup'));
+      await expect(grupos).toHaveLength(2);
+      await expect(grupos.map((g) => g.label)).toEqual(['Sudeste', 'Sul']);
+    });
+    await step('As opções continuam todas no mesmo campo', async () => {
+      const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      const opcoes = Array.from(select.querySelectorAll('option')).filter((o) => !o.hidden);
+      await expect(opcoes).toHaveLength(7);
     });
   },
 };
 
-// ─── WithIcon (indisponível no Vanilla) ──────────────────────────────────────
-
-export const WithIcon: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-rounded-md';
-    wrap.dataset.spacing = 'sm';
-    wrap.style.width = '20rem';
-    wrap.style.padding = '1rem';
-    wrap.style.border = '1px dashed var(--color-border)';
-
-    const title = document.createElement('p');
-    title.className = 'nds-text-body nds-font-semibold';
-    title.textContent = 'Variante indisponível no Vanilla';
-
-    const note = document.createElement('p');
-    note.className = 'nds-text-body';
-    note.textContent =
-      'O factory custom é um wrapper do <select> HTML nativo. O navegador não permite renderizar ícones inline em <option>, portanto a variante "WithIcon" não é suportada nessa stack. Para essa necessidade, use Combobox ou uma implementação custom de dropdown.';
-
-    wrap.append(title, note);
-    return wrap;
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Variante NÃO suportada no Vanilla. O `<select>` HTML nativo (utilizado pelo factory `createSelect`) não permite ícones inline em `<option>` — limitação do navegador, não do design system. Para listas com ícone, recomendamos `Combobox` (Command + Popover) ou um componente custom.',
-      },
-    },
-  },
-
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
-  },
-};
+// A variante com ícone não tem story aqui: o campo desta stack é o `<select>`
+// do navegador, e `<option>` não aceita elemento filho — a limitação é do HTML,
+// não do design system. A story anterior renderizava um cartão de aviso, com uma
+// asserção que não podia falhar: documentação disfarçada de demonstração. O
+// aviso vive na descrição do arquivo, que é onde o leitor o procura; para listas
+// com ícone, o caminho é o Combobox.

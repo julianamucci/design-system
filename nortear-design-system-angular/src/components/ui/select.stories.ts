@@ -163,10 +163,6 @@ export const Playground: Story = {
       'accessibility.item4',
       'accessibility.item5',
     ],
-    coversNotApplicable: {
-      'functional.item4':
-        'o primitivo só faz typeahead com a lista ABERTA — com o gatilho focado e a lista fechada, as únicas teclas tratadas são Enter, Espaço, ↑ e ↓, que abrem a lista; a busca por digitação está provada na story Open',
-    },
   },
   render: (args) => ({
     props: { ...args, estados: ESTADOS },

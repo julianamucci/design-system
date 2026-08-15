@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createSelect } from './select';
+import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
@@ -65,15 +66,16 @@ export const BrazilianState: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('4 opções disponíveis (sem contar placeholder)', async () => {
+    await step('4 opções disponíveis (sem contar o placeholder)', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       const opts = Array.from(select.querySelectorAll('option')).filter((o) => !o.hidden);
       await expect(opts.length).toBe(4);
     });
-    await step('Trocar valor funciona', async () => {
+    await step('Trocar o valor atualiza o rótulo exibido', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       await userEvent.selectOptions(select, 'mg');
       await expect(select.value).toBe('mg');
+      await expect(select.selectedOptions[0].textContent).toBe('Minas Gerais');
     });
   },
 };
@@ -85,7 +87,10 @@ export const RegionWithGroups: Story = {
     // O factory createSelect só aceita items planos — para grupos,
     // construímos o <select> + <optgroup> manualmente.
     const select = document.createElement('select');
-    select.className = 'select';
+    // A classe leva o prefixo do design system. Antes era "select", sem
+    // prefixo — classe que não existe em folha nenhuma, e o campo montado à
+    // mão saía SEM estilo, ao lado de outros idênticos que tinham estilo.
+    select.className = 'nds-select';
     select.dataset.slot = 'select';
     select.id = 'comp-region';
     select.name = 'region';
@@ -151,10 +156,17 @@ export const RegionWithGroups: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Select tem 2 optgroups', async () => {
+    await step('Cada região vira um grupo nomeado', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      const optgroups = select.querySelectorAll('optgroup');
-      await expect(optgroups.length).toBe(2);
+      const grupos = Array.from(select.querySelectorAll('optgroup'));
+      await expect(grupos).toHaveLength(2);
+      await expect(grupos.map((g) => g.label)).toEqual(['Sudeste', 'Sul']);
+    });
+    await step('Escolher dentro de um grupo atualiza o campo', async () => {
+      const select = canvas.getByRole('combobox') as HTMLSelectElement;
+      await userEvent.selectOptions(select, 'pr');
+      await expect(select.value).toBe('pr');
+      await expect(select.selectedOptions[0].textContent).toBe('Paraná');
     });
   },
 };
@@ -194,11 +206,11 @@ export const InForm: Story = {
     field.append(label, select);
     form.appendChild(field);
 
-    const submit = document.createElement('button');
-    submit.type = 'submit';
-    submit.className = 'btn btn-primary';
+    // A factory do próprio design system, e não um `<button>` com as classes
+    // `btn btn-primary` — que não existem em folha nenhuma e deixavam o botão
+    // sem estilo, com o contraste do texto entregue ao acaso do tema.
+    const submit = createButton({ type: 'submit', label: 'Continuar' });
     submit.style.alignSelf = 'flex-end';
-    submit.textContent = 'Continuar';
     form.appendChild(submit);
 
     const out = document.createElement('p');
@@ -225,11 +237,15 @@ export const InForm: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Selecionar "Rio de Janeiro" e submeter envia o valor', async () => {
+    await step('Escolher uma opção e enviar leva o valor no FormData', async () => {
       const select = canvas.getByRole('combobox') as HTMLSelectElement;
       await userEvent.selectOptions(select, 'rj');
-      const submit = canvas.getByRole('button', { name: 'Continuar' });
-      await userEvent.click(submit);
+      await userEvent.click(canvas.getByRole('button', { name: 'Continuar' }));
+
+      // O formulário real é a prova: é a serialização nativa que carrega o
+      // campo, sem código de quem consome.
+      const form = canvasElement.querySelector('form') as HTMLFormElement;
+      await expect(Object.fromEntries(new FormData(form).entries())).toEqual({ state: 'rj' });
       const out = canvasElement.querySelector('[data-testid="form-output"]');
       await expect(out?.textContent).toContain('rj');
     });

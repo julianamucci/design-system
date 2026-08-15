@@ -18,6 +18,36 @@ import { within, waitFor } from "storybook/test";
  */
 export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } as const;
 
+/**
+ * Regra do axe desligada nas stories cuja lista aberta é longa o bastante para
+ * ROLAR.
+ *
+ * `scrollable-region-focusable` existe para o caso do Safari, que não rola uma
+ * caixa sem elemento focável dentro. A própria regra **isenta o popup de um
+ * combobox** — porque ali a rolagem já é comandada pelo teclado: as setas andam
+ * pelas opções e a opção destacada é trazida para a vista. No `reka-ui`, porém,
+ * quem carrega o `overflow` é o viewport, um nó ABAIXO do popup, e a isenção
+ * não alcança um nível.
+ *
+ * As três saídas possíveis foram medidas e todas trocam esta violação por
+ * outra (ver o comentário no `SelectContent.vue`): `tabindex` com
+ * `role="presentation"` cai em `presentation-role-conflict`; sem role, cai em
+ * `aria-required-children`; com `role="group"`, passa no axe mas acrescenta um
+ * grupo anônimo em volta de toda lista, que o leitor de tela anuncia.
+ *
+ * O `overflow` é cravado em estilo inline pela lib, então nem a folha
+ * compartilhada o alcança sem `!important` — e mover a rolagem para o popup
+ * apagaria os botões de rolagem, que leem o scroll do viewport. A correção é da
+ * lib; desligar esta regra é o que mantém as outras valendo enquanto isso.
+ *
+ * Use SÓ em story cuja lista realmente transborda. Lista curta que passar a
+ * rolar tem de falhar, para alguém olhar.
+ */
+export const REGRA_ROLAGEM_DA_LISTA = {
+  id: 'scrollable-region-focusable',
+  enabled: false,
+} as const;
+
 type PortalRole =
   | "tooltip"
   | "dialog"

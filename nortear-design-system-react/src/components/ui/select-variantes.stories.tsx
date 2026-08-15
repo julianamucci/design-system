@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, screen, within, expect, waitFor } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import { MailIcon, PhoneIcon, MessageCircleIcon } from "lucide-react";
 import {
@@ -8,9 +8,28 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "./select";
+
+/** Rótulos das regiões — a asserção deriva daqui em vez de contar à mão. */
+const REGIOES = {
+  Sudeste: [
+    { value: "sp", label: "São Paulo" },
+    { value: "rj", label: "Rio de Janeiro" },
+    { value: "mg", label: "Minas Gerais" },
+  ],
+  Sul: [
+    { value: "rs", label: "Rio Grande do Sul" },
+    { value: "sc", label: "Santa Catarina" },
+    { value: "pr", label: "Paraná" },
+  ],
+} as const;
+
+const REGIOES_POR_VALOR = Object.fromEntries(
+  Object.values(REGIOES).flatMap((itens) => itens.map((i) => [i.value, i.label])),
+);
 
 const meta = {
   title: "UI/Select/Variants",
@@ -58,16 +77,25 @@ export const Default: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("combobox");
-    await step("Trigger exibe placeholder \"Selecione...\"", async () => {
+    await step("Campo exibe o placeholder e o nome acessível", async () => {
       await expect(trigger).toHaveTextContent(/Selecione/);
       await expect(trigger).toHaveAttribute("aria-label", "Selecionar estado");
     });
-    await step("Abre listbox em portal ao clicar", async () => {
-      await userEvent.click(trigger);
+    await step("Abrir mostra uma lista plana, sem cabeçalho de grupo", async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
       const listbox = await waitForPortal("listbox");
       await expect(listbox).toBeVisible();
-      const options = await screen.findAllByRole("option");
+      const options = within(listbox).getAllByRole("option");
       await expect(options).toHaveLength(4);
+      await expect(options[0]).toHaveAccessibleName("São Paulo");
+      // Nada escolhido ainda: nenhuma opção se anuncia selecionada. A conta é
+      // por PAPEL, não por atributo — em lista de escolha única a marca só é
+      // exigida na opção escolhida, e cada lib decide se escreve a negativa.
+      await expect(
+        within(listbox).queryAllByRole("option", { selected: true }),
+      ).toHaveLength(0);
+      await expect(within(listbox).queryAllByRole("group")).toHaveLength(0);
     });
   },
 };
@@ -83,22 +111,27 @@ export const WithGroups: Story = {
   },
   render: () => (
     <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-      <Select>
+      <Select items={REGIOES_POR_VALOR}>
         <SelectTrigger aria-label="Selecionar região">
           <SelectValue placeholder="Selecione..." />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Sudeste</SelectLabel>
-            <SelectItem value="sp">São Paulo</SelectItem>
-            <SelectItem value="rj">Rio de Janeiro</SelectItem>
-            <SelectItem value="mg">Minas Gerais</SelectItem>
+            {REGIOES.Sudeste.map((estado) => (
+              <SelectItem key={estado.value} value={estado.value}>
+                {estado.label}
+              </SelectItem>
+            ))}
           </SelectGroup>
+          <SelectSeparator />
           <SelectGroup>
             <SelectLabel>Sul</SelectLabel>
-            <SelectItem value="rs">Rio Grande do Sul</SelectItem>
-            <SelectItem value="sc">Santa Catarina</SelectItem>
-            <SelectItem value="pr">Paraná</SelectItem>
+            {REGIOES.Sul.map((estado) => (
+              <SelectItem key={estado.value} value={estado.value}>
+                {estado.label}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -107,18 +140,44 @@ export const WithGroups: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("combobox");
-    await step("Abre dropdown e exibe cabeçalhos de grupo", async () => {
-      await userEvent.click(trigger);
-      await waitForPortal("listbox");
-      await expect(await screen.findByText("Sudeste")).toBeVisible();
-      await expect(await screen.findByText("Sul")).toBeVisible();
-    });
-    await step("Selecionar item de um grupo atualiza valor", async () => {
+
+    const abrir = async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
+      return await waitForPortal("listbox");
+    };
+
+    await step("Escolher item de um grupo atualiza o campo", async () => {
+      await abrir();
       const option = await waitForPortal("option", { name: "Santa Catarina" });
       await userEvent.click(option);
       await waitFor(async () => {
+        // Sem o mapa `items` o campo mostraria "sc": o valor cru.
         await expect(trigger).toHaveTextContent(/Santa Catarina/);
       });
+    });
+
+    // Os passos abaixo reabrem a lista e a story TERMINA aberta: é a lista que
+    // muda entre as variantes, não o campo fechado, e é ela que a regressão
+    // visual precisa fotografar.
+    await step("Cada categoria vira um grupo nomeado pelo cabeçalho", async () => {
+      const listbox = await abrir();
+      const grupos = within(listbox).getAllByRole("group");
+      await expect(grupos).toHaveLength(Object.keys(REGIOES).length);
+      for (const [i, nome] of Object.keys(REGIOES).entries()) {
+        await expect(grupos[i]).toHaveAccessibleName(nome);
+      }
+    });
+
+    await step("As opções continuam todas na mesma lista", async () => {
+      const listbox = await abrir();
+      const total = Object.values(REGIOES).reduce((soma, g) => soma + g.length, 0);
+      await expect(within(listbox).getAllByRole("option")).toHaveLength(total);
+      // Linha para o olho, silêncio para o leitor de tela — quem separa
+      // semanticamente é o grupo.
+      await expect(listbox.querySelectorAll(".nds-select-separator")).toHaveLength(
+        Object.keys(REGIOES).length - 1,
+      );
     });
   },
 };
@@ -155,13 +214,23 @@ export const WithIcon: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("combobox");
-    await step("Abre e exibe opções com ícones", async () => {
-      await userEvent.click(trigger);
-      await waitForPortal("listbox");
-      const options = await screen.findAllByRole("option");
+    await step("O ícone entra na opção e fica fora do nome acessível", async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
+      const listbox = await waitForPortal("listbox");
+      const options = within(listbox).getAllByRole("option");
       await expect(options).toHaveLength(3);
-      // ícone svg dentro do primeiro item
       await expect(options[0].querySelector("svg")).toBeTruthy();
+      // Ícone decorativo: o nome acessível continua sendo só o rótulo, sem eco.
+      await expect(options[0]).toHaveAccessibleName("E-mail");
+    });
+
+    await step("O ícone é dimensionado pela folha do componente", async () => {
+      // `.nds-select-item svg:not([class*="size-"])` é a regra que dá 1rem; sem
+      // ela o SVG viria no tamanho intrínseco e estouraria a linha.
+      const listbox = await waitForPortal("listbox");
+      const icone = within(listbox).getAllByRole("option")[0].querySelector("svg") as SVGElement;
+      await expect(getComputedStyle(icone).width).toBe("16px");
     });
   },
 };

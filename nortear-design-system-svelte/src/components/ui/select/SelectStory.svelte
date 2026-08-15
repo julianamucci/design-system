@@ -6,6 +6,7 @@
     SelectItem,
     SelectGroup,
     SelectGroupHeading,
+    SelectSeparator,
   } from './index';
   import MapPinIcon from '@lucide/svelte/icons/map-pin';
 
@@ -46,7 +47,10 @@
     ariaLabel = 'Selecionar estado',
     ariaInvalid = false,
     variant = 'default',
-    triggerClass = 'w-56',
+    // Vazio de propósito: `w-56` era classe do framework utilitário que saiu do
+    // projeto — não existe em folha nenhuma e não largava o campo. A largura do
+    // gatilho é `fit-content` por padrão, igual às outras stacks.
+    triggerClass = '',
     options = [
       { value: 'sp', label: 'São Paulo' },
       { value: 'rj', label: 'Rio de Janeiro' },
@@ -110,13 +114,16 @@
     </SelectTrigger>
     <SelectContent>
       {#if variant === 'withGroups'}
-        {#each groups as group (group.label)}
+        {#each groups as group, i (group.label)}
           <SelectGroup>
             <SelectGroupHeading>{group.label}</SelectGroupHeading>
             {#each group.options as opt (opt.value)}
               <SelectItem value={opt.value} label={opt.label} />
             {/each}
           </SelectGroup>
+          {#if i < groups.length - 1}
+            <SelectSeparator />
+          {/if}
         {/each}
       {:else if variant === 'withIcon'}
         {#each options as opt (opt.value)}

@@ -192,7 +192,7 @@
      do navegador (WCAG 1.4.4); medida fixa só nos icon-only, que não têm texto
      a ser cortado e declaram o próprio quadrado em rem.
      Ver guideline 12-tokenizacao-dimensoes. */
-  --height-sm: 1.75rem;       /* 28px */
+  --height-sm: 1.75rem;       /* 28px — audit-ignore: orphan-token — degrau da escada, redefinido nas três densidades (themes/densities.css) e documentado na guideline 12; o último consumidor era uma story que cravava altura num campo com texto, que é justamente o que a regra proíbe */
   --height-default: 2rem;     /* 32px */
 
   /* Quadrados sem texto — icon-only, indicador, knob, thumb. Aqui medida fixa é

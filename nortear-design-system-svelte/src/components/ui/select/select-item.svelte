@@ -26,7 +26,10 @@
 	{#snippet children({ selected, highlighted })}
 		<span class="nds-select-item-indicator">
 			{#if selected}
-				<CheckIcon class="cn-select-item-indicator-icon" />
+				<!-- Sem classe: `.nds-select-item svg:not([class*="size-"])` já dá
+				     1rem ao ícone. A classe anterior (`cn-…`) não existia em folha
+				     nenhuma — prefixo errado, zero efeito em runtime. -->
+				<CheckIcon />
 			{/if}
 		</span>
 		{#if childrenProp}

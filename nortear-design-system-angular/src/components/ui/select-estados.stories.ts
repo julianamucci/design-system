@@ -155,7 +155,15 @@ export const Selected: Story = {
 
 export const Open: Story = {
   parameters: {
-    covers: ['functional.item1', 'visual.item3'],
+    // `functional.item1` saiu daqui: esta story nasce ABERTA (`defaultOpen`) e
+    // nunca clica no gatilho, então metade do item — "clicar abre" — não era
+    // exercitada. Quem cobre o item inteiro é a Playground.
+    //
+    // `functional.item4` entrou: é aqui que a busca por digitação é
+    // exercitada, com a lista aberta. O item foi reescrito no conteúdo
+    // compartilhado para não prometer que ela funciona com a lista FECHADA —
+    // isso varia por plataforma, e nesta ela não funciona.
+    covers: ['functional.item4', 'visual.item3'],
     docs: {
       description: {
         story:

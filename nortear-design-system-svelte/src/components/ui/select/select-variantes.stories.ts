@@ -1,9 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
+
+const GRUPOS = [
+  {
+    label: 'Sudeste',
+    options: [
+      { value: 'sp', label: 'São Paulo' },
+      { value: 'rj', label: 'Rio de Janeiro' },
+      { value: 'mg', label: 'Minas Gerais' },
+    ],
+  },
+  {
+    label: 'Sul',
+    options: [
+      { value: 'rs', label: 'Rio Grande do Sul' },
+      { value: 'sc', label: 'Santa Catarina' },
+      { value: 'pr', label: 'Paraná' },
+    ],
+  },
+];
 
 const meta: Meta = {
   title: 'UI/Select/Variants',
@@ -12,10 +31,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do Select: default (lista plana), withGroups (SelectGroup + SelectGroupHeading) e withIcon (SelectItem com ícone inline).',
+          'Variantes do Select: lista plana, lista agrupada por categoria (com divisão entre grupos) e opção com ícone inline antes do texto. As três terminam abertas — é a lista que muda entre elas.',
       },
     },
   },
@@ -35,17 +55,32 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
-      description: {
-        story: 'Lista simples — apenas SelectItem dentro de SelectContent.',
-      },
+      description: { story: 'Lista plana — apenas opções, sem cabeçalho nem divisão.' },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Trigger é um combobox com placeholder', async () => {
-      const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
-      await expect(trigger).toBeInTheDocument();
-      await expect(canvas.getByText('Selecione...')).toBeInTheDocument();
+    const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+
+    await step('Campo exibe o placeholder e o nome acessível', async () => {
+      await expect(trigger).toHaveTextContent(/Selecione/);
+      await expect(trigger).toHaveAttribute('aria-label', 'Selecionar estado');
+    });
+
+    await step('Abrir mostra uma lista plana, sem cabeçalho de grupo', async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const listbox = await waitForPortal('listbox');
+      const opcoes = within(listbox).getAllByRole('option');
+      await expect(opcoes).toHaveLength(4);
+      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      // Nada escolhido ainda: nenhuma opção se anuncia selecionada. A conta é
+      // por PAPEL, não por atributo — em lista de escolha única a marca só é
+      // exigida na opção escolhida, e cada lib decide se escreve a negativa.
+      await expect(
+        within(listbox).queryAllByRole('option', { selected: true }),
+      ).toHaveLength(0);
+      await expect(within(listbox).queryAllByRole('group')).toHaveLength(0);
     });
   },
 };
@@ -55,6 +90,7 @@ export const WithGroups: Story = {
     Component: SelectStory,
     props: {
       variant: 'withGroups',
+      groups: GRUPOS,
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar região',
     },
@@ -62,19 +98,43 @@ export const WithGroups: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'SelectGroup + SelectGroupHeading agrupam opções por categoria (Sudeste, Sul).',
+        story:
+          'Cabeçalho por categoria e divisão entre grupos. O cabeçalho nomeia o grupo — o leitor de tela anuncia "Sudeste, grupo" antes das opções.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
-    await step('Abrir dropdown exibe cabeçalhos de grupo', async () => {
-      const trigger = canvas.getByRole('combobox', { name: /Selecionar região/i });
-      await userEvent.click(trigger);
-      await waitForPortal('listbox');
-      await expect(body.getByText('Sudeste')).toBeVisible();
-      await expect(body.getByText('Sul')).toBeVisible();
+    const trigger = canvas.getByRole('combobox', { name: /Selecionar região/i });
+
+    const abrir = async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      return await waitForPortal('listbox');
+    };
+
+    await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
+      const listbox = await abrir();
+      const grupos = within(listbox).getAllByRole('group');
+      await expect(grupos).toHaveLength(GRUPOS.length);
+      for (const [i, grupo] of grupos.entries()) {
+        await expect(grupo).toHaveAccessibleName(GRUPOS[i].label);
+      }
+    });
+
+    await step('As opções continuam todas na mesma lista', async () => {
+      const listbox = await abrir();
+      const total = GRUPOS.reduce((soma, g) => soma + g.options.length, 0);
+      await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
+    });
+
+    await step('A divisão entre grupos é decorativa', async () => {
+      // Linha para o olho, silêncio para o leitor de tela — quem separa
+      // semanticamente é o grupo.
+      const listbox = await abrir();
+      await expect(listbox.querySelectorAll('.nds-select-separator')).toHaveLength(
+        GRUPOS.length - 1,
+      );
     });
   },
 };
@@ -90,19 +150,35 @@ export const WithIcon: Story = {
   }),
   parameters: {
     docs: {
-      description: {
-        story: 'SelectItem com ícone inline antes do texto via snippet `children`.',
-      },
+      description: { story: 'Opção com ícone inline antes do texto. Ele é decorativo: o nome acessível continua sendo só o rótulo.' },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Cada item possui ícone inline', async () => {
-      const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
-      await userEvent.click(trigger);
-      const listbox = await waitForPortal('listbox');
-      const icons = listbox.querySelectorAll('svg.lucide-map-pin');
-      await expect(icons.length).toBeGreaterThanOrEqual(1);
+    const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
+
+    const abrir = async () => {
+      // Idempotente: o clique só acontece com a lista fechada.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      return await waitForPortal('listbox');
+    };
+
+    await step('O ícone entra na opção e fica fora do nome acessível', async () => {
+      const listbox = await abrir();
+      const opcoes = within(listbox).getAllByRole('option');
+      await expect(opcoes).toHaveLength(4);
+      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
+      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+    });
+
+    await step('O ícone é dimensionado pela folha, não pelo tamanho intrínseco', async () => {
+      const listbox = await abrir();
+      const icone = within(listbox)
+        .getAllByRole('option')[0]
+        .querySelector('svg') as SVGElement;
+      await waitFor(async () => {
+        await expect(getComputedStyle(icone).width).toBe('16px');
+      });
     });
   },
 };

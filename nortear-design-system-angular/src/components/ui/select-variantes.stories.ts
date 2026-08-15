@@ -57,7 +57,6 @@ type Story = StoryObj;
 
 export const Default: Story = {
   parameters: {
-    covers: ['accessibility.item4'],
     docs: {
       description: {
         story: 'Lista plana — apenas opções dentro do conteúdo, sem cabeçalho nem divisão.',
@@ -102,7 +101,6 @@ export const Default: Story = {
 
 export const WithGroups: Story = {
   parameters: {
-    covers: ['accessibility.item4'],
     docs: {
       description: {
         story:

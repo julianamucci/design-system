@@ -259,7 +259,7 @@ interface SelectProps {
 
 // SelectTrigger
 interface SelectTriggerProps {
-  size?: "default" | "sm";     // tokens --height-default / --height-sm
+  size?: "default" | "sm";     // densidade: a altura vem do padding-block
   class?: string;
 }
 
