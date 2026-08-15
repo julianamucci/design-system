@@ -17,11 +17,15 @@
 .nds-hover-card-content {
   position: absolute;
   z-index: var(--z-popover);
-  /* A largura sai de `--hover-card-width`, com o valor antigo como fallback —
-   * nada muda de aparência. O motivo é o mesmo do `--sheet-width`: esta folha
-   * carrega depois de `utilities.css`, então uma utilitária de largura na mesma
-   * especificidade perde por ordem de fonte, e `class="nds-w-md"` no painel era
-   * inerte. Custom property não disputa. */
+  /* Dois caminhos para trocar a largura, e os dois valem:
+   *
+   *  · `--hover-card-width` numa folha de quem consome — o caminho para quem
+   *    quer mudar TODO cartão de uma vez, sem tocar em markup;
+   *  · uma utilitária de largura no painel (`nds-w-md`) — o caminho para uma
+   *    instância. Funciona porque `utilities.css` entra por ÚLTIMO no
+   *    index.css: mesma especificidade, e quem vem depois ganha. (A nota antiga
+   *    aqui dizia o contrário; era de antes de as utilities mudarem de posição.)
+   */
   width: var(--hover-card-width, 20rem);         /* 320px */
 
   padding: var(--spacing-4);                     /* 16px */

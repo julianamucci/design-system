@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import {
+  esperarAberto,
+  esperarQuantidade,
+  nomeAcessivel,
+  paineisAbertos,
+} from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+
+// Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
+// que está aqui dentro é ENRIQUECIMENTO — existe outro caminho para a mesma
+// informação (o link, a página, o glossário), porque no toque não há hover.
+//
+// Todas as composições nascem abertas: é o estado que a regressão visual
+// precisa capturar, e o estado fechado já está em UI/HoverCard/States.
 
 const meta = {
   title: "UI/HoverCard/Compositions",
@@ -9,11 +21,13 @@ const meta = {
   component: HoverCard,
   parameters: {
     layout: "centered",
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Composicoes típicas: PerfilDeUsuario, PreviewDeLink, DefinicaoDeTermo e MetricaExplicada.",
+          "Perfil, preview de link, definição de termo, métrica explicada, lados de abertura e classe extra no painel. O gatilho aparece sempre dentro de uma frase: é o uso real do componente e é o que mantém o alvo em linha dispensado do mínimo de 24px.",
       },
     },
   },
@@ -22,170 +36,174 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const wrapperStyle: React.CSSProperties = {
+const paragrafo: React.CSSProperties = {
   contain: "layout",
   minHeight: 280,
   position: "relative",
+  maxWidth: "24rem",
 };
 
-const openDelay = 0;
-const closeDelay = 0;
+const CLASSES_GATILHO_BOTAO =
+  "nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0";
 
 export const UserProfile: Story = {
   parameters: {
+    covers: ["visual.item1"],
     docs: {
       description: {
         story:
-          "Preview de perfil — link @joana abre HoverCard com avatar, nome, bio e métrica de seguidores.",
+          "Menção a uma pessoa revela avatar, nome e uma métrica curta. O link continua navegável por clique e por teclado — é ele o caminho de quem está no toque.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
-      <p className="nds-text-body">
-        Conteúdo de{" "}
-        <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
-          <HoverCardTrigger asChild>
-            <a
-              href="/users/joana"
-              className="nds-text-body nds-font-medium" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
+    <p className="nds-text-body" style={paragrafo}>
+      Comentário de{" "}
+      <HoverCard defaultOpen>
+        <HoverCardTrigger asChild>
+          <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+            @joana
+          </a>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="nds-cluster" data-spacing="sm" data-align="start">
+            <div
+              aria-hidden="true"
+              className="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium"
+              data-align="center"
+              data-justify="center"
             >
-              @joana
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="nds-cluster" data-spacing="sm">
-              <div
-                aria-hidden="true"
-                className="nds-cluster nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-body nds-font-medium" data-align="center" data-justify="center"
-              >
-                JS
-              </div>
-              <div className="nds-stack" data-spacing="xs">
-                <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Joana Silva</p>
-                <p className="nds-text-caption nds-text-muted-foreground">
-                  Designer focada em design systems e acessibilidade.
-                </p>
-                <p className="nds-text-caption nds-text-muted-foreground" style={{ paddingTop: "0.25rem" }}>142 seguidores</p>
-              </div>
+              JS
             </div>
-          </HoverCardContent>
-        </HoverCard>{" "}
-        publicado hoje.
-      </p>
-    </div>
+            <div className="nds-stack" data-spacing="xs">
+              <p className="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+              <p className="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>{" "}
+      há 2 horas.
+    </p>
   ),
-  play: async ({ step }) => {
-    await step("Estrutura semântica: dialog + link acessível", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      // Link permanece acessível (alternativa por click)
-      const link = within(document.body).getByRole("link", { name: /@joana/i });
-      await expect(link).toHaveAttribute("href", "/users/joana");
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("O cartão traz avatar, nome e uma métrica curta", async () => {
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText("Joana Silva")).toBeVisible();
+      await expect(within(painel).getByText(/142 seguidores/)).toBeVisible();
+    });
+
+    await step("E o gatilho continua sendo um link de verdade", async () => {
+      await expect(canvas.getByRole("link")).toHaveAttribute("href", "/users/joana");
     });
   },
 };
 
 export const LinkPreview: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
-          "Preview de link externo — favicon + URL + título + descrição. Útil para links em conteúdo editorial.",
+          "Cabeçalho com a origem, título do destino e uma linha de descrição. Reduz o clique exploratório: quem lê decide antes de sair da página.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
-      <p className="nds-text-body">
-        Saiba mais em{" "}
-        <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
-          <HoverCardTrigger asChild>
-            <a
-              href="https://example.com"
-              className="nds-text-body nds-font-medium" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}
-            >
-              example.com
-            </a>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="nds-stack" data-spacing="sm">
-              <div className="nds-cluster" data-spacing="sm">
-                <div
-                  aria-hidden="true"
-                  className="nds-size-4 nds-rounded-sm nds-bg-muted-foreground-20"
-                />
-                <span className="nds-text-caption nds-text-muted-foreground nds-truncate">
-                  https://example.com
-                </span>
-              </div>
-              <p className="nds-text-body nds-font-medium nds-leading-snug">
-                Example Domain — IANA reservado
-              </p>
-              <p className="nds-text-caption nds-text-muted-foreground">
-                Domínio reservado pela IANA para uso em documentação e exemplos.
-              </p>
+    <p className="nds-text-body" style={paragrafo}>
+      O guia completo está em{" "}
+      <HoverCard defaultOpen>
+        <HoverCardTrigger asChild>
+          <a
+            href="https://design-system.dev"
+            className="nds-text-primary nds-font-medium nds-hover-underline"
+          >
+            design-system.dev
+          </a>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <div className="nds-stack" data-spacing="sm">
+            <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
+              <span className="nds-rounded-sm nds-bg-muted nds-px-1" aria-hidden="true">
+                D
+              </span>
+              <span className="nds-truncate">design-system.dev/overlays</span>
             </div>
-          </HoverCardContent>
-        </HoverCard>
-        .
-      </p>
-    </div>
+            <p className="nds-text-body nds-font-medium nds-leading-none">
+              Guia de overlays acessíveis
+            </p>
+            <p className="nds-text-caption nds-text-muted-foreground">
+              Quando usar tooltip, popover e cartão de hover — e o que cada um exige de teclado.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      .
+    </p>
   ),
-  play: async ({ step }) => {
-    await step("Dialog acessível e link com href válido", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      const link = within(document.body).getByRole("link", { name: /example\.com/i });
-      await expect(link).toHaveAttribute("href", "https://example.com");
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("O cartão mostra origem, título e descrição do destino", async () => {
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
+      await expect(within(painel).getByText("Guia de overlays acessíveis")).toBeVisible();
+      await expect(canvas.getByRole("link")).toHaveAttribute("href", "https://design-system.dev");
     });
   },
 };
 
 export const TermDefinition: Story = {
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
         story:
-          "Definição contextual — termo técnico (WCAG) abre HoverCard com explicação curta. Alternativa para glossário inline.",
+          "Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho é um botão, não um link: não há para onde navegar — o glossário continua sendo o caminho alternativo obrigatório.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
-      <p className="nds-text-body">
-        Atende{" "}
-        <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
-          <HoverCardTrigger asChild>
-            <button
-              type="button"
-              className="nds-text-body nds-font-medium underline decoration-dotted underline-offset-4 cursor-help"
-            >
-              WCAG 2.2 AA
-            </button>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="nds-stack" data-spacing="xs">
-              <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>
-                Web Content Accessibility Guidelines 2.1
-              </p>
-              <p className="nds-text-caption nds-text-muted-foreground">
-                Diretrizes do W3C para acessibilidade web. Nível AA cobre 50
-                critérios e é o mínimo recomendado para produtos digitais.
-              </p>
-            </div>
-          </HoverCardContent>
-        </HoverCard>{" "}
-        no nível recomendado.
-      </p>
-    </div>
+    <p className="nds-text-body" style={paragrafo}>
+      Todo componente do sistema atende{" "}
+      <HoverCard defaultOpen>
+        <HoverCardTrigger asChild>
+          <button type="button" className={CLASSES_GATILHO_BOTAO}>
+            WCAG 2.2 AA
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent aria-label="Definição de WCAG 2.2 AA">
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
+            <p className="nds-text-caption nds-text-muted-foreground">
+              Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação
+              por teclado e alvo de toque de 24px.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      , sem exceção.
+    </p>
   ),
-  play: async ({ step }) => {
-    await step("Dialog renderizado para termo técnico", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      // texto descritivo presente (contraste herdado de bg-popover/text-popover-foreground)
-      await expect(dialog.textContent).toMatch(/Web Content Accessibility/i);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("O gatilho de definição é um botão, e não envia formulário", async () => {
+      const gatilho = canvas.getByRole("button", { name: "WCAG 2.2 AA" });
+      // Sem `type="button"`, o mesmo gatilho dentro de um <form> enviaria o
+      // formulário ao ser ativado por Enter.
+      await expect(gatilho).toHaveAttribute("type", "button");
+    });
+
+    await step("O nome acessível do painel vem do rótulo declarado", async () => {
+      const painel = await esperarAberto();
+      // Sem `aria-label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"),
+      // que repetiria a sigla sem dizer o que o cartão traz.
+      await expect(nomeAcessivel(painel)).toBe("Definição de WCAG 2.2 AA");
+      await expect(within(painel).getByText("WCAG 2.2 nível AA")).toBeVisible();
     });
   },
 };
@@ -195,48 +213,159 @@ export const ExplainedMetric: Story = {
     docs: {
       description: {
         story:
-          "Métrica em dashboard — número (ex.: NPS 72) com HoverCard explicando a fórmula e janela de cálculo.",
+          "Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle}>
-      <div className="nds-rounded-lg nds-border-default nds-bg-card nds-p-4" style={{ width: "14rem" }}>
-        <p className="nds-text-caption nds-text-muted-foreground">NPS últimos 30 dias</p>
-        <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-align="baseline" data-spacing="sm">
-          <span className="nds-font-semibold nds-tracking-tight" style={{ fontSize: "1.5rem", lineHeight: "2rem" }}>72</span>
-          <HoverCard defaultOpen openDelay={openDelay} closeDelay={closeDelay}>
+    <p className="nds-text-body" style={paragrafo}>
+      A página inicial fechou o mês em{" "}
+      <HoverCard defaultOpen>
+        <HoverCardTrigger asChild>
+          <button type="button" className={CLASSES_GATILHO_BOTAO}>
+            LCP 1.8s
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent aria-label="Explicação da métrica LCP">
+          <div className="nds-stack" data-spacing="xs">
+            <div
+              className="nds-cluster"
+              data-justify="between"
+              data-align="baseline"
+              data-spacing="sm"
+            >
+              <p className="nds-text-body nds-font-medium">Largest Contentful Paint</p>
+              <span className="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
+            </div>
+            <p className="nds-text-caption nds-text-muted-foreground">
+              Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      , dentro da meta.
+    </p>
+  ),
+  play: async ({ step }) => {
+    await step("O número carrega a cor semântica; o texto corrido, não", async () => {
+      const painel = await esperarAberto();
+      const valor = within(painel).getByText("1.8s");
+      await expect(valor).toHaveClass(/nds-text-success/);
+      const descricao = within(painel).getByText(/Tempo até o maior elemento/);
+      await expect(descricao).not.toHaveClass(/nds-text-success/);
+    });
+  },
+};
+
+export const Sides: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      description: {
+        story:
+          "Os quatro lados de abertura. O lado é uma PREFERÊNCIA: quando não cabe, o cartão vira para o lado oposto do mesmo eixo — por isso o painel publica o lado que de fato usou em data-side.",
+      },
+    },
+  },
+  render: () => (
+    <div className="nds-grid" data-cols="2" data-spacing="lg" style={{ maxWidth: "32rem" }}>
+      {(
+        [
+          ["acima", "top"],
+          ["abaixo", "bottom"],
+          ["esquerda", "left"],
+          ["direita", "right"],
+        ] as const
+      ).map(([rotulo, lado]) => (
+        <p className="nds-text-body nds-p-8" key={lado}>
+          Abre{" "}
+          <HoverCard defaultOpen>
             <HoverCardTrigger asChild>
-              <button
-                type="button"
-                aria-label="Como o NPS é calculado"
-                className="nds-cluster nds-rounded-full nds-border-default nds-text-caption nds-text-muted-foreground nds-hover-bg-accent" data-align="center" data-justify="center" style={{ width: "1.25rem", height: "1.25rem" }}
-              >
-                ?
+              <button type="button" className={CLASSES_GATILHO_BOTAO}>
+                {rotulo}
               </button>
             </HoverCardTrigger>
-            <HoverCardContent>
-              <div className="nds-stack" data-spacing="xs">
-                <p className="nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Como é calculado</p>
-                <p className="nds-text-caption nds-text-muted-foreground">
-                  NPS = % Promotores (9–10) − % Detratores (0–6). Janela móvel
-                  de 30 dias com mínimo de 50 respostas.
-                </p>
-              </div>
+            <HoverCardContent side={lado} aria-label={`Cartão ${rotulo} do gatilho`}>
+              <p className="nds-text-caption">Lado preferido: {rotulo}.</p>
             </HoverCardContent>
-          </HoverCard>
-        </div>
-      </div>
+          </HoverCard>{" "}
+          do gatilho.
+        </p>
+      ))}
     </div>
   ),
   play: async ({ step }) => {
-    await step("Dialog explicativo + botão com aria-label acessível", async () => {
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
-      const trigger = within(document.body).getByRole("button", {
-        name: /Como o NPS é calculado/i,
-      });
-      await expect(trigger).toBeVisible();
+    await step("Os quatro cartões abrem e cada um declara o lado que usou", async () => {
+      const paineis = await esperarQuantidade(4);
+      await expect(paineis).toHaveLength(4);
+
+      const lados = paineis.map((p) => p.getAttribute("data-side"));
+      for (const lado of lados) {
+        await expect(lado).toBeTruthy();
+      }
+
+      // O EIXO é o contrato, não o lado exato: pedir "acima" sem espaço acima
+      // resulta em "abaixo", e isso é comportamento correto de fuga de colisão.
+      // Afirmar o lado literal transformaria o tamanho da janela do teste em
+      // parte do contrato.
+      const [acima, abaixo, esquerda, direita] = lados;
+      await expect(["top", "bottom"]).toContain(acima);
+      await expect(["top", "bottom"]).toContain(abaixo);
+      await expect(["left", "right"]).toContain(esquerda);
+      await expect(["left", "right"]).toContain(direita);
+    });
+  },
+};
+
+export const ExtraPanelClass: Story = {
+  parameters: {
+    covers: ["visual.item5"],
+    docs: {
+      description: {
+        story:
+          "A classe extra do painel é o caminho para o que a folha do cartão não define — e também para trocar a largura de UMA instância: as utilities entram por último no CSS compartilhado, então uma utilitária de largura vence a largura padrão de 20rem.",
+      },
+    },
+  },
+  render: () => (
+    <p className="nds-text-body" style={paragrafo}>
+      Resumo da entrega de{" "}
+      <HoverCard defaultOpen>
+        <HoverCardTrigger asChild>
+          <a href="/users/joana" className="nds-text-primary nds-font-medium nds-hover-underline">
+            @joana
+          </a>
+        </HoverCardTrigger>
+        <HoverCardContent className="nds-w-md nds-text-center">
+          <div className="nds-stack" data-spacing="xs">
+            <p className="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+            <p className="nds-text-caption nds-text-muted-foreground">
+              Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>{" "}
+      nesta sprint.
+    </p>
+  ),
+  play: async ({ step }) => {
+    await step("A classe extra convive com a classe do componente", async () => {
+      const painel = await esperarAberto();
+      // As duas coexistem: a classe do design system não é substituída pela do
+      // consumidor, é acrescida.
+      await expect(painel).toHaveClass(/nds-hover-card-content/);
+      await expect(painel).toHaveClass(/nds-w-md/);
+      await expect(getComputedStyle(painel).textAlign).toBe("center");
+      await expect(paineisAbertos()).toHaveLength(1);
+    });
+
+    await step("E a largura customizada vence a largura padrão do cartão", async () => {
+      // 24rem da utilitária contra os 20rem que `.nds-hover-card-content`
+      // define. É o que prova que a customização de largura funciona de fato,
+      // e não só que a classe está no atributo.
+      const painel = await esperarAberto();
+      const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(painel.getBoundingClientRect().width).toBeCloseTo(24 * raiz, 0);
     });
   },
 };

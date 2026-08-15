@@ -150,11 +150,12 @@ export const TermDefinition: Story = {
         Todo componente do sistema atende
         <span ndsHoverCard [defaultOpen]="true">
           <!-- Botão sem moldura: as classes zeram o cromo nativo sem uma linha
-               de CSS inline. O sublinhado pontilhado das outras stacks não tem
-               classe equivalente aqui (ver relatório). -->
+               de CSS inline. O sublinhado pontilhado e o cursor de ajuda vêm
+               das utilitárias compartilhadas nds-underline-dotted e
+               nds-cursor-help, iguais nas cinco stacks. -->
           <button
             ndsHoverCardTrigger
-            class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+            class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >WCAG 2.2 AA</button>
 
           <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
@@ -209,7 +210,7 @@ export const ExplainedMetric: Story = {
         <span ndsHoverCard [defaultOpen]="true">
           <button
             ndsHoverCardTrigger
-            class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+            class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
           >LCP 1.8s</button>
 
           <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
@@ -259,7 +260,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >acima</button>
             <ng-template ndsHoverCardContent side="top" label="Cartão acima do gatilho">
               <p class="nds-text-caption">Lado preferido: acima.</p>
@@ -273,7 +274,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >abaixo</button>
             <ng-template ndsHoverCardContent side="bottom" label="Cartão abaixo do gatilho">
               <p class="nds-text-caption">Lado preferido: abaixo.</p>
@@ -287,7 +288,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >esquerda</button>
             <ng-template ndsHoverCardContent side="left" label="Cartão à esquerda do gatilho">
               <p class="nds-text-caption">Lado preferido: esquerda.</p>
@@ -301,7 +302,7 @@ export const Sides: Story = {
           <span ndsHoverCard [defaultOpen]="true">
             <button
               ndsHoverCardTrigger
-              class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+              class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
             >direita</button>
             <ng-template ndsHoverCardContent side="right" label="Cartão à direita do gatilho">
               <p class="nds-text-caption">Lado preferido: direita.</p>
@@ -337,22 +338,20 @@ export const Sides: Story = {
 
 export const ExtraPanelClass: Story = {
   parameters: {
-    // A largura customizada não fecha por story, e o motivo mudou: o CSS
-    // compartilhado passou a ler `--hover-card-width` (com 20rem de fallback),
-    // então a customização EXISTE — só que por custom property, não por classe.
-    // Declará-la exige uma regra na folha de quem consome, e uma story não pode
-    // autorar CSS. O que falta agora é o conteúdo compartilhado parar de
-    // prometer `className` e passar a ensinar a propriedade.
-    coversNotApplicable: {
-      'visual.item5': 'largura do painel é customizável por --hover-card-width, não por classe; declarar a propriedade exige folha de estilo do consumidor, que uma story não pode autorar',
-    },
+    // A largura customizada FECHA por story desde esta revisão. O motivo velho
+    // — "utilitária de largura perde para a folha do componente" — deixou de
+    // valer quando o `utilities.css` passou a entrar por último no `index.css`:
+    // mesma especificidade, e quem vem depois ganha. `nds-w-md` no painel é a
+    // customização de largura de UMA instância, e a asserção mede a largura
+    // resultante, não só o atributo.
+    covers: ['visual.item5'],
     docs: {
       description: {
         story:
           'O painel nasce dentro do portal, então não existe elemento em que quem compõe ' +
-          'pudesse escrever uma classe: quem a leva é o input do conteúdo. Vale para tudo ' +
-          'que a folha do cartão não define — a largura, que ela define, continua vindo do ' +
-          'CSS compartilhado.',
+          'pudesse escrever uma classe: quem a leva é o input do conteúdo. É por ele que ' +
+          'passa tudo que a folha do cartão não define — e também a troca de largura de ' +
+          'uma instância, porque as utilities entram por último no CSS compartilhado.',
       },
     },
   },
@@ -363,7 +362,7 @@ export const ExtraPanelClass: Story = {
         <span ndsHoverCard [defaultOpen]="true">
           <a ndsHoverCardTrigger href="/users/joana" class="nds-text-primary nds-font-medium">@joana</a>
 
-          <ng-template ndsHoverCardContent contentClass="nds-text-center">
+          <ng-template ndsHoverCardContent contentClass="nds-w-md nds-text-center">
             <div class="nds-stack" data-spacing="xs">
               <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
               <p class="nds-text-caption nds-text-muted-foreground">
@@ -382,10 +381,19 @@ export const ExtraPanelClass: Story = {
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida — é o mesmo contrato do resto do stack.
       await expect(painel).toHaveClass(/nds-hover-card-content/);
-      await expect(painel).toHaveClass(/nds-text-center/);
+      await expect(painel).toHaveClass(/nds-w-md/);
       // E ela vale de verdade, não só no atributo.
       await expect(getComputedStyle(painel).textAlign).toBe('center');
       await expect(paineisAbertos()).toHaveLength(1);
+    });
+
+    await step('E a largura customizada vence a largura padrão do cartão', async () => {
+      // 24rem da utilitária contra os 20rem que `.nds-hover-card-content`
+      // define. É o que prova que a customização de largura funciona de fato,
+      // e não só que a classe está no atributo.
+      const painel = await esperarAberto();
+      const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      await expect(painel.getBoundingClientRect().width).toBeCloseTo(24 * raiz, 0);
     });
   },
 };

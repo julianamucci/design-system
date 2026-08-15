@@ -1,6 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, fn } from 'storybook/test';
+import {
+  esperarAberto,
+  esperarFechado,
+  nomeAcessivel,
+  painelAberto,
+  sairComPonteiro,
+} from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
+import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -10,7 +18,10 @@ type HoverCardArgs = {
   triggerLabel: string;
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
+  openDelay: number;
+  closeDelay: number;
   defaultOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 const meta: Meta<HoverCardArgs> = {
@@ -21,139 +32,142 @@ const meta: Meta<HoverCardArgs> = {
     docs: { page: withAutoDocsTab(createHoverCardDocs) },
   },
   argTypes: {
-    triggerLabel: { control: 'text', description: 'Texto do HoverCardTrigger.' },
+    triggerLabel: {
+      control: 'text',
+      description:
+        'Texto do gatilho. Conteúdo natural (uma menção, um nome), nunca “passe o mouse aqui”.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '@joana' } },
+    },
     side: {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
-      description: 'Lado de abertura do Content.',
+      description: 'Lado preferido de abertura.',
+      table: { type: { summary: "'top' | 'bottom' | 'left' | 'right'" }, defaultValue: { summary: "'bottom'" } },
     },
     align: {
       control: { type: 'inline-radio' },
       options: ['start', 'center', 'end'],
-      description: 'Alinhamento horizontal do Content.',
+      description: 'Alinhamento do painel no eixo do lado escolhido.',
+      table: { type: { summary: "'start' | 'center' | 'end'" }, defaultValue: { summary: "'center'" } },
+    },
+    openDelay: {
+      control: { type: 'number' },
+      description: 'Espera em ms antes de abrir, no ponteiro e no foco.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '600' } },
+    },
+    closeDelay: {
+      control: { type: 'number' },
+      description: 'Espera em ms antes de fechar depois que o cursor sai.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '300' } },
     },
     defaultOpen: {
       control: 'boolean',
-      description: 'Abre o cartão ao montar (simulando hover inicial).',
+      description: 'Abre o cartão já na montagem.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Chamado a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
     },
   },
   args: {
     triggerLabel: '@joana',
     side: 'bottom',
     align: 'center',
+    // Espera curta no playground: quem abre a story quer ver o cartão, não
+    // cronometrar 600ms. O padrão real está descrito nos argTypes.
+    openDelay: 150,
+    closeDelay: 100,
     defaultOpen: false,
+    onOpenChange: fn(),
   },
 };
 
 export default meta;
 type Story = StoryObj<HoverCardArgs>;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function buildPreviewContent(): HTMLElement {
-  const root = document.createElement('div');
-  root.className = 'nds-cluster';
-  root.dataset.spacing = 'md';
-  root.dataset.align = 'start';
-
-  const avatar = document.createElement('div');
-  avatar.className =
-    'nds-cluster nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-muted-foreground nds-text-body nds-font-medium';
-  avatar.dataset.justify = 'center';
-  avatar.style.width = '2.5rem';
-  avatar.style.height = '2.5rem';
-  avatar.setAttribute('aria-hidden', 'true');
-  avatar.textContent = 'JS';
-
-  const info = document.createElement('div');
-  info.className = 'nds-stack';
-  info.dataset.spacing = 'xs';
-
-  const name = document.createElement('p');
-  name.className = 'nds-text-body nds-font-medium nds-leading-none';
-  name.textContent = 'Joana Silva';
-
-  const meta = document.createElement('p');
-  meta.className = 'nds-text-caption nds-text-muted-foreground';
-  meta.textContent = 'Designer · 142 seguidores';
-
-  info.append(name, meta);
-  root.append(avatar, info);
-  return root;
-}
-
-function buildHoverEl(args: HoverCardArgs): { el: HTMLElement; trigger: HTMLAnchorElement } {
-  const trigger = document.createElement('a');
-  trigger.href = '/users/joana';
-  trigger.className = 'nds-text-body nds-font-medium nds-text-primary';
-  trigger.style.textDecoration = 'underline';
-  trigger.style.textUnderlineOffset = '4px';
-  trigger.textContent = args.triggerLabel;
-
-  const el = createHoverCard({
-    trigger,
-    content: buildPreviewContent(),
-    side: args.side,
-    align: args.align,
-  });
-  return { el, trigger };
-}
-
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item1', 'accessibility.item3', 'accessibility.item4',
+      'accessibility.item6',
+    ],
+  },
   render: (args) => {
-    const container = document.createElement('div');
-    container.style.contain = 'layout';
-    container.className = 'nds-cluster nds-w-full';
-    container.dataset.justify = 'center';
-    container.style.minHeight = '220px';
-
-    const { el, trigger } = buildHoverEl(args);
-    container.appendChild(el);
-
-    if (args.defaultOpen) {
-      queueMicrotask(() => {
-        trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-      });
-    }
-    return container;
+    const cartao = createHoverCard({
+      trigger: construirLink(args.triggerLabel),
+      content: construirCartaoPerfil(),
+      side: args.side,
+      align: args.align,
+      openDelay: args.openDelay,
+      closeDelay: args.closeDelay,
+      defaultOpen: args.defaultOpen,
+      onOpenChange: args.onOpenChange,
+    });
+    return emFrase(cartao, 'Comentário de', 'há 2 horas.');
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
-    const triggerRe = new RegExp(args.triggerLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const rotulo = new RegExp(args.triggerLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const gatilho = canvas.getByRole('link', { name: rotulo });
 
-    const waitForOpen = async () => {
-      await waitFor(() => {
-        const dialog = body.queryByRole('dialog');
-        if (!dialog) throw new Error('hover card ainda fechado');
-      }, { timeout: 1500 });
-    };
+    await step('O gatilho continua sendo um link de verdade', async () => {
+      // O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela,
+      // chega ao perfil pelo clique. É exigência do componente, não do exemplo.
+      await expect(gatilho).toHaveAttribute('href', '/users/joana');
+      await expect(gatilho.closest('[data-slot="hover-card"]')).not.toBeNull();
+    });
 
-    const waitForClose = async () => {
-      await waitFor(() => {
-        if (body.queryByRole('dialog')) throw new Error('hover card ainda aberto');
-      }, { timeout: 1000 });
-    };
+    // Estado conhecido antes das afirmações: o painel Interactions REEXECUTA a
+    // play no mesmo DOM, e um passo que dependa do que a rodada anterior deixou
+    // inverte de resultado na segunda vez.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado('no reset inicial');
 
-    if (!args.defaultOpen) {
-      await step('Hover no trigger abre o Content', async () => {
-        const trigger = canvas.getByRole('link', { name: triggerRe });
-        await userEvent.hover(trigger);
-        await waitForOpen();
-        const dialog = await body.findByRole('dialog');
-        await expect(dialog).toBeVisible();
-      });
-    } else {
-      await step('Renderiza aberto', async () => {
-        await waitForOpen();
-      });
-    }
+    await step('Fechado, não existe painel no documento', async () => {
+      await expect(painelAberto()).toBeNull();
+    });
 
-    await step('Mover cursor para fora fecha o Content', async () => {
-      await userEvent.unhover(canvas.getByRole('link', { name: triggerRe }));
-      await waitForClose();
+    await step('Passar o ponteiro abre o cartão', async () => {
+      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      await userEvent.hover(gatilho);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute('role', 'dialog');
+      await expect(painel).toHaveClass('nds-hover-card-content');
+      // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
+      // texto do gatilho quando quem compõe não informa outro.
+      await expect(nomeAcessivel(painel)).toBe(args.triggerLabel);
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBeGreaterThan(chamadasAntes);
+    });
+
+    await step('Levar o ponteiro para longe fecha o cartão', async () => {
+      await sairComPonteiro(gatilho, painelAberto()!);
+      await esperarFechado('depois do ponteiro sair');
+      await expect(painelAberto()).toBeNull();
+    });
+
+    await step('Tab alcança o gatilho e abre o cartão sem ponteiro nenhum', async () => {
+      // É o que sustenta a WCAG 1.4.13 para quem navega por teclado: o mesmo
+      // conteúdo, pelo foco.
+      await userEvent.tab();
+      await expect(gatilho).toHaveFocus();
+      const painel = await esperarAberto('depois do foco');
+      await expect(painel).toBeVisible();
+    });
+
+    await step('Escape fecha o cartão', async () => {
+      // O foco está no gatilho, não dentro do painel: o listener é do
+      // documento, e é isso que faz o atalho valer de qualquer lugar.
+      await userEvent.keyboard('{Escape}');
+      await esperarFechado('depois do Escape');
+      await expect(painelAberto()).toBeNull();
     });
   },
 };

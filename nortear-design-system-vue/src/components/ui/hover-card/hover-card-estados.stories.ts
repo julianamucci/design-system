@@ -1,13 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
+import {
+  entrarNoPainel,
+  esperarAberto,
+  esperarFechado,
+  nomeAcessivel,
+  painelAberto,
+  razaoDeContraste,
+} from '@shared/testing/hover-card-probe';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { waitForPortal } from '@/lib/wait-for-portal';
+
+// Os três estados que o conteúdo compartilhado descreve: fechado (só o
+// gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
+// fora). Não há estado desabilitado com visual próprio — um gatilho
+// desabilitado é o `disabled` do elemento nativo.
 
 const meta = {
   title: 'UI/HoverCard/States',
@@ -15,12 +27,13 @@ const meta = {
   tags: ['overlay'],
   parameters: {
     layout: 'centered',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados canônicos do HoverCard: Fechado (apenas trigger renderizado), Aberto (defaultOpen) e Controlado (open + @update:open).',
+          'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.',
       },
     },
   },
@@ -31,119 +44,189 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger, Button };
 
+const CARTAO_PERFIL = `
+  <div class="nds-cluster" data-spacing="sm" data-align="start">
+    <div class="nds-size-10 nds-shrink-0 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
+    <div class="nds-stack" data-spacing="xs">
+      <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+      <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
+    </div>
+  </div>`;
+
+const ESTILO_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
+
 export const Closed: Story = {
   parameters: {
     docs: {
-      description: { story: 'Estado inicial — apenas o trigger é visível. Portal vazio.' },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <div style="contain: layout">
-        <HoverCard>
-          <HoverCardTrigger as-child>
-            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <p class="nds-text-body">Conteúdo do preview.</p>
-          </HoverCardContent>
-        </HoverCard>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    const trigger = canvas.getByRole('link', { name: /@joana/i });
-    await expect(trigger).toBeVisible();
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
-  },
-};
-
-export const Open: Story = {
-  parameters: {
-    docs: {
       description: {
-        story: 'HoverCard aberto via defaultOpen. Captura visual no Chromatic — Content com role=dialog.',
+        story:
+          'Estado inicial. Nada além do gatilho existe no documento, e o gatilho não anuncia nenhum estado expandido: um cartão de preview não é um menu.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 220px;">
-        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
+      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+        Comentário de
+        <HoverCard>
           <HoverCardTrigger as-child>
-            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
+            <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
           </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start">
-            <div class="nds-cluster" data-spacing="sm">
-              <div class="nds-size-10 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
-              <div class="nds-stack" data-spacing="xs">
-                <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
-                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-              </div>
-            </div>
-          </HoverCardContent>
+          <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
         </HoverCard>
-      </div>
+        há 2 horas.
+      </p>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+
+    await step('Fechado, o portal está vazio', async () => {
+      await esperarFechado();
+      await expect(gatilho).toBeVisible();
+      await expect(painelAberto()).toBeNull();
+    });
+
+    await step('O gatilho não anuncia estado de expansão', async () => {
+      // Deliberado, e igual nas cinco stacks: `aria-expanded` descreveria o
+      // cartão como um menu que o leitor comanda. Ele é conteúdo suplementar —
+      // quem tem estado é o painel, não o link.
+      await expect(gatilho).not.toHaveAttribute('aria-expanded');
+      await expect(gatilho).not.toHaveAttribute('aria-haspopup');
+    });
+  },
+};
+
+export const Open: Story = {
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item2', 'accessibility.item5'],
+    docs: {
+      description: {
+        story:
+          'Aberto por ponteiro. O cartão permanece enquanto o cursor estiver sobre o gatilho OU sobre o próprio painel — é o que a WCAG 1.4.13 chama de hoverable, e o que permite selecionar o texto de dentro.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+        Comentário de
+        <HoverCard :open-delay="100" :close-delay="80">
+          <HoverCardTrigger as-child>
+            <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+          </HoverCardTrigger>
+          <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
+        </HoverCard>
+        há 2 horas.
+      </p>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+
+    // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado();
+    await userEvent.hover(gatilho);
+    const painel = await esperarAberto();
+
+    await step('O painel é um dialog não-modal', async () => {
+      await expect(painel).toHaveAttribute('role', 'dialog');
+      // Sem `aria-modal`: a ausência do atributo JÁ significa não-modal, e é o
+      // markup que o Vanilla — referência do sistema — emite. Escrever
+      // `aria-modal="false"` seria redundância que nenhuma outra stack tem.
+      await expect(painel).not.toHaveAttribute('aria-modal');
+      // Não-modal de verdade: o resto da página continua alcançável.
+      await expect(gatilho).toBeVisible();
+      await expect(nomeAcessivel(painel)).toBe('@joana');
+    });
+
+    await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
+      // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
+      // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
+      await entrarNoPainel(gatilho, painel);
+      // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
+      // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      await expect(painelAberto()).toBe(painel);
+      await expect(painel).toBeVisible();
+    });
+
+    await step('O texto do painel tem contraste de 4.5:1 contra o fundo do cartão', async () => {
+      // Medido do par que o design system promete (--popover-foreground sobre
+      // --popover), e não deduzido do token: é o valor que o navegador aplicou.
+      const estilo = getComputedStyle(painel);
+      await expect(razaoDeContraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+    });
   },
 };
 
 export const Controlled: Story = {
   parameters: {
+    covers: ['functional.item6'],
     docs: {
       description: {
-        story: 'Abertura controlada por estado externo via open + @update:open.',
+        story:
+          'Estado vindo de fora. Útil quando outra parte da tela precisa saber que o cartão está aberto — para pausar um carrossel, por exemplo. O gatilho continua abrindo por ponteiro e por foco; cada mudança volta pelo callback.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const open = ref(false);
-      return { open };
+      const aberto = ref(false);
+      return { aberto };
     },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 240px;">
-        <Button @click="open = !open">Toggle externo ({{ open ? 'aberto' : 'fechado' }})</Button>
-        <HoverCard :open="open" @update:open="(v) => open = v" :open-delay="0" :close-delay="0">
-          <HoverCardTrigger as-child>
-            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
-          </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start">
-            <p class="nds-text-body">Preview controlado externamente.</p>
-          </HoverCardContent>
-        </HoverCard>
+      <div class="nds-stack" data-spacing="md" style="${ESTILO_PARAGRAFO}">
+        <div class="nds-cluster" data-spacing="xs">
+          <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
+               mesmo nome acessível são ambíguos em leitor de tela. -->
+          <Button size="sm" variant="outline" @click="aberto = true">Abrir pelo estado externo</Button>
+          <Button size="sm" variant="outline" @click="aberto = false">Fechar pelo estado externo</Button>
+        </div>
+
+        <p class="nds-text-body">
+          Comentário de
+          <HoverCard :open="aberto" @update:open="(v) => aberto = v">
+            <HoverCardTrigger as-child>
+              <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
+            </HoverCardTrigger>
+            <HoverCardContent>${CARTAO_PERFIL}</HoverCardContent>
+          </HoverCard>
+          há 2 horas.
+        </p>
+
+        <p class="nds-text-caption nds-text-muted-foreground" data-testid="estado-externo">
+          Estado externo: {{ aberto ? 'aberto' : 'fechado' }}
+        </p>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const abrir = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
+    const fechar = canvas.getByRole('button', { name: 'Fechar pelo estado externo' });
+    const espelho = canvas.getByTestId('estado-externo');
 
-    await step('Click no toggle externo abre o HoverCard', async () => {
-      const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
-      await userEvent.click(toggle);
-      const dialog = await waitForPortal('dialog', { timeout: 2000 });
-      await expect(dialog).toBeVisible();
+    await step('O cartão obedece ao estado externo, sem ponteiro nenhum', async () => {
+      // Nenhum hover e nenhum foco no gatilho: quem abre é a propriedade, e é
+      // isso que distingue o modo controlado.
+      await userEvent.click(abrir);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(espelho).toHaveTextContent('aberto');
     });
 
-    await step('Click no toggle novamente fecha', async () => {
-      const toggle = canvas.getByRole('button', { name: /Toggle externo/i });
-      await userEvent.click(toggle);
-      await waitFor(
-        () => {
-          if (body.queryByRole('dialog')) throw new Error('hover card ainda aberto');
-        },
-        { timeout: 2000 },
-      );
+    await step('E fecha pelo mesmo caminho', async () => {
+      await userEvent.click(fechar);
+      await esperarFechado();
+      await expect(painelAberto()).toBeNull();
+      await expect(espelho).toHaveTextContent('fechado');
     });
   },
 };

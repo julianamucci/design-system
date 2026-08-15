@@ -121,6 +121,30 @@
 /* ── Cursor / pointer ─────────────────────────────────────────────────────── */
 .nds-cursor-pointer { cursor: pointer; }
 .nds-cursor-default { cursor: default; }
+/* `help` é o cursor do gatilho que REVELA definição sem navegar — o padrão de
+ * "termo com explicação" do HoverCard. Existe para o gatilho não precisar de
+ * `style="cursor: help"` inline, que sai do tema e vence a folha. */
+.nds-cursor-help    { cursor: help; }
+
+/* ── Sublinhado ───────────────────────────────────────────────────────────── */
+/*
+ * O deslocamento de 4px não é escolha desta regra: é o mesmo que button.css,
+ * empty.css, field.css, item.css e toast.css já aplicam ao seu link. Fica junto
+ * da decoração porque separar os dois só produziria a combinação errada.
+ *
+ * A variante pontilhada é o sinal visual de "passe o mouse para saber mais" —
+ * distingue o gatilho de HoverCard/Tooltip de um link que navega, que é a
+ * distinção que a diretriz de uso pede.
+ */
+.nds-underline {
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+}
+.nds-underline-dotted {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 4px;
+}
 
 /* ── Display ───────────────────────────────────────────────────────────────── */
 .nds-hidden       { display: none; }

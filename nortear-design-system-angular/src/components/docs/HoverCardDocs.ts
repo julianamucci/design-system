@@ -42,44 +42,30 @@ import {
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
-// Overrides do conteúdo compartilhado. Três motivos, todos verificáveis:
+// Overrides do conteúdo compartilhado. Sobrou UM motivo, e ele é de API:
+// `props.table.label` e `props.table.contentClass` são propriedades que só
+// este stack tem — o painel nasce dentro do portal, então não existe elemento
+// em que quem compõe escrevesse rótulo ou classe — e o conteúdo compartilhado
+// não as descreve.
 //
-//  · `variants.styles.default` descreve a espera padrão de outra lib (700ms) e
-//    classes utilitárias que não existem neste sistema (`w-64`, `p-2.5`). Aqui
-//    o padrão é o do gatilho do Radix NG — 600ms — e a medida vem do CSS
-//    compartilhado. Número errado numa página de referência é pior que nenhum.
-//  · `tokens.table.width.part` promete 256px; `.nds-hover-card-content` mede
-//    20rem (320px) nas cinco stacks.
-//  · `props.table.label` e `props.table.contentClass` são propriedades que só
-//    este stack tem (o painel nasce dentro do portal, então não existe elemento
-//    em que quem compõe escrevesse rótulo ou classe) — o conteúdo compartilhado
-//    não as descreve.
+// Os outros dois overrides saíram daqui na revisão do componente: o conteúdo
+// compartilhado descrevia a espera padrão de outra lib (700ms) e uma largura de
+// 256px, e agora traz os 600ms e os 20rem que as cinco stacks aplicam de fato.
+// Correção no compartilhado vale para as cinco; override valia só para esta.
 const { t, dict } = useTranslation(hoverCardTranslations as Record<string, unknown>, {
   'pt-BR': {
-    'variants.styles.default':
-      'Espera padrão do gatilho: 600ms para abrir e 300ms para fechar. Painel de 20rem, ' +
-      'com recuo interno de 16px, borda sutil e sombra de elevação.',
-    'tokens.table.width.part': 'Largura padrão do cartão (20rem)',
     'props.table.label.description':
       'Nome acessível do painel. Sem ele, o nome vem do texto do gatilho.',
     'props.table.contentClass.description':
       'Classes extras do painel, para o que a folha do cartão não define.',
   },
   en: {
-    'variants.styles.default':
-      'Trigger default wait: 600ms to open and 300ms to close. 20rem panel, 16px inner ' +
-      'padding, subtle border and elevation shadow.',
-    'tokens.table.width.part': 'Default card width (20rem)',
     'props.table.label.description':
       'Accessible name for the panel. Without it, the name comes from the trigger text.',
     'props.table.contentClass.description':
       'Extra classes for the panel, for whatever the card stylesheet does not set.',
   },
   es: {
-    'variants.styles.default':
-      'Espera predeterminada del gatillo: 600ms para abrir y 300ms para cerrar. Panel de ' +
-      '20rem, 16px de relleno interno, borde sutil y sombra de elevación.',
-    'tokens.table.width.part': 'Ancho predeterminado de la tarjeta (20rem)',
     'props.table.label.description':
       'Nombre accesible del panel. Sin él, el nombre viene del texto del gatillo.',
     'props.table.contentClass.description':
@@ -118,11 +104,11 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const CLASSES_GATILHO = 'nds-text-primary nds-font-medium';
+const CLASSES_GATILHO = 'nds-text-primary nds-font-medium nds-hover-underline';
 // Botão sem moldura para gatilhos que não navegam (termo, métrica): as classes
 // zeram o cromo nativo do `<button>` sem uma linha de CSS inline.
 const CLASSES_GATILHO_BOTAO =
-  'nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer';
+  'nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 // A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
 // descreve um elemento `<nds-hover-card>` e um `<nds-avatar src="…">` que este
@@ -303,7 +289,7 @@ const VARIANT_CODE = {
        o caminho alternativo obrigatório. -->
   <button
     ndsHoverCardTrigger
-    class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+    class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >WCAG 2.2 AA</button>
 
   <ng-template ndsHoverCardContent label="Definição de WCAG 2.2 AA">
@@ -316,7 +302,7 @@ const VARIANT_CODE = {
   metricExplainer: `<span ndsHoverCard>
   <button
     ndsHoverCardTrigger
-    class="nds-text-primary nds-font-medium nds-bg-transparent nds-border-none nds-p-0 nds-cursor-pointer"
+    class="nds-text-primary nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
   >LCP 1.8s</button>
 
   <ng-template ndsHoverCardContent label="Explicação da métrica LCP">
@@ -985,10 +971,9 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna do meio traz a PROPRIEDADE que consome o token, e não a classe
-    // utilitária que o conteúdo compartilhado ainda descreve (`bg-popover`,
-    // `w-64`): essas classes não existem no CSS `.nds-*`. Tudo abaixo mora em
-    // `.nds-hover-card-content`.
+    // A coluna do meio traz a PROPRIEDADE CSS que consome o token, lida linha a
+    // linha de `docs/shared/styles/nds/hover-card.css`. Todas moram em
+    // `.nds-hover-card-content`, menos a camada, que é do positioner.
     return [
       { token: '--popover',            propriedade: 'background-color', k: 'background' },
       { token: '--popover-foreground', propriedade: 'color',            k: 'foreground' },
@@ -996,7 +981,8 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
       { token: '--elevation-xl',       propriedade: 'box-shadow',       k: 'shadow'     },
       { token: '--radius',             propriedade: 'border-radius',    k: 'rounded'    },
       { token: '--spacing-4',          propriedade: 'padding',          k: 'padding'    },
-      { token: '20rem',                propriedade: 'width',            k: 'width'      },
+      { token: '--hover-card-width',   propriedade: 'width',            k: 'width'      },
+      { token: '--z-popover',          propriedade: 'z-index',          k: 'layer'      },
     ].map(({ token, propriedade, k }) => ({
       token,
       value: propriedade,

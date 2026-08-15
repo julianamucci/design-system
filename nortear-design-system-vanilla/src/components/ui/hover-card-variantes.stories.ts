@@ -1,18 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
+import {
+  esperarAberto,
+  esperarFechado,
+  painelAberto,
+} from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
+import { construirDuasLinhas, construirLink, emFrase } from './hover-card.fixtures';
+
+// O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
+// varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
+// e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
+// enriquecimento opcional pede 600ms ou mais, para não abrir a cada passada de
+// cursor.
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'UI/HoverCard/Variants',
   parameters: {
-    actions: { disable: true },
     layout: 'padded',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do HoverCard: Default (delays padrão da factory) e ComDelayCurto (tempos reduzidos para previews ricos). NOTA: a factory Vanilla usa delays internos fixos (SHOW_DELAY=300, HIDE_DELAY=150). Esta story documenta a paridade conceitual com outras stacks.',
+          'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
       },
     },
   },
@@ -21,130 +34,81 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '220px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
-
-function buildContent(): HTMLElement {
-  const root = document.createElement('div');
-  root.className = 'nds-cluster';
-  root.dataset.spacing = 'md';
-  root.dataset.align = 'start';
-
-  const avatar = document.createElement('div');
-  avatar.className =
-    'nds-cluster nds-shrink-0 nds-rounded-full nds-bg-muted nds-text-muted-foreground nds-text-body nds-font-medium';
-  avatar.dataset.justify = 'center';
-  avatar.style.width = '2.5rem';
-  avatar.style.height = '2.5rem';
-  avatar.setAttribute('aria-hidden', 'true');
-  avatar.textContent = 'JS';
-
-  const info = document.createElement('div');
-  info.className = 'nds-stack';
-  info.dataset.spacing = 'xs';
-
-  const name = document.createElement('p');
-  name.className = 'nds-text-body nds-font-medium nds-leading-none';
-  name.textContent = 'Joana Silva';
-
-  const sub = document.createElement('p');
-  sub.className = 'nds-text-caption nds-text-muted-foreground';
-  sub.textContent = 'Designer · 142 seguidores';
-
-  info.append(name, sub);
-  root.append(avatar, info);
-  return root;
-}
-
-function buildTrigger(label: string): HTMLAnchorElement {
-  const a = document.createElement('a');
-  a.href = '/users/joana';
-  a.className = 'nds-text-body nds-font-medium nds-text-primary';
-  a.style.textDecoration = 'underline';
-  a.style.textUnderlineOffset = '4px';
-  a.textContent = label;
-  return a;
-}
-
-async function waitForOpen(): Promise<void> {
-  const body = within(document.body);
-  await waitFor(() => {
-    if (!body.queryByRole('dialog')) throw new Error('hover card fechado');
-  }, { timeout: 2000 });
-}
-
-async function closeAfter(): Promise<void> {
-  const body = within(document.body);
-  await waitFor(() => {
-    if (body.queryByRole('dialog')) {
-      // simulate cursor leaving everything
-      document.body.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    }
-  }, { timeout: 200 }).catch(() => {});
-  // Force-remove residual portals to avoid leaking between stories
-  document.querySelectorAll('[data-slot="hover-card-content"]').forEach((n) => n.remove());
-  await waitFor(() => {
-    if (body.queryByRole('dialog')) throw new Error('still open');
-  });
-}
-
-// ─── Stories ──────────────────────────────────────────────────────────────────
-
 export const Default: Story = {
-  render: () => {
-    const trigger = buildTrigger('@joana');
-    const el = createHoverCard({ trigger, content: buildContent() });
-    queueMicrotask(() => {
-      trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    });
-    return wrap(el);
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito na chamada — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.',
+      },
+    },
   },
-  play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Content abre via hover com delays default', async () => {
-      await waitForOpen();
-      const dialog = await body.findByRole('dialog');
-      await expect(dialog).toBeVisible();
+  render: () => {
+    const cartao = createHoverCard({
+      trigger: construirLink('@joana'),
+      content: construirDuasLinhas(
+        'Joana Silva',
+        'Espera padrão: 600ms para abrir e 300ms para fechar.',
+      ),
+      defaultOpen: true,
     });
-    await step('Cleanup do portal antes do postVisit', async () => {
-      await closeAfter();
+    return emFrase(cartao, 'Comentário de', 'há 2 horas.');
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Sem atraso escrito na chamada, o cartão usa o padrão da factory', async () => {
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText(/600ms/)).toBeVisible();
+      await expect(canvas.getByRole('link')).toBeVisible();
     });
   },
 };
 
 export const WithShortDelay: Story = {
-  render: () => {
-    const trigger = buildTrigger('@maria');
-    // A factory Vanilla tem delays fixos; usamos a classe customizada para
-    // documentar a intenção visual de "delay curto" (preview rico).
-    const el = createHoverCard({
-      trigger,
-      content: buildContent(),
-      class: 'w-72',
-    });
-    queueMicrotask(() => {
-      trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    });
-    return wrap(el);
+  parameters: {
+    covers: ['functional.item1'],
+    docs: {
+      description: {
+        story:
+          'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',
+      },
+    },
   },
-  play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Content aparece após delay curto', async () => {
-      await waitForOpen();
-      const dialog = await body.findByRole('dialog');
-      await expect(dialog).toHaveClass('nds-hover-card-content');
+  render: () => {
+    const cartao = createHoverCard({
+      trigger: construirLink('design-system.dev', 'https://design-system.dev'),
+      content: construirDuasLinhas(
+        'Guia de overlays acessíveis',
+        'Espera de 150ms para abrir e 100ms para fechar.',
+      ),
+      openDelay: 150,
+      closeDelay: 100,
     });
-    await step('Cleanup', async () => {
-      await closeAfter();
+    return emFrase(cartao, 'Documentação em', '— leitura de 8 minutos.');
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link');
+
+    // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado();
+
+    await step('O cartão abre depois da espera pedida na chamada', async () => {
+      await expect(painelAberto()).toBeNull();
+      const inicio = performance.now();
+      await userEvent.hover(gatilho);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+
+      // O cronômetro é a prova de que a espera CHEGOU à factory: antes desta
+      // revisão os tempos eram constantes internas e a opção nem existia — o
+      // cartão usaria os 600ms padrão, muito acima deste teto. A folga é larga
+      // de propósito: mede-se a diferença entre 150 e 600, não o relógio.
+      await expect(performance.now() - inicio).toBeLessThan(550);
     });
   },
 };

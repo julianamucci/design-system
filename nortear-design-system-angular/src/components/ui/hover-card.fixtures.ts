@@ -4,23 +4,34 @@
 // story: `export function painelAberto()` dentro de um `*.stories.ts` viraria
 // uma story "PainelAberto" que não renderiza nada.
 //
-// São dois grupos: consultas ao PORTAL (o painel mora no `<body>`, fora do
-// `canvasElement`, e nenhuma consulta do `within(canvasElement)` o alcança) e
-// os trechos de markup repetidos entre as quatro stories.
+// O grosso das consultas ao PORTAL mora agora em
+// `docs/shared/testing/hover-card-probe.ts` e é o MESMO código nas cinco
+// stacks — era duplicado aqui, e duplicata de helper de teste é como duplicata
+// de CSS: uma das cópias envelhece sozinha. O que sobra local é o que só vale
+// para este stack (a espera gateada em `data-side`) e o markup repetido.
 
-import { userEvent, waitFor } from 'storybook/test';
+import { waitFor } from 'storybook/test';
+import {
+  SELETOR_PAINEL,
+  entrarNoPainel,
+  esperarFechado,
+  nomeAcessivel,
+  paineisAbertos,
+  painelAberto,
+  razaoDeContraste,
+  sairComPonteiro,
+} from '@shared/testing/hover-card-probe';
 
-export const SELETOR_PAINEL = '[data-slot="hover-card-content"]';
-
-/** Painel aberto, ou `null`. Consulta o documento inteiro, não o canvas. */
-export function painelAberto(): HTMLElement | null {
-  return document.body.querySelector<HTMLElement>(SELETOR_PAINEL);
-}
-
-/** Todos os painéis abertos — para as stories que mostram vários cartões. */
-export function paineisAbertos(): HTMLElement[] {
-  return [...document.body.querySelectorAll<HTMLElement>(SELETOR_PAINEL)];
-}
+export {
+  SELETOR_PAINEL,
+  entrarNoPainel,
+  esperarFechado,
+  nomeAcessivel,
+  paineisAbertos,
+  painelAberto,
+  razaoDeContraste,
+  sairComPonteiro,
+};
 
 /**
  * Aberto E POSICIONADO.
@@ -29,7 +40,8 @@ export function paineisAbertos(): HTMLElement[] {
  * positioner o mantém em `visibility: hidden` — esperar só pela existência do
  * elemento reprova em `toBeVisible` por corrida, não por defeito. `data-side` é
  * o sinal público de que a medição terminou: o primitivo só o escreve depois de
- * decidir o lado.
+ * decidir o lado, e é um sinal mais preciso, neste stack, que a opacidade que o
+ * colhedor compartilhado usa.
  */
 function posicionado(painel: HTMLElement | null): painel is HTMLElement {
   return !!painel && painel.hasAttribute('data-side');
@@ -54,79 +66,6 @@ export async function esperarQuantidade(quantos: number): Promise<HTMLElement[]>
     { timeout: 3000 },
   );
   return paineisAbertos();
-}
-
-export async function esperarFechado(contexto = ''): Promise<void> {
-  // `waitFor` e não asserção seca: fechado, o painel continua no DOM enquanto a
-  // transição de saída roda (`[data-ending-style]`); só depois o portal desmonta.
-  await waitFor(
-    () => {
-      if (painelAberto()) throw new Error(`o cartão ainda está aberto ${contexto}`);
-    },
-    { timeout: 3000 },
-  );
-}
-
-/** Centro de um elemento em coordenadas de viewport. */
-function centro(el: HTMLElement): { clientX: number; clientY: number } {
-  const r = el.getBoundingClientRect();
-  return { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
-}
-
-/**
- * Tira o ponteiro de cima do gatilho E da ponte de tolerância.
- *
- * Três paradas numa ÚNICA chamada, e as três são necessárias:
- *
- *  1. o gatilho — cada chamada direta do `userEvent` nasce com o ponteiro em
- *     lugar nenhum, então sem esta parada não há de onde sair e o
- *     `pointerleave` do gatilho, que é o que arma a ponte, nunca acontece
- *     (`unhover` faz o mesmo por dentro, com `setMousePosition`);
- *  2. um ponto fora do gatilho — dispara o `pointerleave` e monta o polígono
- *     de tolerância entre a saída e o painel, para o ponteiro poder atravessar
- *     o vão sem perder o cartão;
- *  3. um ponto além do polígono — é só aqui que o fechamento é pedido.
- *
- * As coordenadas são explícitas de propósito: sem `coords` o user-event
- * dispara tudo em (0,0) e o ponto nunca sai do polígono.
- */
-export async function sairComPonteiro(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
-  const r = painel.getBoundingClientRect();
-  const y1 = Math.min(r.bottom + 40, window.innerHeight - 140);
-  await userEvent.pointer([
-    { target: gatilho, coords: centro(gatilho) },
-    { target: document.body, coords: { clientX: 2, clientY: y1 } },
-    { target: document.body, coords: { clientX: 2, clientY: y1 + 120 } },
-  ]);
-}
-
-/**
- * Leva o ponteiro do gatilho para dentro do painel, na mesma chamada.
- *
- * Separar em duas chamadas tornaria o teste vazio: sem a saída do gatilho não
- * há fechamento agendado, e "continua aberto" passaria mesmo com o componente
- * quebrado.
- */
-export async function entrarNoPainel(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
-  await userEvent.pointer([
-    { target: gatilho, coords: centro(gatilho) },
-    { target: painel, coords: centro(painel) },
-  ]);
-}
-
-/** Contraste WCAG entre duas cores computadas (`rgb(...)` / `rgba(...)`). */
-export function razaoDeContraste(corA: string, corB: string): number {
-  const luminancia = (cor: string): number => {
-    const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
-    const canal = (v: number): number => {
-      const s = v / 255;
-      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-    };
-    return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
-  };
-  const a = luminancia(corA);
-  const b = luminancia(corB);
-  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
 // ─── Markup repetido ──────────────────────────────────────────────────────────

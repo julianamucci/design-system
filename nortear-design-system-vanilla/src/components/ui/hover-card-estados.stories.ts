@@ -1,19 +1,34 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createHoverCard } from './hover-card';
+import { userEvent, within, expect } from 'storybook/test';
+import {
+  entrarNoPainel,
+  esperarAberto,
+  esperarFechado,
+  nomeAcessivel,
+  painelAberto,
+  razaoDeContraste,
+} from '@shared/testing/hover-card-probe';
+import { createHoverCard, type HoverCardElement } from './hover-card';
+import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
+
+// Os três estados que o conteúdo compartilhado descreve: fechado (só o
+// gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
+// fora). Não há estado desabilitado com visual próprio — um gatilho
+// desabilitado é o `disabled` do elemento nativo.
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'UI/HoverCard/States',
   parameters: {
-    actions: { disable: true },
     layout: 'padded',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do HoverCard: Fechado (apenas trigger), Aberto (defaultOpen via dispatch mouseenter) e Controlado (dispara via botão externo).',
+          'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.',
       },
     },
   },
@@ -22,142 +37,167 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '200px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
-
-function buildContent(): HTMLElement {
-  const root = document.createElement('div');
-  root.className = 'nds-stack';
-  root.dataset.spacing = 'xs';
-
-  const title = document.createElement('p');
-  title.className = 'nds-text-body nds-font-medium';
-  title.textContent = 'Joana Silva';
-
-  const sub = document.createElement('p');
-  sub.className = 'nds-text-caption nds-text-muted-foreground';
-  sub.textContent = 'Designer no time de UX';
-
-  root.append(title, sub);
-  return root;
-}
-
-function buildTrigger(label: string): HTMLAnchorElement {
-  const a = document.createElement('a');
-  a.href = '/users/joana';
-  a.className = 'nds-text-body nds-font-medium nds-text-primary';
-  a.style.textDecoration = 'underline';
-  a.style.textUnderlineOffset = '4px';
-  a.textContent = label;
-  return a;
-}
-
-async function waitForOpen(): Promise<void> {
-  const body = within(document.body);
-  await waitFor(() => {
-    if (!body.queryByRole('dialog')) throw new Error('hover card fechado');
-  }, { timeout: 2000 });
-}
-
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="hover-card-content"]').forEach((n) => n.remove());
-  const body = within(document.body);
-  await waitFor(() => {
-    if (body.queryByRole('dialog')) throw new Error('still open');
-  });
-}
-
-// ─── Stories ──────────────────────────────────────────────────────────────────
-
 export const Closed: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Estado inicial. Nada além do gatilho existe no documento, e o gatilho não anuncia nenhum estado expandido: um cartão de preview não é um menu.',
+      },
+    },
+  },
   render: () => {
-    const trigger = buildTrigger('@joana');
-    const el = createHoverCard({ trigger, content: buildContent() });
-    return wrap(el);
+    const cartao = createHoverCard({
+      trigger: construirLink('@joana'),
+      content: construirCartaoPerfil(),
+    });
+    return emFrase(cartao, 'Comentário de', 'há 2 horas.');
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
-    await step('Apenas o trigger renderiza; portal vazio', async () => {
-      const trigger = canvas.getByRole('link', { name: /@joana/i });
-      await expect(trigger).toBeVisible();
-      await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+
+    await step('Fechado, o portal está vazio', async () => {
+      await esperarFechado();
+      await expect(gatilho).toBeVisible();
+      await expect(painelAberto()).toBeNull();
+    });
+
+    await step('O gatilho não anuncia estado de expansão', async () => {
+      // Deliberado, e igual nas cinco stacks: `aria-expanded` descreveria o
+      // cartão como um menu que o leitor comanda. Ele é conteúdo suplementar —
+      // quem tem estado é o painel, não o link.
+      await expect(gatilho).not.toHaveAttribute('aria-expanded');
+      await expect(gatilho).not.toHaveAttribute('aria-haspopup');
     });
   },
 };
 
 export const Open: Story = {
-  render: () => {
-    const trigger = buildTrigger('@joana');
-    const el = createHoverCard({ trigger, content: buildContent() });
-    queueMicrotask(() => {
-      trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    });
-    return wrap(el);
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item2', 'accessibility.item5'],
+    docs: {
+      description: {
+        story:
+          'Aberto por ponteiro. O cartão permanece enquanto o cursor estiver sobre o gatilho OU sobre o próprio painel — é o que a WCAG 1.4.13 chama de hoverable, e o que permite selecionar o texto de dentro.',
+      },
+    },
   },
-  play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Content visível com role=dialog', async () => {
-      await waitForOpen();
-      const dialog = await body.findByRole('dialog');
-      await expect(dialog).toBeVisible();
+  render: () => {
+    const cartao = createHoverCard({
+      trigger: construirLink('@joana'),
+      content: construirCartaoPerfil(),
+      openDelay: 100,
+      closeDelay: 80,
     });
-    await step('Cleanup antes do postVisit', async () => {
-      await cleanupPortal();
+    return emFrase(cartao, 'Comentário de', 'há 2 horas.');
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link', { name: /@joana/i });
+
+    // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado();
+    await userEvent.hover(gatilho);
+    const painel = await esperarAberto();
+
+    await step('O painel é um dialog não-modal', async () => {
+      await expect(painel).toHaveAttribute('role', 'dialog');
+      // Sem `aria-modal`: a ausência do atributo JÁ significa não-modal, e é o
+      // markup que esta factory — referência do sistema — emite.
+      await expect(painel).not.toHaveAttribute('aria-modal');
+      // Não-modal de verdade: o resto da página continua alcançável.
+      await expect(gatilho).toBeVisible();
+      await expect(nomeAcessivel(painel)).toBe('@joana');
+    });
+
+    await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
+      // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
+      // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
+      await entrarNoPainel(gatilho, painel);
+      // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
+      // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      await expect(painelAberto()).toBe(painel);
+      await expect(painel).toBeVisible();
+    });
+
+    await step('O texto do painel tem contraste de 4.5:1 contra o fundo do cartão', async () => {
+      // Medido do par que o design system promete (--popover-foreground sobre
+      // --popover), e não deduzido do token: é o valor que o navegador aplicou.
+      const estilo = getComputedStyle(painel);
+      await expect(razaoDeContraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
 export const Controlled: Story = {
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.style.contain = 'layout';
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'md';
-    wrapper.style.minHeight = '200px';
-    wrapper.style.alignItems = 'center';
-
-    const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
-    const trigger = buildTrigger('@joana');
-
-    const el = createHoverCard({
-      trigger,
-      content: buildContent(),
-      onOpenChange: (open) => {
-        externalBtn.dataset.open = String(open);
+  parameters: {
+    covers: ['functional.item6'],
+    docs: {
+      description: {
+        story:
+          'Estado vindo de fora. Numa factory não há propriedade reativa para observar: quem controla chama abrir()/fechar() na raiz e recebe cada mudança de volta pelo callback.',
       },
-    });
+    },
+  },
+  render: () => {
+    const raiz = document.createElement('div');
+    raiz.className = 'nds-stack';
+    raiz.dataset.spacing = 'md';
+    raiz.style.contain = 'layout';
+    raiz.style.minHeight = '280px';
+    raiz.style.maxWidth = '24rem';
 
-    externalBtn.addEventListener('click', () => {
-      trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    });
+    const espelho = document.createElement('p');
+    espelho.className = 'nds-text-caption nds-text-muted-foreground';
+    espelho.dataset.testid = 'estado-externo';
+    espelho.textContent = 'Estado externo: fechado';
 
-    wrapper.append(externalBtn, el);
-    return wrapper;
+    const cartao = createHoverCard({
+      trigger: construirLink('@joana'),
+      content: construirCartaoPerfil(),
+      onOpenChange: (aberto) => {
+        espelho.textContent = `Estado externo: ${aberto ? 'aberto' : 'fechado'}`;
+      },
+    }) as HoverCardElement;
+
+    // Nomes próprios, e não os mesmos do gatilho: dois controles com o mesmo
+    // nome acessível são ambíguos em leitor de tela.
+    const abrir = createButton({ variant: 'outline', size: 'sm', label: 'Abrir pelo estado externo' });
+    const fechar = createButton({ variant: 'outline', size: 'sm', label: 'Fechar pelo estado externo' });
+    abrir.addEventListener('click', () => cartao.abrir());
+    fechar.addEventListener('click', () => cartao.fechar());
+
+    const controles = document.createElement('div');
+    controles.className = 'nds-cluster';
+    controles.dataset.spacing = 'xs';
+    controles.append(abrir, fechar);
+
+    raiz.append(controles, emFrase(cartao, 'Comentário de', 'há 2 horas.'), espelho);
+    return raiz;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const abrir = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
+    const fechar = canvas.getByRole('button', { name: 'Fechar pelo estado externo' });
+    const espelho = canvas.getByTestId('estado-externo');
 
-    await step('Click externo abre o Content', async () => {
-      const btn = canvas.getByRole('button', { name: /open programmatically/i });
-      await userEvent.click(btn);
-      await waitForOpen();
-      const dialog = await body.findByRole('dialog');
-      await expect(dialog).toBeVisible();
+    await step('O cartão obedece ao estado externo, sem ponteiro nenhum', async () => {
+      // Nenhum hover e nenhum foco no gatilho: quem abre é o comando, e é isso
+      // que distingue o modo controlado.
+      await userEvent.click(abrir);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(espelho).toHaveTextContent('aberto');
     });
 
-    await step('Cleanup', async () => {
-      await cleanupPortal();
+    await step('E fecha pelo mesmo caminho', async () => {
+      await userEvent.click(fechar);
+      await esperarFechado();
+      await expect(painelAberto()).toBeNull();
+      await expect(espelho).toHaveTextContent('fechado');
     });
   },
 };

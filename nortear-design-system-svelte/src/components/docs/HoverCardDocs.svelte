@@ -162,7 +162,7 @@ interface HoverCardProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  openDelay?: number;   // default 700ms
+  openDelay?: number;   // default 600ms
   closeDelay?: number;  // default 300ms
 }
 
@@ -203,7 +203,7 @@ interface HoverCardContentProps {
         <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
           <HoverCardTrigger>
             {#snippet child({ props })}
-              <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
+              <a href="#joana" class="nds-text-primary nds-hover-underline" {...props}>@joana</a>
             {/snippet}
           </HoverCardTrigger>
           <HoverCardContent>
@@ -229,7 +229,7 @@ interface HoverCardContentProps {
         <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
           <HoverCardTrigger>
             {#snippet child({ props })}
-              <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
+              <a href="#link" class="nds-text-primary nds-hover-underline" {...props}>design-system.dev</a>
             {/snippet}
           </HoverCardTrigger>
           <HoverCardContent>
@@ -252,7 +252,7 @@ interface HoverCardContentProps {
         <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
           <HoverCardTrigger>
             {#snippet child({ props })}
-              <a href="#wcag" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>WCAG 2.2</a>
+              <a href="#wcag" class="nds-text-primary nds-hover-underline" {...props}>WCAG 2.2</a>
             {/snippet}
           </HoverCardTrigger>
           <HoverCardContent>
@@ -272,7 +272,7 @@ interface HoverCardContentProps {
         <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
           <HoverCardTrigger>
             {#snippet child({ props })}
-              <a href="#metric" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>3,42%</a>
+              <a href="#metric" class="nds-text-primary nds-hover-underline" {...props}>3,42%</a>
             {/snippet}
           </HoverCardTrigger>
           <HoverCardContent>
@@ -384,13 +384,13 @@ interface HoverCardContentProps {
 
   {#snippet doPair1()}
     <div class="nds-text-body nds-stack" data-spacing="xs" style="contain: layout">
-      <div class="nds-text-primary" style="text-decoration: underline">@joana</div>
+      <div class="nds-text-primary nds-underline">@joana</div>
       <div class="nds-text-caption nds-text-muted-foreground">+ link para /users/joana</div>
     </div>
   {/snippet}
   {#snippet dontPair1()}
     <div class="nds-text-body" style="contain: layout">
-      <div class="nds-text-primary" style="text-decoration: underline">@joana</div>
+      <div class="nds-text-primary nds-underline">@joana</div>
       <div class="nds-text-caption nds-text-muted-foreground nds-italic">apenas hover (touch users perdem)</div>
     </div>
   {/snippet}
@@ -471,7 +471,7 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="nds-text-primary nds-text-body nds-font-medium" style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help" {...props}>
+      <button type="button" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0" {...props}>
         WCAG 2.2 AA
       </button>
     {/snippet}
@@ -492,7 +492,7 @@ interface HoverCardContentProps {
         code: `<HoverCard openDelay={400} closeDelay={150}>
   <HoverCardTrigger>
     {#snippet child({ props })}
-      <button type="button" class="nds-text-primary nds-text-body nds-font-medium" style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help" {...props}>
+      <button type="button" class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0" {...props}>
         LCP 1.8s
       </button>
     {/snippet}
@@ -514,7 +514,7 @@ interface HoverCardContentProps {
 
   {#snippet variantDefault()}
     <div class="nds-text-caption nds-font-mono nds-text-muted-foreground" style="contain: layout">
-      openDelay=700 / closeDelay=300
+      openDelay=600 / closeDelay=300
     </div>
   {/snippet}
   {#snippet variantWithDelay()}
@@ -528,7 +528,7 @@ interface HoverCardContentProps {
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#joana" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>@joana</a>
+            <a href="#joana" class="nds-text-primary nds-hover-underline" {...props}>@joana</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
@@ -552,7 +552,7 @@ interface HoverCardContentProps {
       <HoverCard openDelay={50} closeDelay={50} defaultOpen={true}>
         <HoverCardTrigger>
           {#snippet child({ props })}
-            <a href="#link" class="nds-text-primary nds-hover-underline" style="text-underline-offset: 4px" {...props}>design-system.dev</a>
+            <a href="#link" class="nds-text-primary nds-hover-underline" {...props}>design-system.dev</a>
           {/snippet}
         </HoverCardTrigger>
         <HoverCardContent>
@@ -576,7 +576,6 @@ interface HoverCardContentProps {
             <button
               type="button"
               class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
-              style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help"
               {...props}
             >
               WCAG 2.2 AA
@@ -601,7 +600,6 @@ interface HoverCardContentProps {
             <button
               type="button"
               class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
-              style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help"
               {...props}
             >
               LCP 1.8s
@@ -667,13 +665,17 @@ interface HoverCardContentProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--popover',            value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
-      { token: '--popover-foreground', value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
-      { token: '--foreground/10',      value: $tStore('tokens.table.border.class'),     description: $tStore('tokens.table.border.part')     },
-      { token: 'shadow',               value: $tStore('tokens.table.shadow.class'),     description: $tStore('tokens.table.shadow.part')     },
-      { token: '--radius',             value: $tStore('tokens.table.rounded.class'),    description: $tStore('tokens.table.rounded.part')    },
-      { token: 'spacing',              value: $tStore('tokens.table.padding.class'),    description: $tStore('tokens.table.padding.part')    },
-      { token: 'size',                 value: $tStore('tokens.table.width.class'),      description: $tStore('tokens.table.width.part')      },
+      // A coluna do meio traz a PROPRIEDADE CSS que consome o token, lida linha
+      // a linha de `docs/shared/styles/nds/hover-card.css`. Todas moram em
+      // `.nds-hover-card-content`, menos a camada, que é do positioner.
+      { token: '--popover',            value: 'background-color', description: $tStore('tokens.table.background.part') },
+      { token: '--popover-foreground', value: 'color',            description: $tStore('tokens.table.foreground.part') },
+      { token: '--border',             value: 'border',           description: $tStore('tokens.table.border.part')     },
+      { token: '--elevation-xl',       value: 'box-shadow',       description: $tStore('tokens.table.shadow.part')     },
+      { token: '--radius',             value: 'border-radius',    description: $tStore('tokens.table.rounded.part')    },
+      { token: '--spacing-4',          value: 'padding',          description: $tStore('tokens.table.padding.part')    },
+      { token: '--hover-card-width',   value: 'width',            description: $tStore('tokens.table.width.part')      },
+      { token: '--z-popover',          value: 'z-index',          description: $tStore('tokens.table.layer.part')      },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

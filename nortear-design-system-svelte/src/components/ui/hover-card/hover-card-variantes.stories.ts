@@ -1,8 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
-
-import { expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
+import {
+  esperarAberto,
+  esperarFechado,
+  painelAberto,
+} from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
+
+// O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
+// varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
+// e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
+// enriquecimento opcional pede 600ms ou mais, para não abrir a cada passada de
+// cursor.
 
 const meta: Meta = {
   title: 'UI/HoverCard/Variants',
@@ -10,11 +19,13 @@ const meta: Meta = {
   tags: ['overlay'],
   parameters: {
     layout: 'centered',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do HoverCard: configuração de delay padrão da lib (700/300ms) e delay curto para previews ricos.',
+          'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
       },
     },
   },
@@ -23,44 +34,72 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const waitForOpen = async (_root: HTMLElement) => {
-  await waitFor(
-    async () => {
-      const dialog = await waitForPortal('dialog');
-      expect(dialog).toBeInTheDocument();
-    },
-    { timeout: 2000 }
-  );
-};
-
 export const Default: Story = {
-  name: 'Default (700ms / 300ms)',
+  name: 'Default (600ms / 300ms)',
   args: {
-    openDelay: 0,
-    closeDelay: 0,
     defaultOpen: true,
-    variant: 'userProfile',
+    variant: 'default',
     triggerLabel: '@joana',
   },
-  play: async ({ canvasElement }) => {
-    await waitForOpen(canvasElement);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toHaveAttribute('data-state', 'open');
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito no markup — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Sem atraso escrito no markup, o cartão usa o padrão do componente', async () => {
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText(/600ms/)).toBeVisible();
+      await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
+    });
   },
 };
 
 export const WithShortDelay: Story = {
-  name: 'With short delay (50ms)',
+  name: 'With short delay (150ms)',
   args: {
-    openDelay: 0,
-    closeDelay: 0,
-    defaultOpen: true,
-    variant: 'userProfile',
-    triggerLabel: '@joana',
+    defaultOpen: false,
+    openDelay: 150,
+    closeDelay: 100,
+    variant: 'withDelay',
+    triggerLabel: 'design-system.dev',
   },
-  play: async ({ canvasElement }) => {
-    await waitForOpen(canvasElement);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  parameters: {
+    covers: ['functional.item1'],
+    docs: {
+      description: {
+        story:
+          'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link');
+
+    // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado();
+
+    await step('O cartão abre depois da espera pedida na raiz', async () => {
+      await expect(painelAberto()).toBeNull();
+      const inicio = performance.now();
+      await userEvent.hover(gatilho);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+
+      // O cronômetro é a prova de que o atraso CHEGOU ao primitivo: com o
+      // binding perdido, o cartão usaria os 600ms padrão, muito acima deste
+      // teto. A folga é larga de propósito — o que se mede é a diferença entre
+      // 150 e 600, não a precisão do relógio.
+      await expect(performance.now() - inicio).toBeLessThan(550);
+    });
   },
 };

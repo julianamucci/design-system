@@ -60,7 +60,6 @@ function buildProfilePreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#joana';
   trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = '@joana';
 
   const content = document.createElement('div');
@@ -90,7 +89,6 @@ function buildLinkPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#link';
   trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = 'design-system.dev';
 
   const content = document.createElement('div');
@@ -125,7 +123,6 @@ function buildDefinitionPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#wcag';
   trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = 'WCAG 2.2';
 
   const content = document.createElement('div');
@@ -145,7 +142,6 @@ function buildMetricPreview(): HTMLElement {
   const trigger = document.createElement('a');
   trigger.href = '#metric';
   trigger.className = 'nds-text-primary nds-hover-underline';
-  trigger.style.textUnderlineOffset = '4px';
   trigger.textContent = '3,42%';
 
   const content = document.createElement('div');
@@ -366,8 +362,7 @@ export function createHoverCardDocs(): HTMLElement {
                 wrap.className = 'nds-text-body nds-stack';
                 wrap.dataset.spacing = 'xs';
                 const link = document.createElement('div');
-                link.className = 'nds-text-primary';
-                link.style.textDecoration = 'underline';
+                link.className = 'nds-text-primary nds-underline';
                 link.textContent = '@joana';
                 const note = document.createElement('div');
                 note.className = 'nds-text-caption nds-text-muted-foreground';
@@ -380,8 +375,7 @@ export function createHoverCardDocs(): HTMLElement {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-text-body';
                 const link = document.createElement('div');
-                link.className = 'nds-text-primary';
-                link.style.textDecoration = 'underline';
+                link.className = 'nds-text-primary nds-underline';
                 link.textContent = '@joana';
                 const note = document.createElement('div');
                 note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
@@ -467,7 +461,7 @@ createHoverCard({ trigger, content });`;
               useWhen: stripHtml(t('variants.items.userProfile.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = '/users/joana';
-trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
+trigger.className = 'nds-text-primary nds-hover-underline';
 trigger.textContent = '@joana';
 
 const content = document.createElement('div');
@@ -496,7 +490,7 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               useWhen: stripHtml(t('variants.items.linkPreview.use')),
               code: `const trigger = document.createElement('a');
 trigger.href = 'https://design-system.dev';
-trigger.className = 'nds-text-primary underline-offset-4 hover:underline';
+trigger.className = 'nds-text-primary nds-hover-underline';
 trigger.textContent = 'design-system.dev';
 
 const content = document.createElement('div');
@@ -528,8 +522,8 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               useWhen: stripHtml(t('variants.items.definitionTooltip.use')),
               code: `const trigger = document.createElement('button');
 trigger.type = 'button';
-trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
-Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+trigger.className =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 trigger.textContent = 'WCAG 2.2 AA';
 
 const content = document.createElement('div');
@@ -547,8 +541,7 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
                 const trigger = document.createElement('button');
                 trigger.type = 'button';
                 trigger.className =
-                  'nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer';
-                Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+                  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
                 trigger.textContent = 'WCAG 2.2 AA';
 
                 const content = document.createElement('div');
@@ -571,8 +564,8 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
               useWhen: stripHtml(t('variants.items.metricExplainer.use')),
               code: `const trigger = document.createElement('button');
 trigger.type = 'button';
-trigger.className = 'nds-text-primary nds-text-body nds-font-medium';
-Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+trigger.className =
+  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 trigger.textContent = 'LCP 1.8s';
 
 const content = document.createElement('div');
@@ -600,8 +593,7 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
                 const trigger = document.createElement('button');
                 trigger.type = 'button';
                 trigger.className =
-                  'nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer';
-                Object.assign(trigger.style, { background: 'transparent', border: '0', padding: '0', textDecoration: 'underline dotted', textUnderlineOffset: '4px', cursor: 'help' });
+                  'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
                 trigger.textContent = 'LCP 1.8s';
 
                 const content = document.createElement('div');
@@ -701,14 +693,18 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
+          // A coluna do meio traz a PROPRIEDADE CSS que consome o token, lida
+          // linha a linha de `docs/shared/styles/nds/hover-card.css`. Todas
+          // moram em `.nds-hover-card-content`, menos a camada, do positioner.
           items: [
-            { token: '--popover',            value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
-            { token: '--popover-foreground', value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
-            { token: '--border',             value: t('tokens.table.border.class'),     description: t('tokens.table.border.part')     },
-            { token: '--shadow-md',          value: t('tokens.table.shadow.class'),     description: t('tokens.table.shadow.part')     },
-            { token: '--radius',             value: t('tokens.table.rounded.class'),    description: t('tokens.table.rounded.part')    },
-            { token: 'spacing',              value: t('tokens.table.padding.class'),    description: t('tokens.table.padding.part')    },
-            { token: 'size',                 value: t('tokens.table.width.class'),      description: t('tokens.table.width.part')      },
+            { token: '--popover',            value: 'background-color', description: t('tokens.table.background.part') },
+            { token: '--popover-foreground', value: 'color',            description: t('tokens.table.foreground.part') },
+            { token: '--border',             value: 'border',           description: t('tokens.table.border.part')     },
+            { token: '--elevation-xl',       value: 'box-shadow',       description: t('tokens.table.shadow.part')     },
+            { token: '--radius',             value: 'border-radius',    description: t('tokens.table.rounded.part')    },
+            { token: '--spacing-4',          value: 'padding',          description: t('tokens.table.padding.part')    },
+            { token: '--hover-card-width',   value: 'width',            description: t('tokens.table.width.part')      },
+            { token: '--z-popover',          value: 'z-index',          description: t('tokens.table.layer.part')      },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

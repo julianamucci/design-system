@@ -14,15 +14,43 @@ export type HoverCardOptions = {
   content: HTMLElement;
   side?: HoverCardSide;
   align?: HoverCardAlign;
+  /** Espera em ms antes de abrir, depois que o ponteiro entra no gatilho. */
+  openDelay?: number;
+  /** Espera em ms antes de fechar, depois que o ponteiro sai. */
+  closeDelay?: number;
+  /** Abre já na montagem — o equivalente não-controlado das outras stacks. */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
+};
+
+/**
+ * Raiz do cartão com os dois comandos imperativos.
+ *
+ * É a forma que o modo CONTROLADO tem numa factory: não há prop reativa para
+ * observar, então quem controla chama `abrir()`/`fechar()` e recebe cada
+ * mudança de volta por `onOpenChange`. Antes disso, a única maneira de abrir
+ * por fora era despachar um `mouseenter` falso no gatilho — o que testava o
+ * evento, não o estado.
+ */
+export type HoverCardElement = HTMLElement & {
+  abrir: () => void;
+  fechar: () => void;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 let _hoverCardCounter = 0;
-const SHOW_DELAY = 300;
-const HIDE_DELAY = 150;
+
+/**
+ * Espera padrão do design system, igual nas cinco stacks.
+ *
+ * 600ms respeita a diretriz de uso (≥300ms) sem fazer o cartão abrir a cada
+ * passada de cursor; 300ms para fechar dá tempo de o ponteiro atravessar o vão
+ * entre o gatilho e o painel.
+ */
+const ESPERA_PADRAO_ABRIR = 600;
+const ESPERA_PADRAO_FECHAR = 300;
 
 function positionHoverCard(
   anchor: HTMLElement,
@@ -66,16 +94,23 @@ function positionHoverCard(
 
   panel.style.top = `${top}px`;
   panel.style.left = `${left}px`;
+  // O lado escolhido é publicado como nas outras stacks: é por ele que o CSS e
+  // os testes sabem para onde o cartão abriu.
+  panel.dataset.side = side;
+  panel.dataset.align = align;
 }
 
 // ─── createHoverCard ──────────────────────────────────────────────────────────
 
-export function createHoverCard(options: HoverCardOptions): HTMLElement {
+export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   const {
     trigger,
     content,
     side = 'bottom',
     align = 'center',
+    openDelay = ESPERA_PADRAO_ABRIR,
+    closeDelay = ESPERA_PADRAO_FECHAR,
+    defaultOpen = false,
     onOpenChange,
   } = options;
 
@@ -86,13 +121,25 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
-  const wrapper = document.createElement('div');
+  // O elemento nasce sem os dois comandos e os recebe no fim desta função —
+  // por isso a conversão passa por `unknown`: o `<div>` só vira `HoverCardElement`
+  // depois de `abrir`/`fechar` existirem.
+  const wrapper = document.createElement('div') as unknown as HoverCardElement;
   wrapper.dataset.slot = 'hover-card';
   wrapper.style.display = 'contents';
   wrapper.appendChild(trigger);
 
+  // Escape fecha (WCAG 1.4.13, dismissable). O listener é do DOCUMENTO porque o
+  // foco fica no gatilho — nunca dentro do painel — e só vive enquanto o cartão
+  // está aberto: um listener por instância, permanente, vazaria em toda página
+  // com muitas menções.
+  function aoTeclar(evento: KeyboardEvent): void {
+    if (evento.key === 'Escape') hide();
+  }
+
   function show(): void {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     if (panelEl) return;
 
     panelEl = document.createElement('div');
@@ -103,16 +150,12 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
     panelEl.style.position = 'absolute';
     panelEl.appendChild(content);
 
-    // PATCH: a11y — role="dialog" exige accessible name. Prefer aria-labelledby
-    // apontando para heading interno; fallback usa aria-label do trigger.
-    const heading = panelEl.querySelector<HTMLElement>('h1, h2, h3, h4, h5, h6, [role="heading"]');
-    if (heading) {
-      if (!heading.id) heading.id = `${cardId}-title`;
-      panelEl.setAttribute('aria-labelledby', heading.id);
-    } else {
-      const triggerLabel = trigger.getAttribute('aria-label') || trigger.textContent?.trim() || 'Hover card';
-      panelEl.setAttribute('aria-label', triggerLabel);
-    }
+    // PATCH: a11y — role="dialog" exige accessible name. Ele sai do rótulo que
+    // quem compõe declara no gatilho e, sem ele, do texto do próprio gatilho —
+    // a mesma regra das outras quatro stacks.
+    const triggerLabel =
+      trigger.getAttribute('aria-label') || trigger.textContent?.trim() || 'Prévia';
+    panelEl.setAttribute('aria-label', triggerLabel);
 
     document.body.appendChild(panelEl);
     positionHoverCard(trigger, panelEl, side, align);
@@ -122,12 +165,17 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
       if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     });
     panelEl.addEventListener('mouseleave', scheduleHide);
+    document.addEventListener('keydown', aoTeclar);
 
     onOpenChange?.(true);
   }
 
   function hide(): void {
-    panelEl?.remove();
+    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (!panelEl) return;
+    document.removeEventListener('keydown', aoTeclar);
+    panelEl.remove();
     panelEl = null;
     onOpenChange?.(false);
   }
@@ -135,16 +183,32 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement {
   function scheduleShow(): void {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     // Arrow literal — ver tooltip.ts pra justificativa.
-    showTimer = setTimeout(() => { show(); }, SHOW_DELAY);
+    showTimer = setTimeout(() => { show(); }, openDelay);
   }
 
   function scheduleHide(): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
-    hideTimer = setTimeout(() => { hide(); }, HIDE_DELAY);
+    hideTimer = setTimeout(() => { hide(); }, closeDelay);
   }
 
   trigger.addEventListener('mouseenter', scheduleShow);
   trigger.addEventListener('mouseleave', scheduleHide);
+
+  // Abrir por FOCO, e não só por ponteiro: é o que sustenta a WCAG 1.4.13 para
+  // quem navega por teclado, e é o comportamento que as outras quatro stacks
+  // herdam da lib. Sem isto o cartão era inalcançável sem mouse.
+  trigger.addEventListener('focus', scheduleShow);
+  trigger.addEventListener('blur', scheduleHide);
+
+  wrapper.abrir = show;
+  wrapper.fechar = hide;
+
+  if (defaultOpen) {
+    // `requestAnimationFrame` e não `queueMicrotask`: posicionar exige o
+    // retângulo do gatilho, e ele só existe depois de o wrapper entrar no
+    // documento e o navegador calcular o layout.
+    requestAnimationFrame(() => { show(); });
+  }
 
   return wrapper;
 }

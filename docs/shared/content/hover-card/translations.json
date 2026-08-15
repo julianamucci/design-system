@@ -95,8 +95,8 @@
           "delay": {
             "name": "openDelay",
             "format": "≥300ms para evitar abertura acidental",
-            "good": "openDelay={500}",
-            "bad": "openDelay={0}"
+            "good": "openDelay de 500ms",
+            "bad": "openDelay de 0ms"
           }
         }
       },
@@ -122,8 +122,8 @@
         "dont": "HoverCard como única forma de acessar uma ação — quebra para usuários touch."
       },
       "pair2": {
-        "do": "openDelay ≥300ms para evitar abertura acidental ao mover cursor.",
-        "dont": "openDelay=0 — abre a cada hover, vira ruído visual."
+        "do": "Espera de abertura ≥300ms para evitar abrir por acidente ao mover o cursor.",
+        "dont": "Espera de abertura em zero — abre a cada passada de cursor, vira ruído visual."
       }
     },
     "import": {
@@ -156,8 +156,8 @@
         }
       },
       "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
-        "withDelay": "Customizar via <code>openDelay</code> e <code>closeDelay</code> em ms; usar 300-500ms para previews ricos, 700ms+ para conteúdo opcional."
+        "default": "Espera de 600ms para abrir e 300ms para fechar; painel de 20rem com espaço interno de 16px, borda de 1px e sombra de elevação.",
+        "withDelay": "Ajuste a espera de abertura e de fechamento em ms; 300-500ms para previews que o leitor procura de propósito, 600ms ou mais para enriquecimento opcional."
       }
     },
     "states": {
@@ -174,7 +174,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "onOpenChange callback",
+        "trigger": "estado vindo de fora",
         "behavior": "Estado controlado + callback de mudança permitem gerenciar o estado externamente."
       },
       "cols": {
@@ -211,15 +211,15 @@
         },
         "openDelay": {
           "type": "number",
-          "default": "700",
+          "default": "600",
           "required": "Não",
-          "description": "Delay em ms antes de abrir após hover."
+          "description": "Espera em ms antes de abrir, no ponteiro e no foco."
         },
         "closeDelay": {
           "type": "number",
           "default": "300",
           "required": "Não",
-          "description": "Delay em ms antes de fechar após cursor sair."
+          "description": "Espera em ms antes de fechar depois que o cursor sai."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -244,40 +244,36 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe",
+        "class": "Propriedade",
         "part": "Aplicação",
         "background": {
-          "class": "bg-popover",
-          "part": "Fundo do Content"
+          "part": "Fundo do painel"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Cor do texto no Content"
+          "part": "Cor do texto dentro do painel"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Borda sutil (ring 1px)"
+          "part": "Borda de 1px do painel"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Sombra do cartão"
+          "part": "Sombra que descola o painel da página"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Cantos arredondados"
+          "part": "Cantos arredondados do painel"
         },
         "padding": {
-          "class": "p-2.5",
-          "part": "Padding interno do Content"
+          "part": "Espaço interno do painel (16px)"
         },
         "width": {
-          "class": "w-64",
-          "part": "Largura padrão (256px)"
+          "part": "Largura do painel — 20rem por padrão; redefina a propriedade para mudar todos os cartões de uma vez"
+        },
+        "layer": {
+          "part": "Camada do portal e do painel, acima do conteúdo da página"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de largura para previews maiores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animação custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+        "web": "/* Largura de TODOS os cartões — a folha do componente lê esta propriedade */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Largura de UM cartão: utilitária de largura no painel.\n   utilities.css entra por último no index.css, então ela vence. */\n/* class=\"nds-w-md\" no Content */\n\n/* Saída mais rápida */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
       }
     },
     "accessibility": {
@@ -295,13 +291,13 @@
         "title": "Navegação por Teclado",
         "tab": "Tab — move foco para o Trigger; HoverCard abre automaticamente após focus.",
         "escape": "ESC — fecha o Content.",
-        "shiftTab": "Shift+Tab — sai do Trigger e fecha o Content.",
+        "shiftTab": "Shift+Tab — devolve o foco ao elemento anterior; ao perder o foco, o Content fecha.",
         "enter": "Enter — ativa o trigger se for link/botão (comportamento padrão do elemento)."
       },
       "aria": {
         "title": "Atributos ARIA",
         "trigger": "Trigger: pode receber <code>aria-describedby</code> apontando para o Content.",
-        "content": "Content: <code>role=\"dialog\"</code> com <code>aria-modal=\"false\"</code> (não bloqueia interação).",
+        "content": "Content: <code>role=\"dialog\"</code> sem <code>aria-modal</code> — a ausência do atributo já significa não-modal, e o resto da página continua alcançável.",
         "expanded": "Trigger não recebe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
       "screenReader": {
@@ -336,7 +332,7 @@
       "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> usa factory custom com mouseenter/mouseleave + delays.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Touch devices</strong>: hover não funciona em touch. SEMPRE forneça alternativa (clique no link, página dedicada). HoverCard é enriquecimento, não único caminho.",
-      "item4": "<strong>Delays</strong>: openDelay padrão da lib é 700ms. Para previews ricos use 300-500ms; para tooltips comportamentais 700ms+.",
+      "item4": "<strong>Esperas</strong>: a espera padrão do sistema é de 600ms para abrir e 300ms para fechar, igual nas cinco stacks. Para previews ricos use 300-500ms; abaixo disso o cartão passa a abrir quando o cursor só atravessa o texto.",
       "item5": "<strong>Composição no Trigger</strong>: componha com link <code>&lt;a&gt;</code> ou Button como elemento filho para preservar semântica nativa do elemento."
     },
     "analytics": {
@@ -383,10 +379,10 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Content tem role=dialog e aria-modal=false (WCAG 4.1.2)",
+        "item2": "Content tem role=dialog com nome acessível e sem aria-modal (WCAG 4.1.2)",
         "item3": "Content abre por foco do teclado (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC fecha o Content (WCAG 1.4.13 dismissable)",
-        "item5": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)",
+        "item5": "Contraste mínimo 4.5:1 entre o texto e o fundo do painel (WCAG 1.4.3)",
         "item6": "Conteúdo do Content tem alternativa acessível por outro caminho"
       },
       "visual": {
@@ -410,7 +406,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Width customizada (w-72)",
+          "story": "Aberto com largura customizada",
           "priority": "medium"
         }
       }
@@ -533,8 +529,8 @@
           "delay": {
             "name": "openDelay",
             "format": "≥300ms to avoid accidental opens",
-            "good": "openDelay={500}",
-            "bad": "openDelay={0}"
+            "good": "openDelay of 500ms",
+            "bad": "openDelay of 0ms"
           }
         }
       },
@@ -560,8 +556,8 @@
         "dont": "HoverCard as the only way to access an action — breaks for touch users."
       },
       "pair2": {
-        "do": "openDelay ≥300ms to avoid accidental opens when moving cursor.",
-        "dont": "openDelay=0 — opens on every hover, becomes visual noise."
+        "do": "Open delay ≥300ms to avoid accidental opens when moving the cursor.",
+        "dont": "Zero open delay — opens on every hover, becomes visual noise."
       }
     },
     "import": {
@@ -594,8 +590,8 @@
         }
       },
       "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, <code>shadow-md</code>.",
-        "withDelay": "Customize via <code>openDelay</code> and <code>closeDelay</code> in ms; use 300-500ms for rich previews, 700ms+ for optional content."
+        "default": "600ms to open and 300ms to close; 20rem panel with 16px inner spacing, 1px border and elevation shadow.",
+        "withDelay": "Tune the open and close delays in ms; 300-500ms for previews the reader looks for on purpose, 600ms or more for optional enrichment."
       }
     },
     "states": {
@@ -612,7 +608,7 @@
       },
       "controlled": {
         "label": "Controlled",
-        "trigger": "onOpenChange callback",
+        "trigger": "state coming from outside",
         "behavior": "Controlled state + change callback manage state externally."
       },
       "cols": {
@@ -649,15 +645,15 @@
         },
         "openDelay": {
           "type": "number",
-          "default": "700",
+          "default": "600",
           "required": "No",
-          "description": "Delay in ms before opening after hover."
+          "description": "Delay in ms before opening, on pointer and on focus."
         },
         "closeDelay": {
           "type": "number",
           "default": "300",
           "required": "No",
-          "description": "Delay in ms before closing after cursor leaves."
+          "description": "Delay in ms before closing after the cursor leaves."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -682,40 +678,36 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Class",
+        "class": "Property",
         "part": "Application",
         "background": {
-          "class": "bg-popover",
-          "part": "Content background"
+          "part": "Panel background"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Text color in Content"
+          "part": "Text color inside the panel"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Subtle border (1px ring)"
+          "part": "1px panel border"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Card shadow"
+          "part": "Shadow lifting the panel off the page"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Rounded corners"
+          "part": "Panel rounded corners"
         },
         "padding": {
-          "class": "p-2.5",
-          "part": "Content inner padding"
+          "part": "Panel inner spacing (16px)"
         },
         "width": {
-          "class": "w-64",
-          "part": "Default width (256px)"
+          "part": "Panel width — 20rem by default; redefine the property to change every card at once"
+        },
+        "layer": {
+          "part": "Portal and panel layer, above the page content"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Width override for larger previews */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Custom animation */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+        "web": "/* Width for EVERY card — the component sheet reads this property */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Width for ONE card: a width utility on the panel.\n   utilities.css is imported last in index.css, so it wins. */\n/* class=\"nds-w-md\" on Content */\n\n/* Faster exit */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
       }
     },
     "accessibility": {
@@ -733,13 +725,13 @@
         "title": "Keyboard Navigation",
         "tab": "Tab — moves focus to Trigger; HoverCard opens automatically after focus.",
         "escape": "ESC — closes Content.",
-        "shiftTab": "Shift+Tab — leaves Trigger and closes Content.",
+        "shiftTab": "Shift+Tab — returns focus to the previous element; losing focus closes Content.",
         "enter": "Enter — activates trigger if it's a link/button (default element behavior)."
       },
       "aria": {
         "title": "ARIA Attributes",
         "trigger": "Trigger: may receive <code>aria-describedby</code> pointing to Content.",
-        "content": "Content: <code>role=\"dialog\"</code> with <code>aria-modal=\"false\"</code> (does not block interaction).",
+        "content": "Content: <code>role=\"dialog\"</code> with no <code>aria-modal</code> — the absence of the attribute already means non-modal, and the rest of the page stays reachable.",
         "expanded": "Trigger does not receive <code>aria-expanded</code> — different from DropdownMenu/Popover."
       },
       "screenReader": {
@@ -774,7 +766,7 @@
       "item1": "<strong>Upstream lib</strong>: HoverCard uses <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> uses a custom factory with mouseenter/mouseleave + delays.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Touch devices</strong>: hover doesn't work on touch. ALWAYS provide alternative (link click, dedicated page). HoverCard is enrichment, not the only path.",
-      "item4": "<strong>Delays</strong>: lib default openDelay is 700ms. For rich previews use 300-500ms; for behavioral tooltips 700ms+.",
+      "item4": "<strong>Delays</strong>: the system default is 600ms to open and 300ms to close, the same in all five stacks. For rich previews use 300-500ms; below that the card starts opening when the cursor merely crosses the text.",
       "item5": "<strong>Composition on Trigger</strong>: compose with a <code>&lt;a&gt;</code> link or Button as the child to preserve native element semantics."
     },
     "analytics": {
@@ -821,10 +813,10 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria automated tools should confirm.",
         "item1": "No violations reported by axe-core in default state",
-        "item2": "Content has role=dialog and aria-modal=false (WCAG 4.1.2)",
+        "item2": "Content has role=dialog with an accessible name and no aria-modal (WCAG 4.1.2)",
         "item3": "Content opens by keyboard focus (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC closes Content (WCAG 1.4.13 dismissable)",
-        "item5": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)",
+        "item5": "Minimum 4.5:1 contrast between text and the panel background (WCAG 1.4.3)",
         "item6": "Content has accessible alternative via another path"
       },
       "visual": {
@@ -848,7 +840,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Custom width (w-72)",
+          "story": "Open with custom width",
           "priority": "medium"
         }
       }
@@ -971,8 +963,8 @@
           "delay": {
             "name": "openDelay",
             "format": "≥300ms para evitar apertura accidental",
-            "good": "openDelay={500}",
-            "bad": "openDelay={0}"
+            "good": "openDelay de 500ms",
+            "bad": "openDelay de 0ms"
           }
         }
       },
@@ -998,8 +990,8 @@
         "dont": "HoverCard como única forma de acceder a una acción — rompe para usuarios touch."
       },
       "pair2": {
-        "do": "openDelay ≥300ms para evitar apertura accidental al mover cursor.",
-        "dont": "openDelay=0 — abre en cada hover, se vuelve ruido visual."
+        "do": "Espera de apertura ≥300ms para evitar aperturas accidentales al mover el cursor.",
+        "dont": "Espera de apertura en cero — abre en cada hover, se vuelve ruido visual."
       }
     },
     "import": {
@@ -1032,8 +1024,8 @@
         }
       },
       "styles": {
-        "default": "openDelay 700ms (lib default), closeDelay 300ms; <code>w-64</code>, <code>p-2.5</code>, sombra <code>shadow-md</code>.",
-        "withDelay": "Personaliza vía <code>openDelay</code> y <code>closeDelay</code> en ms; usa 300-500ms para previews ricos, 700ms+ para contenido opcional."
+        "default": "Espera de 600ms para abrir y 300ms para cerrar; panel de 20rem con espacio interno de 16px, borde de 1px y sombra de elevación.",
+        "withDelay": "Ajusta la espera de apertura y de cierre en ms; 300-500ms para previews que el lector busca a propósito, 600ms o más para enriquecimiento opcional."
       }
     },
     "states": {
@@ -1050,7 +1042,7 @@
       },
       "controlled": {
         "label": "Controlado",
-        "trigger": "onOpenChange callback",
+        "trigger": "estado que viene de fuera",
         "behavior": "Estado controlado + callback de cambio permiten gestionar el estado externamente."
       },
       "cols": {
@@ -1087,15 +1079,15 @@
         },
         "openDelay": {
           "type": "number",
-          "default": "700",
+          "default": "600",
           "required": "No",
-          "description": "Delay en ms antes de abrir tras hover."
+          "description": "Espera en ms antes de abrir, con el puntero y con el foco."
         },
         "closeDelay": {
           "type": "number",
           "default": "300",
           "required": "No",
-          "description": "Delay en ms antes de cerrar tras salir el cursor."
+          "description": "Espera en ms antes de cerrar tras salir el cursor."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -1120,40 +1112,36 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase",
+        "class": "Propiedad",
         "part": "Aplicación",
         "background": {
-          "class": "bg-popover",
-          "part": "Fondo del Content"
+          "part": "Fondo del panel"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Color del texto en Content"
+          "part": "Color del texto dentro del panel"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Borde sutil (ring 1px)"
+          "part": "Borde de 1px del panel"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Sombra de la tarjeta"
+          "part": "Sombra que despega el panel de la página"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Esquinas redondeadas"
+          "part": "Esquinas redondeadas del panel"
         },
         "padding": {
-          "class": "p-2.5",
-          "part": "Padding interno del Content"
+          "part": "Espacio interno del panel (16px)"
         },
         "width": {
-          "class": "w-64",
-          "part": "Ancho predeterminado (256px)"
+          "part": "Ancho del panel — 20rem por defecto; redefine la propiedad para cambiar todas las tarjetas de una vez"
+        },
+        "layer": {
+          "part": "Capa del portal y del panel, por encima del contenido de la página"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override de ancho para previews mayores */\n[data-slot='hover-card-content'] {\n  width: 320px;\n}\n\n/* Animación custom */\n[data-slot='hover-card-content'] {\n  animation-duration: 150ms;\n}"
+        "web": "/* Ancho de TODAS las tarjetas — la hoja del componente lee esta propiedad */\n:root {\n  --hover-card-width: 24rem;\n}\n\n/* Ancho de UNA tarjeta: utilidad de ancho en el panel.\n   utilities.css se importa al final en index.css, así que gana. */\n/* class=\"nds-w-md\" en Content */\n\n/* Salida más rápida */\n[data-slot='hover-card-content'][data-ending-style] {\n  transition-duration: 100ms;\n}"
       }
     },
     "accessibility": {
@@ -1171,13 +1159,13 @@
         "title": "Navegación por Teclado",
         "tab": "Tab — mueve foco al Trigger; HoverCard abre automáticamente tras focus.",
         "escape": "ESC — cierra el Content.",
-        "shiftTab": "Shift+Tab — sale del Trigger y cierra el Content.",
+        "shiftTab": "Shift+Tab — devuelve el foco al elemento anterior; al perder el foco, el Content se cierra.",
         "enter": "Enter — activa el trigger si es link/botón (comportamiento predeterminado del elemento)."
       },
       "aria": {
         "title": "Atributos ARIA",
         "trigger": "Trigger: puede recibir <code>aria-describedby</code> apuntando al Content.",
-        "content": "Content: <code>role=\"dialog\"</code> con <code>aria-modal=\"false\"</code> (no bloquea interacción).",
+        "content": "Content: <code>role=\"dialog\"</code> sin <code>aria-modal</code> — la ausencia del atributo ya significa no-modal, y el resto de la página sigue alcanzable.",
         "expanded": "Trigger no recibe <code>aria-expanded</code> — diferente de DropdownMenu/Popover."
       },
       "screenReader": {
@@ -1212,7 +1200,7 @@
       "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> usa factory custom con mouseenter/mouseleave + delays.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Touch devices</strong>: hover no funciona en touch. SIEMPRE proporciona alternativa (clic en el link, página dedicada). HoverCard es enriquecimiento, no único camino.",
-      "item4": "<strong>Delays</strong>: openDelay default de la lib es 700ms. Para previews ricos usa 300-500ms; para tooltips comportamentales 700ms+.",
+      "item4": "<strong>Esperas</strong>: la espera predeterminada del sistema es de 600ms para abrir y 300ms para cerrar, igual en los cinco stacks. Para previews ricos usa 300-500ms; por debajo de eso la tarjeta empieza a abrirse cuando el cursor solo atraviesa el texto.",
       "item5": "<strong>Composición en Trigger</strong>: compón con link <code>&lt;a&gt;</code> o Button como elemento hijo para preservar la semántica nativa del elemento."
     },
     "analytics": {
@@ -1259,10 +1247,10 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios que herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
-        "item2": "Content tiene role=dialog y aria-modal=false (WCAG 4.1.2)",
+        "item2": "Content tiene role=dialog con nombre accesible y sin aria-modal (WCAG 4.1.2)",
         "item3": "Content abre por foco de teclado (WCAG 1.4.13 hoverable+focusable)",
         "item4": "ESC cierra el Content (WCAG 1.4.13 dismissable)",
-        "item5": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)",
+        "item5": "Contraste mínimo 4.5:1 entre el texto y el fondo del panel (WCAG 1.4.3)",
         "item6": "Contenido del Content tiene alternativa accesible por otro camino"
       },
       "visual": {
@@ -1286,7 +1274,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Ancho personalizado (w-72)",
+          "story": "Abierto con ancho personalizado",
           "priority": "medium"
         }
       }

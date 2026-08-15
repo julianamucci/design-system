@@ -164,7 +164,7 @@ const interfaceCode = `// HoverCard (reka-ui)
 interface HoverCardRootProps {
   open?: boolean;
   defaultOpen?: boolean;
-  openDelay?: number;   // default 700ms
+  openDelay?: number;   // default 600ms
   closeDelay?: number;  // default 300ms
 }
 
@@ -251,8 +251,7 @@ const codeCompDefinition = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
     <button
       type="button"
-      class="nds-text-primary nds-text-body nds-font-medium"
-      style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+      class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
     >
       WCAG 2.2 AA
     </button>
@@ -269,8 +268,7 @@ const codeCompMetric = `<HoverCard :open-delay="400" :close-delay="150">
   <HoverCardTrigger as-child>
     <button
       type="button"
-      class="nds-text-primary nds-text-body nds-font-medium"
-      style="text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+      class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
     >
       LCP 1.8s
     </button>
@@ -310,14 +308,18 @@ const hoverCardPropItems = computed(() => [
   { name: 'align',         type: tContent('props.table.align.type'),        defaultValue: tContent('props.table.align.default'),        required: tContent('props.table.align.required'),        description: toPlainText(tContent('props.table.align.description'))        },
 ]);
 
+// A coluna do meio traz a PROPRIEDADE CSS que consome o token, lida linha a
+// linha de `docs/shared/styles/nds/hover-card.css`. Todas moram em
+// `.nds-hover-card-content`, menos a camada, que é do positioner.
 const tokenRows = computed(() => [
-  { token: '--popover',            value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
-  { token: '--popover-foreground', value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
-  { token: '--foreground/10',      value: tContent('tokens.table.border.class'),     description: tContent('tokens.table.border.part')     },
-  { token: 'shadow',               value: tContent('tokens.table.shadow.class'),     description: tContent('tokens.table.shadow.part')     },
-  { token: '--radius',             value: tContent('tokens.table.rounded.class'),    description: tContent('tokens.table.rounded.part')    },
-  { token: 'spacing',              value: tContent('tokens.table.padding.class'),    description: tContent('tokens.table.padding.part')    },
-  { token: 'size',                 value: tContent('tokens.table.width.class'),      description: tContent('tokens.table.width.part')      },
+  { token: '--popover',            value: 'background-color', description: tContent('tokens.table.background.part') },
+  { token: '--popover-foreground', value: 'color',            description: tContent('tokens.table.foreground.part') },
+  { token: '--border',             value: 'border',           description: tContent('tokens.table.border.part')     },
+  { token: '--elevation-xl',       value: 'box-shadow',       description: tContent('tokens.table.shadow.part')     },
+  { token: '--radius',             value: 'border-radius',    description: tContent('tokens.table.rounded.part')    },
+  { token: '--spacing-4',          value: 'padding',          description: tContent('tokens.table.padding.part')    },
+  { token: '--hover-card-width',   value: 'width',            description: tContent('tokens.table.width.part')      },
+  { token: '--z-popover',          value: 'z-index',          description: tContent('tokens.table.layer.part')      },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -424,7 +426,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#joana"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -471,7 +472,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#link"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -516,7 +516,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#wcag"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >WCAG 2.2</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -549,7 +548,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#metric"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >3,42%</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -656,8 +654,7 @@ const a11yCritCols = computed(() => ({
             data-spacing="xs"
           >
             <div
-              class="nds-text-primary"
-              style="text-decoration: underline;"
+              class="nds-text-primary nds-underline"
             >
               @joana
             </div>
@@ -674,8 +671,7 @@ const a11yCritCols = computed(() => ({
         >
           <div class="nds-text-body">
             <div
-              class="nds-text-primary"
-              style="text-decoration: underline;"
+              class="nds-text-primary nds-underline"
             >
               @joana
             </div>
@@ -727,7 +723,7 @@ const a11yCritCols = computed(() => ({
           class="nds-w-full"
         >
           <div class="nds-text-caption nds-font-mono nds-text-muted-foreground">
-            openDelay=700 / closeDelay=300
+            openDelay=600 / closeDelay=300
           </div>
         </div>
       </template>
@@ -755,7 +751,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#joana"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >@joana</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -797,7 +792,6 @@ const a11yCritCols = computed(() => ({
               <a
                 href="#link"
                 class="nds-text-primary nds-hover-underline"
-                style="text-underline-offset: 4px;"
               >design-system.dev</a>
             </HoverCardTrigger>
             <HoverCardContent>
@@ -836,8 +830,7 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <button
                 type="button"
-                class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
-                style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
               >
                 WCAG 2.2 AA
               </button>
@@ -866,8 +859,7 @@ const a11yCritCols = computed(() => ({
             <HoverCardTrigger as-child>
               <button
                 type="button"
-                class="nds-text-primary nds-text-body nds-font-medium nds-cursor-pointer"
-                style="background: transparent; border: 0; padding: 0; text-decoration: underline dotted; text-underline-offset: 4px; cursor: help;"
+                class="nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0"
               >
                 LCP 1.8s
               </button>

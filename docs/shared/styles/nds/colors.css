@@ -80,6 +80,11 @@
 .nds-hover-bg-muted-faint:hover { background-color: hsl(var(--muted) / 0.05); }  /* zebra suave de table-row */
 .nds-hover-bg-muted-soft:hover  { background-color: hsl(var(--muted) / 0.5); }
 .nds-hover-bg-accent:hover      { background-color: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+/* O deslocamento fica FORA do `:hover` de propósito: não muda nada enquanto o
+ * sublinhado não existe, e evita que cada call site repita
+ * `style="text-underline-offset: 4px"` — 4px é a medida que button.css,
+ * empty.css, field.css, item.css e toast.css já aplicam aos seus links. */
+.nds-hover-underline            { text-underline-offset: 4px; }
 .nds-hover-underline:hover      { text-decoration: underline; }
 .nds-hover-text-foreground:hover { color: hsl(var(--foreground)); }
 

@@ -1,11 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
+import {
+  esperarAberto,
+  esperarFechado,
+  painelAberto,
+} from '@shared/testing/hover-card-probe';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
-import { waitForPortal } from '@/lib/wait-for-portal';
+
+// O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
+// varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
+// e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
+// enriquecimento opcional pede 600ms ou mais, para não abrir a cada passada de
+// cursor.
 
 const meta = {
   title: 'UI/HoverCard/Variants',
@@ -13,12 +23,13 @@ const meta = {
   tags: ['overlay'],
   parameters: {
     layout: 'centered',
+    // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do HoverCard: Default (delays padrão da lib — openDelay 700ms, closeDelay 300ms) e ComDelayCurto (delays customizados de 100ms para previews mais responsivos).',
+          'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
       },
     },
   },
@@ -28,75 +39,104 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
+const ESTILO_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
 
 export const Default: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          'Variante padrão — w-64, p-2.5, shadow-md, rounded-lg, ring-foreground/10. Delays padrão da lib.',
+          'Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito no markup — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 220px;">
-        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
+      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+        Comentário de
+        <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
-            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@joana</a>
+            <a href="/users/joana" class="nds-text-primary nds-font-medium nds-hover-underline">@joana</a>
           </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start">
-            <div class="nds-cluster" data-spacing="sm">
-              <div class="nds-size-10 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
-              <div class="nds-stack" data-spacing="xs">
-                <p class="nds-text-body nds-font-medium" style="line-height: 1">Joana Silva</p>
-                <p class="nds-text-caption nds-text-muted-foreground">Designer · 142 seguidores</p>
-              </div>
+          <HoverCardContent>
+            <div class="nds-stack" data-spacing="xs">
+              <p class="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                Espera padrão: 600ms para abrir e 300ms para fechar.
+              </p>
             </div>
           </HoverCardContent>
         </HoverCard>
-      </div>
+        há 2 horas.
+      </p>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Sem atraso escrito no markup, o cartão usa o padrão do componente', async () => {
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText(/600ms/)).toBeVisible();
+      await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
+    });
   },
 };
 
 export const WithShortDelay: Story = {
   parameters: {
+    covers: ['functional.item1'],
     docs: {
       description: {
         story:
-          'Delay customizado — openDelay 100ms / closeDelay 50ms. Útil para previews onde resposta rápida é desejada (ex: lista de @mentions).',
+          'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 220px;">
-        <HoverCard :default-open="true" :open-delay="0" :close-delay="0">
+      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+        Documentação em
+        <HoverCard :open-delay="150" :close-delay="100">
           <HoverCardTrigger as-child>
-            <a href="#" class="nds-font-medium nds-text-primary underline-offset-4 nds-hover-underline">@bruno</a>
+            <a href="https://design-system.dev" class="nds-text-primary nds-font-medium nds-hover-underline">design-system.dev</a>
           </HoverCardTrigger>
-          <HoverCardContent side="bottom" align="start">
-            <div class="nds-cluster" data-spacing="sm">
-              <div class="nds-size-10 nds-rounded-full nds-bg-muted" aria-hidden="true"></div>
-              <div class="nds-stack" data-spacing="xs">
-                <p class="nds-text-body nds-font-medium" style="line-height: 1">Bruno Lima</p>
-                <p class="nds-text-caption nds-text-muted-foreground">Engenharia · 89 seguidores</p>
-              </div>
+          <HoverCardContent>
+            <div class="nds-stack" data-spacing="xs">
+              <p class="nds-text-body nds-font-medium nds-leading-none">Guia de overlays acessíveis</p>
+              <p class="nds-text-caption nds-text-muted-foreground">
+                Espera de 150ms para abrir e 100ms para fechar.
+              </p>
             </div>
           </HoverCardContent>
         </HoverCard>
-      </div>
+        — leitura de 8 minutos.
+      </p>
     `,
   }),
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('link');
+
+    // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
+    await userEvent.keyboard('{Escape}');
+    await esperarFechado();
+
+    await step('O cartão abre depois da espera pedida na raiz', async () => {
+      await expect(painelAberto()).toBeNull();
+      const inicio = performance.now();
+      await userEvent.hover(gatilho);
+      const painel = await esperarAberto();
+      await expect(painel).toBeVisible();
+      await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
+
+      // O cronômetro é a prova de que o atraso CHEGOU ao primitivo: com o
+      // binding perdido, o cartão usaria os 600ms padrão, muito acima deste
+      // teto. A folga é larga de propósito — o que se mede é a diferença entre
+      // 150 e 600, não a precisão do relógio.
+      await expect(performance.now() - inicio).toBeLessThan(550);
+    });
   },
 };
