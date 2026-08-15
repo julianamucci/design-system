@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createPopover } from './popover';
 import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
@@ -14,6 +14,7 @@ type PopoverArgs = {
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   defaultOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 const meta: Meta<PopoverArgs> = {
@@ -24,22 +25,42 @@ const meta: Meta<PopoverArgs> = {
     docs: { page: withAutoDocsTab(createPopoverDocs) },
   },
   argTypes: {
-    triggerLabel: { control: 'text', description: 'Texto do PopoverTrigger.' },
-    title:        { control: 'text', description: 'Título exibido no header (PopoverTitle).' },
-    description:  { control: 'text', description: 'Descrição opcional (PopoverDescription).' },
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto do PopoverTrigger.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: 'Abrir popover' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Título exibido no header. Vira o nome acessível do painel.',
+      table: { type: { summary: 'string' } },
+    },
+    description: {
+      control: 'text',
+      description: 'Descrição opcional abaixo do título.',
+      table: { type: { summary: 'string' } },
+    },
     side: {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
       description: 'Lado de abertura do Content.',
+      table: { type: { summary: '"top" | "bottom" | "left" | "right"' }, defaultValue: { summary: '"bottom"' } },
     },
     align: {
       control: { type: 'inline-radio' },
       options: ['start', 'center', 'end'],
       description: 'Alinhamento ao longo do eixo de side.',
+      table: { type: { summary: '"start" | "center" | "end"' }, defaultValue: { summary: '"center"' } },
     },
     defaultOpen: {
       control: 'boolean',
-      description: 'Abre o popover ao montar (dispatch click no trigger).',
+      description: 'Abre o popover ao montar.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Callback disparado a cada abertura e fechamento, com o novo estado.',
+      table: { type: { summary: '(open: boolean) => void' } },
     },
   },
   args: {
@@ -49,6 +70,7 @@ const meta: Meta<PopoverArgs> = {
     side: 'bottom',
     align: 'center',
     defaultOpen: false,
+    onOpenChange: fn(),
   },
 };
 
@@ -67,34 +89,67 @@ function buildContent(args: PopoverArgs): HTMLElement {
   header.dataset.spacing = 'xs';
 
   const title = document.createElement('h4');
-  title.className = 'nds-text-body nds-font-medium nds-leading-none';
+  title.className = 'nds-popover-title';
+  title.dataset.slot = 'popover-title';
   title.textContent = args.title;
 
   const desc = document.createElement('p');
-  desc.className = 'nds-text-caption nds-text-muted-foreground';
+  desc.className = 'nds-popover-description';
+  desc.dataset.slot = 'popover-description';
   desc.textContent = args.description;
 
   header.append(title, desc);
-  content.appendChild(header);
+
+  const actions = document.createElement('div');
+  actions.className = 'nds-cluster';
+  actions.dataset.spacing = 'sm';
+  actions.dataset.justify = 'end';
+  actions.append(
+    createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
+    createButton({ variant: 'default', size: 'sm', label: 'Salvar' }),
+  );
+
+  content.append(header, actions);
   return content;
 }
 
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="popover-content"]').forEach((n) => n.remove());
+function painel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
+}
+
+/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
+async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
+  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
   await waitFor(() => {
-    if (document.querySelector('[data-slot="popover-content"]')) throw new Error('still open');
-  });
+    if (!painel()) throw new Error('popover ainda fechado');
+  }, { timeout: 1500 });
+  return painel()!;
+}
+
+/** Fecha só se estiver aberto. */
+async function fechar(gatilho: HTMLElement): Promise<void> {
+  if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
+  await waitFor(() => {
+    if (painel()) throw new Error('popover ainda aberto');
+  }, { timeout: 1000 });
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3',
+      'accessibility.item4',
+    ],
+  },
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
-    container.className = 'nds-cluster nds-w-full';
-    container.dataset.justify = 'center';
-    container.style.minHeight = '260px';
+    container.className = 'nds-stack nds-w-full';
+    container.dataset.spacing = 'md';
+    container.dataset.align = 'center';
+    container.style.minHeight = '300px';
 
     const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
     const el = createPopover({
@@ -102,9 +157,18 @@ export const Playground: Story = {
       content: buildContent(args),
       side: args.side,
       align: args.align,
+      onOpenChange: args.onOpenChange,
     });
 
-    container.appendChild(el);
+    // Alvo inerte para o teste de dispensa: clicar em `document.body` depende
+    // da geometria da página e do ponto exato do clique sintético — clicar num
+    // elemento real fora do painel é o que prova a regra.
+    const externo = document.createElement('p');
+    externo.className = 'nds-text-body nds-text-muted-foreground';
+    externo.dataset.testid = 'area-externa';
+    externo.textContent = 'Área externa';
+
+    container.append(el, externo);
 
     if (args.defaultOpen) {
       queueMicrotask(() => trigger.click());
@@ -114,46 +178,76 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const triggerRe = new RegExp(args.triggerLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const gatilho = canvas.getByRole('button', { name: triggerRe });
 
-    const waitForOpen = async () => {
-      await waitFor(() => {
-        if (!document.querySelector('[data-slot="popover-content"]')) {
-          throw new Error('popover ainda fechado');
-        }
-      }, { timeout: 1500 });
-    };
-
-    const waitForClose = async () => {
-      await waitFor(() => {
-        if (document.querySelector('[data-slot="popover-content"]')) {
-          throw new Error('popover ainda aberto');
-        }
-      }, { timeout: 1000 });
-    };
-
-    if (!args.defaultOpen) {
-      await step('1. Clique no trigger abre o Content', async () => {
-        const trigger = canvas.getByRole('button', { name: triggerRe });
-        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-        await userEvent.click(trigger);
-        await waitForOpen();
-        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      });
-    } else {
-      await step('1. Renderiza aberto', async () => {
-        await waitForOpen();
-      });
-    }
-
-    await step('2. Escape fecha e retorna foco ao trigger', async () => {
-      await userEvent.keyboard('{Escape}');
-      await waitForClose();
-      const trigger = canvas.getByRole('button', { name: triggerRe });
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await step('O gatilho anuncia que abre um diálogo', async () => {
+      await expect(gatilho).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(gatilho).toHaveAttribute('data-slot', 'popover-trigger');
     });
 
-    await step('3. Cleanup do portal', async () => {
-      await cleanupPortal();
+    await step('Clicar no gatilho abre o painel com role=dialog', async () => {
+      await fechar(gatilho);
+      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const p = await abrir(gatilho);
+      await expect(p).toHaveAttribute('role', 'dialog');
+      await expect(p).toHaveClass(/nds-popover-content/);
+      await expect(p).toHaveAttribute('data-state', 'open');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBe(chamadasAntes + 1);
+    });
+
+    await step('Aberto, aria-controls aponta para o id real do painel', async () => {
+      const id = gatilho.getAttribute('aria-controls');
+      await expect(id).toBeTruthy();
+      await expect(document.getElementById(id!)).toBe(painel());
+    });
+
+    await step('O painel não é modal', async () => {
+      // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
+      // tela esconder tudo o que está fora dele, que é contrato de Dialog.
+      await expect(painel()).not.toHaveAttribute('aria-modal');
+    });
+
+    await step('O foco entra no painel ao abrir', async () => {
+      await waitFor(() => {
+        if (!painel()!.contains(document.activeElement)) {
+          throw new Error('foco não entrou no painel');
+        }
+      });
+      // Primeiro focável, não um qualquer: é o que a tabela de estados promete.
+      await expect(document.activeElement).toBe(
+        within(painel()!).getByRole('button', { name: /cancelar/i }),
+      );
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await abrir(gatilho);
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => {
+        if (painel()) throw new Error('popover ainda aberto');
+      });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(gatilho).toHaveAttribute('data-state', 'closed');
+      // Sem painel não há id para apontar, e o atributo some junto.
+      await expect(gatilho.getAttribute('aria-controls')).toBeNull();
+      await expect(gatilho).toHaveFocus();
+    });
+
+    await step('Clicar fora fecha o painel', async () => {
+      await abrir(gatilho);
+      await userEvent.click(canvas.getByTestId('area-externa'));
+      await waitFor(() => {
+        if (painel()) throw new Error('popover ainda aberto');
+      });
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      const p = await abrir(gatilho);
+      await expect(p).toBeVisible();
     });
   },
 };

@@ -189,12 +189,12 @@
       "transitioning": {
         "label": "Transitioning",
         "trigger": "animação de entrada/saída",
-        "behavior": "Animação de entrada/saída — <code>data-open</code>/<code>data-closed</code> aplicam classes <code>animate-in</code>/<code>animate-out</code>."
+        "behavior": "Animação de saída — o painel continua montado até a transição de opacidade e escala terminar. A entrada aparece direto, sem animação."
       },
       "focused": {
         "label": "Focused",
         "trigger": "tab em elemento interno",
-        "behavior": "Elemento interno focado — anel de foco visível com <code>ring-2 ring-ring</code>."
+        "behavior": "Elemento interno focado — anel de foco visível, desenhado com <code>box-shadow</code> a partir do token <code>--ring</code>."
       },
       "cols": {
         "state": "Estado",
@@ -266,27 +266,27 @@
         "class": "Classe",
         "part": "Aplicação",
         "popover": {
-          "class": "bg-popover",
+          "class": ".nds-popover-content",
           "part": "Fundo do PopoverContent"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
+          "class": ".nds-popover-content",
           "part": "Texto principal do PopoverContent"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-popover-description",
           "part": "Texto da PopoverDescription"
         },
         "border": {
-          "class": "ring-foreground/10",
+          "class": ".nds-popover-content",
           "part": "Borda sutil do PopoverContent"
         },
         "shadow": {
-          "class": "shadow-md",
+          "class": ".nds-popover-content",
           "part": "Sombra do PopoverContent"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-focus-ring",
           "part": "Anel de foco em elementos internos"
         }
       },
@@ -642,12 +642,12 @@
       "transitioning": {
         "label": "Transitioning",
         "trigger": "enter/exit animation",
-        "behavior": "Enter/exit animation — <code>data-open</code>/<code>data-closed</code> apply <code>animate-in</code>/<code>animate-out</code> classes."
+        "behavior": "Exit animation — the panel stays mounted until the opacity and scale transition ends. The entrance appears at once, with no animation."
       },
       "focused": {
         "label": "Focused",
         "trigger": "tab on inner element",
-        "behavior": "Internal element focused — visible focus ring with <code>ring-2 ring-ring</code>."
+        "behavior": "Internal element focused — visible focus ring, drawn with <code>box-shadow</code> from the <code>--ring</code> token."
       },
       "cols": {
         "state": "State",
@@ -719,27 +719,27 @@
         "class": "Class",
         "part": "Application",
         "popover": {
-          "class": "bg-popover",
+          "class": ".nds-popover-content",
           "part": "PopoverContent background"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
+          "class": ".nds-popover-content",
           "part": "PopoverContent main text"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-popover-description",
           "part": "PopoverDescription text"
         },
         "border": {
-          "class": "ring-foreground/10",
+          "class": ".nds-popover-content",
           "part": "Subtle PopoverContent border"
         },
         "shadow": {
-          "class": "shadow-md",
+          "class": ".nds-popover-content",
           "part": "PopoverContent shadow"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-focus-ring",
           "part": "Focus ring on internal elements"
         }
       },
@@ -1095,12 +1095,12 @@
       "transitioning": {
         "label": "Transitioning",
         "trigger": "animación de entrada/salida",
-        "behavior": "Animación de entrada/salida — <code>data-open</code>/<code>data-closed</code> aplican <code>animate-in</code>/<code>animate-out</code>."
+        "behavior": "Animación de salida — el panel sigue montado hasta que termina la transición de opacidad y escala. La entrada aparece de una vez, sin animación."
       },
       "focused": {
         "label": "Focused",
         "trigger": "tab en elemento interno",
-        "behavior": "Elemento interno enfocado — anillo de foco visible con <code>ring-2 ring-ring</code>."
+        "behavior": "Elemento interno enfocado — anillo de foco visible, dibujado con <code>box-shadow</code> a partir del token <code>--ring</code>."
       },
       "cols": {
         "state": "Estado",
@@ -1172,27 +1172,27 @@
         "class": "Clase",
         "part": "Aplicación",
         "popover": {
-          "class": "bg-popover",
+          "class": ".nds-popover-content",
           "part": "Fondo del PopoverContent"
         },
         "popoverForeground": {
-          "class": "text-popover-foreground",
+          "class": ".nds-popover-content",
           "part": "Texto principal del PopoverContent"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
+          "class": ".nds-popover-description",
           "part": "Texto de PopoverDescription"
         },
         "border": {
-          "class": "ring-foreground/10",
+          "class": ".nds-popover-content",
           "part": "Borde sutil del PopoverContent"
         },
         "shadow": {
-          "class": "shadow-md",
+          "class": ".nds-popover-content",
           "part": "Sombra del PopoverContent"
         },
         "ring": {
-          "class": "ring-ring",
+          "class": ".nds-focus-ring",
           "part": "Anillo de foco en elementos internos"
         }
       },

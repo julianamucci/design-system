@@ -13,7 +13,14 @@
  */
 
 .nds-popover-content {
-  position: absolute;
+  /* SEM `position: absolute` aqui. Quem posiciona o painel é o positioner —
+   * uma caixa que a lib headless coloca no lugar certo e dentro da qual o
+   * painel ocupa o fluxo normal. Tirar o painel do fluxo colapsava o
+   * positioner para 0×0, e o painel passava a crescer para BAIXO a partir do
+   * ponto de ancoragem: com `side="top"` ele cobria o próprio gatilho, sem
+   * erro nenhum e com `data-side="top"` dizendo que estava certo.
+   * A factory sem lib continua cravando `position: absolute` inline, que é
+   * onde essa responsabilidade de fato mora. */
   z-index: var(--z-popover);
   width: 18rem;                                  /* 288px — w-72 */
 

@@ -35,6 +35,33 @@ function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
   )
 }
 
+/**
+ * Nome acessível de reserva para o painel.
+ *
+ * `role="dialog"` sem nome reprova na regra `aria-dialog-name` do axe, e a
+ * variante "apenas conteúdo" do conteúdo compartilhado não tem título. Com
+ * `PopoverTitle` a lib já monta o `aria-labelledby`; sem ele o painel nascia
+ * anônimo. O Vanilla — referência de markup — resolve exatamente assim: sem
+ * título, o painel herda o texto acessível do gatilho. Nomear à mão sempre
+ * vence: a função só age quando não há nome nenhum.
+ */
+function nomearPainel(el: HTMLElement | null): void {
+  if (!el) return
+  if (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby")) return
+
+  const heading = el.querySelector<HTMLElement>('h1, h2, h3, h4, h5, h6, [role="heading"]')
+  if (heading) {
+    if (!heading.id) heading.id = `${el.id || "popover"}-title`
+    el.setAttribute("aria-labelledby", heading.id)
+    return
+  }
+  const trigger = el.ownerDocument.querySelector<HTMLElement>(
+    '[aria-haspopup="dialog"][aria-expanded="true"]'
+  )
+  const nome = trigger?.getAttribute("aria-label") || trigger?.textContent?.trim()
+  if (nome) el.setAttribute("aria-label", nome)
+}
+
 function PopoverContent({
   className,
   align = "center",
@@ -58,6 +85,11 @@ function PopoverContent({
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
+          // Callback ref, e não `useEffect`: o painel monta e desmonta com o
+          // portal, e o ref roda no nó certo em cada montagem. A leitura do
+          // título acontece depois de o conteúdo estar dentro, que é o que um
+          // efeito de montagem do PRÓPRIO Popup não garantiria.
+          ref={nomearPainel}
           className={cn(
             "nds-popover-content",
             className

@@ -22,6 +22,26 @@ export type PopoverOptions = {
 
 let _popoverCounter = 0;
 
+/**
+ * O que conta como "primeiro elemento focável" dentro do painel.
+ *
+ * `[tabindex="-1"]` fica de fora de propósito: é o marcador de foco
+ * programático, não de parada na ordem de tabulação — e o próprio painel o tem.
+ */
+const FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
+function getFocusable(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE))
+    .filter((el) => !el.closest('[hidden]'));
+}
+
 function positionFloating(
   anchor: HTMLElement,
   panel: HTMLElement,
@@ -89,8 +109,16 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   wrapper.style.display = 'contents';
   wrapper.appendChild(trigger);
 
+  // O gatilho passa a declarar o próprio papel no markup, como nas demais
+  // stacks — a peça que compõe vence o `data-slot` de quem foi composto.
+  trigger.dataset.slot = 'popover-trigger';
   trigger.setAttribute('aria-expanded', 'false');
   trigger.setAttribute('aria-haspopup', 'dialog');
+  // `data-state` é o contrato de estado que a tabela de Estados do conteúdo
+  // compartilhado descreve e que as demais stacks emitem pela lib headless.
+  // Aqui não há lib: sem esta linha o atributo documentado não existiria em
+  // lugar nenhum do stack de referência.
+  trigger.dataset.state = 'closed';
   // aria-controls is set only when the popover is open (otherwise it
   // references a non-existent element, which fails axe aria-valid-attr-value).
 
@@ -99,7 +127,11 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     panelEl.id = contentId;
     panelEl.className = cn('nds-popover-content', options.class);
     panelEl.dataset.slot = 'popover-content';
+    panelEl.dataset.state = 'open';
     panelEl.setAttribute('role', 'dialog');
+    // O painel recebe foco quando não há nada focável dentro: é o que faz o
+    // leitor de tela anunciar o diálogo mesmo num painel só de texto.
+    panelEl.tabIndex = -1;
     panelEl.style.position = 'absolute';
 
     if (typeof content === 'string') {
@@ -128,7 +160,15 @@ export function createPopover(options: PopoverOptions): HTMLElement {
 
     trigger.setAttribute('aria-expanded', 'true');
     trigger.setAttribute('aria-controls', contentId);
+    trigger.dataset.state = 'open';
     isOpen = true;
+
+    // O foco entra no painel — é o que separa o popover do tooltip. O conteúdo
+    // é interativo (formulário, filtro, botões), e sem isto quem navega por
+    // teclado teria de atravessar o resto da página para alcançá-lo. É a
+    // promessa que o conteúdo compartilhado faz em três seções: acessibilidade,
+    // estados e critérios de teste.
+    (getFocusable(panelEl)[0] ?? panelEl).focus();
 
     document.addEventListener('keydown', handleKeydown);
     // Defer so this open click doesn't immediately trigger the outside-click close
@@ -138,14 +178,26 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   }
 
   function close(): void {
+    // Se o foco estava dentro do painel — ou já se perdeu para o <body> —, ele
+    // volta ao gatilho. Fechar removendo o elemento focado sem devolver o foco
+    // manda quem navega por teclado de volta ao início da página (WCAG 2.4.3).
+    // Quando a dispensa levou o foco a OUTRO controle da página, o foco fica
+    // onde a pessoa o pôs: puxá-lo de volta seria roubá-lo.
+    const focoEstavaDentro =
+      !!panelEl &&
+      (panelEl.contains(document.activeElement) || document.activeElement === document.body);
+
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');
     trigger.removeAttribute('aria-controls');
+    trigger.dataset.state = 'closed';
     isOpen = false;
 
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
+
+    if (focoEstavaDentro) trigger.focus();
 
     onOpenChange?.(false);
   }
@@ -153,8 +205,9 @@ export function createPopover(options: PopoverOptions): HTMLElement {
   function handleKeydown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.preventDefault();
+      // `close()` já devolve o foco ao gatilho quando ele estava dentro do
+      // painel, que é sempre o caso vindo do Escape.
       close();
-      trigger.focus();
     }
   }
 
@@ -169,6 +222,21 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     e.stopPropagation();
     if (isOpen) close(); else open();
   });
+
+  // O painel mora em portal no body: quando o wrapper sai do DOM — troca de
+  // story no Storybook, desmonte de página — nada removeria o painel, e ele
+  // sobreviveria por cima do conteúdo seguinte. Mesmo mecanismo do dialog.
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      if (!wrapper.isConnected) {
+        if (panelEl) close();
+        observer.disconnect();
+      }
+    });
+    const startObserve = () => observer.observe(document.body, { childList: true, subtree: true });
+    if (document.body) startObserve();
+    else queueMicrotask(startObserve);
+  }
 
   return wrapper;
 }

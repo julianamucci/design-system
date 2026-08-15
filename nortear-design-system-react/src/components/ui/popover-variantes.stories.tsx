@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor, screen, within } from "storybook/test";
+import { expect, waitFor, screen, within, userEvent } from "storybook/test";
 import {
   Popover,
   PopoverContent,
@@ -39,10 +39,11 @@ const wrapperStyle: React.CSSProperties = {
 
 export const Default: Story = {
   parameters: {
+    covers: ["visual.item1"],
     docs: {
       description: {
         story:
-          "Default — conteúdo livre dentro do PopoverContent. Mantém PopoverTitle por acessibilidade.",
+          "Conteúdo livre dentro do PopoverContent. Sem título, o painel herda o nome acessível do gatilho.",
       },
     },
   },
@@ -50,30 +51,37 @@ export const Default: Story = {
     <div style={wrapperStyle}>
       <Popover defaultOpen>
         <PopoverTrigger asChild>
-          <Button variant="outline">Abrir popover</Button>
+          <Button variant="outline">Ver atalhos</Button>
         </PopoverTrigger>
         <PopoverContent>
-          <PopoverTitle className="nds-text-body nds-font-medium">
-            Configuracoes de exibição
-          </PopoverTitle>
-          <p className="nds-text-caption nds-text-muted-foreground">
-            Ajuste a aparência do conteúdo da página.
+          <p className="nds-text-body">
+            Use Ctrl + K para abrir a busca em qualquer tela.
           </p>
         </PopoverContent>
       </Popover>
     </div>
   ),
   play: async ({ step }) => {
-    await step("Content tem role=dialog e título acessível", async () => {
+    await step("Sem título, o painel herda o nome acessível do gatilho", async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
-      await expect(dialog.textContent).toMatch(/Configuracoes de exibição/i);
+      await expect(dialog).toHaveAccessibleName("Ver atalhos");
+    });
+
+    await step("E carrega a classe do design system com o conteúdo livre", async () => {
+      const dialog = screen.getByRole("dialog");
+      await expect(dialog).toHaveClass(/nds-popover-content/);
+      await expect(dialog.textContent).toMatch(/Ctrl \+ K/);
     });
   },
 };
 
 export const WithTitle: Story = {
   parameters: {
+    covers: [
+      "visual.item2", "accessibility.item5", "accessibility.item3", "functional.item4",
+    ],
     docs: {
       description: {
         story:
@@ -105,17 +113,50 @@ export const WithTitle: Story = {
     </div>
   ),
   play: async ({ step }) => {
-    await step("Dialog inclui title e description distintos", async () => {
+    await step("O título nomeia o painel por aria-labelledby", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
-      await expect(dialog.textContent).toMatch(/Configuracoes de exibição/i);
-      await expect(dialog.textContent).toMatch(/aparência do conteúdo/i);
+      const idTitulo = dialog.getAttribute("aria-labelledby");
+      await expect(idTitulo).toBeTruthy();
+      const titulo = document.getElementById(idTitulo!)!;
+      await expect(titulo).toHaveClass(/nds-popover-title/);
+      await expect(titulo.textContent).toMatch(/Configuracoes de exibição/i);
+    });
+
+    await step("A descrição entra por aria-describedby", async () => {
+      const dialog = screen.getByRole("dialog");
+      const idDescricao = dialog.getAttribute("aria-describedby");
+      await expect(idDescricao).toBeTruthy();
+      await expect(document.getElementById(idDescricao!)).toHaveClass(
+        /nds-popover-description/,
+      );
+    });
+
+    await step("Tab caminha entre os controles internos", async () => {
+      const dialog = screen.getByRole("dialog");
+      const cancelar = within(dialog).getByRole("button", { name: /Cancelar/i });
+      const salvar = within(dialog).getByRole("button", { name: /Salvar/i });
+      cancelar.focus();
+      await userEvent.tab();
+      await expect(salvar).toHaveFocus();
+    });
+
+    await step("E o elemento focado por teclado mostra o anel de foco", async () => {
+      // `:focus-visible` é a condição exata que o CSS compartilhado usa para
+      // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
+      // casaria a pseudo-classe e o anel não apareceria.
+      const salvar = within(screen.getByRole("dialog")).getByRole("button", { name: /Salvar/i });
+      await expect(salvar.matches(":focus-visible")).toBe(true);
+      // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
+      // errada daria verde em qualquer elemento.
+      await expect(getComputedStyle(salvar).boxShadow).not.toBe("none");
     });
   },
 };
 
 export const Form: Story = {
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
         story:

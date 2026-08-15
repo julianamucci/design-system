@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 
 const meta: Meta = {
@@ -11,10 +11,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes estruturais do Popover. Não há prop `variant` ou `cva()` — cada item abaixo é um padrão de uso recorrente.',
+          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele herda o texto do gatilho.',
       },
     },
   },
@@ -23,33 +24,45 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const waitOpen = async () => {
-  const dialog = await waitForPortal('dialog', { timeout: 2000 });
-  await expect(dialog).toBeVisible();
-};
+function painel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
+}
 
 export const Default: Story = {
   parameters: {
+    covers: ['visual.item1'],
     docs: {
       description: {
         story:
-          'Conteúdo livre — apenas `PopoverContent` com texto. Use para snippets curtos sem header.',
+          'Conteúdo livre — apenas `PopoverContent` com texto. Sem título, o painel herda o nome acessível do gatilho.',
       },
     },
   },
   args: {
     open: true,
     variant: 'default',
-    triggerLabel: 'Abrir popover',
-    description: 'Conteúdo contextual livre dentro do popover.',
+    triggerLabel: 'Ver atalhos',
+    description: 'Use Ctrl + K para abrir a busca em qualquer tela.',
   },
-  play: async () => {
-    await waitOpen();
+  play: async ({ step }) => {
+    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      await expect(dialog).toHaveAccessibleName('Ver atalhos');
+    });
+
+    await step('E carrega a classe do design system com o conteúdo livre', async () => {
+      await expect(painel()).toHaveClass(/nds-popover-content/);
+      await expect(painel()!.textContent).toMatch(/Ctrl \+ K/);
+    });
   },
 };
 
 export const WithTitle: Story = {
   parameters: {
+    covers: [
+      'visual.item2', 'accessibility.item5', 'accessibility.item3', 'functional.item4',
+    ],
     docs: {
       description: {
         story:
@@ -66,15 +79,46 @@ export const WithTitle: Story = {
     saveLabel: 'Salvar',
     cancelLabel: 'Cancelar',
   },
-  play: waitOpen,
+  play: async ({ step }) => {
+    await step('O título nomeia o painel por aria-labelledby', async () => {
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      const id = dialog.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const titulo = document.getElementById(id!)!;
+      await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
+      await expect(titulo).toHaveClass(/nds-popover-title/);
+      await expect(dialog).toHaveAccessibleName(/Configuracoes de exibição/i);
+    });
+
+    await step('Tab caminha entre os controles internos', async () => {
+      const ctx = within(painel()!);
+      const cancelar = ctx.getByRole('button', { name: 'Cancelar' });
+      const salvar = ctx.getByRole('button', { name: 'Salvar' });
+      cancelar.focus();
+      await userEvent.tab();
+      await expect(salvar).toHaveFocus();
+    });
+
+    await step('E o elemento focado por teclado mostra o anel de foco', async () => {
+      // `:focus-visible` é a condição exata que o CSS compartilhado usa para
+      // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
+      // casaria a pseudo-classe e o anel não apareceria.
+      const salvar = within(painel()!).getByRole('button', { name: 'Salvar' });
+      await expect(salvar.matches(':focus-visible')).toBe(true);
+      // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
+      // errada daria verde em qualquer elemento.
+      await expect(getComputedStyle(salvar).boxShadow).not.toBe('none');
+    });
+  },
 };
 
 export const Form: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
-          'Formulário inline — Inputs e botão de submit dentro do `PopoverContent`. Submit dispara onAction.',
+          'Formulário inline — Inputs e botão de submit dentro do `PopoverContent`.',
       },
     },
   },
@@ -83,10 +127,26 @@ export const Form: Story = {
     variant: 'form',
     triggerLabel: 'Editar perfil',
     title: 'Editar perfil',
-    description: 'Atualize seu nome e e-mail.',
+    description: 'Altere o nome e o email da conta.',
     nameLabel: 'Nome',
     emailLabel: 'Email',
     submitLabel: 'Atualizar',
+    cancelLabel: 'Cancelar',
   },
-  play: waitOpen,
+  play: async ({ step }) => {
+    await step('Os campos existem e estão associados aos rótulos', async () => {
+      const dialog = await waitForPortal('dialog', { timeout: 2000 });
+      const ctx = within(dialog);
+      await expect(ctx.getByLabelText(/Nome/i)).toHaveValue('Ana Ribeiro');
+      await expect(ctx.getByLabelText(/Email/i)).toHaveValue('ana@nortear.com.br');
+    });
+
+    await step('E aceitam digitação — o painel não é inerte', async () => {
+      // Conteúdo interativo dentro do painel é a razão de existir do popover.
+      const nome = within(painel()!).getByLabelText(/Nome/i);
+      await userEvent.clear(nome);
+      await userEvent.type(nome, 'Bruno Lima');
+      await expect(nome).toHaveValue('Bruno Lima');
+    });
+  },
 };

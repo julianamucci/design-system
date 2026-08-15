@@ -868,7 +868,7 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
             { token: '--popover-foreground',  value: t('tokens.table.popoverForeground.class'),  description: t('tokens.table.popoverForeground.part')  },
             { token: '--muted-foreground',    value: t('tokens.table.mutedForeground.class'),    description: t('tokens.table.mutedForeground.part')    },
             { token: '--border',              value: t('tokens.table.border.class'),             description: t('tokens.table.border.part')             },
-            { token: '--shadow',              value: t('tokens.table.shadow.class'),             description: t('tokens.table.shadow.part')             },
+            { token: '--elevation-md',        value: t('tokens.table.shadow.class'),             description: t('tokens.table.shadow.part')             },
             { token: '--ring',                value: t('tokens.table.ring.class'),               description: t('tokens.table.ring.part')               },
           ],
           customizationTitle: t('tokens.customizationTitle'),

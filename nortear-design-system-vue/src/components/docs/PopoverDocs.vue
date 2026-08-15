@@ -376,7 +376,7 @@ const tokenRows = computed(() => [
   { token: '--popover-foreground', value: tContent('tokens.table.popoverForeground.class'), description: tContent('tokens.table.popoverForeground.part') },
   { token: '--muted-foreground',   value: tContent('tokens.table.mutedForeground.class'),   description: tContent('tokens.table.mutedForeground.part')   },
   { token: '--border',             value: tContent('tokens.table.border.class'),            description: tContent('tokens.table.border.part')            },
-  { token: 'shadow',               value: tContent('tokens.table.shadow.class'),            description: tContent('tokens.table.shadow.part')            },
+  { token: '--elevation-md',       value: tContent('tokens.table.shadow.class'),            description: tContent('tokens.table.shadow.part')            },
   { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
 ]);
 

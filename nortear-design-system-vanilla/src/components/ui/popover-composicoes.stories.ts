@@ -42,13 +42,6 @@ async function waitForOpen(): Promise<void> {
   }, { timeout: 1500 });
 }
 
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="popover-content"]').forEach((n) => n.remove());
-  await waitFor(() => {
-    if (document.querySelector('[data-slot="popover-content"]')) throw new Error('still open');
-  });
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const EditProfile: Story = {
@@ -99,9 +92,6 @@ export const EditProfile: Story = {
       const ctx = within(panel!);
       await expect(ctx.getByLabelText(/nome/i)).toHaveValue('Joana Silva');
       await expect(ctx.getByLabelText(/email/i)).toHaveValue('joana@example.com');
-    });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
     });
   },
 };
@@ -159,9 +149,6 @@ export const TableFilter: Story = {
       const ctx = within(panel!);
       await expect(ctx.getByLabelText(/ativo/i)).toBeChecked();
       await expect(ctx.getByRole('button', { name: /aplicar/i })).toBeInTheDocument();
-    });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
     });
   },
 };
@@ -227,9 +214,6 @@ export const ColorPicker: Story = {
       const second = within(panel!).getByRole('button', { name: /laranja/i });
       await expect(second).toHaveFocus();
     });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
-    });
   },
 };
 
@@ -283,9 +267,6 @@ export const QuickSettings: Story = {
       await expect(ctx.getByLabelText(/notificações/i)).toBeChecked();
       await expect(ctx.getByLabelText(/modo escuro/i)).not.toBeChecked();
       await expect(ctx.getByLabelText(/modo compacto/i)).not.toBeChecked();
-    });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
     });
   },
 };

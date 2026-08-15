@@ -789,8 +789,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { token: '--popover',            value: $tStore('tokens.table.popover.class'),           description: $tStore('tokens.table.popover.part')           },
       { token: '--popover-foreground', value: $tStore('tokens.table.popoverForeground.class'), description: $tStore('tokens.table.popoverForeground.part') },
       { token: '--muted-foreground',   value: $tStore('tokens.table.mutedForeground.class'),   description: $tStore('tokens.table.mutedForeground.part')   },
-      { token: '--foreground/10',      value: $tStore('tokens.table.border.class'),            description: $tStore('tokens.table.border.part')            },
-      { token: 'shadow',               value: $tStore('tokens.table.shadow.class'),            description: $tStore('tokens.table.shadow.part')            },
+      { token: '--border',             value: $tStore('tokens.table.border.class'),            description: $tStore('tokens.table.border.part')            },
+      { token: '--elevation-md',       value: $tStore('tokens.table.shadow.class'),            description: $tStore('tokens.table.shadow.part')            },
       { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part')              },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}

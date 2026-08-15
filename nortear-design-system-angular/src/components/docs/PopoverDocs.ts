@@ -1007,20 +1007,21 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna "Classe" do conteúdo compartilhado ainda traz nomes utilitários
-    // de Tailwind (`bg-popover`, `shadow-md`, `ring-ring`) que não existem em
-    // nenhuma stack desde a migração `.nds-*`. Aqui vai a classe real que
-    // consome cada token.
+    // A coluna "Classe" saía daqui porque o conteúdo compartilhado trazia nomes
+    // utilitários do framework que deixou o projeto (`bg-popover`, `shadow-md`,
+    // `ring-ring`), inexistentes em qualquer stack desde a migração `.nds-*`.
+    // Agora o próprio `translations.json` traz a classe real, e as cinco stacks
+    // documentam o mesmo seletor — este bloco só escolhe a ordem das linhas.
     return [
-      { token: '--popover',            classe: '.nds-popover-content',     k: 'popover'          },
-      { token: '--popover-foreground', classe: '.nds-popover-content',     k: 'popoverForeground' },
-      { token: '--muted-foreground',   classe: '.nds-popover-description', k: 'mutedForeground'  },
-      { token: '--border',             classe: '.nds-popover-content',     k: 'border'           },
-      { token: '--elevation-md',       classe: '.nds-popover-content',     k: 'shadow'           },
-      { token: '--ring',               classe: '.nds-focus-ring',          k: 'ring'             },
-    ].map(({ token, classe, k }) => ({
+      { token: '--popover',            k: 'popover'           },
+      { token: '--popover-foreground', k: 'popoverForeground' },
+      { token: '--muted-foreground',   k: 'mutedForeground'   },
+      { token: '--border',             k: 'border'            },
+      { token: '--elevation-md',       k: 'shadow'            },
+      { token: '--ring',               k: 'ring'              },
+    ].map(({ token, k }) => ({
       token,
-      value: classe,
+      value: t(`tokens.table.${k}.class`),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

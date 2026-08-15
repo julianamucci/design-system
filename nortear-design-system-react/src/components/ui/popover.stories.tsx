@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within, expect, waitFor, screen } from "storybook/test";
+import { userEvent, within, expect, waitFor, screen, fn } from "storybook/test";
 import {
   Popover,
   PopoverContent,
@@ -25,23 +25,33 @@ const meta = {
       control: { type: "radio" },
       options: ["top", "bottom", "left", "right"],
       description: "Lado preferido de abertura do Content (auto-flip on collision).",
+      table: { type: { summary: '"top" | "bottom" | "left" | "right"' }, defaultValue: { summary: '"bottom"' } },
     },
     align: {
       control: { type: "radio" },
       options: ["start", "center", "end"],
       description: "Alinhamento ao longo do eixo do side.",
+      table: { type: { summary: '"start" | "center" | "end"' }, defaultValue: { summary: '"center"' } },
     },
     sideOffset: {
       control: { type: "number" },
       description: "Distância em pixels entre trigger e content.",
+      table: { type: { summary: "number" }, defaultValue: { summary: "4" } },
     },
     defaultOpen: {
       control: "boolean",
       description: "Estado inicial em modo não-controlado.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
     },
     modal: {
       control: "boolean",
       description: "Quando true, trapeia foco e bloqueia scroll do body.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "false" } },
+    },
+    onOpenChange: {
+      control: false,
+      description: "Callback disparado a cada abertura e fechamento, com o novo estado.",
+      table: { type: { summary: "(open: boolean) => void" } },
     },
   },
   args: {
@@ -50,6 +60,7 @@ const meta = {
     sideOffset: 4,
     defaultOpen: false,
     modal: false,
+    onOpenChange: fn(),
   },
 } as Meta<typeof Popover>;
 
@@ -62,19 +73,48 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
+/** O painel mora em portal no body — `screen`, não `within(canvasElement)`. */
+function painel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
+}
+
+/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
+async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
+  if (gatilho.getAttribute("aria-expanded") !== "true") await userEvent.click(gatilho);
+  await waitFor(() => expect(screen.getByRole("dialog")).toBeVisible());
+  return painel()!;
+}
+
+/** Fecha só se estiver aberto. */
+async function fechar(gatilho: HTMLElement): Promise<void> {
+  if (gatilho.getAttribute("aria-expanded") === "true") await userEvent.click(gatilho);
+  await waitFor(() => expect(painel()).toBeNull());
+}
+
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1", "functional.item2", "functional.item3",
+      "accessibility.item4",
+    ],
+  },
   render: (args) => {
-    const { side, align, sideOffset, defaultOpen, modal } = args as typeof args & {
+    const { side, align, sideOffset, defaultOpen, modal, onOpenChange } = args as typeof args & {
       side?: "top" | "bottom" | "left" | "right";
       align?: "start" | "center" | "end";
       sideOffset?: number;
+      // O tipo da lib entrega `(open, eventDetails)`; o espião recebe SÓ o
+      // valor. Dentro de `eventDetails` vem o evento nativo, e a aba Actions
+      // estoura um SecurityError ao serializar o `Window` do iframe.
+      onOpenChange?: (open: boolean) => void;
     };
     return (
-      <div style={wrapperStyle}>
+      <div style={wrapperStyle} className="nds-stack" data-spacing="md" data-align="center">
         <Popover
           key={`${String(defaultOpen)}-${String(modal)}`}
           defaultOpen={defaultOpen}
           modal={modal}
+          onOpenChange={(open) => onOpenChange?.(open)}
         >
           <PopoverTrigger asChild>
             <Button variant="outline">Abrir popover</Button>
@@ -86,35 +126,85 @@ export const Playground: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
+            <div className="nds-cluster" data-justify="end" data-spacing="sm">
+              <Button variant="ghost" size="sm">Cancelar</Button>
+              <Button size="sm">Salvar</Button>
+            </div>
           </PopoverContent>
         </Popover>
+
+        {/* Alvo inerte para a dispensa por clique fora: clicar em `document.body`
+            depende da geometria da página e do ponto exato do clique sintético. */}
+        <p className="nds-text-body nds-text-muted-foreground" data-testid="area-externa">
+          Área externa
+        </p>
       </div>
     );
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Abrir popover/i });
 
-    await step("1. Clique no trigger abre o Content com role=dialog", async () => {
-      const trigger = canvas.getByRole("button", { name: /Abrir popover/i });
-      await userEvent.click(trigger);
-      const dialog = await waitFor(() => screen.getByRole("dialog"));
-      await expect(dialog).toBeVisible();
-      // Side é determinado pelo auto-flip — apenas verificamos que existe
-      const sideAttr = dialog.getAttribute("data-side");
-      await expect(["top", "bottom", "left", "right"]).toContain(sideAttr ?? "bottom");
+    await step("O gatilho anuncia que abre um diálogo", async () => {
+      await expect(gatilho).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(gatilho.tagName).toBe("BUTTON");
     });
 
-    await step("2. ESC fecha o Content e retorna foco ao trigger", async () => {
-      await userEvent.keyboard("{Escape}");
-      await waitFor(
-        () => {
-          const dialog = screen.queryByRole("dialog");
-          if (dialog) throw new Error("dialog ainda aberto");
-        },
-        { timeout: 1500 }
+    await step("Clicar no gatilho abre o painel com role=dialog", async () => {
+      await fechar(gatilho);
+      const antes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const p = await abrir(gatilho);
+      await expect(p).toHaveClass(/nds-popover-content/);
+      await expect(gatilho).toHaveAttribute("aria-expanded", "true");
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBe(antes + 1);
+    });
+
+    await step("O painel é nomeado pelo título e descrito pela descrição", async () => {
+      const dialogo = screen.getByRole("dialog");
+      const idTitulo = dialogo.getAttribute("aria-labelledby");
+      await expect(idTitulo).toBeTruthy();
+      await expect(document.getElementById(idTitulo!)).toHaveAttribute(
+        "data-slot", "popover-title",
       );
-      const trigger = canvas.getByRole("button", { name: /Abrir popover/i });
-      await expect(trigger).toHaveFocus();
+      const idDescricao = dialogo.getAttribute("aria-describedby");
+      await expect(idDescricao).toBeTruthy();
+      await expect(document.getElementById(idDescricao!)).toHaveAttribute(
+        "data-slot", "popover-description",
+      );
+    });
+
+    await step("O painel não é modal", async () => {
+      // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
+      // tela esconder tudo o que está fora dele, que é contrato de Dialog.
+      await expect(painel()).not.toHaveAttribute("aria-modal");
+    });
+
+    await step("O foco entra no painel ao abrir", async () => {
+      // É o que separa popover de tooltip: o conteúdo é interativo, então o
+      // foco precisa alcançá-lo sem caçar com Tab pela página inteira.
+      await waitFor(() => expect(painel()!.contains(document.activeElement)).toBe(true));
+    });
+
+    await step("Escape fecha e devolve o foco ao gatilho", async () => {
+      await abrir(gatilho);
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(painel()).toBeNull());
+      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+      await waitFor(() => expect(gatilho).toHaveFocus());
+    });
+
+    await step("Clicar fora fecha o painel", async () => {
+      await abrir(gatilho);
+      await userEvent.click(canvas.getByTestId("area-externa"));
+      await waitFor(() => expect(painel()).toBeNull());
+      await expect(gatilho).toHaveAttribute("aria-expanded", "false");
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step("Estado final: painel aberto", async () => {
+      await expect(await abrir(gatilho)).toBeVisible();
     });
   },
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, waitFor } from 'storybook/test';
+import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { createPopover } from './popover';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -15,7 +15,9 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Popover: Default (apenas conteúdo livre), ComTitulo (PopoverHeader com Title + Description) e Form (formulário inline). NOTA: a factory Vanilla não tem subcomponentes PopoverHeader/Title/Description — usamos HTML semântico (h4/p) dentro do content.',
+          'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. ' +
+          'O painel sempre precisa de nome acessível: com título ele vem do ' +
+          'aria-labelledby, sem título ele herda o texto do gatilho.',
       },
     },
   },
@@ -31,64 +33,73 @@ function wrap(child: HTMLElement): HTMLElement {
   w.style.contain = 'layout';
   w.className = 'nds-cluster nds-w-full';
   w.dataset.justify = 'center';
-  w.style.minHeight = '260px';
+  w.style.minHeight = '300px';
   w.appendChild(child);
   return w;
 }
 
-async function waitForOpen(): Promise<void> {
-  await waitFor(() => {
-    if (!document.querySelector('[data-slot="popover-content"]')) throw new Error('popover fechado');
-  }, { timeout: 1500 });
+function painel(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 }
 
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="popover-content"]').forEach((n) => n.remove());
+async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
+  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
   await waitFor(() => {
-    if (document.querySelector('[data-slot="popover-content"]')) throw new Error('still open');
-  });
+    if (!painel()) throw new Error('popover ainda fechado');
+  }, { timeout: 1500 });
+  return painel()!;
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
+    const trigger = createButton({ variant: 'outline', label: 'Ver atalhos' });
 
-    const content = document.createElement('div');
-    content.className = 'nds-text-body nds-text-muted-foreground';
-    content.textContent = 'Conteúdo livre dentro do popover, sem header.';
+    const content = document.createElement('p');
+    content.className = 'nds-text-body';
+    content.textContent = 'Use Ctrl + K para abrir a busca em qualquer tela.';
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
     return wrap(el);
   },
-  play: async ({ step }) => {
-    await step('Content aberto com texto simples', async () => {
-      await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      await expect(panel?.textContent).toMatch(/Conteúdo livre/);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /ver atalhos/i });
+
+    await step('Sem título, o painel herda o nome acessível do gatilho', async () => {
+      // `role="dialog"` sem nome reprova na regra aria-dialog-name do axe.
+      const p = await abrir(gatilho);
+      await expect(p).toHaveAttribute('aria-label', 'Ver atalhos');
+      await expect(p).not.toHaveAttribute('aria-labelledby');
     });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
+
+    await step('E carrega a classe do design system com o conteúdo livre', async () => {
+      await expect(painel()).toHaveClass(/nds-popover-content/);
+      await expect(painel()!.textContent).toMatch(/Ctrl \+ K/);
     });
   },
 };
 
 export const WithTitle: Story = {
+  parameters: { covers: ['visual.item2', 'accessibility.item5'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
+    const trigger = createButton({ variant: 'outline', label: 'Configuracoes de exibição' });
 
     const content = document.createElement('div');
     content.className = 'nds-stack';
     content.dataset.spacing = 'xs';
 
     const title = document.createElement('h4');
-    title.className = 'nds-text-body nds-font-medium nds-leading-none';
+    title.className = 'nds-popover-title';
+    title.dataset.slot = 'popover-title';
     title.textContent = 'Configuracoes de exibição';
 
     const desc = document.createElement('p');
-    desc.className = 'nds-text-caption nds-text-muted-foreground';
+    desc.className = 'nds-popover-description';
+    desc.dataset.slot = 'popover-description';
     desc.textContent = 'Ajuste a aparência do conteúdo da página.';
 
     content.append(title, desc);
@@ -97,20 +108,30 @@ export const WithTitle: Story = {
     queueMicrotask(() => trigger.click());
     return wrap(el);
   },
-  play: async ({ step }) => {
-    await step('Content com header (h4 + p)', async () => {
-      await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      await expect(panel?.querySelector('h4')?.textContent).toMatch(/Configuracoes de exibição/);
-      await expect(panel?.querySelector('p')?.textContent).toMatch(/Ajuste a aparência/);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: 'Configuracoes de exibição' });
+
+    await step('O título nomeia o painel por aria-labelledby', async () => {
+      const p = await abrir(gatilho);
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const titulo = document.getElementById(id!)!;
+      await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
+      await expect(titulo).toHaveClass(/nds-popover-title/);
+      await expect(titulo.textContent?.trim()).toBe('Configuracoes de exibição');
     });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
+
+    await step('E a descrição usa a classe própria, não a de título', async () => {
+      const desc = painel()!.querySelector('[data-slot="popover-description"]')!;
+      await expect(desc).toHaveClass(/nds-popover-description/);
+      await expect(desc.textContent).toMatch(/Ajuste a aparência/);
     });
   },
 };
 
 export const Form: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
@@ -119,12 +140,18 @@ export const Form: Story = {
     content.dataset.spacing = 'sm';
     content.addEventListener('submit', (e) => e.preventDefault());
 
+    const title = document.createElement('h4');
+    title.className = 'nds-popover-title';
+    title.dataset.slot = 'popover-title';
+    title.textContent = 'Editar perfil';
+    content.appendChild(title);
+
     const nameRow = document.createElement('div');
     nameRow.className = 'nds-stack';
     nameRow.dataset.spacing = 'xs';
     nameRow.append(
       createLabel({ text: 'Nome', htmlFor: 'pv-name' }),
-      createInput({ id: 'pv-name', placeholder: 'Joana Silva' }),
+      createInput({ id: 'pv-name', value: 'Ana Ribeiro' }),
     );
 
     const emailRow = document.createElement('div');
@@ -132,7 +159,7 @@ export const Form: Story = {
     emailRow.dataset.spacing = 'xs';
     emailRow.append(
       createLabel({ text: 'Email', htmlFor: 'pv-email' }),
-      createInput({ id: 'pv-email', type: 'email', placeholder: 'joana@example.com' }),
+      createInput({ id: 'pv-email', type: 'email', value: 'ana@nortear.com.br' }),
     );
 
     const submit = createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' });
@@ -143,17 +170,24 @@ export const Form: Story = {
     queueMicrotask(() => trigger.click());
     return wrap(el);
   },
-  play: async ({ step }) => {
-    await step('Form inline com Inputs e botão Atualizar', async () => {
-      await waitForOpen();
-      const panel = document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-      const ctx = within(panel!);
-      await expect(ctx.getByLabelText(/nome/i)).toBeInTheDocument();
-      await expect(ctx.getByLabelText(/email/i)).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /editar perfil/i });
+
+    await step('Os campos existem e estão associados aos rótulos', async () => {
+      const p = await abrir(gatilho);
+      const ctx = within(p);
+      await expect(ctx.getByLabelText(/nome/i)).toHaveValue('Ana Ribeiro');
+      await expect(ctx.getByLabelText(/email/i)).toHaveValue('ana@nortear.com.br');
       await expect(ctx.getByRole('button', { name: /atualizar/i })).toBeInTheDocument();
     });
-    await step('Cleanup', async () => {
-      await cleanupPortal();
+
+    await step('E aceitam digitação — o painel não é inerte', async () => {
+      // Conteúdo interativo dentro do painel é a razão de existir do popover.
+      const nome = within(painel()!).getByLabelText(/nome/i);
+      await userEvent.clear(nome);
+      await userEvent.type(nome, 'Bruno Lima');
+      await expect(nome).toHaveValue('Bruno Lima');
     });
   },
 };

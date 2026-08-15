@@ -153,10 +153,13 @@ const OPOSTO: Record<string, string> = {
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
+    // `accessibility.item1` (axe no estado ABERTO) e `accessibility.item2`
+    // (contraste) saíram daqui na revalidação do contrato: a play desta story
+    // termina com o painel FECHADO, e é o estado final que o axe varre. Os dois
+    // itens passaram para `States/Open`, que termina aberta.
     covers: [
       'functional.item1', 'functional.item2',
-      'accessibility.item1', 'accessibility.item2', 'accessibility.item4',
-      'accessibility.item5',
+      'accessibility.item4', 'accessibility.item5',
     ],
   },
   render: (args) => ({
@@ -258,12 +261,21 @@ export const Playground: Story = {
       await expect(document.getElementById(id!)).toBe(painel());
     });
 
+    await step('O painel não é modal', async () => {
+      // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
+      // tela esconder tudo o que está fora dele, que é contrato de Dialog.
+      await expect(painel()).not.toHaveAttribute('aria-modal');
+    });
+
     await step('O foco entra no painel ao abrir', async () => {
       // É o que separa popover de tooltip: o conteúdo é interativo, então o
       // foco precisa alcançá-lo sem caçar com Tab pela página inteira.
       await waitFor(async () => {
         await expect(painel()!.contains(document.activeElement)).toBe(true);
       });
+      // No PRIMEIRO focável, e não num qualquer: é o que a tabela de estados
+      // promete e o que evita uma varredura por Tab dentro do painel.
+      await expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveFocus();
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
@@ -289,6 +301,14 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(painel()).toBeNull();
       });
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic
+    // fotografa. Terminar fechada era o que tornava falsa a declaração de
+    // `accessibility.item1` que morava aqui.
+    await step('Estado final: painel aberto', async () => {
+      await abrir(gatilho);
+      await expect(screen.getByRole('dialog')).toBeVisible();
     });
   },
 };

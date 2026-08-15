@@ -71,6 +71,11 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
+    // Story SEM interação de fechamento: termina aberta de propósito, porque é
+    // este estado que o axe varre (ARIA e contraste do painel) e que o
+    // Chromatic fotografa. Declarar os itens de axe numa story que fecha no
+    // final seria declarar cobertura que não existe.
+    covers: ["accessibility.item1", "accessibility.item2"],
     docs: {
       description: {
         story:
@@ -95,10 +100,23 @@ export const Open: Story = {
       </Popover>
     </div>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
     await step("Content aberto com role=dialog", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveClass(/nds-popover-content/);
+    });
+
+    await step("E o gatilho declara o estado aberto", async () => {
+      const trigger = canvas.getByRole("button", { name: /Abrir popover/i });
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+      // Aberto, `aria-controls` aponta para o painel que existe de fato —
+      // apontar para id ausente reprova em aria-valid-attr-value.
+      const id = trigger.getAttribute("aria-controls");
+      await expect(id).toBeTruthy();
+      await expect(document.getElementById(id!)).toBeInTheDocument();
     });
   },
 };
@@ -144,11 +162,20 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
+    const trigger = () => canvas.getByRole("button", { name: /^Trigger$/i });
+
     await step("Botão externo abre o Popover", async () => {
+      // Cada passo estabelece a própria precondição: no replay do painel
+      // Interactions o DOM chega no estado que a rodada anterior deixou.
+      const closeBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
+      await userEvent.click(closeBtn);
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+
       const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
       await userEvent.click(openBtn);
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
+      await expect(trigger()).toHaveAttribute("aria-expanded", "true");
     });
 
     await step("Botão externo fecha o Popover", async () => {
@@ -161,6 +188,13 @@ export const Controlled: Story = {
         },
         { timeout: 1500 }
       );
+      await expect(trigger()).toHaveAttribute("aria-expanded", "false");
+    });
+
+    // Termina ABERTA: é o estado que o Chromatic fotografa.
+    await step("Estado final: aberto pelo estado externo", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /Abrir externamente/i }));
+      await expect(await waitFor(() => screen.getByRole("dialog"))).toBeVisible();
     });
   },
 };
@@ -198,6 +232,15 @@ export const Modal: Story = {
     await step("Dialog aberto em modo modal", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
+    });
+
+    await step("Modal prende o foco, e ainda assim não anuncia aria-modal", async () => {
+      // `modal` aqui é bloqueio de rolagem e prisão de foco — não é o contrato
+      // de Dialog. `aria-modal` faria o leitor de tela esconder o resto da
+      // página, e um popover continua sendo conteúdo AO LADO, não no lugar.
+      const dialog = screen.getByRole("dialog");
+      await expect(dialog).not.toHaveAttribute("aria-modal");
+      await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
     });
   },
 };

@@ -90,6 +90,11 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
+  // Story SEM interação de fechamento: termina aberta de propósito, porque é
+  // este estado que o axe varre (ARIA e contraste do painel) e que o Chromatic
+  // fotografa. Os dois itens vieram do Playground na revalidação do contrato —
+  // lá a play termina com o painel fechado.
+  parameters: { covers: ['accessibility.item1', 'accessibility.item2'] },
   render: () => ({
     template: `
       <div ndsPopover [defaultOpen]="true">
@@ -160,6 +165,12 @@ export const Controlled: Story = {
         await expect(painel()).toBeNull();
       });
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    // Termina ABERTA: é o estado que o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await abrir(gatilho);
+      await expect(screen.getByRole('dialog')).toBeVisible();
     });
   },
 };
