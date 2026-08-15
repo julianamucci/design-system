@@ -1860,3 +1860,24 @@ design antes de alguém "alinhar" no sentido errado.
 - Carrossel vertical respondia a ArrowLeft/ArrowRight em React e Svelte.
 - A navegação por teclado do Vanilla atravessava os extremos (`%` no índice)
   enquanto a seta ao lado estava desabilitada dizendo que não dava.
+
+---
+
+## Sheet — vizinho tocado de raspão (2026-08-15, rodada 22 da revisão serial)
+
+- [ ] **`regiao()` do `sonner.fixtures.ts` (Svelte) não é renderizado por
+  ninguém, e ninguém via.** O `export_sem_story` estava sendo satisfeito por um
+  COMENTÁRIO no `SheetStory.svelte` — "a regiao rolavel precisa de acesso por
+  teclado" —, num arquivo de outro componente. Reescrever aquele comentário
+  destapou o achado: `node scripts/audit.mjs --all` sai com `sonner: 1` onde
+  antes saía zero. **Não é regressão desta rodada**: é uma peça exportada e não
+  entregue, que estava escondida atrás de uma palavra solta em texto livre.
+
+  Fica registrado em vez de corrigido porque o escopo da rodada é o sheet.
+  Quando o sonner for revisado, a saída é a de sempre: entregar (story que
+  renderize a região) ou remover a export.
+
+  Vale também como achado sobre a REGRA: `export_sem_story` procura o nome do
+  export como texto, então qualquer comentário que use a mesma palavra dá falso
+  negativo. Um nome de export com cara de palavra comum (`regiao`, `titulo`,
+  `item`) fica coberto por acidente.

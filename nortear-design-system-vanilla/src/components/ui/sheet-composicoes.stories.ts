@@ -3,6 +3,8 @@ import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { createButton } from './button';
+import { createInput } from './input';
+import { createLabel } from './label';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -16,9 +18,10 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Sheet: filtros avançados (right), navegação secundária (left) e painel ' +
-          'mobile-style (bottom). NOTA: a factory Vanilla não suporta SheetClose com asChild — o botão X é ' +
-          'sempre renderizado pela factory, e botões customizados de cancelar precisam acionar o overlay manualmente.',
+          'Composições reais do Sheet: filtros avançados (right), navegação secundária ' +
+          '(left), painel de ações (bottom) e corpo longo com rolagem interna. A factory ' +
+          'não expõe um botão de fechar componível — o X vem pronto, e os botões do rodapé ' +
+          'saem pelo overlay.',
       },
     },
   },
@@ -29,20 +32,15 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildInputField(labelText: string, type: string, value: string): HTMLLabelElement {
-  const label = document.createElement('label');
-  label.className = 'nds-stack nds-text-body';
-  label.dataset.spacing = 'xs';
-  const span = document.createElement('span');
-  span.className = 'nds-font-medium';
-  span.textContent = labelText;
-  const input = document.createElement('input');
-  input.className = 'nds-border-default nds-rounded-md';
-  input.style.padding = '0.5rem 0.75rem';
-  input.type = type;
-  input.value = value;
-  label.append(span, input);
-  return label;
+function buildInputField(labelText: string, id: string, type: string, value: string): HTMLElement {
+  const campo = document.createElement('div');
+  campo.className = 'nds-stack';
+  campo.dataset.spacing = 'xs';
+  campo.append(
+    createLabel({ text: labelText, htmlFor: id }),
+    createInput({ id, type, value }),
+  );
+  return campo;
 }
 
 function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
@@ -52,13 +50,12 @@ function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
   footer.className = 'nds-cluster';
   footer.dataset.spacing = 'sm';
   footer.append(cancel, action);
-  // Fechar via overlay click (factory Vanilla não suporta SheetClose asChild)
-  const closeFromAction = () => {
-    const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
-    overlay?.click();
+  // A factory não expõe SheetClose: quem fecha por fora é o overlay.
+  const fecharPorAcao = () => {
+    document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
   };
-  cancel.addEventListener('click', closeFromAction);
-  action.addEventListener('click', closeFromAction);
+  cancel.addEventListener('click', fecharPorAcao);
+  action.addEventListener('click', fecharPorAcao);
   return footer;
 }
 
@@ -78,10 +75,9 @@ export const AdvancedFilters: Story = {
     form.className = 'nds-stack';
     form.dataset.spacing = 'sm';
     form.append(
-      buildInputField('Categoria', 'text', 'Eletrônicos'),
-      buildInputField('Preço mínimo', 'number', '100'),
-      buildInputField('Preço máximo', 'number', '500'),
-      buildInputField('Marca', 'text', ''),
+      buildInputField('Categoria', 'filtro-categoria', 'text', 'Eletrônicos'),
+      buildInputField('Preço mínimo', 'filtro-min', 'number', '100'),
+      buildInputField('Preço máximo', 'filtro-max', 'number', '500'),
     );
     const sheet = createSheet({
       trigger,
@@ -95,11 +91,9 @@ export const AdvancedFilters: Story = {
     return sheet;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialogs = await body.findAllByRole('dialog');
-    const dialog = dialogs[dialogs.length - 1];
-    await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
-    await expect(within(dialog).getByText(/Categoria/i)).toBeVisible();
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
+    await expect(within(painel).getByLabelText(/Categoria/i)).toBeVisible();
   },
 };
 
@@ -117,33 +111,31 @@ export const SecondaryNavigation: Story = {
     const nav = document.createElement('nav');
     nav.className = 'nds-stack';
     nav.dataset.spacing = 'sm';
-    nav.setAttribute('aria-label', 'Sheet sample sidebar links (story-only)');
-    const items = ['Dashboard', 'Projetos', 'Equipe', 'Configuracoes', 'Faturas'];
-    for (const label of items) {
+    nav.setAttribute('aria-label', 'Seções');
+    for (const label of ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas']) {
       const a = document.createElement('a');
       a.href = '#';
-      a.className = 'nds-rounded-md nds-text-body nds-hover-bg-accent';
-      a.style.padding = '0.5rem 0.75rem';
+      a.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
       a.textContent = label;
       nav.appendChild(a);
     }
 
-    const sheet = createSheet({
+    return createSheet({
       trigger,
       side: 'left',
       title: 'Menu',
       description: 'Navegue entre as áreas do sistema.',
       content: nav,
     });
-    return sheet;
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole('button', { name: 'Abrir menu' });
     await userEvent.click(trigger);
-    const dialog = await waitForPortal('dialog');
-    await expect(within(dialog).getByRole('navigation')).toBeVisible();
-    await expect(within(dialog).getByRole('link', { name: 'Dashboard' })).toBeVisible();
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'left');
+    await expect(within(painel).getByRole('navigation')).toBeVisible();
+    await expect(within(painel).getByRole('link', { name: 'Dashboard' })).toBeVisible();
   },
 };
 
@@ -152,34 +144,19 @@ export const MobileBottomPanel: Story = {
     docs: {
       description: {
         story:
-          'Painel mobile-style deslizando de baixo — equivalente ao Drawer, mas sem gesture de arrastar. ' +
-          'Use Drawer quando swipe for esperado pelo usuário.',
+          'Painel de ações deslizando de baixo — o mesmo desenho do Drawer, sem o gesto de ' +
+          'arrastar. Quando o gesto importa, o componente é o Drawer.',
       },
     },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Mais opções' });
 
-    const list = document.createElement('div');
-    list.className = 'nds-grid nds-text-body';
-    list.dataset.cols = '3';
-    list.dataset.spacing = 'sm';
-    const actions = ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar', 'Mover', 'Excluir'];
-    for (const label of actions) {
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'nds-stack nds-rounded-md nds-border-default nds-hover-bg-accent';
-      item.dataset.spacing = 'xs';
-      item.dataset.align = 'center';
-      item.style.padding = '0.75rem';
-      const dot = document.createElement('div');
-      dot.className = 'nds-rounded-full nds-bg-muted';
-      dot.style.width = '2rem';
-      dot.style.height = '2rem';
-      const span = document.createElement('span');
-      span.textContent = label;
-      item.append(dot, span);
-      list.appendChild(item);
+    const lista = document.createElement('div');
+    lista.className = 'nds-cluster';
+    lista.dataset.spacing = 'sm';
+    for (const label of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar', 'Mover', 'Excluir']) {
+      lista.appendChild(createButton({ variant: 'outline', label }));
     }
 
     const sheet = createSheet({
@@ -187,39 +164,40 @@ export const MobileBottomPanel: Story = {
       side: 'bottom',
       title: 'Ações rápidas',
       description: 'Escolha o que fazer com este item.',
-      content: list,
+      content: lista,
     });
     queueMicrotask(() => trigger.click());
     return sheet;
   },
   play: async () => {
-    const body = within(document.body);
-    const dialogs = await body.findAllByRole('dialog');
-    const dialog = dialogs[dialogs.length - 1];
-    await expect(dialog).toHaveAccessibleName(/Ações rápidas/i);
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'bottom');
+    await expect(painel).toHaveAccessibleName(/Ações rápidas/i);
+    await expect(within(painel).getByRole('button', { name: 'Compartilhar' })).toBeVisible();
   },
 };
 
 export const WithLongScrollContent: Story = {
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
-          'Body longo com scroll interno — o flex layout do painel mantém o footer fixo enquanto o body rola. ' +
-          'A factory Vanilla aplica `flex-1 overflow-auto` automaticamente no body.',
+          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
+          'é o que separa "conteúdo longo" de "ação fora de alcance".',
       },
     },
   },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Ler termos' });
 
-    const longBody = document.createElement('div');
-    longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-    longBody.dataset.spacing = 'sm';
-    for (let i = 1; i <= 18; i++) {
+    const longo = document.createElement('div');
+    longo.className = 'nds-stack nds-text-body nds-text-muted-foreground';
+    longo.dataset.spacing = 'sm';
+    for (let i = 1; i <= 24; i++) {
       const p = document.createElement('p');
-      p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
-      longBody.appendChild(p);
+      p.textContent = `Parágrafo ${i}: termos longos o bastante para o corpo precisar rolar dentro do painel, sem empurrar o rodapé para fora da tela.`;
+      longo.appendChild(p);
     }
 
     const sheet = createSheet({
@@ -227,15 +205,35 @@ export const WithLongScrollContent: Story = {
       side: 'right',
       title: 'Termos de uso',
       description: 'Leia atentamente antes de aceitar.',
-      content: longBody,
+      content: longo,
       footer: makeFooter('Cancelar', 'Aceitar termos'),
     });
     queueMicrotask(() => trigger.click());
     return sheet;
   },
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
 
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(corpo).not.toBeNull();
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
+      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const caixaRodape = rodape.getBoundingClientRect();
+      const caixaPainel = painel.getBoundingClientRect();
+      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
+      await expect(caixaRodape.height).toBeGreaterThan(0);
+    });
   },
 };

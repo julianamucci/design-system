@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
@@ -16,19 +16,59 @@ const meta: Meta = {
       page: withAutoDocsTab(SheetDocs),
       description: {
         component:
-          'Sheet baseado em bits-ui Dialog. Painel deslizante com 4 sides (top/right/bottom/left), focus trap, Escape para fechar e overlay click.',
+          'Painel deslizante com quatro direções, foco preso enquanto está aberto, ' +
+          'Escape para fechar e clique no overlay como saída.',
       },
     },
   },
+  // O docgen está desligado neste stack: `argTypes` é a ÚNICA fonte da aba API
+  // Reference. Todo arg precisa de entrada aqui, senão some da tabela.
   argTypes: {
     side: {
       control: 'inline-radio',
       options: ['top', 'right', 'bottom', 'left'],
-      description: 'Lado de onde o painel desliza (prop do SheetContent).',
+      description: 'Borda de onde o painel desliza. Mora no conteúdo, não na raiz.',
+      table: { type: { summary: "'top' | 'right' | 'bottom' | 'left'" }, defaultValue: { summary: "'right'" } },
     },
     showCloseButton: {
       control: 'boolean',
-      description: 'Exibe o botão X no canto superior direito do SheetContent.',
+      description: 'Exibe o botão de fechar no canto superior direito do painel.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto do gatilho. Verbo no infinitivo — nomeie a ação, nunca "Mais".',
+      table: { type: { summary: 'string' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Título do painel — é ele que dá o nome acessível ao diálogo.',
+      table: { type: { summary: 'string' } },
+    },
+    description: {
+      control: 'text',
+      description: 'Descrição sob o título, ligada ao painel por aria-describedby.',
+      table: { type: { summary: 'string' } },
+    },
+    actionLabel: {
+      control: 'text',
+      description: 'Rótulo da ação primária do rodapé.',
+      table: { type: { summary: 'string' } },
+    },
+    cancelLabel: {
+      control: 'text',
+      description: 'Rótulo da saída do rodapé.',
+      table: { type: { summary: 'string' } },
+    },
+    onAction: {
+      control: false,
+      description: 'Chamado ao acionar a ação primária do rodapé.',
+      table: { type: { summary: '() => void' } },
+    },
+    onCancel: {
+      control: false,
+      description: 'Chamado ao acionar a saída do rodapé.',
+      table: { type: { summary: '() => void' } },
     },
   },
   args: {
@@ -47,72 +87,143 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
+async function esperarPonteiroLiberado(): Promise<void> {
+  await waitFor(() => {
+    if (getComputedStyle(document.body).pointerEvents === 'none') {
+      throw new Error('o overlay ainda bloqueia o ponteiro');
+    }
+  });
+}
+
+/**
+ * Abre só se estiver fechado.
+ *
+ * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
+ * do estado que a rodada anterior deixou e inverteria o resultado.
+ */
+async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+  // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
+  // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
+  // Sem esta espera o clique de reabertura falha no intervalo — medido.
+  await esperarPonteiroLiberado();
+  if (within(document.body).queryAllByRole('dialog').length === 0) {
+    await userEvent.click(trigger);
+  }
+  return await waitForPortal('dialog');
+}
+
+/**
+ * Fecha e espera a interação voltar.
+ *
+ * O painel sumir do DOM não basta: enquanto ele é modal a lib deixa
+ * `pointer-events: none` no `body` e só devolve DEPOIS de remover o nó. O
+ * clique seguinte falharia nesse intervalo.
+ */
+async function fechar(): Promise<void> {
+  if (within(document.body).queryAllByRole('dialog').length > 0) {
+    await userEvent.keyboard('{Escape}');
+  }
+  await waitForPortalGone('dialog');
+  await esperarPonteiroLiberado();
+}
+
 export const Playground: Story = {
-  play: async ({ canvasElement, step }) => {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item3', 'accessibility.item4', 'accessibility.item5',
+    ],
+  },
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const trigger = canvas.getByRole('button', { name: args.triggerLabel as string });
 
-    const waitForClose = async () => {
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('dialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('sheet still open');
-          }
-          // data-state=closed nao basta: durante a animacao de saida o overlay
-          // ainda segura pointer-events, e o proximo clique no trigger falha.
-          // A espera tem que ser pela interacao devolvida.
-          const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
-          if (getComputedStyle(trigger).pointerEvents === 'none') {
-            throw new Error('overlay ainda bloqueia o ponteiro');
-          }
-        },
-        { timeout: 3000 }
+    await fechar();
+
+    await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
+      const painel = await abrir(trigger);
+
+      await expect(painel).toBeVisible();
+      // O nome acessível vem do aria-labelledby ligado ao id REAL do SheetTitle
+      // — painel modal anônimo é o defeito silencioso aqui.
+      await expect(painel).toHaveAccessibleName(args.title as string);
+      await expect(painel).toHaveAccessibleDescription(args.description as string);
+      await expect(painel).toHaveAttribute('aria-modal', 'true');
+      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
+      await expect(painel).toHaveAttribute('data-side', args.side as string);
+      await expect(painel).toHaveClass(/nds-sheet-content/);
+    });
+
+    await step('O painel é portalizado para fora da story', async () => {
+      const painel = await waitForPortal('dialog');
+      await expect(canvasElement.contains(painel)).toBe(false);
+      await expect(document.body.contains(painel)).toBe(true);
+    });
+
+    await step('O foco entra no painel ao abrir', async () => {
+      const painel = await waitForPortal('dialog');
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco não entrou no painel');
+        }
+      });
+    });
+
+    await step('Tab mantém o foco preso dentro do painel', async () => {
+      const painel = await waitForPortal('dialog');
+      for (let i = 0; i < 6; i++) await userEvent.tab();
+      // A espera é o mecanismo, não folga: quem dá a volta é uma âncora de foco
+      // da lib — um <span> IRMÃO do painel — e o retorno para dentro acontece no
+      // tique seguinte. Sem a espera, a asserção reprova o transporte em vez do
+      // destino; com ela, um foco que realmente escapasse continuaria
+      // reprovando, porque nunca voltaria.
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco saiu do painel e não voltou');
+        }
+      });
+      await expect(painel.contains(document.activeElement)).toBe(true);
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await fechar();
+      await waitFor(() => {
+        if (document.activeElement !== trigger) {
+          throw new Error('o foco não voltou ao gatilho');
+        }
+      });
+    });
+
+    await step('Clique no overlay fecha o painel', async () => {
+      await abrir(trigger);
+      const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
+      await expect(overlay).not.toBeNull();
+      // `overlay.click()` NÃO serve: a lib dispensa a camada no `pointerdown`,
+      // que o `click()` sintético não emite.
+      await userEvent.click(overlay!);
+      await waitForPortalGone('dialog');
+    });
+
+    await step('O botão do canto fecha o painel', async () => {
+      const painel = await abrir(trigger);
+      const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
+      await userEvent.click(fecharBtn);
+      await waitForPortalGone('dialog');
+    });
+
+    await step('Cancelar no rodapé fecha e avisa quem escuta', async () => {
+      const painel = await abrir(trigger);
+      const antes = (args.onCancel as ReturnType<typeof fn>).mock.calls.length;
+      await userEvent.click(
+        within(painel).getByRole('button', { name: args.cancelLabel as string }),
       );
-    };
-
-    await step('1. Abre ao clicar no trigger', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
-      await expect(trigger).toBeInTheDocument();
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      await expect(dialog).toBeVisible();
-      await expect(dialog).toHaveAttribute('aria-modal', 'true');
-      await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
+      await waitForPortalGone('dialog');
+      await expect((args.onCancel as ReturnType<typeof fn>).mock.calls.length).toBe(antes + 1);
     });
 
-    await step('2. Aplica data-side=right', async () => {
-      const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
-      await expect(content).not.toBeNull();
-      await expect(content).toHaveAttribute('data-side', 'right');
-    });
-
-    await step('3. Focus trap — foco move para dentro do sheet', async () => {
-      const dialog = await waitForPortal('dialog');
-      await waitFor(() => {
-        if (!dialog.contains(document.activeElement)) throw new Error('focus not trapped');
-      });
-    });
-
-    await step('4. Escape fecha o sheet', async () => {
-      await userEvent.keyboard('{Escape}');
-      await waitForClose();
-    });
-
-    await step('5. Retorno de foco ao trigger após Escape', async () => {
-      await waitFor(() => {
-        const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
-        if (document.activeElement !== trigger) throw new Error('focus did not return');
-      });
-    });
-
-    await step('6. Reabrir e fechar via botão Fechar (X)', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      const closeBtn = within(dialog).getByRole('button', { name: /fechar/i });
-      await userEvent.click(closeBtn);
-      await waitForClose();
-    });
+    // Termina fechado: a próxima rodada da play (painel Interactions) precisa do
+    // mesmo ponto de partida desta.
+    await fechar();
   },
 };

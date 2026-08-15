@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 import {
   Sheet,
   SheetClose,
@@ -16,6 +16,9 @@ import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
+// Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
+// no DOM; aberto, o foco entra e fica preso até o fechamento.
+
 const meta = {
   title: "UI/Sheet/States",
   tags: ["disclosure"],
@@ -23,10 +26,12 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), WithCloseButtonHidden (sem X embutido) e Controlled (estado externo via open + onOpenChange).",
+          "Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), " +
+          "WithCloseButtonHidden (sem o botão do canto) e Controlled (estado externo).",
       },
     },
   },
@@ -47,7 +52,8 @@ export const Closed: Story = {
     docs: {
       description: {
         story:
-          "Estado inicial — apenas o trigger visível. O SheetContent não está renderizado no DOM (Portal vazio).",
+          "Estado inicial. O painel não está no DOM, e o gatilho anuncia que existe um " +
+          "diálogo por trás dele sem prometer que já está aberto.",
       },
     },
   },
@@ -65,24 +71,24 @@ export const Closed: Story = {
               {t("demonstration.labels.description")}
             </SheetDescription>
           </SheetHeader>
-          <SheetFooter>
-            <SheetClose render={<Button variant="outline" />}>
-              {t("demonstration.labels.cancel")}
-            </SheetClose>
-            <Button>{t("demonstration.labels.apply")}</Button>
-          </SheetFooter>
         </SheetContent>
       </Sheet>
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getAllByRole("button")[0];
-    await expect(trigger).toBeVisible();
-    const dialog = within(document.body).queryByRole("dialog");
-    if (dialog) {
-      await expect(dialog).toHaveAttribute("data-state", "closed");
-    }
+
+    await step("Fechado, o painel não existe no DOM", async () => {
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
+    });
+
+    await step("O gatilho anuncia o diálogo sem afirmar que está aberto", async () => {
+      await expect(trigger).toBeVisible();
+      await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(trigger).toHaveAttribute("data-slot", "sheet-trigger");
+    });
   },
 };
 
@@ -91,7 +97,8 @@ export const Open: Story = {
     docs: {
       description: {
         story:
-          "Sheet aberto via `defaultOpen`. Overlay com backdrop blur, focus trap ativo, scroll-lock no body.",
+          "Aberto por defaultOpen, sem estado externo nenhum. O foco entra no painel e o " +
+          "restante da página fica inerte enquanto ele durar.",
       },
     },
   },
@@ -119,12 +126,24 @@ export const Open: Story = {
       </Sheet>
     );
   },
-  play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute("aria-modal", "true");
-    await expect(dialog).toHaveAccessibleName();
-    await expect(dialog).toHaveAccessibleDescription();
+  play: async ({ step }) => {
+    const painel = await waitForPortal("dialog");
+
+    await step("Monta já aberto, com o contrato de markup completo", async () => {
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute("aria-modal", "true");
+      await expect(painel).toHaveAccessibleName();
+      await expect(painel).toHaveAccessibleDescription();
+      await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
+    });
+
+    await step("O foco está dentro do painel", async () => {
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error("o foco não entrou no painel");
+        }
+      });
+    });
   },
 };
 
@@ -133,7 +152,8 @@ export const WithCloseButtonHidden: Story = {
     docs: {
       description: {
         story:
-          "`showCloseButton={false}` no SheetContent — sem X no canto. Fechamento apenas via Escape, clique no overlay ou ação do Footer.",
+          "Sem o botão do canto. Só faz sentido quando o rodapé já oferece uma saída " +
+          "explícita — Escape continua fechando de qualquer forma.",
       },
     },
   },
@@ -155,17 +175,26 @@ export const WithCloseButtonHidden: Story = {
             <SheetClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </SheetClose>
-            <Button>{t("demonstration.labels.apply")}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
     );
   },
-  play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toBeVisible();
-    const closeBtn = within(dialog).queryByRole("button", { name: /^Fechar$/i });
-    await expect(closeBtn).toBeNull();
+  play: async ({ step }) => {
+    const painel = await waitForPortal("dialog");
+
+    await step("O botão do canto não é renderizado", async () => {
+      await expect(painel).toBeVisible();
+      await expect(
+        within(painel).queryByRole("button", { name: /^Fechar$/i }),
+      ).toBeNull();
+    });
+
+    await step("E ainda assim existe uma saída — o rodapé", async () => {
+      const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+      await expect(rodape).not.toBeNull();
+      await expect(within(rodape!).getAllByRole("button").length).toBeGreaterThan(0);
+    });
   },
 };
 
@@ -174,7 +203,8 @@ export const Controlled: Story = {
     docs: {
       description: {
         story:
-          "Abertura controlada por estado externo via `open` + `onOpenChange`. Útil quando o pai precisa abrir o Sheet a partir de outro fluxo.",
+          "Estado do lado de fora. O componente não decide nada sozinho: abre quando o " +
+          "valor ligado diz que sim, e avisa a cada mudança para que o dono do estado acompanhe.",
       },
     },
   },
@@ -184,8 +214,10 @@ export const Controlled: Story = {
       const [open, setOpen] = useState(false);
       return (
         <div className="nds-stack" data-spacing="sm">
-          <Button onClick={() => setOpen(true)}>Open programmatically</Button>
-          <Sheet open={open} onOpenChange={setOpen}>
+          <Button variant="outline" onClick={() => setOpen(true)}>
+            Abrir pelo estado externo
+          </Button>
+          <Sheet open={open} onOpenChange={(valor) => setOpen(valor)}>
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>{t("demonstration.labels.title")}</SheetTitle>
@@ -197,9 +229,6 @@ export const Controlled: Story = {
                 <SheetClose render={<Button variant="outline" />}>
                   {t("demonstration.labels.cancel")}
                 </SheetClose>
-                <Button onClick={() => setOpen(false)}>
-                  {t("demonstration.labels.apply")}
-                </Button>
               </SheetFooter>
             </SheetContent>
           </Sheet>
@@ -210,27 +239,30 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const externo = canvas.getByRole("button", { name: "Abrir pelo estado externo" });
 
-    await step("Clique no trigger externo abre o sheet", async () => {
-      const trigger = canvas.getByRole("button", {
-        name: /Open programmatically/i,
-      });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal("dialog");
-      await expect(dialog).toBeVisible();
+    await step("Sem gatilho interno, o painel nasce fechado", async () => {
+      if (within(document.body).queryAllByRole("dialog").length > 0) {
+        await userEvent.keyboard("{Escape}");
+        await waitForPortalGone("dialog");
+      }
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
 
-    await step("Escape fecha o sheet controlado", async () => {
-      await userEvent.keyboard("{Escape}");
-      await waitFor(
-        () => {
-          const dialog = within(document.body).queryByRole("dialog");
-          if (dialog && dialog.getAttribute("data-closed") === null) {
-            throw new Error("sheet ainda aberto");
-          }
-        },
-        { timeout: 2000 },
-      );
+    await step("O estado externo abre o painel", async () => {
+      await userEvent.click(externo);
+      const painel = await waitForPortal("dialog");
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute("data-slot", "sheet-content");
+    });
+
+    await step("Fechar por dentro devolve o valor a quem é dono dele", async () => {
+      const painel = await waitForPortal("dialog");
+      await userEvent.click(within(painel).getByRole("button", { name: /fechar/i }));
+      await waitForPortalGone("dialog");
+      // Se o callback não tivesse chegado, o estado do pai continuaria `true` e
+      // o painel reabriria no próximo render.
+      await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
   },
 };

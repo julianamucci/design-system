@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     Sheet,
+    SheetBody,
     SheetClose,
     SheetContent,
     SheetDescription,
@@ -10,6 +11,8 @@
     SheetTrigger,
   } from './index';
   import { Button } from '@/components/ui/button';
+  import { Input } from '@/components/ui/input';
+  import { Label } from '@/components/ui/label';
 
   type Side = 'top' | 'right' | 'bottom' | 'left';
   type Variant = 'default' | 'withForm' | 'withScrollContent' | 'noFooter' | 'withDestructiveAction';
@@ -60,41 +63,31 @@
           </SheetHeader>
 
           {#if variant === 'withForm'}
-            <form class="nds-grid nds-px-4" data-spacing="sm">
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Nome</span>
-                <input
-                  type="text"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  value="Maria Silva"
-                />
-              </label>
-              <label class="nds-grid nds-text-body" data-spacing="xs">
-                <span class="nds-text-foreground">Email</span>
-                <input
-                  type="email"
-                  class="nds-bg-background nds-border-default nds-border-default nds-text-body" style="border-radius: var(--radius-input); height: var(--height-default); padding-inline: 0.75rem" 
-                  value="maria@exemplo.com"
-                />
-              </label>
-            </form>
+            <SheetBody>
+              <form class="nds-grid" data-spacing="sm">
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="sheet-story-nome">Nome</Label>
+                  <Input id="sheet-story-nome" value="Maria Silva" />
+                </div>
+                <div class="nds-grid" data-spacing="xs">
+                  <Label for="sheet-story-email">Email</Label>
+                  <Input id="sheet-story-email" type="email" value="maria@exemplo.com" />
+                </div>
+              </form>
+            </SheetBody>
           {:else if variant === 'withScrollContent'}
-            <!-- max-h-[60vh] era Tailwind morto: sem altura maxima nada rolava, e por
-                 isso o axe nunca aplicava scrollable-region-focusable. Com a altura de
-                 volta, a regiao rolavel precisa de acesso por teclado. -->
-            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-            <div
-              class="nds-overflow-y nds-px-4 nds-text-body nds-text-muted-foreground"
-              data-spacing="sm"
-              style="max-block-size: 60vh"
-              tabindex="0"
-              role="region"
-              aria-label={title}
-            >
+            <!--
+              Aqui moravam `max-h-[60vh]` (Tailwind morto) e, depois, um
+              `style="max-block-size: 60vh"` inline com `role="region"` à mão.
+              O corpo rolável é peça do componente: o SheetBody já traz o
+              `overflow`, o `flex` que segura o rodapé e o `tabindex` que a
+              regra scrollable-region-focusable exige.
+            -->
+            <SheetBody class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
               {#each Array.from({ length: 14 }) as _, i (i)}
                 <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Sheet.</p>
               {/each}
-            </div>
+            </SheetBody>
           {/if}
 
           {#if variant !== 'noFooter'}
@@ -119,9 +112,7 @@
                 {/snippet}
               </SheetClose>
               <Button
-                class={variant === 'withDestructiveAction'
-                  ? 'bg-destructive text-destructive-foreground nds-hover-bg-destructive-90'
-                  : ''}
+                variant={variant === 'withDestructiveAction' ? 'destructive' : 'default'}
                 onclick={onAction}
               >
                 {actionLabel}

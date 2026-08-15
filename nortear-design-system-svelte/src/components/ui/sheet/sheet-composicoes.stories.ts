@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { expect } from 'storybook/test';
+import { expect, within } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 
 const meta: Meta = {
@@ -11,10 +11,12 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes reais do Sheet em fluxos de produto: filtros avançados, edição de perfil e termos com scroll. Renderizadas com open=true para captura no Chromatic.',
+          'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
+          'perfil e termos com rolagem interna. Renderizadas abertas para a captura visual.',
       },
     },
   },
@@ -22,13 +24,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-async function expectOpen() {
-  const dialog = await waitForPortal('dialog');
-  await expect(dialog).toBeVisible();
-  await expect(dialog).toHaveAttribute('aria-modal', 'true');
-  return dialog;
-}
 
 export const AdvancedFilters: Story = {
   args: {
@@ -45,15 +40,17 @@ export const AdvancedFilters: Story = {
     docs: {
       description: {
         story:
-          'Sheet lateral direito com formulário de filtros. Submissão dispara `dialog_confirm` e o footer mantém Cancelar + ação primária alinhados à direita.',
+          'Painel lateral direito com formulário de filtros. O rodapé mantém a saída e a ' +
+          'ação primária alinhadas à direita.',
       },
     },
   },
   play: async () => {
-    const dialog = await expectOpen();
-    await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
-    const inputs = dialog.querySelectorAll('input');
-    await expect(inputs.length).toBeGreaterThanOrEqual(2);
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toBeVisible();
+    await expect(painel).toHaveAttribute('aria-modal', 'true');
+    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
+    await expect(within(painel).getByLabelText(/Nome/i)).toBeVisible();
   },
 };
 
@@ -72,13 +69,16 @@ export const ProfileEdit: Story = {
     docs: {
       description: {
         story:
-          'Edição de perfil em painel lateral. Inputs dentro do Sheet participam do focus trap; Escape ou Cancelar fecham sem salvar.',
+          'Edição de perfil em painel lateral. Os campos participam do foco preso; Escape ' +
+          'ou a saída do rodapé fecham sem salvar.',
       },
     },
   },
   play: async () => {
-    const dialog = await expectOpen();
-    await expect(dialog).toHaveAccessibleName(/Editar perfil/i);
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toBeVisible();
+    await expect(painel).toHaveAttribute('aria-modal', 'true');
+    await expect(painel).toHaveAccessibleName(/Editar perfil/i);
   },
 };
 
@@ -94,16 +94,38 @@ export const TermsWithScroll: Story = {
     cancelLabel: 'Recusar',
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
-          'Sheet com conteúdo extenso (scroll interno via max-h + overflow-y-auto). Cabeçalho e footer permanecem visíveis enquanto o body rola.',
+          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
+          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
       },
     },
   },
-  play: async () => {
-    const dialog = await expectOpen();
-    const scrollArea = dialog.querySelector('.nds-overflow-y');
-    await expect(scrollArea).not.toBeNull();
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(corpo).not.toBeNull();
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
+      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const caixaRodape = rodape.getBoundingClientRect();
+      const caixaPainel = painel.getBoundingClientRect();
+      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
+      await expect(caixaRodape.height).toBeGreaterThan(0);
+    });
   },
 };

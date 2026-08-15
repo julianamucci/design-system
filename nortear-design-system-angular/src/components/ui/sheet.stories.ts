@@ -131,6 +131,15 @@ type Story = StoryObj<SheetArgs>;
  * do estado que a rodada anterior deixou e inverteria o resultado.
  */
 async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
+  // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
+  // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
+  // Sem esta espera o clique de reabertura falha no intervalo — medido no stack
+  // svelte, na mesma família de overlay.
+  await waitFor(() => {
+    if (getComputedStyle(document.body).pointerEvents === 'none') {
+      throw new Error('o overlay ainda bloqueia o ponteiro');
+    }
+  });
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -232,6 +241,16 @@ export const Playground: Story = {
       const painel = await esperarPortal('dialog');
       // Volta suficiente para dar a volta completa em qualquer um dos lados.
       for (let i = 0; i < 6; i++) await userEvent.tab();
+      // A espera é o mecanismo, não folga: quem dá a volta é uma âncora de foco
+      // da lib — um <span> IRMÃO do painel — e o retorno para dentro acontece no
+      // tique seguinte. Sem a espera, a asserção reprova o transporte em vez do
+      // destino; com ela, um foco que realmente escapasse continuaria
+      // reprovando, porque nunca voltaria.
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco saiu do painel e não voltou');
+        }
+      });
       await expect(painel.contains(document.activeElement)).toBe(true);
     });
 

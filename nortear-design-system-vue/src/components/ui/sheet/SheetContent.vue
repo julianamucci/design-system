@@ -40,6 +40,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 // emite `aria-modal` (conferido em node_modules). O contrato de markup do
 // design system promete o atributo, então quem o emite é este wrapper — lendo
 // do contexto da raiz para que um painel não-modal não o receba.
+//
+// Aqui morava também um `aria-label="Sheet"` de muleta, aplicado sempre que o
+// consumidor não passasse `aria-labelledby` — o que é SEMPRE, porque quem liga
+// o rótulo ao SheetTitle é a lib, por dentro, e não um atributo de fora. Ele
+// era inerte enquanto houvesse título (aria-labelledby vence aria-label) e
+// nocivo quando não houvesse: batizava o painel de "Sheet", em inglês, em vez
+// de deixar o axe apontar o diálogo sem nome.
 const rootContext = injectDialogRootContext()
 const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
 </script>
@@ -51,7 +58,7 @@ const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
       data-slot="sheet-content"
       :data-side="side"
       :class="cn('nds-sheet-content', props.class)"
-      v-bind="{ 'aria-modal': ariaModal, 'aria-label': $attrs['aria-labelledby'] ? undefined : 'Sheet', ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': ariaModal, ...$attrs, ...forwarded }"
     >
       <slot />
 

@@ -3,6 +3,7 @@ import { within, expect } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -22,10 +23,12 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Composicoes reais do Sheet em fluxos de produto: filtros avançados, navegação secundária e painel inferior mobile.",
+          "Composições reais do Sheet em fluxos de produto: filtros avançados, navegação " +
+          "secundária, painel inferior e corpo longo com rolagem interna.",
       },
     },
   },
@@ -46,26 +49,25 @@ export const FiltersPanel: Story = {
     docs: {
       description: {
         story:
-          "Sheet à direita com filtros avançados em formulário. Title nomeia a ação, Description orienta o uso, Footer com Cancelar + Aplicar.",
+          "Sheet à direita com filtros avançados em formulário. O título nomeia a ação, a " +
+          "descrição orienta o uso e o rodapé traz Cancelar + ação primária.",
       },
     },
   },
-  render: () => {
-    const title = "Filtros avançados";
-    return (
-      <Sheet defaultOpen>
-        <SheetTrigger render={<Button variant="outline" />}>
-          Abrir filtros
-        </SheetTrigger>
-        <SheetContent side="right" className="nds-sm-w-420" style={{ width: "400px" }}>
-          <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
-            <SheetDescription>
-              Refine os resultados por categoria, preço e disponibilidade.
-            </SheetDescription>
-          </SheetHeader>
+  render: () => (
+    <Sheet defaultOpen>
+      <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Filtros avançados</SheetTitle>
+          <SheetDescription>
+            Refine os resultados por categoria, preço e disponibilidade.
+          </SheetDescription>
+        </SheetHeader>
+        <SheetBody>
           <form
-            className="nds-grid nds-px-4" data-spacing="md"
+            className="nds-grid"
+            data-spacing="md"
             onSubmit={(e) => {
               e.preventDefault();
             }}
@@ -83,21 +85,21 @@ export const FiltersPanel: Story = {
               <Input id="filter-max" type="number" defaultValue="2000" />
             </div>
           </form>
-          <SheetFooter>
-            <SheetClose render={<Button type="button" variant="outline" />}>
-              Cancelar
-            </SheetClose>
-            <Button>Aplicar filtros</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    );
-  },
+        </SheetBody>
+        <SheetFooter>
+          <SheetClose render={<Button type="button" variant="outline" />}>
+            Cancelar
+          </SheetClose>
+          <Button>Aplicar filtros</Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
   play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toHaveAccessibleName(/Filtros avançados/i);
-    const input = within(dialog).getByLabelText(/Categoria/i);
-    await expect(input).toBeVisible();
+    const painel = await waitForPortal("dialog");
+    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
+    const campo = within(painel).getByLabelText(/Categoria/i);
+    await expect(campo).toBeVisible();
   },
 };
 
@@ -106,45 +108,35 @@ export const SecondaryNavigation: Story = {
     docs: {
       description: {
         story:
-          "Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do painel, sem Footer.",
+          "Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do " +
+          "painel, sem rodapé.",
       },
     },
   },
-  render: () => {
-    const title = "Navegação";
-    return (
-      <Sheet defaultOpen>
-        <SheetTrigger render={<Button variant="outline" />}>
-          Abrir menu
-        </SheetTrigger>
-        <SheetContent side="left">
-          <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
-            <SheetDescription>
-              Acesse as seções principais do aplicativo.
-            </SheetDescription>
-          </SheetHeader>
-          <nav className="nds-stack nds-px-4" data-spacing="xs" aria-label="Seções">
-            {["Dashboard", "Projetos", "Equipe", "Configuracoes"].map(
-              (label) => (
-                <Button
-                  key={label}
-                  variant="ghost"
-                  className="" data-justify="start"
-                >
-                  {label}
-                </Button>
-              )
-            )}
+  render: () => (
+    <Sheet defaultOpen>
+      <SheetTrigger render={<Button variant="outline" />}>Abrir menu</SheetTrigger>
+      <SheetContent side="left">
+        <SheetHeader>
+          <SheetTitle>Navegação</SheetTitle>
+          <SheetDescription>Acesse as seções principais do aplicativo.</SheetDescription>
+        </SheetHeader>
+        <SheetBody>
+          <nav className="nds-stack" data-spacing="xs" aria-label="Seções">
+            {["Dashboard", "Projetos", "Equipe", "Configurações"].map((label) => (
+              <Button key={label} variant="ghost">
+                {label}
+              </Button>
+            ))}
           </nav>
-        </SheetContent>
-      </Sheet>
-    );
-  },
+        </SheetBody>
+      </SheetContent>
+    </Sheet>
+  ),
   play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toHaveAttribute("data-side", "left");
-    const nav = within(dialog).getByRole("navigation");
+    const painel = await waitForPortal("dialog");
+    await expect(painel).toHaveAttribute("data-side", "left");
+    const nav = within(painel).getByRole("navigation");
     await expect(nav).toBeVisible();
   },
 };
@@ -154,40 +146,98 @@ export const BottomPanel: Story = {
     docs: {
       description: {
         story:
-          "Sheet inferior — equivalente visual ao Drawer mobile, mas sem gesture. Para swipe nativo em mobile, use Drawer.",
+          "Sheet inferior — o mesmo desenho do Drawer mobile, sem o gesto de arrastar. " +
+          "Quando o gesto importa, o componente é o Drawer.",
       },
     },
   },
-  render: () => {
-    const title = "Ações rápidas";
-    return (
-      <Sheet defaultOpen>
-        <SheetTrigger render={<Button variant="outline" />}>
-          Abrir ações
-        </SheetTrigger>
-        <SheetContent side="bottom">
-          <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
-            <SheetDescription>
-              Escolha uma das ações disponíveis para este item.
-            </SheetDescription>
-          </SheetHeader>
-          <div className="nds-cluster nds-px-4" data-spacing="sm" style={{ flexWrap: "wrap" }}>
+  render: () => (
+    <Sheet defaultOpen>
+      <SheetTrigger render={<Button variant="outline" />}>Abrir ações</SheetTrigger>
+      <SheetContent side="bottom">
+        <SheetHeader>
+          <SheetTitle>Ações rápidas</SheetTitle>
+          <SheetDescription>
+            Escolha uma das ações disponíveis para este item.
+          </SheetDescription>
+        </SheetHeader>
+        <SheetBody>
+          <div className="nds-cluster" data-spacing="sm">
             <Button variant="outline">Compartilhar</Button>
             <Button variant="outline">Duplicar</Button>
             <Button variant="destructive">Excluir</Button>
           </div>
-          <SheetFooter>
-            <SheetClose render={<Button variant="outline" />}>
-              Fechar
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    );
-  },
+        </SheetBody>
+        <SheetFooter>
+          <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
   play: async () => {
-    const dialog = await waitForPortal("dialog");
-    await expect(dialog).toHaveAttribute("data-side", "bottom");
+    const painel = await waitForPortal("dialog");
+    await expect(painel).toHaveAttribute("data-side", "bottom");
+    await expect(painel).toHaveAccessibleName(/Ações rápidas/i);
+  },
+};
+
+export const WithLongScrollContent: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      description: {
+        story:
+          "Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — " +
+          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+      },
+    },
+  },
+  render: () => (
+    <Sheet defaultOpen>
+      <SheetTrigger render={<Button variant="outline" />}>Ler termos</SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Termos de uso</SheetTitle>
+          <SheetDescription>Leia atentamente antes de aceitar.</SheetDescription>
+        </SheetHeader>
+        <SheetBody className="nds-stack" data-spacing="sm">
+          {Array.from({ length: 24 }, (_, i) => (
+            <p key={i} className="nds-text-body">
+              Parágrafo {i + 1}: termos longos o bastante para o corpo precisar rolar
+              dentro do painel, sem empurrar o rodapé para fora da tela.
+            </p>
+          ))}
+        </SheetBody>
+        <SheetFooter>
+          <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+          <Button>Aceitar termos</Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
+  play: async ({ step }) => {
+    const painel = await waitForPortal("dialog");
+    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step("O corpo é quem rola, não o painel", async () => {
+      await expect(corpo).not.toBeNull();
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
+      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+    });
+
+    await step("A região rolável é alcançável por teclado", async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(corpo).toHaveAttribute("tabindex", "0");
+    });
+
+    await step("O rodapé continua visível com o corpo cheio", async () => {
+      const caixaRodape = rodape.getBoundingClientRect();
+      const caixaPainel = painel.getBoundingClientRect();
+      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
+      await expect(caixaRodape.height).toBeGreaterThan(0);
+    });
   },
 };

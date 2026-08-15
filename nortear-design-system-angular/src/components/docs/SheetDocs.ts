@@ -704,7 +704,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly anatomyItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6, 7, 8].map((i) => t(`anatomy.item${i}`));
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => t(`anatomy.item${i}`));
   });
 
   protected readonly guidelines = computed(() => {
@@ -922,19 +922,20 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna do meio leva a classe .nds-* REAL, não o utilitário da era
-    // Tailwind que o conteúdo compartilhado ainda guarda em `*.class`.
+    // A coluna do meio vem do conteúdo compartilhado como todas as outras: as
+    // classes `.nds-*` reais passaram a morar lá, no lugar dos utilitários da
+    // era Tailwind que a tabela guardava (`bg-popover`, `ring-ring`).
     return [
-      { token: '--background',       classe: 'nds-sheet-content',        k: 'popover'           },
-      { token: '--foreground',       classe: 'nds-sheet-content',        k: 'popoverForeground' },
-      { token: '--foreground',       classe: 'nds-sheet-title',          k: 'foreground'        },
-      { token: '--muted-foreground', classe: 'nds-sheet-description',    k: 'mutedForeground'   },
-      { token: '--border',           classe: 'nds-sheet-content',        k: 'border'            },
-      { token: '--ring',             classe: 'nds-sheet-close-position', k: 'ring'              },
-      { token: '--z-modal-backdrop', classe: 'nds-sheet-overlay',        k: 'overlay'           },
-    ].map(({ token, classe, k }) => ({
+      { token: '--background', k: 'background' },
+      { token: '--foreground', k: 'foreground' },
+      { token: '--muted-foreground', k: 'mutedForeground' },
+      { token: '--border', k: 'border' },
+      { token: '--z-modal-backdrop', k: 'overlay' },
+      { token: '--ring', k: 'ring' },
+      { token: '--sheet-width', k: 'width' },
+    ].map(({ token, k }) => ({
       token,
-      value: classe,
+      value: t(`tokens.table.${k}.class`),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

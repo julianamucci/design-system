@@ -49,6 +49,29 @@ function createCloseIcon(): SVGSVGElement {
 
 let _sheetCounter = 0;
 
+/**
+ * Painéis abertos. O Sheet é modal: um de cada vez, e o mais novo manda.
+ *
+ * O painel vive em `document.body`, FORA do wrapper — quem tira o wrapper do
+ * documento não leva o painel junto. Sobravam no `body` diálogos órfãos
+ * empilhados, cada um com o seu listener de `keydown` ainda ativo; as asserções
+ * tinham aprendido a pegar "o último `dialog` do body" para conviver com a
+ * pilha, o que é o mesmo que documentar o defeito.
+ *
+ * Fechar os outros na ABERTURA é a guarda determinística: não depende de quando
+ * a remoção do wrapper é notificada, e descreve o estado que o componente
+ * promete — dois painéis modais ao mesmo tempo deixam um deles inalcançável.
+ * O `MutationObserver` de cada instância cobre o caso oposto: o wrapper sai e
+ * ninguém mais abre nada.
+ */
+const abertos = new Set<{ fechar: () => void }>();
+
+function fecharOutrosPaineis(atual: { fechar: () => void }): void {
+  for (const registro of [...abertos]) {
+    if (registro !== atual) registro.fechar();
+  }
+}
+
 function getFocusable(container: HTMLElement): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>(
@@ -72,9 +95,27 @@ export function createSheet(options: SheetOptions): HTMLElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'sheet';
+
+  // O gatilho anuncia que existe um diálogo por trás dele. As libs headless das
+  // outras stacks emitem os dois atributos; aqui não existia lib para emitir, e
+  // o leitor de tela ouvia um botão comum — WAI-ARIA APG para diálogo modal.
+  trigger.setAttribute('aria-haspopup', 'dialog');
+  trigger.dataset.slot = 'sheet-trigger';
+
   wrapper.appendChild(trigger);
 
+  const registro = {
+    fechar: () => {
+      const estavaAberto = panelEl !== null;
+      desmontarPainel();
+      if (estavaAberto) onOpenChange?.(false);
+    },
+  };
+
   function open(): void {
+    // Antes de pôr mais um painel na tela, tire da tela o que já estava lá.
+    fecharOutrosPaineis(registro);
+
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
@@ -149,16 +190,28 @@ export function createSheet(options: SheetOptions): HTMLElement {
     focusable[0]?.focus();
 
     document.addEventListener('keydown', handleKeydown);
+    abertos.add(registro);
     onOpenChange?.(true);
   }
 
-  // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
-  function closeWithReason(reason: SheetCloseReason): void {
+  /**
+   * Tira o painel do documento e solta o que ele prendeu.
+   *
+   * Separado do fechamento por vontade de quem usa: aqui não se devolve foco
+   * (o elemento anterior pode ter saído do DOM junto) nem se anuncia motivo.
+   */
+  function desmontarPainel(): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
+    abertos.delete(registro);
+  }
+
+  // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
+  function closeWithReason(reason: SheetCloseReason): void {
+    desmontarPainel();
     previousFocus?.focus();
     onClose?.(reason);
     onOpenChange?.(false);
@@ -184,5 +237,37 @@ export function createSheet(options: SheetOptions): HTMLElement {
   }
 
   trigger.addEventListener('click', open);
+
+  /*
+   * O painel mora em `document.body`, não dentro do wrapper: quem tira o
+   * wrapper do documento não leva o painel junto, e sobravam no `body` um
+   * diálogo órfão e um listener de `keydown` — vivos até a página recarregar.
+   *
+   * Dava para ver na suíte: as stories abriam painéis que nunca saíam, e as
+   * asserções tinham aprendido a pegar "o último `dialog` do body" para
+   * conviver com a pilha. O `dialog.ts` já tinha esta guarda; o `sheet.ts`
+   * ficou sem ela.
+   */
+  if (typeof MutationObserver !== 'undefined') {
+    // `jaConectou` é a guarda que separa "saiu do documento" de "ainda não
+    // entrou". A factory devolve o wrapper e quem chama o insere DEPOIS: quem
+    // abre o painel no mesmo tique da criação (as stories que nascem abertas
+    // fazem isso) dispara a primeira mutação com o wrapper ainda solto, e sem
+    // esta guarda o painel era desmontado no quadro seguinte ao de abrir.
+    let jaConectou = false;
+    const observador = new MutationObserver(() => {
+      if (wrapper.isConnected) {
+        jaConectou = true;
+        return;
+      }
+      if (!jaConectou) return;
+      registro.fechar();
+      observador.disconnect();
+    });
+    const observar = () => observador.observe(document.body, { childList: true, subtree: true });
+    if (document.body) observar();
+    else queueMicrotask(observar);
+  }
+
   return wrapper;
 }

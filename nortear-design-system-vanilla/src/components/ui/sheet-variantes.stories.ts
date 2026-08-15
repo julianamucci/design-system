@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
 import { createButton } from './button';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
+
+// As quatro direções são a única variação visual do Sheet. Cada uma nasce
+// ABERTA: é o estado que a regressão visual captura e o que o axe tem para
+// examinar — fechada, o painel nem está no DOM.
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -16,8 +21,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de posicionamento do Sheet via prop side: right (padrão), left, top e bottom. ' +
-          'Cada history abre o painel programaticamente para captura visual no Chromatic.',
+          'Direção do painel pela prop side. Right é o padrão de desktop; left serve à ' +
+          'navegação secundária; top e bottom ocupam altura automática.',
       },
     },
   },
@@ -66,9 +71,15 @@ function buildSheetSide(opts: {
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
+// As asserções estão escritas story a story, e não extraídas para um helper: o
+// lado é o ÚNICO contrato que cada uma destas quatro verifica, e ver a asserção
+// dentro da story é o que torna um lado errado visível na leitura. Antes, três
+// delas só contavam botões do canvas — uma asserção que passa com a tela vazia.
+
 export const Right: Story = {
   parameters: {
-    docs: { description: { story: "Desliza da direita — side='right'. Padrão para filtros em desktop." } },
+    covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'],
+    docs: { description: { story: 'Desliza da direita. Padrão para filtros em desktop.' } },
   },
   render: () => buildSheetSide({
     side: 'right',
@@ -77,15 +88,19 @@ export const Right: Story = {
     description: 'Filtros avançados encostados à direita.',
   }),
   play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'right');
+    await expect(painel).toHaveAttribute('aria-modal', 'true');
+    await expect(painel).toHaveClass(/nds-sheet-content/);
+    // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
+    await esperarEncostarNaBorda(painel, 'right');
   },
 };
 
 export const Left: Story = {
   parameters: {
-    docs: { description: { story: "Desliza da esquerda — side='left'. Ideal para navegação secundária." } },
+    covers: ['visual.item2'],
+    docs: { description: { story: 'Desliza da esquerda. Ideal para navegação secundária.' } },
   },
   render: () => buildSheetSide({
     side: 'left',
@@ -93,16 +108,17 @@ export const Left: Story = {
     title: 'Painel esquerdo',
     description: 'Navegação secundária encostada à esquerda.',
   }),
-
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async () => {
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'left');
+    await expect(painel).toHaveClass(/nds-sheet-content/);
+    await esperarEncostarNaBorda(painel, 'left');
   },
 };
 
 export const Top: Story = {
   parameters: {
-    docs: { description: { story: "Desliza do topo — side='top'. Altura automática." } },
+    docs: { description: { story: 'Desliza do topo, com altura definida pelo conteúdo.' } },
   },
   render: () => buildSheetSide({
     side: 'top',
@@ -110,16 +126,18 @@ export const Top: Story = {
     title: 'Painel superior',
     description: 'Faixa superior com ações rápidas.',
   }),
-
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async () => {
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'top');
+    await expect(painel).toHaveClass(/nds-sheet-content/);
+    await esperarEncostarNaBorda(painel, 'top');
   },
 };
 
 export const Bottom: Story = {
   parameters: {
-    docs: { description: { story: "Desliza de baixo — side='bottom'. Equivalente ao Drawer mas sem gesture." } },
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Desliza de baixo — o desenho do Drawer, sem o gesto.' } },
   },
   render: () => buildSheetSide({
     side: 'bottom',
@@ -127,9 +145,10 @@ export const Bottom: Story = {
     title: 'Painel inferior',
     description: 'Painel mobile-style sem swipe.',
   }),
-
-  play: async ({ canvasElement }) => {
-    const el = canvasElement as HTMLElement;
-    await expect(within(el).queryAllByRole('button').length).toBeGreaterThanOrEqual(0);
+  play: async () => {
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'bottom');
+    await expect(painel).toHaveClass(/nds-sheet-content/);
+    await esperarEncostarNaBorda(painel, 'bottom');
   },
 };

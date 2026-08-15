@@ -44,7 +44,10 @@ const ROTULOS = {
 
 export const Closed: Story = {
   parameters: {
-    covers: ['visual.item1'],
+    // Sem `covers`. Esta story declarava `visual.item1`, que é a captura da
+    // direção RIGHT — item já coberto, e corretamente, pela story Right das
+    // variantes. Aqui o que se vê é o painel ausente: uma declaração deslocada,
+    // que fazia o auditor contar como verificada uma foto que ninguém tira.
     docs: {
       description: {
         story:

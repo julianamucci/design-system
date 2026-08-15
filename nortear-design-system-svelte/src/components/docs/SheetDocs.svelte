@@ -120,6 +120,7 @@
 
   const codeImportBasic = `import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -199,7 +200,7 @@ interface TriggerProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="flex-wrap: wrap; contain: layout">
+    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="sm" style="contain: layout">
       <Sheet onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'sheet', label: 'right', location: 'docs_demo' })}>
         <SheetTrigger>
           {#snippet child({ props })}
@@ -302,6 +303,7 @@ interface TriggerProps {
       $tStore('anatomy.item6'),
       $tStore('anatomy.item7'),
       $tStore('anatomy.item8'),
+      $tStore('anatomy.item9'),
     ]}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -689,13 +691,13 @@ interface TriggerProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--popover',            value: $tStore('tokens.table.popover.class'),           description: $tStore('tokens.table.popover.part')           },
-      { token: '--popover-foreground', value: $tStore('tokens.table.popoverForeground.class'), description: $tStore('tokens.table.popoverForeground.part') },
-      { token: '--foreground',         value: $tStore('tokens.table.foreground.class'),        description: $tStore('tokens.table.foreground.part')        },
-      { token: '--muted-foreground',   value: $tStore('tokens.table.mutedForeground.class'),   description: $tStore('tokens.table.mutedForeground.part')   },
-      { token: '--border',             value: $tStore('tokens.table.border.class'),            description: $tStore('tokens.table.border.part')            },
-      { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part')              },
-      { token: 'overlay',              value: $tStore('tokens.table.overlay.class'),           description: $tStore('tokens.table.overlay.part')           },
+      { token: '--background', value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
+      { token: '--foreground', value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
+      { token: '--muted-foreground', value: $tStore('tokens.table.mutedForeground.class'), description: $tStore('tokens.table.mutedForeground.part') },
+      { token: '--border', value: $tStore('tokens.table.border.class'), description: $tStore('tokens.table.border.part') },
+      { token: '--z-modal-backdrop', value: $tStore('tokens.table.overlay.class'), description: $tStore('tokens.table.overlay.part') },
+      { token: '--ring', value: $tStore('tokens.table.ring.class'), description: $tStore('tokens.table.ring.part') },
+      { token: '--sheet-width', value: $tStore('tokens.table.width.class'), description: $tStore('tokens.table.width.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

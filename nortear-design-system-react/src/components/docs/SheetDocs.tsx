@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import {
   Sheet,
   SheetClose,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -147,38 +148,43 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, location 
         }
       >
         <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
-        <SheetContent side="right" style={{ width: '420px' }}>
+        <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>{description}</SheetDescription>
           </SheetHeader>
-          <form
-            className="nds-grid nds-px-4"
-            data-spacing="md"
-            onSubmit={(e) => {
-              e.preventDefault();
-              track("dialog_confirm", {
-                component: "sheet",
-                action: apply,
-                location,
-              });
-            }}
-          >
-            <div className="nds-grid" data-spacing="xs">
-              <Label htmlFor="docs-sheet-category">Categoria</Label>
-              <Input id="docs-sheet-category" defaultValue="Eletrônicos" />
-            </div>
-            <div className="nds-grid" data-spacing="xs">
-              <Label htmlFor="docs-sheet-min">Preço mínimo</Label>
-              <Input id="docs-sheet-min" type="number" defaultValue="100" />
-            </div>
-            <SheetFooter>
-              <SheetClose render={<Button type="button" variant="outline" />}>
-                {cancel}
-              </SheetClose>
-              <Button type="submit">{apply}</Button>
-            </SheetFooter>
-          </form>
+          <SheetBody>
+            <form
+              id="docs-sheet-filtros"
+              className="nds-grid"
+              data-spacing="md"
+              onSubmit={(e) => {
+                e.preventDefault();
+                track("dialog_confirm", {
+                  component: "sheet",
+                  action: apply,
+                  location,
+                });
+              }}
+            >
+              <div className="nds-grid" data-spacing="xs">
+                <Label htmlFor="docs-sheet-category">Categoria</Label>
+                <Input id="docs-sheet-category" defaultValue="Eletrônicos" />
+              </div>
+              <div className="nds-grid" data-spacing="xs">
+                <Label htmlFor="docs-sheet-min">Preço mínimo</Label>
+                <Input id="docs-sheet-min" type="number" defaultValue="100" />
+              </div>
+            </form>
+          </SheetBody>
+          {/* O rodapé fica FORA do corpo: é ele que continua visível quando o
+              conteúdo rola. O `form` liga o botão ao formulário de novo. */}
+          <SheetFooter>
+            <SheetClose render={<Button type="button" variant="outline" />}>
+              {cancel}
+            </SheetClose>
+            <Button type="submit" form="docs-sheet-filtros">{apply}</Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </div>
@@ -245,6 +251,7 @@ export function SheetDocs() {
 
   const codeImport = `import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -255,18 +262,14 @@ export function SheetDocs() {
 } from "@/components/ui/sheet";`;
 
   const codeRight = `<Sheet>
-  <SheetTrigger asChild>
-    <Button variant="outline">Abrir filtros</Button>
-  </SheetTrigger>
+  <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
   <SheetContent side="right">
     <SheetHeader>
       <SheetTitle>Filtros avançados</SheetTitle>
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
     <SheetFooter>
-      <SheetClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </SheetClose>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
       <Button>Aplicar filtros</Button>
     </SheetFooter>
   </SheetContent>
@@ -308,7 +311,7 @@ export function SheetDocs() {
       }
     >
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="nds-cluster" data-justify="center" data-spacing="sm" style={{ flexWrap: "wrap" }}>
+        <div className="nds-cluster" data-justify="center" data-spacing="sm">
           <SheetDemo
             trigger={tContent("demonstration.labels.trigger")}
             title={tContent("demonstration.labels.title")}
@@ -339,6 +342,7 @@ export function SheetDocs() {
           tContent("anatomy.item6"),
           tContent("anatomy.item7"),
           tContent("anatomy.item8"),
+          tContent("anatomy.item9"),
         ]}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -578,20 +582,22 @@ export function SheetDocs() {
             useWhen: tContent("variants.compositions.advancedFilters.use"),
             code: `<Sheet>
   <SheetTrigger render={<Button variant="outline" />}>Abrir filtros</SheetTrigger>
-  <SheetContent side="right" style={{ width: '420px' }}>
+  <SheetContent side="right">
     <SheetHeader>
       <SheetTitle>Filtros avançados</SheetTitle>
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
-    <form className="nds-grid nds-px-4" data-spacing="md">
-      <Label htmlFor="cat">Categoria</Label>
-      <Input id="cat" defaultValue="Eletrônicos" />
-      <Label htmlFor="min">Preço mínimo</Label>
-      <Input id="min" type="number" defaultValue="100" />
-    </form>
+    <SheetBody>
+      <form id="filtros" className="nds-grid" data-spacing="md">
+        <Label htmlFor="cat">Categoria</Label>
+        <Input id="cat" defaultValue="Eletrônicos" />
+        <Label htmlFor="min">Preço mínimo</Label>
+        <Input id="min" type="number" defaultValue="100" />
+      </form>
+    </SheetBody>
     <SheetFooter>
       <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
-      <Button>Aplicar filtros</Button>
+      <Button type="submit" form="filtros">Aplicar filtros</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`,
@@ -617,12 +623,14 @@ export function SheetDocs() {
       <SheetTitle>Menu</SheetTitle>
       <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
     </SheetHeader>
-    <nav aria-label="Navegação secundária" className="nds-stack nds-px-4" data-spacing="xs">
-      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Dashboard</a>
-      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Projetos</a>
-      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Equipe</a>
-      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Configurações</a>
-    </nav>
+    <SheetBody>
+      <nav aria-label="Navegação secundária" className="nds-stack" data-spacing="xs">
+      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+      <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+      </nav>
+    </SheetBody>
   </SheetContent>
 </Sheet>`,
             preview: (
@@ -634,12 +642,14 @@ export function SheetDocs() {
                       <SheetTitle>Menu</SheetTitle>
                       <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
                     </SheetHeader>
-                    <nav aria-label="Navegação secundária" className="nds-stack nds-px-4" data-spacing="xs">
-                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Dashboard</a>
-                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Projetos</a>
-                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Equipe</a>
-                      <a href="#" className="nds-rounded-md nds-text-body nds-hover-bg-accent" style={{ padding: "0.5rem 0.75rem" }}>Configurações</a>
-                    </nav>
+                    <SheetBody>
+                      <nav aria-label="Navegação secundária" className="nds-stack" data-spacing="xs">
+                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+                        <a href="#" className="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Configurações</a>
+                      </nav>
+                    </SheetBody>
                   </SheetContent>
                 </Sheet>
               </div>
@@ -753,13 +763,13 @@ export function SheetDocs() {
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--popover",            value: tContent("tokens.table.popover.class"),            description: tContent("tokens.table.popover.part") },
-          { token: "--popover-foreground", value: tContent("tokens.table.popoverForeground.class"),  description: tContent("tokens.table.popoverForeground.part") },
-          { token: "--foreground",         value: tContent("tokens.table.foreground.class"),         description: tContent("tokens.table.foreground.part") },
-          { token: "--muted-foreground",   value: tContent("tokens.table.mutedForeground.class"),    description: tContent("tokens.table.mutedForeground.part") },
-          { token: "--border",             value: tContent("tokens.table.border.class"),             description: tContent("tokens.table.border.part") },
-          { token: "--ring",               value: tContent("tokens.table.ring.class"),               description: tContent("tokens.table.ring.part") },
-          { token: "bg-black/10",          value: tContent("tokens.table.overlay.class"),            description: tContent("tokens.table.overlay.part") },
+          { token: "--background", value: tContent("tokens.table.background.class"), description: tContent("tokens.table.background.part") },
+          { token: "--foreground", value: tContent("tokens.table.foreground.class"), description: tContent("tokens.table.foreground.part") },
+          { token: "--muted-foreground", value: tContent("tokens.table.mutedForeground.class"), description: tContent("tokens.table.mutedForeground.part") },
+          { token: "--border", value: tContent("tokens.table.border.class"), description: tContent("tokens.table.border.part") },
+          { token: "--z-modal-backdrop", value: tContent("tokens.table.overlay.class"), description: tContent("tokens.table.overlay.part") },
+          { token: "--ring", value: tContent("tokens.table.ring.class"), description: tContent("tokens.table.ring.part") },
+          { token: "--sheet-width", value: tContent("tokens.table.width.class"), description: tContent("tokens.table.width.part") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

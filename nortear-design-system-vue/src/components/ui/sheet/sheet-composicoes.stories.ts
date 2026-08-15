@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -13,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 
 const meta = {
   title: 'UI/Sheet/Compositions',
@@ -23,10 +24,13 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
+    // Painel modal aberto: ver o motivo em wait-for-portal.ts.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         component:
-          'Composicoes canônicas de uso real do Sheet: filtros avançados, edição de perfil, navegação secundária e formulário longo com scroll.',
+          'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
+          'perfil, navegação secundária e formulário longo com rolagem interna.',
       },
     },
   },
@@ -42,6 +46,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -63,26 +68,28 @@ export const AdvancedFilters: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Sheet default-open :modal="false">
+      <Sheet default-open>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Filtros avançados</SheetTitle>
             <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
           </SheetHeader>
-          <div class="nds-grid nds-px-4" data-spacing="md">
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="cat">Categoria</Label>
-              <Input id="cat" defaultValue="Componentes" />
+          <SheetBody>
+            <div class="nds-grid" data-spacing="md">
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="cat">Categoria</Label>
+                <Input id="cat" defaultValue="Componentes" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="status">Status</Label>
+                <Input id="status" defaultValue="Estável" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="lang">Idioma</Label>
+                <Input id="lang" defaultValue="Português" />
+              </div>
             </div>
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="status">Status</Label>
-              <Input id="status" defaultValue="Estável" />
-            </div>
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="lang">Idioma</Label>
-              <Input id="lang" defaultValue="Português" />
-            </div>
-          </div>
+          </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
               <Button variant="outline">Cancelar</Button>
@@ -94,11 +101,10 @@ export const AdvancedFilters: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const apply = await body.findByRole('button', { name: /Aplicar filtros/i });
-    await expect(apply).toBeVisible();
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAccessibleName(/Filtros avançados/i);
+    const aplicar = within(painel).getByRole('button', { name: /Aplicar filtros/i });
+    await expect(aplicar).toBeVisible();
   },
 };
 
@@ -111,26 +117,28 @@ export const ProfileEdit: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Sheet default-open :modal="false">
+      <Sheet default-open>
         <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Editar perfil</SheetTitle>
             <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
           </SheetHeader>
-          <form class="nds-grid nds-px-4" data-spacing="sm">
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="profile-name">Nome</Label>
-              <Input id="profile-name" defaultValue="Juliana Mucci" />
-            </div>
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="profile-handle">Username</Label>
-              <Input id="profile-handle" defaultValue="@julianamucci" />
-            </div>
-            <div class="nds-grid" data-spacing="xs">
-              <Label for="profile-bio">Bio</Label>
-              <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
-            </div>
-          </form>
+          <SheetBody>
+            <form class="nds-grid" data-spacing="sm">
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="profile-name">Nome</Label>
+                <Input id="profile-name" defaultValue="Juliana Mucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="profile-handle">Username</Label>
+                <Input id="profile-handle" defaultValue="@julianamucci" />
+              </div>
+              <div class="nds-grid" data-spacing="xs">
+                <Label for="profile-bio">Bio</Label>
+                <Input id="profile-bio" defaultValue="Designer de sistemas em São Paulo" />
+              </div>
+            </form>
+          </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
               <Button variant="outline">Cancelar</Button>
@@ -142,11 +150,10 @@ export const ProfileEdit: Story = {
     `,
   }),
   play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const nameInput = await body.findByLabelText(/Nome/i);
-    await expect(nameInput).toBeVisible();
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAccessibleName(/Editar perfil/i);
+    const nome = within(painel).getByLabelText(/Nome/i);
+    await expect(nome).toBeVisible();
   },
 };
 
@@ -159,54 +166,61 @@ export const SecondaryNavigation: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Sheet default-open :modal="false">
+      <Sheet default-open>
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Navegação</SheetTitle>
             <SheetDescription>Acesse as seções principais da aplicação.</SheetDescription>
           </SheetHeader>
-          <nav class="nds-stack nds-px-4" data-spacing="xs">
-            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Dashboard</a>
-            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Componentes</a>
-            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Tokens</a>
-            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Documentação</a>
-            <a href="#" class="nds-rounded-md nds-py-2 nds-text-body nds-hover-bg-muted-soft" style="padding-inline: 0.75rem">Configuracoes</a>
-          </nav>
+          <SheetBody>
+            <nav class="nds-stack" data-spacing="xs" aria-label="Seções">
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Dashboard</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Componentes</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Tokens</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Documentação</a>
+              <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-muted-soft">Configurações</a>
+            </nav>
+          </SheetBody>
         </SheetContent>
       </Sheet>
     `,
   }),
   play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const content = document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
-    await expect(content).toHaveAttribute('data-side', 'left');
+    const painel = await waitForPortal('dialog');
+    await expect(painel).toHaveAttribute('data-side', 'left');
+    const nav = within(painel).getByRole('navigation');
+    await expect(nav).toBeVisible();
   },
 };
 
 export const LongFormScroll: Story = {
   parameters: {
+    covers: ['visual.item4'],
     docs: {
-      description: { story: 'Formulário longo com scroll interno — Header/Footer fixos enquanto o body rola.' },
+      description: {
+        story:
+          'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +
+          "é o que separa 'conteúdo longo' de 'ação fora de alcance'.",
+      },
     },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <Sheet default-open :modal="false">
-        <SheetContent side="right" class="nds-stack">
+      <Sheet default-open>
+        <SheetContent side="right">
           <SheetHeader>
             <SheetTitle>Preferências de notificação</SheetTitle>
             <SheetDescription>Configure cada tipo de notificação individualmente.</SheetDescription>
           </SheetHeader>
-          <div class="nds-flex-1 nds-overflow-y nds-px-4">
-            <div class="nds-grid nds-py-2" data-spacing="sm">
+          <SheetBody>
+            <div class="nds-grid" data-spacing="sm">
               <div v-for="i in 12" :key="i" class="nds-grid" data-spacing="xs">
                 <Label :for="'notif-' + i">Categoria {{ i }}</Label>
                 <Input :id="'notif-' + i" :defaultValue="'Configuração ' + i" />
               </div>
             </div>
-          </div>
+          </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
               <Button variant="outline">Cancelar</Button>
@@ -217,11 +231,29 @@ export const LongFormScroll: Story = {
       </Sheet>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const save = await body.findByRole('button', { name: /Salvar preferências/i });
-    await expect(save).toBeVisible();
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+    const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
+    const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
+
+    await step('O corpo é quem rola, não o painel', async () => {
+      await expect(corpo).not.toBeNull();
+      await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
+      // O painel em si não rola: o `flex` do corpo é o que segura o rodapé.
+      await expect(painel.scrollHeight).toBeLessThanOrEqual(painel.clientHeight + 1);
+    });
+
+    await step('A região rolável é alcançável por teclado', async () => {
+      // WCAG 2.1.1 — sem o tabindex quem navega por teclado não consegue rolar
+      // o corpo (é a regra scrollable-region-focusable do axe).
+      await expect(corpo).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('O rodapé continua visível com o corpo cheio', async () => {
+      const caixaRodape = rodape.getBoundingClientRect();
+      const caixaPainel = painel.getBoundingClientRect();
+      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
+      await expect(caixaRodape.height).toBeGreaterThan(0);
+    });
   },
 };

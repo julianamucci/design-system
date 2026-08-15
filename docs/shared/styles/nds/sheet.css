@@ -9,11 +9,13 @@
  *     <div class="nds-sheet-header">…</div>
  *     <div class="nds-sheet-body">…</div>
  *     <div class="nds-sheet-footer">…</div>
- *     <button class="nds-sheet-close" aria-label="Close">…</button>
+ *     <button class="nds-sheet-close" aria-label="Fechar">…</button>
  *   </div>
  *
  * Tokens: --background, --foreground, --muted-foreground, --border,
  *         --ring, --spacing-*
+ *         --sheet-width / --sheet-max-width — largura dos lados esquerdo e
+ *         direito, o ponto de customização (ver a nota em "Sides").
  */
 
 /* ── Overlay ─────────────────────────────────────────────────────────────── */
@@ -121,8 +123,24 @@
 }
 
 /* ── Body ────────────────────────────────────────────────────────────────── */
+/*
+ * `flex: 1 1 auto`, e não `flex: 1` — mesmo defeito já medido no drawer.
+ *
+ * O atalho `flex: 1` zera a BASE (`flex-basis: 0%`). Nos lados esquerdo e
+ * direito o painel tem `height: 100%`, altura definida, e a base zero não faz
+ * diferença: o corpo cresce para o espaço livre de qualquer jeito. Em `top` e
+ * `bottom`, porém, o painel tem `height: auto` — a altura sai do conteúdo, e um
+ * corpo de base zero não contribui com nada para ela. O painel ficava do
+ * tamanho do cabeçalho mais o rodapé e o corpo desabava para zero, rolando
+ * dentro de uma caixa sem altura.
+ *
+ * Com a base `auto` a altura hipotética do corpo é a do conteúdo, e
+ * `min-height: 0` desliga o mínimo automático do item flex para que ele possa
+ * encolher quando houver teto.
+ */
 .nds-sheet-body {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
 }
 

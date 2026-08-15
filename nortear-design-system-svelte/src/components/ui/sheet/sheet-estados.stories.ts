@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
+
+// Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
+// no DOM; aberto, o foco entra e fica preso até o fechamento.
 
 const meta: Meta = {
   title: 'UI/Sheet/States',
@@ -11,10 +14,12 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados canônicos do Sheet: closed (inicial), open, withCloseButtonHidden e controlled (bind:open).',
+          'Estados canônicos do Sheet: Closed (inicial), Open, WithCloseButtonHidden ' +
+          '(sem o botão do canto) e Controlled (estado externo).',
       },
     },
   },
@@ -31,15 +36,27 @@ export const Closed: Story = {
   },
   parameters: {
     docs: {
-      description: { story: 'Estado inicial — apenas o trigger é visível, SheetContent não renderizado.' },
+      description: {
+        story:
+          'Estado inicial. O painel não está no DOM, e o gatilho anuncia que existe um ' +
+          'diálogo por trás dele sem prometer que já está aberto.',
+      },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
     const trigger = canvas.getByRole('button', { name: /Abrir filtros/i });
-    await expect(trigger).toBeVisible();
-    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await step('Fechado, o painel não existe no DOM', async () => {
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      await expect(document.querySelector('[data-slot="sheet-content"]')).toBeNull();
+    });
+
+    await step('O gatilho anuncia o diálogo sem afirmar que está aberto', async () => {
+      await expect(trigger).toBeVisible();
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(trigger).toHaveAttribute('data-slot', 'sheet-trigger');
+    });
   },
 };
 
@@ -54,12 +71,32 @@ export const Open: Story = {
     cancelLabel: 'Cancelar',
   },
   parameters: {
-    docs: { description: { story: 'Sheet aberto via bind:open. Captura visual no Chromatic.' } },
+    docs: {
+      description: {
+        story:
+          'Aberto por estado inicial, sem interação nenhuma. O foco entra no painel e o ' +
+          'restante da página fica inerte enquanto ele durar.',
+      },
+    },
   },
-  play: async () => {
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+
+    await step('Monta já aberto, com o contrato de markup completo', async () => {
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute('aria-modal', 'true');
+      await expect(painel).toHaveAccessibleName();
+      await expect(painel).toHaveAccessibleDescription();
+      await expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
+    });
+
+    await step('O foco está dentro do painel', async () => {
+      await waitFor(() => {
+        if (!painel.contains(document.activeElement)) {
+          throw new Error('o foco não entrou no painel');
+        }
+      });
+    });
   },
 };
 
@@ -78,25 +115,35 @@ export const WithCloseButtonHidden: Story = {
     docs: {
       description: {
         story:
-          'showCloseButton={false} no SheetContent. Sem X no canto — fechar apenas via Escape, overlay ou ação do Footer.',
+          'Sem o botão do canto. Só faz sentido quando o rodapé já oferece uma saída ' +
+          'explícita — Escape continua fechando de qualquer forma.',
       },
     },
   },
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await waitForPortal('dialog');
-    await expect(dialog).toBeVisible();
-    const closeBtns = body.queryAllByRole('button', { name: /^Fechar$/i });
-    await expect(closeBtns.length).toBe(0);
+  play: async ({ step }) => {
+    const painel = await waitForPortal('dialog');
+
+    await step('O botão do canto não é renderizado', async () => {
+      await expect(painel).toBeVisible();
+      await expect(
+        within(painel).queryByRole('button', { name: /^Fechar$/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    await step('E ainda assim existe uma saída — o rodapé', async () => {
+      const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
+      await expect(rodape).not.toBeNull();
+      await expect(within(rodape!).getAllByRole('button').length).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Controlled: Story = {
   args: {
     open: false,
-    triggerLabel: 'Abrir via estado externo',
+    triggerLabel: 'Abrir pelo estado externo',
     title: 'Controlado pelo pai',
-    description: 'Este sheet é comandado por estado externo via bind:open.',
+    description: 'Este painel é comandado por estado externo e devolve cada mudança a quem é dono dele.',
     actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
     onAction: fn(),
@@ -104,31 +151,32 @@ export const Controlled: Story = {
   },
   parameters: {
     docs: {
-      description: { story: 'Abertura controlada externamente via bind:open. Escape fecha mesmo controlado.' },
+      description: {
+        story:
+          'Estado do lado de fora. O valor ligado manda no painel, e o painel devolve cada ' +
+          'mudança — Escape fecha mesmo assim.',
+      },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const trigger = canvas.getByRole('button', { name: /Abrir pelo estado externo/i });
 
-    await step('Clique no trigger abre o sheet', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-      await userEvent.click(trigger);
-      const dialog = await waitForPortal('dialog');
-      await expect(dialog).toBeVisible();
+    await step('O estado externo abre o painel', async () => {
+      if (within(document.body).queryAllByRole('dialog').length === 0) {
+        await userEvent.click(trigger);
+      }
+      const painel = await waitForPortal('dialog');
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
     });
 
-    await step('Escape fecha o sheet controlado', async () => {
+    await step('Escape fecha o painel controlado', async () => {
       await userEvent.keyboard('{Escape}');
-      await waitFor(
-        () => {
-          const dialog = body.queryByRole('dialog');
-          if (dialog && dialog.getAttribute('data-state') !== 'closed') {
-            throw new Error('sheet still open');
-          }
-        },
-        { timeout: 1200 }
-      );
+      await waitForPortalGone('dialog');
+      // Se o valor ligado não tivesse voltado a false, o painel reabriria no
+      // próximo ciclo de render.
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
   },
 };

@@ -4,6 +4,7 @@ import { expect } from 'storybook/test';
 import { NDS_SHEET, type SheetSide } from './sheet';
 import { NdsButton } from './button';
 import { esperarPortal } from '@/lib/wait-for-portal';
+import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
@@ -90,6 +91,8 @@ export const Right: Story = {
       await expect(painelEl).toHaveAttribute('data-side', 'right');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
+      // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
+      await esperarEncostarNaBorda(painelEl, 'right');
     });
   },
 };
@@ -112,6 +115,8 @@ export const Left: Story = {
       await expect(painelEl).toHaveAttribute('data-side', 'left');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
+      // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
+      await esperarEncostarNaBorda(painelEl, 'left');
     });
   },
 };
@@ -133,6 +138,8 @@ export const Top: Story = {
       await expect(painelEl).toHaveAttribute('data-side', 'top');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
+      // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
+      await esperarEncostarNaBorda(painelEl, 'top');
     });
   },
 };
@@ -155,6 +162,8 @@ export const Bottom: Story = {
       await expect(painelEl).toHaveAttribute('data-side', 'bottom');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
+      // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
+      await esperarEncostarNaBorda(painelEl, 'bottom');
     });
   },
 };

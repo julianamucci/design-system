@@ -237,7 +237,6 @@ export function createSheetDocs(): HTMLElement {
             wrap.className = 'nds-cluster';
             wrap.dataset.justify = 'center';
             wrap.dataset.spacing = 'sm';
-            wrap.style.flexWrap = 'wrap';
             wrap.appendChild(buildSheetDemo({
               side: 'right',
               triggerLabel: t('demonstration.labels.trigger'),
@@ -253,7 +252,7 @@ export function createSheetDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
+          items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -440,13 +439,12 @@ createSheet({
         const buildSecondaryNavBody = () => {
           const nav = document.createElement('nav');
           nav.setAttribute('aria-label', 'Navegação secundária');
-          nav.className = 'nds-stack nds-px-4';
+          nav.className = 'nds-stack';
           nav.dataset.spacing = 'xs';
           ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'].forEach((label) => {
             const a = document.createElement('a');
             a.href = '#';
-            a.className = 'nds-rounded-md nds-text-body nds-hover-bg-accent';
-            a.style.padding = '0.5rem 0.75rem';
+            a.className = 'nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent';
             a.textContent = label;
             nav.appendChild(a);
           });
@@ -601,13 +599,13 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--popover',             value: t('tokens.table.popover.class'),            description: t('tokens.table.popover.part')            },
-            { token: '--popover-foreground',  value: t('tokens.table.popoverForeground.class'),  description: t('tokens.table.popoverForeground.part')  },
-            { token: '--foreground',          value: t('tokens.table.foreground.class'),         description: t('tokens.table.foreground.part')         },
-            { token: '--muted-foreground',    value: t('tokens.table.mutedForeground.class'),    description: t('tokens.table.mutedForeground.part')    },
-            { token: '--border',              value: t('tokens.table.border.class'),             description: t('tokens.table.border.part')             },
-            { token: '--ring',                value: t('tokens.table.ring.class'),               description: t('tokens.table.ring.part')               },
-            { token: 'overlay',               value: t('tokens.table.overlay.class'),            description: t('tokens.table.overlay.part')            },
+            { token: '--background', value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
+            { token: '--foreground', value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
+            { token: '--muted-foreground', value: t('tokens.table.mutedForeground.class'), description: t('tokens.table.mutedForeground.part') },
+            { token: '--border', value: t('tokens.table.border.class'), description: t('tokens.table.border.part') },
+            { token: '--z-modal-backdrop', value: t('tokens.table.overlay.class'), description: t('tokens.table.overlay.part') },
+            { token: '--ring', value: t('tokens.table.ring.class'), description: t('tokens.table.ring.part') },
+            { token: '--sheet-width', value: t('tokens.table.width.class'), description: t('tokens.table.width.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

@@ -101,6 +101,25 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Corpo rolável do painel.
+ *
+ * `tabIndex={0}`, como no Vanilla: quando o conteúdo passa da altura do painel,
+ * a região rolável precisa ser alcançável por teclado (WCAG 2.1.1 — é a regra
+ * `scrollable-region-focusable` do axe). O `flex` do CSS compartilhado é o que
+ * mantém o rodapé no lugar enquanto o corpo rola.
+ */
+function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="sheet-body"
+      tabIndex={0}
+      className={cn("nds-sheet-body", className)}
+      {...props}
+    />
+  )
+}
+
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -143,6 +162,7 @@ export {
   SheetClose,
   SheetContent,
   SheetHeader,
+  SheetBody,
   SheetFooter,
   SheetTitle,
   SheetDescription,

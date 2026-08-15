@@ -7,6 +7,7 @@ import { useActiveSection } from '@/lib/use-active-section';
 import {
   Sheet,
   SheetClose,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -170,6 +171,7 @@ function handleDemoApply() {
 
 const codeImportBasic = `import {
   Sheet,
+  SheetBody,
   SheetClose,
   SheetContent,
   SheetDescription,
@@ -235,6 +237,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item6'),
   tContent('anatomy.item7'),
   tContent('anatomy.item8'),
+  tContent('anatomy.item9'),
 ]);
 
 const variantItems = computed(() => [
@@ -248,22 +251,24 @@ const codeCompAdvancedFilters = `<Sheet>
   <SheetTrigger as-child>
     <Button variant="outline">Abrir filtros</Button>
   </SheetTrigger>
-  <SheetContent side="right" style="width: 420px;">
+  <SheetContent side="right">
     <SheetHeader>
       <SheetTitle>Filtros avançados</SheetTitle>
       <SheetDescription>Configure os filtros para refinar os resultados.</SheetDescription>
     </SheetHeader>
-    <form class="nds-grid nds-px-4" data-spacing="md">
-      <Label for="cat">Categoria</Label>
-      <Input id="cat" default-value="Eletrônicos" />
-      <Label for="min">Preço mínimo</Label>
-      <Input id="min" type="number" default-value="100" />
-    </form>
+    <SheetBody>
+      <form id="filtros" class="nds-grid" data-spacing="md">
+        <Label for="cat">Categoria</Label>
+        <Input id="cat" default-value="Eletrônicos" />
+        <Label for="min">Preço mínimo</Label>
+        <Input id="min" type="number" default-value="100" />
+      </form>
+    </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
         <Button variant="outline">Cancelar</Button>
       </SheetClose>
-      <Button>Aplicar filtros</Button>
+      <Button type="submit" form="filtros">Aplicar filtros</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`;
@@ -277,11 +282,13 @@ const codeCompSecondaryNav = `<Sheet>
       <SheetTitle>Menu</SheetTitle>
       <SheetDescription>Navegue entre as áreas do sistema.</SheetDescription>
     </SheetHeader>
-    <nav aria-label="Navegação secundária" class="nds-stack nds-px-4" data-spacing="xs">
-      <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Dashboard</a>
-      <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Projetos</a>
-      <a href="#" class="nds-rounded-md nds-text-body nds-hover-bg-accent" style="padding: 0.5rem 0.75rem;">Equipe</a>
-    </nav>
+    <SheetBody>
+      <nav aria-label="Navegação secundária" class="nds-stack" data-spacing="xs">
+        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Dashboard</a>
+        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Projetos</a>
+        <a href="#" class="nds-rounded-md nds-px-4 nds-py-2 nds-text-body nds-hover-bg-accent">Equipe</a>
+      </nav>
+    </SheetBody>
   </SheetContent>
 </Sheet>`;
 
@@ -326,13 +333,13 @@ const propRows = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--popover',            value: tContent('tokens.table.popover.class'),           description: tContent('tokens.table.popover.part')           },
-  { token: '--popover-foreground', value: tContent('tokens.table.popoverForeground.class'), description: tContent('tokens.table.popoverForeground.part') },
-  { token: '--foreground',         value: tContent('tokens.table.foreground.class'),        description: tContent('tokens.table.foreground.part')        },
-  { token: '--muted-foreground',   value: tContent('tokens.table.mutedForeground.class'),   description: tContent('tokens.table.mutedForeground.part')   },
-  { token: '--border',             value: tContent('tokens.table.border.class'),            description: tContent('tokens.table.border.part')            },
-  { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
-  { token: 'overlay',              value: tContent('tokens.table.overlay.class'),           description: tContent('tokens.table.overlay.part')           },
+  { token: '--background', value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
+  { token: '--foreground', value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
+  { token: '--muted-foreground', value: tContent('tokens.table.mutedForeground.class'), description: tContent('tokens.table.mutedForeground.part') },
+  { token: '--border', value: tContent('tokens.table.border.class'), description: tContent('tokens.table.border.part') },
+  { token: '--z-modal-backdrop', value: tContent('tokens.table.overlay.class'), description: tContent('tokens.table.overlay.part') },
+  { token: '--ring', value: tContent('tokens.table.ring.class'), description: tContent('tokens.table.ring.part') },
+  { token: '--sheet-width', value: tContent('tokens.table.width.class'), description: tContent('tokens.table.width.part') },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -416,7 +423,6 @@ const a11yCritCols = computed(() => ({
         class="nds-cluster nds-w-full"
         data-justify="center"
         data-spacing="sm"
-        style="flex-wrap: wrap;"
       >
         <Sheet @update:open="(o: boolean) => handleDemoOpenChange(o, 'right')">
           <SheetTrigger as-child>
@@ -429,13 +435,15 @@ const a11yCritCols = computed(() => ({
               <SheetTitle>{{ tContent('demonstration.labels.title') }}</SheetTitle>
               <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
             </SheetHeader>
-            <div
-              class="nds-grid nds-px-4"
-              data-spacing="md"
-            >
-              <Label for="demo-category">{{ tContent('demonstration.labels.section') }}</Label>
-              <Input id="demo-category" />
-            </div>
+            <SheetBody>
+              <div
+                class="nds-grid"
+                data-spacing="md"
+              >
+                <Label for="demo-category">{{ tContent('demonstration.labels.section') }}</Label>
+                <Input id="demo-category" />
+              </div>
+            </SheetBody>
             <SheetFooter>
               <SheetClose as-child>
                 <Button variant="outline">
