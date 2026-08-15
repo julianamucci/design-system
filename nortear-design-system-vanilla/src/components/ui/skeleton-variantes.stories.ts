@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -12,8 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Patterns de uso do Skeleton via className: Retângulo (rounded-md, padrão), ' +
-          'Círculo (rounded-full para avatares) e Linha de texto (h-3 a h-5 com largura variável).',
+          'Formas do esqueleto. Não há variante via opção de estilo: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
       },
     },
   },
@@ -22,10 +22,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function buildContainer(label: string): HTMLElement {
+function regiaoDeCarregamento(label: string, className = ''): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack nds-w-full nds-max-w-md';
-  wrap.dataset.spacing = 'sm';
+  if (className) wrap.className = className;
   wrap.setAttribute('role', 'status');
   wrap.setAttribute('aria-busy', 'true');
   wrap.setAttribute('aria-label', label);
@@ -35,60 +34,99 @@ function buildContainer(label: string): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Rectangle: Story = {
+  parameters: {
+    covers: ['visual.item1'],
+    docs: {
+      description: {
+        story:
+          '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
+      },
+    },
+  },
   render: () => {
-    const wrap = buildContainer('Carregando bloco retangular');
-    const skeleton = createSkeleton({ height: '6rem', width: '100%' });
-    skeleton.setAttribute('aria-hidden', 'true');
-    skeleton.setAttribute('data-slot', 'skeleton');
-    wrap.appendChild(skeleton);
+    const wrap = regiaoDeCarregamento('Carregando bloco', 'nds-w-sm');
+    wrap.appendChild(createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' }));
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Skeleton retângulo renderiza com classe base nds-skeleton', async () => {
-      const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('nds-skeleton');
+    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+
+    await step('Preenche a caixa do container na proporção de mídia', async () => {
+      const caixa = caixaDesenhada(sk);
+      await expect(caixa.largura).toBeGreaterThan(0);
+      await expect(Math.abs(caixa.largura / caixa.altura - 16 / 9)).toBeLessThan(0.05);
+    });
+
+    await step('Continua fora da árvore de acessibilidade', async () => {
+      await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };
 
 export const Circle: Story = {
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      description: {
+        story:
+          '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
+      },
+    },
+  },
   render: () => {
-    const wrap = buildContainer('Carregando avatar');
-    const skeleton = createSkeleton({ className: 'nds-rounded-full nds-size-12' });
-    skeleton.setAttribute('aria-hidden', 'true');
-    skeleton.setAttribute('data-slot', 'skeleton');
-    wrap.appendChild(skeleton);
+    const wrap = regiaoDeCarregamento('Carregando avatar');
+    wrap.appendChild(createSkeleton({ shape: 'avatar' }));
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Skeleton círculo aplica rounded-full', async () => {
-      const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeleton).toBeTruthy();
-      await expect(skeleton).toHaveClass('nds-rounded-full');
+    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+
+    await step('Quadrado com medida vinda do tema', async () => {
+      // Sem número mágico: a medida sai de `--size-*`, que muda por densidade.
+      // Afirmar "40px" amarraria o teste ao tema padrão.
+      const caixa = caixaDesenhada(sk);
+      await expect(caixa.largura).toBeGreaterThan(0);
+      await expect(caixa.quadrado).toBe(true);
+    });
+
+    await step('O raio é circular, não o raio padrão do sistema', async () => {
+      // Comportamento, não classe: o que importa é o círculo desenhado.
+      await expect(caixaDesenhada(sk).circular).toBe(true);
     });
   },
 };
 
 export const TextLine: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',
+      },
+    },
+  },
   render: () => {
-    const wrap = buildContainer('Carregando linhas de texto');
-
-    const widths = ['250px', '200px', '160px'];
-    widths.forEach((w) => {
-      const skeleton = createSkeleton({ height: '1rem', width: w });
-      skeleton.setAttribute('aria-hidden', 'true');
-      skeleton.setAttribute('data-slot', 'skeleton');
-      wrap.appendChild(skeleton);
-    });
-
+    const wrap = regiaoDeCarregamento('Carregando linhas de texto', 'nds-stack nds-w-sm');
+    wrap.dataset.spacing = 'sm';
+    for (const width of ['full', '3-4', '1-2'] as const) {
+      wrap.appendChild(createSkeleton({ shape: 'text', width }));
+    }
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Linhas de texto: três skeletons renderizados', async () => {
-      const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(3);
-      await expect(skeletons[0]).toHaveClass('nds-skeleton');
+    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('Três linhas, todas com altura desenhada', async () => {
+      await expect(linhas).toHaveLength(3);
+      for (const l of linhas) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
+    await step('As larguras decrescem na ordem declarada', async () => {
+      // É a asserção que faltava: o tradutor de classe utilitária descartava
+      // `w-[60%]` em silêncio e as três linhas saíam do mesmo tamanho.
+      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      await expect(larguras[0]).toBeGreaterThan(larguras[1]);
+      await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });
   },
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { Skeleton } from '@/components/ui/skeleton';
+  import { AspectRatio } from '@/components/ui/aspect-ratio';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -98,16 +99,21 @@
   const codeImportUsage = `import { Skeleton } from "@/components/ui/skeleton";
 
 <div role="status" aria-busy={isLoading} aria-label="Carregando perfil">
-  <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
-  <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 250px" aria-hidden="true" />
+  <Skeleton data-shape="avatar" />
+  <Skeleton data-shape="text" data-width="3-4" />
 </div>`;
 
-  const codeRectangle = `<Skeleton class="nds-motion-reduce-none" style="height: 5rem; width: 16rem" aria-hidden="true" />`;
-  const codeCircle = `<Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />`;
-  const codeLine = `<Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 200px" aria-hidden="true" />`;
+  const codeRectangle = `<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />`;
+  const codeCircle = `<Skeleton data-shape="avatar" />`;
+  const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
+  // Sem props próprias além de class: a caixa vem de atributo, e a folha de
+  // estilo continua dona das medidas.
   const interfaceCode = `interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   class?: string;
+  // data-shape: "text" | "heading" | "avatar" | "fill"
+  // data-width: "full" | "3-4" | "2-3" | "1-2" | "1-3"
+  // data-size:  "sm" | "lg"   (só na forma de avatar)
 }`;
 </script>
 
@@ -135,10 +141,10 @@
           data-spacing="md"
           data-align="center"
         >
-          <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+          <Skeleton data-shape="avatar" />
           <div class="nds-stack nds-flex-1" data-spacing="sm">
-            <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
-            <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
+            <Skeleton data-shape="text" data-width="2-3" />
+            <Skeleton data-shape="text" data-width="1-2" />
           </div>
         </div>
       </div>
@@ -146,11 +152,14 @@
       <!-- Lista -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
-        <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack" data-spacing="sm">
-          {#each Array.from({ length: 3 }) as _, i (i)}
+        <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack nds-list-none nds-p-0" data-spacing="sm">
+          {#each Array.from({ length: 5 }) as _, i (i)}
             <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
-              <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2rem; width: 2rem" aria-hidden="true" />
-              <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 140px" aria-hidden="true" />
+              <Skeleton data-shape="avatar" data-size="sm" />
+              <div class="nds-stack nds-flex-1" data-spacing="xs">
+                <Skeleton data-shape="text" data-width="2-3" />
+                <Skeleton data-shape="text" data-width="1-3" />
+              </div>
             </li>
           {/each}
         </ul>
@@ -160,9 +169,9 @@
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
         <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
-          <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;">
-            <Skeleton class="nds-w-full nds-motion-reduce-none" style="position: absolute; inset: 0; height: 100%" aria-hidden="true" />
-          </div>
+          <AspectRatio ratio={16 / 9}>
+            <Skeleton data-shape="fill" />
+          </AspectRatio>
         </div>
       </div>
 
@@ -170,9 +179,9 @@
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
         <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-          <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 0.75rem" aria-hidden="true" />
-          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
-          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
+          <Skeleton data-shape="text" data-width="full" />
+          <Skeleton data-shape="text" data-width="3-4" />
+          <Skeleton data-shape="text" data-width="1-2" />
         </div>
       </div>
     </div>
@@ -262,26 +271,32 @@
 
   {#snippet doPair1()}
     <div role="status" aria-busy="true" aria-label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
-      <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 5rem" aria-hidden="true" />
-      <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
-      <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
+      <Skeleton data-shape="heading" data-width="1-2" />
+      <Skeleton data-shape="text" data-width="full" />
+      <Skeleton data-shape="text" data-width="3-4" />
     </div>
   {/snippet}
   {#snippet dontPair1()}
     <div role="status" aria-busy="true" aria-label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
-      <Skeleton class="nds-motion-reduce-none" style="height: 1.5rem; width: 60px" aria-hidden="true" />
+      <Skeleton data-shape="text" data-width="1-3" />
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div role="status" aria-busy="true" aria-label="Carregando avatar" class="nds-cluster" data-spacing="sm" data-align="center">
-      <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2.5rem; width: 2.5rem" aria-hidden="true" />
-      <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 120px" aria-hidden="true" />
+    <div role="status" aria-busy="true" aria-label="Carregando avatar" class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+      <Skeleton data-shape="avatar" />
+      <div class="nds-stack nds-flex-1" data-spacing="xs">
+        <Skeleton data-shape="text" data-width="1-2" />
+        <Skeleton data-shape="text" data-width="1-3" />
+      </div>
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="nds-cluster" data-spacing="sm" data-align="center">
-      <Skeleton class="nds-rounded-full" style="height: 2.5rem; width: 2.5rem" />
-      <Skeleton style="height: 0.75rem; width: 120px" />
+    <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+      <Skeleton data-shape="avatar" />
+      <div class="nds-stack nds-flex-1" data-spacing="xs">
+        <Skeleton data-shape="text" data-width="1-2" />
+        <Skeleton data-shape="text" data-width="1-3" />
+      </div>
     </div>
   {/snippet}
 
@@ -303,18 +318,19 @@
   />
 
   {#snippet variantRectangle()}
-    <div role="status" aria-busy="true" aria-label="Carregando bloco">
-      <Skeleton class="nds-motion-reduce-none" style="height: 5rem; width: 16rem" aria-hidden="true" />
+    <div role="status" aria-busy="true" aria-label="Carregando bloco" class="nds-w-xs">
+      <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
     </div>
   {/snippet}
   {#snippet variantCircle()}
     <div role="status" aria-busy="true" aria-label="Carregando avatar">
-      <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
+      <Skeleton data-shape="avatar" />
     </div>
   {/snippet}
   {#snippet variantLine()}
-    <div role="status" aria-busy="true" aria-label="Carregando texto">
-      <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 200px" aria-hidden="true" />
+    <div role="status" aria-busy="true" aria-label="Carregando texto" class="nds-stack nds-w-xs" data-spacing="xs">
+      <Skeleton data-shape="text" data-width="3-4" />
+      <Skeleton data-shape="text" data-width="1-2" />
     </div>
   {/snippet}
 
@@ -346,6 +362,9 @@
         },
         items: [
           { name: 'class',       type: $tStore('props.table.className.type'),  defaultValue: $tStore('props.table.className.default'),  required: $tStore('props.table.className.required'),  description: $tStore('props.table.className.description')  },
+          { name: 'data-shape',  type: $tStore('props.table.dataShape.type'),  defaultValue: $tStore('props.table.dataShape.default'),  required: $tStore('props.table.dataShape.required'),  description: $tStore('props.table.dataShape.description')  },
+          { name: 'data-width',  type: $tStore('props.table.dataWidth.type'),  defaultValue: $tStore('props.table.dataWidth.default'),  required: $tStore('props.table.dataWidth.required'),  description: $tStore('props.table.dataWidth.description')  },
+          { name: 'data-size',   type: $tStore('props.table.dataSize.type'),   defaultValue: $tStore('props.table.dataSize.default'),   required: $tStore('props.table.dataSize.required'),   description: $tStore('props.table.dataSize.description')   },
           { name: 'aria-hidden', type: $tStore('props.table.ariaHidden.type'), defaultValue: $tStore('props.table.ariaHidden.default'), required: $tStore('props.table.ariaHidden.required'), description: $tStore('props.table.ariaHidden.description') },
           { name: '...rest',     type: $tStore('props.table.rest.type'),       defaultValue: $tStore('props.table.rest.default'),       required: $tStore('props.table.rest.required'),       description: $tStore('props.table.rest.description')       },
         ],
@@ -365,10 +384,11 @@
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: 'bg-muted',      value: $tStore('tokens.table.background.class'),   description: $tStore('tokens.table.background.part')   },
-      { token: 'rounded-md',    value: $tStore('tokens.table.rounded.class'),      description: $tStore('tokens.table.rounded.part')      },
-      { token: 'animate-pulse', value: $tStore('tokens.table.animation.class'),    description: $tStore('tokens.table.animation.part')    },
-      { token: 'motion-reduce', value: $tStore('tokens.table.motionReduce.class'), description: $tStore('tokens.table.motionReduce.part') },
+      { token: $tStore('tokens.table.background.token'),   value: $tStore('tokens.table.background.class'),   description: $tStore('tokens.table.background.part')   },
+      { token: $tStore('tokens.table.rounded.token'),      value: $tStore('tokens.table.rounded.class'),      description: $tStore('tokens.table.rounded.part')      },
+      { token: $tStore('tokens.table.animation.token'),    value: $tStore('tokens.table.animation.class'),    description: $tStore('tokens.table.animation.part')    },
+      { token: $tStore('tokens.table.size.token'),         value: $tStore('tokens.table.size.class'),         description: $tStore('tokens.table.size.part')         },
+      { token: $tStore('tokens.table.motionReduce.token'), value: $tStore('tokens.table.motionReduce.class'), description: $tStore('tokens.table.motionReduce.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
@@ -398,7 +418,6 @@
     title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.progress.name'),    description: $tStore('related.items.progress.description'),    path: '?path=/docs/ui-progress--docs'    },
-      { name: $tStore('related.items.spinner.name'),     description: $tStore('related.items.spinner.description'),     path: '?path=/docs/ui-spinner--docs'     },
       { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/ui-aspectratio--docs' },
       { name: $tStore('related.items.card.name'),        description: $tStore('related.items.card.description'),        path: '?path=/docs/ui-card--docs'        },
     ]}
@@ -455,11 +474,13 @@
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2', how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2', how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.3.3', how: '—' },
-        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '1.4.11', how: '—' },
+        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
+        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2', how: 'DevTools a11y tree' },
+        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2', how: 'DevTools a11y tree' },
+        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.3.3', how: 'prefers-reduced-motion' },
+        // Não é critério da WCAG: o esqueleto não transmite informação, então
+        // 1.4.3 e 1.4.11 não se aplicam. O que se mede é luminância.
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '—', how: 'Medição de luminância' },
       ],
     }}
     visual={{

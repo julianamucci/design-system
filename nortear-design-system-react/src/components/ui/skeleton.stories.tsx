@@ -1,63 +1,113 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
 import { SkeletonDocs } from "@/components/docs/SkeletonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { FRACAO_DE_LARGURA, caixaDesenhada } from "@shared/testing/skeleton-probe";
 
+// A caixa do esqueleto vem de atributo, não de classe de dimensão nem de
+// altura cravada: `data-shape` escolhe a forma e `data-width` a fração da
+// largura do container (docs/shared/styles/nds/skeleton.css). Altura é
+// resultado de padding + tipografia — guideline 12, WCAG 1.4.4.
+type PlaygroundArgs = {
+  shape: "text" | "heading" | "avatar" | "fill";
+  width: "full" | "3-4" | "2-3" | "1-2" | "1-3";
+  loading: boolean;
+};
+
+// Sem `component: Skeleton`: os controls do Playground são a FORMA e a LARGURA,
+// que o componente não recebe como prop — chegam como atributo. Declarar o
+// componente aqui faria o docgen anunciar uma API que não é a que se controla.
 const meta = {
   title: "UI/Skeleton",
-  component: Skeleton,
   tags: ["autodocs", "feedback"],
   parameters: {
-    layout: "centered",
+    layout: "padded",
     docs: { page: withAutoDocsTab(SkeletonDocs) },
   },
   argTypes: {
-    className: {
-      control: { type: "text" },
+    shape: {
+      control: { type: "inline-radio" },
+      options: ["text", "heading", "avatar", "fill"],
       description:
-        "Classes utilitárias .nds-* para definir dimensões e arredondamento do placeholder.",
+        "Forma do placeholder — decide a caixa que ele desenha (data-shape).",
+      table: { type: { summary: '"text" | "heading" | "avatar" | "fill"' }, defaultValue: { summary: "text" } },
+    },
+    width: {
+      control: { type: "inline-radio" },
+      options: ["full", "3-4", "2-3", "1-2", "1-3"],
+      description:
+        "Fração da largura do container (data-width). Só se aplica às formas de texto.",
+      table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: "3-4" } },
+    },
+    loading: {
+      control: "boolean",
+      description: "Estado de carregamento da região que contém o placeholder.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
     },
   },
   args: {
-    className: "h-4 w-[250px]",
+    shape: "text",
+    width: "3-4",
+    loading: true,
   },
-} satisfies Meta<typeof Skeleton>;
+} satisfies Meta<PlaygroundArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PlaygroundArgs>;
 
 export const Playground: Story = {
-  render: (args) => (
-    <div role="status" aria-busy="true" aria-label="Carregando exemplo">
-      <Skeleton {...args} aria-hidden="true" />
+  parameters: {
+    covers: [
+      "functional.item2",
+      "functional.item3",
+      "functional.item4",
+      "accessibility.item1",
+      "accessibility.item2",
+      "accessibility.item3",
+    ],
+  },
+  render: ({ shape, width, loading }) => (
+    <div role="status" aria-busy={loading} aria-label="Carregando conteúdo">
+      <Skeleton
+        data-shape={shape}
+        data-width={shape === "text" || shape === "heading" ? width : undefined}
+        // `fill` preenche a caixa que o container estabelece; aqui quem
+        // estabelece é a proporção de mídia, senão o bloco nasce com altura
+        // zero e o Playground mostra um esqueleto invisível.
+        className={shape === "fill" ? "nds-docs-skeleton-media" : undefined}
+      />
     </div>
   ),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const skeleton = canvasElement.querySelector(
-      "[data-slot='skeleton']"
-    ) as HTMLElement | null;
-    const container = skeleton?.parentElement as HTMLElement | null;
+  play: async ({ canvasElement, step, args }) => {
+    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
 
-    await step("Skeleton está no DOM", async () => {
-      await expect(skeleton).toBeInTheDocument();
-      await expect(canvas).toBeTruthy();
+    await step("O placeholder fica fora da árvore de acessibilidade", async () => {
+      // Anunciar cada barrinha é ruído: o esqueleto não tem conteúdo.
+      await expect(sk).toHaveAttribute("aria-hidden", "true");
     });
 
-    await step("Skeleton tem estilo base (pulso, radius, bg)", async () => {
-      await expect(skeleton).toHaveClass("nds-skeleton");
-      const style = getComputedStyle(skeleton!);
-      await expect(style.animationName).toBe("nds-skeleton-pulse");
-      await expect(style.borderRadius).not.toBe("0px");
+    await step("Quem anuncia o carregamento é a região", async () => {
+      // `aria-busy` sozinho num div sem role não é anunciado, e aria-label em
+      // div sem role é violação de ARIA — o par role+label é o que faz o
+      // leitor dizer "carregando conteúdo".
+      await expect(regiao).toHaveAttribute("aria-busy", String(args.loading));
+      await expect(regiao.getAttribute("aria-label")).toBeTruthy();
+      await expect(regiao.contains(sk)).toBe(true);
     });
 
-    await step("Skeleton tem aria-hidden=true", async () => {
-      await expect(skeleton).toHaveAttribute("aria-hidden", "true");
-    });
-
-    await step("Container tem aria-busy=true", async () => {
-      await expect(container).toHaveAttribute("aria-busy", "true");
+    await step("O atributo desenha a caixa — medida no que foi renderizado", async () => {
+      // Mede o que foi DESENHADO, não a classe: foi exatamente assim que
+      // `h-4 w-[250px]` sobreviveu como texto inerte, com o esqueleto do
+      // Playground renderizando altura zero.
+      const caixa = caixaDesenhada(sk, regiao);
+      await expect(caixa.altura).toBeGreaterThan(0);
+      if (args.shape === "text" || args.shape === "heading") {
+        await expect(
+          Math.abs(caixa.fracaoDoContainer - FRACAO_DE_LARGURA[args.width]),
+        ).toBeLessThan(0.02);
+      }
     });
   },
 };

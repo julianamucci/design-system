@@ -104,7 +104,8 @@ const INTERFACE_CODE = `// <div ndsSkeleton> — diretiva de atributo, sem input
 })
 export class NdsSkeleton {}
 
-// Forma e dimensão vêm do style de quem usa:
+// Forma e dimensão vêm de atributo, e a folha de estilo continua dona
+// das medidas:
 // <div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
 
 const CODE_LINHA = `<div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
@@ -465,8 +466,15 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
       {
         title: 'NdsSkeleton',
         cols,
-        items: ['className', 'ariaHidden', 'rest'].map((p) => ({
-          name: p === 'className' ? 'class' : p === 'ariaHidden' ? 'aria-hidden' : '(atributos nativos)',
+        items: ['className', 'dataShape', 'dataWidth', 'dataSize', 'ariaHidden', 'rest'].map((p) => ({
+          name: {
+            className: 'class',
+            dataShape: 'data-shape',
+            dataWidth: 'data-width',
+            dataSize: 'data-size',
+            ariaHidden: 'aria-hidden',
+            rest: '(atributos nativos)',
+          }[p]!,
           type: toPlainText(t(`props.table.${p}.type`)),
           defaultValue: toPlainText(t(`props.table.${p}.default`)),
           required: toPlainText(t(`props.table.${p}.required`)),
@@ -487,9 +495,9 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return ['background', 'rounded', 'animation', 'motionReduce'].map((k) => ({
-      token: toPlainText(t(`tokens.table.${k}.class`)),
-      value: '.nds-skeleton',
+    return ['background', 'rounded', 'animation', 'size', 'motionReduce'].map((k) => ({
+      token: toPlainText(t(`tokens.table.${k}.token`)),
+      value: toPlainText(t(`tokens.table.${k}.class`)),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });
@@ -523,10 +531,11 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
   protected readonly relatedItems = computed(() => {
     dict();
     return [
-      { key: 'progress',    path: '?path=/docs/ui-progress--docs'     },
-      { key: 'spinner',     path: '?path=/docs/ui-progress--docs'     },
-      { key: 'aspectRatio', path: '?path=/docs/ui-aspect-ratio--docs' },
-      { key: 'card',        path: '?path=/docs/ui-card--docs'         },
+      { key: 'progress',    path: '?path=/docs/ui-progress--docs'    },
+      // O id do Storybook sai do title 'UI/AspectRatio', sem hífen: com hífen
+      // o link cai em 404 e ninguém percebe, porque nada testa navegação.
+      { key: 'aspectRatio', path: '?path=/docs/ui-aspectratio--docs' },
+      { key: 'card',        path: '?path=/docs/ui-card--docs'        },
     ].map(({ key, path }) => ({
       name: t(`related.items.${key}.name`),
       description: t(`related.items.${key}.description`),
@@ -587,10 +596,18 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: [1, 2, 3, 4, 5].map((i) => ({
-        criterion: toPlainText(t(`testes.accessibility.item${i}`)),
-        level: '—',
-        how: 'axe + play',
+      // O item 5 não é critério da WCAG: o esqueleto não transmite informação,
+      // então 1.4.3 e 1.4.11 não se aplicam — o que se mede é luminância.
+      items: [
+        { level: 'AA',    how: 'axe-core' },
+        { level: '4.1.2', how: 'DevTools a11y tree' },
+        { level: '4.1.2', how: 'DevTools a11y tree' },
+        { level: '2.3.3', how: 'prefers-reduced-motion' },
+        { level: '—',     how: 'Medição de luminância' },
+      ].map(({ level, how }, idx) => ({
+        criterion: toPlainText(t(`testes.accessibility.item${idx + 1}`)),
+        level,
+        how,
       })),
     };
   });

@@ -3,7 +3,8 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createSkeleton } from '@/components/ui/skeleton';
+import { createSkeleton, type SkeletonWidth } from '@/components/ui/skeleton';
+import { createAspectRatio } from '@/components/ui/aspect-ratio';
 import uiTranslations from '@/i18n/ui.json';
 import skeletonTranslations from '@shared/content/skeleton/translations.json';
 
@@ -54,13 +55,6 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function makeSkeleton(className: string): HTMLElement {
-  const el = createSkeleton({ className });
-  el.setAttribute('aria-hidden', 'true');
-  el.setAttribute('data-slot', 'skeleton');
-  return el;
-}
-
 function loadingWrap(label: string, extraClass = '', stackSpacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = `nds-w-full ${extraClass}`.trim();
@@ -74,10 +68,9 @@ function loadingWrap(label: string, extraClass = '', stackSpacing?: 'xs' | 'sm' 
   return wrap;
 }
 
-function sizedSkeleton(styles: Partial<CSSStyleDeclaration>, className = 'motion-reduce:animate-none'): HTMLElement {
-  const el = makeSkeleton(className);
-  Object.assign(el.style, styles);
-  return el;
+/** Linha de texto na fração pedida do container. */
+function linha(width: SkeletonWidth): HTMLElement {
+  return createSkeleton({ shape: 'text', width });
 }
 
 function buildCardDemo(label: string): HTMLElement {
@@ -93,13 +86,14 @@ function buildCardDemo(label: string): HTMLElement {
   const row = document.createElement('div');
   row.className = 'nds-cluster';
   row.dataset.spacing = 'md';
-  row.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
+  row.dataset.align = 'center';
+  row.appendChild(createSkeleton({ shape: 'avatar' }));
 
   const lines = document.createElement('div');
-  lines.className = 'nds-stack';
+  lines.className = 'nds-stack nds-flex-1';
   lines.dataset.spacing = 'sm';
-  lines.appendChild(sizedSkeleton({ height: '1rem', width: '200px' }));
-  lines.appendChild(sizedSkeleton({ height: '1rem', width: '160px' }));
+  lines.appendChild(linha('2-3'));
+  lines.appendChild(linha('1-2'));
   row.appendChild(lines);
   inner.appendChild(row);
 
@@ -121,12 +115,13 @@ function buildListDemo(label: string): HTMLElement {
     const row = document.createElement('div');
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
-    row.appendChild(sizedSkeleton({ height: '2rem', width: '2rem', borderRadius: '9999px' }));
+    row.dataset.align = 'center';
+    row.appendChild(createSkeleton({ shape: 'avatar', size: 'sm' }));
     const text = document.createElement('div');
     text.className = 'nds-stack nds-flex-1';
-    text.dataset.spacing = 'sm';
-    text.appendChild(sizedSkeleton({ height: '0.75rem', width: '60%' }));
-    text.appendChild(sizedSkeleton({ height: '0.75rem', width: '40%' }));
+    text.dataset.spacing = 'xs';
+    text.appendChild(linha('2-3'));
+    text.appendChild(linha('1-3'));
     row.appendChild(text);
     list.appendChild(row);
   }
@@ -145,15 +140,9 @@ function buildImageDemo(label: string): HTMLElement {
   caption.textContent = label;
 
   const inner = loadingWrap('Carregando imagem');
-  const ratio = document.createElement('div');
-  ratio.className = 'nds-w-full';
-  ratio.style.position = 'relative';
-  ratio.style.aspectRatio = '16 / 9';
-  const skel = sizedSkeleton({ height: '100%', width: '100%' });
-  skel.style.position = 'absolute';
-  skel.style.inset = '0';
-  ratio.appendChild(skel);
-  inner.appendChild(ratio);
+  inner.appendChild(
+    createAspectRatio({ ratio: 16 / 9, content: createSkeleton({ shape: 'fill' }) }),
+  );
 
   wrap.append(caption, inner);
   return wrap;
@@ -169,9 +158,7 @@ function buildParagraphDemo(label: string): HTMLElement {
   caption.textContent = label;
 
   const inner = loadingWrap('Carregando parágrafo', '', 'sm');
-  (['100%', '95%', '60%'] as const).forEach((w) => {
-    inner.appendChild(sizedSkeleton({ height: '1rem', width: w }));
-  });
+  (['full', '3-4', '1-2'] as const).forEach((w) => inner.appendChild(linha(w)));
 
   wrap.append(caption, inner);
   return wrap;
@@ -179,21 +166,19 @@ function buildParagraphDemo(label: string): HTMLElement {
 
 function buildRectangleVariant(): HTMLElement {
   const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
-  wrap.appendChild(sizedSkeleton({ height: '6rem', width: '100%' }));
+  wrap.appendChild(createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' }));
   return wrap;
 }
 
 function buildCircleVariant(): HTMLElement {
   const wrap = loadingWrap('Carregando avatar', 'nds-max-w-sm');
-  wrap.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
+  wrap.appendChild(createSkeleton({ shape: 'avatar' }));
   return wrap;
 }
 
 function buildLineVariant(): HTMLElement {
   const wrap = loadingWrap('Carregando linhas', 'nds-max-w-sm', 'sm');
-  (['250px', '200px', '160px'] as const).forEach((w) => {
-    wrap.appendChild(sizedSkeleton({ height: '1rem', width: w }));
-  });
+  (['full', '3-4', '1-2'] as const).forEach((w) => wrap.appendChild(linha(w)));
   return wrap;
 }
 
@@ -377,24 +362,15 @@ export function createSkeletonDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando card de perfil', 'nds-max-w-sm');
-                const row = document.createElement('div');
-                row.className = 'nds-cluster';
-                row.dataset.spacing = 'md';
-                row.appendChild(sizedSkeleton({ height: '3rem', width: '3rem', borderRadius: '9999px' }));
-                const lines = document.createElement('div');
-                lines.className = 'nds-stack';
-                lines.dataset.spacing = 'sm';
-                lines.appendChild(sizedSkeleton({ height: '1rem', width: '200px' }));
-                lines.appendChild(sizedSkeleton({ height: '1rem', width: '160px' }));
-                row.appendChild(lines);
-                wrap.appendChild(row);
+                const wrap = loadingWrap('Carregando artigo', 'nds-max-w-sm', 'sm');
+                wrap.appendChild(createSkeleton({ shape: 'heading', width: '1-2' }));
+                wrap.appendChild(linha('full'));
+                wrap.appendChild(linha('3-4'));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = loadingWrap('Carregando', 'nds-max-w-sm', 'sm');
-                wrap.appendChild(sizedSkeleton({ height: '5rem', width: '100%' }, ''));
-                wrap.appendChild(sizedSkeleton({ height: '5rem', width: '100%' }, ''));
+                wrap.appendChild(linha('1-3'));
                 return wrap;
               },
             },
@@ -404,17 +380,33 @@ export function createSkeletonDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
-                wrap.appendChild(sizedSkeleton({ height: '4rem', width: '100%' }));
+                const wrap = loadingWrap('Carregando perfil', 'nds-max-w-sm');
+                wrap.classList.add('nds-cluster');
+                wrap.dataset.spacing = 'sm';
+                wrap.dataset.align = 'center';
+                wrap.appendChild(createSkeleton({ shape: 'avatar' }));
+                const lines = document.createElement('div');
+                lines.className = 'nds-stack nds-flex-1';
+                lines.dataset.spacing = 'xs';
+                lines.appendChild(linha('1-2'));
+                lines.appendChild(linha('1-3'));
+                wrap.appendChild(lines);
                 return wrap;
               },
+              // Sem `role="status"`/`aria-busy`: é justamente o que falta no
+              // "não faça" — o esqueleto solto não anuncia carregamento nenhum.
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-max-w-sm';
-                const skeleton = createSkeleton({ className: '' });
-                skeleton.style.height = '4rem';
-                skeleton.style.width = '100%';
-                wrap.appendChild(skeleton);
+                wrap.className = 'nds-w-full nds-max-w-sm nds-cluster';
+                wrap.dataset.spacing = 'sm';
+                wrap.dataset.align = 'center';
+                wrap.appendChild(createSkeleton({ shape: 'avatar' }));
+                const lines = document.createElement('div');
+                lines.className = 'nds-stack nds-flex-1';
+                lines.dataset.spacing = 'xs';
+                lines.appendChild(linha('1-2'));
+                lines.appendChild(linha('1-3'));
+                wrap.appendChild(lines);
                 return wrap;
               },
             },
@@ -428,15 +420,9 @@ export function createSkeletonDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeRect =
-          `const skeleton = createSkeleton({ height: '6rem', width: '100%' });\n` +
-          `skeleton.setAttribute('aria-hidden', 'true');`;
-        const codeCircle =
-          `const avatar = createSkeleton({ height: '3rem', width: '3rem', className: 'nds-rounded-full' });\n` +
-          `avatar.setAttribute('aria-hidden', 'true');`;
-        const codeLine =
-          `const line = createSkeleton({ height: '1rem', width: '250px' });\n` +
-          `line.setAttribute('aria-hidden', 'true');`;
+        const codeRect = `const bloco = createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' });`;
+        const codeCircle = `const avatar = createSkeleton({ shape: 'avatar' });`;
+        const codeLine = `const linha = createSkeleton({ shape: 'text', width: '3-4' });`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -478,9 +464,13 @@ export function createSkeletonDocs(): HTMLElement {
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createSkeleton(options)
+        const interfaceCode = `// createSkeleton(options) — a caixa vem de atributo, e a folha
+// de estilo continua dona das medidas.
 export interface SkeletonOptions {
   className?: string;
+  shape?: 'text' | 'heading' | 'avatar' | 'fill';
+  width?: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
+  size?: 'sm' | 'lg';
 }
 
 export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
@@ -500,14 +490,17 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
               title: 'createSkeleton(options)',
               cols: propsCols,
               items: [
-                {
-                  name: 'className',
-                  type: t('props.table.className.type'),
-                  defaultValue: t('props.table.className.default'),
-                  required: t('props.table.className.required'),
-                  description: t('props.table.className.description'),
-                },
-              ],
+                { name: 'className', chave: 'className' },
+                { name: 'shape',     chave: 'dataShape' },
+                { name: 'width',     chave: 'dataWidth' },
+                { name: 'size',      chave: 'dataSize'  },
+              ].map(({ name, chave }) => ({
+                name,
+                type: t(`props.table.${chave}.type`),
+                defaultValue: t(`props.table.${chave}.default`),
+                required: t(`props.table.${chave}.required`),
+                description: t(`props.table.${chave}.description`),
+              })),
             },
           ],
           interfaceCode,
@@ -524,12 +517,11 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: [
-            { token: '--primary', value: t('tokens.table.background.class'),    description: t('tokens.table.background.part') },
-            { token: '—',         value: t('tokens.table.rounded.class'),       description: t('tokens.table.rounded.part') },
-            { token: '—',         value: t('tokens.table.animation.class'),     description: t('tokens.table.animation.part') },
-            { token: '—',         value: t('tokens.table.motionReduce.class'),  description: t('tokens.table.motionReduce.part') },
-          ],
+          items: ['background', 'rounded', 'animation', 'size', 'motionReduce'].map((k) => ({
+            token: t(`tokens.table.${k}.token`),
+            value: t(`tokens.table.${k}.class`),
+            description: t(`tokens.table.${k}.part`),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
         });
@@ -560,7 +552,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
           title: t('related.title'),
           items: [
             { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/ui-progress--docs' },
-            { name: t('related.items.spinner.name'),     description: toPlainText(t('related.items.spinner.description')),     path: '?path=/docs/ui-spinner--docs' },
             { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs' },
             { name: t('related.items.card.name'),        description: toPlainText(t('related.items.card.description')),        path: '?path=/docs/ui-card--docs' },
           ],
@@ -618,10 +609,19 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
-              level: 'AA',
-              how: '—',
+            // O item 5 não é critério da WCAG: o esqueleto não transmite
+            // informação, então 1.4.3 e 1.4.11 não se aplicam — o que se mede
+            // é luminância.
+            items: [
+              { level: 'AA',    how: 'axe-core' },
+              { level: '4.1.2', how: 'DevTools a11y tree' },
+              { level: '4.1.2', how: 'DevTools a11y tree' },
+              { level: '2.3.3', how: 'prefers-reduced-motion' },
+              { level: '—',     how: 'Medição de luminância' },
+            ].map(({ level, how }, idx) => ({
+              criterion: t(`testes.accessibility.item${idx + 1}`),
+              level,
+              how,
             })),
           },
           visual: {

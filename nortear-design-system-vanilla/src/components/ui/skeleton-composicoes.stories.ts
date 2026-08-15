@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import { createAspectRatio } from './aspect-ratio';
+import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -12,8 +14,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do Skeleton dentro de Card, Lista, AspectRatio e Parágrafo. ' +
-          'Container pai recebe aria-busy + aria-label; cada Skeleton recebe aria-hidden + motion-reduce.',
+          'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região de carregamento com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
       },
     },
   },
@@ -22,164 +23,205 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// Aceita pseudo-classes .nds-* (motion-reduce:, w-[…], h-[…]) e converte em styles inline
-// quando possível para evitar InvalidCharacterError no classList.add.
-function makeSkeleton(className: string): HTMLElement {
-  const tokens = className.split(' ').filter(Boolean);
-  const safeClasses: string[] = [];
-  const styles: Record<string, string> = {};
-  const rounded: string[] = [];
-  for (const t of tokens) {
-    if (t.includes(':') || t.includes('[')) continue; // skip variant/arbitrary tokens
-    const mH = /^h-(\d+)$/.exec(t);
-    const mW = /^w-(\d+)$/.exec(t);
-    if (mH) {
-      styles.height = `${parseInt(mH[1], 10) * 0.25}rem`;
-      continue;
-    }
-    if (mW) {
-      styles.width = `${parseInt(mW[1], 10) * 0.25}rem`;
-      continue;
-    }
-    if (t === 'w-full') styles.width = '100%';
-    else if (t === 'h-full') styles.height = '100%';
-    else if (t === 'rounded-full') rounded.push('nds-rounded-full');
-    else if (t === 'rounded-md') rounded.push('nds-rounded-md');
-    else if (t === 'absolute') styles.position = 'absolute';
-    else if (t === 'inset-0') {
-      styles.inset = '0';
-    } else safeClasses.push(t);
-  }
-  const skeleton = createSkeleton({ className: [...safeClasses, ...rounded].join(' ') });
-  Object.assign(skeleton.style, styles);
-  skeleton.setAttribute('aria-hidden', 'true');
-  skeleton.setAttribute('data-slot', 'skeleton');
-  return skeleton;
-}
-
-function loadingContainer(label: string, extraClass = ''): HTMLElement {
+function regiaoDeCarregamento(label: string, className = ''): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = `nds-w-full ${extraClass}`.trim();
+  if (className) wrap.className = className;
   wrap.setAttribute('role', 'status');
   wrap.setAttribute('aria-busy', 'true');
   wrap.setAttribute('aria-label', label);
   return wrap;
 }
 
+function bloco(className: string, spacing: string): HTMLElement {
+  const el = document.createElement('div');
+  el.className = className;
+  el.dataset.spacing = spacing;
+  return el;
+}
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const ProfileCard: Story = {
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      description: {
+        story: 'Avatar circular + 2 linhas de texto — padrão de carregamento de card de perfil.',
+      },
+    },
+  },
   render: () => {
-    const wrap = loadingContainer('Carregando card de perfil', 'nds-max-w-sm');
+    const wrap = regiaoDeCarregamento(
+      'Carregando card de perfil',
+      'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
+    );
+    wrap.dataset.align = 'center';
+    wrap.dataset.spacing = 'md';
 
-    const row = document.createElement('div');
-    row.className = 'nds-cluster';
-    row.dataset.spacing = 'md';
+    wrap.appendChild(createSkeleton({ shape: 'avatar' }));
 
-    row.appendChild(makeSkeleton('h-12 w-12 rounded-full motion-reduce:animate-none'));
+    const linhas = bloco('nds-stack nds-flex-1', 'sm');
+    linhas.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
+    linhas.appendChild(createSkeleton({ shape: 'text', width: '1-2' }));
+    wrap.appendChild(linhas);
 
-    const lines = document.createElement('div');
-    lines.className = 'nds-stack';
-    lines.dataset.spacing = 'xs';
-    lines.appendChild(makeSkeleton('h-4 w-[250px] motion-reduce:animate-none'));
-    lines.appendChild(makeSkeleton('h-4 w-[200px] motion-reduce:animate-none'));
-
-    row.appendChild(lines);
-    wrap.appendChild(row);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Card de perfil tem 1 avatar circular + 2 linhas', async () => {
-      const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(3);
-      await expect(skeletons[0]).toHaveClass('nds-rounded-full');
+    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A região tem papel, estado e nome', async () => {
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
     });
-    await step('Container pai expõe aria-busy', async () => {
-      const container = canvasElement.querySelector<HTMLElement>('[aria-busy="true"]');
-      await expect(container).toBeTruthy();
+
+    await step('Avatar + duas linhas, todos fora da árvore de acessibilidade', async () => {
+      await expect(pecas).toHaveLength(3);
+      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('O avatar é circular e as linhas têm larguras diferentes', async () => {
+      await expect(caixaDesenhada(pecas[0]).quadrado).toBe(true);
+      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
+        pecas[2].getBoundingClientRect().width,
+      );
     });
   },
 };
 
 export const ListWithAvatar: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      description: {
+        story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
+      },
+    },
+  },
   render: () => {
-    const wrap = loadingContainer('Carregando lista de pedidos', 'nds-stack nds-max-w-md');
-    wrap.dataset.spacing = 'md';
+    const lista = document.createElement('ul');
+    lista.className = 'nds-stack nds-list-none nds-p-0 nds-w-md';
+    lista.dataset.spacing = 'md';
+    lista.setAttribute('aria-busy', 'true');
+    lista.setAttribute('aria-label', 'Carregando lista de pedidos');
 
     for (let i = 0; i < 5; i++) {
-      const row = document.createElement('div');
-      row.className = 'nds-cluster';
-      row.dataset.spacing = 'md';
+      const item = document.createElement('li');
+      item.className = 'nds-cluster';
+      item.dataset.align = 'center';
+      item.dataset.spacing = 'sm';
 
-      row.appendChild(makeSkeleton('h-10 w-10 rounded-full motion-reduce:animate-none'));
+      item.appendChild(createSkeleton({ shape: 'avatar', size: 'sm' }));
 
-      const text = document.createElement('div');
-      text.className = 'nds-stack nds-flex-1';
-      text.dataset.spacing = 'xs';
-      text.appendChild(makeSkeleton('h-4 w-[60%] motion-reduce:animate-none'));
-      text.appendChild(makeSkeleton('h-3 w-[40%] motion-reduce:animate-none'));
+      const texto = bloco('nds-stack nds-flex-1', 'xs');
+      texto.appendChild(createSkeleton({ shape: 'text', width: '2-3' }));
+      texto.appendChild(createSkeleton({ shape: 'text', width: '1-3' }));
+      item.appendChild(texto);
 
-      row.appendChild(text);
-      wrap.appendChild(row);
+      lista.appendChild(item);
     }
 
-    return wrap;
+    return lista;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Lista renderiza 5 avatares + 10 linhas', async () => {
-      const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(15);
+    const lista = canvasElement.querySelector<HTMLElement>('ul')!;
+    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A lista inteira é uma região ocupada, com nome', async () => {
+      await expect(lista).toHaveAttribute('aria-busy', 'true');
+      await expect(lista.getAttribute('aria-label')).toBeTruthy();
+      await expect(lista.querySelectorAll('li')).toHaveLength(5);
     });
-    await step('Todos os Skeletons têm aria-hidden=true', async () => {
-      const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
-      skeletons.forEach((s) => {
-        expect(s.getAttribute('aria-hidden')).toBe('true');
-      });
+
+    await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
+      await expect(pecas).toHaveLength(15);
+      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('O avatar pequeno continua quadrado e com medida do tema', async () => {
+      // `data-size="sm"` só entrega se a folha responder: sem isso o item da
+      // lista sai com o mesmo bloco do card de perfil.
+      const caixa = caixaDesenhada(pecas[0]);
+      await expect(caixa.quadrado).toBe(true);
+      await expect(caixa.largura).toBeGreaterThan(0);
     });
   },
 };
 
 export const ImageInAspectRatio: Story = {
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      description: {
+        story:
+          'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
+      },
+    },
+  },
   render: () => {
-    const wrap = loadingContainer('Carregando imagem', 'nds-max-w-md');
-
-    const ratio = document.createElement('div');
-    ratio.className = 'nds-w-full';
-    ratio.style.position = 'relative';
-    ratio.style.aspectRatio = '16 / 9';
-
-    const skeleton = makeSkeleton('absolute inset-0 h-full w-full motion-reduce:animate-none');
-    ratio.appendChild(skeleton);
-
-    wrap.appendChild(ratio);
+    const wrap = regiaoDeCarregamento('Carregando imagem', 'nds-w-sm');
+    wrap.appendChild(
+      createAspectRatio({ ratio: 16 / 9, content: createSkeleton({ shape: 'fill' }) }),
+    );
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Skeleton ocupa h-full w-full do AspectRatio (via style)', async () => {
-      const skeleton = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeleton).toBeTruthy();
-      await expect(skeleton!.style.height).toBe('100%');
-      await expect(skeleton!.style.width).toBe('100%');
+    const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
+    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+
+    await step('A região de carregamento tem estado e nome', async () => {
+      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+    });
+
+    await step('O placeholder preenche a caixa proporcional', async () => {
+      // Se o filho perdesse o `inset: 0`, a proporção continuaria certa e a
+      // caixa ficaria vazia — só a medição acusa.
+      const c = caixa.getBoundingClientRect();
+      const s = sk.getBoundingClientRect();
+      await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
+      await expect(Math.abs(s.width - c.width)).toBeLessThan(2);
+      await expect(Math.abs(c.width / c.height - 16 / 9)).toBeLessThan(0.05);
     });
   },
 };
 
 export const Paragraph: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Três linhas com larguras decrescentes — placeholder de parágrafo.',
+      },
+    },
+  },
   render: () => {
-    const wrap = loadingContainer('Carregando parágrafo', 'nds-stack nds-max-w-md');
-    wrap.dataset.spacing = 'xs';
-
-    const widths = ['w-full', 'w-[95%]', 'w-[60%]'];
-    widths.forEach((w) => {
-      wrap.appendChild(makeSkeleton(`h-4 ${w} motion-reduce:animate-none`));
-    });
-
+    const wrap = regiaoDeCarregamento('Carregando parágrafo', 'nds-stack nds-w-sm');
+    wrap.dataset.spacing = 'sm';
+    for (const width of ['full', '3-4', '1-2'] as const) {
+      wrap.appendChild(createSkeleton({ shape: 'text', width }));
+    }
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Parágrafo tem 3 linhas com larguras variáveis', async () => {
-      const skeletons = canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(3);
+    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A região tem estado e nome', async () => {
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+    });
+
+    await step('Três linhas, ocultas ao leitor de tela', async () => {
+      await expect(linhas).toHaveLength(3);
+      for (const l of linhas) await expect(l).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('As larguras decrescem — é o que faz o bloco parecer parágrafo', async () => {
+      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      await expect(larguras[0]).toBeGreaterThan(larguras[1]);
+      await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });
   },
 };

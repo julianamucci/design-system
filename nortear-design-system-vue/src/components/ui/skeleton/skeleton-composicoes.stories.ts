@@ -2,19 +2,20 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
-const meta: Meta<any> = {
+const meta: Meta = {
   title: 'UI/Skeleton/Compositions',
   component: Skeleton,
   tags: ['feedback'],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes reais do Skeleton replicando estruturas de conteúdo: card de perfil, lista com avatar, imagem em AspectRatio e parágrafo. Cada Skeleton com aria-hidden e container com aria-busy + aria-label.',
+          'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região `role="status"` com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
       },
     },
   },
@@ -24,6 +25,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ProfileCard: Story = {
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      description: {
+        story: 'Avatar circular + 2 linhas de texto — padrão de carregamento de card de perfil.',
+      },
+    },
+  },
   render: () => ({
     components: { Skeleton },
     template: `
@@ -31,39 +40,50 @@ export const ProfileCard: Story = {
         role="status"
         aria-busy="true"
         aria-label="Carregando card de perfil"
-        class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-align="center" data-spacing="md" style="width: 320px"
+        class="nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm"
+        data-align="center"
+        data-spacing="md"
       >
-        <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 3rem; width: 3rem" :aria-hidden="true" />
-        <div class="nds-flex-1" data-spacing="sm">
-          <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 180px" :aria-hidden="true" />
-          <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 140px" :aria-hidden="true" />
+        <Skeleton data-shape="avatar" />
+        <div class="nds-stack nds-flex-1" data-spacing="sm">
+          <Skeleton data-shape="text" data-width="2-3" />
+          <Skeleton data-shape="text" data-width="1-2" />
         </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Container expõe aria-busy=true e aria-label', async () => {
-      const container = canvasElement.querySelector('[aria-busy="true"]');
-      await expect(container).toBeInTheDocument();
-      await expect(container).toHaveAttribute('aria-label', 'Carregando card de perfil');
+    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
+    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A região tem papel, estado e nome', async () => {
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
     });
 
-    await step('Todos os Skeletons têm aria-hidden=true', async () => {
-      const skeletons = canvasElement.querySelectorAll('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(3);
-      for (const sk of Array.from(skeletons)) {
-        await expect(sk).toHaveAttribute('aria-hidden', 'true');
-      }
+    await step('Avatar + duas linhas, todos fora da árvore de acessibilidade', async () => {
+      await expect(pecas).toHaveLength(3);
+      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Avatar usa rounded-full', async () => {
-      const avatar = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-      await expect(avatar.className).toContain('rounded-full');
+    await step('O avatar é circular e as linhas têm larguras diferentes', async () => {
+      await expect(caixaDesenhada(pecas[0]).quadrado).toBe(true);
+      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
+        pecas[2].getBoundingClientRect().width,
+      );
     });
   },
 };
 
 export const ListWithAvatar: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      description: {
+        story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
+      },
+    },
+  },
   render: () => ({
     components: { Skeleton },
     template: `
@@ -71,96 +91,128 @@ export const ListWithAvatar: Story = {
         role="list"
         aria-busy="true"
         aria-label="Carregando lista de pedidos"
-        class="m-0 nds-p-0 nds-list-none" data-spacing="sm" style="width: 360px"
+        class="nds-stack nds-list-none nds-p-0 nds-w-md"
+        data-spacing="md"
       >
-        <li v-for="i in 5" :key="i" class="nds-cluster" data-spacing="sm">
-          <Skeleton class="nds-rounded-full motion-reduce:animate-none" style="height: 2.5rem; width: 2.5rem" :aria-hidden="true" />
-          <div class="nds-flex-1" data-spacing="sm">
-            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 200px" :aria-hidden="true" />
-            <Skeleton class="motion-reduce:animate-none" style="height: 0.75rem; width: 120px" :aria-hidden="true" />
+        <li v-for="i in 5" :key="i" class="nds-cluster" data-align="center" data-spacing="sm">
+          <Skeleton data-shape="avatar" data-size="sm" />
+          <div class="nds-stack nds-flex-1" data-spacing="xs">
+            <Skeleton data-shape="text" data-width="2-3" />
+            <Skeleton data-shape="text" data-width="1-3" />
           </div>
         </li>
       </ul>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Container lista expõe aria-busy=true', async () => {
-      const list = canvasElement.querySelector('[aria-busy="true"]');
-      await expect(list).toBeInTheDocument();
-      await expect(list).toHaveAttribute('aria-label', 'Carregando lista de pedidos');
+    const lista = canvasElement.querySelector('ul') as HTMLElement;
+    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A lista inteira é uma região ocupada, com nome', async () => {
+      await expect(lista).toHaveAttribute('aria-busy', 'true');
+      await expect(lista.getAttribute('aria-label')).toBeTruthy();
+      await expect(lista.querySelectorAll('li')).toHaveLength(5);
     });
 
-    await step('Renderiza 5 itens com 3 Skeletons cada (15 total)', async () => {
-      const skeletons = canvasElement.querySelectorAll('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(15);
-      for (const sk of Array.from(skeletons)) {
-        await expect(sk).toHaveAttribute('aria-hidden', 'true');
-      }
+    await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
+      await expect(pecas).toHaveLength(15);
+      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('O avatar pequeno continua quadrado e com medida do tema', async () => {
+      // `data-size="sm"` só entrega se a folha responder: sem isso o item da
+      // lista sai com o mesmo bloco do card de perfil.
+      const caixa = caixaDesenhada(pecas[0]);
+      await expect(caixa.quadrado).toBe(true);
+      await expect(caixa.largura).toBeGreaterThan(0);
     });
   },
 };
 
 export const ImageInAspectRatio: Story = {
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      description: {
+        story:
+          'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
+      },
+    },
+  },
   render: () => ({
     components: { Skeleton, AspectRatio },
     template: `
-      <div
-        role="status"
-        aria-busy="true"
-        aria-label="Carregando imagem em proporção 16:9"
-        class="" style="width: 480px"
-      >
+      <div role="status" aria-busy="true" aria-label="Carregando imagem" class="nds-w-sm">
         <AspectRatio :ratio="16 / 9">
-          <Skeleton class="nds-w-full nds-rounded-md motion-reduce:animate-none" style="height: 100%" :aria-hidden="true" />
+          <Skeleton data-shape="fill" />
         </AspectRatio>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Container expõe aria-busy=true', async () => {
-      const container = canvasElement.querySelector('[aria-busy="true"]');
-      await expect(container).toBeInTheDocument();
+    const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]') as HTMLElement;
+    const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
+
+    await step('A região de carregamento tem estado e nome', async () => {
+      const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
     });
 
-    await step('Skeleton ocupa h-full w-full dentro do AspectRatio', async () => {
-      const skeleton = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-      await expect(skeleton).toBeInTheDocument();
-      await expect(skeleton).toHaveAttribute('aria-hidden', 'true');
-      await expect(skeleton.className).toContain('h-full');
-      await expect(skeleton.className).toContain('w-full');
+    await step('O placeholder preenche a caixa proporcional', async () => {
+      // Se o filho perdesse o `inset: 0`, a proporção continuaria certa e a
+      // caixa ficaria vazia — só a medição acusa.
+      const c = caixa.getBoundingClientRect();
+      const s = sk.getBoundingClientRect();
+      await expect(Math.abs(s.height - c.height)).toBeLessThan(2);
+      await expect(Math.abs(s.width - c.width)).toBeLessThan(2);
+      await expect(Math.abs(c.width / c.height - 16 / 9)).toBeLessThan(0.05);
     });
   },
 };
 
 export const Paragraph: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Três linhas com larguras decrescentes — placeholder de parágrafo.',
+      },
+    },
+  },
   render: () => ({
     components: { Skeleton },
     template: `
       <div
         role="status"
         aria-busy="true"
-        aria-label="Carregando parágrafo de texto"
-        class="" data-spacing="sm" style="width: 360px"
+        aria-label="Carregando parágrafo"
+        class="nds-stack nds-w-sm"
+        data-spacing="sm"
       >
-        <Skeleton class="nds-w-full motion-reduce:animate-none" style="height: 1rem" :aria-hidden="true" />
-        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 92%" :aria-hidden="true" />
-        <Skeleton class="motion-reduce:animate-none" style="height: 1rem; width: 60%" :aria-hidden="true" />
+        <Skeleton data-shape="text" data-width="full" />
+        <Skeleton data-shape="text" data-width="3-4" />
+        <Skeleton data-shape="text" data-width="1-2" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Container expõe aria-busy=true', async () => {
-      const container = canvasElement.querySelector('[aria-busy="true"]');
-      await expect(container).toBeInTheDocument();
+    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
+    const linhas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+
+    await step('A região tem estado e nome', async () => {
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
     });
 
-    await step('Renderiza 3 linhas de Skeleton com aria-hidden', async () => {
-      const skeletons = canvasElement.querySelectorAll('[data-slot="skeleton"]');
-      await expect(skeletons.length).toBe(3);
-      for (const sk of Array.from(skeletons)) {
-        await expect(sk).toHaveAttribute('aria-hidden', 'true');
-        await expect((sk as HTMLElement).className).toContain('motion-reduce:animate-none');
-      }
+    await step('Três linhas, ocultas ao leitor de tela', async () => {
+      await expect(linhas).toHaveLength(3);
+      for (const l of linhas) await expect(l).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('As larguras decrescem — é o que faz o bloco parecer parágrafo', async () => {
+      const larguras = linhas.map((l) => l.getBoundingClientRect().width);
+      await expect(larguras[0]).toBeGreaterThan(larguras[1]);
+      await expect(larguras[1]).toBeGreaterThan(larguras[2]);
     });
   },
 };

@@ -131,13 +131,17 @@ export function SkeletonDocs() {
 
   const codeImport = `import { Skeleton } from "@/components/ui/skeleton";`;
 
-  const codeRectangle = `<Skeleton style={{ height: "5rem", width: "100%" }} aria-hidden="true" />`;
-  const codeCircle = `<Skeleton className="nds-rounded-full" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />`;
-  const codeLine = `<Skeleton style={{ height: "1rem", width: "200px" }} aria-hidden="true" />`;
+  const codeRectangle = `<Skeleton data-shape="fill" className="nds-docs-skeleton-media" />`;
+  const codeCircle = `<Skeleton data-shape="avatar" />`;
+  const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
-  const interfaceCode = `// Skeleton
+  const interfaceCode = `// Skeleton — sem props próprias além de className.
+// A caixa vem de atributo, e a folha de estilo continua dona das medidas.
 interface SkeletonProps extends React.ComponentProps<"div"> {
   className?: string;
+  "data-shape"?: "text" | "heading" | "avatar" | "fill";
+  "data-width"?: "full" | "3-4" | "2-3" | "1-2" | "1-3";
+  "data-size"?: "sm" | "lg";
 }`;
 
   // ─── Locale-aware column labels ─────────────────────────────────────────────
@@ -178,22 +182,10 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               data-spacing="md"
               data-align="center"
             >
-              <Skeleton
-                className="nds-rounded-full nds-motion-reduce-none"
-                style={{ height: "3rem", width: "3rem" }}
-                aria-hidden="true"
-              />
+              <Skeleton data-shape="avatar" />
               <div className="nds-stack nds-flex-1" data-spacing="sm">
-                <Skeleton
-                  className="nds-motion-reduce-none"
-                  style={{ height: "1rem", width: "70%" }}
-                  aria-hidden="true"
-                />
-                <Skeleton
-                  className="nds-motion-reduce-none"
-                  style={{ height: "1rem", width: "50%" }}
-                  aria-hidden="true"
-                />
+                <Skeleton data-shape="text" data-width="2-3" />
+                <Skeleton data-shape="text" data-width="1-2" />
               </div>
             </div>
           </div>
@@ -212,22 +204,10 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             >
               {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="nds-cluster" data-spacing="sm" data-align="center">
-                  <Skeleton
-                    className="nds-rounded-md nds-motion-reduce-none"
-                    style={{ height: "2rem", width: "2rem" }}
-                    aria-hidden="true"
-                  />
+                  <Skeleton data-shape="avatar" data-size="sm" />
                   <div className="nds-flex-1 nds-stack" data-spacing="xs">
-                    <Skeleton
-                      className="nds-motion-reduce-none"
-                      style={{ height: "0.75rem", width: "60%" }}
-                      aria-hidden="true"
-                    />
-                    <Skeleton
-                      className="nds-motion-reduce-none"
-                      style={{ height: "0.75rem", width: "40%" }}
-                      aria-hidden="true"
-                    />
+                    <Skeleton data-shape="text" data-width="2-3" />
+                    <Skeleton data-shape="text" data-width="1-3" />
                   </div>
                 </div>
               ))}
@@ -245,11 +225,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               aria-label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             >
               <AspectRatio ratio={16 / 9}>
-                <Skeleton
-                  className="nds-motion-reduce-none"
-                  style={{ height: "100%", width: "100%" }}
-                  aria-hidden="true"
-                />
+                <Skeleton data-shape="fill" />
               </AspectRatio>
             </div>
           </div>
@@ -266,21 +242,9 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
               className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
               data-spacing="sm"
             >
-              <Skeleton
-                className="nds-motion-reduce-none"
-                style={{ height: "1rem", width: "100%" }}
-                aria-hidden="true"
-              />
-              <Skeleton
-                className="nds-motion-reduce-none"
-                style={{ height: "1rem", width: "90%" }}
-                aria-hidden="true"
-              />
-              <Skeleton
-                className="nds-motion-reduce-none"
-                style={{ height: "1rem", width: "60%" }}
-                aria-hidden="true"
-              />
+              <Skeleton data-shape="text" data-width="full" />
+              <Skeleton data-shape="text" data-width="3-4" />
+              <Skeleton data-shape="text" data-width="1-2" />
             </div>
           </div>
         </div>
@@ -396,13 +360,14 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 className="nds-w-full nds-stack"
                 data-spacing="sm"
               >
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "100%" }} aria-hidden="true" />
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "70%" }} aria-hidden="true" />
+                <Skeleton data-shape="heading" data-width="1-2" />
+                <Skeleton data-shape="text" data-width="full" />
+                <Skeleton data-shape="text" data-width="3-4" />
               </div>
             ),
             dontPreview: (
               <div className="nds-w-full">
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "0.5rem", width: "3rem" }} aria-hidden="true" />
+                <Skeleton data-shape="text" data-width="1-3" />
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -420,14 +385,20 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 data-spacing="sm"
                 data-align="center"
               >
-                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "2.5rem", width: "2.5rem" }} aria-hidden="true" />
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "160px" }} aria-hidden="true" />
+                <Skeleton data-shape="avatar" />
+                <div className="nds-stack nds-flex-1" data-spacing="xs">
+                  <Skeleton data-shape="text" data-width="1-2" />
+                  <Skeleton data-shape="text" data-width="1-3" />
+                </div>
               </div>
             ),
             dontPreview: (
               <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
-                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "2.5rem", width: "2.5rem" }} />
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "160px" }} />
+                <Skeleton data-shape="avatar" />
+                <div className="nds-stack nds-flex-1" data-spacing="xs">
+                  <Skeleton data-shape="text" data-width="1-2" />
+                  <Skeleton data-shape="text" data-width="1-3" />
+                </div>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -449,8 +420,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
             preview: (
-              <div role="status" aria-busy="true" aria-label="Carregando bloco" style={{ width: "12rem" }}>
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "5rem", width: "100%" }} aria-hidden="true" />
+              <div role="status" aria-busy="true" aria-label="Carregando bloco" className="nds-w-xs">
+                <Skeleton data-shape="fill" className="nds-docs-skeleton-media" />
               </div>
             ),
           },
@@ -460,7 +431,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeCircle,
             preview: (
               <div role="status" aria-busy="true" aria-label="Carregando avatar">
-                <Skeleton className="nds-rounded-full nds-motion-reduce-none" style={{ height: "3rem", width: "3rem" }} aria-hidden="true" />
+                <Skeleton data-shape="avatar" />
               </div>
             ),
           },
@@ -469,8 +440,15 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,
             preview: (
-              <div role="status" aria-busy="true" aria-label="Carregando linha de texto">
-                <Skeleton className="nds-motion-reduce-none" style={{ height: "1rem", width: "200px" }} aria-hidden="true" />
+              <div
+                role="status"
+                aria-busy="true"
+                aria-label="Carregando linha de texto"
+                className="nds-stack nds-w-xs"
+                data-spacing="xs"
+              >
+                <Skeleton data-shape="text" data-width="3-4" />
+                <Skeleton data-shape="text" data-width="1-2" />
               </div>
             ),
           },
@@ -520,6 +498,27 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 description: DOMPurify.sanitize(tContent("props.table.className.description")),
               },
               {
+                name: "data-shape",
+                type: tContent("props.table.dataShape.type"),
+                defaultValue: tContent("props.table.dataShape.default"),
+                required: tContent("props.table.dataShape.required"),
+                description: DOMPurify.sanitize(tContent("props.table.dataShape.description")),
+              },
+              {
+                name: "data-width",
+                type: tContent("props.table.dataWidth.type"),
+                defaultValue: tContent("props.table.dataWidth.default"),
+                required: tContent("props.table.dataWidth.required"),
+                description: DOMPurify.sanitize(tContent("props.table.dataWidth.description")),
+              },
+              {
+                name: "data-size",
+                type: tContent("props.table.dataSize.type"),
+                defaultValue: tContent("props.table.dataSize.default"),
+                required: tContent("props.table.dataSize.required"),
+                description: DOMPurify.sanitize(tContent("props.table.dataSize.description")),
+              },
+              {
                 name: "aria-hidden",
                 type: tContent("props.table.ariaHidden.type"),
                 defaultValue: tContent("props.table.ariaHidden.default"),
@@ -549,28 +548,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={[
-          {
-            token: "--muted",
-            value: tContent("tokens.table.background.class"),
-            description: tContent("tokens.table.background.part"),
-          },
-          {
-            token: "--radius",
-            value: tContent("tokens.table.rounded.class"),
-            description: tContent("tokens.table.rounded.part"),
-          },
-          {
-            token: "animate-pulse",
-            value: tContent("tokens.table.animation.class"),
-            description: tContent("tokens.table.animation.part"),
-          },
-          {
-            token: "motion-reduce",
-            value: tContent("tokens.table.motionReduce.class"),
-            description: tContent("tokens.table.motionReduce.part"),
-          },
-        ]}
+        items={["background", "rounded", "animation", "size", "motionReduce"].map((k) => ({
+          token: tContent(`tokens.table.${k}.token`),
+          value: tContent(`tokens.table.${k}.class`),
+          description: tContent(`tokens.table.${k}.part`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}
       />
@@ -604,11 +586,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             name: tContent("related.items.progress.name"),
             description: toPlainText(tContent("related.items.progress.description")),
             path: "?path=/docs/ui-progress--docs",
-          },
-          {
-            name: tContent("related.items.spinner.name"),
-            description: toPlainText(tContent("related.items.spinner.description")),
-            path: "?path=/docs/ui-spinner--docs",
           },
           {
             name: tContent("related.items.aspectRatio.name"),
@@ -699,7 +676,9 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             { criterion: tContent("testes.accessibility.item2"), level: "4.1.2", how: "DevTools a11y tree" },
             { criterion: tContent("testes.accessibility.item3"), level: "4.1.2", how: "DevTools a11y tree" },
             { criterion: tContent("testes.accessibility.item4"), level: "2.3.3", how: "prefers-reduced-motion" },
-            { criterion: tContent("testes.accessibility.item5"), level: "1.4.11", how: "Contrast checker" },
+            // Não é critério da WCAG: o esqueleto não transmite informação, então
+            // 1.4.3 e 1.4.11 não se aplicam. O que se mede é luminância.
+            { criterion: tContent("testes.accessibility.item5"), level: "—", how: "Medição de luminância" },
           ],
         }}
         visual={{

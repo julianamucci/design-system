@@ -40,9 +40,12 @@ export const Shapes: Story = {
 
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-caption nds-text-muted-foreground">Card de perfil</p>
-          <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster" data-spacing="sm">
+          <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster" data-align="center" data-spacing="sm">
             <div ndsSkeleton data-shape="avatar"></div>
-            <div class="nds-stack" data-spacing="xs">
+            <!-- nds-flex-1 não é enfeite: sem base de largura o bloco encolhe
+                 para o conteúdo, as linhas em porcentagem resolvem para zero e
+                 o esqueleto some. -->
+            <div class="nds-stack nds-flex-1" data-spacing="xs">
               <div ndsSkeleton data-shape="text" data-width="1-2"></div>
               <div ndsSkeleton data-shape="text" data-width="1-3"></div>
             </div>
@@ -77,11 +80,22 @@ export const Shapes: Story = {
       // O par role="status" + aria-label é o que faz o leitor anunciar; sem
       // ele o aria-busy passa despercebido e o axe acusa aria-prohibited-attr.
       const regioes = [...canvasElement.querySelectorAll<HTMLElement>('[aria-busy="true"]')];
-      await expect(regioes.length).toBeGreaterThanOrEqual(5);
+      await expect(regioes).toHaveLength(5);
       for (const r of regioes) {
         await expect(r.getAttribute('role')).toBe('status');
         await expect(r.getAttribute('aria-label')).toBeTruthy();
       }
+    });
+
+    await step('Toda linha de texto tem largura desenhada', async () => {
+      // Percentual só resolve contra container com largura definida: uma pilha
+      // sem base de largura encolhe para o conteúdo e as linhas somem. Sem esta
+      // medição o defeito passa — a story renderiza, só que vazia.
+      const linhas = [
+        ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"][data-shape="text"]'),
+      ];
+      await expect(linhas.length).toBeGreaterThan(0);
+      for (const l of linhas) await expect(l.getBoundingClientRect().width).toBeGreaterThan(0);
     });
 
     await step('O esqueleto dentro do AspectRatio preenche a caixa', async () => {

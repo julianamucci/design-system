@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Skeleton } from './index';
+  import { AspectRatio } from '@/components/ui/aspect-ratio';
 
   type Variant = 'cardDePerfil' | 'listaComAvatar' | 'imagemEmAspectRatio' | 'paragrafo';
 
@@ -14,37 +15,50 @@
   <div
     role="status"
     aria-busy="true"
-    aria-label="Carregando perfil"
-    class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-align="center" data-spacing="md" style="width: 20rem"
+    aria-label="Carregando card de perfil"
+    class="nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm"
+    data-align="center"
+    data-spacing="md"
   >
-    <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 3rem; width: 3rem" aria-hidden="true" />
-    <div class="nds-flex-1" data-spacing="sm">
-      <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 180px" aria-hidden="true" />
-      <Skeleton class="nds-motion-reduce-none" style="height: 1rem; width: 140px" aria-hidden="true" />
+    <Skeleton data-shape="avatar" />
+    <div class="nds-stack nds-flex-1" data-spacing="sm">
+      <Skeleton data-shape="text" data-width="2-3" />
+      <Skeleton data-shape="text" data-width="1-2" />
     </div>
   </div>
 {:else if variant === 'listaComAvatar'}
-  <ul aria-busy="true" aria-label="Carregando lista de itens" class="" data-spacing="sm" style="width: 20rem">
+  <ul
+    aria-busy="true"
+    aria-label="Carregando lista de pedidos"
+    class="nds-stack nds-list-none nds-p-0 nds-w-md"
+    data-spacing="md"
+  >
     {#each Array.from({ length: 5 }) as _, i (i)}
-      <li class="nds-cluster nds-rounded-md nds-border-default" data-align="center" data-spacing="sm" style="padding: 0.75rem">
-        <Skeleton class="nds-rounded-full nds-motion-reduce-none" style="height: 2.5rem; width: 2.5rem" aria-hidden="true" />
-        <div class="nds-flex-1" data-spacing="sm">
-          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 160px" aria-hidden="true" />
-          <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 120px" aria-hidden="true" />
+      <li class="nds-cluster" data-align="center" data-spacing="sm">
+        <Skeleton data-shape="avatar" data-size="sm" />
+        <div class="nds-stack nds-flex-1" data-spacing="xs">
+          <Skeleton data-shape="text" data-width="2-3" />
+          <Skeleton data-shape="text" data-width="1-3" />
         </div>
       </li>
     {/each}
   </ul>
 {:else if variant === 'imagemEmAspectRatio'}
   <div role="status" aria-busy="true" aria-label="Carregando imagem" class="nds-w-sm">
-    <div class="nds-w-full" style="position: relative; aspect-ratio: 16 / 9;" >
-      <Skeleton class="nds-w-full nds-h-full nds-motion-reduce-none" style="position: absolute; inset: 0" aria-hidden="true" />
-    </div>
+    <AspectRatio ratio={16 / 9}>
+      <Skeleton data-shape="fill" />
+    </AspectRatio>
   </div>
 {:else if variant === 'paragrafo'}
-  <div role="status" aria-busy="true" aria-label="Carregando parágrafo" class="" data-spacing="sm" style="width: 20rem">
-    <Skeleton class="nds-w-full nds-motion-reduce-none" style="height: 0.75rem" aria-hidden="true" />
-    <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 90%" aria-hidden="true" />
-    <Skeleton class="nds-motion-reduce-none" style="height: 0.75rem; width: 75%" aria-hidden="true" />
+  <div
+    role="status"
+    aria-busy="true"
+    aria-label="Carregando parágrafo"
+    class="nds-stack nds-w-sm"
+    data-spacing="sm"
+  >
+    <Skeleton data-shape="text" data-width="full" />
+    <Skeleton data-shape="text" data-width="3-4" />
+    <Skeleton data-shape="text" data-width="1-2" />
   </div>
 {/if}

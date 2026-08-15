@@ -128,16 +128,19 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 const codeImportBasic = `import { Skeleton } from "@/components/ui/skeleton";`;
 
-const codeRectangle = `<Skeleton style="height: 5rem; width: 100%" aria-hidden="true" />`;
+const codeRectangle = `<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />`;
 
-const codeCircle = `<Skeleton class="nds-rounded-full" style="height: 3rem; width: 3rem" aria-hidden="true" />`;
+const codeCircle = `<Skeleton data-shape="avatar" />`;
 
-const codeLine = `<Skeleton style="height: 1rem; width: 200px" aria-hidden="true" />`;
+const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
-const interfaceCode = `// Skeleton
+const interfaceCode = `// Skeleton — sem props próprias além de class.
+// A caixa vem de atributo, e a folha de estilo continua dona das medidas.
 interface SkeletonProps {
   class?: string;
-  // Aceita qualquer prop nativa de div (style, id, data-*, aria-hidden)
+  // data-shape: "text" | "heading" | "avatar" | "fill"
+  // data-width: "full" | "3-4" | "2-3" | "1-2" | "1-3"
+  // data-size:  "sm" | "lg"   (só na forma de avatar)
 }`;
 
 const anatomyStructure = computed(() => tContent('anatomy.structureCode'));
@@ -171,16 +174,20 @@ const propCols = computed(() => ({
 
 const skeletonPropItems = computed(() => [
   { name: 'class',       type: tContent('props.table.className.type'),  defaultValue: tContent('props.table.className.default'),  required: tContent('props.table.className.required'),  description: toPlainText(tContent('props.table.className.description')) },
+  { name: 'data-shape',  type: tContent('props.table.dataShape.type'),  defaultValue: tContent('props.table.dataShape.default'),  required: tContent('props.table.dataShape.required'),  description: toPlainText(tContent('props.table.dataShape.description')) },
+  { name: 'data-width',  type: tContent('props.table.dataWidth.type'),  defaultValue: tContent('props.table.dataWidth.default'),  required: tContent('props.table.dataWidth.required'),  description: toPlainText(tContent('props.table.dataWidth.description')) },
+  { name: 'data-size',   type: tContent('props.table.dataSize.type'),   defaultValue: tContent('props.table.dataSize.default'),   required: tContent('props.table.dataSize.required'),   description: toPlainText(tContent('props.table.dataSize.description')) },
   { name: 'aria-hidden', type: tContent('props.table.ariaHidden.type'), defaultValue: tContent('props.table.ariaHidden.default'), required: tContent('props.table.ariaHidden.required'), description: toPlainText(tContent('props.table.ariaHidden.description')) },
   { name: '...rest',     type: tContent('props.table.rest.type'),       defaultValue: tContent('props.table.rest.default'),       required: tContent('props.table.rest.required'),       description: toPlainText(tContent('props.table.rest.description')) },
 ]);
 
-const tokenRows = computed(() => [
-  { token: '--muted',    value: tContent('tokens.table.background.class'),   description: tContent('tokens.table.background.part')   },
-  { token: '—',          value: tContent('tokens.table.rounded.class'),      description: tContent('tokens.table.rounded.part')      },
-  { token: '—',          value: tContent('tokens.table.animation.class'),    description: tContent('tokens.table.animation.part')    },
-  { token: '—',          value: tContent('tokens.table.motionReduce.class'), description: tContent('tokens.table.motionReduce.part') },
-]);
+const tokenRows = computed(() =>
+  ['background', 'rounded', 'animation', 'size', 'motionReduce'].map((k) => ({
+    token: tContent(`tokens.table.${k}.token`),
+    value: tContent(`tokens.table.${k}.class`),
+    description: tContent(`tokens.table.${k}.part`),
+  })),
+);
 
 const accessibilityItems = computed(() => [
   tContent('accessibility.items.item1'),
@@ -197,7 +204,6 @@ const keyboardItems = computed(() => [
 
 const relatedItems = computed(() => [
   { name: tContent('related.items.progress.name'),    description: toPlainText(tContent('related.items.progress.description')),    path: '?path=/docs/ui-progress--docs'     },
-  { name: tContent('related.items.spinner.name'),     description: toPlainText(tContent('related.items.spinner.description')),     path: '?path=/docs/ui-spinner--docs'      },
   { name: tContent('related.items.aspectRatio.name'), description: toPlainText(tContent('related.items.aspectRatio.description')), path: '?path=/docs/ui-aspectratio--docs'  },
   { name: tContent('related.items.card.name'),        description: toPlainText(tContent('related.items.card.description')),        path: '?path=/docs/ui-card--docs'         },
 ]);
@@ -229,11 +235,13 @@ const functionalTestItems = computed(() => [
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'AA', how: tContent('testes.accessibility.item1') },
-  { criterion: tContent('testes.accessibility.item2'), level: 'AA', how: tContent('testes.accessibility.item2') },
-  { criterion: tContent('testes.accessibility.item3'), level: 'AA', how: tContent('testes.accessibility.item3') },
-  { criterion: tContent('testes.accessibility.item4'), level: 'AA', how: tContent('testes.accessibility.item4') },
-  { criterion: tContent('testes.accessibility.item5'), level: 'AA', how: tContent('testes.accessibility.item5') },
+  { criterion: tContent('testes.accessibility.item1'), level: 'AA',    how: 'axe-core' },
+  { criterion: tContent('testes.accessibility.item2'), level: '4.1.2', how: 'DevTools a11y tree' },
+  { criterion: tContent('testes.accessibility.item3'), level: '4.1.2', how: 'DevTools a11y tree' },
+  { criterion: tContent('testes.accessibility.item4'), level: '2.3.3', how: 'prefers-reduced-motion' },
+  // Não é critério da WCAG: o esqueleto não transmite informação, então 1.4.3 e
+  // 1.4.11 não se aplicam. O que se mede é luminância.
+  { criterion: tContent('testes.accessibility.item5'), level: '—',     how: 'Medição de luminância' },
 ]);
 
 const visualTestItems = computed(() => [
@@ -284,24 +292,18 @@ const visualTestItems = computed(() => [
             data-spacing="md"
             data-align="center"
           >
-            <Skeleton
-              class="nds-rounded-full nds-motion-reduce-none"
-              style="height: 3rem; width: 3rem"
-              :aria-hidden="true"
-            />
+            <Skeleton data-shape="avatar" />
             <div
               class="nds-stack nds-flex-1"
               data-spacing="sm"
             >
               <Skeleton
-                class="nds-motion-reduce-none"
-                style="height: 1rem; width: 70%"
-                :aria-hidden="true"
+                data-shape="text"
+                data-width="2-3"
               />
               <Skeleton
-                class="nds-motion-reduce-none"
-                style="height: 1rem; width: 50%"
-                :aria-hidden="true"
+                data-shape="text"
+                data-width="1-2"
               />
             </div>
           </div>
@@ -330,23 +332,20 @@ const visualTestItems = computed(() => [
               data-align="center"
             >
               <Skeleton
-                class="nds-rounded-md nds-motion-reduce-none"
-                style="height: 2rem; width: 2rem"
-                :aria-hidden="true"
+                data-shape="avatar"
+                data-size="sm"
               />
               <div
                 class="nds-flex-1 nds-stack"
                 data-spacing="xs"
               >
                 <Skeleton
-                  class="nds-motion-reduce-none"
-                  style="height: 0.75rem; width: 60%"
-                  :aria-hidden="true"
+                  data-shape="text"
+                  data-width="2-3"
                 />
                 <Skeleton
-                  class="nds-motion-reduce-none"
-                  style="height: 0.75rem; width: 40%"
-                  :aria-hidden="true"
+                  data-shape="text"
+                  data-width="1-3"
                 />
               </div>
             </div>
@@ -367,11 +366,7 @@ const visualTestItems = computed(() => [
             :aria-label="tContent('demonstration.labels.image')"
           >
             <AspectRatio :ratio="16 / 9">
-              <Skeleton
-                class="nds-motion-reduce-none"
-                style="height: 100%; width: 100%"
-                :aria-hidden="true"
-              />
+              <Skeleton data-shape="fill" />
             </AspectRatio>
           </div>
         </div>
@@ -392,19 +387,16 @@ const visualTestItems = computed(() => [
             data-spacing="sm"
           >
             <Skeleton
-              class="nds-motion-reduce-none"
-              style="height: 1rem; width: 100%"
-              :aria-hidden="true"
+              data-shape="text"
+              data-width="full"
             />
             <Skeleton
-              class="nds-motion-reduce-none"
-              style="height: 1rem; width: 90%"
-              :aria-hidden="true"
+              data-shape="text"
+              data-width="3-4"
             />
             <Skeleton
-              class="nds-motion-reduce-none"
-              style="height: 1rem; width: 60%"
-              :aria-hidden="true"
+              data-shape="text"
+              data-width="1-2"
             />
           </div>
         </div>
@@ -484,23 +476,24 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 1rem; width: 100%"
-            :aria-hidden="true"
+            data-shape="heading"
+            data-width="1-2"
           />
           <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 1rem; width: 70%"
-            :aria-hidden="true"
+            data-shape="text"
+            data-width="full"
+          />
+          <Skeleton
+            data-shape="text"
+            data-width="3-4"
           />
         </div>
       </template>
       <template #dont-preview-0>
         <div class="nds-w-full">
           <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 0.5rem; width: 3rem"
-            :aria-hidden="true"
+            data-shape="text"
+            data-width="1-3"
           />
         </div>
       </template>
@@ -513,16 +506,20 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
           data-align="center"
         >
-          <Skeleton
-            class="nds-rounded-full nds-motion-reduce-none"
-            style="height: 2.5rem; width: 2.5rem"
-            :aria-hidden="true"
-          />
-          <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 1rem; width: 160px"
-            :aria-hidden="true"
-          />
+          <Skeleton data-shape="avatar" />
+          <div
+            class="nds-stack nds-flex-1"
+            data-spacing="xs"
+          >
+            <Skeleton
+              data-shape="text"
+              data-width="1-2"
+            />
+            <Skeleton
+              data-shape="text"
+              data-width="1-3"
+            />
+          </div>
         </div>
       </template>
       <template #dont-preview-1>
@@ -531,14 +528,20 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
           data-align="center"
         >
-          <Skeleton
-            class="nds-rounded-full nds-motion-reduce-none"
-            style="height: 2.5rem; width: 2.5rem"
-          />
-          <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 1rem; width: 160px"
-          />
+          <Skeleton data-shape="avatar" />
+          <div
+            class="nds-stack nds-flex-1"
+            data-spacing="xs"
+          >
+            <Skeleton
+              data-shape="text"
+              data-width="1-2"
+            />
+            <Skeleton
+              data-shape="text"
+              data-width="1-3"
+            />
+          </div>
         </div>
       </template>
     </DocsDoDont>
@@ -559,12 +562,11 @@ const visualTestItems = computed(() => [
           role="status"
           aria-busy="true"
           aria-label="Carregando bloco"
-          style="width: 12rem"
+          class="nds-w-xs"
         >
           <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 5rem; width: 100%"
-            :aria-hidden="true"
+            data-shape="fill"
+            class="nds-docs-skeleton-media"
           />
         </div>
       </template>
@@ -574,11 +576,7 @@ const visualTestItems = computed(() => [
           aria-busy="true"
           aria-label="Carregando avatar"
         >
-          <Skeleton
-            class="nds-rounded-full nds-motion-reduce-none"
-            style="height: 3rem; width: 3rem"
-            :aria-hidden="true"
-          />
+          <Skeleton data-shape="avatar" />
         </div>
       </template>
       <template #variant-preview-2>
@@ -586,11 +584,16 @@ const visualTestItems = computed(() => [
           role="status"
           aria-busy="true"
           aria-label="Carregando linha de texto"
+          class="nds-stack nds-w-xs"
+          data-spacing="xs"
         >
           <Skeleton
-            class="nds-motion-reduce-none"
-            style="height: 1rem; width: 200px"
-            :aria-hidden="true"
+            data-shape="text"
+            data-width="3-4"
+          />
+          <Skeleton
+            data-shape="text"
+            data-width="1-2"
           />
         </div>
       </template>

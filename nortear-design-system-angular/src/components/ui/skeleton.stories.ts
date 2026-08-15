@@ -4,30 +4,23 @@ import { expect } from 'storybook/test';
 import { NdsSkeleton } from './skeleton';
 import { NdsSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { FRACAO_DE_LARGURA, caixaDesenhada } from '@shared/testing/skeleton-probe';
 
 // O CSS do .nds-skeleton não traz forma nem dimensão de propósito — quem usa
 // define a caixa que o conteúdo real vai ocupar.
-// Forma por atributo, nunca por medida: guideline 12 — altura é resultado de
-// padding e tipografia, não valor cravado, senão o bloco não cresce quando a
-// pessoa aumenta a fonte do navegador.
-const FORMAS: Record<'line' | 'circle' | 'rectangle', string> = {
-  line:      'data-shape="text" data-width="3-4"',
-  circle:    'data-shape="avatar"',
-  rectangle: 'data-shape="fill"',
-};
-
+// Forma por ATRIBUTO, nunca por medida cravada: guideline 12 — altura é
+// resultado de padding e tipografia, senão o bloco não cresce quando a pessoa
+// aumenta a fonte do navegador.
 type SkeletonArgs = {
-  shape: 'line' | 'circle' | 'rectangle';
+  shape: 'text' | 'heading' | 'avatar' | 'fill';
+  width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
   loading: boolean;
 };
 
 /** Ver a nota em separator.stories.ts. */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }): string {
-  const { shape = 'line' } = ctx.args ?? {};
-  // Dimensão vai em style, não em classe: o esqueleto imita a caixa do
-  // conteúdo que vai substituir, e classe fixa daria sempre o retângulo errado.
-  // É o que o comentário do skeleton.css documenta.
-  const estilo = FORMAS[shape];
+  const { shape = 'text', width = '3-4' } = ctx.args ?? {};
+  const largura = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
   return `import { NdsSkeleton } from '@/components/ui/skeleton';
 
 @Component({
@@ -36,7 +29,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SkeletonArgs> }
     <!-- aria-busy no CONTAINER: o esqueleto é aria-hidden e quem anuncia
          o carregamento é a região que vai receber o conteúdo. -->
     <div role="status" [attr.aria-busy]="carregando()" aria-label="Carregando conteúdo">
-      <div ndsSkeleton ${estilo}></div>
+      <div ndsSkeleton data-shape="${shape}"${largura}></div>
     </div>
   \`,
 })
@@ -54,12 +47,23 @@ const meta: Meta<SkeletonArgs> = {
   argTypes: {
     shape: {
       control: { type: 'inline-radio' },
-      options: ['line', 'circle', 'rectangle'],
-      description: 'Forma do esqueleto. Vem da classe utilitária, não de input.',
+      options: ['text', 'heading', 'avatar', 'fill'],
+      description: 'Forma do placeholder — decide a caixa que ele desenha (data-shape).',
+      table: { type: { summary: '"text" | "heading" | "avatar" | "fill"' }, defaultValue: { summary: 'text' } },
     },
-    loading: { control: 'boolean', description: 'Estado de carregamento do container.' },
+    width: {
+      control: { type: 'inline-radio' },
+      options: ['full', '3-4', '2-3', '1-2', '1-3'],
+      description: 'Fração da largura do container (data-width). Só se aplica às formas de texto.',
+      table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: '3-4' } },
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Estado de carregamento da região que contém o placeholder.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
   },
-  args: { shape: 'line', loading: true },
+  args: { shape: 'text', width: '3-4', loading: true },
 };
 
 export default meta;
@@ -68,40 +72,51 @@ type Story = StoryObj<SkeletonArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    covers: ['functional.item1', 'accessibility.item1', 'accessibility.item2'],
+    covers: ['functional.item2', 'functional.item3', 'accessibility.item1', 'accessibility.item2'],
   },
   render: (args) => ({
     props: {
       ...args,
-      forma: { line: 'text', circle: 'avatar', rectangle: 'fill' }[args.shape],
-      largura: args.shape === 'line' ? '3-4' : null,
+      largura: args.shape === 'text' || args.shape === 'heading' ? args.width : null,
+      // `fill` preenche a caixa que o container estabelece; aqui quem
+      // estabelece é a proporção de mídia, senão o bloco nasce com altura zero
+      // e o Playground mostra um esqueleto invisível.
+      classe: args.shape === 'fill' ? 'nds-docs-skeleton-media' : '',
     },
     template: `
       <div role="status" [attr.aria-busy]="loading" aria-label="Carregando conteúdo">
-        <div ndsSkeleton [attr.data-shape]="forma" [attr.data-width]="largura"></div>
+        <div ndsSkeleton [attr.data-shape]="shape" [attr.data-width]="largura" [class]="classe"></div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step, args }) => {
+    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+
     await step('O esqueleto sai da árvore de acessibilidade', async () => {
       // É ruído para leitor de tela: não tem conteúdo, só ocupa o espaço.
-      const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
       await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('Quem anuncia o carregamento é o container', async () => {
       // O par é sempre este: esqueleto aria-hidden dentro de região aria-busy.
       // Sem o container, o leitor não sabe que algo está sendo carregado.
-      const container = canvasElement.querySelector<HTMLElement>('[aria-busy]')!;
-      await expect(container.getAttribute('aria-busy')).toBe(String(args.loading));
-      await expect(container.querySelector('[data-slot="skeleton"]')).toBeTruthy();
+      await expect(regiao.getAttribute('aria-busy')).toBe(String(args.loading));
+      await expect(regiao.contains(sk)).toBe(true);
     });
 
-    await step('A classe base existe e a caixa vem do style', async () => {
-      const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+    await step('O atributo desenha a caixa — medida no que foi renderizado', async () => {
+      // Mede o que foi DESENHADO, não a classe: é a asserção que faltava nas
+      // outras quatro stacks, onde `h-4 w-[250px]` era texto inerte e o
+      // Playground renderizava altura zero.
       await expect(sk).toHaveClass(/nds-skeleton/);
-      // A dimensão vem do style de quem usa, não do componente.
-      await expect(sk.getBoundingClientRect().height).toBeGreaterThan(0);
+      const caixa = caixaDesenhada(sk, regiao);
+      await expect(caixa.altura).toBeGreaterThan(0);
+      if (args.shape === 'text' || args.shape === 'heading') {
+        await expect(
+          Math.abs(caixa.fracaoDoContainer - FRACAO_DE_LARGURA[args.width]),
+        ).toBeLessThan(0.02);
+      }
     });
   },
 };
