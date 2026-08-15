@@ -765,15 +765,14 @@ export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--border',            k: 'input',             classe: '.nds-radio-item'      },
-      { token: '--primary',           k: 'primary',           classe: '.nds-radio-item'      },
-      { token: '--primary',           k: 'primaryForeground', classe: '.nds-radio-indicator' },
-      { token: '--ring',              k: 'ring',              classe: '.nds-radio-item'      },
-      { token: '--destructive',       k: 'destructive',       classe: '.nds-radio-item'      },
-      { token: '--foreground',        k: 'foreground',        classe: '.nds-radio-label'     },
-    ].map(({ token, k, classe }) => ({
+      { token: '--background',  k: 'background'  },
+      { token: '--primary',     k: 'primary'     },
+      { token: '--ring',        k: 'ring'        },
+      { token: '--destructive', k: 'destructive' },
+      { token: '--foreground',  k: 'foreground'  },
+    ].map(({ token, k }) => ({
       token,
-      value: classe,
+      value: toPlainText(t(`tokens.table.${k}.class`)),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });

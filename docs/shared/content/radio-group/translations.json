@@ -27,8 +27,8 @@
       "title": "Anatomia",
       "item1": "<strong>RadioGroup</strong> — container <code>role=\"radiogroup\"</code> que agrupa os itens e controla a seleção.",
       "item2": "<strong>RadioGroupItem</strong> — botão de rádio individual com <code>role=\"radio\"</code> e <code>value</code> único.",
-      "item3": "<strong>RadioGroupIndicator</strong> — bolinha interna visível apenas quando <code>data-checked</code>.",
-      "item4": "<strong>Label</strong> — rótulo externo obrigatório, associado via <code>htmlFor</code> ao <code>id</code> do item.",
+      "item3": "<strong>RadioGroupIndicator</strong> — bolinha interna, visível apenas no item selecionado.",
+      "item4": "<strong>Label</strong> — rótulo externo obrigatório, associado pelo atributo <code>for</code> ao <code>id</code> do item.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pagamento\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"cartao\" id=\"cartao\" />\n    <Label htmlFor=\"cartao\">Cartão de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
@@ -40,7 +40,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para 2–7 opções com seleção única. Para on/off, use <code>Switch</code>; para múltipla, use <code>Checkbox</code>.",
-        "item2": "Cada <code>RadioGroupItem</code> deve ter <code>Label</code> associado via <code>htmlFor</code> + <code>id</code>.",
+        "item2": "Cada <code>RadioGroupItem</code> deve ter <code>Label</code> associado pelo atributo <code>for</code> + <code>id</code>.",
         "item3": "Não pré-selecione opções por padrão — exceto quando há um default genuíno de negócio.",
         "item4": "4+ opções: orientação vertical. 2–3 opções curtas: pode usar layout horizontal."
       },
@@ -122,7 +122,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Sempre vincule Label ao item via htmlFor + id correspondente.",
+        "do": "Sempre vincule o Label ao item pelo atributo for, apontando para o id correspondente.",
         "dont": "Não use texto solto ao lado do radio — leitores de tela não associam."
       },
       "pair2": {
@@ -141,8 +141,8 @@
         "withDescription": "With description"
       },
       "styles": {
-        "vertical": "Empilhado — padrão para 4+ opções. <code>grid gap-2</code>.",
-        "horizontal": "Inline — para 2–3 opções curtas. <code>flex gap-6</code>.",
+        "vertical": "Empilhado — padrão do grupo, recomendado para 4+ opções.",
+        "horizontal": "Em linha — para 2–3 opções curtas. Marque o grupo com <code>aria-orientation=\"horizontal\"</code>: o mesmo atributo que anuncia a direção das setas dispõe as opções lado a lado.",
         "withDescription": "Cada item com descrição auxiliar abaixo do Label."
       },
       "compositionsTitle": "Composições",
@@ -159,32 +159,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Não selecionado — borda <code>border-input</code>, indicador invisível."
+        "behavior": "Não selecionado — <code>aria-checked=\"false\"</code>, bolinha interna ausente. A borda usa <code>--primary</code> em todos os estados."
       },
       "checked": {
         "label": "Checked",
         "trigger": "Ao selecionar a opção, por clique ou teclado",
-        "behavior": "Selecionado — <code>data-checked</code>, borda e fundo <code>primary</code>, indicador interno visível."
+        "behavior": "Selecionado — <code>aria-checked=\"true\"</code> e bolinha interna <code>--primary</code> visível, com animação curta de entrada."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre o item",
-        "behavior": "Cursor sobre o item — sem mudança visual nativa; aplique <code>hover:</code> conforme necessário."
+        "behavior": "Cursor sobre o item — sem mudança visual no próprio rádio; o destaque, quando existe, é do cartão que o envolve."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab ou navegação por setas",
-        "behavior": "Focado via teclado — anel <code>ring-3 ring-ring/50</code>."
+        "behavior": "Focado via teclado — anel de 2px em <code>--ring</code> a 50% de opacidade, só em <code>:focus-visible</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando o item é marcado como indisponível",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> e <code>cursor-not-allowed</code>."
+        "behavior": "Item e rótulo a 50% de opacidade, com cursor bloqueado; não recebe clique nem entra na navegação por setas."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" no grupo ou item",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code> e anel <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> no item — borda em <code>--destructive</code>."
       },
       "cols": {
         "state": "Estado",
@@ -255,34 +255,30 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "input": {
-          "class": "border-input",
-          "part": "Borda do item não selecionado"
+        "background": {
+          "class": ".nds-radio-item",
+          "part": "Fundo do item, selecionado ou não"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Fundo do item selecionado"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Bolinha interna do indicador"
+          "class": ".nds-radio-item · .nds-radio-indicator",
+          "part": "Borda do item e bolinha interna do indicador"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco"
+          "class": ".nds-radio-item:focus-visible",
+          "part": "Anel de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
+          "class": ".nds-radio-item[aria-invalid=\"true\"]",
           "part": "Borda no estado inválido"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Cor do Label associado"
+          "class": ".nds-radio-label",
+          "part": "Cor do rótulo associado"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override do tamanho do radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Cor customizada via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+        "web": "/* Rádio maior num formulário denso */\n.pagamento .nds-radio-item {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Outra cor para o item escolhido — borda e bolinha saem do mesmo token */\n.pagamento .nds-radio-item[aria-checked=\"true\"] {\n  border-color: hsl(var(--chart-2));\n}\n\n.pagamento .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator > svg,\n.pagamento .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator:empty::after {\n  fill: hsl(var(--chart-2));\n  background-color: hsl(var(--chart-2));\n}"
       }
     },
     "accessibility": {
@@ -292,7 +288,7 @@
         "item1": "<code>role=\"radiogroup\"</code> no container e <code>role=\"radio\"</code> em cada item",
         "item2": "<code>aria-checked</code> reflete o estado selecionado",
         "item3": "<code>aria-label</code> ou <code>aria-labelledby</code> obrigatório no grupo",
-        "item4": "Label associado a cada item via <code>htmlFor</code> + <code>id</code>",
+        "item4": "Label associado a cada item pelo atributo <code>for</code> + <code>id</code>",
         "item5": "Navegação por setas (↑/↓/←/→) entre itens — gerenciada pela lib",
         "item6": "Anel de foco visível com contraste mínimo 3:1"
       },
@@ -391,7 +387,7 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 3:1 entre borda e fundo, 4.5:1 do Label",
-        "item3": "Focus ring visível com ring-3 ring-ring/50",
+        "item3": "Anel de foco visível ao focar o item pelo teclado",
         "item4": "role=\"radiogroup\" no container e role=\"radio\" em cada item",
         "item5": "aria-checked reflete o estado em cada item"
       },
@@ -466,8 +462,8 @@
       "title": "Anatomy",
       "item1": "<strong>RadioGroup</strong> — <code>role=\"radiogroup\"</code> container that groups items and controls selection.",
       "item2": "<strong>RadioGroupItem</strong> — individual radio button with <code>role=\"radio\"</code> and unique <code>value</code>.",
-      "item3": "<strong>RadioGroupIndicator</strong> — inner dot visible only when <code>data-checked</code>.",
-      "item4": "<strong>Label</strong> — required external label, associated via <code>htmlFor</code> to item's <code>id</code>.",
+      "item3": "<strong>RadioGroupIndicator</strong> — inner dot, visible only on the selected item.",
+      "item4": "<strong>Label</strong> — required external label, associated by the <code>for</code> attribute to the item's <code>id</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Payment method\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"card\" id=\"card\" />\n    <Label htmlFor=\"card\">Credit card</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
@@ -479,7 +475,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for 2–7 options with single selection. For on/off, use <code>Switch</code>; for multiple, use <code>Checkbox</code>.",
-        "item2": "Each <code>RadioGroupItem</code> must have an associated <code>Label</code> via <code>htmlFor</code> + <code>id</code>.",
+        "item2": "Each <code>RadioGroupItem</code> must have an associated <code>Label</code> through the <code>for</code> attribute + <code>id</code>.",
         "item3": "Don't pre-select options by default — except when there's a genuine business default.",
         "item4": "4+ options: vertical orientation. 2–3 short options: may use horizontal layout."
       },
@@ -561,7 +557,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Always link Label to item via matching htmlFor + id.",
+        "do": "Always link the Label to the item through the for attribute, pointing at the matching id.",
         "dont": "Don't use loose text next to the radio — screen readers won't associate."
       },
       "pair2": {
@@ -580,8 +576,8 @@
         "withDescription": "With description"
       },
       "styles": {
-        "vertical": "Stacked — default for 4+ options. <code>grid gap-2</code>.",
-        "horizontal": "Inline — for 2–3 short options. <code>flex gap-6</code>.",
+        "vertical": "Stacked — the group's default, recommended for 4+ options.",
+        "horizontal": "Inline — for 2–3 short options. Mark the group with <code>aria-orientation=\"horizontal\"</code>: the same attribute that announces the arrow direction lays the options out side by side.",
         "withDescription": "Each item with helper description below the Label."
       },
       "compositionsTitle": "Compositions",
@@ -598,32 +594,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Not selected — <code>border-input</code>, invisible indicator."
+        "behavior": "Not selected — <code>aria-checked=\"false\"</code>, no inner dot. The border uses <code>--primary</code> in every state."
       },
       "checked": {
         "label": "Checked",
         "trigger": "On selecting the option, by click or keyboard",
-        "behavior": "Selected — <code>data-checked</code>, <code>primary</code> border and background, visible inner indicator."
+        "behavior": "Selected — <code>aria-checked=\"true\"</code> and a visible <code>--primary</code> inner dot, with a short entrance animation."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer over the item",
-        "behavior": "Cursor over item — no native visual change; apply <code>hover:</code> as needed."
+        "behavior": "Cursor over the item — no visual change on the radio itself; the highlight, where there is one, belongs to the card around it."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab or arrow-key navigation",
-        "behavior": "Keyboard focused — <code>ring-3 ring-ring/50</code>."
+        "behavior": "Keyboard focused — a 2px ring in <code>--ring</code> at 50% opacity, only on <code>:focus-visible</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the item is marked unavailable",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> and <code>cursor-not-allowed</code>."
+        "behavior": "Item and label at 50% opacity, with a blocked cursor; takes no click and drops out of arrow navigation."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" on the group or item",
-        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border and <code>destructive/20</code> ring."
+        "behavior": "<code>aria-invalid=\"true\"</code> on the item — border in <code>--destructive</code>."
       },
       "cols": {
         "state": "State",
@@ -694,34 +690,30 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "input": {
-          "class": "border-input",
-          "part": "Unselected item border"
+        "background": {
+          "class": ".nds-radio-item",
+          "part": "Item background, selected or not"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Selected item background"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Inner indicator dot"
+          "class": ".nds-radio-item · .nds-radio-indicator",
+          "part": "Item border and inner indicator dot"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring"
+          "class": ".nds-radio-item:focus-visible",
+          "part": "Keyboard focus ring"
         },
         "destructive": {
-          "class": "border-destructive",
+          "class": ".nds-radio-item[aria-invalid=\"true\"]",
           "part": "Invalid state border"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Associated Label color"
+          "class": ".nds-radio-label",
+          "part": "Associated label color"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Override radio size */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Custom color via .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+        "web": "/* Bigger radio in a dense form */\n.payment .nds-radio-item {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Another colour for the chosen item — border and dot share one token */\n.payment .nds-radio-item[aria-checked=\"true\"] {\n  border-color: hsl(var(--chart-2));\n}\n\n.payment .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator > svg,\n.payment .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator:empty::after {\n  fill: hsl(var(--chart-2));\n  background-color: hsl(var(--chart-2));\n}"
       }
     },
     "accessibility": {
@@ -731,7 +723,7 @@
         "item1": "<code>role=\"radiogroup\"</code> on the container and <code>role=\"radio\"</code> on each item",
         "item2": "<code>aria-checked</code> reflects the selected state",
         "item3": "<code>aria-label</code> or <code>aria-labelledby</code> required on the group",
-        "item4": "Label associated with each item via <code>htmlFor</code> + <code>id</code>",
+        "item4": "Label associated with each item through the <code>for</code> attribute + <code>id</code>",
         "item5": "Arrow key navigation (↑/↓/←/→) between items — managed by the lib",
         "item6": "Visible focus ring with minimum 3:1 contrast"
       },
@@ -830,7 +822,7 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 3:1 contrast between border and background, 4.5:1 for Label",
-        "item3": "Visible focus ring with ring-3 ring-ring/50",
+        "item3": "Visible focus ring when the item is focused by keyboard",
         "item4": "role=\"radiogroup\" on container and role=\"radio\" on each item",
         "item5": "aria-checked reflects state in each item"
       },
@@ -905,8 +897,8 @@
       "title": "Anatomía",
       "item1": "<strong>RadioGroup</strong> — contenedor <code>role=\"radiogroup\"</code> que agrupa los ítems y controla la selección.",
       "item2": "<strong>RadioGroupItem</strong> — botón de radio individual con <code>role=\"radio\"</code> y <code>value</code> único.",
-      "item3": "<strong>RadioGroupIndicator</strong> — punto interno visible solo cuando <code>data-checked</code>.",
-      "item4": "<strong>Label</strong> — etiqueta externa obligatoria, asociada vía <code>htmlFor</code> al <code>id</code> del ítem.",
+      "item3": "<strong>RadioGroupIndicator</strong> — punto interno, visible solo en el ítem seleccionado.",
+      "item4": "<strong>Label</strong> — etiqueta externa obligatoria, asociada por el atributo <code>for</code> al <code>id</code> del ítem.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<RadioGroup value={value} onValueChange={setValue} aria-label=\"Forma de pago\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"tarjeta\" id=\"tarjeta\" />\n    <Label htmlFor=\"tarjeta\">Tarjeta de crédito</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"pix\" id=\"pix\" />\n    <Label htmlFor=\"pix\">Pix</Label>\n  </div>\n</RadioGroup>",
@@ -918,7 +910,7 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para 2–7 opciones con selección única. Para on/off, usa <code>Switch</code>; para múltiple, usa <code>Checkbox</code>.",
-        "item2": "Cada <code>RadioGroupItem</code> debe tener <code>Label</code> asociado vía <code>htmlFor</code> + <code>id</code>.",
+        "item2": "Cada <code>RadioGroupItem</code> debe tener <code>Label</code> asociado por el atributo <code>for</code> + <code>id</code>.",
         "item3": "No preseleccione opciones por defecto — excepto cuando hay un default genuino de negocio.",
         "item4": "4+ opciones: orientación vertical. 2–3 opciones cortas: puedes usar layout horizontal."
       },
@@ -1000,7 +992,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Vincula siempre Label al ítem vía htmlFor + id correspondiente.",
+        "do": "Vincula siempre el Label al ítem por el atributo for, apuntando al id correspondiente.",
         "dont": "No uses texto suelto al lado del radio — los lectores de pantalla no asocian."
       },
       "pair2": {
@@ -1019,8 +1011,8 @@
         "withDescription": "With description"
       },
       "styles": {
-        "vertical": "Apilado — predeterminado para 4+ opciones. <code>grid gap-2</code>.",
-        "horizontal": "Inline — para 2–3 opciones cortas. <code>flex gap-6</code>.",
+        "vertical": "Apilado — predeterminado del grupo, recomendado para 4+ opciones.",
+        "horizontal": "En línea — para 2–3 opciones cortas. Marca el grupo con <code>aria-orientation=\"horizontal\"</code>: el mismo atributo que anuncia la dirección de las flechas coloca las opciones una al lado de la otra.",
         "withDescription": "Cada ítem con descripción auxiliar bajo el Label."
       },
       "compositionsTitle": "Composiciones",
@@ -1037,32 +1029,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "No seleccionado — <code>border-input</code>, indicador invisible."
+        "behavior": "No seleccionado — <code>aria-checked=\"false\"</code>, sin punto interno. El borde usa <code>--primary</code> en todos los estados."
       },
       "checked": {
         "label": "Checked",
         "trigger": "Al seleccionar la opción, por clic o teclado",
-        "behavior": "Seleccionado — <code>data-checked</code>, borde y fondo <code>primary</code>, indicador interno visible."
+        "behavior": "Seleccionado — <code>aria-checked=\"true\"</code> y punto interno <code>--primary</code> visible, con una animación corta de entrada."
       },
       "hover": {
         "label": "Hover",
         "trigger": "pointer sobre el ítem",
-        "behavior": "Cursor sobre el ítem — sin cambio visual nativo; aplica <code>hover:</code> si es necesario."
+        "behavior": "Cursor sobre el ítem — sin cambio visual en el propio radio; el resalte, cuando existe, es de la tarjeta que lo envuelve."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab o navegación con flechas",
-        "behavior": "Enfocado por teclado — <code>ring-3 ring-ring/50</code>."
+        "behavior": "Enfocado por teclado — anillo de 2px en <code>--ring</code> al 50% de opacidad, solo en <code>:focus-visible</code>."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando el ítem se marca como no disponible",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code> y <code>cursor-not-allowed</code>."
+        "behavior": "Ítem y etiqueta al 50% de opacidad, con cursor bloqueado; no recibe clic ni entra en la navegación por flechas."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" en el grupo o ítem",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code> y anillo <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> en el ítem — borde en <code>--destructive</code>."
       },
       "cols": {
         "state": "Estado",
@@ -1133,34 +1125,30 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "input": {
-          "class": "border-input",
-          "part": "Borde del ítem no seleccionado"
+        "background": {
+          "class": ".nds-radio-item",
+          "part": "Fondo del ítem, seleccionado o no"
         },
         "primary": {
-          "class": "bg-primary",
-          "part": "Fondo del ítem seleccionado"
-        },
-        "primaryForeground": {
-          "class": "bg-primary-foreground",
-          "part": "Punto interno del indicador"
+          "class": ".nds-radio-item · .nds-radio-indicator",
+          "part": "Borde del ítem y punto interno del indicador"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco"
+          "class": ".nds-radio-item:focus-visible",
+          "part": "Anillo de foco por teclado"
         },
         "destructive": {
-          "class": "border-destructive",
+          "class": ".nds-radio-item[aria-invalid=\"true\"]",
           "part": "Borde en estado inválido"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Color del Label asociado"
+          "class": ".nds-radio-label",
+          "part": "Color de la etiqueta asociada"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override del tamaño del radio */\n[data-slot=\"radio-group-item\"] {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Color personalizado vía .nds-* */\n.payment-radio [data-slot=\"radio-group-item\"][data-checked] {\n  background-color: var(--color-blue-600);\n  border-color: var(--color-blue-600);\n}"
+        "web": "/* Radio más grande en un formulario denso */\n.pago .nds-radio-item {\n  width: 1.25rem;\n  height: 1.25rem;\n}\n\n/* Otro color para el ítem elegido — borde y punto salen del mismo token */\n.pago .nds-radio-item[aria-checked=\"true\"] {\n  border-color: hsl(var(--chart-2));\n}\n\n.pago .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator > svg,\n.pago .nds-radio-item[aria-checked=\"true\"] .nds-radio-indicator:empty::after {\n  fill: hsl(var(--chart-2));\n  background-color: hsl(var(--chart-2));\n}"
       }
     },
     "accessibility": {
@@ -1170,7 +1158,7 @@
         "item1": "<code>role=\"radiogroup\"</code> en el contenedor y <code>role=\"radio\"</code> en cada ítem",
         "item2": "<code>aria-checked</code> refleja el estado seleccionado",
         "item3": "<code>aria-label</code> o <code>aria-labelledby</code> obligatorio en el grupo",
-        "item4": "Label asociado a cada ítem vía <code>htmlFor</code> + <code>id</code>",
+        "item4": "Label asociado a cada ítem por el atributo <code>for</code> + <code>id</code>",
         "item5": "Navegación por flechas (↑/↓/←/→) entre ítems — gestionada por la lib",
         "item6": "Anillo de foco visible con contraste mínimo 3:1"
       },
@@ -1269,7 +1257,7 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 3:1 entre borde y fondo, 4.5:1 para el Label",
-        "item3": "Anillo de foco visible con ring-3 ring-ring/50",
+        "item3": "Anillo de foco visible al enfocar el ítem con el teclado",
         "item4": "role=\"radiogroup\" en el contenedor y role=\"radio\" en cada ítem",
         "item5": "aria-checked refleja el estado en cada ítem"
       },

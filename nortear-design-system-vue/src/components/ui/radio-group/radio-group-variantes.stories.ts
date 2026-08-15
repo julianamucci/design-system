@@ -61,7 +61,7 @@ export const Horizontal: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup orientation="horizontal" aria-label="Forma de entrega" class="nds-cluster" data-spacing="lg" style="flex-wrap: wrap">
+      <RadioGroup orientation="horizontal" aria-label="Forma de entrega">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="standard" id="horiz-standard" />
           <Label :for="'horiz-standard'">Padrão</Label>
@@ -80,11 +80,17 @@ export const Horizontal: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const group = canvas.getByRole('radiogroup');
-    await step('Orientação horizontal aplicada', async () => {
+    await step('O grupo anuncia a orientação horizontal', async () => {
       await expect(group).toHaveAttribute('aria-orientation', 'horizontal');
     });
-    await step('Renderiza 3 radios', async () => {
-      await expect(canvas.getAllByRole('radio')).toHaveLength(3);
+    await step('As três opções ficam na mesma linha', async () => {
+      // O atributo sozinho não prova nada: antes desta asserção o grupo trazia
+      // uma classe de layout que a cascata do CSS do componente sobrescrevia, e
+      // a variante "horizontal" renderizava empilhada sem ninguém reprovar.
+      const topos = new Set(
+        canvas.getAllByRole('radio').map((el) => Math.round(el.getBoundingClientRect().top)),
+      );
+      await expect(topos.size).toBe(1);
     });
   },
 };
@@ -97,7 +103,7 @@ export const WithDescription: Story = {
       <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 20rem">
         <div class="nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="cartao" id="wd-cartao" class="nds-mt-1" aria-describedby="wd-cartao-desc" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'wd-cartao'">Cartão de crédito</Label>
             <p id="wd-cartao-desc" class="nds-text-caption nds-text-muted-foreground">
               Aprovação imediata em até 12x.
@@ -106,7 +112,7 @@ export const WithDescription: Story = {
         </div>
         <div class="nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="pix" id="wd-pix" class="nds-mt-1" aria-describedby="wd-pix-desc" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'wd-pix'">Pix</Label>
             <p id="wd-pix-desc" class="nds-text-caption nds-text-muted-foreground">
               Pagamento instantâneo com 5% de desconto.
@@ -115,7 +121,7 @@ export const WithDescription: Story = {
         </div>
         <div class="nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="boleto" id="wd-boleto" class="nds-mt-1" aria-describedby="wd-boleto-desc" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <Label :for="'wd-boleto'">Boleto bancário</Label>
             <p id="wd-boleto-desc" class="nds-text-caption nds-text-muted-foreground">
               Compensação em até 3 dias úteis.

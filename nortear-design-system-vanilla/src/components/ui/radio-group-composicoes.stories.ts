@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
+import { createButton } from './button';
 
 const meta: Meta = {
   tags: ['form'],
@@ -31,11 +32,16 @@ function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElem
   legend.id = id;
   legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
-  group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
   wrap.append(legend, group);
   return wrap;
 }
+
+/** Idempotente — ver a nota em `radio-group.stories.ts`. */
+const escolher = async (alvo: HTMLElement): Promise<void> => {
+  if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
+  await expect(alvo).toHaveAttribute('aria-checked', 'true');
+};
 
 // ─── FormaDePagamento ─────────────────────────────────────────────────────────
 
@@ -62,15 +68,26 @@ export const PaymentMethod: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Três radios renderizados sem pré-seleção', async () => {
-      const radios = canvas.getAllByRole('radio');
+    const radios = canvas.getAllByRole('radio') as HTMLElement[];
+
+    await step('Três radios renderizados', async () => {
+      // A ausência de pré-seleção é asserção de MONTAGEM e mora na story
+      // `States/Default`, que não interage: nenhum replay a alcançaria aqui.
       await expect(radios).toHaveLength(3);
-      for (const r of radios) await expect(r).toHaveAttribute('aria-checked', 'false');
     });
-    await step('Selecionar "Pix" troca o estado', async () => {
-      const radios = canvas.getAllByRole('radio');
-      await userEvent.click(radios[1]);
-      await expect(radios[1]).toHaveAttribute('aria-checked', 'true');
+
+    await step('Selecionar "Pix" marca só ele', async () => {
+      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
+      await expect(radios[0]).toHaveAttribute('aria-checked', 'false');
+      await expect(radios[2]).toHaveAttribute('aria-checked', 'false');
+    });
+
+    await step('Clicar no rótulo escolhe a opção', async () => {
+      // O rótulo faz parte do alvo de clique — teste que não depende do markup
+      // interno do item.
+      await userEvent.click(canvas.getByText('Boleto bancário'));
+      await expect(radios[2]).toHaveAttribute('aria-checked', 'true');
+      await expect(radios[1]).toHaveAttribute('aria-checked', 'false');
     });
   },
 };
@@ -212,11 +229,10 @@ export const InForm: Story = {
 
     form.appendChild(fs);
 
-    const submit = document.createElement('button');
-    submit.type = 'submit';
-    submit.className = 'btn btn-primary';
-    submit.style.alignSelf = 'flex-end';
-    submit.textContent = 'Continuar';
+    // `createButton`, não um `<button>` cru com as classes do framework
+    // utilitário antigo: elas não existem no CSS `.nds-*` e o botão de submit
+    // vinha sem estilo nenhum.
+    const submit = createButton({ type: 'submit', label: 'Continuar' });
     form.appendChild(submit);
 
     const out = document.createElement('p');
@@ -242,21 +258,23 @@ export const InForm: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const submit = canvas.getByRole('button', { name: 'Continuar' });
+    const saida = () => canvasElement.querySelector('[data-testid="form-output"]')?.textContent ?? '';
 
-    await step('Submit sem seleção mostra "(nenhum)"', async () => {
-      const submit = canvas.getByRole('button', { name: 'Continuar' });
+    // O caso "formulário sem escolha" é asserção de MONTAGEM — depois do
+    // primeiro clique nenhum replay volta a ele. Ele mora em `States/Default`.
+    await step('Selecionar "Pix" e submeter envia o valor escolhido', async () => {
+      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
       await userEvent.click(submit);
-      const out = canvasElement.querySelector('[data-testid="form-output"]');
-      await expect(out?.textContent).toContain('(nenhum)');
+      await expect(saida()).toContain('pix');
     });
 
-    await step('Selecionar "Pix" e submeter envia o valor', async () => {
-      const radios = canvas.getAllByRole('radio');
-      await userEvent.click(radios[1]);
-      const submit = canvas.getByRole('button', { name: 'Continuar' });
+    await step('Trocar a escolha troca o que o formulário envia', async () => {
+      // Segunda rodada com valor diferente: prova que o input escondido
+      // acompanha a seleção, e não que ele foi preenchido uma vez.
+      await escolher(canvas.getByRole('radio', { name: 'Boleto bancário' }));
       await userEvent.click(submit);
-      const out = canvasElement.querySelector('[data-testid="form-output"]');
-      await expect(out?.textContent).toContain('pix');
+      await expect(saida()).toContain('boleto');
     });
   },
 };

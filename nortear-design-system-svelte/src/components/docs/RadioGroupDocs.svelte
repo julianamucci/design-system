@@ -197,17 +197,6 @@ interface RadioGroupItemProps {
   class?: string;
 }`;
 
-  const customizationCode = `/* Override do tamanho do radio */
-[data-slot="radio-group-item"] {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Cor customizada via classe .nds-* */
-.payment-radio [data-slot="radio-group-item"][data-checked] {
-  @apply bg-blue-600 border-blue-600;
-}`;
-
   const descCopy = $derived.by(() => {
     const l = $locale;
     if (l === 'en') {
@@ -686,15 +675,14 @@ interface RadioGroupItemProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--input',              value: $tStore('tokens.table.input.class'),             description: $tStore('tokens.table.input.part') },
-      { token: '--primary',            value: $tStore('tokens.table.primary.class'),           description: $tStore('tokens.table.primary.part') },
-      { token: '--primary-foreground', value: $tStore('tokens.table.primaryForeground.class'), description: $tStore('tokens.table.primaryForeground.part') },
-      { token: '--ring',               value: $tStore('tokens.table.ring.class'),              description: $tStore('tokens.table.ring.part') },
-      { token: '--destructive',        value: $tStore('tokens.table.destructive.class'),       description: $tStore('tokens.table.destructive.part') },
-      { token: '--foreground',         value: $tStore('tokens.table.foreground.class'),        description: $tStore('tokens.table.foreground.part') },
+      { token: '--background',  value: $tStore('tokens.table.background.class'),  description: $tStore('tokens.table.background.part') },
+      { token: '--primary',     value: $tStore('tokens.table.primary.class'),     description: $tStore('tokens.table.primary.part') },
+      { token: '--ring',        value: $tStore('tokens.table.ring.class'),        description: $tStore('tokens.table.ring.part') },
+      { token: '--destructive', value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
+      { token: '--foreground',  value: $tStore('tokens.table.foreground.class'),  description: $tStore('tokens.table.foreground.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={customizationCode}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->

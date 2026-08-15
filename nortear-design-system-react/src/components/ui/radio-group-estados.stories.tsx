@@ -22,12 +22,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
+ * de token não responde a pergunta do critério — a razão responde.
+ */
+function razaoContraste(a: string, b: string): number {
+  const luminancia = (cor: string): number => {
+    const [r, g, bl] = cor
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map(Number)
+      .map((v) => {
+        const s = v / 255;
+        return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (escuro + 0.05);
+}
+
 export const Default: Story = {
   parameters: {
+    covers: ["visual.item1", "accessibility.item2"],
     docs: {
       description: {
         story:
-          "Nenhuma opção pré-selecionada. Borda --input, indicador interno invisível, aria-checked=\"false\" em todos.",
+          "Nenhuma opção pré-selecionada: indicador interno ausente e aria-checked=\"false\" em todos. A borda usa --primary em qualquer estado.",
       },
     },
   },
@@ -51,15 +72,31 @@ export const Default: Story = {
         await expect(r).toHaveAttribute("aria-checked", "false");
       }
     });
+
+    await step("Borda contra fundo e rótulo contra fundo passam na WCAG", async () => {
+      // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
+      // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
+      const estiloItem = getComputedStyle(radios[0]);
+      await expect(
+        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+      ).toBeGreaterThanOrEqual(3);
+
+      const rotulo = canvas.getByText("Cartão de crédito");
+      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      await expect(
+        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
   },
 };
 
 export const Checked: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
-          "Item com defaultValue selecionado. Borda e fundo --primary, bolinha interna --primary-foreground visível, aria-checked=\"true\".",
+          "Item com defaultValue selecionado: aria-checked=\"true\" e bolinha interna --primary visível, com animação curta de entrada.",
       },
     },
   },
@@ -89,10 +126,11 @@ export const Checked: Story = {
 
 export const Disabled: Story = {
   parameters: {
+    covers: ["functional.item4", "visual.item3"],
     docs: {
       description: {
         story:
-          "Grupo inteiro desabilitado via prop disabled na raiz e em cada item. opacity-50 e cursor-not-allowed; não responde a cliques.",
+          "Grupo inteiro desabilitado pela prop disabled na raiz e em cada item: item e rótulo a 50% de opacidade, cursor bloqueado, sem resposta a clique.",
       },
     },
   },
@@ -162,10 +200,11 @@ export const ItemDisabled: Story = {
 
 export const Invalid: Story = {
   parameters: {
+    covers: ["visual.item4"],
     docs: {
       description: {
         story:
-          "Estado de erro via aria-invalid=\"true\" no item. Borda --destructive e anel --destructive/20. Use junto com FormMessage para exibir mensagem.",
+          "Estado de erro via aria-invalid=\"true\" no item: borda --destructive. Use junto com FormMessage para exibir a mensagem.",
       },
     },
   },
@@ -204,10 +243,11 @@ export const Invalid: Story = {
 
 export const FocusVisible: Story = {
   parameters: {
+    covers: ["accessibility.item3"],
     docs: {
       description: {
         story:
-          "Estado de foco via teclado. Anel ring-3 ring-ring/50 com border-ring no item focado. Use Tab para entrar e setas para navegar.",
+          "Estado de foco por teclado: anel de 2px em --ring a 50% de opacidade, só em :focus-visible. Tab entra no grupo e as setas navegam.",
       },
     },
   },
@@ -226,9 +266,19 @@ export const FocusVisible: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const radios = canvas.getAllByRole("radio");
-    await step("Primeiro item recebe foco programaticamente", async () => {
-      radios[0].focus();
+    await step("Um Tab entra no grupo e para no primeiro item", async () => {
+      // Tab de verdade, não `.focus()`: `:focus-visible` só casa quando o foco
+      // chega por teclado, e é dele que sai o anel.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       await expect(radios[0]).toHaveFocus();
+    });
+
+    await step("O item focado por teclado desenha anel visível", async () => {
+      // Afirma o efeito, não a classe: a asserção sobrevive a qualquer troca de
+      // vocabulário no CSS e reprova se o anel sumir.
+      const estilo = getComputedStyle(radios[0]);
+      await expect(estilo.boxShadow !== "none" || estilo.outlineStyle !== "none").toBe(true);
     });
   },
 };

@@ -23,6 +23,18 @@
   border: 0;
 }
 
+/* Orientação horizontal — dirigida pelo atributo que já descreve a navegação
+ * por setas, não por uma classe paralela: `aria-orientation` é o que a ARIA
+ * exige num radiogroup horizontal e `data-orientation` é o que parte das libs
+ * headless emite sozinha. Assim o layout nunca contradiz o que o leitor de
+ * tela anuncia. */
+.nds-radio-group[aria-orientation="horizontal"],
+.nds-radio-group[data-orientation="horizontal"] {
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: var(--spacing-6);                          /* 24px entre opções curtas */
+}
+
 /* ── Row (item + label) ──────────────────────────────────────────────────── */
 .nds-radio-row {
   display: flex;
@@ -61,7 +73,11 @@
   opacity: 0.5;
 }
 
-.nds-radio-item[aria-invalid="true"] {
+/* O erro pode ser marcado no item ou no grupo inteiro — as libs headless
+ * divergem em qual dos dois recebe `aria-invalid`, e a borda vermelha não pode
+ * depender dessa escolha. */
+.nds-radio-item[aria-invalid="true"],
+.nds-radio-group[aria-invalid="true"] .nds-radio-item {
   border-color: hsl(var(--destructive));
 }
 
@@ -115,6 +131,43 @@
 }
 
 .nds-radio-row:has(.nds-radio-item:disabled) .nds-radio-label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Cartão selecionável ─────────────────────────────────────────────────────
+ *
+ *   <label class="nds-radio-card nds-cluster" for="entrega-expressa"> …
+ *     <span class="nds-radio-item" role="radio" aria-checked="true"> … </span>
+ *   </label>
+ *
+ * O cartão inteiro é o alvo (é um <label for>), e o destaque do escolhido vem
+ * de `:has()` sobre o item de dentro. O gancho é `aria-checked`, o único que as
+ * cinco stacks emitem: `data-checked` é vocabulário de duas delas, e uma regra
+ * escrita sobre ele deixaria o cartão inerte nas outras três — que foi
+ * exatamente o defeito que esta regra substitui.
+ */
+.nds-radio-card {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast),
+    background-color var(--duration-fast);
+}
+
+.nds-radio-card:hover {
+  background-color: hsl(var(--muted) / 0.4);
+}
+
+.nds-radio-card:has(.nds-radio-item[aria-checked="true"]) {
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.05);
+}
+
+.nds-radio-card:has(.nds-radio-item:disabled),
+.nds-radio-card:has(.nds-radio-item[aria-disabled="true"]) {
   cursor: not-allowed;
   opacity: 0.5;
 }

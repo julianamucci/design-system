@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes de layout do RadioGroup: Vertical (padrão, grid gap-2), Horizontal (flex gap-6 para 2-3 opções curtas) e WithDescription (Label + texto auxiliar abaixo). O factory custom do Vanilla não expõe prop `orientation` — a orientação é aplicada via classe utilitária no `<fieldset>`.',
+          'Variantes de layout do RadioGroup: Vertical (padrão do grupo), Horizontal (2–3 opções curtas, via `orientation`) e WithDescription (Label + texto auxiliar abaixo).',
       },
     },
   },
@@ -31,7 +31,6 @@ function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElem
   legend.id = id;
   legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
-  group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
   wrap.append(legend, group);
   return wrap;
@@ -57,15 +56,29 @@ export const Vertical: Story = {
     docs: {
       description: {
         story:
-          'Layout padrão — itens empilhados com `grid gap-2`. Recomendado para 4+ opções e para qualquer caso em que a verticalização melhore a leitura.',
+          'Layout padrão — itens empilhados pelo próprio grupo. Recomendado para 4+ opções e para qualquer caso em que a verticalização melhore a leitura.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const radios = canvas.getAllByRole('radio') as HTMLElement[];
+
     await step('Três radios renderizados', async () => {
-      const radios = canvas.getAllByRole('radio');
       await expect(radios).toHaveLength(3);
+    });
+
+    await step('As linhas ficam empilhadas', async () => {
+      const topos = new Set(radios.map((el) => Math.round(el.getBoundingClientRect().top)));
+      await expect(topos.size).toBe(3);
+    });
+
+    await step('Os alvos têm o espaçamento livre que a WCAG 2.5.8 exige', async () => {
+      // O rádio tem 16px de lado, abaixo dos 24px de alvo mínimo. A norma aceita
+      // o alvo menor quando há espaçamento: os centros ficam a 24px ou mais um
+      // do outro. É o gap do grupo que paga essa conta.
+      const [a, b] = radios.map((el) => el.getBoundingClientRect());
+      await expect(b.top + b.height / 2 - (a.top + a.height / 2)).toBeGreaterThanOrEqual(24);
     });
   },
 };
@@ -73,33 +86,46 @@ export const Vertical: Story = {
 // ─── Horizontal ───────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
-  render: () => {
-    const group = createRadioGroup({
-      name: 'rg-horizontal',
-      items: [
-        { value: 'standard', label: 'Padrão (5 dias)' },
-        { value: 'express', label: 'Expressa (1 dia)' },
-        { value: 'pickup', label: 'Retirar na loja' },
-      ],
-    });
-    group.style.gridAutoFlow = 'column';
-    group.style.gridAutoColumns = 'max-content';
-    group.style.gap = '1.5rem';
-    return withLegend(group, 'Forma de entrega', 'rg-horizontal-legend');
-  },
+  render: () =>
+    withLegend(
+      createRadioGroup({
+        name: 'rg-horizontal',
+        orientation: 'horizontal',
+        items: [
+          { value: 'standard', label: 'Padrão (5 dias)' },
+          { value: 'express', label: 'Expressa (1 dia)' },
+          { value: 'pickup', label: 'Retirar na loja' },
+        ],
+      }),
+      'Forma de entrega',
+      'rg-horizontal-legend',
+    ),
   parameters: {
     docs: {
       description: {
         story:
-          'Layout inline — para 2 a 3 opções curtas. Aplicado via `grid-flow-col auto-cols-max gap-6` sobre o `<fieldset>` raiz (o factory não expõe prop `orientation`).',
+          'Layout em linha — para 2 a 3 opções curtas. Sai de `orientation: "horizontal"`, que escreve `aria-orientation` no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const radios = canvas.getAllByRole('radio') as HTMLElement[];
+
     await step('Três radios renderizados', async () => {
-      const radios = canvas.getAllByRole('radio');
       await expect(radios).toHaveLength(3);
+    });
+
+    await step('O grupo anuncia a orientação horizontal', async () => {
+      await expect(canvas.getByRole('radiogroup')).toHaveAttribute('aria-orientation', 'horizontal');
+    });
+
+    await step('As três opções ficam na mesma linha', async () => {
+      // Sem esta asserção o `aria-orientation` poderia estar certo e o layout
+      // continuar empilhado — foi assim que a versão em classe morta passou
+      // despercebida em três stacks.
+      const topos = new Set(radios.map((el) => Math.round(el.getBoundingClientRect().top)));
+      await expect(topos.size).toBe(1);
     });
   },
 };
@@ -129,6 +155,9 @@ export const WithDescription: Story = {
     fieldset.style.margin = '0';
     fieldset.setAttribute('role', 'radiogroup');
     fieldset.setAttribute('aria-labelledby', 'rg-desc-legend');
+    // Este fieldset é montado à mão (o factory não expõe `description` por
+    // item), então o `role` precisa ser escrito aqui — nos demais casos quem o
+    // escreve é o próprio factory.
 
     const items = [
       {
@@ -169,9 +198,15 @@ export const WithDescription: Story = {
         label.replaceWith(textGroup);
         label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
         const desc = document.createElement('p');
-        desc.className = 'nds-text-body';
+        desc.id = `rg-with-desc-${item.value}-desc`;
+        desc.className = 'nds-text-caption nds-text-muted-foreground';
         desc.textContent = item.description;
         textGroup.append(label, desc);
+        // A descrição precisa chegar ao controle: sem `aria-describedby` ela é
+        // texto solto ao lado, e quem usa leitor de tela nunca a ouve.
+        row
+          .querySelector('[data-slot="radio-group-item"]')
+          ?.setAttribute('aria-describedby', desc.id);
       }
 
       fieldset.appendChild(row);
@@ -196,6 +231,14 @@ export const WithDescription: Story = {
     });
     await step('Descrição auxiliar visível', async () => {
       await expect(canvas.getByText(/Entrega em 5 dias úteis/)).toBeVisible();
+    });
+    await step('A descrição chega ao controle por aria-describedby', async () => {
+      const padrao = canvas.getByRole('radio', { name: 'Padrão' });
+      const alvo = padrao.getAttribute('aria-describedby');
+      await expect(alvo).toBe('rg-with-desc-standard-desc');
+      await expect(
+        canvasElement.ownerDocument.getElementById(alvo!)?.textContent ?? '',
+      ).toContain('5 dias úteis');
     });
   },
 };

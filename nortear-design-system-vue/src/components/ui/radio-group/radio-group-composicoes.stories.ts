@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 const meta = {
   title: 'UI/RadioGroup/Compositions',
@@ -22,6 +23,12 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/** Idempotente — ver a nota em `radio-group.stories.ts`. */
+const escolher = async (alvo: HTMLElement): Promise<void> => {
+  if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
+  await waitFor(() => expect(alvo).toHaveAttribute('aria-checked', 'true'));
+};
 
 export const PaymentMethod: Story = {
   render: () => ({
@@ -56,8 +63,16 @@ export const PaymentMethod: Story = {
     });
 
     await step('Clicar na label seleciona o radio', async () => {
+      // O rótulo faz parte do alvo de clique. Clicar num rótulo já escolhido o
+      // mantém escolhido, então o passo sobrevive ao replay.
       await userEvent.click(canvas.getByText('Pix'));
-      await expect(canvas.getByRole('radio', { name: 'Pix' })).toHaveAttribute('aria-checked', 'true');
+      await waitFor(() =>
+        expect(canvas.getByRole('radio', { name: 'Pix' })).toHaveAttribute('aria-checked', 'true'),
+      );
+      await expect(canvas.getByRole('radio', { name: 'Cartão de crédito' })).toHaveAttribute(
+        'aria-checked',
+        'false',
+      );
     });
   },
 };
@@ -99,17 +114,17 @@ export const WithFieldsetLegend: Story = {
 
 export const InForm: Story = {
   render: () => ({
-    components: { RadioGroup, RadioGroupItem, Label },
+    components: { RadioGroup, RadioGroupItem, Label, Button },
     setup() { return {}; },
     template: `
-      <form class="" data-spacing="md" style="width: 20rem" @submit.prevent>
+      <form class="nds-stack" data-spacing="md" style="width: 20rem" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <label class="nds-text-body nds-font-medium" for="form-email">Email</label>
           <input
             id="form-email"
             type="email"
             placeholder="seu@email.com"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
+            class="nds-input" 
           />
         </div>
 
@@ -131,12 +146,7 @@ export const InForm: Story = {
           </RadioGroup>
         </fieldset>
 
-        <button
-          type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
-        >
-          Finalizar pedido
-        </button>
+        <Button type="submit" class="nds-w-full">Finalizar pedido</Button>
       </form>
     `,
   }),
@@ -153,9 +163,11 @@ export const InForm: Story = {
     });
 
     await step('Selecionar uma opção marca aria-checked', async () => {
-      const pix = canvas.getByRole('radio', { name: 'Pix' });
-      await userEvent.click(pix);
-      await expect(pix).toHaveAttribute('aria-checked', 'true');
+      await escolher(canvas.getByRole('radio', { name: 'Pix' }));
+      await expect(canvas.getByRole('radio', { name: 'Cartão de crédito' })).toHaveAttribute(
+        'aria-checked',
+        'false',
+      );
     });
   },
 };
@@ -166,32 +178,23 @@ export const SelectableCards: Story = {
     setup() { return {}; },
     template: `
       <RadioGroup aria-label="Plano" class="nds-grid" data-spacing="sm" style="width: 20rem">
-        <label
-          for="card-basic"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
-        >
+        <label for="card-basic" class="nds-radio-card nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="basic" id="card-basic" class="nds-mt-1" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <span class="nds-block nds-text-body nds-font-medium">Básico — R$ 19/mês</span>
             <span class="nds-block nds-text-caption nds-text-muted-foreground">Para uso pessoal e projetos pequenos.</span>
           </div>
         </label>
-        <label
-          for="card-pro"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
-        >
+        <label for="card-pro" class="nds-radio-card nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="pro" id="card-pro" class="nds-mt-1" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <span class="nds-block nds-text-body nds-font-medium">Pro — R$ 49/mês</span>
             <span class="nds-block nds-text-caption nds-text-muted-foreground">Para times com até 5 pessoas.</span>
           </div>
         </label>
-        <label
-          for="card-enterprise"
-          class="nds-cluster nds-rounded-lg nds-border-default nds-border-default nds-p-4 nds-cursor-pointer nds-hover-bg-muted-40 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/5" data-align="start" data-spacing="sm"
-        >
+        <label for="card-enterprise" class="nds-radio-card nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="enterprise" id="card-enterprise" class="nds-mt-1" />
-          <div class="" data-spacing="xs">
+          <div class="nds-stack" data-spacing="xs">
             <span class="nds-block nds-text-body nds-font-medium">Enterprise — Sob consulta</span>
             <span class="nds-block nds-text-caption nds-text-muted-foreground">Suporte dedicado e SLA personalizado.</span>
           </div>
@@ -207,7 +210,24 @@ export const SelectableCards: Story = {
     });
     await step('Clique no cartão Pro seleciona seu radio', async () => {
       await userEvent.click(canvas.getByText(/Pro — R\$ 49/));
-      await expect(radios[1]).toHaveAttribute('aria-checked', 'true');
+      await waitFor(() => expect(radios[1]).toHaveAttribute('aria-checked', 'true'));
+    });
+
+    await step('O cartão escolhido muda de aparência', async () => {
+      // A razão de existir da composição. Enquanto o destaque saía de classe
+      // morta, os três cartões ficavam idênticos e nenhuma asserção reprovava:
+      // a play só olhava o aria-checked do rádio de dentro.
+      const cartoes = Array.from(canvasElement.querySelectorAll<HTMLElement>('.nds-radio-card'));
+      const escolhido = cartoes.find((c) => c.querySelector('[role="radio"][aria-checked="true"]'))!;
+      const outro = cartoes.find((c) => c !== escolhido)!;
+      await waitFor(async () => {
+        await expect(getComputedStyle(escolhido).borderTopColor).not.toBe(
+          getComputedStyle(outro).borderTopColor,
+        );
+        await expect(getComputedStyle(escolhido).backgroundColor).not.toBe(
+          getComputedStyle(outro).backgroundColor,
+        );
+      });
     });
   },
 };

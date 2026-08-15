@@ -27,7 +27,7 @@ export const Vertical: Story = {
     docs: {
       description: {
         story:
-          "Empilhado — padrão. Cada par item+Label envolto em um div flex; grupo herda grid gap-2 do UI primitive.",
+          "Empilhado — padrão do grupo. Cada par item+Label vai num .nds-cluster; o ritmo vertical vem do próprio .nds-radio-group.",
       },
     },
   },
@@ -65,15 +65,12 @@ export const Horizontal: Story = {
     docs: {
       description: {
         story:
-          "Inline — para 2–3 opções curtas. Sobrescreve o grid do root via flex gap-6 no className.",
+          "Em linha — para 2–3 opções curtas. Sai de aria-orientation=\"horizontal\" no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado.",
       },
     },
   },
   render: () => (
-    <RadioGroup
-      className="nds-cluster" data-spacing="lg" style={{ flexWrap: "wrap" }}
-      aria-label="Forma de entrega"
-    >
+    <RadioGroup aria-orientation="horizontal" aria-label="Forma de entrega">
       <div className="nds-cluster" data-spacing="sm">
         <RadioGroupItem value="padrao" id="horiz-padrao" />
         <Label htmlFor="horiz-padrao">Padrão</Label>
@@ -90,9 +87,19 @@ export const Horizontal: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Grupo usa flex (sem orientation explícita)", async () => {
-      const group = canvasElement.querySelector('[role="radiogroup"]');
-      await expect(group).toHaveClass("nds-cluster");
+    await step("O grupo anuncia a orientação horizontal", async () => {
+      await expect(canvas.getByRole("radiogroup")).toHaveAttribute(
+        "aria-orientation",
+        "horizontal",
+      );
+    });
+    await step("As três opções ficam na mesma linha", async () => {
+      // Sem esta asserção o atributo poderia estar certo e o layout continuar
+      // empilhado — foi assim que a versão em classe morta passou despercebida.
+      const topos = new Set(
+        canvas.getAllByRole("radio").map((el) => Math.round(el.getBoundingClientRect().top)),
+      );
+      await expect(topos.size).toBe(1);
     });
     await step("Possui 3 itens com Labels associados", async () => {
       const radios = canvas.getAllByRole("radio");
@@ -107,7 +114,7 @@ export const WithDescription: Story = {
     docs: {
       description: {
         story:
-          "Cada item com Label + descrição auxiliar abaixo. Use flex items-start para alinhar o radio com a primeira linha do texto.",
+          "Cada item com Label + descrição auxiliar abaixo, ligada ao controle por aria-describedby. O .nds-cluster com data-align=\"start\" alinha o rádio à primeira linha do texto.",
       },
     },
   },

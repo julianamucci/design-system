@@ -31,10 +31,29 @@ function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElem
   legend.id = id;
   legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = labelText;
-  group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', id);
   wrap.append(legend, group);
   return wrap;
+}
+
+/**
+ * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
+ * de token não responde a pergunta do critério — a razão responde.
+ */
+function razaoContraste(a: string, b: string): number {
+  const luminancia = (cor: string): number => {
+    const [r, g, bl] = cor
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map(Number)
+      .map((v) => {
+        const s = v / 255;
+        return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (escuro + 0.05);
 }
 
 // ─── Default ──────────────────────────────────────────────────────────────────
@@ -54,6 +73,7 @@ export const Default: Story = {
       'rg-default-legend',
     ),
   parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
     docs: {
       description: {
         story: 'Nenhum item pré-selecionado — comportamento recomendado para forçar confirmação explícita.',
@@ -65,6 +85,22 @@ export const Default: Story = {
     await step('Todos os radios têm aria-checked="false"', async () => {
       const radios = canvas.getAllByRole('radio');
       for (const r of radios) await expect(r).toHaveAttribute('aria-checked', 'false');
+    });
+
+    await step('Borda contra fundo e rótulo contra fundo passam na WCAG', async () => {
+      // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
+      // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
+      const item = canvas.getAllByRole('radio')[0] as HTMLElement;
+      const estiloItem = getComputedStyle(item);
+      await expect(
+        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+      ).toBeGreaterThanOrEqual(3);
+
+      const rotulo = canvasElement.querySelector<HTMLElement>('.nds-radio-label')!;
+      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      await expect(
+        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+      ).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -87,6 +123,7 @@ export const Checked: Story = {
       'rg-checked-legend',
     ),
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
         story: 'Item "Pix" marcado via `defaultValue`. Indicador interno visível, `aria-checked="true"`.',
@@ -107,36 +144,44 @@ export const Checked: Story = {
 // ─── Disabled (grupo inteiro) ─────────────────────────────────────────────────
 
 export const Disabled: Story = {
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: {
+      description: {
+        story:
+          'Grupo inteiro bloqueado por `disabled: true` nas opções do factory — item e rótulo a 50% de opacidade, cursor bloqueado, sem foco e sem clique.',
+      },
+    },
+  },
   render: () =>
     withLegend(
       createRadioGroup({
         name: 'rg-disabled',
+        disabled: true,
         items: [
-          { value: 'card', label: 'Cartão de crédito', disabled: true },
-          { value: 'pix', label: 'Pix', disabled: true },
-          { value: 'boleto', label: 'Boleto bancário', disabled: true },
+          { value: 'card', label: 'Cartão de crédito' },
+          { value: 'pix', label: 'Pix' },
+          { value: 'boleto', label: 'Boleto bancário' },
         ],
       }),
       'Forma de pagamento',
       'rg-disabled-legend',
     ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Todos os itens com `disabled: true` — `opacity-50`, cursor bloqueado, não recebe foco nem responde a clique. O factory custom do Vanilla não expõe prop `disabled` no grupo: aplique item-a-item.',
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Todos os radios estão desabilitados', async () => {
+    await step('O disabled do grupo desce para todos os itens', async () => {
       const radios = canvas.getAllByRole('radio');
       for (const r of radios) await expect(r).toBeDisabled();
     });
+    await step('Nenhum item entra na ordem de tabulação', async () => {
+      // Grupo bloqueado não é ponto de parada do Tab: o botão desabilitado já
+      // sai da ordem, e nenhum roving tabindex o traz de volta.
+      const radios = canvas.getAllByRole('radio') as HTMLElement[];
+      await expect(radios.filter((r) => r.tabIndex === 0)).toHaveLength(0);
+    });
     await step('Clique não altera o estado', async () => {
       const radios = canvas.getAllByRole('radio');
-      await userEvent.click(radios[0]);
+      await userEvent.click(radios[0], { pointerEventsCheck: 0 });
       await expect(radios[0]).toHaveAttribute('aria-checked', 'false');
     });
   },
@@ -197,16 +242,17 @@ export const Invalid: Story = {
         { value: 'boleto', label: 'Boleto bancário' },
       ],
     });
-    group.setAttribute('role', 'radiogroup');
     group.setAttribute('aria-labelledby', 'rg-invalid-legend');
     group.setAttribute('aria-invalid', 'true');
     group.setAttribute('aria-describedby', 'rg-invalid-msg');
 
-    // Estiliza visualmente todos os botões como inválidos
+    // `aria-invalid` no item é o único gancho necessário: quem troca a cor da
+    // borda é `.nds-radio-item[aria-invalid="true"]` no CSS compartilhado. A
+    // versão anterior ainda empilhava uma classe e um box-shadow inline em
+    // `rgb(var(--destructive))` — os tokens são HSL, então a sombra nunca
+    // chegou a pintar nada.
     group.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
       btn.setAttribute('aria-invalid', 'true');
-      btn.classList.add('nds-border-destructive');
-      btn.style.boxShadow = '0 0 0 2px rgb(var(--destructive) / 0.2)';
     });
 
     const msg = document.createElement('p');
@@ -218,6 +264,7 @@ export const Invalid: Story = {
     return wrap;
   },
   parameters: {
+    covers: ['visual.item4'],
     docs: {
       description: {
         story:
@@ -256,18 +303,30 @@ export const FocusVisible: Story = {
       'rg-focus-legend',
     ),
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
-        story: 'Estado de foco via teclado. Anel `ring-1 ring-ring` ao redor do item focado.',
+        story:
+          'Estado de foco por teclado. O anel sai de `:focus-visible` — 2px em `--ring` a 50% de opacidade — e não aparece no clique de mouse.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Primeiro radio recebe foco', async () => {
+    await step('Um Tab entra no grupo e para no primeiro item', async () => {
+      // Tab de verdade, não `.focus()`: `:focus-visible` só casa quando o foco
+      // chega por teclado, e é dele que sai o anel.
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
       const radios = canvas.getAllByRole('radio');
-      (radios[0] as HTMLElement).focus();
       await expect(radios[0]).toHaveFocus();
+    });
+    await step('O item focado por teclado desenha anel visível', async () => {
+      // Afirma o efeito, não a classe: a asserção sobrevive a qualquer troca de
+      // vocabulário no CSS e reprova se o anel sumir.
+      const foco = canvas.getAllByRole('radio')[0] as HTMLElement;
+      const estilo = getComputedStyle(foco);
+      await expect(estilo.boxShadow !== 'none' || estilo.outlineStyle !== 'none').toBe(true);
     });
   },
 };

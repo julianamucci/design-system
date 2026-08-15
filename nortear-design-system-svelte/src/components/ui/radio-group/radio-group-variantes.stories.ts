@@ -40,7 +40,7 @@ export const Vertical: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Vertical (padrão). `grid gap-2` — recomendado para 4+ opções.',
+        story: 'Vertical — empilhamento padrão do grupo, recomendado para 4+ opções.',
       },
     },
   },
@@ -51,6 +51,16 @@ export const Vertical: Story = {
     });
     await step('Renderiza 3 radios', async () => {
       await expect(canvas.getAllByRole('radio')).toHaveLength(3);
+    });
+    await step('As linhas ficam empilhadas, com o alvo livre da WCAG 2.5.8', async () => {
+      // O rádio tem 16px de lado, abaixo dos 24px de alvo mínimo. A norma
+      // aceita o alvo menor quando há espaçamento: os centros ficam a 24px ou
+      // mais um do outro. É o gap do grupo que paga essa conta.
+      const itens = canvas.getAllByRole('radio');
+      const topos = new Set(itens.map((el) => Math.round(el.getBoundingClientRect().top)));
+      await expect(topos.size).toBe(3);
+      const [a, b] = itens.map((el) => el.getBoundingClientRect());
+      await expect(b.top + b.height / 2 - (a.top + a.height / 2)).toBeGreaterThanOrEqual(24);
     });
   },
 };
@@ -72,18 +82,25 @@ export const Horizontal: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Horizontal. `flex gap-6` — recomendado para 2–3 opções curtas.',
+        story:
+          'Horizontal — sai de `aria-orientation="horizontal"` no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado. Recomendado para 2–3 opções curtas.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const group = canvas.getByRole('radiogroup');
-    await step('Orientação horizontal aplicada', async () => {
+    await step('O grupo anuncia a orientação horizontal', async () => {
       await expect(group).toHaveAttribute('aria-orientation', 'horizontal');
     });
-    await step('Renderiza 3 radios', async () => {
-      await expect(canvas.getAllByRole('radio')).toHaveLength(3);
+    await step('As três opções ficam na mesma linha', async () => {
+      // O atributo sozinho não prova nada: antes desta asserção o layout saía
+      // de classes que não existem mais no CSS, e a variante "horizontal"
+      // renderizava empilhada sem ninguém reprovar.
+      const topos = new Set(
+        canvas.getAllByRole('radio').map((el) => Math.round(el.getBoundingClientRect().top)),
+      );
+      await expect(topos.size).toBe(1);
     });
   },
 };
@@ -96,7 +113,6 @@ export const WithDescription: Story = {
       withDescription: true,
       ariaLabel: 'Forma de pagamento',
       idPrefix: 'var-desc',
-      class: 'w-80',
       options: [
         { value: 'cartao', label: 'Cartão de crédito', description: 'Aprovação imediata em até 12x.' },
         { value: 'pix', label: 'Pix', description: 'Pagamento instantâneo com 5% de desconto.' },

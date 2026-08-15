@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect, fn, userEvent } from 'storybook/test';
+import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { NdsRadioGroup, NdsRadioGroupItem } from './radio-group';
 import { NdsLabel } from './label';
 import { NdsRadioGroupDocs } from '@/components/docs/RadioGroupDocs';
@@ -91,6 +91,14 @@ type Story = StoryObj<RadioGroupArgs>;
 
 export const Playground: Story = {
   parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'functional.item3',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
     docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
@@ -124,6 +132,8 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const itens = (): HTMLElement[] =>
+      Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-slot="radio-group-item"]'));
 
     await step('O grupo é um radiogroup com nome acessível', async () => {
       // O `role` vem do primitivo; o nome vem do <p> apontado por
@@ -155,6 +165,54 @@ export const Playground: Story = {
       const cartao = canvas.getByRole('radio', { name: 'Cartão de crédito' });
       await expect(cartao.getAttribute('aria-checked')).toBe('false');
       await expect(args.onValueChange).toHaveBeenCalledWith('pix');
+    });
+
+    await step('A escolha seguinte desmarca a anterior', async () => {
+      // Exclusão mútua é a razão de existir do componente: sem ela, isto seria
+      // um grupo de checkboxes. O par (Pix, depois Cartão) ainda garante um
+      // clique real nesta rodada, venha o DOM de onde vier.
+      const cartao = canvas.getByRole('radio', { name: 'Cartão de crédito' });
+      await userEvent.click(cartao);
+      await expect(cartao.getAttribute('aria-checked')).toBe('true');
+      await expect(
+        canvas.getByRole('radio', { name: 'Pix' }).getAttribute('aria-checked'),
+      ).toBe('false');
+    });
+
+    await step('ArrowDown move o foco E seleciona o próximo item', async () => {
+      // A tecla fica PRESSIONADA durante as asserções: o primitivo só seleciona
+      // no foco enquanto a seta está em curso (ver a nota em
+      // `radio-group-variantes.stories.ts`).
+      const lista = itens();
+      lista[0].focus();
+      await userEvent.keyboard('{ArrowDown>}');
+      await waitFor(async () => {
+        await expect(canvasElement.ownerDocument.activeElement).toBe(lista[1]);
+      });
+      await waitFor(async () => {
+        await expect(lista[1].getAttribute('aria-checked')).toBe('true');
+      });
+      await userEvent.keyboard('{/ArrowDown}');
+    });
+
+    await step('ArrowUp circula do primeiro para o último', async () => {
+      const lista = itens();
+      lista[0].focus();
+      await userEvent.keyboard('{ArrowUp>}');
+      await waitFor(async () => {
+        await expect(canvasElement.ownerDocument.activeElement).toBe(lista[2]);
+      });
+      await userEvent.keyboard('{/ArrowUp}');
+    });
+
+    await step('Roving tabindex: o Tab tem UMA parada no grupo inteiro', async () => {
+      // Asserção sobre o CONJUNTO, não só sobre o ativo: exatamente um item na
+      // ordem de tabulação, e é o escolhido. Sem isso o Tab percorreria opção
+      // por opção em vez de sair do grupo.
+      const ordem = itens().map((el) => el.tabIndex);
+      await expect(ordem.filter((t) => t === 0)).toHaveLength(1);
+      const marcado = itens().findIndex((el) => el.getAttribute('aria-checked') === 'true');
+      await expect(ordem[marcado]).toBe(0);
     });
   },
 };

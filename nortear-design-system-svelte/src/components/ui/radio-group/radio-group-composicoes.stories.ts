@@ -48,8 +48,14 @@ export const PaymentMethod: Story = {
     });
 
     await step('Clicar na label seleciona o radio', async () => {
+      // O rótulo faz parte do alvo de clique. Clicar num rótulo já escolhido o
+      // mantém escolhido, então o passo sobrevive ao replay.
       await userEvent.click(canvas.getByText('Pix'));
       await expect(canvas.getByRole('radio', { name: 'Pix' })).toHaveAttribute('aria-checked', 'true');
+      await expect(canvas.getByRole('radio', { name: 'Cartão de crédito' })).toHaveAttribute(
+        'aria-checked',
+        'false',
+      );
     });
   },
 };
@@ -70,8 +76,12 @@ export const DeliveryMethodHorizontal: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Grupo está em orientação horizontal', async () => {
+    await step('Grupo está em orientação horizontal, e as opções na mesma linha', async () => {
       await expect(canvas.getByRole('radiogroup')).toHaveAttribute('aria-orientation', 'horizontal');
+      const topos = new Set(
+        canvas.getAllByRole('radio').map((el) => Math.round(el.getBoundingClientRect().top)),
+      );
+      await expect(topos.size).toBe(1);
     });
     await step('3 opções de entrega', async () => {
       await expect(canvas.getAllByRole('radio')).toHaveLength(3);
@@ -86,7 +96,6 @@ export const WithDescription: Story = {
       withDescription: true,
       ariaLabel: 'Forma de entrega',
       idPrefix: 'comp-desc',
-      class: 'w-80',
       options: [
         { value: 'standard', label: 'Padrão', description: 'Entrega em até 5 dias úteis.' },
         { value: 'express', label: 'Expressa', description: 'Entrega em 1 dia útil.' },

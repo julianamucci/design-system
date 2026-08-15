@@ -26,7 +26,25 @@ const estados = (canvasElement: HTMLElement): (string | null)[] =>
 const marcados = (canvasElement: HTMLElement): (string | null)[] =>
   radios(canvasElement).map((el) => el.getAttribute('aria-checked'));
 
+/** Razão de contraste da WCAG entre duas cores computadas opacas. */
+function razaoContraste(a: string, b: string): number {
+  const luminancia = (cor: string): number => {
+    const [r, g, bl] = cor
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map(Number)
+      .map((v) => {
+        const x = v / 255;
+        return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (escuro + 0.05);
+}
+
 export const Default: Story = {
+  parameters: { covers: ['visual.item1', 'accessibility.item2'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">
@@ -63,10 +81,27 @@ export const Default: Story = {
       )!;
       await expect(getComputedStyle(indicador).display).toBe('none');
     });
+
+    await step('Borda contra fundo e rótulo contra fundo passam na WCAG', async () => {
+      // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
+      // normal (1.4.3) — o rótulo tem 14px, não é texto grande. Comparar nome
+      // de token não responde a pergunta do critério; a razão responde.
+      const estiloItem = getComputedStyle(radios(canvasElement)[0]);
+      await expect(
+        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+      ).toBeGreaterThanOrEqual(3);
+
+      const rotulo = canvasElement.querySelector<HTMLElement>('.nds-radio-label')!;
+      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      await expect(
+        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
   },
 };
 
 export const Checked: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">
@@ -111,6 +146,7 @@ export const Checked: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: { covers: ['functional.item4', 'visual.item3'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">
@@ -218,6 +254,7 @@ export const ItemDisabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">
@@ -269,6 +306,7 @@ export const Invalid: Story = {
 };
 
 export const FocusVisible: Story = {
+  parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="xs">

@@ -206,17 +206,6 @@ const codeWithDescription = `<RadioGroup aria-label="Forma de pagamento">
   </div>
 </RadioGroup>`;
 
-const codeCustomizationTokens = `/* Override do tamanho do radio */
-[data-slot="radio-group-item"] {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Cor customizada via classe .nds-* */
-.payment-radio [data-slot="radio-group-item"][data-checked] {
-  @apply bg-blue-600 border-blue-600;
-}`;
-
 const interfaceCode = `// RadioGroup (reka-ui RadioGroupRoot)
 interface RadioGroupProps {
   modelValue?: string;
@@ -335,12 +324,11 @@ const radioGroupItemPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--input',              value: tContent('tokens.table.input.class'),             description: tContent('tokens.table.input.part')             },
-  { token: '--primary',            value: tContent('tokens.table.primary.class'),           description: tContent('tokens.table.primary.part')           },
-  { token: '--primary-foreground', value: tContent('tokens.table.primaryForeground.class'), description: tContent('tokens.table.primaryForeground.part') },
-  { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
-  { token: '--destructive',        value: tContent('tokens.table.destructive.class'),       description: tContent('tokens.table.destructive.part')       },
-  { token: '--foreground',         value: tContent('tokens.table.foreground.class'),        description: tContent('tokens.table.foreground.part')        },
+  { token: '--background',  value: tContent('tokens.table.background.class'),  description: tContent('tokens.table.background.part')  },
+  { token: '--primary',     value: tContent('tokens.table.primary.class'),     description: tContent('tokens.table.primary.part')     },
+  { token: '--ring',        value: tContent('tokens.table.ring.class'),        description: tContent('tokens.table.ring.part')        },
+  { token: '--destructive', value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
+  { token: '--foreground',  value: tContent('tokens.table.foreground.class'),  description: tContent('tokens.table.foreground.part')  },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -1032,7 +1020,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->

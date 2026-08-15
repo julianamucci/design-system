@@ -20,6 +20,7 @@
     withDescription?: boolean;
     idPrefix?: string;
     class?: string;
+    onValueChange?: (value: string) => void;
   }
 
   let {
@@ -37,13 +38,14 @@
     withDescription = false,
     idPrefix = 'rg-story',
     class: className = '',
+    onValueChange = undefined,
   }: Props = $props();
 
-  const containerClass = $derived(
-    orientation === 'horizontal'
-      ? `flex flex-wrap gap-6 ${className}`
-      : `grid gap-2 w-72 ${className}`,
-  );
+  // O layout sai do próprio `.nds-radio-group`: empilhado por padrão, em linha
+  // quando `aria-orientation="horizontal"`. As classes que estavam aqui
+  // (`flex flex-wrap gap-6` / `grid gap-2 w-72`) eram do framework utilitário
+  // que saiu do projeto — não existiam mais no CSS, e a variante horizontal
+  // renderizava empilhada enquanto o teste só conferia o atributo ARIA.
 </script>
 
 <RadioGroup
@@ -51,10 +53,11 @@
   {disabled}
   {orientation}
   {name}
+  {onValueChange}
   aria-label={ariaLabel}
   aria-orientation={orientation}
   aria-invalid={ariaInvalid || undefined}
-  class={containerClass}
+  class={className}
 >
   {#each options as opt (opt.value)}
     {@const id = `${idPrefix}-${opt.value}`}

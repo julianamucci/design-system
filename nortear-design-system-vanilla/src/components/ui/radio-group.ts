@@ -21,28 +21,67 @@ export type RadioGroupOptions = {
   name: string;
   items: RadioGroupItem[];
   defaultValue?: string;
+  /** Desabilita o grupo inteiro — equivalente a marcar todos os itens. */
+  disabled?: boolean;
+  /**
+   * Direção da navegação por setas. Vira `aria-orientation` no grupo, e é o
+   * mesmo atributo que o CSS compartilhado usa para dispor as opções em linha —
+   * layout e anúncio do leitor de tela não têm como divergir.
+   */
+  orientation?: 'vertical' | 'horizontal';
   onValueChange?: (value: string) => void;
   class?: string;
 };
 
 export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
-  const { name, items, defaultValue, onValueChange } = options;
+  const { name, items, defaultValue, disabled: groupDisabled, orientation, onValueChange } = options;
 
   const fieldset = document.createElement('fieldset');
   fieldset.dataset.slot = 'radio-group';
   fieldset.className = cn('nds-radio-group', options.class);
+  // `<fieldset>` sozinho tem role implícito `group`, não `radiogroup`: sem esta
+  // linha o leitor de tela não anuncia nem o conjunto exclusivo nem a contagem
+  // de opções, e cada story teria de repetir o atributo por fora.
+  fieldset.setAttribute('role', 'radiogroup');
+  if (orientation) fieldset.setAttribute('aria-orientation', orientation);
+
+  const isDisabled = (item: RadioGroupItem): boolean => groupDisabled || item.disabled === true;
+
+  /**
+   * Roving tabindex: o grupo é UM ponto de parada do Tab, não um por opção.
+   * Fica na ordem de tabulação o item escolhido; sem escolha, o primeiro
+   * habilitado. É o que faz o Tab sair do grupo em vez de percorrê-lo.
+   */
+  function updateTabStops(): void {
+    const todos = Array.from(
+      fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]'),
+    );
+    const habilitados = todos.filter((b) => !b.disabled);
+    const marcado = habilitados.find((b) => b.getAttribute('aria-checked') === 'true');
+    const parada = marcado ?? habilitados[0];
+    // Todos saem da ordem de tabulação e só a parada volta. O item bloqueado é
+    // incluído de propósito: `disabled` já o torna infocável, mas deixar o
+    // `tabindex="0"` implícito do <button> faz o markup dizer o contrário do
+    // comportamento — e é o markup que as outras stacks emitem e a auditoria
+    // cross-stack compara.
+    todos.forEach((b) => {
+      b.tabIndex = b === parada ? 0 : -1;
+    });
+  }
 
   function selectItem(value: string): void {
     fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
       const v = btn.dataset.value!;
       const isSelected = v === value;
       btn.setAttribute('aria-checked', String(isSelected));
+      btn.dataset.state = isSelected ? 'checked' : 'unchecked';
       const ind = btn.querySelector<HTMLElement>('[data-slot="radio-indicator"]');
       if (ind) ind.style.display = isSelected ? '' : 'none';
     });
     fieldset.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((inp) => {
       inp.checked = inp.value === value;
     });
+    updateTabStops();
     onValueChange?.(value);
   }
 
@@ -59,8 +98,9 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     itemBtn.className = 'nds-radio-item';
     itemBtn.setAttribute('role', 'radio');
     itemBtn.setAttribute('aria-checked', String(item.value === defaultValue));
+    itemBtn.dataset.state = item.value === defaultValue ? 'checked' : 'unchecked';
     itemBtn.setAttribute('aria-labelledby', labelId);
-    if (item.disabled) itemBtn.disabled = true;
+    if (isDisabled(item)) itemBtn.disabled = true;
 
     const indicatorSpan = document.createElement('span');
     indicatorSpan.dataset.slot = 'radio-indicator';
@@ -79,7 +119,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     nativeInput.name = name;
     nativeInput.value = item.value;
     nativeInput.checked = item.value === defaultValue;
-    nativeInput.disabled = item.disabled ?? false;
+    nativeInput.disabled = isDisabled(item);
     nativeInput.setAttribute('aria-hidden', 'true');
     nativeInput.tabIndex = -1;
     // Hidden native input — kept as sibling (not nested inside the button)
@@ -94,7 +134,7 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
     rowEl.append(itemBtn, labelEl, nativeInput);
     fieldset.appendChild(rowEl);
 
-    if (!item.disabled) {
+    if (!isDisabled(item)) {
       itemBtn.addEventListener('click', () => selectItem(item.value));
       labelEl.addEventListener('click', () => selectItem(item.value));
       itemBtn.addEventListener('keydown', (e) => {
@@ -102,17 +142,27 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
           fieldset.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]:not([disabled])')
         );
         const idx = allBtns.indexOf(itemBtn);
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-          e.preventDefault();
-          allBtns[(idx + 1) % allBtns.length]?.focus();
-        }
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-          e.preventDefault();
-          allBtns[(idx - 1 + allBtns.length) % allBtns.length]?.focus();
-        }
+        const passo =
+          e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
+          : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1
+          : 0;
+        if (passo === 0) return;
+        e.preventDefault();
+        // Circula: do último volta ao primeiro, como o padrão WAI-ARIA e como
+        // as libs headless das outras stacks.
+        const alvo = allBtns[(idx + passo + allBtns.length) % allBtns.length];
+        if (!alvo) return;
+        alvo.focus();
+        // A seta MOVE E SELECIONA — é o que distingue um radiogroup de um punhado
+        // de botões, e é o que a seção de acessibilidade do conteúdo descreve.
+        // Antes daqui a seta só movia o foco, e o teste que a cobria assertava
+        // apenas o foco: o defeito estava documentado como comportamento.
+        selectItem(alvo.dataset.value!);
       });
     }
   });
+
+  updateTabStops();
 
   return fieldset;
 }
