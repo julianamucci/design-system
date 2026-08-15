@@ -113,6 +113,27 @@
  */
 .nds-stack[data-split="last"] > :last-child { margin-top: auto; }
 
+/* ── Alinhamento no eixo transversal ──────────────────────────────────────────
+ *
+ * O vocabulário é o mesmo do `.nds-cluster`, e a razão de existir aqui é que
+ * ele já estava sendo ESCRITO: 14 lugares em 11 arquivos, nas quatro stacks que
+ * usam o padrão, passavam `data-align` num stack — e o atributo não fazia nada,
+ * porque só o cluster o lia. Duas rodadas independentes desta revisão (toggle e
+ * pagination) tropeçaram no mesmo ponto antes de alguém medir o alcance.
+ *
+ * Numa coluna, o eixo transversal é o horizontal: `start` encosta os filhos à
+ * esquerda em vez de esticá-los, `center` os centraliza. `stretch` continua
+ * sendo o padrão, então quem não escreve o atributo não muda de comportamento.
+ *
+ * `data-justify` NÃO entra. No eixo principal de uma coluna ele distribuiria os
+ * filhos verticalmente, o que só faz sentido com altura fixa — e para o caso
+ * real que existe (empurrar o último para baixo) já existe `data-split="last"`,
+ * que resolve sem depender de altura. */
+.nds-stack[data-align="start"]   { align-items: flex-start; }
+.nds-stack[data-align="center"]  { align-items: center; }
+.nds-stack[data-align="end"]     { align-items: flex-end; }
+.nds-stack[data-align="stretch"] { align-items: stretch; }
+
 
 /* ── nds-cluster ───────────────────────────────────────────────────────────
  * Grupo horizontal de itens que quebra linha quando não cabem. Útil para
