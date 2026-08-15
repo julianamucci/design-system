@@ -41,6 +41,18 @@
   border-color: hsl(var(--destructive));
   box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
 }
+/* O anel de estado inválido é PERMANENTE — não some quando o elemento perde o
+ * foco — e era declarado depois do `:focus-visible` com a mesma
+ * especificidade. Resultado: focar um elemento inválido não mudava nada na
+ * tela, e com vários inválidos na página não dava para saber qual estava em
+ * foco. WCAG 2.4.7 (Focus Visible, AA).
+ *
+ * Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesmo
+ * remédio já aplicado no `toggle`, onde o defeito foi medido primeiro. */
+.nds-input-group:has([aria-invalid="true"]):has([data-slot="input-group-control"]:focus-visible) {
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2), 0 0 0 5px hsl(var(--ring) / 0.5);
+}
+
 
 .nds-input-group:has(:disabled) {
   opacity: 0.5;

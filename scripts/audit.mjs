@@ -2914,7 +2914,14 @@ function auditFocusRingSobrescrito() {
         if (!decl) continue;
         if (alvo(r.sel) !== alvoAnel) continue;
         if (especificidade(r.sel) < espAnel) continue;
-        if (/--ring|--destructive/.test(decl)) continue;
+        // Só é troca legítima quando a regra repinta o PRÓPRIO anel de foco
+        // (`--ring`). `--destructive` estava aqui e era largo demais: o anel de
+        // estado inválido é PERMANENTE, não some quando o elemento perde o
+        // foco, então focar um campo inválido não muda nada na tela. Com vários
+        // inválidos na página, não dá para saber qual está em foco — que é o
+        // que a 2.4.7 exige. Medido no toggle, onde a asserção que deveria
+        // guardar o anel passava justamente por causa dessa sombra permanente.
+        if (/--ring/.test(decl)) continue;
         const restaurado = regras.some(
           (z) =>
             z.ordem > r.ordem &&
