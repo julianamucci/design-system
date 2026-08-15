@@ -1790,7 +1790,14 @@ function auditExportSemStory(slug) {
     const { ui } = filesForSlug(slug, stack);
     const arquivosDeStory = ui.filter(f => /\.stories\./.test(basename(f)));
     if (!arquivosDeStory.length) continue;
-    const textoDasStories = arquivosDeStory.map(f => readFile(f) || '').join('\n');
+    // Comentário NÃO é uso. Sem tirar, a regra dava por renderizado qualquer
+    // export cujo nome aparecesse em prosa — e nome curto de palavra comum é
+    // coberto por acidente. Medido: o `regiao()` do sonner passou meses
+    // "coberto" por um comentário sobre região rolável no arquivo de OUTRO
+    // componente, e só apareceu quando alguém reescreveu aquela frase.
+    const textoDasStories = arquivosDeStory
+      .map(f => stripComments(readFile(f) || ''))
+      .join('\n');
 
     const exportados = new Map();
     const origensDeAlias = new Set();
@@ -1843,7 +1850,11 @@ function auditExportSemStory(slug) {
       // renderiza `<AlertDialogPortal>` ali mesmo. Ignorar o arquivo de
       // definição inteiro marcava esses como mortos. O que não conta é a
       // declaração e a lista de export — o resto é uso.
-      const proprio = (readFile(file) || '')
+      // Comentário não é uso, aqui também: o arquivo de definição passa pelo
+      // mesmo filtro que as stories e os consumidores. Sem isto, citar o
+      // símbolo em prosa — inclusive numa nota explicando por que ele existe —
+      // o dava por renderizado.
+      const proprio = stripComments(readFile(file) || '')
         .replace(/export\s*\{[^}]*\}/g, '')
         .replace(new RegExp(`(?:function|const)\\s+${simbolo}\\b`, 'g'), '');
       if (rx.test(proprio)) continue;
@@ -1851,7 +1862,7 @@ function auditExportSemStory(slug) {
       const usadoPorOutro = consumidores.some(f => {
         if (f === file) return false;
         const c = readFile(f);
-        return c && rx.test(c);
+        return c && rx.test(stripComments(c));
       });
       if (usadoPorOutro) continue;
 
