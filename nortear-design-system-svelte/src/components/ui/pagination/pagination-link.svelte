@@ -17,12 +17,15 @@
 
 	// O bits-ui fixa `aria-label="Page N"` — em inglês — nos próprios props da
 	// Page, e vence o que o consumidor passa. Resultado: a paginação inteira era
-	// anunciada em inglês, e a página atual não se distinguia das outras.
-	// O snippet `child` é a única forma de escrever depois do merge da lib.
-	// Consumidor que passar `aria-label` continua vencendo.
+	// anunciada em inglês. O snippet `child` é a única forma de escrever depois do
+	// merge da lib. Consumidor que passar `aria-label` continua vencendo.
+	//
+	// A página atual NÃO ganha rótulo diferente: quem anuncia "página atual" é o
+	// `aria-current="page"`, nativamente e em qualquer idioma. Um rótulo especial
+	// aqui divergia das outras stacks e duplicava o anúncio.
 	const ariaLabel = $derived(
 		((restProps as Record<string, unknown>)["aria-label"] as string | undefined) ??
-			(isActive ? `Página atual, ${page.value}` : `Ir para página ${page.value}`),
+			`Ir para página ${page.value}`,
 	);
 </script>
 
@@ -35,13 +38,8 @@
 	{page}
 	aria-current={isActive ? "page" : undefined}
 	data-slot="pagination-link"
-	data-active={isActive}
-	data-size={size}
-	class={cn(
-		buttonVariants({ size, variant: isActive ? "outline" : "ghost" }),
-		"cn-pagination-link",
-		className
-	)}
+	data-active={isActive ? "true" : undefined}
+	class={cn(buttonVariants({ size, variant: isActive ? "outline" : "ghost" }), className)}
 	{...restProps}
 >
 	{#snippet child({ props })}

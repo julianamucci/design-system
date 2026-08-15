@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
 
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
+
 const meta: Meta = {
   tags: ['navigation'],
   title: 'UI/Pagination/Compositions',
@@ -12,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do Pagination: Simples (5 páginas, sem ellipsis), ComEllipsis (12 páginas com … entre 1, atual e total), UltimaPagina (Next desabilitado) e Interativo (estado controlado por re-render). NOTA: a factory createPagination (Vanilla) não tem estado interno — para SPA real, mantenha `current` no escopo do consumidor e re-monte o nav a cada onPageChange.',
+          'Composições do Pagination: Simple (5 páginas), WithEllipsis (12 páginas), LastPage (próxima desabilitado), Interactive (estado do consumidor) e CompleteTable (rodapé de tabela). A factory não guarda estado — quem consome mantém `current` e remonta a faixa a cada mudança.',
       },
     },
   },
@@ -23,12 +26,11 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement, minHeight = 120): HTMLElement {
+function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2 nds-min-h-24';
   wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = `${minHeight}px`;
+  wrapper.dataset.align = 'center';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -37,160 +39,239 @@ function wrap(child: HTMLElement, minHeight = 120): HTMLElement {
 
 export const Simple: Story = {
   name: 'Simple (5 pages)',
+  parameters: { covers: ['visual.item1'] },
   render: () =>
     wrap(
       createPagination({
         total: 5,
         current: 1,
         showPrevNext: true,
+        label: 'Paginação simples',
         onPageChange: () => {},
       }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Renderiza 5 links numerados + Prev + Next', async () => {
-      const links = canvas.getAllByRole('link');
-      // 5 numerados + Previous + Next = 7
-      await expect(links.length).toBe(7);
+
+    await step('A faixa mostra todos os números, sem reticências', async () => {
+      // visual.item1 — é o estado que o Chromatic fotografa como "default".
+      const numerados = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
+      await expect(numerados.length).toBe(5);
+      await expect([...numerados].map((l) => l.textContent?.trim())).toEqual([
+        '1', '2', '3', '4', '5',
+      ]);
+      await expect(
+        canvasElement.querySelectorAll('[data-slot="pagination-ellipsis"]').length,
+      ).toBe(0);
     });
-    await step('Sem ellipsis (total <= 7)', async () => {
-      const ellipsis = canvasElement.querySelector('span[aria-hidden="true"]');
-      // Pode existir <span aria-hidden> dos chevrons SVG; checamos texto "…"
-      const hasEllipsisChar = !!Array.from(canvasElement.querySelectorAll('span')).find(
-        (s) => s.textContent === '…',
+
+    await step('A primeira página é a atual e Anterior está desabilitado', async () => {
+      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toHaveAttribute(
+        'aria-current',
+        'page',
       );
-      await expect(hasEllipsisChar).toBe(false);
-      void ellipsis;
+      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+        'aria-disabled',
+        'true',
+      );
     });
   },
 };
 
 export const WithEllipsis: Story = {
-  name: 'With ellipsis (12 pages, current=6)',
+  name: 'With ellipsis (12 pages, current 6)',
+  parameters: { covers: ['visual.item2'] },
   render: () =>
     wrap(
       createPagination({
         total: 12,
         current: 6,
         showPrevNext: true,
+        label: 'Paginação com reticências',
         onPageChange: () => {},
       }),
     ),
   play: async ({ canvasElement, step }) => {
-    await step('Renderiza pelo menos um caractere "…"', async () => {
-      const hasEllipsis = !!Array.from(canvasElement.querySelectorAll('span')).find(
-        (s) => s.textContent === '…',
-      );
-      await expect(hasEllipsis).toBe(true);
+    const canvas = within(canvasElement);
+
+    await step('As páginas distantes colapsam em reticências', async () => {
+      // visual.item2
+      const reticencias = canvasElement.querySelectorAll('[data-slot="pagination-ellipsis"]');
+      await expect(reticencias.length).toBe(2);
+      for (const item of reticencias) {
+        // notes.item3: o caractere tipográfico, não três pontos e não um ícone.
+        await expect(item.textContent?.trim()).toBe('…');
+        await expect(item.tagName).toBe('SPAN');
+      }
     });
-    await step('Página atual = 6', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current?.textContent?.trim()).toBe('6');
+
+    await step('As reticências não são lidas nem tabuladas', async () => {
+      for (const item of canvasElement.querySelectorAll('[data-slot="pagination-ellipsis"]')) {
+        await expect(item).toHaveAttribute('aria-hidden', 'true');
+        await expect(item.hasAttribute('tabindex')).toBe(false);
+      }
     });
-    await step('Primeira (1) e última (12) sempre visíveis', async () => {
-      const links = Array.from(canvasElement.querySelectorAll('a')).map((a) =>
-        (a.textContent ?? '').trim(),
+
+    await step('Primeira, última e a atual continuam visíveis', async () => {
+      await expect(canvas.getByRole('link', { name: 'Ir para página 1' })).toBeVisible();
+      await expect(canvas.getByRole('link', { name: 'Ir para página 12' })).toBeVisible();
+      await expect(canvas.getByRole('link', { name: 'Ir para página 6' })).toHaveAttribute(
+        'aria-current',
+        'page',
       );
-      await expect(links).toContain('1');
-      await expect(links).toContain('12');
     });
   },
 };
 
 export const LastPage: Story = {
-  name: 'Last page (Next disabled)',
+  name: 'Last page (next disabled)',
   render: () =>
     wrap(
       createPagination({
         total: 10,
         current: 10,
         showPrevNext: true,
+        label: 'Paginação na última página',
         onPageChange: () => {},
       }),
     ),
   play: async ({ canvasElement, step }) => {
-    await step('Página 10 ativa', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current?.textContent?.trim()).toBe('10');
+    const canvas = within(canvasElement);
+
+    await step('A página 10 é a atual', async () => {
+      await expect(canvas.getByRole('link', { name: 'Ir para página 10' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
     });
-    await step('Next está desabilitado', async () => {
-      const next = canvasElement.querySelector('a[aria-label="Go to next page"]');
-      await expect(next).toHaveAttribute('aria-disabled', 'true');
+
+    await step('Próxima está desabilitado e fora da tabulação', async () => {
+      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+      await expect(proxima).toHaveAttribute('aria-disabled', 'true');
+      await expect(proxima).toHaveAttribute('tabindex', '-1');
     });
   },
 };
 
 export const Interactive: Story = {
-  name: 'Interactive (externally controlled state)',
+  name: 'Interactive (state held by the consumer)',
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.style.contain = 'layout';
-    wrapper.className = 'nds-stack nds-w-full nds-p-2';
+    wrapper.className = 'nds-stack nds-w-full nds-p-2 nds-min-h-24';
     wrapper.dataset.spacing = 'sm';
-    wrapper.style.minHeight = '160px';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.justifyContent = 'center';
 
     const status = document.createElement('p');
-    status.className = 'nds-text-body';
-    status.dataset.testid = 'page-status';
+    status.className = 'nds-text-body nds-text-muted-foreground';
+    status.dataset.slot = 'pagina-atual';
 
     const total = 8;
     let current = 3;
 
     const navContainer = document.createElement('div');
 
-    function rerender() {
+    function remontar(): void {
       status.textContent = `Página ${current} de ${total}`;
-      const nav = createPagination({
-        total,
-        current,
-        showPrevNext: true,
-        onPageChange: (page) => {
-          current = page;
-          rerender();
-        },
-      });
-      navContainer.replaceChildren(nav);
+      navContainer.replaceChildren(
+        createPagination({
+          total,
+          current,
+          showPrevNext: true,
+          label: 'Paginação interativa',
+          onPageChange: (page) => {
+            current = page;
+            remontar();
+          },
+        }),
+      );
     }
 
-    rerender();
+    remontar();
     wrapper.append(status, navContainer);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const status = canvasElement.querySelector('[data-testid="page-status"]');
+    const status = () => canvasElement.querySelector('[data-slot="pagina-atual"]');
 
-    await step('Status inicial: Página 3 de 8', async () => {
-      await expect(status?.textContent).toMatch(/Página 3 de 8/);
-    });
-
-    await step('Click em "4" atualiza status para Página 4', async () => {
-      // Com total=8 e current=3, o algoritmo de páginas retorna
-      // [1, 2, 3, 4, ellipsis, 8] — então clicamos no vizinho "4".
-      const links = canvas.getAllByRole('link');
-      const four = links.find((a) => (a.textContent ?? '').trim() === '4');
-      if (!four) throw new Error('link "4" não encontrado');
-      await userEvent.click(four);
-      await waitFor(() => {
-        if (!/Página 4 de 8/.test(status?.textContent ?? '')) {
-          throw new Error('status não atualizou para 4');
-        }
-      });
-    });
-
-    await step('Click em Next leva para página 5', async () => {
-      const next = canvasElement.querySelector<HTMLAnchorElement>(
-        'a[aria-label="Go to next page"]',
+    const irPara = async (n: number) => {
+      // Par idempotente: só clica quando ainda não é a página atual. O painel
+      // Interactions reexecuta a play no mesmo DOM, e um clique cego partiria
+      // do estado que a rodada anterior deixou.
+      const alvo = canvas.getByRole('link', { name: `Ir para página ${n}` });
+      if (alvo.getAttribute('aria-current') !== 'page') await userEvent.click(alvo);
+      await waitFor(() =>
+        expect(canvas.getByRole('link', { name: `Ir para página ${n}` })).toHaveAttribute(
+          'aria-current',
+          'page',
+        ),
       );
-      if (!next) throw new Error('Next não encontrado');
-      await userEvent.click(next);
-      await waitFor(() => {
-        if (!/Página 5 de 8/.test(status?.textContent ?? '')) {
-          throw new Error('status não atualizou para 5');
-        }
-      });
+    };
+
+    await step('Clicar numa página move o destaque e o contador', async () => {
+      await irPara(4);
+      await expect(status()).toHaveTextContent('Página 4 de 8');
+    });
+
+    await step('Só uma página é a atual em qualquer momento', async () => {
+      await expect(canvasElement.querySelectorAll('[aria-current="page"]').length).toBe(1);
+    });
+
+    await step('O estado volta ao início para a próxima rodada', async () => {
+      await irPara(3);
+      await expect(status()).toHaveTextContent('Página 3 de 8');
+    });
+  },
+};
+
+export const CompleteTable: Story = {
+  name: 'Complete table footer',
+  render: () => {
+    // `nds-cluster` e não `nds-stack`: só o cluster tem data-align/data-justify,
+    // e é ele que quebra a linha sozinho quando a largura aperta.
+    const rodape = document.createElement('div');
+    rodape.className =
+      'nds-cluster nds-w-full nds-max-w-prose nds-border-default nds-rounded-lg nds-p-4';
+    rodape.dataset.spacing = 'sm';
+    rodape.dataset.align = 'center';
+    rodape.dataset.justify = 'between';
+
+    const contador = document.createElement('span');
+    contador.className = 'nds-text-body nds-text-muted-foreground';
+    contador.textContent = 'Mostrando 11–20 de 120 resultados';
+
+    rodape.append(
+      contador,
+      createPagination({
+        total: 12,
+        current: 2,
+        showPrevNext: true,
+        align: 'end',
+        label: 'Paginação do rodapé da tabela',
+        onPageChange: () => {},
+      }),
+    );
+    return rodape;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A faixa encosta na borda direita do rodapé', async () => {
+      // O alinhamento é o PONTO desta composição: sem `data-align`, a faixa
+      // ocupa a linha inteira e fica centrada.
+      const nav = canvas.getByRole('navigation', { name: 'Paginação do rodapé da tabela' });
+      await expect(getComputedStyle(nav).justifyContent).toBe('flex-end');
+      await expect(nav.getBoundingClientRect().width).toBeLessThan(
+        (nav.parentElement as HTMLElement).getBoundingClientRect().width,
+      );
+    });
+
+    await step('O contador e a faixa dividem a mesma linha', async () => {
+      const rodape = canvasElement.querySelector('.nds-cluster') as HTMLElement;
+      await expect(getComputedStyle(rodape).justifyContent).toBe('space-between');
+      await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
     });
   },
 };

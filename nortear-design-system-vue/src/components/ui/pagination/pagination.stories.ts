@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import { within, fn, userEvent, expect } from 'storybook/test';
 import {
   Pagination,
@@ -12,6 +13,22 @@ import {
 import PaginationDocs from '@/components/docs/PaginationDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+/**
+ * Args do Playground.
+ *
+ * Tipados à parte, e não por `Meta<any>`: o `render` faz conta com `total` e
+ * `itemsPerPage` e chama o espião, e sem o tipo o `vue-tsc` os enxergava como
+ * `undefined` ou como props do próprio componente.
+ */
+type PlaygroundArgs = {
+  total: number;
+  itemsPerPage: number;
+  defaultPage: number;
+  textoAnterior: string;
+  textoProxima: string;
+  onPageChange: (page: number) => void;
+};
+
 const meta = {
   title: 'UI/Pagination',
   component: Pagination,
@@ -21,14 +38,14 @@ const meta = {
       page: withAutoDocsTab(PaginationDocs),
       description: {
         component:
-          'Pagination (reka-ui) — navegação entre páginas de um conjunto paginado. Renderiza um <nav aria-label="pagination"> com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',
+          'Pagination — navegação entre páginas de um conjunto paginado. Renderiza um <nav> nomeado com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',
       },
     },
   },
   argTypes: {
     total: {
-      control: { type: 'number', min: 0, step: 10 },
-      description: 'Total de itens — usado por reka-ui para calcular o número de páginas.',
+      control: { type: 'number', min: 10, step: 10 },
+      description: 'Total de itens — usado para calcular o número de páginas.',
     },
     itemsPerPage: {
       control: { type: 'number', min: 1, step: 1 },
@@ -36,40 +53,47 @@ const meta = {
     },
     defaultPage: {
       control: { type: 'number', min: 1, step: 1 },
-      description: 'Página inicial em modo não-controlado.',
+      description: 'Página exibida ao montar.',
     },
-    siblingCount: {
-      control: { type: 'number', min: 0, max: 4, step: 1 },
-      description: 'Quantidade de páginas vizinhas exibidas à esquerda e à direita da atual.',
+    textoAnterior: {
+      control: 'text',
+      description: 'Rótulo visível do controle de página anterior.',
     },
-    showEdges: {
-      control: 'boolean',
-      description: 'Sempre mostra a primeira e a última página, mesmo fora da janela de siblings.',
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Desabilita a paginação inteira (aria-disabled em todos os controles).',
+    textoProxima: {
+      control: 'text',
+      description: 'Rótulo visível do controle de próxima página.',
     },
     onPageChange: {
       action: 'page-change',
-      description: 'Callback emitido quando a página atual muda. Em Vue, equivale ao evento @update:page.',
+      description: 'Chamado com o número da página quando ela muda.',
     },
   },
   args: {
     total: 50,
     itemsPerPage: 10,
     defaultPage: 1,
-    siblingCount: 2,
-    showEdges: false,
-    disabled: false,
+    textoAnterior: 'Anterior',
+    textoProxima: 'Próxima',
     onPageChange: fn(),
   },
-} satisfies Meta<any>;
+} satisfies Meta<PlaygroundArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PlaygroundArgs>;
+
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => ({
     components: {
       Pagination,
@@ -81,67 +105,119 @@ export const Playground: Story = {
       PaginationPrevious,
     },
     setup() {
-      return { args };
+      // O estado da página vive aqui, como em qualquer consumidor: a faixa não
+      // guarda página atual. `key` no root remonta quando os controls mudam.
+      const atual = ref(args.defaultPage);
+      const totalPaginas = Math.ceil(args.total / args.itemsPerPage);
+      const paginas = Array.from({ length: totalPaginas }, (_, i) => i + 1);
+      const irPara = (n: number) => {
+        if (n < 1 || n > totalPaginas) return;
+        atual.value = n;
+        args.onPageChange(n);
+      };
+      return { args, atual, paginas, totalPaginas, irPara };
     },
     template: `
-      <div class="nds-w-full" style="contain: layout; min-height: 64px;">
-        <Pagination
-          :key="String(args.total) + String(args.itemsPerPage) + String(args.defaultPage) + String(args.siblingCount) + String(args.showEdges) + String(args.disabled)"
-          :total="args.total"
-          :items-per-page="args.itemsPerPage"
-          :default-page="args.defaultPage"
-          :sibling-count="args.siblingCount"
-          :show-edges="args.showEdges"
-          :disabled="args.disabled"
-          @update:page="args.onPageChange"
-        >
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious aria-label="Anterior">
-                <span class="nds-hidden sm:block">Anterior</span>
-              </PaginationPrevious>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink :is-active="true" aria-label="Página atual, 1">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink aria-label="Ir para página 2">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink aria-label="Ir para página 3">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink aria-label="Ir para página 5">5</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext aria-label="Próxima">
-                <span class="nds-hidden sm:block">Próxima</span>
-              </PaginationNext>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+      <Pagination
+        :key="String(args.total) + String(args.itemsPerPage) + String(args.defaultPage)"
+        :total="args.total"
+        :items-per-page="args.itemsPerPage"
+        :page="atual"
+      >
+        <PaginationContent>
+          <PaginationItem>
+            <!-- O primitivo já desabilita nos extremos a partir de :page. -->
+            <PaginationPrevious :text="args.textoAnterior" @click="irPara(atual - 1)" />
+          </PaginationItem>
+          <PaginationItem v-for="n in paginas" :key="n">
+            <PaginationLink
+              href="#"
+              :is-active="atual === n"
+              :aria-label="\`Ir para página \${n}\`"
+              @click.prevent="irPara(n)"
+            >
+              {{ n }}
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext :text="args.textoProxima" @click="irPara(atual + 1)" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const totalPaginas = Math.ceil(args.total / args.itemsPerPage);
 
-    await step('1. Pagination tem nav com aria-label', async () => {
-      const nav = canvas.getByRole('navigation');
-      await expect(nav).toBeInTheDocument();
+    await step('A paginação é um landmark de navegação nomeado', async () => {
+      // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
+      // e o axe acusa `landmark-unique` quando a página mostra mais de uma.
+      const nav = canvas.getByRole('navigation', { name: 'Paginação' });
+      await expect(nav.tagName).toBe('NAV');
+      await expect(nav).toHaveAttribute('data-slot', 'pagination');
+      await expect(nav).toHaveClass('nds-pagination');
     });
 
-    await step('2. Página ativa anuncia aria-current="page"', async () => {
-      const active = canvas.getByLabelText(/Página atual, 1/i);
-      await expect(active).toHaveAttribute('aria-current', 'page');
+    await step('Todo controle tem rótulo com contexto', async () => {
+      // accessibility.item5 — "3" sozinho não diz nada em voz alta.
+      for (let n = 1; n <= totalPaginas; n++) {
+        const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
+        await expect(link).toHaveAttribute('data-slot', 'pagination-link');
+      }
+      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+        'data-slot',
+        'pagination-previous',
+      );
+      await expect(canvas.getByRole('button', { name: ROTULO_PROXIMA })).toHaveAttribute(
+        'data-slot',
+        'pagination-next',
+      );
     });
 
-    await step('3. Click em link numerado dispara navegação', async () => {
-      const page2 = canvas.getByLabelText(/Ir para página 2/i);
-      await userEvent.click(page2);
+    await step('A página atual é marcada e o extremo é desabilitado', async () => {
+      // accessibility.item4
+      const ativo = canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` });
+      await expect(ativo).toHaveAttribute('aria-current', 'page');
+      await expect(ativo).toHaveAttribute('data-active', 'true');
+      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toBeDisabled();
+    });
+
+    await step('Clicar numa página avisa quem controla o estado', async () => {
+      // functional.item1 — a story guarda a página, então o passo VOLTA ao
+      // valor inicial no fim: o painel Interactions reexecuta a play no mesmo
+      // DOM, e sem isso a segunda rodada partiria de outra página.
+      const alvo = args.defaultPage === 1 ? 2 : 1;
+      (args.onPageChange as unknown as { mockClear: () => void }).mockClear();
+      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${alvo}` }));
+      await expect(args.onPageChange).toHaveBeenLastCalledWith(alvo);
+      await expect(
+        canvas.getByRole('link', { name: `Ir para página ${alvo}` }),
+      ).toHaveAttribute('aria-current', 'page');
+
+      await userEvent.click(
+        canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` }),
+      );
+      await expect(
+        canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` }),
+      ).toHaveAttribute('aria-current', 'page');
+    });
+
+    await step('Tab percorre os controles na ordem visual', async () => {
+      // functional.item4 — a lista esperada é DERIVADA do DOM: o controle
+      // desabilitado sai da tabulação, e uma lista escrita à mão só valeria
+      // com os controls no valor padrão.
+      const esperados = [
+        canvas.getByRole('button', { name: ROTULO_ANTERIOR }),
+        canvas.getByRole('link', { name: 'Ir para página 1' }),
+        canvas.getByRole('link', { name: 'Ir para página 2' }),
+      ].filter((el) => !(el as HTMLButtonElement).disabled);
+
+      (document.activeElement as HTMLElement | null)?.blur();
+      for (const alvo of esperados) {
+        await userEvent.tab();
+        await expect(alvo).toHaveFocus();
+      }
     });
   },
 };

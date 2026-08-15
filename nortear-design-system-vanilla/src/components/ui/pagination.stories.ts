@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { fn, userEvent, within, expect } from 'storybook/test';
 import { createPagination } from './pagination';
 import { createPaginationDocs } from '@/components/docs/PaginationDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -10,7 +10,14 @@ type PaginationArgs = {
   total: number;
   current: number;
   showPrevNext: boolean;
+  label: string;
 };
+
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
+
+/** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
+const onPageChange = fn();
 
 const meta: Meta<PaginationArgs> = {
   title: 'UI/Pagination',
@@ -22,7 +29,7 @@ const meta: Meta<PaginationArgs> = {
   argTypes: {
     total: {
       control: { type: 'number', min: 1, max: 50, step: 1 },
-      description: 'Total de páginas. Acima de 7 ativa o ellipsis automático.',
+      description: 'Total de páginas. Acima de 7 ativa as reticências automáticas.',
     },
     current: {
       control: { type: 'number', min: 1, max: 50, step: 1 },
@@ -30,13 +37,18 @@ const meta: Meta<PaginationArgs> = {
     },
     showPrevNext: {
       control: 'boolean',
-      description: 'Exibe os controles Previous (◀) e Next (▶) nas extremidades.',
+      description: 'Exibe os controles de página anterior e próxima nas extremidades.',
+    },
+    label: {
+      control: 'text',
+      description: 'Nome acessível do landmark de navegação.',
     },
   },
   args: {
-    total: 10,
-    current: 3,
+    total: 5,
+    current: 1,
     showPrevNext: true,
+    label: 'Paginação',
   },
 };
 
@@ -46,52 +58,102 @@ type Story = StoryObj<PaginationArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => {
+    // A factory não guarda estado: quem consome mantém a página e remonta a
+    // faixa. É o que esta story demonstra.
     const container = document.createElement('div');
-    container.style.contain = 'layout';
-    container.className = 'nds-cluster nds-w-full nds-p-2';
+    container.className = 'nds-cluster nds-w-full nds-p-2 nds-min-h-24';
     container.dataset.justify = 'center';
-    container.style.minHeight = '120px';
+    container.dataset.align = 'center';
 
-    const nav = createPagination({
-      total: args.total,
-      current: Math.min(Math.max(1, args.current), args.total),
-      showPrevNext: args.showPrevNext,
-      onPageChange: (page) => {
-         
-        console.log('[pagination] page_change', page);
-      },
-    });
-    container.appendChild(nav);
+    let atual = Math.min(Math.max(1, args.current), args.total);
+
+    function remontar(): void {
+      container.replaceChildren(
+        createPagination({
+          total: args.total,
+          current: atual,
+          showPrevNext: args.showPrevNext,
+          label: args.label,
+          onPageChange: (page) => {
+            atual = page;
+            onPageChange(page);
+            remontar();
+          },
+        }),
+      );
+    }
+
+    remontar();
     return container;
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step('Root é <nav role="navigation"> com aria-label', async () => {
-      const nav = canvasElement.querySelector('nav[aria-label="Pagination"]');
-      await expect(nav).toBeTruthy();
+    await step('A paginação é um landmark de navegação nomeado', async () => {
+      // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
+      // e o axe acusa `landmark-unique` quando a página mostra mais de uma.
+      const nav = canvas.getByRole('navigation', { name: args.label });
+      await expect(nav.tagName).toBe('NAV');
+      await expect(nav).toHaveAttribute('data-slot', 'pagination');
+      await expect(nav).toHaveClass('nds-pagination');
     });
 
-    await step('Página atual tem aria-current="page"', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toBeTruthy();
-    });
-
-    await step('Click em página numerada dispara navegação', async () => {
-      // Procura um link numerado que NÃO seja o ativo.
-      const links = canvas.getAllByRole('link');
-      const numbered = links.find(
-        (a) => /^\d+$/.test((a.textContent ?? '').trim()) && !a.hasAttribute('aria-current'),
-      );
-      if (numbered) {
-        await userEvent.click(numbered);
-        // Não checamos navegação real (Storybook não atualiza state) — apenas que
-        // o evento foi disparado sem erro.
-        await waitFor(() => {
-          // noop — o handler do factory chama preventDefault
-        });
+    await step('Todo controle tem rótulo com contexto', async () => {
+      // accessibility.item5 — "3" sozinho não diz nada em voz alta. Antes daqui
+      // a faixa saía com "Page 2" e "Go to previous page", em inglês, e o link
+      // da página atual não tinha rótulo nenhum.
+      for (let n = 1; n <= args.total; n++) {
+        const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
+        await expect(link).toHaveAttribute('data-slot', 'pagination-link');
       }
+      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+        'data-slot',
+        'pagination-previous',
+      );
+      await expect(canvas.getByRole('link', { name: ROTULO_PROXIMA })).toHaveAttribute(
+        'data-slot',
+        'pagination-next',
+      );
+    });
+
+    await step('A página atual é marcada e o extremo é desabilitado', async () => {
+      // accessibility.item4
+      const ativo = canvas.getByRole('link', { name: `Ir para página ${args.current}` });
+      await expect(ativo).toHaveAttribute('aria-current', 'page');
+      await expect(ativo).toHaveAttribute('data-active', 'true');
+
+      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
+      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
+      await expect(anterior).toHaveAttribute('tabindex', '-1');
+    });
+
+    await step('Clicar numa página avisa quem controla o estado', async () => {
+      // functional.item1 — a story remonta a faixa a cada clique, então o passo
+      // VOLTA ao valor inicial no fim: o painel Interactions reexecuta a play no
+      // mesmo DOM, e sem isso a segunda rodada partiria de outra página.
+      const alvo = args.current === 1 ? 2 : 1;
+      onPageChange.mockClear();
+      await userEvent.click(canvas.getByRole('link', { name: `Ir para página ${alvo}` }));
+      await expect(onPageChange).toHaveBeenLastCalledWith(alvo);
+      await expect(
+        canvas.getByRole('link', { name: `Ir para página ${alvo}` }),
+      ).toHaveAttribute('aria-current', 'page');
+
+      await userEvent.click(
+        canvas.getByRole('link', { name: `Ir para página ${args.current}` }),
+      );
+      await expect(
+        canvas.getByRole('link', { name: `Ir para página ${args.current}` }),
+      ).toHaveAttribute('aria-current', 'page');
     });
   },
 };

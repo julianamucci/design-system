@@ -875,46 +875,43 @@ const total = 8;
               description: tContent("props.table.description"),
             },
             items: [
+              // `toPlainText` e não `DOMPurify.sanitize`: a célula de descrição
+              // escreve um textNode, então o `<code>` sanitizado aparecia
+              // literalmente na tela. As outras stacks já faziam assim.
               {
                 name: "isActive",
                 type: tContent("props.table.isActive.type"),
                 defaultValue: tContent("props.table.isActive.default"),
                 required: tContent("props.table.isActive.required"),
-                description: DOMPurify.sanitize(
-                  tContent("props.table.isActive.description")
-                ),
+                description: toPlainText(tContent("props.table.isActive.description")),
               },
               {
                 name: "size",
                 type: tContent("props.table.size.type"),
                 defaultValue: tContent("props.table.size.default"),
                 required: tContent("props.table.size.required"),
-                description: DOMPurify.sanitize(tContent("props.table.size.description")),
+                description: toPlainText(tContent("props.table.size.description")),
               },
               {
                 name: "text",
                 type: tContent("props.table.text.type"),
                 defaultValue: tContent("props.table.text.default"),
                 required: tContent("props.table.text.required"),
-                description: DOMPurify.sanitize(tContent("props.table.text.description")),
+                description: toPlainText(tContent("props.table.text.description")),
               },
               {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: DOMPurify.sanitize(
-                  tContent("props.table.className.description")
-                ),
+                description: toPlainText(tContent("props.table.className.description")),
               },
               {
                 name: "children",
                 type: tContent("props.table.children.type"),
                 defaultValue: tContent("props.table.children.default"),
                 required: tContent("props.table.children.required"),
-                description: DOMPurify.sanitize(
-                  tContent("props.table.children.description")
-                ),
+                description: toPlainText(tContent("props.table.children.description")),
               },
             ],
           },
@@ -934,11 +931,6 @@ const total = 8;
         }}
         items={[
           {
-            token: "--background",
-            value: tContent("tokens.table.background.class"),
-            description: tContent("tokens.table.background.part"),
-          },
-          {
             token: "--foreground",
             value: tContent("tokens.table.foreground.class"),
             description: tContent("tokens.table.foreground.part"),
@@ -954,14 +946,24 @@ const total = 8;
             description: tContent("tokens.table.accentForeground.part"),
           },
           {
-            token: "--border",
-            value: tContent("tokens.table.border.class"),
-            description: tContent("tokens.table.border.part"),
-          },
-          {
             token: "--ring",
             value: tContent("tokens.table.ring.class"),
             description: tContent("tokens.table.ring.part"),
+          },
+          {
+            token: "--muted-foreground",
+            value: tContent("tokens.table.ellipsis.class"),
+            description: tContent("tokens.table.ellipsis.part"),
+          },
+          {
+            token: "--radius",
+            value: tContent("tokens.table.radius.class"),
+            description: tContent("tokens.table.radius.part"),
+          },
+          {
+            token: "--spacing-1",
+            value: tContent("tokens.table.gap.class"),
+            description: tContent("tokens.table.gap.part"),
           },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

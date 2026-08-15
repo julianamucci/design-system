@@ -102,7 +102,7 @@ export class NdsPaginationIcon {
 // ─── Container ────────────────────────────────────────────────────────────────
 
 /**
- * Container da paginação — `<nav aria-label="pagination">`.
+ * Container da paginação — `<nav aria-label="Paginação">`.
  *
  * O nome acessível é configurável porque a página pode ter mais de uma
  * navegação; sem nomes distintos o axe acusa `landmark-unique` e o leitor de
@@ -124,7 +124,7 @@ export class NdsPaginationIcon {
   },
 })
 export class NdsPagination {
-  /** Nome acessível do landmark. Padrão: `pagination`. */
+  /** Nome acessível do landmark. Padrão: `Paginação`. */
   readonly label = input<string | undefined>(undefined);
 
   private readonly rotuloEscrito = inject<ElementRef<HTMLElement>>(
@@ -132,7 +132,7 @@ export class NdsPagination {
   ).nativeElement.getAttribute('aria-label');
 
   protected readonly nomeAcessivel = computed(
-    () => this.label() ?? this.rotuloEscrito ?? 'pagination',
+    () => this.label() ?? this.rotuloEscrito ?? 'Paginação',
   );
 }
 
@@ -277,7 +277,7 @@ function barrarCliqueQuandoDesabilitado(controle: { disabled: () => boolean }): 
 })
 export class NdsPaginationPrevious {
   /** Texto visível do controle. Traduzível. */
-  readonly text = input<string>('Previous');
+  readonly text = input<string>('Anterior');
 
   /** Nome acessível. Sem ele, o rótulo visível é usado. */
   readonly label = input<string | undefined>(undefined);
@@ -317,7 +317,7 @@ export class NdsPaginationPrevious {
 })
 export class NdsPaginationNext {
   /** Texto visível do controle. Traduzível. */
-  readonly text = input<string>('Next');
+  readonly text = input<string>('Próxima');
 
   /** Nome acessível. Sem ele, o rótulo visível é usado. */
   readonly label = input<string | undefined>(undefined);

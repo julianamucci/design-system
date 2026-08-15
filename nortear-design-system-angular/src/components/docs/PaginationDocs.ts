@@ -1093,12 +1093,13 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--background',        k: 'background'        },
       { token: '--foreground',        k: 'foreground'        },
       { token: '--accent',            k: 'accent'            },
       { token: '--accent-foreground', k: 'accentForeground'  },
-      { token: '--border',            k: 'border'            },
       { token: '--ring',              k: 'ring'              },
+      { token: '--muted-foreground',  k: 'ellipsis'          },
+      { token: '--radius',            k: 'radius'            },
+      { token: '--spacing-1',         k: 'gap'               },
     ].map(({ token, k }) => ({
       token,
       value: toPlainText(t(`tokens.table.${k}.class`)),

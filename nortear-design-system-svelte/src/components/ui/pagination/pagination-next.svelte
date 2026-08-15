@@ -8,21 +8,24 @@
 		ref = $bindable(null),
 		class: className,
 		children,
+		text = "Próxima",
+		"aria-label": ariaLabel = "Ir para a próxima página",
 		...restProps
-	}: PaginationPrimitive.NextButtonProps = $props();
+	}: PaginationPrimitive.NextButtonProps & { text?: string; "aria-label"?: string } = $props();
 </script>
 
+<!-- `nds-pagination-next` no lugar de `pr-1.5!`, e `data-slot` próprio — ver a nota em pagination-previous.svelte. -->
 <PaginationPrimitive.NextButton
 	bind:ref
-	aria-label="Go to next page"
-	data-slot="pagination-link"
-	class={cn(buttonVariants({ variant: "ghost", size: "default" }), "pr-1.5!", className)}
+	aria-label={ariaLabel}
+	data-slot="pagination-next"
+	class={cn(buttonVariants({ variant: "ghost", size: "default" }), "nds-pagination-next", className)}
 	{...restProps}
 >
 	{#if children}
 		{@render children?.()}
 	{:else}
-		<span class="nds-pagination-label">Next</span>
+		<span class="nds-pagination-label">{text}</span>
 		<ChevronRightIcon data-icon="inline-end" />
 	{/if}
 </PaginationPrimitive.NextButton>

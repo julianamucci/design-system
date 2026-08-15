@@ -1,9 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, within, expect } from 'storybook/test';
+import { fn, userEvent, within, expect } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 import PaginationDocs from '@/components/docs/PaginationDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
+
+/** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
+const onPageChange = fn();
 
 const meta: Meta = {
   title: 'UI/Pagination',
@@ -15,14 +21,14 @@ const meta: Meta = {
       page: withAutoDocsTab(PaginationDocs),
       description: {
         component:
-          'Pagination (bits-ui) — navegação entre páginas de um conjunto paginado. Renderiza um <nav aria-label="pagination"> com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',
+          'Pagination — navegação entre páginas de um conjunto paginado. Renderiza um <nav> nomeado com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',
       },
     },
   },
   argTypes: {
     count: {
-      control: { type: 'number', min: 0, step: 10 },
-      description: 'Total de itens — usado por bits-ui para calcular o número de páginas.',
+      control: { type: 'number', min: 10, step: 10 },
+      description: 'Total de itens — usado para calcular o número de páginas.',
     },
     perPage: {
       control: { type: 'number', min: 1, step: 1 },
@@ -30,7 +36,7 @@ const meta: Meta = {
     },
     page: {
       control: { type: 'number', min: 1, step: 1 },
-      description: 'Página inicial em modo não-controlado.',
+      description: 'Página exibida ao montar.',
     },
     siblingCount: {
       control: { type: 'number', min: 0, max: 4, step: 1 },
@@ -38,16 +44,23 @@ const meta: Meta = {
     },
     demonstration: {
       control: 'select',
-      options: ['simples', 'comEllipsis', 'ultimaPagina', 'directional', 'controlada', 'tabela'],
+      options: ['simples', 'directional', 'controlada', 'tabela'],
       description: 'Composição interna usada na demonstração.',
     },
+    rotulo: {
+      control: 'text',
+      description: 'Nome acessível do landmark de navegação.',
+    },
+    onPageChange: { control: false, table: { disable: true } },
   },
   args: {
     count: 50,
     perPage: 10,
     page: 1,
-    siblingCount: 1,
+    siblingCount: 2,
     demonstration: 'simples',
+    rotulo: 'Paginação',
+    onPageChange,
   },
 };
 
@@ -55,23 +68,87 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('1. Pagination tem nav com aria-label', async () => {
-      const nav = canvas.getByRole('navigation');
-      await expect(nav).toBeInTheDocument();
-      await expect(nav).toHaveAttribute('aria-label', 'pagination');
+    await step('A paginação é um landmark de navegação nomeado', async () => {
+      // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
+      // e o axe acusa `landmark-unique` quando a página mostra mais de uma.
+      // O primitivo entrega um `<div>`; a tag `nav` vem do snippet `child`.
+      const nav = canvas.getByRole('navigation', { name: 'Paginação' });
+      await expect(nav.tagName).toBe('NAV');
+      await expect(nav).toHaveAttribute('data-slot', 'pagination');
+      await expect(nav).toHaveClass('nds-pagination');
     });
 
-    await step('2. Página ativa anuncia aria-current="page"', async () => {
-      const active = canvas.getByLabelText(/Página atual, 1/i);
-      await expect(active).toHaveAttribute('aria-current', 'page');
+    await step('Todo controle tem rótulo com contexto', async () => {
+      // accessibility.item5 — "3" sozinho não diz nada em voz alta. O primitivo
+      // fixa "Page N", em inglês; o rótulo em português vem do snippet `child`.
+      for (let n = 1; n <= 5; n++) {
+        const alvo = canvas.getByRole('button', { name: `Ir para página ${n}` });
+        await expect(alvo).toHaveAttribute('data-slot', 'pagination-link');
+      }
+      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+        'data-slot',
+        'pagination-previous',
+      );
+      await expect(canvas.getByRole('button', { name: ROTULO_PROXIMA })).toHaveAttribute(
+        'data-slot',
+        'pagination-next',
+      );
     });
 
-    await step('3. Click em link numerado dispara navegação', async () => {
-      const page2 = canvas.getByLabelText(/Ir para página 2/i);
-      await userEvent.click(page2);
+    await step('A página atual é marcada e o extremo é desabilitado', async () => {
+      // accessibility.item4
+      const ativo = canvas.getByRole('button', { name: 'Ir para página 1' });
+      await expect(ativo).toHaveAttribute('aria-current', 'page');
+      await expect(ativo).toHaveAttribute('data-active', 'true');
+      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toBeDisabled();
+    });
+
+    await step('Clicar numa página avisa quem controla o estado', async () => {
+      // functional.item1 — o passo VOLTA ao valor inicial no fim: o painel
+      // Interactions reexecuta a play no mesmo DOM, e sem isso a segunda rodada
+      // partiria de outra página e inverteria as asserções acima.
+      onPageChange.mockClear();
+      await userEvent.click(canvas.getByRole('button', { name: 'Ir para página 2' }));
+      await expect(onPageChange).toHaveBeenLastCalledWith(2);
+      await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+
+      await userEvent.click(canvas.getByRole('button', { name: 'Ir para página 1' }));
+      await expect(canvas.getByRole('button', { name: 'Ir para página 1' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+    });
+
+    await step('Tab percorre os controles na ordem visual', async () => {
+      // functional.item4 — a lista esperada é DERIVADA do DOM: o controle
+      // desabilitado sai da tabulação, e uma lista escrita à mão só valeria
+      // com os controls no valor padrão.
+      const esperados = [
+        canvas.getByRole('button', { name: ROTULO_ANTERIOR }),
+        canvas.getByRole('button', { name: 'Ir para página 1' }),
+        canvas.getByRole('button', { name: 'Ir para página 2' }),
+      ].filter((el) => !(el as HTMLButtonElement).disabled);
+
+      (document.activeElement as HTMLElement | null)?.blur();
+      for (const alvo of esperados) {
+        await userEvent.tab();
+        await expect(alvo).toHaveFocus();
+      }
     });
   },
 };

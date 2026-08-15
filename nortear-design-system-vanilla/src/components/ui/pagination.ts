@@ -9,8 +9,23 @@ export type PaginationOptions = {
   current: number;
   onPageChange: (page: number) => void;
   showPrevNext?: boolean;
+  /** Nome acessível do landmark. Padrão: `Paginação`. */
+  label?: string;
+  /**
+   * Alinhamento da faixa. Sem valor, ela ocupa a linha inteira e fica centrada;
+   * `start`/`end` a encolhem e a encostam na ponta — o caso do rodapé de tabela.
+   */
+  align?: 'start' | 'end';
   class?: string;
 };
+
+/** Rótulos em português — o idioma da documentação que cerca o componente. */
+const ROTULOS = {
+  navegacao: 'Paginação',
+  anterior: 'Ir para a página anterior',
+  proxima: 'Ir para a próxima página',
+  pagina: (n: number) => `Ir para página ${n}`,
+} as const;
 
 // ─── SVGs ──────────────────────────────────────────────────────────────────
 
@@ -49,35 +64,42 @@ function getPages(total: number, current: number): (number | 'ellipsis')[] {
 // ─── createPagination ──────────────────────────────────────────────────────
 
 export function createPagination(options: PaginationOptions): HTMLElement {
-  const { total, current, onPageChange, showPrevNext = true } = options;
+  const { total, current, onPageChange, showPrevNext = true, label, align } = options;
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'pagination';
   nav.setAttribute('role', 'navigation');
-  nav.setAttribute('aria-label', 'Pagination');
+  nav.setAttribute('aria-label', label ?? ROTULOS.navegacao);
+  if (align) nav.dataset.align = align;
   nav.className = cn('nds-pagination', options.class);
 
   const ul = document.createElement('ul');
+  ul.dataset.slot = 'pagination-content';
   ul.className = 'nds-pagination-list';
 
   function addItem(child: HTMLElement): void {
     const li = document.createElement('li');
+    li.dataset.slot = 'pagination-item';
     li.appendChild(child);
     ul.appendChild(li);
   }
 
-  function makeLink(label: string | null, page: number, isCurrent = false): HTMLAnchorElement {
+  function makeLink(page: number, isCurrent: boolean): HTMLAnchorElement {
     const a = document.createElement('a');
     a.href = '#';
+    a.dataset.slot = 'pagination-link';
     a.className = 'nds-pagination-link';
 
+    // Todo link numerado tem rótulo com contexto — inclusive o da página atual:
+    // "3" sozinho não diz nada em voz alta. Quem anuncia que é a página atual é
+    // o `aria-current`, nativamente e em qualquer idioma.
+    a.setAttribute('aria-label', ROTULOS.pagina(page));
     if (isCurrent) {
       a.setAttribute('aria-current', 'page');
-    } else if (label) {
-      a.setAttribute('aria-label', `Page ${page}`);
+      a.dataset.active = 'true';
     }
 
-    if (label) a.textContent = label;
+    a.textContent = String(page);
 
     a.addEventListener('click', (e) => {
       e.preventDefault();
@@ -86,19 +108,44 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     return a;
   }
 
+  /**
+   * Controle direcional.
+   *
+   * Desabilitado é `aria-disabled` MAIS `tabindex="-1"`: em `<a>` não existe
+   * `disabled`, o CSS já barra o ponteiro a partir do `aria-disabled`, e sem o
+   * tabindex negativo o controle inerte continuava na ordem de tabulação.
+   */
+  function makeDirecional(
+    direcao: 'left' | 'right',
+    rotulo: string,
+    slot: string,
+    desabilitado: boolean,
+    aoClicar: () => void,
+  ): HTMLAnchorElement {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.dataset.slot = slot;
+    a.setAttribute('aria-label', rotulo);
+    a.className = 'nds-pagination-link nds-pagination-icon';
+    if (desabilitado) {
+      a.setAttribute('aria-disabled', 'true');
+      a.tabIndex = -1;
+    }
+    a.appendChild(createChevronSvg(direcao));
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!desabilitado) aoClicar();
+    });
+    return a;
+  }
+
   // Prev
   if (showPrevNext) {
-    const prevA = document.createElement('a');
-    prevA.href = '#';
-    prevA.setAttribute('aria-label', 'Go to previous page');
-    prevA.className = 'nds-pagination-link nds-pagination-icon';
-    if (current <= 1) prevA.setAttribute('aria-disabled', 'true');
-    prevA.appendChild(createChevronSvg('left'));
-    prevA.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (current > 1) onPageChange(current - 1);
-    });
-    addItem(prevA);
+    addItem(
+      makeDirecional('left', ROTULOS.anterior, 'pagination-previous', current <= 1, () =>
+        onPageChange(current - 1),
+      ),
+    );
   }
 
   // Pages
@@ -106,30 +153,26 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   for (const page of pages) {
     if (page === 'ellipsis') {
       const span = document.createElement('span');
+      span.dataset.slot = 'pagination-ellipsis';
       span.className = 'nds-pagination-ellipsis';
       span.setAttribute('aria-hidden', 'true');
       span.textContent = '…';
       const li = document.createElement('li');
+      li.dataset.slot = 'pagination-item';
       li.appendChild(span);
       ul.appendChild(li);
     } else {
-      addItem(makeLink(String(page), page, page === current));
+      addItem(makeLink(page, page === current));
     }
   }
 
   // Next
   if (showPrevNext) {
-    const nextA = document.createElement('a');
-    nextA.href = '#';
-    nextA.setAttribute('aria-label', 'Go to next page');
-    nextA.className = 'nds-pagination-link nds-pagination-icon';
-    if (current >= total) nextA.setAttribute('aria-disabled', 'true');
-    nextA.appendChild(createChevronSvg('right'));
-    nextA.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (current < total) onPageChange(current + 1);
-    });
-    addItem(nextA);
+    addItem(
+      makeDirecional('right', ROTULOS.proxima, 'pagination-next', current >= total, () =>
+        onPageChange(current + 1),
+      ),
+    );
   }
 
   nav.appendChild(ul);

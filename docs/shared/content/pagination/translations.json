@@ -22,7 +22,7 @@
     },
     "anatomy": {
       "title": "Anatomia",
-      "item1": "<strong>Pagination</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"pagination\"</code>.",
+      "item1": "<strong>Pagination</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa os itens horizontalmente.",
       "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada controle.",
       "item4": "<strong>PaginationLink</strong> — link numerado com <code>aria-current=\"page\"</code> quando ativo.",
@@ -30,8 +30,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
-        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Próxima -->\n    </li>\n  </ul>\n</nav>"
+        "react": "<Pagination>                       {/* nav aria-label=\"Paginação\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Próxima */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"Paginação\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Próxima -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -137,7 +137,6 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "active": "Active",
         "directional": "Directional",
         "simple": {
           "name": "Simples (≤ 7 páginas)",
@@ -165,7 +164,7 @@
       "lastPage": {
         "label": "Última página (Next desabilitado)",
         "trigger": "Página atual é a última",
-        "behavior": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> + opacidade reduzida + <code>pointer-events: none</code>. Mesmo padrão para Prev quando <code>current === 1</code>."
+        "behavior": "Quando <code>current === total</code>, o link Next recebe <code>aria-disabled=\"true\"</code> e <code>tabindex=\"-1\"</code>: sai da ordem de tabulação e deixa de responder ao clique. Mesmo padrão para Prev quando <code>current === 1</code>."
       },
       "default": {
         "label": "Default",
@@ -180,17 +179,17 @@
       "active": {
         "label": "Active",
         "trigger": "Quando o número corresponde à página exibida",
-        "behavior": "Página atual — borda visível e <code>aria-current=\"page\"</code>."
+        "behavior": "Página atual — destaque visual permanente e <code>aria-current=\"page\"</code> para o leitor de tela."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "current=1 (Prev) / current=total (Next)",
-        "behavior": "Previous na primeira página ou Next na última — <code>opacity-50</code> e <code>pointer-events-none</code>."
+        "behavior": "Previous na primeira página ou Next na última — opacidade reduzida e ponteiro barrado, aplicados pelo CSS a partir de <code>aria-disabled=\"true\"</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Anel de foco visível com <code>ring-2 ring-ring</code>."
+        "behavior": "Anel de foco visível desenhado com o token <code>--ring</code> em <code>:focus-visible</code>."
       },
       "cols": {
         "state": "Estado",
@@ -220,7 +219,7 @@
         },
         "text": {
           "type": "string",
-          "default": "\"Previous\" / \"Next\"",
+          "default": "\"Anterior\" / \"Próxima\"",
           "required": "Não",
           "description": "Texto exibido em Previous e Next. Permite traduzir o label."
         },
@@ -239,7 +238,7 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Use asChild para integrar com router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "react": "// O link é um <a> de verdade: as props do elemento passam direto.\n// Para integrar com router, use o href do próprio roteador.\n<PaginationLink\n  href={`?page=${page}`}\n  isActive={page === current}\n  aria-label={`Ir para página ${page}`}\n  onClick={(e) => { e.preventDefault(); irPara(page); }}\n>\n  {page}\n</PaginationLink>",
         "angular": "<!-- routerLink no próprio host: o seletor é de atributo, então o link\n     do Angular Router convive com a diretiva sem wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
@@ -249,29 +248,33 @@
         "token": "Token",
         "class": "Classe",
         "part": "Aplicação",
-        "background": {
-          "class": "bg-background",
-          "part": "Fundo neutro do container"
-        },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto do número da página inativa"
+          "class": ".nds-pagination-link",
+          "part": "Texto do número da página"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Fundo no estado hover"
+          "class": ".nds-pagination-link:hover",
+          "part": "Fundo sob o ponteiro e na página atual"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Texto no estado hover"
-        },
-        "border": {
-          "class": "border",
-          "part": "Borda do link da página ativa"
+          "class": ".nds-pagination-link:hover",
+          "part": "Texto sob o ponteiro e na página atual"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco visível"
+          "class": ".nds-pagination-link:focus-visible",
+          "part": "Anel de foco por teclado"
+        },
+        "ellipsis": {
+          "class": ".nds-pagination-ellipsis",
+          "part": "Cor das reticências"
+        },
+        "radius": {
+          "class": ".nds-pagination-link",
+          "part": "Raio do alvo clicável"
+        },
+        "gap": {
+          "class": ".nds-pagination-list",
+          "part": "Distância entre os controles da faixa"
         }
       },
       "customizationTitle": "Customização",
@@ -283,12 +286,12 @@
       "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 e 4.1.2.",
       "items": {
-        "item1": "<code>nav</code> com <code>aria-label=\"pagination\"</code> diferencia de outros elementos de navegação",
+        "item1": "<code>nav</code> com <code>aria-label=\"Paginação\"</code> diferencia de outros elementos de navegação",
         "item2": "<code>aria-current=\"page\"</code> na página ativa anuncia ao leitor de tela",
         "item3": "Cada link numerado tem <code>aria-label</code> com contexto (\"Ir para página N\")",
         "item4": "Previous e Next têm <code>aria-label</code> descritivo",
         "item5": "PaginationEllipsis com <code>aria-hidden=\"true\"</code> — decorativo",
-        "item6": "Foco visível em todos os elementos com <code>ring-2 ring-ring</code>"
+        "item6": "Foco visível em todos os elementos, com anel desenhado a partir do token <code>--ring</code>"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
@@ -299,7 +302,7 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "navLabel": "<code>aria-label=\"pagination\"</code> no <code>&lt;nav&gt;</code> raiz",
+        "navLabel": "<code>aria-label=\"Paginação\"</code> no <code>&lt;nav&gt;</code> raiz",
         "current": "<code>aria-current=\"page\"</code> no link da página ativa",
         "linkLabel": "<code>aria-label=\"Ir para página N\"</code> em cada link numerado",
         "ellipsis": "<code>aria-hidden=\"true\"</code> no PaginationEllipsis"
@@ -331,8 +334,8 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por padrão</strong> — em SPAs sem URLs reais, componha com elemento filho para renderizar <code>&lt;button&gt;</code>.",
-      "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> só vale em <code>&lt;button&gt;</code>.",
-      "item3": "<strong>Ellipsis tipográfico</strong> — use o caractere <code>…</code> (U+2026), não três pontos <code>...</code>.",
+      "item2": "<strong>Estado disabled</strong> — em <code>&lt;a&gt;</code> não existe <code>disabled</code>. O par correto é <code>aria-disabled=\"true\"</code> mais <code>tabindex=\"-1\"</code>; a opacidade e o bloqueio do ponteiro vêm do CSS do design system.",
+      "item3": "<strong>Reticências tipográficas</strong> — o caractere <code>…</code> (U+2026) como texto do elemento, não três pontos <code>...</code> nem um ícone. É o que o leitor de tela ignora e o que o CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível.",
       "item5": "<strong>Vanilla</strong> — a factory <code>createPagination({ total, current, onPageChange })</code> não permite compor com elemento filho nem expõe <code>PaginationLink</code> individuais. Para integrar com router, use <code>onPageChange</code> e atualize a URL manualmente."
     },
@@ -382,7 +385,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
         "item3": "Focus ring visível em todos os links e botões",
         "item4": "aria-current=\"page\" presente na página ativa",
-        "item5": "aria-label descritivo em Previous, Next e links numerados"
+        "item5": "aria-label descritivo em Previous, Next e links numerados",
+        "item6": "Alvo de toque de no mínimo 24×24 px em todos os controles (WCAG 2.5.8)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -450,7 +454,7 @@
     },
     "anatomy": {
       "title": "Anatomy",
-      "item1": "<strong>Pagination</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"pagination\"</code>.",
+      "item1": "<strong>Pagination</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — <code>&lt;ul&gt;</code> list grouping items horizontally.",
       "item3": "<strong>PaginationItem</strong> — <code>&lt;li&gt;</code> wrapper for each control.",
       "item4": "<strong>PaginationLink</strong> — numbered link with <code>aria-current=\"page\"</code> when active.",
@@ -458,8 +462,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — decorative indicator (<code>aria-hidden</code>) of omitted pages.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
-        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Previous -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Next -->\n    </li>\n  </ul>\n</nav>"
+        "react": "<Pagination>                       {/* nav aria-label=\"Paginação\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Previous */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Next */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"Paginação\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Previous -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Next -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -565,7 +569,6 @@
       "title": "Variants",
       "items": {
         "default": "Default",
-        "active": "Active",
         "directional": "Directional",
         "simple": {
           "name": "Simple (≤ 7 pages)",
@@ -593,7 +596,7 @@
       "lastPage": {
         "label": "Last page (Next disabled)",
         "trigger": "Current page is the last",
-        "behavior": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> + reduced opacity + <code>pointer-events: none</code>. Same pattern for Prev when <code>current === 1</code>."
+        "behavior": "When <code>current === total</code>, the Next link receives <code>aria-disabled=\"true\"</code> and <code>tabindex=\"-1\"</code>: it leaves the tab order and stops responding to clicks. Same pattern for Prev when <code>current === 1</code>."
       },
       "default": {
         "label": "Default",
@@ -608,17 +611,17 @@
       "active": {
         "label": "Active",
         "trigger": "When the number matches the displayed page",
-        "behavior": "Current page — visible border and <code>aria-current=\"page\"</code>."
+        "behavior": "Current page — permanent visual highlight and <code>aria-current=\"page\"</code> for the screen reader."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "current=1 (Prev) / current=total (Next)",
-        "behavior": "Previous on the first page or Next on the last — <code>opacity-50</code> and <code>pointer-events-none</code>."
+        "behavior": "Previous on the first page or Next on the last — reduced opacity and blocked pointer, applied by CSS from <code>aria-disabled=\"true\"</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Visible focus ring with <code>ring-2 ring-ring</code>."
+        "behavior": "Visible focus ring drawn with the <code>--ring</code> token on <code>:focus-visible</code>."
       },
       "cols": {
         "state": "State",
@@ -648,7 +651,7 @@
         },
         "text": {
           "type": "string",
-          "default": "\"Previous\" / \"Next\"",
+          "default": "\"Anterior\" / \"Próxima\"",
           "required": "No",
           "description": "Label text shown on Previous and Next. Allows translation."
         },
@@ -667,7 +670,7 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Use asChild to integrate with router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "react": "// The link is a real <a>: element props go straight through.\n// To integrate with a router, use the router own href.\n<PaginationLink\n  href={`?page=${page}`}\n  isActive={page === current}\n  aria-label={`Go to page ${page}`}\n  onClick={(e) => { e.preventDefault(); goTo(page); }}\n>\n  {page}\n</PaginationLink>",
         "angular": "<!-- routerLink on the host itself: the selector is attribute-based, so the\n     Angular Router link coexists with the directive without a wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
@@ -677,29 +680,33 @@
         "token": "Token",
         "class": "Class",
         "part": "Application",
-        "background": {
-          "class": "bg-background",
-          "part": "Neutral container background"
-        },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Inactive page number text"
+          "class": ".nds-pagination-link",
+          "part": "Page number text"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Hover state background"
+          "class": ".nds-pagination-link:hover",
+          "part": "Background under the pointer and on the current page"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Hover state text"
-        },
-        "border": {
-          "class": "border",
-          "part": "Active page link border"
+          "class": ".nds-pagination-link:hover",
+          "part": "Text under the pointer and on the current page"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Visible focus ring"
+          "class": ".nds-pagination-link:focus-visible",
+          "part": "Keyboard focus ring"
+        },
+        "ellipsis": {
+          "class": ".nds-pagination-ellipsis",
+          "part": "Ellipsis color"
+        },
+        "radius": {
+          "class": ".nds-pagination-link",
+          "part": "Radius of the clickable target"
+        },
+        "gap": {
+          "class": ".nds-pagination-list",
+          "part": "Distance between the controls in the strip"
         }
       },
       "customizationTitle": "Customization",
@@ -711,12 +718,12 @@
       "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 and 4.1.2.",
       "items": {
-        "item1": "<code>nav</code> with <code>aria-label=\"pagination\"</code> distinguishes from other navigation elements",
+        "item1": "<code>nav</code> with <code>aria-label=\"Paginação\"</code> distinguishes from other navigation elements",
         "item2": "<code>aria-current=\"page\"</code> on the active page is announced to the screen reader",
         "item3": "Each numbered link has an <code>aria-label</code> with context (\"Go to page N\")",
         "item4": "Previous and Next have descriptive <code>aria-label</code>",
         "item5": "PaginationEllipsis with <code>aria-hidden=\"true\"</code> — decorative",
-        "item6": "Visible focus on all elements with <code>ring-2 ring-ring</code>"
+        "item6": "Visible focus on every element, with a ring drawn from the <code>--ring</code> token"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
@@ -727,7 +734,7 @@
       },
       "aria": {
         "title": "ARIA Attributes",
-        "navLabel": "<code>aria-label=\"pagination\"</code> on the root <code>&lt;nav&gt;</code>",
+        "navLabel": "<code>aria-label=\"Paginação\"</code> on the root <code>&lt;nav&gt;</code>",
         "current": "<code>aria-current=\"page\"</code> on the active page link",
         "linkLabel": "<code>aria-label=\"Go to page N\"</code> on each numbered link",
         "ellipsis": "<code>aria-hidden=\"true\"</code> on PaginationEllipsis"
@@ -759,8 +766,8 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Renders <code>&lt;a&gt;</code> by default</strong> — in SPAs without real URLs, compose with a child element to render <code>&lt;button&gt;</code>.",
-      "item2": "<strong>Disabled state</strong> — for <code>&lt;a&gt;</code> links, use <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> only works on <code>&lt;button&gt;</code>.",
-      "item3": "<strong>Typographic ellipsis</strong> — use the <code>…</code> character (U+2026), not three dots <code>...</code>.",
+      "item2": "<strong>Disabled state</strong> — <code>&lt;a&gt;</code> has no <code>disabled</code>. The correct pair is <code>aria-disabled=\"true\"</code> plus <code>tabindex=\"-1\"</code>; opacity and pointer blocking come from the design system CSS.",
+      "item3": "<strong>Typographic ellipsis</strong> — the <code>…</code> character (U+2026) as the element text, not three dots <code>...</code> and not an icon. It is what the screen reader ignores and what the CSS sizes.",
       "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible.",
       "item5": "<strong>Vanilla</strong> — the <code>createPagination({ total, current, onPageChange })</code> factory does not allow composing with a child element nor exposes individual <code>PaginationLink</code>. To integrate with a router, use <code>onPageChange</code> and update the URL manually."
     },
@@ -810,7 +817,8 @@
         "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
         "item3": "Visible focus ring on all links and buttons",
         "item4": "aria-current=\"page\" present on the active page",
-        "item5": "Descriptive aria-label on Previous, Next and numbered links"
+        "item5": "Descriptive aria-label on Previous, Next and numbered links",
+        "item6": "Minimum 24×24 px target size on every control (WCAG 2.5.8)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -878,7 +886,7 @@
     },
     "anatomy": {
       "title": "Anatomía",
-      "item1": "<strong>Pagination</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"pagination\"</code>.",
+      "item1": "<strong>Pagination</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa los ítems horizontalmente.",
       "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada control.",
       "item4": "<strong>PaginationLink</strong> — link numerado con <code>aria-current=\"page\"</code> cuando está activo.",
@@ -886,8 +894,8 @@
       "item6": "<strong>PaginationEllipsis</strong> — indicador decorativo (<code>aria-hidden</code>) de páginas omitidas.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Pagination>                       {/* nav aria-label=\"pagination\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
-        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"pagination\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Siguiente -->\n    </li>\n  </ul>\n</nav>"
+        "react": "<Pagination>                       {/* nav aria-label=\"Paginação\" */}\n  <PaginationContent>              {/* ul */}\n    <PaginationItem>               {/* li */}\n      <PaginationPrevious />       {/* Anterior */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink isActive>1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />       {/* … */}\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext />           {/* Siguiente */}\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>",
+        "angular": "<nav ndsPagination>                <!-- nav aria-label=\"Paginação\" -->\n  <ul ndsPaginationContent>        <!-- ul -->\n    <li ndsPaginationItem>         <!-- li -->\n      <a ndsPaginationPrevious></a>   <!-- Anterior -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationLink [isActive]=\"true\">1</a>\n    </li>\n    <li ndsPaginationItem>\n      <span ndsPaginationEllipsis></span>   <!-- … -->\n    </li>\n    <li ndsPaginationItem>\n      <a ndsPaginationNext></a>       <!-- Siguiente -->\n    </li>\n  </ul>\n</nav>"
       }
     },
     "usage": {
@@ -993,7 +1001,6 @@
       "title": "Variantes",
       "items": {
         "default": "Default",
-        "active": "Active",
         "directional": "Directional",
         "simple": {
           "name": "Simple (≤ 7 páginas)",
@@ -1021,7 +1028,7 @@
       "lastPage": {
         "label": "Última página (Next deshabilitado)",
         "trigger": "La página actual es la última",
-        "behavior": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> + opacidad reducida + <code>pointer-events: none</code>. Mismo patrón para Prev cuando <code>current === 1</code>."
+        "behavior": "Cuando <code>current === total</code>, el link Next recibe <code>aria-disabled=\"true\"</code> y <code>tabindex=\"-1\"</code>: sale del orden de tabulación y deja de responder al clic. Mismo patrón para Prev cuando <code>current === 1</code>."
       },
       "default": {
         "label": "Default",
@@ -1036,17 +1043,17 @@
       "active": {
         "label": "Active",
         "trigger": "Cuando el número corresponde a la página mostrada",
-        "behavior": "Página actual — borde visible y <code>aria-current=\"page\"</code>."
+        "behavior": "Página actual — destaque visual permanente y <code>aria-current=\"page\"</code> para el lector de pantalla."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "current=1 (Prev) / current=total (Next)",
-        "behavior": "Previous en la primera página o Next en la última — <code>opacity-50</code> y <code>pointer-events-none</code>."
+        "behavior": "Previous en la primera página o Next en la última — opacidad reducida y puntero bloqueado, aplicados por CSS a partir de <code>aria-disabled=\"true\"</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab",
-        "behavior": "Anillo de foco visible con <code>ring-2 ring-ring</code>."
+        "behavior": "Anillo de foco visible dibujado con el token <code>--ring</code> en <code>:focus-visible</code>."
       },
       "cols": {
         "state": "Estado",
@@ -1076,7 +1083,7 @@
         },
         "text": {
           "type": "string",
-          "default": "\"Previous\" / \"Next\"",
+          "default": "\"Anterior\" / \"Próxima\"",
           "required": "No",
           "description": "Texto mostrado en Previous y Next. Permite traducir la etiqueta."
         },
@@ -1095,7 +1102,7 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Usa asChild para integrar con router (Next.js, React Router, SPA)\n<PaginationLink asChild isActive={page === current}>\n  <Link href={`?page=${page}`}>{page}</Link>\n</PaginationLink>",
+        "react": "// El link es un <a> real: las props del elemento pasan directo.\n// Para integrar con router, usa el href del propio enrutador.\n<PaginationLink\n  href={`?page=${page}`}\n  isActive={page === current}\n  aria-label={`Ir a la página ${page}`}\n  onClick={(e) => { e.preventDefault(); irA(page); }}\n>\n  {page}\n</PaginationLink>",
         "angular": "<!-- routerLink en el propio host: el selector es de atributo, así que el\n     enlace del Angular Router convive con la directiva sin wrapper -->\n<a\n  ndsPaginationLink\n  [isActive]=\"page === current\"\n  [routerLink]=\"[]\"\n  [queryParams]=\"{ page }\"\n>{{ page }}</a>"
       }
     },
@@ -1105,29 +1112,33 @@
         "token": "Token",
         "class": "Clase",
         "part": "Aplicación",
-        "background": {
-          "class": "bg-background",
-          "part": "Fondo neutral del contenedor"
-        },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto del número de página inactiva"
+          "class": ".nds-pagination-link",
+          "part": "Texto del número de página"
         },
         "accent": {
-          "class": "bg-accent",
-          "part": "Fondo en estado hover"
+          "class": ".nds-pagination-link:hover",
+          "part": "Fondo bajo el puntero y en la página actual"
         },
         "accentForeground": {
-          "class": "text-accent-foreground",
-          "part": "Texto en estado hover"
-        },
-        "border": {
-          "class": "border",
-          "part": "Borde del link de la página activa"
+          "class": ".nds-pagination-link:hover",
+          "part": "Texto bajo el puntero y en la página actual"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco visible"
+          "class": ".nds-pagination-link:focus-visible",
+          "part": "Anillo de foco por teclado"
+        },
+        "ellipsis": {
+          "class": ".nds-pagination-ellipsis",
+          "part": "Color de los puntos suspensivos"
+        },
+        "radius": {
+          "class": ".nds-pagination-link",
+          "part": "Radio del área clicable"
+        },
+        "gap": {
+          "class": ".nds-pagination-list",
+          "part": "Distancia entre los controles de la franja"
         }
       },
       "customizationTitle": "Personalización",
@@ -1139,12 +1150,12 @@
       "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 y 4.1.2.",
       "items": {
-        "item1": "<code>nav</code> con <code>aria-label=\"pagination\"</code> diferencia de otros elementos de navegación",
+        "item1": "<code>nav</code> con <code>aria-label=\"Paginação\"</code> diferencia de otros elementos de navegación",
         "item2": "<code>aria-current=\"page\"</code> en la página activa se anuncia al lector de pantalla",
         "item3": "Cada link numerado tiene <code>aria-label</code> con contexto (\"Ir a la página N\")",
         "item4": "Previous y Next tienen <code>aria-label</code> descriptivo",
         "item5": "PaginationEllipsis con <code>aria-hidden=\"true\"</code> — decorativo",
-        "item6": "Foco visible en todos los elementos con <code>ring-2 ring-ring</code>"
+        "item6": "Foco visible en todos los elementos, con un anillo dibujado a partir del token <code>--ring</code>"
       },
       "keyboard": {
         "title": "Navegación por Teclado",
@@ -1155,7 +1166,7 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "navLabel": "<code>aria-label=\"pagination\"</code> en el <code>&lt;nav&gt;</code> raíz",
+        "navLabel": "<code>aria-label=\"Paginação\"</code> en el <code>&lt;nav&gt;</code> raíz",
         "current": "<code>aria-current=\"page\"</code> en el link de la página activa",
         "linkLabel": "<code>aria-label=\"Ir a la página N\"</code> en cada link numerado",
         "ellipsis": "<code>aria-hidden=\"true\"</code> en PaginationEllipsis"
@@ -1187,8 +1198,8 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por defecto</strong> — en SPAs sin URLs reales, compón con elemento hijo para renderizar <code>&lt;button&gt;</code>.",
-      "item2": "<strong>Estado disabled</strong> — para links <code>&lt;a&gt;</code>, usa <code>aria-disabled</code> + <code>pointer-events-none</code>; <code>disabled</code> solo aplica a <code>&lt;button&gt;</code>.",
-      "item3": "<strong>Ellipsis tipográfico</strong> — usa el carácter <code>…</code> (U+2026), no tres puntos <code>...</code>.",
+      "item2": "<strong>Estado disabled</strong> — en <code>&lt;a&gt;</code> no existe <code>disabled</code>. El par correcto es <code>aria-disabled=\"true\"</code> más <code>tabindex=\"-1\"</code>; la opacidad y el bloqueo del puntero vienen del CSS del design system.",
+      "item3": "<strong>Puntos suspensivos tipográficos</strong> — el carácter <code>…</code> (U+2026) como texto del elemento, no tres puntos <code>...</code> ni un icono. Es lo que el lector de pantalla ignora y lo que el CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible.",
       "item5": "<strong>Vanilla</strong> — la factory <code>createPagination({ total, current, onPageChange })</code> no permite componer con elemento hijo ni expone <code>PaginationLink</code> individuales. Para integrar con router, usa <code>onPageChange</code> y actualiza la URL manualmente."
     },
@@ -1238,7 +1249,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
         "item3": "Anillo de foco visible en todos los links y botones",
         "item4": "aria-current=\"page\" presente en la página activa",
-        "item5": "aria-label descriptivo en Previous, Next y links numerados"
+        "item5": "aria-label descriptivo en Previous, Next y links numerados",
+        "item6": "Área de destino mínima de 24×24 px en todos los controles (WCAG 2.5.8)"
       },
       "visual": {
         "title": "Regresión Visual",

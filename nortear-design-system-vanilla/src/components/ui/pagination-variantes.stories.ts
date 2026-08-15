@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
+import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
+
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -12,7 +16,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Pagination: Default (link inativo, ghost), Active (página atual com aria-current="page" e estilo destacado) e Directional (Previous/Next com ícone). NOTA: o factory createPagination (Vanilla) não expõe prop `variant` — a variante "active" é aplicada internamente quando `page === current`.',
+          'Variantes do link de paginação: Default (inativo), Active (página atual, com aria-current=page) e Directional (anterior/próxima com ícone). A factory não expõe uma prop de variante — a marcação da página atual é aplicada quando `page === current`.',
       },
     },
   },
@@ -23,12 +27,11 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement, minHeight = 100): HTMLElement {
+function wrap(child: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2 nds-min-h-24';
   wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = `${minHeight}px`;
+  wrapper.dataset.align = 'center';
   wrapper.appendChild(child);
   return wrapper;
 }
@@ -42,73 +45,94 @@ export const Default: Story = {
         total: 5,
         current: 2,
         showPrevNext: false,
+        label: 'Paginação com link inativo',
         onPageChange: () => {},
       }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('5 links numerados visíveis (sem Prev/Next)', async () => {
+
+    await step('Cinco números visíveis, sem controles direcionais', async () => {
       const links = canvas.getAllByRole('link');
       await expect(links.length).toBe(5);
+      await expect(canvasElement.querySelector('[data-slot="pagination-previous"]')).toBeNull();
     });
-    await step('Apenas 1 link com aria-current="page"', async () => {
-      const current = canvasElement.querySelectorAll('a[aria-current="page"]');
-      await expect(current.length).toBe(1);
+
+    await step('O link inativo não se anuncia como página atual', async () => {
+      const inativo = canvas.getByRole('link', { name: 'Ir para página 3' });
+      await expect(inativo).not.toHaveAttribute('aria-current');
+      // `data-active` só existe quando é verdade — atributo presente com valor
+      // "false" faria `[data-active]` casar o item errado.
+      await expect(inativo.hasAttribute('data-active')).toBe(false);
     });
   },
 };
 
 export const Active: Story = {
   name: 'Active (current page)',
-  render: () => {
-    const nav = createPagination({
-      total: 7,
-      current: 4,
-      showPrevNext: false,
-      onPageChange: () => {},
-    });
-    // Reforça visualmente o "outline" da variante active (factory marca apenas
-    // aria-current + pointer-events-none — aqui acrescentamos border para parity).
-    const current = nav.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-    if (current) current.classList.add('nds-border-default');
-    return wrap(nav);
-  },
+  render: () =>
+    wrap(
+      createPagination({
+        total: 7,
+        current: 4,
+        showPrevNext: false,
+        label: 'Paginação com página atual',
+        onPageChange: () => {},
+      }),
+    ),
   play: async ({ canvasElement, step }) => {
-    await step('Link 4 marcado com aria-current="page"', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toBeTruthy();
-      await expect(current?.textContent?.trim()).toBe('4');
+    const canvas = within(canvasElement);
+
+    await step('Exatamente um link é a página atual', async () => {
+      const marcados = canvasElement.querySelectorAll('[aria-current="page"]');
+      await expect(marcados.length).toBe(1);
+      await expect(marcados[0].textContent?.trim()).toBe('4');
     });
-    await step('Link ativo marcado via aria-current=page (não navega)', async () => {
-      const current = canvasElement.querySelector('a[aria-current="page"]');
-      await expect(current).toHaveAttribute('aria-current', 'page');
+
+    await step('A página atual continua rotulada e destacada', async () => {
+      const ativo = canvas.getByRole('link', { name: 'Ir para página 4' });
+      await expect(ativo).toHaveAttribute('aria-current', 'page');
+      await expect(ativo).toHaveAttribute('data-active', 'true');
     });
   },
 };
 
 export const Directional: Story = {
-  name: 'Directional (Previous/Next)',
+  name: 'Directional (previous/next)',
+  parameters: { covers: ['accessibility.item5', 'accessibility.item6'] },
   render: () =>
     wrap(
       createPagination({
         total: 8,
         current: 4,
         showPrevNext: true,
+        label: 'Paginação direcional',
         onPageChange: () => {},
       }),
     ),
   play: async ({ canvasElement, step }) => {
-    await step('Previous e Next presentes com aria-label', async () => {
-      const prev = canvasElement.querySelector('a[aria-label="Go to previous page"]');
-      const next = canvasElement.querySelector('a[aria-label="Go to next page"]');
-      await expect(prev).toBeTruthy();
-      await expect(next).toBeTruthy();
+    const canvas = within(canvasElement);
+
+    await step('Os controles de direção têm rótulo em português', async () => {
+      // accessibility.item5 — o ícone não tem texto: sem o rótulo, o controle
+      // fica mudo. Antes daqui ele saía como "Go to previous page".
+      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
+      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+      await expect(anterior).toHaveClass('nds-pagination-icon');
+      await expect(proxima).toHaveClass('nds-pagination-icon');
+      await expect(anterior.querySelector('svg')).not.toBeNull();
+      await expect(proxima.querySelector('svg')).not.toBeNull();
     });
-    await step('Ambos contêm um <svg> (ícone chevron)', async () => {
-      const prev = canvasElement.querySelector('a[aria-label="Go to previous page"] svg');
-      const next = canvasElement.querySelector('a[aria-label="Go to next page"] svg');
-      await expect(prev).toBeTruthy();
-      await expect(next).toBeTruthy();
+
+    await step('O ícone é decoração, não conteúdo', async () => {
+      for (const icone of canvasElement.querySelectorAll('svg')) {
+        await expect(icone).toHaveAttribute('aria-hidden', 'true');
+      }
+    });
+
+    await step('Todo controle alcança o alvo de toque mínimo', async () => {
+      // accessibility.item6 — WCAG 2.5.8 pede 24×24 CSS px.
+      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
     });
   },
 };

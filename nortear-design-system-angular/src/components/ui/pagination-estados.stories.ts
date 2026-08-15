@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
+import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
 import {
   NdsPagination,
   NdsPaginationContent,
@@ -242,47 +243,14 @@ export const FocusVisible: Story = {
 };
 
 // ─── Contraste ────────────────────────────────────────────────────────────────
-
-/** `rgb(...)`/`rgba(...)` → canal; devolve null quando o valor é transparente. */
-function canais(valor: string): [number, number, number] | null {
-  const bruto = valor.match(/rgba?\(([^)]+)\)/);
-  if (!bruto) return null;
-  const partes = bruto[1].split(/[,/]/).map((p) => parseFloat(p));
-  if (partes.length >= 4 && partes[3] === 0) return null;
-  return [partes[0], partes[1], partes[2]];
-}
-
-/** Luminância relativa da WCAG 2.2 (fórmula de 1.4.3). */
-function luminancia([r, g, b]: [number, number, number]): number {
-  const linear = [r, g, b].map((v) => {
-    const s = v / 255;
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
-}
-
-function razaoDeContraste(
-  a: [number, number, number],
-  b: [number, number, number],
-): number {
-  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
-}
-
-/** Primeiro fundo opaco subindo a árvore — o link ghost não pinta o próprio. */
-function fundoEfetivo(elemento: HTMLElement): [number, number, number] {
-  let no: HTMLElement | null = elemento;
-  while (no) {
-    const cor = canais(getComputedStyle(no).backgroundColor);
-    if (cor) return cor;
-    no = no.parentElement;
-  }
-  return [255, 255, 255];
-}
+//
+// A conta vive no colhedor compartilhado (docs/shared/testing/pagination-probe),
+// e não aqui: as cinco stacks medem a mesma coisa do mesmo jeito, então uma
+// divergência aparece como diferença de valor e não de método.
 
 export const Contrast: Story = {
   parameters: {
-    covers: ['accessibility.item2'],
+    covers: ['accessibility.item2', 'accessibility.item6'],
     docs: {
       description: {
         story:
@@ -292,31 +260,19 @@ export const Contrast: Story = {
   },
   render: () => faixa('Paginação medida por contraste', 3),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
-      // accessibility.item2 — o axe também mede isso, mas só no estado que a
-      // story renderiza; aqui a conta é explícita e nomeia quem falhou.
-      const links = canvas.getAllByRole('link') as HTMLElement[];
-      await expect(links.length).toBe(7);
-      for (const link of links) {
-        const cor = canais(getComputedStyle(link).color);
-        await expect(cor).not.toBeNull();
-        const razao = razaoDeContraste(cor!, fundoEfetivo(link));
-        await expect(razao).toBeGreaterThanOrEqual(4.5);
-      }
+      // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
+      // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
+      // A página atual troca de variante (ghost → outline): medir TODOS é o que
+      // impede um defeito que só apareceria na página selecionada.
+      const medidas = contrastesDaFaixa(canvasElement);
+      await expect(medidas.length).toBe(7);
+      await expect(JSON.stringify(medidas.filter((m) => m.razao < 4.5))).toBe('[]');
     });
 
-    await step('O contraste não depende de qual página está ativa', async () => {
-      // A página atual troca de variante (ghost → outline). Se o par de cores
-      // da variante ativa fosse mais fraco, o defeito só apareceria na página
-      // que por acaso estivesse selecionada.
-      const ativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 3` });
-      const inativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 4` });
-      for (const link of [ativo, inativo]) {
-        const razao = razaoDeContraste(canais(getComputedStyle(link).color)!, fundoEfetivo(link));
-        await expect(razao).toBeGreaterThanOrEqual(4.5);
-      }
+    await step('Todo controle alcança o alvo de toque mínimo', async () => {
+      // accessibility.item6
+      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
     });
   },
 };

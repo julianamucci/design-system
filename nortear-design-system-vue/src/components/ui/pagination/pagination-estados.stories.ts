@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, fn, userEvent } from 'storybook/test';
+import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
 import {
   Pagination,
   PaginationContent,
@@ -20,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Estados canônicos do Pagination: Default (link inativo), Hover (bg-accent), Active (página atual com aria-current), Disabled (Previous na primeira ou Next na última, com aria-disabled e pointer-events-none) e Focus (ring-2 ring-ring visível).',
+          'Estados canônicos do Pagination: Default, Hover, Active, Disabled (Previous na primeira página), Focus e Contrast.',
       },
     },
   },
@@ -38,116 +39,221 @@ const sharedComponents = {
   PaginationPrevious,
 };
 
-export const Default: Story = {
-  parameters: {
-    docs: { description: { story: 'Link inativo — fundo transparente, texto em foreground.' } },
-  },
-  render: () => ({
+const ROTULO_ANTERIOR = 'Ir para a página anterior';
+const ROTULO_PROXIMA = 'Ir para a próxima página';
+
+/** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
+const onPageChange = fn();
+
+/**
+ * Faixa de 5 páginas com a página atual parametrizada. Um só molde para as
+ * stories de estado evita que uma delas envelheça sozinha.
+ */
+function faixa(rotulo: string, atual: number) {
+  return () => ({
     components: sharedComponents,
+    setup: () => ({
+      rotulo,
+      atual,
+      paginas: [1, 2, 3, 4, 5],
+      onPageChange,
+    }),
     template: `
-      <Pagination :total="50" :items-per-page="10" :default-page="1">
+      <Pagination :total="50" :items-per-page="10" :page="atual" :aria-label="rotulo">
         <PaginationContent>
-          <PaginationItem><PaginationLink aria-label="Ir para página 2">2</PaginationLink></PaginationItem>
+          <PaginationItem>
+            <PaginationPrevious @click="onPageChange(atual - 1)" />
+          </PaginationItem>
+          <PaginationItem v-for="n in paginas" :key="n">
+            <PaginationLink
+              href="#"
+              :is-active="n === atual"
+              :aria-label="\`Ir para página \${n}\`"
+              @click.prevent="onPageChange(n)"
+            >
+              {{ n }}
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext @click="onPageChange(atual + 1)" />
+          </PaginationItem>
         </PaginationContent>
       </Pagination>
     `,
-  }),
+  });
+}
+
+export const Default: Story = {
+  parameters: {
+    docs: { description: { story: 'Estado padrão — sem fundo, texto em foreground e cursor de clique.' } },
+  },
+  render: faixa('Paginação em repouso', 3),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const link = canvas.getByLabelText(/Ir para página 2/i);
+    const link = canvas.getByRole('link', { name: 'Ir para página 4' });
     await expect(link).toBeVisible();
+    await expect(link).not.toHaveAttribute('aria-current');
+    await expect(getComputedStyle(link).pointerEvents).toBe('auto');
   },
 };
 
 export const Hover: Story = {
   parameters: {
-    pseudo: { hover: true },
-    docs: { description: { story: 'Estado hover — bg-accent + text-accent-foreground (simulado via parameters.pseudo).' } },
+    docs: {
+      description: {
+        story:
+          'Sob o ponteiro o link recebe fundo accent. A afordância é o cursor de clique, e o alvo tem que estar realmente alcançável.',
+      },
+    },
   },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Pagination :total="50" :items-per-page="10" :default-page="1">
-        <PaginationContent>
-          <PaginationItem><PaginationLink aria-label="Ir para página 2">2</PaginationLink></PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    `,
-  }),
+  render: faixa('Paginação sob o ponteiro', 3),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole('link', { name: 'Ir para página 4' });
+    await userEvent.hover(link);
+    // Não se assere a cor do hover: `:hover` computado é frágil no harness. O
+    // que prova a afordância é o cursor, e o que prova que o clique CHEGA é o
+    // elemento devolvido no centro da caixa.
+    await expect(getComputedStyle(link).cursor).toBe('pointer');
+    const caixa = link.getBoundingClientRect();
+    const alvo = document.elementFromPoint(
+      caixa.left + caixa.width / 2,
+      caixa.top + caixa.height / 2,
+    );
+    await expect(link.contains(alvo)).toBe(true);
   },
 };
 
 export const Active: Story = {
   parameters: {
-    docs: { description: { story: 'Página atual — isActive aplica outline + aria-current="page".' } },
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Página atual destacada no meio da faixa — o caso que o Chromatic fotografa.' } },
   },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Pagination :total="50" :items-per-page="10" :default-page="3">
-        <PaginationContent>
-          <PaginationItem><PaginationLink :is-active="true" aria-label="Página atual, 3">3</PaginationLink></PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
+  render: faixa('Paginação com página atual', 3),
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const active = canvas.getByLabelText(/Página atual, 3/i);
-    await expect(active).toHaveAttribute('aria-current', 'page');
+
+    await step('Exatamente um link é a página atual', async () => {
+      // visual.item3
+      const marcados = canvasElement.querySelectorAll('[aria-current="page"]');
+      await expect(marcados.length).toBe(1);
+      await expect(marcados[0]).toHaveTextContent('3');
+    });
+
+    await step('O destaque é visual e não depende da posição', async () => {
+      await expect(canvas.getByRole('link', { name: 'Ir para página 3' })).toHaveClass(
+        'nds-button-outline',
+      );
+      await expect(canvas.getByRole('link', { name: 'Ir para página 2' })).toHaveClass(
+        'nds-button-ghost',
+      );
+    });
   },
 };
 
 export const Disabled: Story = {
   parameters: {
+    covers: ['functional.item2', 'visual.item4'],
     docs: {
       description: {
         story:
-          'Previous na primeira página recebe aria-disabled="true" e pointer-events-none — reka-ui aplica automaticamente quando page === 1.',
+          'Na primeira página o controle Anterior fica desabilitado: opacidade reduzida, fora da tabulação e sem navegar.',
       },
     },
   },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Pagination :total="50" :items-per-page="10" :default-page="1">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious aria-label="Ir para a página anterior">
-              <span class="nds-hidden sm:block">Anterior</span>
-            </PaginationPrevious>
-          </PaginationItem>
-          <PaginationItem><PaginationLink :is-active="true" aria-label="Página atual, 1">1</PaginationLink></PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
+  render: faixa('Paginação na primeira página', 1),
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const prev = canvas.getByLabelText(/anterior/i);
-    // reka-ui aplica disabled/aria-disabled quando estamos na primeira página
-    await expect(prev).toBeVisible();
+    const anterior = canvas.getByRole('button', { name: ROTULO_ANTERIOR });
+
+    await step('Anterior está marcado como desabilitado', async () => {
+      // visual.item4 — aqui o controle é um `<button>`, então o `disabled`
+      // nativo já tira da tabulação; a opacidade e o bloqueio do ponteiro vêm
+      // de `.nds-button:disabled`, no CSS compartilhado.
+      await expect(anterior).toBeDisabled();
+      await expect(getComputedStyle(anterior).pointerEvents).toBe('none');
+      await expect(Number(getComputedStyle(anterior).opacity)).toBeLessThan(1);
+    });
+
+    await step('Clicar em Anterior não navega', async () => {
+      // functional.item2 — o clique sintético do elemento, e não `fireEvent`:
+      // aqui o controle é um <button> com `disabled` nativo, e o navegador barra
+      // tanto o clique real quanto o `click()` de um script. `fireEvent`
+      // despacharia o evento à força e mediria uma rota que não existe fora do
+      // teste.
+      onPageChange.mockClear();
+      anterior.click();
+      await expect(onPageChange).not.toHaveBeenCalled();
+    });
+
+    await step('Próxima continua ativo', async () => {
+      const proxima = canvas.getByRole('button', { name: ROTULO_PROXIMA });
+      await expect(proxima).not.toBeDisabled();
+      onPageChange.mockClear();
+      await userEvent.click(proxima);
+      await expect(onPageChange).toHaveBeenLastCalledWith(2);
+    });
   },
 };
 
 export const Focus: Story = {
   parameters: {
-    pseudo: { focusVisible: true },
-    docs: { description: { story: 'Foco visível — ring-2 ring-ring (simulado via parameters.pseudo).' } },
+    covers: ['accessibility.item3'],
+    docs: {
+      description: {
+        story:
+          'Foco por teclado desenha um anel visível em qualquer link da faixa — inclusive no da página atual.',
+      },
+    },
   },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <Pagination :total="50" :items-per-page="10" :default-page="1">
-        <PaginationContent>
-          <PaginationItem><PaginationLink aria-label="Ir para página 2">2</PaginationLink></PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  render: faixa('Paginação com foco', 3),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O anel de foco aparece no link numerado', async () => {
+      // accessibility.item3 — medir a sombra computada é o que prova que a
+      // regra do CSS compartilhado chegou ao elemento, e não só que o foco
+      // chegou. `ring-2 ring-ring`, que a documentação citava, não existe.
+      const link = canvas.getByRole('link', { name: 'Ir para página 2' });
+      link.blur();
+      link.focus();
+      await expect(link).toHaveFocus();
+      await expect(getComputedStyle(link).boxShadow).not.toBe('none');
+    });
+
+    await step('A página atual também é focável', async () => {
+      const ativo = canvas.getByRole('link', { name: 'Ir para página 3' });
+      ativo.blur();
+      ativo.focus();
+      await expect(ativo).toHaveFocus();
+      await expect(getComputedStyle(ativo).boxShadow).not.toBe('none');
+    });
+  },
+};
+
+export const Contrast: Story = {
+  parameters: {
+    covers: ['accessibility.item2', 'accessibility.item6'],
+    docs: {
+      description: {
+        story:
+          'O texto de todo link da faixa — ativo, inativo e direcional — fica acima de 4.5:1 sobre o fundo em que aparece.',
+      },
+    },
+  },
+  render: faixa('Paginação medida por contraste', 3),
+  play: async ({ canvasElement, step }) => {
+    await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
+      // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
+      // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
+      const medidas = contrastesDaFaixa(canvasElement);
+      await expect(medidas.length).toBe(7);
+      await expect(JSON.stringify(medidas.filter((m) => m.razao < 4.5))).toBe('[]');
+    });
+
+    await step('Todo controle alcança o alvo de toque mínimo', async () => {
+      // accessibility.item6
+      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+    });
   },
 };

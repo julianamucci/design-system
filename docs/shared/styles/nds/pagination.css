@@ -3,7 +3,7 @@
  * Navegação de página numerada com prev/next + chevrons + ellipsis.
  *
  * Estrutura:
- *   <nav class="nds-pagination" aria-label="Pagination">
+ *   <nav class="nds-pagination" aria-label="Paginação">
  *     <ul class="nds-pagination-list">
  *       <li><a class="nds-pagination-link nds-pagination-icon">‹</a></li>
  *       <li><a class="nds-pagination-link" aria-current="page">1</a></li>
@@ -22,6 +22,28 @@
   width: 100%;
   margin-inline: auto;
 }
+
+/*
+ * Alinhamento da faixa — `data-align="start" | "end"`.
+ *
+ * O padrão (sem atributo) é a faixa sozinha numa linha própria: bloco de largura
+ * total, centrado. Num rodapé de tabela ela divide a linha com o contador de
+ * resultados, e aí os três defaults trabalham contra — a largura total empurra o
+ * contador, a margem automática recentra e o `justify-content` ignora a borda.
+ *
+ * Por isso o atributo governa os TRÊS de uma vez: quem alinha a faixa a uma
+ * ponta quer que ela ocupe só o que precisa. Antes disto, o rodapé de tabela era
+ * escrito com três utilitários de força de um framework que saiu, e o layout que
+ * a composição documentava nunca chegou à tela.
+ */
+.nds-pagination[data-align="start"],
+.nds-pagination[data-align="end"] {
+  width: auto;
+  margin-inline: 0;
+}
+
+.nds-pagination[data-align="start"] { justify-content: flex-start; }
+.nds-pagination[data-align="end"]   { justify-content: flex-end; }
 
 /* ── List ────────────────────────────────────────────────────────────────── */
 .nds-pagination-list {
@@ -72,11 +94,18 @@
   box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
 }
 
-/* Página atual — não navegável */
+/*
+ * Página atual.
+ *
+ * Sem `pointer-events: none`. Ele existia aqui e valia só para a forma
+ * standalone — nas quatro stacks que compõem o link em cima do botão, o mesmo
+ * link continuava clicável e hoverável. O que impede a página atual de navegar
+ * para si mesma é a guarda de quem trata o clique, não o CSS; e a regra ainda
+ * tirava o hover do único stack em que se aplicava.
+ */
 .nds-pagination-link[aria-current="page"] {
   background-color: hsl(var(--accent));
   color: hsl(var(--accent-foreground));
-  pointer-events: none;
 }
 
 /* Variante icon (prev/next chevrons) — quadrado */
@@ -90,7 +119,18 @@
   height: var(--spacing-4);
 }
 
-/* Estado desabilitado (prev em página 1, next em última) */
+/*
+ * Estado desabilitado (prev em página 1, next em última).
+ *
+ * Vale para a forma standalone. Onde prev/next são compostos em cima do botão,
+ * quem barra é `.nds-button:disabled, .nds-button[aria-disabled="true"]` em
+ * button.css — medido nas cinco stacks: `pointer-events` computado sai `none` e
+ * o `elementFromPoint` no centro do controle já não devolve o controle.
+ *
+ * O bloqueio é do PONTEIRO. O teclado sai por `tabindex="-1"` (link) ou pelo
+ * `disabled` nativo (botão) — sem um dos dois, o controle continua tabulável e
+ * o Enter navega.
+ */
 .nds-pagination-link[aria-disabled="true"],
 .nds-pagination-link.is-disabled {
   pointer-events: none;

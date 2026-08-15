@@ -158,13 +158,16 @@ const onPageChange = fn();
 
 export const Playground: Story = {
   parameters: {
+    // `visual.item1` saiu daqui: esta play termina com o foco no último
+    // controle da faixa, e o Chromatic fotografa o estado FINAL — o "default"
+    // que o item pede sai com anel de foco. Quem o cobre é a story `Simple`,
+    // que não interage.
     covers: [
       'functional.item1',
       'functional.item4',
       'accessibility.item1',
       'accessibility.item4',
       'accessibility.item5',
-      'visual.item1',
     ],
     docs: { source: { transform: playgroundSource } },
   },
@@ -226,7 +229,7 @@ export const Playground: Story = {
     await step('A paginação é um landmark de navegação nomeado', async () => {
       // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
       // e a pessoa não sabe qual das navegações da página é esta.
-      const nav = canvas.getByRole('navigation', { name: 'pagination' });
+      const nav = canvas.getByRole('navigation', { name: 'Paginação' });
       await expect(nav).toHaveAttribute('data-slot', 'pagination');
       await expect(nav.tagName).toBe('NAV');
       await expect(nav).toHaveClass('nds-pagination');

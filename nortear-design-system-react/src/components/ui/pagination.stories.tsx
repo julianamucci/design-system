@@ -180,6 +180,10 @@ function PaginationDemo({
   const prevDisabled = page === 1;
   const nextDisabled = page === totalPages;
 
+  // Em <a> não existe `disabled`: o par correto é aria-disabled + tabindex="-1".
+  // O `pointer-events-none opacity-50` que morava aqui era do framework
+  // utilitário que saiu — inerte. Quem barra o ponteiro e reduz a opacidade é
+  // `.nds-button[aria-disabled="true"]`, no CSS compartilhado.
   return (
     <Pagination>
       <PaginationContent>
@@ -189,7 +193,6 @@ function PaginationDemo({
             text={previousText}
             aria-disabled={prevDisabled}
             tabIndex={prevDisabled ? -1 : 0}
-            className={prevDisabled ? "pointer-events-none opacity-50" : ""}
             onClick={(e) => {
               e.preventDefault();
               goTo(page - 1);
@@ -203,7 +206,6 @@ function PaginationDemo({
             text={nextText}
             aria-disabled={nextDisabled}
             tabIndex={nextDisabled ? -1 : 0}
-            className={nextDisabled ? "pointer-events-none opacity-50" : ""}
             onClick={(e) => {
               e.preventDefault();
               goTo(page + 1);
@@ -216,6 +218,15 @@ function PaginationDemo({
 }
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      "functional.item1",
+      "functional.item4",
+      "accessibility.item1",
+      "accessibility.item4",
+      "accessibility.item5",
+    ],
+  },
   render: (args) => (
     // key força re-mount quando initialPage muda no painel de controls
     <PaginationDemo
@@ -226,35 +237,80 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
-    await step("nav com aria-label=pagination está visível", async () => {
-      const nav = canvas.getByRole("navigation", { name: /pagination/i });
-      await expect(nav).toBeVisible();
+    await step("A paginação é um landmark de navegação nomeado", async () => {
+      // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
+      // e o axe acusa `landmark-unique` quando a página mostra mais de uma.
+      const nav = canvas.getByRole("navigation", { name: "Paginação" });
+      await expect(nav).toHaveAttribute("data-slot", "pagination");
+      await expect(nav.tagName).toBe("NAV");
+      await expect(nav).toHaveClass("nds-pagination");
     });
 
-    await step(
-      "página inicial tem aria-current=page e Previous está aria-disabled",
-      async () => {
-        const active = canvas.getByRole("link", {
-          name: new RegExp(`Ir para página ${args.initialPage}`, "i"),
-        });
-        await expect(active).toHaveAttribute("aria-current", "page");
-
-        const prev = canvas.getByRole("link", { name: /previous page/i });
-        await expect(prev).toHaveAttribute("aria-disabled", "true");
+    await step("Todo controle tem rótulo com contexto", async () => {
+      // accessibility.item5 — "3" sozinho não diz nada em voz alta.
+      for (let n = 1; n <= Math.min(args.totalPages, 5); n++) {
+        const link = canvas.getByRole("link", { name: `Ir para página ${n}` });
+        await expect(link).toHaveAttribute("data-slot", "pagination-link");
       }
-    );
+      await expect(
+        canvas.getByRole("link", { name: "Ir para a página anterior" })
+      ).toHaveAttribute("data-slot", "pagination-previous");
+      await expect(
+        canvas.getByRole("link", { name: "Ir para a próxima página" })
+      ).toHaveAttribute("data-slot", "pagination-next");
+    });
 
-    await step(
-      "clique em uma página seguinte dispara onPageChange",
-      async () => {
-        const target = args.initialPage + 1;
-        if (target > args.totalPages) return;
-        const link = canvas.getByRole("link", {
-          name: new RegExp(`Ir para página ${target}`, "i"),
-        });
-        await userEvent.click(link);
-        await expect(args.onPageChange).toHaveBeenCalledWith(target);
+    await step("A página atual é marcada e o extremo é desabilitado", async () => {
+      // accessibility.item4
+      const active = canvas.getByRole("link", {
+        name: `Ir para página ${args.initialPage}`,
+      });
+      await expect(active).toHaveAttribute("aria-current", "page");
+      await expect(active).toHaveAttribute("data-active", "true");
+
+      const prev = canvas.getByRole("link", { name: "Ir para a página anterior" });
+      await expect(prev).toHaveAttribute("aria-disabled", "true");
+      await expect(prev).toHaveAttribute("tabindex", "-1");
+    });
+
+    await step("Clicar numa página avisa quem controla o estado", async () => {
+      // functional.item1 — a story guarda a página num state, então o passo
+      // VOLTA ao valor inicial no fim: o painel Interactions reexecuta a play no
+      // mesmo DOM, e sem isso a segunda rodada partiria de outra página e
+      // inverteria as asserções acima.
+      const alvo = args.initialPage === 1 ? 2 : 1;
+      const espiao = args.onPageChange as unknown as { mockClear: () => void };
+      espiao.mockClear();
+      await userEvent.click(canvas.getByRole("link", { name: `Ir para página ${alvo}` }));
+      await expect(args.onPageChange).toHaveBeenLastCalledWith(alvo);
+      await expect(
+        canvas.getByRole("link", { name: `Ir para página ${alvo}` })
+      ).toHaveAttribute("aria-current", "page");
+
+      await userEvent.click(
+        canvas.getByRole("link", { name: `Ir para página ${args.initialPage}` })
+      );
+      await expect(
+        canvas.getByRole("link", { name: `Ir para página ${args.initialPage}` })
+      ).toHaveAttribute("aria-current", "page");
+    });
+
+    await step("Tab percorre os controles na ordem visual", async () => {
+      // functional.item4 — a ordem de foco é a do DOM, e o DOM é a ordem em que
+      // a faixa é lida: anterior, 1, 2… A lista esperada é DERIVADA do DOM (o
+      // controle fora da tabulação é filtrado), senão a asserção só valeria com
+      // os controls no valor padrão.
+      const esperados = [
+        canvas.getByRole("link", { name: "Ir para a página anterior" }),
+        canvas.getByRole("link", { name: "Ir para página 1" }),
+        canvas.getByRole("link", { name: "Ir para página 2" }),
+      ].filter((el) => el.getAttribute("tabindex") !== "-1");
+
+      (document.activeElement as HTMLElement | null)?.blur();
+      for (const alvo of esperados) {
+        await userEvent.tab();
+        await expect(alvo).toHaveFocus();
       }
-    );
+    });
   },
 };

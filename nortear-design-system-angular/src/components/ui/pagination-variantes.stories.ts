@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { signal } from '@angular/core';
 import { expect, userEvent, within } from 'storybook/test';
+import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
 import {
   NdsPagination,
   NdsPaginationContent,
@@ -57,7 +58,7 @@ const ROTULO_PROXIMA = 'Ir para a próxima página';
 
 export const Simple: Story = {
   parameters: {
-    covers: ['visual.item1'],
+    covers: ['visual.item1', 'accessibility.item6'],
     docs: {
       description: {
         story:
@@ -114,13 +115,12 @@ export const Simple: Story = {
     });
 
     await step('Cada número é um alvo quadrado do tamanho de botão de ícone', async () => {
-      // O link numerado usa o tamanho `icon`: quadrado, sem padding lateral. É
-      // o que garante o alvo de toque mínimo sem alargar a faixa.
+      // accessibility.item6 — o link numerado usa o tamanho `icon`: quadrado,
+      // sem padding lateral. WCAG 2.5.8 pede 24×24 CSS px, e o colhedor
+      // compartilhado mede TODO controle da faixa, não só o primeiro.
       const primeiro = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 1` });
       await expect(primeiro).toHaveClass('nds-button-icon');
-      const caixa = primeiro.getBoundingClientRect();
-      await expect(caixa.width).toBeGreaterThanOrEqual(24);
-      await expect(caixa.height).toBeGreaterThanOrEqual(24);
+      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
     });
   },
 };

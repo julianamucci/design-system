@@ -346,12 +346,13 @@ const directionalPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--background',         value: tContent('tokens.table.background.class'),        description: tContent('tokens.table.background.part')        },
   { token: '--foreground',         value: tContent('tokens.table.foreground.class'),        description: tContent('tokens.table.foreground.part')        },
   { token: '--accent',             value: tContent('tokens.table.accent.class'),            description: tContent('tokens.table.accent.part')            },
   { token: '--accent-foreground',  value: tContent('tokens.table.accentForeground.class'),  description: tContent('tokens.table.accentForeground.part')  },
-  { token: '--border',             value: tContent('tokens.table.border.class'),            description: tContent('tokens.table.border.part')            },
   { token: '--ring',               value: tContent('tokens.table.ring.class'),              description: tContent('tokens.table.ring.part')              },
+  { token: '--muted-foreground',   value: tContent('tokens.table.ellipsis.class'),          description: tContent('tokens.table.ellipsis.part')          },
+  { token: '--radius',             value: tContent('tokens.table.radius.class'),            description: tContent('tokens.table.radius.part')            },
+  { token: '--spacing-1',          value: tContent('tokens.table.gap.class'),               description: tContent('tokens.table.gap.part')               },
 ]);
 
 const accessibilityItems = computed(() => [

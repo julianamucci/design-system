@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import {
     Pagination,
     PaginationContent,
@@ -9,13 +10,7 @@
     PaginationPrevious,
   } from './index';
 
-  type Demonstration =
-    | 'simples'
-    | 'comEllipsis'
-    | 'ultimaPagina'
-    | 'directional'
-    | 'controlada'
-    | 'tabela';
+  type Demonstration = 'simples' | 'directional' | 'controlada' | 'tabela';
 
   interface Props {
     count?: number;
@@ -23,6 +18,10 @@
     page?: number;
     siblingCount?: number;
     demonstration?: Demonstration;
+    /** Nome acessível do landmark — distinto por story, senão o axe acusa landmark-unique. */
+    rotulo?: string;
+    /** Espião do consumidor: a play precisa alcançá-lo, então vem de fora. */
+    onPageChange?: (page: number) => void;
   }
 
   let {
@@ -31,106 +30,43 @@
     page: initialPage = 1,
     siblingCount = 1,
     demonstration = 'simples',
+    rotulo = 'Paginação',
+    onPageChange = () => {},
   }: Props = $props();
 
-  // estado controlado para a composição "controlada"
-  let currentPage = $derived(initialPage);
+  // Estado controlado da composição "controlada". `$state` e não `$derived`: a
+  // demonstração é justamente o estado que muda a cada clique.
+  //
+  // `untrack` porque a leitura é DE PROPÓSITO só a inicial: quem re-sincroniza
+  // quando o control muda é o `{#key}` abaixo, que remonta o bloco inteiro.
+  let currentPage = $state(untrack(() => initialPage));
+  const totalPaginas = $derived(Math.ceil(count / perPage));
 </script>
 
-<div class="nds-w-full" style="contain: layout; min-height: 64px;">
-  {#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
-    {#if demonstration === 'directional'}
-      <Pagination {count} {perPage} page={initialPage} {siblingCount}>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious aria-label="Ir para a página anterior" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext aria-label="Ir para a próxima página" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    {:else if demonstration === 'controlada'}
-      <div class="nds-stack" data-align="center" data-spacing="sm">
-        <span class="nds-text-body nds-text-muted-foreground">
-          Página atual: {currentPage} de {Math.ceil(count / perPage)}
-        </span>
-        <Pagination {count} {perPage} bind:page={currentPage} {siblingCount}>
-          {#snippet children({ pages })}
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  aria-label="Ir para a página anterior"
-                  onclick={() => (currentPage = Math.max(1, currentPage - 1))}
-                />
-              </PaginationItem>
-              {#each pages as p (p.key)}
-                <PaginationItem>
-                  {#if p.type === 'ellipsis'}
-                    <PaginationEllipsis />
-                  {:else}
-                    <PaginationLink
-                      page={p}
-                      isActive={currentPage === p.value}
-                      aria-label={currentPage === p.value
-                        ? `Página atual, ${p.value}`
-                        : `Ir para página ${p.value}`}
-                      onclick={() => (currentPage = p.value)}
-                    >
-                      {p.value}
-                    </PaginationLink>
-                  {/if}
-                </PaginationItem>
-              {/each}
-              <PaginationItem>
-                <PaginationNext
-                  aria-label="Ir para a próxima página"
-                  onclick={() => (currentPage = Math.min(Math.ceil(count / perPage), currentPage + 1))}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          {/snippet}
-        </Pagination>
-      </div>
-    {:else if demonstration === 'tabela'}
-      <div class="nds-stack nds-w-full max-w-2xl nds-border-default nds-rounded-lg nds-p-4 nds-sm-flex-row" data-align="center" data-justify="between" data-spacing="sm">
-        <span class="nds-text-body nds-text-muted-foreground">Mostrando 11–20 de {count} resultados</span>
-        <Pagination {count} {perPage} page={initialPage} {siblingCount} class="!justify-end !mx-0 !w-auto">
-          {#snippet children({ pages, currentPage: cp })}
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious aria-label="Ir para a página anterior" />
-              </PaginationItem>
-              {#each pages as p (p.key)}
-                <PaginationItem>
-                  {#if p.type === 'ellipsis'}
-                    <PaginationEllipsis />
-                  {:else}
-                    <PaginationLink
-                      page={p}
-                      isActive={cp === p.value}
-                      aria-label={cp === p.value
-                        ? `Página atual, ${p.value}`
-                        : `Ir para página ${p.value}`}
-                    >
-                      {p.value}
-                    </PaginationLink>
-                  {/if}
-                </PaginationItem>
-              {/each}
-              <PaginationItem>
-                <PaginationNext aria-label="Ir para a próxima página" />
-              </PaginationItem>
-            </PaginationContent>
-          {/snippet}
-        </Pagination>
-      </div>
-    {:else}
-      <Pagination {count} {perPage} page={initialPage} {siblingCount}>
-        {#snippet children({ pages, currentPage: cp })}
+{#key `${count}-${perPage}-${initialPage}-${siblingCount}-${demonstration}`}
+  {#if demonstration === 'directional'}
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={rotulo}>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious onclick={() => onPageChange(initialPage - 1)} />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext onclick={() => onPageChange(initialPage + 1)} />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  {:else if demonstration === 'controlada'}
+    <div class="nds-stack" data-spacing="sm">
+      <p class="nds-text-body nds-text-muted-foreground" data-slot="pagina-atual">
+        Página {currentPage} de {totalPaginas}
+      </p>
+      <Pagination {count} {perPage} bind:page={currentPage} {siblingCount} aria-label={rotulo}>
+        {#snippet children({ pages })}
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious aria-label="Ir para a página anterior" />
+              <PaginationPrevious
+                onclick={() => (currentPage = Math.max(1, currentPage - 1))}
+              />
             </PaginationItem>
             {#each pages as p (p.key)}
               <PaginationItem>
@@ -139,10 +75,8 @@
                 {:else}
                   <PaginationLink
                     page={p}
-                    isActive={cp === p.value}
-                    aria-label={cp === p.value
-                      ? `Página atual, ${p.value}`
-                      : `Ir para página ${p.value}`}
+                    isActive={currentPage === p.value}
+                    onclick={() => (currentPage = p.value)}
                   >
                     {p.value}
                   </PaginationLink>
@@ -150,11 +84,85 @@
               </PaginationItem>
             {/each}
             <PaginationItem>
-              <PaginationNext aria-label="Ir para a próxima página" />
+              <PaginationNext
+                onclick={() => (currentPage = Math.min(totalPaginas, currentPage + 1))}
+              />
             </PaginationItem>
           </PaginationContent>
         {/snippet}
       </Pagination>
-    {/if}
-  {/key}
-</div>
+    </div>
+  {:else if demonstration === 'tabela'}
+    <!--
+      `nds-cluster` e não `nds-stack`: só o cluster tem data-align/data-justify, e
+      é ele que quebra a linha sozinho quando a largura aperta. A marcação
+      anterior usava um stack com atributos que nenhuma regra lê, mais três
+      classes de força de um framework que saiu — o rodapé nunca virou linha e a
+      faixa nunca encostou à direita.
+    -->
+    <div
+      class="nds-cluster nds-w-full nds-max-w-prose nds-border-default nds-rounded-lg nds-p-4"
+      data-spacing="sm"
+      data-align="center"
+      data-justify="between"
+    >
+      <span class="nds-text-body nds-text-muted-foreground">
+        Mostrando 11–20 de {count} resultados
+      </span>
+      <Pagination
+        {count}
+        {perPage}
+        page={initialPage}
+        {siblingCount}
+        data-align="end"
+        aria-label={rotulo}
+      >
+        {#snippet children({ pages, currentPage: cp })}
+          <PaginationContent>
+            <PaginationItem><PaginationPrevious /></PaginationItem>
+            {#each pages as p (p.key)}
+              <PaginationItem>
+                {#if p.type === 'ellipsis'}
+                  <PaginationEllipsis />
+                {:else}
+                  <PaginationLink page={p} isActive={cp === p.value}>
+                    {p.value}
+                  </PaginationLink>
+                {/if}
+              </PaginationItem>
+            {/each}
+            <PaginationItem><PaginationNext /></PaginationItem>
+          </PaginationContent>
+        {/snippet}
+      </Pagination>
+    </div>
+  {:else}
+    <Pagination {count} {perPage} page={initialPage} {siblingCount} aria-label={rotulo}>
+      {#snippet children({ pages, currentPage: cp })}
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onclick={() => onPageChange(initialPage - 1)} />
+          </PaginationItem>
+          {#each pages as p (p.key)}
+            <PaginationItem>
+              {#if p.type === 'ellipsis'}
+                <PaginationEllipsis />
+              {:else}
+                <PaginationLink
+                  page={p}
+                  isActive={cp === p.value}
+                  onclick={() => onPageChange(p.value)}
+                >
+                  {p.value}
+                </PaginationLink>
+              {/if}
+            </PaginationItem>
+          {/each}
+          <PaginationItem>
+            <PaginationNext onclick={() => onPageChange(initialPage + 1)} />
+          </PaginationItem>
+        </PaginationContent>
+      {/snippet}
+    </Pagination>
+  {/if}
+{/key}
