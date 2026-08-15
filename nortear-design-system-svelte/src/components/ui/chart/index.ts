@@ -8,7 +8,7 @@ import { prefersReducedMotion, duration as motionDuration } from '@/lib/motion.j
 
 export { CHART_EMPTY_LABEL, isChartOptionEmpty } from './chart-state.js';
 
-export { ChartContainer, ChartContainer as Container };
+export { ChartContainer };
 
 export interface ChartDataPoint { label: string; value: number }
 export interface ChartSeries { name: string; data: number[]; color?: string }

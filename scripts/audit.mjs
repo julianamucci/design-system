@@ -1836,8 +1836,17 @@ function auditExportSemStory(slug) {
     // (`Root as Accordion`), cva compartilhada (`buttonVariants`) e
     // sub-componente que só o próprio componente renderiza — 442 falsos
     // positivos na primeira versão.
-    const consumidores = globStack(stack, 'components', ['.ts', '.tsx', '.vue', '.svelte'])
-      .filter(f => !/^index\.ts$/i.test(basename(f)));
+    // O `index.ts` ENTRA na lista, mas sem as linhas de re-export.
+    //
+    // Filtrá-lo inteiro era o atalho antigo, e ele mente quando o barril não é
+    // só barril: o `index.ts` do chart no Svelte CONSTRÓI as opções e usa a
+    // constante `ARIA` ali mesmo. Com o arquivo fora, a constante aparecia como
+    // exportada e não usada — falso positivo que só surgiu quando a regra passou
+    // a exigir import, porque antes qualquer menção solta a cobria.
+    //
+    // O que não conta é `export { … }` e `export … from`; o resto do arquivo é
+    // código como outro qualquer.
+    const consumidores = globStack(stack, 'components', ['.ts', '.tsx', '.vue', '.svelte']);
 
     for (const [simbolo, file] of exportados) {
       if (RAIZ_RX.test(simbolo)) continue;                       // a raiz sempre aparece
@@ -1859,10 +1868,42 @@ function auditExportSemStory(slug) {
         .replace(new RegExp(`(?:function|const)\\s+${simbolo}\\b`, 'g'), '');
       if (rx.test(proprio)) continue;
 
+      // Fora do arquivo de definição, uso exige IMPORT — não basta o
+      // identificador aparecer.
+      //
+      // Tirar comentário resolveu metade do problema; a outra metade é que a
+      // regra casava variável LOCAL de qualquer arquivo da stack. O `regiao()`
+      // do sonner passou de "coberto por um comentário" para "coberto por um
+      // `const regiao` declarado numa story do skeleton" — componente diferente,
+      // arquivo diferente, zero relação. Nome curto de palavra comum é campo
+      // minado: `regiao`, `item`, `titulo`, `valor`.
+      //
+      // Exigir que o símbolo apareça numa lista de import amarra o uso ao grafo
+      // de módulos, que é o que "nada o renderiza" quer dizer.
       const usadoPorOutro = consumidores.some(f => {
         if (f === file) return false;
         const c = readFile(f);
-        return c && rx.test(stripComments(c));
+        if (!c) return false;
+        // Re-export não é uso — nem no barril, nem em arquivo nenhum.
+        const limpo = stripComments(c)
+          .replace(/export\s*\{[^}]*\}(?:\s*from\s*['"][^'"]+['"])?/g, '')
+          .replace(/export\s+\*\s+from\s*['"][^'"]+['"]/g, '');
+        if (!rx.test(limpo)) return false;
+        // Num arquivo que IMPORTA o símbolo, a referência é uso. Num arquivo que
+        // não importa, ela é homônima — variável local com o mesmo nome.
+        const importa = [...limpo.matchAll(/import\s+(?:type\s+)?([\s\S]*?)\s+from\s/g)]
+          .some(m => rx.test(m[1]));
+        // Import de NAMESPACE cobre tudo o que o módulo exporta.
+        //
+        // `import * as Command from '…/command'` seguido de `<Command.Dialog>`
+        // não deixa o nome do símbolo aparecer em lugar nenhum que esta regra
+        // consiga ler. Reivindicar "nada renderiza" aí é afirmar mais do que se
+        // sabe — e o padrão é comum no Svelte, o que fazia quase todo `index.ts`
+        // daquela stack acusar os próprios aliases públicos.
+        if (/import\s+\*\s+as\s+\w+\s+from/.test(limpo)) return true;
+        // O próprio módulo que declara e o barril que o constrói não importam
+        // de lugar nenhum: ali a referência vale por si.
+        return importa || /^index\.ts$/i.test(basename(f));
       });
       if (usadoPorOutro) continue;
 

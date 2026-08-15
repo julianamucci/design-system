@@ -57,13 +57,6 @@ export function tipoDaTorrada(el: Element): ToastType {
   return (el.getAttribute('data-type') as ToastType | null) ?? 'default';
 }
 
-/** A região da lib — o `<ol>` que recebe `data-sonner-toaster`. */
-export function regiao(): HTMLElement {
-  const el = document.querySelector<HTMLElement>('[data-sonner-toaster]');
-  if (!el) throw new Error('nenhuma região [data-sonner-toaster] na tela');
-  return el;
-}
-
 /** Espera a notificação aparecer E assentar. */
 export async function esperarTorrada(
   filtro: { tipo?: ToastType; texto?: string | RegExp } = {},
