@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect } from 'storybook/test';
+import { expect, userEvent } from 'storybook/test';
 import { NdsSlider } from './slider';
 
 // Tipos e composições do Slider. Sem argTypes, então o painel Controls é
@@ -23,7 +23,10 @@ function preenchimento(raiz: HTMLElement): number {
 }
 
 export const Types: Story = {
-  parameters: { covers: ['visual.item1', 'visual.item2'] },
+  // `visual.item1` é a story de valor único em 50, e vive na Playground. Aqui o
+  // valor único está em 40: declarar o item aqui era cobertura deslocada — o
+  // Chromatic fotografa outro estado que o documentado.
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     template: `
       <div class="nds-stack" data-spacing="lg">
@@ -105,6 +108,20 @@ export const Vertical: Story = {
       const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
       const caixa = trilho.getBoundingClientRect();
       await expect(caixa.height).toBeGreaterThan(caixa.width);
+    });
+
+    await step('ArrowUp incrementa no eixo vertical', async () => {
+      // As outras quatro stacks já cobriam isto; aqui a story parava no
+      // atributo e na geometria. Orientação que muda o desenho e não muda o
+      // eixo das setas é meia orientação: o controle fica em pé e continua
+      // sendo operado como se estivesse deitado.
+      const input = canvasElement.querySelector<HTMLInputElement>(
+        '[data-slot="slider-thumb"] > input',
+      )!;
+      const antes = Number(input.value);
+      input.focus();
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(Number(input.value)).toBe(Math.min(100, antes + 1));
     });
   },
 };

@@ -228,17 +228,6 @@ const codeVertical = `<template>
   </div>
 </template>`;
 
-const codeCustomizationTokens = `/* Override do tamanho do Thumb */
-[data-slot="slider-thumb"] {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Cor customizada do Range */
-.slider-success [data-slot="slider-range"] {
-  @apply bg-green-500;
-}`;
-
 const interfaceCode = `// Slider (reka-ui SliderRoot)
 interface SliderProps {
   modelValue?: number[];           // SEMPRE array
@@ -364,12 +353,12 @@ const sliderPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--muted',            value: tContent('tokens.table.muted.class'),           description: tContent('tokens.table.muted.part')           },
-  { token: '--primary',          value: tContent('tokens.table.primary.class'),         description: tContent('tokens.table.primary.part')         },
-  { token: '--ring',             value: tContent('tokens.table.ring.class'),            description: tContent('tokens.table.ring.part')            },
-  { token: '--background',       value: tContent('tokens.table.background.class'),      description: tContent('tokens.table.background.part')      },
-  { token: '--foreground',       value: tContent('tokens.table.foreground.class'),      description: tContent('tokens.table.foreground.part')      },
-  { token: '--muted-foreground', value: tContent('tokens.table.mutedForeground.class'), description: tContent('tokens.table.mutedForeground.part') },
+  { token: '--primary / 0.2', value: tContent('tokens.table.track.class'),           description: tContent('tokens.table.track.part')           },
+  { token: '--primary',       value: tContent('tokens.table.range.class'),           description: tContent('tokens.table.range.part')           },
+  { token: '--primary',       value: tContent('tokens.table.thumbBorder.class'),     description: tContent('tokens.table.thumbBorder.part')     },
+  { token: '--background',    value: tContent('tokens.table.thumbBackground.class'), description: tContent('tokens.table.thumbBackground.part') },
+  { token: '--ring',          value: tContent('tokens.table.focusRing.class'),       description: tContent('tokens.table.focusRing.part')       },
+  { token: '--radius-full',   value: tContent('tokens.table.radius.class'),          description: tContent('tokens.table.radius.part')          },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -382,15 +371,15 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: 'Tab',         description: tContent('accessibility.keyboard.tab')        },
-  { key: 'Arrow Right',  description: tContent('accessibility.keyboard.arrowRight') },
-  { key: 'Arrow Left',   description: tContent('accessibility.keyboard.arrowLeft')  },
-  { key: 'Arrow Up',     description: tContent('accessibility.keyboard.arrowUp')    },
-  { key: 'Arrow Down',   description: tContent('accessibility.keyboard.arrowDown')  },
-  { key: 'Home',        description: tContent('accessibility.keyboard.home')       },
-  { key: 'End',         description: tContent('accessibility.keyboard.end')        },
-  { key: 'PageUp',      description: tContent('accessibility.keyboard.pageUp')     },
-  { key: 'PageDown',    description: tContent('accessibility.keyboard.pageDown')   },
+  { key: 'Tab',         description: toPlainText(tContent('accessibility.keyboard.tab'))        },
+  { key: 'Arrow Right',  description: toPlainText(tContent('accessibility.keyboard.arrowRight')) },
+  { key: 'Arrow Left',   description: toPlainText(tContent('accessibility.keyboard.arrowLeft'))  },
+  { key: 'Arrow Up',     description: toPlainText(tContent('accessibility.keyboard.arrowUp'))    },
+  { key: 'Arrow Down',   description: toPlainText(tContent('accessibility.keyboard.arrowDown'))  },
+  { key: 'Home',        description: toPlainText(tContent('accessibility.keyboard.home'))       },
+  { key: 'End',         description: toPlainText(tContent('accessibility.keyboard.end'))        },
+  { key: 'PageUp',      description: toPlainText(tContent('accessibility.keyboard.pageUp'))     },
+  { key: 'PageDown',    description: toPlainText(tContent('accessibility.keyboard.pageDown'))   },
 ]);
 
 const relatedItems = computed(() => [
@@ -926,7 +915,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->

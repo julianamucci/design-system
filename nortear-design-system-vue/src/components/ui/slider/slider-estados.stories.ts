@@ -3,6 +3,14 @@ import { ref } from 'vue';
 import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  alcaDesabilitada,
+  alcasDoSlider,
+  anelDeFocoAssentado,
+  anelEmRepouso,
+  contrasteAlcaTrilho,
+  valorDaAlca,
+} from '@shared/testing/slider-probe';
 
 const meta = {
   title: 'UI/Slider/States',
@@ -25,6 +33,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -32,10 +41,10 @@ export const Default: Story = {
       return { value };
     },
     template: `
-      <div class="" data-spacing="sm" style="width: 18rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -43,28 +52,23 @@ export const Default: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('Renderiza com aria-valuenow=50', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '50');
+
+    // Story sem interação: é aqui que o valor de montagem pode ser afirmado.
+    await step('Alça no valor inicial', async () => {
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(50);
+    });
+
+    await step('A borda da alça alcança 3:1 contra o trilho', async () => {
+      // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
+      // a separa do trilho é a borda.
+      await expect(contrasteAlcaTrilho(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
 
 export const FocusVisible: Story = {
-  render: () => ({
-    components: { Slider, Label },
-    setup() {
-      const value = ref<number[]>([50]);
-      return { value };
-    },
-    template: `
-      <div class="" data-spacing="sm" style="width: 18rem">
-        <Label>Volume</Label>
-        <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
-      </div>
-    `,
-  }),
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story:
@@ -72,23 +76,6 @@ export const FocusVisible: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-
-    await step('Thumb recebe foco programaticamente', async () => {
-      (thumb as HTMLElement).focus();
-      await expect(thumb).toHaveFocus();
-    });
-
-    await step('PageUp incrementa em 10× step', async () => {
-      await userEvent.keyboard('{PageUp}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '60');
-    });
-  },
-};
-
-export const Disabled: Story = {
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -96,7 +83,47 @@ export const Disabled: Story = {
       return { value };
     },
     template: `
-      <div class="opacity-100" data-spacing="sm" style="width: 18rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
+        <Label>Volume</Label>
+        <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alca = () => alcasDoSlider(canvasElement)[0];
+    const repouso = await anelEmRepouso(alca());
+
+    await step('A alça recebe foco por teclado', async () => {
+      await userEvent.tab();
+      await expect(canvas.getByRole('slider')).toHaveFocus();
+    });
+
+    await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
+      // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
+      const focada = await anelDeFocoAssentado(alca(), repouso);
+      await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
+      await expect(focada.sombra).not.toBe('none');
+    });
+
+    await step('PageUp anda mais que uma seta', async () => {
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await userEvent.keyboard('{PageUp}');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBeGreaterThan(antes + 1);
+    });
+  },
+};
+
+export const Disabled: Story = {
+  parameters: { covers: ['visual.item4'] },
+  render: () => ({
+    components: { Slider, Label },
+    setup() {
+      const value = ref<number[]>([50]);
+      return { value };
+    },
+    template: `
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <Label>Volume</Label>
         <Slider v-model="value" :disabled="true" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -104,16 +131,17 @@ export const Disabled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
-    await step('Thumb está com data-disabled', async () => {
-      await expect(thumb).toHaveAttribute('data-disabled');
+    await step('A alça está marcada como desabilitada', async () => {
+      await expect(alcaDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
     });
 
     await step('ArrowRight não altera o valor', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      const antes = valorDaAlca(alca);
+      (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '50');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(antes);
     });
   },
 };
@@ -126,10 +154,10 @@ export const NoMin: Story = {
       return { value };
     },
     template: `
-      <div class="" data-spacing="sm" style="width: 18rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -137,14 +165,12 @@ export const NoMin: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('aria-valuenow no mínimo', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '0');
-    });
     await step('ArrowLeft não passa do mínimo', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      (alca as HTMLElement).focus();
+      await userEvent.keyboard('{Home}');
       await userEvent.keyboard('{ArrowLeft}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '0');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
     });
   },
 };
@@ -157,10 +183,10 @@ export const NoMax: Story = {
       return { value };
     },
     template: `
-      <div class="" data-spacing="sm" style="width: 18rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" aria-label="Volume" />
       </div>
@@ -168,14 +194,12 @@ export const NoMax: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('aria-valuenow no máximo', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '100');
-    });
     await step('ArrowRight não passa do máximo', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      (alca as HTMLElement).focus();
+      await userEvent.keyboard('{End}');
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '100');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

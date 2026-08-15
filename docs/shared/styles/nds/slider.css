@@ -6,13 +6,13 @@
  *   <div class="nds-slider">
  *     <div class="nds-slider-track">
  *       <div class="nds-slider-range" style="width: 40%"></div>
- *       <span class="nds-slider-thumb" style="left: calc(40% - 0.5rem)"></span>
+ *       <span class="nds-slider-thumb" style="left: calc(40% - 0.75rem)"></span>
  *       <input type="range" />
  *     </div>
  *   </div>
  *
- * Tokens: --primary (range fill), --primary/0.2 (track), --primary/0.5 (thumb border),
- *         --background (thumb bg), --ring (focus), --spacing-*
+ * Tokens: --primary (range fill), --primary/0.2 (track), --primary (thumb border),
+ *         --background (thumb bg), --ring (focus), --radius-full, --spacing-*
  */
 
 .nds-slider {
@@ -31,7 +31,13 @@
   flex-grow: 1;
   height: 0.375rem;                               /* 6px — h-1.5 */
   width: 100%;
-  overflow: hidden;
+  /* SEM `overflow: hidden`.
+   *
+   * Na anatomia sem lib headless a alça é FILHA do trilho, e o trilho tem 6px
+   * contra os 24px da alça: recortar aqui deixava visíveis 6px dos 24 (medido),
+   * ou seja, a alça redonda virava uma tira da altura do trilho, e nos extremos
+   * perdia metade da largura também. O preenchimento não precisa deste recorte
+   * — ele já tem `border-radius: var(--radius-full)` e nunca passa do trilho. */
   border-radius: var(--radius-full);
   background-color: hsl(var(--primary) / 0.2);
 }
@@ -44,20 +50,50 @@
   border-radius: var(--radius-full);
 }
 
-/* ── Thumb (alça arrastável) — hit-area ≥24×24 via ::after (WCAG 2.5.8):
-      nas libs primitivas o thumb é o alvo interativo (16px visual). ────────── */
-.nds-slider-thumb::after {
-  content: "";
-  position: absolute;
-  inset: -0.25rem;                                    /* 16 + 8 = 24px */
-}
-
+/* ── Thumb (alça arrastável) ──────────────────────────────────────────────────
+ *
+ * A ALÇA é o alvo de toque: 24×24, o piso da WCAG 2.5.8. O disco que se vê tem
+ * 16px e é desenhado pelo `::before`.
+ *
+ * Antes disto a alça media 16×16 e a área de toque vinha de um `::after` com
+ * `inset: -0.25rem`. Para o ponteiro aquilo funciona — a caixa do pseudo faz
+ * parte da região de hit-test do elemento que o originou. O que não funciona é
+ * a VERIFICAÇÃO: `getBoundingClientRect()` não enxerga o transbordo do pseudo,
+ * então a alça continuava medindo 16×16 para o axe e para qualquer auditoria
+ * que meça a caixa do alvo. O `target-size` reprovava — e reprovava com razão,
+ * porque o alvo declarado no DOM era mesmo de 16px.
+ *
+ * Inverter os papéis resolve os dois lados de uma vez: a caixa real passa a ter
+ * os 24px que a norma pede, e o desenho continua com os 16 de sempre. Nenhum
+ * pixel muda na tela.
+ *
+ * Como as libs headless posicionam a alça por `transform: translate(-50%)`
+ * sobre o centro, crescer a caixa não desloca nada nelas. Onde a conta é nossa
+ * (vanilla), o deslocamento acompanha: meia alça passou de 0.5rem para 0.75rem.
+ */
 .nds-slider-thumb {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 
   display: block;
+  width: var(--spacing-6);                        /* 24px — alvo (WCAG 2.5.8) */
+  height: var(--spacing-6);
+
+  /* A caixa do alvo é transparente: quem pinta é o `::before`. */
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+}
+
+/* O disco visível — 16px, centrado no alvo de 24. */
+.nds-slider-thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   width: var(--spacing-4);                        /* 16px */
   height: var(--spacing-4);
 
@@ -76,7 +112,7 @@
 }
 
 /* Focus visual: aplicado quando o native input está focado */
-.nds-slider:has(input:focus-visible) .nds-slider-thumb {
+.nds-slider:has(input:focus-visible) .nds-slider-thumb::before {
   border-color: hsl(var(--ring));
   box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
 }
@@ -112,9 +148,26 @@
   opacity: 0.5;
 }
 /* Foco por thumb individual (libs colocam o input nativo DENTRO do thumb) */
-.nds-slider-thumb:has(input:focus-visible) {
+.nds-slider-thumb:has(input:focus-visible)::before {
   border-color: hsl(var(--ring));
   box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+/* Foco quando a PRÓPRIA alça é o elemento focável.
+ *
+ * Nem toda lib headless põe um input dentro da alça: há as que a tornam
+ * `tabindex="0"` com `role="slider"` e recebem o foco direto. Nessas, as duas
+ * regras acima não casam com nada e o anel de foco documentado (WCAG 2.4.7)
+ * simplesmente não aparecia — a alça focada ficava idêntica à alça em repouso.
+ * Mesma pintura, terceiro seletor. */
+.nds-slider-thumb:focus-visible::before {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+/* O contorno do navegador fica com o ::before, que é o desenho; a caixa de
+ * 24px é só o alvo e não deve ganhar contorno próprio. */
+.nds-slider-thumb:focus-visible {
+  outline: none;
 }
 
 /* ── Orientação vertical ─────────────────────────────────────────────────── */
@@ -142,8 +195,25 @@
   transform: translateX(-50%);
 }
 
+/* Input nativo em pé (implementação sem lib headless).
+ *
+ * `writing-mode: vertical-lr` é o que o navegador reconhece para virar o eixo
+ * de um `<input type="range">`; `direction: rtl` põe o máximo em cima, que é o
+ * que a pessoa espera de um controle vertical. Sem isto o input continuava
+ * deitado sobre um trilho em pé: o arraste andava na horizontal enquanto a alça
+ * subia, e o alvo de toque saía do componente. */
+.nds-slider[data-orientation="vertical"] > .nds-slider-track > input[type="range"] {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: max(var(--spacing-6), 100%);              /* ≥24px (WCAG 2.5.8) */
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nds-slider-thumb {
+  .nds-slider-thumb::before {
     transition: none;
   }
 }

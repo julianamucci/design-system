@@ -16,8 +16,6 @@
     showRangeValue?: boolean;
     valueSuffix?: string;
     rangePrefix?: string;
-    width?: string;
-    verticalHeight?: string;
     onValueCommit?: (v: number[]) => void;
   }
 
@@ -34,8 +32,6 @@
     showRangeValue = false,
     valueSuffix = '%',
     rangePrefix = '',
-    width = 'w-72',
-    verticalHeight = 'h-40',
     onValueCommit,
   }: Props = $props();
 
@@ -59,17 +55,24 @@
   });
 </script>
 
+<!--
+Largura e altura vêm de classe `.nds-*` e do próprio componente: as versões
+anteriores traziam `w-72` e `h-40` como valor padrão de prop, classes do
+framework utilitário que saiu do projeto. Não pintavam nada — o andaime nascia
+sem largura e o slider em pé só ficava de pé por causa da altura mínima que o
+CSS do componente já garante.
+-->
 {#if orientation === 'vertical'}
   <div class="nds-stack" data-spacing="sm">
     {#if label || showValue}
-      <div class="nds-cluster" data-align="center" data-justify="between" style="width: 10rem">
+      <div class="nds-cluster" data-align="center" data-justify="between">
         {#if label}<Label>{label}</Label>{/if}
         {#if showValue}
           <span class="nds-text-body nds-tabular-nums" aria-live="polite">{current[0]}{valueSuffix}</span>
         {/if}
       </div>
     {/if}
-    <div class="nds-cluster {verticalHeight}" data-justify="center">
+    <div class="nds-cluster" data-justify="center">
       <Slider
         bind:value={current}
         {min}
@@ -83,7 +86,7 @@
     </div>
   </div>
 {:else}
-  <div class="{width}" data-spacing="sm">
+  <div class="nds-stack nds-w-sm" data-spacing="sm">
     {#if label || showValue || showRangeValue}
       <div class="nds-cluster" data-justify="between">
         {#if label}<Label>{label}</Label>{/if}

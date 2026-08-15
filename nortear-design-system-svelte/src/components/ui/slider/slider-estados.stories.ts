@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
+import {
+  alcaDesabilitada,
+  alcasDoSlider,
+  anelDeFocoAssentado,
+  anelEmRepouso,
+  contrasteAlcaTrilho,
+  valorDaAlca,
+} from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   title: 'UI/Slider/States',
@@ -10,6 +18,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -32,11 +41,19 @@ export const Default: Story = {
     showValue: true,
     valueSuffix: '%',
   },
+  parameters: { covers: ['accessibility.item2'] },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('Renderiza com aria-valuenow=50', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '50');
+
+    // Story sem interação: é aqui que o valor de montagem pode ser afirmado.
+    await step('Alça no valor inicial', async () => {
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(50);
+    });
+
+    await step('A borda da alça alcança 3:1 contra o trilho', async () => {
+      // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
+      // a separa do trilho é a borda.
+      await expect(contrasteAlcaTrilho(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -50,6 +67,7 @@ export const FocusVisible: Story = {
     label: 'Volume',
   },
   parameters: {
+    covers: ['accessibility.item3'],
     docs: {
       description: {
         story:
@@ -59,19 +77,25 @@ export const FocusVisible: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
+    const alca = () => alcasDoSlider(canvasElement)[0];
+    const repouso = await anelEmRepouso(alca());
 
-    await step('Thumb recebe foco programaticamente', async () => {
-      (thumb as HTMLElement).focus();
-      await expect(thumb).toHaveFocus();
+    await step('A alça recebe foco por teclado', async () => {
+      await userEvent.tab();
+      await expect(canvas.getByRole('slider')).toHaveFocus();
     });
 
-    await step('ArrowRight incrementa o valor', async () => {
-      await userEvent.keyboard('{ArrowRight}');
-      // Re-consulta: a renderizacao pode substituir o thumb, e ler o atributo do
-      // no antigo devolve o valor de antes.
-      const valuenow = Number(canvas.getByRole('slider').getAttribute('aria-valuenow'));
-      await expect(valuenow).toBeGreaterThan(50);
+    await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
+      // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
+      const focada = await anelDeFocoAssentado(alca(), repouso);
+      await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
+      await expect(focada.sombra).not.toBe('none');
+    });
+
+    await step('PageUp anda mais que uma seta', async () => {
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await userEvent.keyboard('{PageUp}');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBeGreaterThan(antes + 1);
     });
   },
 };
@@ -85,18 +109,20 @@ export const Disabled: Story = {
     'aria-label': 'Volume',
     label: 'Volume',
   },
+  parameters: { covers: ['visual.item4'] },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
-    await step('Thumb está com data-disabled', async () => {
-      await expect(thumb).toHaveAttribute('data-disabled');
+    await step('A alça está marcada como desabilitada', async () => {
+      await expect(alcaDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
     });
 
     await step('ArrowRight não altera o valor', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      const antes = valorDaAlca(alca);
+      (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '50');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(antes);
     });
   },
 };
@@ -113,14 +139,12 @@ export const NoMin: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('aria-valuenow no mínimo', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '0');
-    });
     await step('ArrowLeft não passa do mínimo', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      (alca as HTMLElement).focus();
+      await userEvent.keyboard('{Home}');
       await userEvent.keyboard('{ArrowLeft}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '0');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
     });
   },
 };
@@ -137,14 +161,12 @@ export const NoMax: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
-    await step('aria-valuenow no máximo', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuenow', '100');
-    });
     await step('ArrowRight não passa do máximo', async () => {
-      (thumb as HTMLElement).focus();
+      const alca = canvas.getByRole('slider');
+      (alca as HTMLElement).focus();
+      await userEvent.keyboard('{End}');
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '100');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

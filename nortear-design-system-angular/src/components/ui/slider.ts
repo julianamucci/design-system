@@ -60,6 +60,13 @@ import { RdxControlValueAccessor } from '@radix-ng/primitives/core';
       // primeiro `effect`). O que esta lista muda é quem responde por `value` no
       // template de quem consome.
       inputs: ['min', 'max', 'step', 'disabled', 'orientation', 'minStepsBetweenValues'],
+      // `onValueCommitted` é o callback de commit que as cinco stacks
+      // documentam — dispara ao soltar o arrasto ou largar a tecla, e é o que
+      // se liga ao analytics. Output de host directive não é exposto sozinho:
+      // sem esta lista, `(onValueCommitted)` no elemento não liga em nada e
+      // falha em silêncio. `valueChange` fica de fora de propósito: este
+      // componente já tem o seu, vindo do `model` de `value`.
+      outputs: ['onValueCommitted'],
     },
   ],
   host: {
@@ -76,9 +83,15 @@ import { RdxControlValueAccessor } from '@radix-ng/primitives/core';
         <div rdxSliderIndicator class="nds-slider-range" data-slot="slider-range"></div>
       </div>
 
-      <!-- Alças fora do trilho, e não dentro: o trilho tem \`overflow: hidden\`
-           para recortar o preenchimento nas pontas arredondadas, e uma alça
-           filha seria recortada junto. -->
+      <!-- Alças irmãs do trilho, e não filhas: é onde o primitivo as coloca, e
+           é a mesma anatomia das outras stacks que rodam lib headless. O CSS
+           compartilhado atende às duas — posiciona a alça contra \`.nds-slider\`,
+           que é o ancestral posicionado nos dois arranjos.
+
+           NÃO é por recorte: o trilho não tem \`overflow: hidden\`. Ele foi
+           removido de propósito, e o motivo está no próprio slider.css — com
+           6px de trilho contra uma alça de 24, recortar deixaria visível só uma
+           tira dela. -->
       @for (rotulo of rotulosDasAlcas(); track $index) {
         <div
           rdxSliderThumb

@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { createSlider } from './slider';
+import { createButton } from './button';
+import { createInput } from './input';
+import { apertarTecla, valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -12,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Slider: Volume (single, com unidade), Brilho (single, step grande), FaixaDePreco (range — composição manual de 2 sliders com clamping mútuo, já que o factory custom não suporta 2 thumbs) e EmFormulario (integrado a `<form>` com debounce de analytics). DIVERGÊNCIA Vanilla: factory é wrapper de `<input type="range">` nativo — sem range nativo, sem `onValueCommitted` (debounce manual), sem orientação vertical acessível.',
+          'Composições reais do Slider: Volume (com unidade), Glow (passo grande), PriceRange (faixa composta por duas alças com clamping mútuo) e InForm (dentro de `<form>`, com o callback de commit alimentando o analytics).',
       },
     },
   },
@@ -33,13 +36,24 @@ function withLabel(opts: {
   value?: number;
   unit?: string;
   onValueChange?: (v: number) => void;
+  onValueCommitted?: (v: number) => void;
 }): HTMLElement {
-  const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, unit = '', onValueChange } = opts;
+  const {
+    idPrefix,
+    labelText,
+    ariaLabel,
+    min = 0,
+    max = 100,
+    step = 1,
+    value = 0,
+    unit = '',
+    onValueChange,
+    onValueCommitted,
+  } = opts;
 
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
+  wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
-  wrap.style.width = '20rem';
 
   const row = document.createElement('div');
   row.className = 'nds-cluster';
@@ -52,8 +66,7 @@ function withLabel(opts: {
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'nds-text-body nds-text-muted-foreground';
-  valueText.style.fontVariantNumeric = 'tabular-nums';
+  valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 
@@ -64,16 +77,16 @@ function withLabel(opts: {
     max,
     step,
     value,
+    ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
       onValueChange?.(v);
     },
+    onValueCommitted,
   });
 
   const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
   if (input) {
-    input.setAttribute('aria-label', ariaLabel);
-    input.setAttribute('aria-labelledby', `${idPrefix}-label`);
     input.setAttribute('aria-describedby', `${idPrefix}-value`);
     input.id = `${idPrefix}-input`;
     input.name = idPrefix;
@@ -103,9 +116,12 @@ export const Volume: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Label e valor visíveis', async () => {
-      await expect(canvas.getByText('Volume')).toBeVisible();
-      await expect(canvas.getByText('50%')).toBeVisible();
+
+    await step('O texto do valor acompanha a alça', async () => {
+      const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
+      await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
   },
 };
@@ -133,8 +149,11 @@ export const Glow: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Valor inicial 75%', async () => {
-      await expect(canvas.getByText('75%')).toBeVisible();
+
+    await step('A seta anda um passo inteiro, não uma unidade', async () => {
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 5));
     });
   },
 };
@@ -144,9 +163,8 @@ export const Glow: Story = {
 export const PriceRange: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'sm';
-    wrap.style.width = '20rem';
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
@@ -157,8 +175,7 @@ export const PriceRange: Story = {
     label.textContent = 'Faixa de preço';
     const valueText = document.createElement('span');
     valueText.id = 'comp-range-value';
-    valueText.className = 'nds-text-body nds-text-muted-foreground';
-  valueText.style.fontVariantNumeric = 'tabular-nums';
+    valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
     let minV = 100;
@@ -174,6 +191,7 @@ export const PriceRange: Story = {
       max: 1000,
       step: 10,
       value: minV,
+      ariaLabel: 'Faixa de preço — mínimo',
       onValueChange: (v) => {
         if (v > maxV) {
           minV = maxV;
@@ -185,17 +203,13 @@ export const PriceRange: Story = {
         fmt();
       },
     });
-    const minInput = minSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
-    if (minInput) {
-      minInput.setAttribute('aria-label', 'Faixa de preço — mínimo');
-      minInput.setAttribute('aria-labelledby', 'comp-range-label');
-    }
 
     const maxSlider = createSlider({
       min: 0,
       max: 1000,
       step: 10,
       value: maxV,
+      ariaLabel: 'Faixa de preço — máximo',
       onValueChange: (v) => {
         if (v < minV) {
           maxV = minV;
@@ -207,11 +221,6 @@ export const PriceRange: Story = {
         fmt();
       },
     });
-    const maxInput = maxSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
-    if (maxInput) {
-      maxInput.setAttribute('aria-label', 'Faixa de preço — máximo');
-      maxInput.setAttribute('aria-labelledby', 'comp-range-label');
-    }
 
     wrap.append(row, minSlider, maxSlider);
     return wrap;
@@ -220,17 +229,23 @@ export const PriceRange: Story = {
     docs: {
       description: {
         story:
-          'DIVERGÊNCIA Vanilla: o factory custom NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes e clamping mútuo (min nunca passa max, e vice-versa). Cada `<input type="range">` recebe `aria-label` independente — "mínimo" e "máximo".',
+          'Faixa de preço com clamping mútuo: o mínimo nunca passa do máximo e vice-versa. Cada alça recebe o seu nome acessível — "mínimo" e "máximo".',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
-    await step('Dois inputs distintos', async () => {
-      const inputs = canvasElement.querySelectorAll('input[type="range"]');
-      await expect(inputs).toHaveLength(2);
+    const canvas = within(canvasElement);
+
+    await step('Duas alças, cada uma com nome próprio', async () => {
+      const alcas = canvas.getAllByRole('slider');
+      await expect(alcas).toHaveLength(2);
+      await expect(alcas.map((a) => a.getAttribute('aria-label'))).toEqual([
+        'Faixa de preço — mínimo',
+        'Faixa de preço — máximo',
+      ]);
     });
+
     await step('Faixa formatada corretamente', async () => {
-      const canvas = within(canvasElement);
       await expect(canvas.getByText(/R\$ 100 — R\$ 400/)).toBeVisible();
     });
   },
@@ -241,64 +256,79 @@ export const PriceRange: Story = {
 export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'nds-stack';
+    form.className = 'nds-stack nds-w-sm';
     form.dataset.spacing = 'md';
-    form.style.width = '20rem';
-    form.setAttribute('aria-label', 'Configuracoes de áudio');
+    form.setAttribute('aria-label', 'Configurações de áudio');
 
-    // Debounce manual — o factory Vanilla não tem onValueCommitted
-    let debounceId: ReturnType<typeof setTimeout> | null = null;
-    let lastCommitted = 60;
+    let ultimoCommit = 60;
 
-    const submitStatus = document.createElement('p');
-    submitStatus.className = 'nds-text-caption nds-text-muted-foreground';
-    submitStatus.setAttribute('aria-live', 'polite');
-    submitStatus.textContent = 'Aguardando alteração…';
+    const status = document.createElement('p');
+    status.className = 'nds-text-caption nds-text-muted-foreground';
+    status.setAttribute('aria-live', 'polite');
+    status.textContent = 'Aguardando alteração…';
+
+    const nomeWrap = document.createElement('div');
+    nomeWrap.className = 'nds-stack';
+    nomeWrap.dataset.spacing = 'sm';
+    const nomeLabel = document.createElement('label');
+    nomeLabel.className = 'nds-text-body nds-font-medium';
+    nomeLabel.htmlFor = 'form-preset';
+    nomeLabel.textContent = 'Nome do preset';
+    nomeWrap.append(nomeLabel, createInput({ id: 'form-preset', placeholder: 'Meu preset' }));
 
     const volume = withLabel({
       idPrefix: 'form-volume',
       labelText: 'Volume',
       ariaLabel: 'Volume',
-      value: lastCommitted,
+      value: ultimoCommit,
       unit: '%',
-      onValueChange: (v) => {
-        if (debounceId) clearTimeout(debounceId);
-        debounceId = setTimeout(() => {
-          lastCommitted = v;
-          submitStatus.textContent = `Commitado: ${v}% (analytics dispararia aqui)`;
-        }, 300);
+      // O commit é o `change` do input nativo — um evento por interação, e não
+      // um por pixel arrastado. É ele que alimenta o analytics.
+      onValueCommitted: (v) => {
+        ultimoCommit = v;
+        status.textContent = `Commitado: ${v}%`;
       },
     });
 
-    const submit = document.createElement('button');
-    submit.type = 'submit';
-    submit.className = 'btn btn-primary';
-    submit.textContent = 'Salvar';
+    const submit = createButton({ type: 'submit', label: 'Salvar preset', size: 'sm' });
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      submitStatus.textContent = `Enviado: volume=${lastCommitted}%`;
+      status.textContent = `Enviado: volume=${ultimoCommit}%`;
     });
 
-    form.append(volume, submit, submitStatus);
+    form.append(nomeWrap, volume, submit, status);
     return form;
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Slider em formulário com debounce manual de 300ms para simular `onValueCommitted` — DIVERGÊNCIA Vanilla: o factory custom não expõe callback de commit separado, então debounce manual é necessário para analytics, evitando 1 evento por tecla pressionada.',
+          'Slider em formulário: o callback de commit dispara ao soltar o arrasto ou largar a tecla, e é o que alimenta o analytics — o callback contínuo geraria um evento por pixel.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Form com aria-label', async () => {
-      const form = canvasElement.querySelector('form');
-      await expect(form).toHaveAttribute('aria-label', 'Configuracoes de áudio');
+
+    await step('Formulário tem campo de texto, slider e botão do design system', async () => {
+      await expect(canvas.getByLabelText(/Nome do preset/)).toBeInTheDocument();
+      await expect(canvas.getAllByRole('slider')).toHaveLength(1);
+      // Classe real do botão: `btn btn-primary` não pinta nada desde a
+      // migração, e o botão saía do formulário sem estilo nenhum.
+      await expect(canvas.getByRole('button', { name: 'Salvar preset' })).toHaveClass('nds-button');
     });
-    await step('Status inicial visível', async () => {
-      await expect(canvas.getByText(/Aguardando alteração/)).toBeVisible();
+
+    await step('O commit registra o valor confirmado', async () => {
+      await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
+      const valor = valorDaAlca(canvas.getByRole('slider'));
+      await expect(canvas.getByText(`Commitado: ${valor}%`)).toBeVisible();
+    });
+
+    await step('Submeter usa o último valor confirmado', async () => {
+      const valor = valorDaAlca(canvas.getByRole('slider'));
+      await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
+      await expect(canvas.getByText(`Enviado: volume=${valor}%`)).toBeVisible();
     });
   },
 };

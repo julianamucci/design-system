@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSlider } from './slider';
+import { apertarTecla, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -12,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Slider: Single (1 thumb, padrão), Range (composição com 2 sliders adjacentes — o factory custom do Vanilla não suporta 2 thumbs nativamente) e Vertical (NÃO suportado de forma acessível — `<input type="range">` nativo não tem orientação vertical com ARIA correto; documentada como divergência).',
+          'Variantes do Slider: Single (uma alça, padrão), Range (composição de duas alças adjacentes com clamping mútuo — a factory controla um valor por instância) e Vertical (`orientation="vertical"`).',
       },
     },
   },
@@ -32,13 +33,24 @@ function withLabel(opts: {
   step?: number;
   value?: number;
   unit?: string;
+  orientation?: 'horizontal' | 'vertical';
 }): HTMLElement {
-  const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, unit = '' } = opts;
+  const {
+    idPrefix,
+    labelText,
+    ariaLabel,
+    min = 0,
+    max = 100,
+    step = 1,
+    value = 0,
+    unit = '',
+    orientation = 'horizontal',
+  } = opts;
+  const vertical = orientation === 'vertical';
 
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
+  wrap.className = vertical ? 'nds-stack' : 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
-  wrap.style.width = '18rem';
 
   const row = document.createElement('div');
   row.className = 'nds-cluster';
@@ -51,8 +63,7 @@ function withLabel(opts: {
 
   const valueText = document.createElement('span');
   valueText.id = `${idPrefix}-value`;
-  valueText.className = 'nds-text-body nds-text-muted-foreground';
-  valueText.style.fontVariantNumeric = 'tabular-nums';
+  valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
   valueText.setAttribute('aria-live', 'polite');
   valueText.textContent = `${value}${unit}`;
 
@@ -63,19 +74,25 @@ function withLabel(opts: {
     max,
     step,
     value,
+    orientation,
+    ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
     },
   });
 
   const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
-  if (input) {
-    input.setAttribute('aria-label', ariaLabel);
-    input.setAttribute('aria-labelledby', `${idPrefix}-label`);
-    input.setAttribute('aria-describedby', `${idPrefix}-value`);
-  }
+  if (input) input.setAttribute('aria-describedby', `${idPrefix}-value`);
 
-  wrap.append(row, slider);
+  if (vertical) {
+    const centro = document.createElement('div');
+    centro.className = 'nds-cluster';
+    centro.dataset.justify = 'center';
+    centro.append(slider);
+    wrap.append(row, centro);
+  } else {
+    wrap.append(row, slider);
+  }
   return wrap;
 }
 
@@ -87,28 +104,29 @@ export const Single: Story = {
       idPrefix: 'v-single',
       labelText: 'Volume',
       ariaLabel: 'Volume',
-      min: 0,
-      max: 100,
       value: 50,
       unit: '%',
     }),
   parameters: {
     docs: {
       description: {
-        story:
-          'Variante padrão — um único thumb representando um valor escalar. `value` é `number` no Vanilla (não `number[]` como nas libs upstream).',
+        story: 'Variante padrão — uma alça representando um valor escalar.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Input range presente com aria-label', async () => {
-      const input = canvasElement.querySelector('input[type="range"]') as HTMLInputElement;
-      await expect(input).toBeTruthy();
-      await expect(input).toHaveAttribute('aria-label', 'Volume');
+
+    await step('Single tem exatamente 1 alça, com nome acessível', async () => {
+      const alcas = canvas.getAllByRole('slider');
+      await expect(alcas).toHaveLength(1);
+      await expect(alcas[0]).toHaveAttribute('aria-label', 'Volume');
     });
-    await step('Valor exibido', async () => {
-      await expect(canvas.getByText('50%')).toBeVisible();
+
+    await step('ArrowRight anda um passo', async () => {
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
   },
 };
@@ -116,12 +134,19 @@ export const Single: Story = {
 // ─── Range ────────────────────────────────────────────────────────────────────
 
 export const Range: Story = {
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      description: {
+        story:
+          'Faixa com mínimo e máximo. A factory controla um valor por instância, então a faixa é composta por duas alças adjacentes com clamping mútuo — cada uma com o seu nome acessível.',
+      },
+    },
+  },
   render: () => {
-    // Composição manual com 2 sliders — factory custom não suporta 2 thumbs
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'sm';
-    wrap.style.width = '20rem';
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
@@ -132,12 +157,11 @@ export const Range: Story = {
     label.textContent = 'Faixa de preço';
     const valueText = document.createElement('span');
     valueText.id = 'v-range-value';
-    valueText.className = 'nds-text-body nds-text-muted-foreground';
-    valueText.style.fontVariantNumeric = 'tabular-nums';
+    valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
-    let minV = 100;
-    let maxV = 400;
+    let minV = 20;
+    let maxV = 80;
     const fmt = () => {
       valueText.textContent = `R$ ${minV} — R$ ${maxV}`;
     };
@@ -147,9 +171,10 @@ export const Range: Story = {
 
     const minSlider = createSlider({
       min: 0,
-      max: 1000,
-      step: 10,
+      max: 100,
+      step: 1,
       value: minV,
+      ariaLabel: 'Faixa de preço — mínimo',
       onValueChange: (v) => {
         if (v > maxV) {
           minV = maxV;
@@ -161,17 +186,13 @@ export const Range: Story = {
         fmt();
       },
     });
-    const minInput = minSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
-    if (minInput) {
-      minInput.setAttribute('aria-label', 'Faixa de preço — mínimo');
-      minInput.setAttribute('aria-labelledby', 'v-range-label');
-    }
 
     const maxSlider = createSlider({
       min: 0,
-      max: 1000,
-      step: 10,
+      max: 100,
+      step: 1,
       value: maxV,
+      ariaLabel: 'Faixa de preço — máximo',
       onValueChange: (v) => {
         if (v < minV) {
           maxV = minV;
@@ -183,72 +204,77 @@ export const Range: Story = {
         fmt();
       },
     });
-    const maxInput = maxSlider.querySelector('input[type="range"]') as HTMLInputElement | null;
-    if (maxInput) {
-      maxInput.setAttribute('aria-label', 'Faixa de preço — máximo');
-      maxInput.setAttribute('aria-labelledby', 'v-range-label');
-    }
 
     wrap.append(row, minSlider, maxSlider);
     return wrap;
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Variante "Range" — o factory custom do Vanilla NÃO suporta 2 thumbs (`value` é `number`, não `number[]`). Composição manual com 2 sliders adjacentes + estado compartilhado para min/max e clamping mútuo. ARIA: 2 inputs distintos com aria-label "min" e "max".',
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
-    await step('Dois inputs range — min e max', async () => {
-      const inputs = canvasElement.querySelectorAll('input[type="range"]');
-      await expect(inputs).toHaveLength(2);
-      await expect(inputs[0]).toHaveAttribute('aria-label', 'Faixa de preço — mínimo');
-      await expect(inputs[1]).toHaveAttribute('aria-label', 'Faixa de preço — máximo');
+    const canvas = within(canvasElement);
+
+    await step('Duas alças, cada uma com nome próprio', async () => {
+      // "Faixa de preço" repetido duas vezes não diria qual alça está em foco.
+      const alcas = canvas.getAllByRole('slider');
+      await expect(alcas).toHaveLength(2);
+      await expect(alcas.map((a) => a.getAttribute('aria-label'))).toEqual([
+        'Faixa de preço — mínimo',
+        'Faixa de preço — máximo',
+      ]);
     });
+
     await step('Valor formatado como faixa', async () => {
-      const canvas = within(canvasElement);
-      await expect(canvas.getByText(/R\$ 100 — R\$ 400/)).toBeVisible();
+      await expect(canvas.getByText(/R\$ 20 — R\$ 80/)).toBeVisible();
+    });
+
+    await step('O mínimo não passa do máximo', async () => {
+      await apertarTecla(canvas.getAllByRole('slider')[0], '{End}');
+      await expect(valorDaAlca(canvas.getAllByRole('slider')[0])).toBeLessThanOrEqual(
+        valorDaAlca(canvas.getAllByRole('slider')[1]),
+      );
     });
   },
 };
 
-// ─── Vertical (não suportado) ─────────────────────────────────────────────────
+// ─── Vertical ─────────────────────────────────────────────────────────────────
 
 export const Vertical: Story = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-italic';
-    wrap.dataset.spacing = 'sm';
-    wrap.dataset.align = 'center';
-    wrap.style.width = '18rem';
-
-    const note = document.createElement('p');
-    note.className = 'nds-text-body nds-italic';
-    note.style.textAlign = 'center';
-    note.textContent =
-      'A variante "vertical" NÃO é suportada de forma acessível no Vanilla — <input type="range"> nativo não expõe orientação vertical via ARIA. Use a variante horizontal.';
-
-    const fallback = createSlider({ min: 0, max: 100, value: 50 });
-    const input = fallback.querySelector('input[type="range"]') as HTMLInputElement | null;
-    if (input) input.setAttribute('aria-label', 'Volume (fallback horizontal)');
-
-    wrap.append(note, fallback);
-    return wrap;
-  },
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
-          'Variante "Vertical" — divergência documentada. O factory custom é um wrapper de `<input type="range">` nativo, que não suporta orientação vertical acessível (rotação via CSS quebra ARIA). Esta story renderiza um fallback horizontal com nota explicativa.',
+          '`orientation="vertical"` — o trilho fica em pé, a orientação é anunciada e as setas de cima e de baixo movem o valor. O componente traz altura mínima própria.',
       },
     },
   },
+  render: () =>
+    withLabel({
+      idPrefix: 'v-vertical',
+      labelText: 'Brilho',
+      ariaLabel: 'Brilho',
+      value: 60,
+      unit: '%',
+      orientation: 'vertical',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Nota de divergência visível', async () => {
-      await expect(canvas.getByText(/NÃO é suportada de forma acessível/)).toBeVisible();
+
+    await step('A orientação vertical é anunciada', async () => {
+      // `<input type="range">` é horizontal por definição na árvore de
+      // acessibilidade; em pé, a orientação precisa ser dita.
+      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-orientation', 'vertical');
+    });
+
+    await step('O trilho fica em pé', async () => {
+      // A orientação não pode ser só um atributo: a geometria vira junto, senão
+      // o controle continua deitado dizendo que está de pé.
+      const caixa = trilhoDoSlider(canvasElement).getBoundingClientRect();
+      await expect(caixa.height).toBeGreaterThan(caixa.width);
+    });
+
+    await step('ArrowUp incrementa no eixo vertical', async () => {
+      const antes = valorDaAlca(canvas.getByRole('slider'));
+      await apertarTecla(canvas.getByRole('slider'), '{ArrowUp}');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
   },
 };

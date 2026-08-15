@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import { NdsSlider } from './slider';
 import { NdsSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { contrasteAlcaTrilho } from '@shared/testing/slider-probe';
 
 type SliderArgs = {
   value: number[];
@@ -49,26 +50,6 @@ export class Exemplo {
   // Um array: um item para valor único, dois para intervalo.
   readonly valor = signal(${JSON.stringify(value)});
 }`;
-}
-
-/**
- * Razão de contraste entre duas cores computadas (`rgb()` / `rgba()`).
- *
- * Uma cor translúcida é achatada sobre branco antes da conta: é o que o olho vê
- * quando o fundo da página é claro, e medir o canal alfa cru daria um número
- * que não corresponde a nada na tela.
- */
-function contraste(corA: string, corB: string): number {
-  const luminancia = (cor: string): number => {
-    const [r = 0, g = 0, b = 0, a = 1] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
-    const canal = (v: number) => {
-      const misturado = (v * a + 255 * (1 - a)) / 255;
-      return misturado <= 0.03928 ? misturado / 12.92 : ((misturado + 0.055) / 1.055) ** 2.4;
-    };
-    return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
-  };
-  const [claro, escuro] = [luminancia(corA), luminancia(corB)].sort((x, y) => y - x);
-  return (claro + 0.05) / (escuro + 0.05);
 }
 
 const meta: Meta<SliderArgs> = {
@@ -126,11 +107,11 @@ export const Playground: Story = {
       const alcas = canvasElement.querySelectorAll('[data-slot="slider-thumb"]');
       await expect(alcas.length).toBe(args.value.length);
 
-      const inputs = canvasElement.querySelectorAll<HTMLInputElement>(
-        '[data-slot="slider-thumb"] > input',
-      );
-      await expect(inputs.length).toBe(args.value.length);
-      for (const input of inputs) await expect(input.type).toBe('range');
+      // Pelo PAPEL, e não pelo `type` do input: o item de contrato fala de
+      // `role="slider"`, e é o papel — implícito num range nativo — que o
+      // leitor de tela anuncia.
+      const porPapel = within(canvasElement).getAllByRole('slider');
+      await expect(porPapel.length).toBe(args.value.length);
     });
 
     await step('O aria-label fica na alça, não na raiz', async () => {
@@ -150,13 +131,14 @@ export const Playground: Story = {
       // WCAG 1.4.11: componente de interface não textual precisa de 3:1 contra
       // o que está em volta. Quem separa a alça do trilho é a BORDA dela — o
       // miolo é da cor do fundo da página de propósito.
-      const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
-      const razao = contraste(
-        getComputedStyle(alca).borderTopColor,
-        getComputedStyle(trilho).backgroundColor,
-      );
-      await expect(razao).toBeGreaterThanOrEqual(3);
+      //
+      // Pelo colhedor compartilhado, e não por uma conta local: a borda mora no
+      // `::before` (a caixa da alça é o alvo de toque de 24px e é transparente),
+      // e o fundo do trilho tem alfa, que precisa ser composto sobre o primeiro
+      // ancestral opaco antes da divisão. A conta que vivia aqui ignorava as
+      // duas coisas — lia a borda no elemento errado e achatava o trilho contra
+      // um branco fixo.
+      await expect(contrasteAlcaTrilho(canvasElement)).toBeGreaterThanOrEqual(3);
     });
 
     await step('A classe .nds-slider fica no control, como nas outras stacks', async () => {

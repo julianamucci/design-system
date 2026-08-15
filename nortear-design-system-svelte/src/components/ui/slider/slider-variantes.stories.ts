@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
+import { alcasDoSlider, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   title: 'UI/Slider/Variants',
@@ -10,10 +11,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do Slider: single (um thumb), range (dois thumbs) e vertical (orientation="vertical" com altura definida no container).',
+          'Variantes do Slider: single (um thumb), range (dois thumbs) e vertical (orientation="vertical").',
       },
     },
   },
@@ -42,31 +44,27 @@ export const Single: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
     await step('Single tem exatamente 1 thumb', async () => {
-      await expect(thumbs).toHaveLength(1);
+      await expect(canvas.getAllByRole('slider')).toHaveLength(1);
     });
 
-    await step('aria-valuenow inicial = 50', async () => {
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '50');
-    });
-
-    await step('ArrowRight altera aria-valuenow', async () => {
-      (thumbs[0] as HTMLElement).focus();
+    await step('ArrowRight anda um passo', async () => {
+      const alca = canvas.getByRole('slider');
+      const antes = valorDaAlca(alca);
+      (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
-      await expect(valuenow).toBeGreaterThanOrEqual(50);
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
   },
 };
 
 export const Range: Story = {
   args: {
-    value: [100, 400],
+    value: [20, 80],
     min: 0,
-    max: 500,
-    step: 10,
+    max: 100,
+    step: 1,
     'aria-label': 'Faixa de preço',
     label: 'Faixa de preço',
     showRangeValue: true,
@@ -74,30 +72,30 @@ export const Range: Story = {
     rangePrefix: 'R$ ',
   },
   parameters: {
+    covers: ['visual.item2'],
     docs: {
       description: {
-        story: 'value=[100, 400] — dois thumbs controlando min e max de uma faixa.',
+        story: 'value=[20, 80] — dois thumbs controlando min e max de uma faixa.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
-    await step('Range tem exatamente 2 thumbs', async () => {
+    await step('Range tem exatamente 2 thumbs, em 20 e 80', async () => {
+      const thumbs = canvas.getAllByRole('slider');
       await expect(thumbs).toHaveLength(2);
+      await expect(valorDaAlca(thumbs[0])).toBe(20);
+      await expect(valorDaAlca(thumbs[1])).toBe(80);
     });
 
-    await step('Valores iniciais 100 e 400', async () => {
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '100');
-      await expect(thumbs[1]).toHaveAttribute('aria-valuenow', '400');
-    });
-
-    await step('ArrowRight no primeiro thumb incrementa o valor', async () => {
-      (thumbs[0] as HTMLElement).focus();
-      await userEvent.keyboard('{ArrowRight}');
-      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
-      await expect(valuenow).toBeGreaterThanOrEqual(100);
+    await step('O preenchimento é o miolo entre as duas alças', async () => {
+      // Afirma o desenho, não o dado: 80 − 20 do trilho, com folga de subpixel.
+      const trilho = trilhoDoSlider(canvasElement);
+      const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
+      const pct =
+        (faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100;
+      await expect(Math.abs(pct - 60)).toBeLessThan(1.5);
     });
   },
 };
@@ -113,32 +111,35 @@ export const Vertical: Story = {
     label: 'Brilho',
     showValue: true,
     valueSuffix: '%',
-    verticalHeight: 'h-40',
   },
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
-        story: 'orientation="vertical" + container com h-40 — slider em pé.',
+        story:
+          'orientation="vertical" — o componente já traz altura mínima própria em pé.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
-    await step('Vertical tem 1 thumb', async () => {
-      await expect(thumbs).toHaveLength(1);
+    await step('A orientação vertical é anunciada', async () => {
+      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-orientation', 'vertical');
     });
 
-    await step('aria-orientation=vertical', async () => {
-      await expect(thumbs[0]).toHaveAttribute('aria-orientation', 'vertical');
+    await step('O trilho fica em pé', async () => {
+      // A orientação não pode ser só um atributo: a geometria vira junto, senão
+      // o controle continua deitado dizendo que está de pé.
+      const caixa = trilhoDoSlider(canvasElement).getBoundingClientRect();
+      await expect(caixa.height).toBeGreaterThan(caixa.width);
     });
 
-    await step('ArrowUp incrementa (vertical)', async () => {
-      (thumbs[0] as HTMLElement).focus();
+    await step('ArrowUp incrementa no eixo vertical', async () => {
+      const antes = valorDaAlca(alcasDoSlider(canvasElement)[0]);
+      (canvas.getByRole('slider') as HTMLElement).focus();
       await userEvent.keyboard('{ArrowUp}');
-      const valuenow = Number(thumbs[0].getAttribute('aria-valuenow'));
-      await expect(valuenow).toBeGreaterThanOrEqual(60);
+      await expect(valorDaAlca(alcasDoSlider(canvasElement)[0])).toBe(Math.min(100, antes + 1));
     });
   },
 };

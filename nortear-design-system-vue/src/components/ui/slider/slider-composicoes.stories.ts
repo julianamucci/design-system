@@ -3,6 +3,9 @@ import { ref } from 'vue';
 import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta = {
   title: 'UI/Slider/Compositions',
@@ -32,10 +35,10 @@ export const VolumeWithValue: Story = {
       return { value };
     },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Volume</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }}%</span>
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ value[0] }}%</span>
         </div>
         <Slider v-model="value" :min="0" :max="100" :step="1" aria-label="Volume" />
       </div>
@@ -43,16 +46,14 @@ export const VolumeWithValue: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
-    await step('Valor textual visível', async () => {
-      await expect(canvas.getByText('50%')).toBeVisible();
-    });
-
-    await step('Após ArrowRight, valor textual reflete mudança', async () => {
-      (thumb as HTMLElement).focus();
+    await step('O texto do valor acompanha a alça', async () => {
+      const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
+      const alca = canvas.getByRole('slider');
+      const antes = valorDaAlca(alca);
+      (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '51');
+      await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
   },
 };
@@ -65,10 +66,10 @@ export const PriceRange: Story = {
       return { value };
     },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Faixa de preço</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">
             R$ {{ value[0] }} — R$ {{ value[1] }}
           </span>
         </div>
@@ -82,10 +83,9 @@ export const PriceRange: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
     await step('2 thumbs renderizados', async () => {
-      await expect(thumbs).toHaveLength(2);
+      await expect(canvas.getAllByRole('slider')).toHaveLength(2);
     });
 
     await step('Valor textual no formato min — max', async () => {
@@ -96,28 +96,27 @@ export const PriceRange: Story = {
 
 export const InForm: Story = {
   render: () => ({
-    components: { Slider, Label },
+    components: { Slider, Label, Input, Button },
     setup() {
       const brightness = ref<number[]>([70]);
       const opacity = ref<number[]>([100]);
-      return { brightness, opacity };
+      const salvo = ref<string>('');
+      const salvar = () => {
+        salvo.value = `Brilho ${brightness.value[0]}% · Opacidade ${opacity.value[0]}%`;
+      };
+      return { brightness, opacity, salvo, salvar };
     },
     template: `
-      <form class="" data-spacing="lg" style="width: 20rem" @submit.prevent>
+      <form class="nds-stack nds-w-sm" data-spacing="md" aria-label="Configurações de áudio" @submit.prevent="salvar">
         <div class="nds-stack" data-spacing="sm">
           <Label for="form-name">Nome do preset</Label>
-          <input
-            id="form-name"
-            type="text"
-            placeholder="Meu preset"
-            class="nds-w-full nds-rounded-md nds-border-default nds-border-default nds-bg-background nds-text-body nds-focus-ring" style="height: var(--height-default); padding-inline: 0.75rem" 
-          />
+          <Input id="form-name" placeholder="Meu preset" />
         </div>
 
         <div class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <Label>Brilho</Label>
-            <span aria-live="polite" class="nds-text-body tabular-nums">{{ brightness[0] }}%</span>
+            <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ brightness[0] }}%</span>
           </div>
           <Slider v-model="brightness" :min="0" :max="100" aria-label="Brilho" />
         </div>
@@ -125,36 +124,38 @@ export const InForm: Story = {
         <div class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-justify="between">
             <Label>Opacidade</Label>
-            <span aria-live="polite" class="nds-text-body tabular-nums">{{ opacity[0] }}%</span>
+            <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ opacity[0] }}%</span>
           </div>
           <Slider v-model="opacity" :min="0" :max="100" aria-label="Opacidade" />
         </div>
 
-        <button
-          type="submit"
-          class="nds-w-full nds-px-4 nds-rounded-md nds-bg-primary text-primary-foreground nds-text-body nds-font-medium nds-hover-bg-primary-90 transition-colors" style="height: var(--height-default)"
-        >
-          Salvar preset
-        </button>
+        <Button type="submit" size="sm">Salvar preset</Button>
+        <p class="nds-text-caption nds-text-muted-foreground" aria-live="polite">{{ salvo }}</p>
       </form>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
-    await step('Formulário tem input de texto e 2 sliders', async () => {
+    await step('Formulário tem campo de texto e dois sliders', async () => {
       await expect(canvas.getByLabelText(/Nome do preset/)).toBeInTheDocument();
-      await expect(thumbs).toHaveLength(2);
+      await expect(canvas.getAllByRole('slider')).toHaveLength(2);
     });
 
-    await step('Cada slider tem aria-label distinto', async () => {
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '70');
-      await expect(thumbs[1]).toHaveAttribute('aria-valuenow', '100');
+    await step('Cada slider tem nome acessível próprio', async () => {
+      const thumbs = canvas.getAllByRole('slider');
+      await expect(thumbs[0]).toHaveAttribute('aria-label', 'Brilho');
+      await expect(thumbs[1]).toHaveAttribute('aria-label', 'Opacidade');
     });
 
-    await step('Botão de submit presente', async () => {
-      await expect(canvas.getByRole('button', { name: 'Salvar preset' })).toBeInTheDocument();
+    await step('Submeter guarda o valor corrente dos dois', async () => {
+      const thumbs = canvas.getAllByRole('slider');
+      const brilho = valorDaAlca(thumbs[0]);
+      const opacidade = valorDaAlca(thumbs[1]);
+      await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
+      await expect(
+        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
+      ).toBeVisible();
     });
   },
 };
@@ -167,10 +168,10 @@ export const ThickStep: Story = {
       return { value };
     },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+      <div class="nds-stack nds-w-sm" data-spacing="sm">
         <div class="nds-cluster" data-justify="between">
           <Label>Avaliação</Label>
-          <span aria-live="polite" class="nds-text-body tabular-nums">{{ value[0] }} / 5</span>
+          <span aria-live="polite" class="nds-text-body nds-tabular-nums">{{ value[0] }} / 5</span>
         </div>
         <Slider v-model="value" :min="1" :max="5" :step="1" aria-label="Avaliação" />
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
@@ -181,17 +182,19 @@ export const ThickStep: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
-    await step('aria-valuemin=1 e aria-valuemax=5', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuemin', '1');
-      await expect(thumb).toHaveAttribute('aria-valuemax', '5');
+    await step('A faixa curta chega à árvore de acessibilidade', async () => {
+      const alca = canvas.getByRole('slider');
+      await expect(alca).toHaveAttribute('aria-valuemin', '1');
+      await expect(alca).toHaveAttribute('aria-valuemax', '5');
     });
 
-    await step('ArrowRight com step=1 incrementa para 4', async () => {
-      (thumb as HTMLElement).focus();
+    await step('ArrowRight anda um passo dentro da faixa curta', async () => {
+      const alca = canvas.getByRole('slider');
+      const antes = valorDaAlca(alca);
+      (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(thumb).toHaveAttribute('aria-valuenow', '4');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });
   },
 };

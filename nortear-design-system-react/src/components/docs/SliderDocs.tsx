@@ -787,34 +787,34 @@ interface SliderProps {
         }}
         items={[
           {
-            token: "--muted",
-            value: tContent("tokens.table.muted.class"),
-            description: tContent("tokens.table.muted.part"),
+            token: "--primary / 0.2",
+            value: tContent("tokens.table.track.class"),
+            description: tContent("tokens.table.track.part"),
           },
           {
             token: "--primary",
-            value: tContent("tokens.table.primary.class"),
-            description: tContent("tokens.table.primary.part"),
+            value: tContent("tokens.table.range.class"),
+            description: tContent("tokens.table.range.part"),
           },
           {
-            token: "--ring",
-            value: tContent("tokens.table.ring.class"),
-            description: tContent("tokens.table.ring.part"),
+            token: "--primary",
+            value: tContent("tokens.table.thumbBorder.class"),
+            description: tContent("tokens.table.thumbBorder.part"),
           },
           {
             token: "--background",
-            value: tContent("tokens.table.background.class"),
-            description: tContent("tokens.table.background.part"),
+            value: tContent("tokens.table.thumbBackground.class"),
+            description: tContent("tokens.table.thumbBackground.part"),
           },
           {
-            token: "--foreground",
-            value: tContent("tokens.table.foreground.class"),
-            description: tContent("tokens.table.foreground.part"),
+            token: "--ring",
+            value: tContent("tokens.table.focusRing.class"),
+            description: tContent("tokens.table.focusRing.part"),
           },
           {
-            token: "--muted-foreground",
-            value: tContent("tokens.table.mutedForeground.class"),
-            description: tContent("tokens.table.mutedForeground.part"),
+            token: "--radius-full",
+            value: tContent("tokens.table.radius.class"),
+            description: tContent("tokens.table.radius.part"),
           },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

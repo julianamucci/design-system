@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
+import { valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   title: 'UI/Slider/Compositions',
@@ -11,6 +12,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -33,7 +35,6 @@ export const VolumeWithValue: Story = {
     label: 'Volume',
     showValue: true,
     valueSuffix: '%',
-    width: 'w-80',
   },
   parameters: {
     docs: {
@@ -46,18 +47,16 @@ export const VolumeWithValue: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Valor textual visível', async () => {
-      await expect(canvas.getByText('50%')).toBeVisible();
-    });
-
-    await step('Após ArrowRight, aria-valuenow reflete mudança', async () => {
-      // Re-consulta antes de focar: o thumb capturado no inicio do play pode
-      // ter sido substituido pela renderizacao, e focar no no destacado nao faz
-      // nada — o foco ficava no BODY e a tecla nao chegava no slider.
+    await step('O texto do valor acompanha a alça', async () => {
+      // Re-consulta antes de focar: o nó pode ter sido substituído pela
+      // renderização, e focar no nó destacado não faz nada — o foco ficava no
+      // BODY e a tecla não chegava no slider.
+      const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
       const alvo = canvas.getByRole('slider') as HTMLElement;
+      const antes = valorDaAlca(alvo);
       alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-valuenow', '51');
+      await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
   },
 };
@@ -73,7 +72,6 @@ export const PriceRange: Story = {
     showRangeValue: true,
     valueSuffix: '',
     rangePrefix: 'R$ ',
-    width: 'w-80',
   },
   parameters: {
     docs: {
@@ -85,10 +83,9 @@ export const PriceRange: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
     await step('2 thumbs renderizados', async () => {
-      await expect(thumbs).toHaveLength(2);
+      await expect(canvas.getAllByRole('slider')).toHaveLength(2);
     });
 
     await step('Valor textual no formato min — max', async () => {
@@ -106,26 +103,32 @@ export const InForm: Story = {
     docs: {
       description: {
         story:
-          'Múltiplos sliders dentro de um formulário (Brilho + Opacidade) com input de texto e submit.',
+          'Múltiplos sliders dentro de um formulário (Brilho + Opacidade) com campo de texto e submit.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumbs = canvas.getAllByRole('slider');
 
-    await step('Formulário tem input de texto e 2 sliders', async () => {
+    await step('Formulário tem campo de texto e dois sliders', async () => {
       await expect(canvas.getByLabelText(/Nome do preset/)).toBeInTheDocument();
-      await expect(thumbs).toHaveLength(2);
+      await expect(canvas.getAllByRole('slider')).toHaveLength(2);
     });
 
-    await step('Cada slider tem aria-valuenow distinto', async () => {
-      await expect(thumbs[0]).toHaveAttribute('aria-valuenow', '70');
-      await expect(thumbs[1]).toHaveAttribute('aria-valuenow', '100');
+    await step('Cada slider tem nome acessível próprio', async () => {
+      const thumbs = canvas.getAllByRole('slider');
+      await expect(thumbs[0]).toHaveAttribute('aria-label', 'Brilho');
+      await expect(thumbs[1]).toHaveAttribute('aria-label', 'Opacidade');
     });
 
-    await step('Botão de submit presente', async () => {
-      await expect(canvas.getByRole('button', { name: 'Salvar preset' })).toBeInTheDocument();
+    await step('Submeter guarda o valor corrente dos dois', async () => {
+      const thumbs = canvas.getAllByRole('slider');
+      const brilho = valorDaAlca(thumbs[0]);
+      const opacidade = valorDaAlca(thumbs[1]);
+      await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
+      await expect(
+        canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
+      ).toBeVisible();
     });
   },
 };
@@ -140,7 +143,6 @@ export const ThickStep: Story = {
     label: 'Avaliação',
     showValue: true,
     valueSuffix: ' / 5',
-    width: 'w-80',
   },
   parameters: {
     docs: {
@@ -152,19 +154,19 @@ export const ThickStep: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const thumb = canvas.getByRole('slider');
 
-    await step('aria-valuemin=1 e aria-valuemax=5', async () => {
-      await expect(thumb).toHaveAttribute('aria-valuemin', '1');
-      await expect(thumb).toHaveAttribute('aria-valuemax', '5');
+    await step('A faixa curta chega à árvore de acessibilidade', async () => {
+      const alca = canvas.getByRole('slider');
+      await expect(alca).toHaveAttribute('aria-valuemin', '1');
+      await expect(alca).toHaveAttribute('aria-valuemax', '5');
     });
 
-    await step('ArrowRight com step=1 incrementa para 4', async () => {
-      // Re-consulta antes de focar, como na story de volume.
+    await step('ArrowRight anda um passo dentro da faixa curta', async () => {
       const alvo = canvas.getByRole('slider') as HTMLElement;
+      const antes = valorDaAlca(alvo);
       alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(canvas.getByRole('slider')).toHaveAttribute('aria-valuenow', '4');
+      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });
   },
 };

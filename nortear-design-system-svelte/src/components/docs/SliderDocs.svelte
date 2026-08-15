@@ -573,12 +573,12 @@ interface SliderProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--muted',            value: $tStore('tokens.table.muted.class'),           description: $tStore('tokens.table.muted.part')           },
-      { token: '--primary',          value: $tStore('tokens.table.primary.class'),         description: $tStore('tokens.table.primary.part')         },
-      { token: '--ring',             value: $tStore('tokens.table.ring.class'),            description: $tStore('tokens.table.ring.part')            },
-      { token: '--background',       value: $tStore('tokens.table.background.class'),      description: $tStore('tokens.table.background.part')      },
-      { token: '--foreground',       value: $tStore('tokens.table.foreground.class'),      description: $tStore('tokens.table.foreground.part')      },
-      { token: '--muted-foreground', value: $tStore('tokens.table.mutedForeground.class'), description: $tStore('tokens.table.mutedForeground.part') },
+      { token: '--primary / 0.2', value: $tStore('tokens.table.track.class'),           description: $tStore('tokens.table.track.part')           },
+      { token: '--primary',       value: $tStore('tokens.table.range.class'),           description: $tStore('tokens.table.range.part')           },
+      { token: '--primary',       value: $tStore('tokens.table.thumbBorder.class'),     description: $tStore('tokens.table.thumbBorder.part')     },
+      { token: '--background',    value: $tStore('tokens.table.thumbBackground.class'), description: $tStore('tokens.table.thumbBackground.part') },
+      { token: '--ring',          value: $tStore('tokens.table.focusRing.class'),       description: $tStore('tokens.table.focusRing.part')       },
+      { token: '--radius-full',   value: $tStore('tokens.table.radius.class'),          description: $tStore('tokens.table.radius.part')          },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

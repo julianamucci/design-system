@@ -139,38 +139,23 @@ export class NdsSlider {
 // Uso com Reactive Forms:
 // <div ndsSlider formControlName="volume" aria-label="Volume"></div>`;
 
-// A anatomia do conteúdo compartilhado descreve `<nds-slider />`, elemento que
-// não existe: aqui o seletor é de atributo, para o markup ficar idêntico ao das
-// outras stacks. Mesmo precedente do Card e do Checkbox.
-const ANATOMY_CODE = `<!-- valor = signal([50]) -->
-<div
-  ndsSlider
-  [(value)]="valor"
-  [min]="0"
-  [max]="100"
-  [step]="1"
-  aria-label="Volume"
-></div>
-
-<!-- Intervalo: dois valores, duas alças, um rótulo para cada -->
-<div
-  ndsSlider
-  [(value)]="faixa"
-  [thumbLabels]="['Preço mínimo', 'Preço máximo']"
-></div>`;
-
-// O snippet compartilhado ensina `@apply`, de uma lib que saiu do projeto.
-const CUSTOMIZATION_CODE = `/* Cor do preenchimento por contexto, via token */
-.tema-sucesso {
-  --primary: 142 71% 45%;
-}
-
-/* O tamanho da alça é medida sem texto: mora no CSS compartilhado,
-   na escada de 8px — não em style inline. */
-.nds-slider-thumb {
-  inline-size: var(--spacing-5);
-  block-size: var(--spacing-5);
-}`;
+// A anatomia e a customização vêm do conteúdo compartilhado, como nas outras
+// quatro stacks.
+//
+// Viviam aqui como constantes locais, e as duas estavam erradas de formas
+// diferentes:
+//
+//  - a anatomia local existia porque a variante `angular` do conteúdo
+//    compartilhado ensinava `<nds-slider />`, um elemento que não existe (o
+//    seletor é `div[ndsSlider]`). Contornar localmente deixou o erro de pé no
+//    conteúdo, que é o que o pacote `@nortear/ds-core` publica. A variante foi
+//    corrigida na fonte, e a cópia local perdeu a razão de ser;
+//  - a customização local ensinava `--spacing-5`, token que não existe em
+//    nenhum CSS do projeto (a escala pula 3, 5 e 7). O leitor copiaria uma
+//    regra que não muda nada.
+//
+// Constante local de snippet também custa os outros dois idiomas: as duas
+// respondiam em português para quem lesse a página em inglês ou espanhol.
 
 @Component({
   selector: 'nds-slider-docs',
@@ -338,7 +323,7 @@ const CUSTOMIZATION_CODE = `/* Cor do preenchimento por contexto, via token */
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -395,7 +380,7 @@ const CUSTOMIZATION_CODE = `/* Cor do preenchimento por contexto, via token */
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
-          [customizationCode]="customizationCode"
+          [customizationCode]="t('tokens.customizationCode')"
         />
 
         <nds-docs-accessibility
@@ -436,8 +421,6 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
-  protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = `import { NdsSlider } from '@/components/ui/slider';`;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
@@ -651,10 +634,20 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return ['muted', 'primary', 'ring', 'background', 'foreground', 'mutedForeground'].map((k) => ({
-      token: `--${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}`,
-      value: toPlainText(t(`tokens.table.${k}.class`)),
-      description: toPlainText(t(`tokens.table.${k}.part`)),
+    // O token não sai mais do nome da chave: a tabela descreve o que o CSS
+    // realmente pinta, e duas linhas usam `--primary` (o trilho, a 20%, e a
+    // borda da alça). Derivar o nome da chave voltaria a inventar token.
+    return [
+      { chave: 'track', token: '--primary / 0.2' },
+      { chave: 'range', token: '--primary' },
+      { chave: 'thumbBorder', token: '--primary' },
+      { chave: 'thumbBackground', token: '--background' },
+      { chave: 'focusRing', token: '--ring' },
+      { chave: 'radius', token: '--radius-full' },
+    ].map(({ chave, token }) => ({
+      token,
+      value: toPlainText(t(`tokens.table.${chave}.class`)),
+      description: toPlainText(t(`tokens.table.${chave}.part`)),
     }));
   });
 
