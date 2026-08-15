@@ -337,11 +337,14 @@ const tooltipPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--foreground', value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
-  { token: '--background', value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
-  { token: '--foreground', value: tContent('tokens.table.fill.class'),       description: tContent('tokens.table.fill.part')       },
-  { token: '--radius',     value: tContent('tokens.table.radius.class'),     description: tContent('tokens.table.radius.part')     },
-  { token: 'z-index',      value: tContent('tokens.table.zIndex.class'),     description: tContent('tokens.table.zIndex.part')     },
+  // Os tokens são os que a folha compartilhada realmente usa
+  // (docs/shared/styles/nds/tooltip.css). A tabela documentava
+  // --foreground/--background/--radius, que o Tooltip não toca.
+  { token: '--primary',            value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
+  { token: '--primary-foreground', value: tContent('tokens.table.background.class'), description: tContent('tokens.table.background.part') },
+  { token: '--primary',            value: tContent('tokens.table.fill.class'),       description: tContent('tokens.table.fill.part')       },
+  { token: '--radius-sm',          value: tContent('tokens.table.radius.class'),     description: tContent('tokens.table.radius.part')     },
+  { token: '--z-tooltip',          value: tContent('tokens.table.zIndex.class'),     description: tContent('tokens.table.zIndex.part')     },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -521,7 +524,9 @@ const a11yCritCols = computed(() => ({
           items: [
             { element: tContent('usage.uxWriting.table.content.name'), rules: tContent('usage.uxWriting.table.content.format'), do: tContent('usage.uxWriting.table.content.good'), dont: tContent('usage.uxWriting.table.content.bad') },
             { element: tContent('usage.uxWriting.table.shortcut.name'), rules: tContent('usage.uxWriting.table.shortcut.format'), do: tContent('usage.uxWriting.table.shortcut.good'), dont: tContent('usage.uxWriting.table.shortcut.bad') },
-            { element: tContent('usage.uxWriting.table.icon.name'), rules: tContent('usage.uxWriting.table.icon.format'), do: tContent('usage.uxWriting.table.icon.good'), dont: tContent('usage.uxWriting.table.icon.bad') },
+            // A regra de formato cita <code>aria-label</code>, e a célula escreve
+            // textNode — sem toPlainText a tag apareceria literal.
+            { element: tContent('usage.uxWriting.table.icon.name'), rules: toPlainText(tContent('usage.uxWriting.table.icon.format')), do: tContent('usage.uxWriting.table.icon.good'), dont: tContent('usage.uxWriting.table.icon.bad') },
           ],
         }"
         :do="{

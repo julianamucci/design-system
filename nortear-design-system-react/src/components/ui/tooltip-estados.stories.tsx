@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, waitFor, screen } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Tooltip,
   TooltipContent,
@@ -10,6 +9,25 @@ import {
 } from "./tooltip";
 import { Button } from "./button";
 import { Save } from "lucide-react";
+
+// Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
+// aberto por hover (depois do delay do provider) e aberto por foco (na hora). A
+// diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
+// pode depender do mouse.
+
+/** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
+const DELAY_LONGO = 600;
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute("aria-describedby");
+  return id ? document.getElementById(id) : null;
+}
+
+/** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
+function espera(ms: number): Promise<void> {
+  return new Promise((resolver) => setTimeout(resolver, ms));
+}
 
 const meta = {
   title: "UI/Tooltip/States",
@@ -25,10 +43,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do Tooltip: Fechado (sem dialog no DOM), Aberto (defaultOpen), Focado (foco via Tab) e Controlado (open + onOpenChange).",
+          "Fechado é o padrão e o balão nem existe no DOM. Aberto pode vir do estado externo, do hover (depois do delay) ou do foco (imediato). Levar o mouse do gatilho até o balão não fecha nada — é a persistência que a WCAG 1.4.13 exige.",
       },
     },
   },
@@ -68,11 +87,18 @@ export const Closed: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Apenas trigger visível, tooltip ausente", async () => {
-      const trigger = canvas.getByRole("button", { name: /Salvar/i });
-      await expect(trigger).toBeVisible();
-      const tip = screen.queryByRole("tooltip");
-      await expect(tip).toBeNull();
+    const gatilho = canvas.getByRole("button", { name: /Salvar/i });
+
+    await step("O balão não está no DOM, nem no canvas nem no portal", async () => {
+      await expect(gatilho).toBeVisible();
+      await expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull();
+      await expect(screen.queryByRole("tooltip")).toBeNull();
+    });
+
+    await step("Sem balão, não há describedby apontando para o vazio", async () => {
+      // Um `aria-describedby` para um id ausente é violação de
+      // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
+      await expect(gatilho.getAttribute("aria-describedby")).toBeNull();
     });
   },
 };
@@ -100,23 +126,138 @@ export const Open: Story = {
       </Tooltip>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Tooltip com role=tooltip e aria-describedby", async () => {
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeVisible();
-      // trigger deve ter aria-describedby
-      const trigger = screen.getByRole("button", { name: /Salvar/i });
-      await expect(trigger).toHaveAttribute("aria-describedby");
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Salvar/i });
+
+    await step("O estado inicial abre o balão sem interação nenhuma", async () => {
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      const balao = balaoDe(gatilho)!;
+      await expect(balao).toHaveAttribute("role", "tooltip");
+      await expect(balao).toHaveAttribute("data-slot", "tooltip-content");
+      await waitFor(async () => {
+        await expect(balao).toBeVisible();
+      });
+    });
+
+    await step("E o gatilho passa a apontar para ele", async () => {
+      await expect(
+        document.getElementById(gatilho.getAttribute("aria-describedby")!),
+      ).toBe(balaoDe(gatilho));
+    });
+  },
+};
+
+export const Hover: Story = {
+  parameters: {
+    covers: ["functional.item1"],
+    docs: {
+      description: {
+        story:
+          "Hover no trigger com delay longo — o balão só abre depois da espera do Provider. É o delay que separa passar o mouse de parar sobre o elemento.",
+      },
+    },
+  },
+  render: () => (
+    // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
+    <TooltipProvider delay={DELAY_LONGO}>
+      <div style={wrapperStyle}>
+        <Tooltip>
+          <TooltipTrigger
+            delay={DELAY_LONGO}
+            render={(props) => (
+              <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+                <Save aria-hidden="true" />
+              </Button>
+            )}
+          />
+          <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Salvar/i });
+
+    await step("O mouse passando não abre — o delay separa passar de parar", async () => {
+      await userEvent.hover(gatilho);
+      await expect(balaoDe(gatilho)).toBeNull();
+    });
+
+    await step("Parado sobre o gatilho, o balão abre depois do delay", async () => {
+      await waitFor(
+        async () => {
+          await expect(balaoDe(gatilho)).not.toBeNull();
+        },
+        { timeout: DELAY_LONGO * 5 },
+      );
+      await expect(balaoDe(gatilho)).toHaveAttribute("role", "tooltip");
     });
   },
 };
 
 export const Focused: Story = {
   parameters: {
+    covers: ["functional.item2"],
     docs: {
       description: {
         story:
-          "Foco via teclado — WCAG 1.4.13. Trigger.focus() abre o tooltip sem hover. Escape fecha mantendo foco.",
+          "Foco via teclado — WCAG 1.4.13. O foco abre o tooltip sem hover e sem esperar o delay; sair do trigger fecha.",
+      },
+    },
+  },
+  render: () => (
+    // Delay longo de propósito: quem chega por teclado não tem como "parar em
+    // cima", então esperar aqui esconderia a informação de quem não usa mouse.
+    <TooltipProvider delay={DELAY_LONGO}>
+      <div style={wrapperStyle}>
+        <Tooltip>
+          <TooltipTrigger
+            delay={DELAY_LONGO}
+            render={(props) => (
+              <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+                <Save aria-hidden="true" />
+              </Button>
+            )}
+          />
+          <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Salvar/i });
+
+    await step("O foco abre na hora, mesmo com o provider pedindo espera", async () => {
+      gatilho.blur();
+      gatilho.focus();
+      await expect(gatilho).toHaveFocus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)).toHaveAttribute("role", "tooltip");
+    });
+
+    await step("Sair do gatilho fecha o balão", async () => {
+      gatilho.blur();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).toBeNull();
+      });
+    });
+  },
+};
+
+export const PersistenceInBubble: Story = {
+  parameters: {
+    covers: ["functional.item4"],
+    docs: {
+      description: {
+        story:
+          "Levar o ponteiro do trigger até o balão não fecha nada — a área de tolerância entre os dois é o que a WCAG 1.4.13 (Hoverable) exige.",
       },
     },
   },
@@ -125,29 +266,36 @@ export const Focused: Story = {
       <Tooltip>
         <TooltipTrigger
           render={(props) => (
-            <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
-              <Save aria-hidden="true" />
+            <Button {...props} variant="outline">
+              Compartilhar
             </Button>
           )}
         />
-        <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        <TooltipContent side="bottom">
+          Cria um link público de leitura
+        </TooltipContent>
       </Tooltip>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole("button", { name: /Compartilhar/i });
 
-    await step("Trigger recebe foco programaticamente (WCAG 1.4.13)", async () => {
-      const trigger = canvas.getByRole("button", { name: /Salvar/i });
-      trigger.focus();
-      await expect(trigger).toHaveFocus();
+    await step("O hover abre o balão", async () => {
+      await userEvent.hover(gatilho);
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
     });
 
-    await step("Tab move o foco para o trigger (focus-visible)", async () => {
-      const trigger = canvas.getByRole("button", { name: /Salvar/i });
-      trigger.blur();
-      await userEvent.tab();
-      await expect(trigger).toHaveFocus();
+    await step("Levar o ponteiro até o balão não fecha nada", async () => {
+      const balao = balaoDe(gatilho)!;
+      // `pointerEventsCheck: 0` porque a folha compartilhada deixa o balão
+      // `pointer-events: none` — quem segura a abertura é a área de tolerância
+      // entre gatilho e balão, calculada por coordenada, não por hover no nó.
+      await userEvent.hover(balao, { pointerEventsCheck: 0 });
+      await espera(200);
+      await expect(balaoDe(gatilho)).not.toBeNull();
     });
   },
 };
@@ -190,23 +338,25 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
+    // Dois botões, e não um só que alterna: o `pointerdown` do clique fora
+    // dispensa o balão ANTES do `click`, então um toggle leria o estado já
+    // invertido pela lib e reabriria o que acabou de fechar.
     await step("Botão externo abre o Tooltip", async () => {
-      const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
-      await userEvent.click(openBtn);
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeInTheDocument();
+      const abrir = canvas.getByRole("button", { name: /Abrir externamente/i });
+      await userEvent.click(abrir);
+      const gatilho = canvas.getByRole("button", { name: /Salvar/i });
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)).toHaveAttribute("role", "tooltip");
     });
 
     await step("Botão externo fecha o Tooltip", async () => {
-      const closeBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
-      await userEvent.click(closeBtn);
-      await waitFor(
-        () => {
-          const tip = screen.queryByRole("tooltip");
-          if (tip) throw new Error("ainda aberto");
-        },
-        { timeout: 3000 }
-      );
+      const fechar = canvas.getByRole("button", { name: /Fechar externamente/i });
+      await userEvent.click(fechar);
+      await waitFor(async () => {
+        await expect(screen.queryByRole("tooltip")).toBeNull();
+      });
     });
   },
 };

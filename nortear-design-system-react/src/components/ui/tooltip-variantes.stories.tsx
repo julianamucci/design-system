@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { within, expect, waitFor } from "storybook/test";
 import {
   Tooltip,
   TooltipContent,
@@ -9,6 +8,31 @@ import {
 } from "./tooltip";
 import { Button } from "./button";
 import { Save } from "lucide-react";
+
+// As três variantes que o conteúdo compartilhado descreve — texto curto, texto
+// com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
+// visual capturar o balão, que só existe no DOM enquanto está aberto.
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute("aria-describedby");
+  return id ? document.getElementById(id) : null;
+}
+
+/** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
+function luminancia(cor: string): number {
+  const [r, g, b] = (cor.match(/[\d.]+/g) ?? ["0", "0", "0"]).slice(0, 3).map((v) => {
+    const canal = Number(v) / 255;
+    return canal <= 0.03928 ? canal / 12.92 : ((canal + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** Razão de contraste WCAG entre duas cores computadas. */
+function contraste(a: string, b: string): number {
+  const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
+  return (claro + 0.05) / (escuro + 0.05);
+}
 
 const meta = {
   title: "UI/Tooltip/Variants",
@@ -24,10 +48,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Variantes do Tooltip: Default (texto curto), ComAtalho (texto + kbd) e TextoLongo (até max-w-xs).",
+          "Default é texto curto. Com atalho acrescenta a tecla em <kbd>, que a folha compartilhada reconhece e usa para encurtar o respiro à direita. Texto longo quebra dentro do limite de largura do balão — passou disso, o caso é de Popover.",
       },
     },
   },
@@ -42,15 +67,13 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-const kbdClass =
-  "inline-flex h-4 min-w-4 items-center justify-center rounded-sm bg-background/15 px-1 font-mono text-[10px] font-medium text-background";
-
 export const Default: Story = {
   parameters: {
+    covers: ["visual.item1", "accessibility.item2"],
     docs: {
       description: {
         story:
-          "Default — texto curto explicativo, fundo foreground, texto background. defaultOpen=true para captura visual.",
+          "Default — texto curto explicativo, com o par de cores do balão medido contra o limite de 4.5:1.",
       },
     },
   },
@@ -68,17 +91,31 @@ export const Default: Story = {
       </Tooltip>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Tooltip tem role=tooltip", async () => {
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeVisible();
-      await expect(tip.textContent).toMatch(/Salvar/i);
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole("button", { name: /Salvar/i });
+
+    await step("Nasce aberto, com o texto curto no balão", async () => {
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      const balao = balaoDe(gatilho)!;
+      await expect(balao).toHaveClass(/nds-tooltip-content/);
+      await expect(balao.textContent?.trim()).toBe("Salvar");
+    });
+
+    await step("O texto do balão passa dos 4.5:1 exigidos", async () => {
+      // Medido no elemento real, não na tabela de tokens: é a combinação
+      // aplicada (fundo --primary, texto --primary-foreground) que a pessoa lê,
+      // e ela precisa valer em qualquer tema da toolbar.
+      const estilo = getComputedStyle(balaoDe(gatilho)!);
+      await expect(contraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
 export const WithShortcut: Story = {
   parameters: {
+    covers: ["visual.item2"],
     docs: {
       description: {
         story:
@@ -98,28 +135,44 @@ export const WithShortcut: Story = {
         />
         <TooltipContent>
           <span>Salvar</span>
-          <kbd className={kbdClass}>Ctrl</kbd>
-          <kbd className={kbdClass}>S</kbd>
+          {/* `.nds-kbd` + `data-slot="kbd"`: a classe é a do design system, e o
+              data-slot é o que faz `.nds-tooltip-content:has([data-slot="kbd"])`
+              encurtar o respiro à direita do balão. */}
+          <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
+          <kbd className="nds-kbd" data-slot="kbd">S</kbd>
         </TooltipContent>
       </Tooltip>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Tooltip contém kbd elements", async () => {
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeVisible();
-      const kbds = tip.querySelectorAll("kbd");
-      await expect(kbds.length).toBeGreaterThanOrEqual(2);
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole("button", { name: /Salvar/i });
+
+    await step("O atalho vai em <kbd>, não solto no texto", async () => {
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      const teclas = balaoDe(gatilho)!.querySelectorAll("kbd");
+      await expect(teclas.length).toBe(2);
+      await expect(teclas[0].textContent).toBe("Ctrl");
+    });
+
+    await step("A folha compartilhada reconhece a tecla e encurta o respiro", async () => {
+      const balao = balaoDe(gatilho)!;
+      await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
+      await expect(getComputedStyle(balao).paddingInlineEnd).not.toBe(
+        getComputedStyle(balao).paddingInlineStart,
+      );
     });
   },
 };
 
 export const LongText: Story = {
   parameters: {
+    covers: ["visual.item4"],
     docs: {
       description: {
         story:
-          "Texto longo — ocupa até max-w-xs com quebra natural. Use só se realmente couber em uma linha — não substitui Popover.",
+          "Texto longo — quebra dentro do limite de largura do balão. Use só se realmente couber em poucas linhas; passou disso, o caso é de Popover.",
       },
     },
   },
@@ -134,16 +187,25 @@ export const LongText: Story = {
           )}
         />
         <TooltipContent side="bottom">
-          Cria um link público com permissão de leitura — qualquer pessoa com o link pode visualizar o conteúdo.
+          Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo
         </TooltipContent>
       </Tooltip>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Tooltip aberto com texto longo", async () => {
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeVisible();
-      await expect(tip.textContent).toMatch(/link público/i);
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole("button", { name: /Compartilhar/i });
+
+    await step("O texto quebra dentro do limite de largura do balão", async () => {
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      const balao = balaoDe(gatilho)!;
+      await expect(balao.textContent).toMatch(/link público/i);
+      // O limite vem da folha compartilhada; medir a largura real prova que o
+      // texto respeitou o teto em vez de esticar o balão pela viewport.
+      const limite = parseFloat(getComputedStyle(balao).maxWidth);
+      await expect(limite).toBeGreaterThan(0);
+      await expect(balao.getBoundingClientRect().width).toBeLessThanOrEqual(limite + 1);
     });
   },
 };

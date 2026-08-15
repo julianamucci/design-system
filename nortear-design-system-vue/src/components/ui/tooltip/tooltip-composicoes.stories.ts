@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import {
   Tooltip,
   TooltipContent,
@@ -9,7 +9,26 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
-import { waitForPortal } from '@/lib/wait-for-portal';
+
+// As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
+// regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
+// nunca é o único portador da informação.
+
+/**
+ * O balão vive num portal no `body` — o caminho até ele é o aria-describedby.
+ * A lib põe o id num `<span>` de leitura DENTRO do balão, então subir até o
+ * `[data-slot="tooltip-content"]` é o que devolve o balão em si.
+ */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute('aria-describedby');
+  const alvo = id ? document.getElementById(id) : null;
+  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+}
+
+/** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
+function ladoDe(balao: HTMLElement | null): string | null {
+  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
+}
 
 const meta = {
   title: 'UI/Tooltip/Compositions',
@@ -28,7 +47,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais: BotaoIconOnly (icon button com aria-label + Tooltip de reforço), BarraDeAcoes (toolbar com Tooltips em múltiplos botões), AtalhoDeTeclado (Tooltip com Kbd), QuatroLados (top/right/bottom/left side by side).',
+          'Botão icon-only com aria-label próprio e Tooltip de reforço, barra de ações com vários deles, atalho de teclado em Kbd e os quatro lados de posicionamento.',
       },
     },
   },
@@ -44,7 +63,7 @@ export const IconOnlyButton: Story = {
     docs: {
       description: {
         story:
-          'Botão icon-only — aria-label no Button é obrigatório; Tooltip é complementar para usuários que veem (mobile sem hover continua acessível via aria-label).',
+          'Botão icon-only — o aria-label no Button é obrigatório; o Tooltip é complementar (em mobile, sem hover, o aria-label continua respondendo).',
       },
     },
   },
@@ -63,12 +82,16 @@ export const IconOnlyButton: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /Salvar/i });
-    await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+
+    await step('O nome acessível é do botão; o balão é o reforço', async () => {
+      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)).toBeVisible();
+    });
   },
 };
 
@@ -134,15 +157,18 @@ export const ActionBar: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const toolbar = canvas.getByRole('toolbar', { name: /Ações do documento/i });
-    await expect(toolbar).toBeVisible();
-    // Todos os botões devem ter aria-label próprio
-    const buttons = canvas.getAllByRole('button');
-    for (const btn of buttons) {
-      await expect(btn).toHaveAttribute('aria-label');
-    }
+
+    await step('A barra se anuncia como toolbar e cada botão tem nome próprio', async () => {
+      const toolbar = canvas.getByRole('toolbar', { name: /Ações do documento/i });
+      await expect(toolbar).toBeVisible();
+      const botoes = canvas.getAllByRole('button');
+      await expect(botoes.length).toBe(5);
+      for (const botao of botoes) {
+        await expect(botao).toHaveAttribute('aria-label');
+      }
+    });
   },
 };
 
@@ -150,8 +176,7 @@ export const KeyboardShortcut: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'Tooltip com atalho via Kbd — comunica hotkey visualmente para usuários power.',
+        story: 'Tooltip com atalho via Kbd — comunica a hotkey visualmente sem tirá-la do aria-label.',
       },
     },
   },
@@ -165,8 +190,8 @@ export const KeyboardShortcut: Story = {
               <Save aria-hidden="true" class="nds-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom" class="" data-spacing="xs">
-            Salvar
+          <TooltipContent side="bottom">
+            <span>Salvar</span>
             <Kbd>Ctrl</Kbd>
             <Kbd>S</Kbd>
           </TooltipContent>
@@ -174,62 +199,98 @@ export const KeyboardShortcut: Story = {
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toBeVisible();
-    await expect(body.getByText('Ctrl')).toBeVisible();
-    await expect(body.getByText('S')).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /Salvar/i });
+
+    await step('O nome acessível é do botão; o atalho é o extra', async () => {
+      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+    });
+
+    await step('O atalho vai em <kbd>, e a folha reconhece a tecla', async () => {
+      const balao = balaoDe(gatilho)!;
+      const teclas = balao.querySelectorAll('kbd');
+      await expect(teclas.length).toBe(2);
+      await expect(teclas[0].textContent).toBe('Ctrl');
+      await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
+    });
   },
 };
 
 export const FourSides: Story = {
   parameters: {
+    covers: ['visual.item3'],
     docs: {
       description: {
         story:
-          'Tooltip nos quatro lados (top, right, bottom, left). Demonstra positioning automático com Arrow.',
+          'Quatro tooltips abertos ao mesmo tempo mostrando side=top/right/bottom/left. O auto-flip por colisão pode trocar o lado quando falta espaço.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px; padding: 3rem" class="nds-grid place-items-center" data-spacing="2xl" data-cols="2" >
+      <div style="contain: layout; min-height: 280px;" class="nds-grid nds-p-8" data-spacing="xl" data-cols="2">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
-            <Button variant="outline" size="sm">Top</Button>
+            <Button variant="outline" size="sm" aria-label="top">top</Button>
           </TooltipTrigger>
           <TooltipContent side="top">Tooltip top</TooltipContent>
         </Tooltip>
 
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
-            <Button variant="outline" size="sm">Right</Button>
+            <Button variant="outline" size="sm" aria-label="right">right</Button>
           </TooltipTrigger>
           <TooltipContent side="right">Tooltip right</TooltipContent>
         </Tooltip>
 
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
-            <Button variant="outline" size="sm">Bottom</Button>
+            <Button variant="outline" size="sm" aria-label="bottom">bottom</Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">Tooltip bottom</TooltipContent>
         </Tooltip>
 
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
-            <Button variant="outline" size="sm">Left</Button>
+            <Button variant="outline" size="sm" aria-label="left">left</Button>
           </TooltipTrigger>
           <TooltipContent side="left">Tooltip left</TooltipContent>
         </Tooltip>
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
-    // Devem existir 4 tooltips abertos simultaneamente
-    const tips = await body.findAllByRole('tooltip');
-    await expect(tips.length).toBeGreaterThanOrEqual(4);
+  play: async ({ step }) => {
+    const oposto: Record<string, string> = {
+      top: 'bottom', bottom: 'top', left: 'right', right: 'left',
+    };
+    const baloes = () =>
+      Array.from(document.querySelectorAll<HTMLElement>('[data-slot="tooltip-content"]'));
+
+    await step('Os quatro balões abrem ao mesmo tempo', async () => {
+      await waitFor(async () => {
+        await expect(baloes().length).toBe(4);
+      });
+    });
+
+    await step('Cada balão nasce do lado pedido, ou do oposto quando falta espaço', async () => {
+      for (const lado of ['top', 'right', 'bottom', 'left']) {
+        // O texto identifica o balão sem depender do gatilho: aqui o que
+        // interessa é de onde ele nasceu, não a ponte de acessibilidade.
+        const balao = baloes().find((b) => b.textContent?.includes(`Tooltip ${lado}`));
+        await expect(balao).toBeTruthy();
+        // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
+        // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
+        await waitFor(async () => {
+          await expect(ladoDe(balao!)).toBeTruthy();
+        });
+        // O auto-flip por colisão é comportamento documentado: perto da borda o
+        // balão troca para o lado oposto em vez de sair da tela.
+        await expect([lado, oposto[lado]]).toContain(ladoDe(balao!));
+      }
+    });
   },
 };

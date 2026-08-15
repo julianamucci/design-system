@@ -1,8 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
-
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+
+// As composições que o conteúdo compartilhado documenta, mais os quatro lados de
+// posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
+// se explica sozinho — nunca é o único portador da informação.
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute('aria-describedby');
+  const alvo = id ? document.getElementById(id) : null;
+  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+}
+
+/** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
+function ladoDe(balao: HTMLElement | null): string | null {
+  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
+}
 
 const meta: Meta = {
   title: 'UI/Tooltip/Compositions',
@@ -11,10 +25,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes comuns do Tooltip: atalho de teclado em botão icon-only, sides diferentes (top/bottom/left/right) e descrição curta de ação.',
+          'Atalho de teclado em botão icon-only, descrição curta de ação e os quatro lados de posicionamento (top/right/bottom/left), um por story para a regressão visual isolar cada um.',
       },
     },
   },
@@ -30,15 +45,11 @@ const baseArgs = {
   sideOffset: 4,
 };
 
-const waitOpen = async () => {
-  await waitFor(
-    async () => {
-      const tip = await waitForPortal('tooltip');
-      expect(tip).toBeVisible();
-    },
-    { timeout: 2000 }
-  );
-};
+/**
+ * O item visual de posicionamento fala de três lados (bottom, left e right), e
+ * aqui cada lado tem story própria — as três juntas é que o cobrem.
+ */
+const COBRE_LADOS = { covers: ['visual.item3'] };
 
 export const KeyboardShortcut: Story = {
   name: 'Keyboard shortcut on icon button',
@@ -50,10 +61,23 @@ export const KeyboardShortcut: Story = {
     ariaLabel: 'Salvar',
     contentText: 'Salvar',
   },
-  play: async () => {
-    await waitOpen();
-    const body = within(document.body);
-    await expect(body.getByText(/Ctrl/)).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O nome acessível é do botão; o atalho é o extra', async () => {
+      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+    });
+
+    await step('O atalho vai em <kbd>, e a folha reconhece a tecla', async () => {
+      const balao = balaoDe(gatilho)!;
+      const teclas = balao.querySelectorAll('kbd');
+      await expect(teclas.length).toBe(2);
+      await expect(teclas[0].textContent).toBe('Ctrl');
+      await expect(balao.querySelector('[data-slot="kbd"]')).not.toBeNull();
+    });
   },
 };
 
@@ -66,10 +90,16 @@ export const SideTop: Story = {
     ariaLabel: 'Salvar',
     contentText: 'Tooltip no topo',
   },
-  play: async () => {
-    await waitOpen();
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toHaveAttribute('data-side', 'top');
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O balão nasce acima do gatilho', async () => {
+      await waitFor(async () => {
+        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+      });
+      await expect(ladoDe(balaoDe(gatilho))).toBe('top');
+      await expect(balaoDe(gatilho)!.textContent).toContain('Tooltip no topo');
+    });
   },
 };
 
@@ -82,10 +112,17 @@ export const SideBottom: Story = {
     ariaLabel: 'Excluir item',
     contentText: 'Excluir item',
   },
-  play: async () => {
-    await waitOpen();
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toHaveAttribute('data-side', 'bottom');
+  parameters: COBRE_LADOS,
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /excluir/i });
+
+    await step('O balão nasce abaixo do gatilho', async () => {
+      await waitFor(async () => {
+        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+      });
+      await expect(ladoDe(balaoDe(gatilho))).toBe('bottom');
+      await expect(balaoDe(gatilho)!.textContent).toContain('Excluir item');
+    });
   },
 };
 
@@ -98,10 +135,17 @@ export const SideLeft: Story = {
     ariaLabel: 'Salvar',
     contentText: 'À esquerda',
   },
-  play: async () => {
-    await waitOpen();
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toHaveAttribute('data-side', 'left');
+  parameters: COBRE_LADOS,
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O balão nasce à esquerda do gatilho', async () => {
+      await waitFor(async () => {
+        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+      });
+      await expect(ladoDe(balaoDe(gatilho))).toBe('left');
+      await expect(balaoDe(gatilho)!.textContent).toContain('À esquerda');
+    });
   },
 };
 
@@ -114,10 +158,17 @@ export const SideRight: Story = {
     ariaLabel: 'Salvar',
     contentText: 'À direita',
   },
-  play: async () => {
-    await waitOpen();
-    const tip = await waitForPortal('tooltip');
-    await expect(tip).toHaveAttribute('data-side', 'right');
+  parameters: COBRE_LADOS,
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O balão nasce à direita do gatilho', async () => {
+      await waitFor(async () => {
+        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+      });
+      await expect(ladoDe(balaoDe(gatilho))).toBe('right');
+      await expect(balaoDe(gatilho)!.textContent).toContain('À direita');
+    });
   },
 };
 
@@ -131,9 +182,15 @@ export const ActionDescription: Story = {
     ariaLabel: 'Compartilhar link',
     contentText: 'Compartilhar link',
   },
-  play: async () => {
-    await waitOpen();
-    const body = within(document.body);
-    await expect(body.getByText(/Compartilhar link/i)).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole('button', { name: /compartilhar/i });
+
+    await step('O botão já tem nome; o balão só descreve a ação', async () => {
+      await expect(gatilho).toHaveAttribute('aria-label', 'Compartilhar link');
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)!.textContent).toContain('Compartilhar link');
+    });
   },
 };

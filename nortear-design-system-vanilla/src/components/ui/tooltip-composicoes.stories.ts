@@ -1,29 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton, createButtonIcon } from './button';
 
-const meta: Meta = {
-  tags: ['overlay'],
-  title: 'UI/Tooltip/Compositions',
-  parameters: {
-    actions: { disable: true },
-    layout: 'padded',
-    controls: { disable: true },
-    docs: {
-      description: {
-        component:
-          'Composicoes do Tooltip: IconButtonComAtalho (botão icon-only com aria-label + atalho), CamposDeForm (label "?"), DescricaoDeMetrica (cabeçalho de KPI) e LadosDePosicionamento (top/right/bottom/left lado-a-lado). NOTA: tooltip NÃO substitui aria-label — em botões icon-only, o aria-label do botão é obrigatório porque o tooltip não aparece em mobile sem hover.',
-      },
-    },
-  },
-};
+// As composições que o conteúdo compartilhado documenta, mais os quatro lados de
+// posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
+// se explica sozinho — nunca é o único portador da informação.
 
-export default meta;
-type Story = StoryObj;
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute('aria-describedby');
+  const alvo = id ? document.getElementById(id) : null;
+  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+}
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+function limparPortal(): void {
+  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
+}
 
 function wrap(child: HTMLElement, minHeight = '200px'): HTMLElement {
   const wrapper = document.createElement('div');
@@ -35,28 +28,24 @@ function wrap(child: HTMLElement, minHeight = '200px'): HTMLElement {
   return wrapper;
 }
 
-async function waitForOpen(): Promise<void> {
-  const body = within(document.body);
-  await waitFor(() => {
-    if (!body.queryByRole('tooltip')) throw new Error('tooltip fechado');
-  }, { timeout: 2000 });
-}
+const meta: Meta = {
+  tags: ['overlay'],
+  title: 'UI/Tooltip/Compositions',
+  parameters: {
+    actions: { disable: true },
+    layout: 'padded',
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          'Botão de ação rápida com atalho, ajuda ao lado do rótulo de um campo, definição de sigla no cabeçalho de uma métrica e os quatro lados de posicionamento. O Tooltip NÃO substitui o aria-label: em touch não há hover, e o nome do botão precisa existir sem ele.',
+      },
+    },
+  },
+};
 
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-  const body = within(document.body);
-  await waitFor(() => {
-    if (body.queryByRole('tooltip')) throw new Error('still open');
-  });
-}
-
-function fireOpen(trigger: HTMLElement): void {
-  queueMicrotask(() => {
-    trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-  });
-}
-
-// ─── Stories ──────────────────────────────────────────────────────────────────
+export default meta;
+type Story = StoryObj;
 
 export const IconButtonWithShortcut: Story = {
   render: () => {
@@ -72,23 +61,29 @@ export const IconButtonWithShortcut: Story = {
     });
 
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
-    fireOpen(trigger);
+    queueMicrotask(() => trigger.focus());
     return wrap(el);
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Botão icon-only mantém aria-label próprio + tooltip complementar', async () => {
-      const trigger = canvas.getByRole('button', { name: /salvar/i });
-      await expect(trigger).toHaveAttribute('aria-label', 'Salvar');
-      await waitForOpen();
-      const tip = await waitForPortal('tooltip');
-      await expect(tip.textContent).toMatch(/Ctrl\+S/);
+    const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
+
+    await step('O nome acessível é do botão; o atalho é o extra', async () => {
+      // A ordem importa: o `aria-label` sozinho já diz o que o botão faz. O
+      // Tooltip acrescenta a tecla, que é conveniência, não requisito.
+      await expect(gatilho).toHaveAttribute('aria-label', 'Salvar');
+      gatilho.blur();
+      gatilho.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)!.textContent).toMatch(/Ctrl\+S/);
     });
-    await step('Cleanup', async () => { await cleanupPortal(); });
+
+    await step('Cleanup', async () => { limparPortal(); });
   },
 };
 
-export const FormFields: Story = {
+export const HelpInFormField: Story = {
   name: 'Form field with help',
   render: () => {
     const root = document.createElement('div');
@@ -108,15 +103,14 @@ export const FormFields: Story = {
     const help = createButton({
       variant: 'ghost',
       size: 'icon-sm',
-      ariaLabel: 'Ajuda sobre Token de API',
+      ariaLabel: 'Onde encontrar o Token de API',
       label: '?',
     });
 
     const tooltip = createTooltip({
       trigger: help,
-      content: 'Cole o token gerado em Configuracoes > Integrações.',
+      content: 'Gere em Configurações › Acesso › Tokens.',
       side: 'right',
-      class: 'max-w-xs whitespace-normal',
     });
 
     labelRow.append(label, tooltip);
@@ -124,21 +118,35 @@ export const FormFields: Story = {
     const input = document.createElement('input');
     input.id = 'api-token-input';
     input.type = 'text';
-    input.className = 'input';
-    input.style.width = '16rem';
-    input.placeholder = 'sk-...';
+    input.className = 'nds-input';
+    input.placeholder = 'ndsk_...';
 
     root.append(labelRow, input);
-    fireOpen(help);
+    queueMicrotask(() => help.focus());
     return wrap(root);
   },
-  play: async ({ step }) => {
-    await step('Tooltip de ajuda explica o campo', async () => {
-      await waitForOpen();
-      const tip = await waitForPortal('tooltip');
-      await expect(tip.textContent).toMatch(/Configuracoes/);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Onde encontrar o Token de API/i });
+
+    await step('O campo continua rotulado pelo label, não pelo Tooltip', async () => {
+      // O `for`/`id` é o que nomeia o campo. O Tooltip explica ONDE achar o
+      // valor — informação complementar, que pode faltar sem quebrar o form.
+      const campo = canvas.getByLabelText('Token de API');
+      await expect(campo).toHaveAttribute('id', 'api-token-input');
     });
-    await step('Cleanup', async () => { await cleanupPortal(); });
+
+    await step('O ícone de ajuda é um botão focável, com nome próprio', async () => {
+      gatilho.blur();
+      gatilho.focus();
+      await expect(gatilho).toHaveFocus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)!.textContent).toContain('Tokens');
+    });
+
+    await step('Cleanup', async () => { limparPortal(); });
   },
 };
 
@@ -166,63 +174,84 @@ export const MetricDescription: Story = {
 
     const tooltip = createTooltip({
       trigger: help,
-      content: 'Largest Contentful Paint — tempo até o maior elemento visível ser renderizado.',
+      content: 'LCP — Largest Contentful Paint',
       side: 'top',
-      class: 'max-w-xs whitespace-normal',
     });
 
     headerRow.append(title, tooltip);
 
     const value = document.createElement('p');
     value.className = 'nds-text-h3 nds-font-semibold';
-    value.textContent = '1.8s';
+    value.textContent = '1,8 s';
 
     root.append(headerRow, value);
-    fireOpen(help);
+    queueMicrotask(() => help.focus());
     return wrap(root);
   },
-  play: async ({ step }) => {
-    await step('Tooltip explica métrica LCP', async () => {
-      await waitForOpen();
-      const tip = await waitForPortal('tooltip');
-      await expect(tip.textContent).toMatch(/Largest Contentful Paint/);
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /O que é LCP/i });
+
+    await step('A sigla fica visível; o Tooltip só a expande', async () => {
+      await expect(canvasElement.textContent).toContain('LCP');
+      gatilho.blur();
+      gatilho.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)!.textContent).toContain('Largest Contentful Paint');
     });
-    await step('Cleanup', async () => { await cleanupPortal(); });
+
+    await step('Cleanup', async () => { limparPortal(); });
   },
 };
 
 export const PlacementSides: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => {
     const grid = document.createElement('div');
     grid.style.contain = 'layout';
-    grid.className = 'nds-grid nds-w-full';
-    grid.dataset.cols = '4';
+    grid.className = 'nds-grid nds-w-full nds-p-8';
+    grid.dataset.cols = '2';
     grid.dataset.spacing = 'xl';
-    grid.style.placeItems = 'center';
-    grid.style.minHeight = '200px';
+    grid.style.minHeight = '240px';
 
-    const sides: Array<{ side: 'top' | 'bottom' | 'left' | 'right'; label: string }> = [
-      { side: 'top',    label: 'Top'    },
-      { side: 'right',  label: 'Right'  },
-      { side: 'bottom', label: 'Bottom' },
-      { side: 'left',   label: 'Left'   },
-    ];
+    const lados: Array<'top' | 'right' | 'bottom' | 'left'> = ['top', 'right', 'bottom', 'left'];
 
-    for (const { side, label } of sides) {
-      const trigger = createButton({ variant: 'outline', label, ariaLabel: label });
-      const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
-      grid.appendChild(el);
+    for (const side of lados) {
+      const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
+      grid.appendChild(createTooltip({ trigger, content: `Tooltip ${side}`, side }));
+      queueMicrotask(() => {
+        trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      });
     }
 
-    return wrap(grid, '240px');
+    return wrap(grid, '260px');
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Renderiza 4 triggers para 4 lados (top/right/bottom/left)', async () => {
-      await expect(canvas.getByRole('button', { name: 'Top' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Right' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Bottom' })).toBeVisible();
-      await expect(canvas.getByRole('button', { name: 'Left' })).toBeVisible();
+    const baloes = () =>
+      Array.from(document.querySelectorAll<HTMLElement>('[data-slot="tooltip-content"]'));
+
+    await step('Os quatro balões abrem ao mesmo tempo', async () => {
+      await waitFor(
+        async () => {
+          await expect(baloes().length).toBe(4);
+        },
+        { timeout: 3000 },
+      );
     });
+
+    await step('Cada balão nasce do lado pedido', async () => {
+      for (const lado of ['top', 'right', 'bottom', 'left']) {
+        const gatilho = canvas.getByRole('button', { name: lado });
+        // A factory posiciona por JS e publica o lado escolhido em `data-side`
+        // — o mesmo gancho que as outras stacks emitem.
+        await expect(balaoDe(gatilho)).toHaveAttribute('data-side', lado);
+        await expect(balaoDe(gatilho)!.textContent).toBe(`Tooltip ${lado}`);
+      }
+    });
+
+    await step('Cleanup', async () => { limparPortal(); });
   },
 };

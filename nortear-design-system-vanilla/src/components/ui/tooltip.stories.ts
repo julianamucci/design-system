@@ -1,10 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute('aria-describedby');
+  const alvo = id ? document.getElementById(id) : null;
+  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+}
+
+/** Tira do DOM qualquer balão que tenha sobrado antes do axe varrer a página. */
+function limparPortal(): void {
+  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
+}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -23,16 +36,26 @@ const meta: Meta<TooltipArgs> = {
     docs: { page: withAutoDocsTab(createTooltipDocs) },
   },
   argTypes: {
-    triggerLabel: { control: 'text', description: 'Texto/aria-label do botão trigger.' },
-    content:      { control: 'text', description: 'Texto exibido no TooltipContent.' },
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto/aria-label do botão trigger.',
+      table: { type: { summary: 'string' } },
+    },
+    content: {
+      control: 'text',
+      description: 'Texto exibido no TooltipContent.',
+      table: { type: { summary: 'string' } },
+    },
     side: {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
       description: 'Lado de abertura do Content.',
+      table: { type: { summary: '"top" | "right" | "bottom" | "left"' }, defaultValue: { summary: '"top"' } },
     },
     defaultOpen: {
       control: 'boolean',
-      description: 'Abre o tooltip ao montar (dispatch mouseenter no trigger).',
+      description: 'Abre o tooltip ao montar (foca o trigger).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
   },
   args: {
@@ -46,15 +69,16 @@ const meta: Meta<TooltipArgs> = {
 export default meta;
 type Story = StoryObj<TooltipArgs>;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-async function cleanupPortal(): Promise<void> {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-}
-
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item2', 'functional.item3',
+      'accessibility.item1', 'accessibility.item3',
+      'accessibility.item4', 'accessibility.item5',
+    ],
+  },
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
@@ -68,58 +92,80 @@ export const Playground: Story = {
       ariaLabel: args.triggerLabel,
     });
 
-    const el = createTooltip({
-      trigger,
-      content: args.content,
-      side: args.side,
-    });
-    container.appendChild(el);
+    container.appendChild(
+      createTooltip({ trigger, content: args.content, side: args.side }),
+    );
 
-    if (args.defaultOpen) {
-      queueMicrotask(() => {
-        trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-      });
-    }
+    // O foco é o caminho mais curto para abrir sem depender de ponteiro — e é o
+    // mesmo que a play exercita.
+    if (args.defaultOpen) queueMicrotask(() => trigger.focus());
     return container;
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="tooltip"]')!;
+    const gatilho = canvas.getByRole('button', {
+      name: new RegExp(args.triggerLabel, 'i'),
+    });
 
-    const waitForOpen = async () => {
-      await waitFor(() => {
-        if (!body.queryByRole('tooltip')) throw new Error('tooltip fechado');
-      }, { timeout: 2000 });
-    };
+    await step('O markup é o do design system, não um elemento inventado', async () => {
+      await expect(raiz).toHaveAttribute('data-slot', 'tooltip');
+      await expect(gatilho.tagName).toBe('BUTTON');
+    });
 
-    const waitForClose = async () => {
-      await waitFor(() => {
-        if (body.queryByRole('tooltip')) throw new Error('tooltip ainda aberto');
-      }, { timeout: 1000 });
-    };
+    await step('O gatilho tem nome acessível próprio', async () => {
+      // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
+      // botão ficaria anônimo para quem não usa mouse.
+      await expect(gatilho).toHaveAttribute('aria-label', args.triggerLabel);
+    });
 
-    if (!args.defaultOpen) {
-      await step('Hover no trigger abre o Content após delay', async () => {
-        const trigger = canvas.getByRole('button', { name: new RegExp(args.triggerLabel, 'i') });
-        await userEvent.hover(trigger);
-        await waitForOpen();
-        const tip = await waitForPortal('tooltip');
-        await expect(tip).toBeVisible();
-        await expect(tip.textContent).toMatch(new RegExp(args.content.slice(0, 6), 'i'));
+    await step('Fechado, não há describedby apontando para o vazio', async () => {
+      // `aria-describedby` para um id ausente é violação de
+      // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
+      gatilho.blur();
+      await waitFor(async () => {
+        await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
       });
-    } else {
-      await step('Renderiza aberto', async () => {
-        await waitForOpen();
-      });
-    }
+    });
 
-    await step('Mover cursor para fora fecha o Content', async () => {
-      await userEvent.unhover(canvas.getByRole('button', { name: new RegExp(args.triggerLabel, 'i') }));
-      await waitForClose();
+    await step('Focar pelo teclado abre o balão', async () => {
+      // `blur()` antes do `focus()`: no replay o gatilho já está focado (o
+      // Escape do último passo não tira o foco), e `focus()` num elemento já
+      // focado não dispara evento nenhum — o balão nunca reabriria.
+      gatilho.blur();
+      gatilho.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+    });
+
+    await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
+      const balao = balaoDe(gatilho)!;
+      await expect(balao).toHaveAttribute('role', 'tooltip');
+      await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
+      await expect(balao.textContent).toContain(args.content);
+      // O balão nasce no portal, no <body> — fora do canvas da story.
+      await expect(canvasElement.contains(balao)).toBe(false);
+      await expect(balao).toBeVisible();
+    });
+
+    await step('O lado pedido chega ao balão como data-side', async () => {
+      // É o gancho que o CSS compartilhado lê, e o mesmo atributo que as outras
+      // stacks publicam.
+      await expect(balaoDe(gatilho)).toHaveAttribute('data-side', args.side);
+    });
+
+    await step('Escape fecha e o foco fica onde estava', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).toBeNull();
+      });
+      await expect(gatilho).toHaveFocus();
+      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
     });
 
     await step('Cleanup do portal', async () => {
-      await cleanupPortal();
+      limparPortal();
     });
   },
 };

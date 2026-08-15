@@ -682,11 +682,14 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--foreground', value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
-            { token: '--background', value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
-            { token: 'fill',         value: t('tokens.table.fill.class'),       description: t('tokens.table.fill.part')       },
-            { token: '--radius',     value: t('tokens.table.radius.class'),     description: t('tokens.table.radius.part')     },
-            { token: 'z-index',      value: t('tokens.table.zIndex.class'),     description: t('tokens.table.zIndex.part')     },
+            // Os tokens são os que a folha compartilhada realmente usa
+            // (docs/shared/styles/nds/tooltip.css). A tabela documentava
+            // --foreground/--background/--radius, que o Tooltip não toca.
+            { token: '--primary',            value: t('tokens.table.foreground.class'), description: t('tokens.table.foreground.part') },
+            { token: '--primary-foreground', value: t('tokens.table.background.class'), description: t('tokens.table.background.part') },
+            { token: '--primary',            value: t('tokens.table.fill.class'),       description: t('tokens.table.fill.part')       },
+            { token: '--radius-sm',          value: t('tokens.table.radius.class'),     description: t('tokens.table.radius.part')     },
+            { token: '--z-tooltip',          value: t('tokens.table.zIndex.class'),     description: t('tokens.table.zIndex.part')     },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

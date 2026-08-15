@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor, screen } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { within, expect, waitFor } from "storybook/test";
 import {
   Tooltip,
   TooltipContent,
@@ -8,7 +7,28 @@ import {
   TooltipTrigger,
 } from "./tooltip";
 import { Button } from "./button";
-import { Save, Trash2, Share2, Bold, Italic, Underline } from "lucide-react";
+import { Save, Trash2, Share2 } from "lucide-react";
+
+// As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
+// regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
+// nunca é o único portador da informação.
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute("aria-describedby");
+  return id ? document.getElementById(id) : null;
+}
+
+/**
+ * De que lado o balão nasceu.
+ *
+ * Divergência de lib, registrada e não "alinhada": o `@base-ui/react` publica
+ * `data-side` no POSICIONADOR (`.nds-tooltip-positioner`), enquanto reka-ui,
+ * bits-ui, radix-ng e a factory do Vanilla publicam no próprio balão.
+ */
+function ladoDe(balao: HTMLElement | null): string | null {
+  return balao?.closest("[data-side]")?.getAttribute("data-side") ?? null;
+}
 
 const meta = {
   title: "UI/Tooltip/Compositions",
@@ -24,10 +44,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Composicoes típicas: IconBarToolbar (barra de ferramentas icon-only), ComAtalhoTeclado (kbd) e SidesPosicionamento (top/bottom/left/right).",
+          "Barra de ações icon-only, botão de ação rápida com atalho e os quatro lados de posicionamento.",
       },
     },
   },
@@ -42,9 +63,6 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
-const kbdClass =
-  "inline-flex h-4 min-w-4 items-center justify-center rounded-sm bg-background/15 px-1 font-mono text-[10px] font-medium text-background";
-
 export const IconBarToolbar: Story = {
   parameters: {
     docs: {
@@ -55,7 +73,12 @@ export const IconBarToolbar: Story = {
     },
   },
   render: () => (
-    <div style={wrapperStyle} className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card" data-align="center" data-spacing="xs">
+    <div
+      style={wrapperStyle}
+      className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card"
+      data-align="center"
+      data-spacing="xs"
+    >
       <Tooltip>
         <TooltipTrigger
           render={(props) => (
@@ -92,11 +115,11 @@ export const IconBarToolbar: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     await step("Todos os botões têm aria-label próprio", async () => {
-      const buttons = canvasElement.querySelectorAll("button[aria-label]");
-      await expect(buttons.length).toBe(3);
-      await expect(buttons[0]).toHaveAttribute("aria-label", "Salvar");
-      await expect(buttons[1]).toHaveAttribute("aria-label", "Compartilhar");
-      await expect(buttons[2]).toHaveAttribute("aria-label", "Excluir");
+      const botoes = canvasElement.querySelectorAll("button[aria-label]");
+      await expect(botoes.length).toBe(3);
+      await expect(botoes[0]).toHaveAttribute("aria-label", "Salvar");
+      await expect(botoes[1]).toHaveAttribute("aria-label", "Compartilhar");
+      await expect(botoes[2]).toHaveAttribute("aria-label", "Excluir");
     });
   },
 };
@@ -106,130 +129,104 @@ export const WithKeyboardShortcut: Story = {
     docs: {
       description: {
         story:
-          "Tooltips com atalho de teclado em <kbd> — formatadores (Negrito Ctrl+B, Itálico Ctrl+I, Sublinhado Ctrl+U).",
+          "Botão de ação rápida com hotkey — o aria-label sozinho já diz o que o botão faz; o Tooltip acrescenta a tecla, que é conveniência.",
       },
     },
   },
   render: () => (
-    <div style={wrapperStyle} className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card" data-align="center" data-spacing="xs">
-      <Tooltip defaultOpen>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="ghost" size="icon" aria-label="Negrito">
-              <Bold aria-hidden="true" />
-            </Button>
-          )}
-        />
-        <TooltipContent side="bottom">
-          <span>Negrito</span>
-          <kbd className={kbdClass}>Ctrl</kbd>
-          <kbd className={kbdClass}>B</kbd>
-        </TooltipContent>
-      </Tooltip>
-
+    <div style={wrapperStyle} className="nds-cluster" data-align="center" data-spacing="xs">
       <Tooltip>
         <TooltipTrigger
           render={(props) => (
-            <Button {...props} variant="ghost" size="icon" aria-label="Itálico">
-              <Italic aria-hidden="true" />
+            <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
+              <Save aria-hidden="true" />
             </Button>
           )}
         />
         <TooltipContent side="bottom">
-          <span>Itálico</span>
-          <kbd className={kbdClass}>Ctrl</kbd>
-          <kbd className={kbdClass}>I</kbd>
-        </TooltipContent>
-      </Tooltip>
-
-      <Tooltip>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="ghost" size="icon" aria-label="Sublinhado">
-              <Underline aria-hidden="true" />
-            </Button>
-          )}
-        />
-        <TooltipContent side="bottom">
-          <span>Sublinhado</span>
-          <kbd className={kbdClass}>Ctrl</kbd>
-          <kbd className={kbdClass}>U</kbd>
+          <span>Salvar</span>
+          <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
+          <kbd className="nds-kbd" data-slot="kbd">S</kbd>
         </TooltipContent>
       </Tooltip>
     </div>
   ),
-  play: async ({ step }) => {
-    await step("Tooltip aberto contém kbd elements", async () => {
-      const tip = await waitForPortal("tooltip", { timeout: 5000 });
-      await expect(tip).toBeVisible();
-      const kbds = tip.querySelectorAll("kbd");
-      await expect(kbds.length).toBeGreaterThanOrEqual(2);
+  play: async ({ canvasElement, step }) => {
+    const gatilho = within(canvasElement).getByRole("button", { name: "Salvar" });
+
+    await step("O nome acessível é do botão; o atalho é o extra", async () => {
+      await expect(gatilho).toHaveAttribute("aria-label", "Salvar");
+      gatilho.blur();
+      gatilho.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+      await expect(balaoDe(gatilho)!.querySelectorAll("kbd").length).toBe(2);
     });
   },
 };
 
 export const PlacementSides: Story = {
   parameters: {
+    covers: ["visual.item3"],
     docs: {
       description: {
         story:
-          "Quatro tooltips abertos lado-a-lado mostrando side=top/right/bottom/left. Auto-flip ocorre por colisão de viewport.",
+          "Quatro tooltips abertos lado a lado mostrando side=top/right/bottom/left. O auto-flip por colisão pode trocar o lado quando falta espaço.",
       },
     },
   },
   render: () => (
-    <div className="nds-grid" data-spacing="2xl" data-cols="2" style={{padding: "3rem", contain: "layout", minHeight: 280, position: "relative" }} >
-      <Tooltip defaultOpen>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="outline">
-              top
-            </Button>
-          )}
-        />
-        <TooltipContent side="top">Top</TooltipContent>
-      </Tooltip>
-
-      <Tooltip defaultOpen>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="outline">
-              right
-            </Button>
-          )}
-        />
-        <TooltipContent side="right">Right</TooltipContent>
-      </Tooltip>
-
-      <Tooltip defaultOpen>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="outline">
-              bottom
-            </Button>
-          )}
-        />
-        <TooltipContent side="bottom">Bottom</TooltipContent>
-      </Tooltip>
-
-      <Tooltip defaultOpen>
-        <TooltipTrigger
-          render={(props) => (
-            <Button {...props} variant="outline">
-              left
-            </Button>
-          )}
-        />
-        <TooltipContent side="left">Left</TooltipContent>
-      </Tooltip>
+    <div
+      className="nds-grid nds-p-8"
+      data-spacing="xl"
+      data-cols="2"
+      style={{ contain: "layout", minHeight: 280, position: "relative" }}
+    >
+      {(["top", "right", "bottom", "left"] as const).map((lado) => (
+        <Tooltip key={lado} defaultOpen>
+          <TooltipTrigger
+            render={(props) => (
+              <Button {...props} variant="outline" aria-label={lado}>
+                {lado}
+              </Button>
+            )}
+          />
+          <TooltipContent side={lado}>Tooltip {lado}</TooltipContent>
+        </Tooltip>
+      ))}
     </div>
   ),
   play: async ({ step }) => {
-    await step("Quatro tooltips renderizados no portal", async () => {
+    const oposto: Record<string, string> = {
+      top: "bottom", bottom: "top", left: "right", right: "left",
+    };
+    const baloes = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>('[data-slot="tooltip-content"]'),
+      );
+
+    await step("Os quatro balões abrem ao mesmo tempo", async () => {
       await waitFor(async () => {
-        const tips = screen.getAllByRole("tooltip");
-        await expect(tips.length).toBe(4);
-      }, { timeout: 5000, interval: 100 });
+        await expect(baloes().length).toBe(4);
+      });
+    });
+
+    await step("Cada balão nasce do lado pedido, ou do oposto quando falta espaço", async () => {
+      for (const lado of ["top", "right", "bottom", "left"]) {
+        // O texto identifica o balão sem depender do gatilho: aqui o que
+        // interessa é de onde ele nasceu, não a ponte de acessibilidade.
+        const balao = baloes().find((b) => b.textContent?.includes(`Tooltip ${lado}`));
+        await expect(balao).toBeTruthy();
+        // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
+        // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
+        await waitFor(async () => {
+          await expect(ladoDe(balao!)).toBeTruthy();
+        });
+        // O auto-flip por colisão é comportamento documentado: perto da borda o
+        // balão troca para o lado oposto em vez de sair da tela.
+        await expect([lado, oposto[lado]]).toContain(ladoDe(balao!));
+      }
     });
   },
 };

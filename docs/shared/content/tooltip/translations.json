@@ -144,9 +144,9 @@
         }
       },
       "styles": {
-        "default": "Texto explicativo curto — fundo <code>foreground</code>, texto <code>background</code>.",
+        "default": "Texto explicativo curto — fundo <code>--primary</code>, texto <code>--primary-foreground</code>.",
         "withShortcut": "Texto + atalho (ex: \"Salvar (Ctrl+S)\") — útil para botões com hotkeys.",
-        "longText": "Texto que ocupa até <code>max-w-xs</code> — quebra natural sem ser parágrafo."
+        "longText": "Texto que ocupa até o limite de largura do balão — quebra natural sem ser parágrafo."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -157,7 +157,7 @@
         },
         "formFieldHelp": {
           "name": "Campo de form com ajuda",
-          "description": "Ícone \"?\" ao lado do label de um campo, com Tooltip explicando onde encontrar ou como gerar o valor esperado. O texto cabe em uma linha e usa <code>max-w-xs</code> quando necessário.",
+          "description": "Ícone \"?\" ao lado do label de um campo, com Tooltip explicando onde encontrar ou como gerar o valor esperado. O texto cabe em uma linha e respeita o limite de largura do balão.",
           "use": "Formulários com campos cujo conteúdo exige contexto extra (tokens, IDs, formatos específicos) — sem poluir o label principal nem usar um Popover quando o conteúdo é apenas texto."
         },
         "metricDescription": {
@@ -270,30 +270,33 @@
         "class": "Classe",
         "part": "Aplicação",
         "foreground": {
-          "class": "bg-foreground",
-          "part": "Fundo do TooltipContent (escuro)"
+          "class": "nds-tooltip-content",
+          "part": "Fundo do balão"
         },
         "background": {
-          "class": "text-background",
-          "part": "Cor do texto (contraste com foreground)"
+          "class": "nds-tooltip-content",
+          "part": "Cor do texto do balão"
         },
         "fill": {
-          "class": "fill-foreground",
-          "part": "Cor do Arrow (mesma do fundo)"
+          "class": "nds-tooltip-arrow",
+          "part": "Cor da seta (igual à do fundo)"
         },
         "radius": {
-          "class": "rounded-md",
-          "part": "Raio do TooltipContent"
+          "class": "nds-tooltip-content",
+          "part": "Raio do balão"
         },
         "zIndex": {
-          "class": "z-50",
+          "class": "nds-tooltip-positioner",
           "part": "Camada do portal (acima de overlays)"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "react": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay customizado via Provider (props.delay) */\n<TooltipProvider delay={600}>",
-        "angular": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  fill: hsl(var(--popover));\n}\n\n<!-- Delay customizado via provider -->\n<nds-tooltip-provider [delay]=\"600\">"
+        "react": "/* Tooltip claro em tema escuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera customizada, no provider */\n<TooltipProvider delay={600}>",
+        "vue": "/* Tooltip claro em tema escuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera customizada, no provider */\n<TooltipProvider :delay-duration=\"600\">",
+        "svelte": "/* Tooltip claro em tema escuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera customizada, no provider */\n<TooltipProvider delayDuration={600}>",
+        "vanilla": "/* Tooltip claro em tema escuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* A espera antes de abrir é interna à factory — não há provider para ajustá-la. */",
+        "angular": "/* Tooltip claro em tema escuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera customizada, no provider */\n<div ndsTooltipProvider [delay]=\"600\">"
       }
     },
     "accessibility": {
@@ -418,7 +421,7 @@
           "priority": "medium"
         },
         "item4": {
-          "story": "Texto longo (max-w-xs)",
+          "story": "Texto longo (limite de largura)",
           "priority": "medium"
         }
       }
@@ -589,9 +592,9 @@
         }
       },
       "styles": {
-        "default": "Short explanatory text — <code>foreground</code> background, <code>background</code> text.",
+        "default": "Short explanatory text — <code>--primary</code> background, <code>--primary-foreground</code> text.",
         "withShortcut": "Text + shortcut (e.g. \"Save (Ctrl+S)\") — useful for buttons with hotkeys.",
-        "longText": "Text up to <code>max-w-xs</code> — natural wrap without being a paragraph."
+        "longText": "Text up to the bubble's width limit — natural wrap without being a paragraph."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -602,7 +605,7 @@
         },
         "formFieldHelp": {
           "name": "Form field with help",
-          "description": "\"?\" icon next to a field label, with a Tooltip explaining where to find or how to generate the expected value. Text fits on one line and uses <code>max-w-xs</code> when needed.",
+          "description": "\"?\" icon next to a field label, with a Tooltip explaining where to find or how to generate the expected value. Text fits on one line and respects the bubble's width limit.",
           "use": "Forms with fields that need extra context (tokens, IDs, specific formats) — without cluttering the main label or using a Popover when the content is just text."
         },
         "metricDescription": {
@@ -715,30 +718,33 @@
         "class": "Class",
         "part": "Application",
         "foreground": {
-          "class": "bg-foreground",
-          "part": "TooltipContent background (dark)"
+          "class": "nds-tooltip-content",
+          "part": "Tooltip bubble background"
         },
         "background": {
-          "class": "text-background",
-          "part": "Text color (contrast with foreground)"
+          "class": "nds-tooltip-content",
+          "part": "Bubble text color"
         },
         "fill": {
-          "class": "fill-foreground",
-          "part": "Arrow color (matches background)"
+          "class": "nds-tooltip-arrow",
+          "part": "Arrow color (same as the background)"
         },
         "radius": {
-          "class": "rounded-md",
-          "part": "TooltipContent radius"
+          "class": "nds-tooltip-content",
+          "part": "Bubble radius"
         },
         "zIndex": {
-          "class": "z-50",
+          "class": "nds-tooltip-positioner",
           "part": "Portal layer (above overlays)"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "react": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Custom delay via Provider (props.delay) */\n<TooltipProvider delay={600}>",
-        "angular": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  fill: hsl(var(--popover));\n}\n\n<!-- Custom delay via provider -->\n<nds-tooltip-provider [delay]=\"600\">"
+        "react": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Custom delay, on the provider */\n<TooltipProvider delay={600}>",
+        "vue": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Custom delay, on the provider */\n<TooltipProvider :delay-duration=\"600\">",
+        "svelte": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Custom delay, on the provider */\n<TooltipProvider delayDuration={600}>",
+        "vanilla": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* The wait before opening is internal to the factory — there is no provider to tune it. */",
+        "angular": "/* Light tooltip in dark theme (variant override) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Custom delay, on the provider */\n<div ndsTooltipProvider [delay]=\"600\">"
       }
     },
     "accessibility": {
@@ -863,7 +869,7 @@
           "priority": "medium"
         },
         "item4": {
-          "story": "Long text (max-w-xs)",
+          "story": "Long text (width limit)",
           "priority": "medium"
         }
       }
@@ -1034,9 +1040,9 @@
         }
       },
       "styles": {
-        "default": "Texto explicativo corto — fondo <code>foreground</code>, texto <code>background</code>.",
+        "default": "Texto explicativo corto — fondo <code>--primary</code>, texto <code>--primary-foreground</code>.",
         "withShortcut": "Texto + atajo (ej. \"Guardar (Ctrl+S)\") — útil para botones con hotkeys.",
-        "longText": "Texto que ocupa hasta <code>max-w-xs</code> — quiebre natural sin ser párrafo."
+        "longText": "Texto que ocupa hasta el límite de ancho del globo — quiebre natural sin ser párrafo."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -1047,7 +1053,7 @@
         },
         "formFieldHelp": {
           "name": "Campo de form con ayuda",
-          "description": "Icono \"?\" junto al label de un campo, con un Tooltip explicando dónde encontrar o cómo generar el valor esperado. El texto cabe en una línea y usa <code>max-w-xs</code> cuando hace falta.",
+          "description": "Icono \"?\" junto al label de un campo, con un Tooltip explicando dónde encontrar o cómo generar el valor esperado. El texto cabe en una línea y respeta el límite de ancho del globo.",
           "use": "Formularios con campos que requieren contexto extra (tokens, IDs, formatos específicos) — sin saturar el label principal ni usar un Popover cuando el contenido es solo texto."
         },
         "metricDescription": {
@@ -1160,30 +1166,33 @@
         "class": "Clase",
         "part": "Aplicación",
         "foreground": {
-          "class": "bg-foreground",
-          "part": "Fondo del TooltipContent (oscuro)"
+          "class": "nds-tooltip-content",
+          "part": "Fondo del globo"
         },
         "background": {
-          "class": "text-background",
-          "part": "Color del texto (contraste con foreground)"
+          "class": "nds-tooltip-content",
+          "part": "Color del texto del globo"
         },
         "fill": {
-          "class": "fill-foreground",
-          "part": "Color del Arrow (igual al fondo)"
+          "class": "nds-tooltip-arrow",
+          "part": "Color de la flecha (igual al fondo)"
         },
         "radius": {
-          "class": "rounded-md",
-          "part": "Radio del TooltipContent"
+          "class": "nds-tooltip-content",
+          "part": "Radio del globo"
         },
         "zIndex": {
-          "class": "z-50",
+          "class": "nds-tooltip-positioner",
           "part": "Capa del portal (por encima de overlays)"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "react": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  @apply fill-popover;\n}\n\n/* Delay personalizado vía Provider (props.delay) */\n<TooltipProvider delay={600}>",
-        "angular": "/* Tooltip claro em tema dark (override de variante) */\n.tooltip-light [data-slot=\"tooltip-content\"] {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light [data-slot=\"tooltip-content\"] svg {\n  fill: hsl(var(--popover));\n}\n\n<!-- Delay personalizado con provider -->\n<nds-tooltip-provider [delay]=\"600\">"
+        "react": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera personalizada, en el provider */\n<TooltipProvider delay={600}>",
+        "vue": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera personalizada, en el provider */\n<TooltipProvider :delay-duration=\"600\">",
+        "svelte": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera personalizada, en el provider */\n<TooltipProvider delayDuration={600}>",
+        "vanilla": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* La espera antes de abrir es interna a la factory — no hay provider para ajustarla. */",
+        "angular": "/* Tooltip claro en tema oscuro (override de variante) */\n.tooltip-light .nds-tooltip-content {\n  background-color: hsl(var(--popover));\n  color: hsl(var(--popover-foreground));\n  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1);\n}\n.tooltip-light .nds-tooltip-arrow {\n  background-color: hsl(var(--popover));\n}\n\n/* Espera personalizada, en el provider */\n<div ndsTooltipProvider [delay]=\"600\">"
       }
     },
     "accessibility": {
@@ -1308,7 +1317,7 @@
           "priority": "medium"
         },
         "item4": {
-          "story": "Texto largo (max-w-xs)",
+          "story": "Texto largo (límite de ancho)",
           "priority": "medium"
         }
       }

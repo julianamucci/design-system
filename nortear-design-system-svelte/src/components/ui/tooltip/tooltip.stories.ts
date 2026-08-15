@@ -1,10 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
-
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+
+/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
+function balaoDe(gatilho: HTMLElement): HTMLElement | null {
+  const id = gatilho.getAttribute('aria-describedby');
+  const alvo = id ? document.getElementById(id) : null;
+  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
+}
+
+/** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
+function ladoDe(balao: HTMLElement | null): string | null {
+  return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
+}
 
 const meta: Meta = {
   title: 'UI/Tooltip',
@@ -16,7 +26,7 @@ const meta: Meta = {
       page: withAutoDocsTab(TooltipDocs),
       description: {
         component:
-          'Tooltip construído sobre bits-ui. Texto explicativo curto exibido em hover OU foco (WCAG 1.4.13). TooltipProvider é obrigatório no root. Tooltip não substitui aria-label em botões icon-only.',
+          'Texto explicativo curto exibido em hover OU foco (WCAG 1.4.13). O Provider é obrigatório no root. O Tooltip não substitui aria-label em botões icon-only — é complementar.',
       },
     },
   },
@@ -25,32 +35,50 @@ const meta: Meta = {
       control: 'inline-radio',
       options: ['top', 'bottom', 'left', 'right'],
       description: 'Lado preferido do Content em relação ao trigger.',
+      table: { type: { summary: '"top" | "right" | "bottom" | "left"' }, defaultValue: { summary: '"top"' } },
     },
     align: {
       control: 'inline-radio',
       options: ['start', 'center', 'end'],
       description: 'Alinhamento ao longo do eixo do side.',
+      table: { type: { summary: '"start" | "center" | "end"' }, defaultValue: { summary: '"center"' } },
     },
     sideOffset: {
       control: { type: 'number', min: 0, step: 1 },
       description: 'Distância em pixels entre trigger e Content.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '4' } },
     },
     delayDuration: {
       control: { type: 'number', min: 0, step: 50 },
-      description: 'Delay em ms antes de abrir no hover (aplicado no Provider).',
+      description: 'Espera em ms antes de abrir no hover (aplicada no Provider).',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '0' } },
     },
     defaultOpen: {
       control: 'boolean',
       description: 'Estado inicial em modo não-controlado.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     variant: {
       control: 'select',
       options: ['default', 'withShortcut', 'longText'],
       description: 'Composição interna do TooltipContent.',
+      table: { type: { summary: '"default" | "withShortcut" | "longText"' }, defaultValue: { summary: '"default"' } },
     },
-    triggerLabel: { control: 'text', description: 'Rótulo lógico do trigger (usado para selecionar ícone).' },
-    ariaLabel: { control: 'text', description: 'aria-label do botão icon-only (obrigatório).' },
-    contentText: { control: 'text', description: 'Texto exibido dentro do TooltipContent.' },
+    triggerLabel: {
+      control: 'text',
+      description: 'Rótulo lógico do trigger (usado para selecionar ícone).',
+      table: { type: { summary: 'string' } },
+    },
+    ariaLabel: {
+      control: 'text',
+      description: 'aria-label do botão icon-only (obrigatório).',
+      table: { type: { summary: 'string' } },
+    },
+    contentText: {
+      control: 'text',
+      description: 'Texto exibido dentro do TooltipContent.',
+      table: { type: { summary: 'string' } },
+    },
   },
   args: {
     side: 'top',
@@ -69,38 +97,81 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  play: async ({ canvasElement, step }) => {
+  parameters: {
+    covers: [
+      'functional.item2', 'functional.item3',
+      'accessibility.item1', 'accessibility.item3',
+      'accessibility.item4', 'accessibility.item5',
+    ],
+  },
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const gatilho = canvas.getByRole('button', { name: /salvar/i });
 
-    const waitForClose = async () => {
-      await waitFor(
-        () => {
-          const tip = body.queryByRole('tooltip');
-          if (tip && tip.getAttribute('data-state') !== 'closed') {
-            throw new Error('tooltip still open');
-          }
-        },
-        { timeout: 2000 }
-      );
-    };
-
-    await step('1. Trigger renderiza como botão com aria-label', async () => {
-      const trigger = canvas.getByRole('button', { name: /salvar/i });
-      await expect(trigger).toBeInTheDocument();
-      await expect(trigger).toHaveAttribute('aria-label');
+    await step('O gatilho é um botão nativo, alcançável por teclado', async () => {
+      // A raiz da lib não tem elemento próprio (é só contexto), então o
+      // `data-slot="tooltip"` que o Vanilla põe no wrapper não existe aqui, e o
+      // `data-slot` do gatilho é o do Button. O que o contrato cobra em todas as
+      // stacks é o `data-slot="tooltip-content"` no balão, verificado abaixo.
+      await expect(gatilho.tagName).toBe('BUTTON');
+      await expect(gatilho).toBeVisible();
     });
 
-    await step('2. Foco abre o tooltip (WCAG 1.4.13)', async () => {
-      const trigger = canvas.getByRole('button', { name: /salvar/i });
-      trigger.focus();
-      const tip = await waitForPortal('tooltip', { timeout: 2000 });
-      await expect(tip).toBeVisible();
+    await step('O gatilho icon-only tem nome acessível próprio', async () => {
+      // O Tooltip é complementar: em touch não há hover, e sem o aria-label o
+      // botão ficaria anônimo para quem não usa mouse.
+      await expect(gatilho).toHaveAttribute('aria-label', String(args.ariaLabel));
     });
 
-    await step('3. ESC fecha o tooltip', async () => {
+    await step('Fechado, não há describedby apontando para o vazio', async () => {
+      // `aria-describedby` para um id ausente é violação de
+      // `aria-valid-attr-value` — o mesmo axe que roda no addon-a11y da story.
+      if (!args.defaultOpen) {
+        await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
+      }
+    });
+
+    await step('Focar pelo teclado abre o balão', async () => {
+      // `blur()` antes do `focus()`: no replay o gatilho já está focado (o
+      // Escape do último passo não tira o foco), e `focus()` num elemento já
+      // focado não dispara evento nenhum — o balão nunca reabriria.
+      gatilho.blur();
+      gatilho.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).not.toBeNull();
+      });
+    });
+
+    await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
+      const balao = balaoDe(gatilho)!;
+      await expect(balao).toHaveAttribute('role', 'tooltip');
+      await expect(balao).toHaveAttribute('data-slot', 'tooltip-content');
+      await expect(balao.textContent).toContain(String(args.contentText));
+      // O balão nasce no portal, no <body> — fora do canvas da story.
+      await expect(canvasElement.contains(balao)).toBe(false);
+      await waitFor(async () => {
+        await expect(balao).toBeVisible();
+      });
+    });
+
+    await step('O lado pedido chega ao balão como data-side', async () => {
+      // É o gancho que o CSS compartilhado lê. Auto-flip por colisão pode
+      // devolver o lado oposto quando falta espaço — comportamento, não defeito.
+      const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
+      const lado = (args.side ?? 'top') as keyof typeof oposto;
+      await waitFor(async () => {
+        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+      });
+      await expect([lado, oposto[lado]]).toContain(ladoDe(balaoDe(gatilho)));
+    });
+
+    await step('Escape fecha e o foco fica onde estava', async () => {
       await userEvent.keyboard('{Escape}');
-      await waitForClose();
+      await waitFor(async () => {
+        await expect(balaoDe(gatilho)).toBeNull();
+      });
+      await expect(gatilho).toHaveFocus();
+      await expect(gatilho.getAttribute('aria-describedby')).toBeNull();
     });
   },
 };

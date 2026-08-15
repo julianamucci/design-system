@@ -45,7 +45,7 @@
   }: Props = $props();
 </script>
 
-<div style="contain: layout; padding: 2.5rem 1rem;">
+<div class="nds-p-8" style="contain: layout;">
   <TooltipProvider {delayDuration}>
     {#key `${side}-${align}-${sideOffset}-${defaultOpen}-${variant}-${delayDuration}`}
         <Tooltip bind:open>
@@ -65,8 +65,14 @@
           <TooltipContent {side} {align} {sideOffset}>
             {#if variant === 'withShortcut'}
               <span>{contentText.replace(/\s*\([^)]*\)\s*$/, '')}</span>
-              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="margin-left: 0.25rem; height: 1rem; font-size: 10px">Ctrl</kbd>
-              <kbd data-slot="kbd" class="nds-cluster nds-bg-background-15 text-background nds-rounded nds-px-1 nds-font-medium" data-align="center" style="height: 1rem; font-size: 10px">S</kbd>
+              <!-- `.nds-kbd` + `data-slot="kbd"`: a classe é a do design system
+                   (as anteriores — `text-background`, altura e corpo cravados em
+                   style inline — saíram da folha na migração e não pintavam
+                   nada), e o `data-slot` é o que faz
+                   `.nds-tooltip-content:has([data-slot="kbd"])` encurtar o
+                   respiro à direita do balão. -->
+              <kbd data-slot="kbd" class="nds-kbd">Ctrl</kbd>
+              <kbd data-slot="kbd" class="nds-kbd">S</kbd>
             {:else if variant === 'longText'}
               {contentText}
             {:else}

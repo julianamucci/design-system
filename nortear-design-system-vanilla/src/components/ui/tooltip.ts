@@ -20,6 +20,17 @@ export type TooltipOptions = {
 let _tooltipCounter = 0;
 const SHOW_DELAY = 300;
 
+/**
+ * Janela em que o balão sobrevive ao ponteiro que saiu do gatilho.
+ *
+ * É a "área de tolerância" que a WCAG 1.4.13 (Hoverable) exige: o ponteiro
+ * precisa poder atravessar o vão entre gatilho e balão sem que o balão suma no
+ * caminho. O balão é `pointer-events: none` na folha compartilhada — igual nas
+ * cinco stacks —, então quem segura a abertura não é o hover NELE, e sim a
+ * coordenada do ponteiro dentro da caixa que une os dois.
+ */
+const GRACE_MS = 200;
+
 function positionTooltip(
   anchor: HTMLElement,
   panel: HTMLElement,
@@ -65,13 +76,40 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
 
   let panelEl: HTMLElement | null = null;
   let showTimer: ReturnType<typeof setTimeout> | null = null;
+  let hideTimer: ReturnType<typeof setTimeout> | null = null;
+  let ponteiroPressionado = false;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'tooltip';
   wrapper.style.display = 'contents';
   wrapper.appendChild(trigger);
 
-  trigger.setAttribute('aria-describedby', tooltipId);
+  /** O ponteiro está dentro da caixa que une gatilho e balão? */
+  function dentroDaTolerancia(x: number, y: number): boolean {
+    if (!panelEl) return false;
+    const a = trigger.getBoundingClientRect();
+    const b = panelEl.getBoundingClientRect();
+    const margem = 8;
+    return (
+      x >= Math.min(a.left, b.left) - margem &&
+      x <= Math.max(a.right, b.right) + margem &&
+      y >= Math.min(a.top, b.top) - margem &&
+      y <= Math.max(a.bottom, b.bottom) + margem
+    );
+  }
+
+  function aoMover(event: MouseEvent): void {
+    if (!panelEl) return;
+    if (dentroDaTolerancia(event.clientX, event.clientY)) cancelarFechamento();
+    else agendarFechamento();
+  }
+
+  function aoTeclar(event: KeyboardEvent): void {
+    // Escape fecha sem tirar o foco do gatilho — WCAG 1.4.13 (Dismissible).
+    // O foco não é tocado aqui de propósito: `blur` é que fecha por saída, e
+    // mexer nele faria o Escape parecer um Tab.
+    if (event.key === 'Escape') hide();
+  }
 
   function show(): void {
     if (panelEl) return;
@@ -81,29 +119,84 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
     panelEl.setAttribute('role', 'tooltip');
     panelEl.className = cn('nds-tooltip-content', options.class);
     panelEl.dataset.slot = 'tooltip-content';
+    panelEl.dataset.state = 'open';
+    panelEl.dataset.side = side;
     panelEl.textContent = content;
 
     document.body.appendChild(panelEl);
     positionTooltip(trigger, panelEl, side);
+
+    // `aria-describedby` só enquanto o balão EXISTE. Escrevê-lo na montagem
+    // deixa o gatilho apontando para um id ausente o tempo todo — violação de
+    // `aria-valid-attr-value` no axe, e uma descrição que o leitor de tela
+    // procura e não acha.
+    trigger.setAttribute('aria-describedby', tooltipId);
+
+    document.addEventListener('mousemove', aoMover);
+    document.addEventListener('keydown', aoTeclar);
+
     // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
     options.onShow?.();
   }
 
   function hide(): void {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    document.removeEventListener('mousemove', aoMover);
+    document.removeEventListener('keydown', aoTeclar);
     panelEl?.remove();
     panelEl = null;
+    trigger.removeAttribute('aria-describedby');
   }
 
   function scheduleShow(): void {
+    cancelarFechamento();
+    if (panelEl || showTimer) return;
     // Arrow literal explícito — clarifica pro SAST que setTimeout recebe
     // função, não string evaluada. Comportamento idêntico a setTimeout(show, …).
-    showTimer = setTimeout(() => { show(); }, SHOW_DELAY);
+    showTimer = setTimeout(() => { showTimer = null; show(); }, SHOW_DELAY);
+  }
+
+  function cancelarFechamento(): void {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+  }
+
+  function agendarFechamento(): void {
+    if (hideTimer) return;
+    hideTimer = setTimeout(() => { hideTimer = null; hide(); }, GRACE_MS);
+  }
+
+  /** Saída pelo ponteiro respeita a tolerância; saída pelo foco fecha na hora. */
+  function aoSairDoPonteiro(): void {
+    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+    if (panelEl) agendarFechamento();
+  }
+
+  /**
+   * O foco abre NA HORA, sem a espera do hover.
+   *
+   * Quem chega por teclado não tem como "parar em cima" — a espera existe para
+   * separar o ponteiro que atravessa do que para, e não tem equivalente no Tab.
+   * As outras quatro stacks fazem o mesmo, e é o que o conteúdo compartilhado
+   * documenta.
+   *
+   * `ponteiroPressionado` evita que o foco vindo de um clique abra o balão duas
+   * vezes: nesse caminho quem manda é o hover, com a espera dele.
+   */
+  function aoFocar(): void {
+    if (ponteiroPressionado) return;
+    cancelarFechamento();
+    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+    show();
   }
 
   trigger.addEventListener('mouseenter', scheduleShow);
-  trigger.addEventListener('mouseleave', hide);
-  trigger.addEventListener('focus', scheduleShow);
+  trigger.addEventListener('mouseleave', aoSairDoPonteiro);
+  trigger.addEventListener('pointerdown', () => {
+    ponteiroPressionado = true;
+    document.addEventListener('pointerup', () => { ponteiroPressionado = false; }, { once: true });
+  });
+  trigger.addEventListener('focus', aoFocar);
   trigger.addEventListener('blur', hide);
 
   return wrapper;

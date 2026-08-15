@@ -366,7 +366,9 @@ interface TooltipContentProps {
               },
               {
                 element: tContent("usage.uxWriting.table.icon.name"),
-                rules: tContent("usage.uxWriting.table.icon.format"),
+                // A regra de formato cita <code>aria-label</code>, e a célula
+                // escreve textNode — sem toPlainText a tag apareceria literal.
+                rules: toPlainText(tContent("usage.uxWriting.table.icon.format")),
                 do: tContent("usage.uxWriting.table.icon.good"),
                 dont: tContent("usage.uxWriting.table.icon.bad"),
               },
@@ -763,56 +765,56 @@ interface TooltipContentProps {
                   type: tContent("props.table.delay.type"),
                   defaultValue: tContent("props.table.delay.default"),
                   required: tContent("props.table.delay.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.delay.description")),
+                  description: toPlainText(tContent("props.table.delay.description")),
                 },
                 {
                   name: "open",
                   type: tContent("props.table.open.type"),
                   defaultValue: tContent("props.table.open.default"),
                   required: tContent("props.table.open.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.open.description")),
+                  description: toPlainText(tContent("props.table.open.description")),
                 },
                 {
                   name: "defaultOpen",
                   type: tContent("props.table.defaultOpen.type"),
                   defaultValue: tContent("props.table.defaultOpen.default"),
                   required: tContent("props.table.defaultOpen.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.defaultOpen.description")),
+                  description: toPlainText(tContent("props.table.defaultOpen.description")),
                 },
                 {
                   name: "onOpenChange",
                   type: tContent("props.table.onOpenChange.type"),
                   defaultValue: tContent("props.table.onOpenChange.default"),
                   required: tContent("props.table.onOpenChange.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.onOpenChange.description")),
+                  description: toPlainText(tContent("props.table.onOpenChange.description")),
                 },
                 {
                   name: "side",
                   type: tContent("props.table.side.type"),
                   defaultValue: tContent("props.table.side.default"),
                   required: tContent("props.table.side.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.side.description")),
+                  description: toPlainText(tContent("props.table.side.description")),
                 },
                 {
                   name: "align",
                   type: tContent("props.table.align.type"),
                   defaultValue: tContent("props.table.align.default"),
                   required: tContent("props.table.align.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.align.description")),
+                  description: toPlainText(tContent("props.table.align.description")),
                 },
                 {
                   name: "sideOffset",
                   type: tContent("props.table.sideOffset.type"),
                   defaultValue: tContent("props.table.sideOffset.default"),
                   required: tContent("props.table.sideOffset.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.sideOffset.description")),
+                  description: toPlainText(tContent("props.table.sideOffset.description")),
                 },
                 {
                   name: "className",
                   type: tContent("props.table.className.type"),
                   defaultValue: tContent("props.table.className.default"),
                   required: tContent("props.table.className.required"),
-                  description: DOMPurify.sanitize(tContent("props.table.className.description")),
+                  description: toPlainText(tContent("props.table.className.description")),
                 },
               ],
             },
@@ -830,29 +832,32 @@ interface TooltipContentProps {
             value: tContent("tokens.table.class"),
             description: tContent("tokens.table.part"),
           }}
+          // Os tokens são os que a folha compartilhada realmente usa
+          // (docs/shared/styles/nds/tooltip.css). A tabela documentava
+          // --foreground/--background/--radius, que o Tooltip não toca.
           items={[
             {
-              token: "--foreground",
+              token: "--primary",
               value: tContent("tokens.table.foreground.class"),
               description: tContent("tokens.table.foreground.part"),
             },
             {
-              token: "--background",
+              token: "--primary-foreground",
               value: tContent("tokens.table.background.class"),
               description: tContent("tokens.table.background.part"),
             },
             {
-              token: "--foreground",
+              token: "--primary",
               value: tContent("tokens.table.fill.class"),
               description: tContent("tokens.table.fill.part"),
             },
             {
-              token: "--radius",
+              token: "--radius-sm",
               value: tContent("tokens.table.radius.class"),
               description: tContent("tokens.table.radius.part"),
             },
             {
-              token: "z-index",
+              token: "--z-tooltip",
               value: tContent("tokens.table.zIndex.class"),
               description: tContent("tokens.table.zIndex.part"),
             },

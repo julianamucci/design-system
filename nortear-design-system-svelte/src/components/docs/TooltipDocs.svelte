@@ -181,13 +181,10 @@
   </TooltipContent>
 </Tooltip>`;
 
-  const codeCustomizationTokens = `/* Tooltip claro em tema dark (override de variante) */
-.tooltip-light [data-slot="tooltip-content"] {
-  @apply bg-popover text-popover-foreground ring-1 ring-foreground/10;
-}
-.tooltip-light [data-slot="tooltip-content"] svg {
-  @apply fill-popover;
-}`;
+  // O snippet de customização vem do conteúdo compartilhado
+  // (`tokens.customizationCode`, variante svelte). A cópia local que morava
+  // aqui ensinava `@apply` — diretiva de um framework utilitário que saiu do
+  // projeto — e por isso era conselho inerte.
 
   const interfaceCode = `// TooltipProvider (bits-ui)
 interface TooltipProviderProps {
@@ -755,14 +752,17 @@ interface TooltipTriggerProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--foreground', value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
-      { token: '--background', value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
-      { token: 'fill',         value: $tStore('tokens.table.fill.class'),       description: $tStore('tokens.table.fill.part')       },
-      { token: 'radius',       value: $tStore('tokens.table.radius.class'),     description: $tStore('tokens.table.radius.part')     },
-      { token: 'zIndex',       value: $tStore('tokens.table.zIndex.class'),     description: $tStore('tokens.table.zIndex.part')     },
+      // Os tokens são os que a folha compartilhada realmente usa
+      // (docs/shared/styles/nds/tooltip.css). A tabela documentava
+      // --foreground/--background e dois rótulos que nem token eram.
+      { token: '--primary',         value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
+      { token: '--primary-foreground', value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
+      { token: '--primary',            value: $tStore('tokens.table.fill.class'),       description: $tStore('tokens.table.fill.part')       },
+      { token: '--radius-sm',          value: $tStore('tokens.table.radius.class'),     description: $tStore('tokens.table.radius.part')     },
+      { token: '--z-tooltip',          value: $tStore('tokens.table.zIndex.class'),     description: $tStore('tokens.table.zIndex.part')     },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

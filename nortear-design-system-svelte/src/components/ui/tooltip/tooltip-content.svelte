@@ -4,9 +4,11 @@
 	import TooltipPortal from "./tooltip-portal.svelte";
 	import type { ComponentProps } from "svelte";
 	import type { WithoutChildrenOrChild } from "@/lib/utils.js";
+	import { usarDescricao } from "./tooltip-descricao.svelte";
 
 	let {
 		ref = $bindable(null),
+		id,
 		class: className,
 		sideOffset = 0,
 		side = "top",
@@ -18,6 +20,23 @@
 		arrowClasses?: string;
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
 	} = $props();
+
+	const descricao = usarDescricao();
+
+	// Carimbado no nó, e não passado por prop: `PopperLayer` e `PopperLayerInner`
+	// tiram `id` das props antes de chegarem ao elemento, então um `id` por prop
+	// é engolido no caminho e o balão nasce sem id nenhum.
+	// Ver tooltip-descricao.svelte.ts.
+	$effect(() => {
+		const alvo = ref;
+		const identificador = id ?? descricao?.id;
+		if (!alvo || !identificador) return;
+		if (alvo.id !== identificador) alvo.id = identificador;
+		// Avisar a raiz é o que devolve a vez ao gatilho — sem isto ele escreve
+		// o `aria-describedby` antes de a lib escrever o dela, e perde.
+		descricao?.marcarMontado(true);
+		return () => descricao?.marcarMontado(false);
+	});
 </script>
 
 <TooltipPortal {...portalProps}>
@@ -35,19 +54,12 @@
 		{...restProps}
 	>
 		{@render children?.()}
+		<!-- A seta é posicionada só pela folha compartilhada, por `[data-side]`.
+		     As classes utilitárias que moravam aqui saíram do projeto na migração
+		     para `.nds-*` e não pintavam nada. -->
 		<TooltipPrimitive.Arrow>
 			{#snippet child({ props })}
-				<div
-					class={cn(
-						"nds-tooltip-arrow",
-						"data-[side=top]:translate-x-1/2 data-[side=top]:translate-y-[calc(-50%+2px)]",
-						"data-[side=bottom]:-translate-x-1/2 data-[side=bottom]:-translate-y-[calc(-50%+1px)]",
-						"data-[side=right]:translate-x-[calc(50%+2px)] data-[side=right]:translate-y-1/2",
-						"data-[side=left]:-translate-y-[calc(50%-3px)]",
-						arrowClasses
-					)}
-					{...props}
-				></div>
+				<div class={cn("nds-tooltip-arrow", arrowClasses)} {...props}></div>
 			{/snippet}
 		</TooltipPrimitive.Arrow>
 	</TooltipPrimitive.Content>
