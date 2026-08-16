@@ -3,6 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsCodeBlock } from './code-block';
 import { LANGUAGE_ITEMS, COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
+import {
+  MINIMO_DE_CONTRASTE,
+  TRECHOS_DA_PALETA,
+  laudoDeContraste,
+} from '@shared/testing/code-block-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -45,15 +50,6 @@ function tokensClassificados(canvasElement: HTMLElement): number {
   return canvasElement.querySelectorAll('[data-token]:not([data-token="plain"])').length;
 }
 
-/** Luminância relativa (WCAG) de uma cor computada no formato `rgb(...)`. */
-function luminancia(cor: string): number {
-  const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map((n) => {
-    const c = Number(n) / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
 /** Story de uma linguagem: mesmo trecho e mesma linguagem da docs page. */
 function renderLanguage(key: string) {
   const item = LANGUAGE_ITEMS.find((i) => i.key === key)!;
@@ -63,13 +59,23 @@ function renderLanguage(key: string) {
   });
 }
 
-/** Paleta inteira em uma tela: as seis linguagens e uma linha em destaque. */
+/**
+ * Paleta inteira em uma tela: os trechos do colhedor compartilhado — que juntos
+ * acendem os ONZE tokens — e uma linha em destaque, que é o SEGUNDO fundo
+ * possível.
+ *
+ * Os trechos vêm de `code-block-probe` e não de `LANGUAGE_ITEMS` de propósito:
+ * os itens da docs page são idiomáticos por stack, e a medição das cinco só é
+ * comparável sobre dados idênticos. A primeira versão media `LANGUAGE_ITEMS` e
+ * alcançava cinco cores das onze — as outras seis nunca tinham sido medidas
+ * contra fundo nenhum.
+ */
 const renderPaleta = () => ({
-  props: { itens: LANGUAGE_ITEMS, destacado: COMPOSITION_CODE, destaque: [2] },
+  props: { trechos: TRECHOS_DA_PALETA, destacado: COMPOSITION_CODE, destaque: [2] },
   template: `
     <div class="nds-stack" data-spacing="md">
-      @for (item of itens; track item.key) {
-        <nds-code-block [code]="item.code" [language]="item.language" [showLineNumbers]="false" />
+      @for (t of trechos; track t.language) {
+        <nds-code-block [code]="t.code" [language]="t.language" [showLineNumbers]="false" />
       }
       <nds-code-block [code]="destacado" language="ts" [highlightLines]="destaque" />
     </div>
@@ -90,6 +96,7 @@ export const Script: Story = {
 };
 
 export const Markup: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('markup'),
   play: async ({ canvasElement, step }) => {
     await step('Marcação recebe classificação de sintaxe', async () => {
@@ -100,6 +107,7 @@ export const Markup: Story = {
 };
 
 export const Styles: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('styles'),
   play: async ({ canvasElement, step }) => {
     await step('CSS recebe classificação de sintaxe', async () => {
@@ -110,6 +118,7 @@ export const Styles: Story = {
 };
 
 export const Date: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
     await step('JSON recebe classificação de sintaxe', async () => {
@@ -120,6 +129,7 @@ export const Date: Story = {
 };
 
 export const Shell: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('shell'),
   play: async ({ canvasElement, step }) => {
     await step('Linha de comando recebe classificação de sintaxe', async () => {
@@ -130,6 +140,7 @@ export const Shell: Story = {
 };
 
 export const Text: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('text'),
   play: async ({ canvasElement, step }) => {
     await step('Texto simples não recebe nenhuma cor', async () => {
@@ -144,27 +155,34 @@ export const Text: Story = {
 // ─── Paleta por tema ──────────────────────────────────────────────────────────
 //
 // As cores de sintaxe são custom properties da raiz e trocam com o tema. As duas
-// stories abaixo existem para que o axe meça o contraste da paleta INTEIRA nos
-// dois fundos possíveis — a superfície e a linha em destaque — no claro e no
-// escuro, que é o critério `testes.accessibility.item4`.
+// stories abaixo cobrem `testes.accessibility.item4` — "contraste mínimo 4.5:1
+// na paleta de sintaxe", nos dois fundos possíveis e nos dois modos.
+//
+// A versão anterior declarava o item e assertava só a DIREÇÃO da luminância
+// (mais escura que a superfície no claro, mais clara no escuro): passaria com
+// uma cor a 1.2:1, desde que apontasse para o lado certo. O número que o
+// critério pede é a razão WCAG, e é ela que se afirma agora — calculada nos três
+// temas de marca, porque cada um traz a própria superfície.
 
 export const LightPalette: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: renderPaleta,
   play: async ({ canvasElement, step }) => {
-    await step('No tema claro a sintaxe é mais escura que a superfície', async () => {
-      const bloco = root(canvasElement);
-      const keyword = canvasElement.querySelector<HTMLElement>('[data-token="keyword"]')!;
-      await expect(keyword).toBeInTheDocument();
-      await expect(luminancia(getComputedStyle(keyword).color)).toBeLessThan(
-        luminancia(getComputedStyle(bloco).backgroundColor),
+    await step('No claro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
+      // A varredura roda nos três temas e devolve a PIOR razão; o fundo do
+      // destaque é semitransparente e é composto antes da conta, senão a medida
+      // mentiria para o alfa.
+      await expect(laudoDeContraste(canvasElement, 'claro')).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
       );
     });
 
     await step('A linha em destaque não depende só de cor', async () => {
       // Barra de acento além do fundo: a marcação precisa sobreviver à visão
       // monocromática (WCAG 1.4.1).
-      const marcada = canvasElement.querySelector<HTMLElement>('[data-highlighted="true"]')!;
+      const marcada = canvasElement.querySelector<HTMLElement>(
+        '[data-highlighted]:not([data-highlighted="false"])',
+      )!;
       await expect(marcada).toBeInTheDocument();
       await expect(getComputedStyle(marcada).boxShadow).not.toBe('none');
     });
@@ -184,13 +202,12 @@ export const DarkPalette: Story = {
       await expect(document.documentElement.classList.contains('dark')).toBe(true);
     });
 
-    await step('No tema escuro a sintaxe é mais clara que a superfície', async () => {
-      // Prova que a paleta escura entrou: com as custom properties do claro,
-      // a palavra reservada continuaria mais escura que o fundo.
-      const bloco = root(canvasElement);
-      const keyword = canvasElement.querySelector<HTMLElement>('[data-token="keyword"]')!;
-      await expect(luminancia(getComputedStyle(keyword).color)).toBeGreaterThan(
-        luminancia(getComputedStyle(bloco).backgroundColor),
+    await step('No escuro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
+      // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
+      // do runner está sempre no claro. Aqui a classe é posta e retirada pela
+      // varredura, que restaura o className da raiz no finally.
+      await expect(laudoDeContraste(canvasElement, 'escuro')).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
       );
     });
   },

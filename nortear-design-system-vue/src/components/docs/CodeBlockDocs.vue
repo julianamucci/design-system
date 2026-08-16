@@ -284,7 +284,7 @@ const demoTxtCode = `Valor não reconhecido cai em texto simples.
 O bloco continua rolando e copiando normalmente.`;
 
 const variantScriptCode = 'const total = items.length; // soma';
-const variantMarkupCode = '<button class="nds-btn" :disabled="loading">Salvar</button>';
+const variantMarkupCode = '<button class="nds-button" :disabled="loading">Salvar</button>';
 const variantStylesCode = '.nds-card { padding: var(--spacing-4); }';
 const variantDataCode = '{ "port": 6006, "open": true }';
 const variantShellCode = 'npm run build -- --mode production';

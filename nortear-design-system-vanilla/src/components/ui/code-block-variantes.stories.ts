@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createCodeBlock } from './code-block';
 import { LANGUAGE_ITEMS } from '@/components/docs/CodeBlockDocs';
+import {
+  MINIMO_DE_CONTRASTE,
+  TRECHOS_DA_PALETA,
+  laudoDeContraste,
+} from '@shared/testing/code-block-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -26,6 +31,11 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+/** Trecho base do destaque nas stories de paleta. */
+const PALETA_CODE = `const items = await load();
+const total = items.length;
+render(items, total);`;
 
 /** Trecho e linguagem da seção Variantes, pela chave do item. */
 function renderLanguage(key: string): () => HTMLElement {
@@ -56,6 +66,7 @@ function root(canvasElement: HTMLElement): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Script: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('script'),
   play: async ({ canvasElement, step }) => {
     await step('TypeScript recebe classificação de sintaxe', async () => {
@@ -66,6 +77,7 @@ export const Script: Story = {
 };
 
 export const Markup: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('markup'),
   play: async ({ canvasElement, step }) => {
     await step('Marcação recebe classificação de sintaxe', async () => {
@@ -76,6 +88,7 @@ export const Markup: Story = {
 };
 
 export const Styles: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('styles'),
   play: async ({ canvasElement, step }) => {
     await step('CSS recebe classificação de sintaxe', async () => {
@@ -86,6 +99,7 @@ export const Styles: Story = {
 };
 
 export const Date: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
     await step('JSON recebe classificação de sintaxe', async () => {
@@ -96,6 +110,7 @@ export const Date: Story = {
 };
 
 export const Shell: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('shell'),
   play: async ({ canvasElement, step }) => {
     await step('Linha de comando recebe classificação de sintaxe', async () => {
@@ -106,6 +121,7 @@ export const Shell: Story = {
 };
 
 export const Text: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: renderLanguage('text'),
   play: async ({ canvasElement, step }) => {
     await step('Texto simples não recebe nenhuma cor', async () => {
@@ -113,6 +129,79 @@ export const Text: Story = {
       // correto, e o trecho continua legível e copiável.
       await expect(root(canvasElement)).toHaveAttribute('data-language', 'text');
       await expect(classifiedTokens(canvasElement)).toBe(0);
+    });
+  },
+};
+
+// ─── Paleta por tema ──────────────────────────────────────────────────────────
+//
+// As cores de sintaxe são custom properties da raiz e trocam com o tema. As duas
+// stories abaixo cobrem `testes.accessibility.item4` — "contraste mínimo 4.5:1
+// na paleta de sintaxe", nos dois fundos possíveis (a superfície e a linha em
+// destaque) e nos dois modos.
+//
+// Os trechos vêm do colhedor compartilhado e não de LANGUAGE_ITEMS: juntos eles
+// acendem os ONZE tokens da paleta, e a medição das cinco stacks só é comparável
+// sobre dados idênticos. Medir um trecho isolado alcançava cinco cores — as
+// outras seis nunca tinham sido medidas contra fundo nenhum.
+
+function renderPaleta(): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'md';
+  for (const t of TRECHOS_DA_PALETA) {
+    wrap.append(createCodeBlock({ code: t.code, language: t.language, showLineNumbers: false }));
+  }
+  wrap.append(createCodeBlock({ code: PALETA_CODE, language: 'ts', highlightLines: [2] }));
+  return wrap;
+}
+
+export const LightPalette: Story = {
+  parameters: { covers: ['accessibility.item4'] },
+  render: renderPaleta,
+  play: async ({ canvasElement, step }) => {
+    await step('No claro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
+      // A varredura roda nos três temas de marca e devolve a PIOR razão; o fundo
+      // do destaque é semitransparente e é composto antes da conta, senão a
+      // medida mentiria para o alfa. Comparar nome de token não responde a
+      // pergunta — a razão WCAG responde.
+      await expect(laudoDeContraste(canvasElement, 'claro')).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      );
+    });
+
+    await step('A linha em destaque não depende só de cor', async () => {
+      // Barra de acento além do fundo: a marcação precisa sobreviver à visão
+      // monocromática (WCAG 1.4.1).
+      const marcada = canvasElement.querySelector<HTMLElement>(
+        '[data-highlighted]:not([data-highlighted="false"])',
+      )!;
+      await expect(marcada).toBeInTheDocument();
+      await expect(getComputedStyle(marcada).boxShadow).not.toBe('none');
+    });
+  },
+};
+
+export const DarkPalette: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    // themeOverride é o canal do addon-themes: a classe volta sozinha na story
+    // seguinte, porque o efeito do decorator depende dele.
+    themes: { themeOverride: 'dark' },
+  },
+  render: renderPaleta,
+  play: async ({ canvasElement, step }) => {
+    await step('O tema escuro está aplicado no documento', async () => {
+      await expect(document.documentElement.classList.contains('dark')).toBe(true);
+    });
+
+    await step('No escuro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
+      // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
+      // do runner está sempre no claro. A varredura restaura o className da raiz
+      // no finally — deixá-lo posto envenenaria a story seguinte e o Chromatic.
+      await expect(laudoDeContraste(canvasElement, 'escuro')).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      );
     });
   },
 };

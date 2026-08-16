@@ -189,17 +189,33 @@ export const RemovedBeforeFeedback: Story = {
     // Signal e não campo comum: em modo zoneless é o signal que garante a nova
     // detecção de mudança quando o bloco sai da tela.
     props: { visivel: signal(true), code: COMPOSITION_CODE },
+    // Alterna em vez de só remover: o painel Interactions reexecuta a play no
+    // MESMO DOM, e um botão que só sabe remover deixa a segunda rodada sem
+    // bloco nenhum para copiar. O rótulo acompanha o estado para que a play
+    // consiga estabelecer a própria precondição.
     template: `
       <div class="nds-stack" data-spacing="md">
         @if (visivel()) {
           <nds-code-block [code]="code" language="ts" />
         }
-        <button ndsButton variant="outline" (click)="visivel.set(false)">Remover o bloco</button>
+        <button ndsButton variant="outline" (click)="visivel.set(!visivel())">
+          {{ visivel() ? 'Remover o bloco' : 'Restaurar o bloco' }}
+        </button>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+
+    // Precondição própria: no replay a rodada anterior deixou o bloco removido.
+    await step('O bloco está na tela antes de qualquer coisa', async () => {
+      if (!canvasElement.querySelector('[data-slot="code-block"]')) {
+        await userEvent.click(canvas.getByRole('button', { name: /restaurar o bloco/i }));
+      }
+      await waitFor(() =>
+        expect(canvasElement.querySelector('[data-slot="code-block"]')).not.toBeNull(),
+      );
+    });
 
     // Espiões sobre os temporizadores globais: o componente chama `setTimeout`
     // e `clearTimeout` sem alias, então o que ele usa é o global do momento da

@@ -1,24 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import {
+  MINIMO_DE_CONTRASTE,
+  TRECHOS_DA_PALETA,
+  laudoDeContraste,
+} from "@shared/testing/code-block-probe";
 
 /**
  * "Variantes" aqui são as linguagens suportadas — o componente não tem variantes
  * de estilo. Os literais são os mesmos da seção Variantes da docs page.
  */
 const LANG_SCRIPT = `const total = items.length; // soma`;
-const LANG_MARKUP = `<button class="nds-btn" :disabled="loading">Salvar</button>`;
+const LANG_MARKUP = `<button class="nds-button" :disabled="loading">Salvar</button>`;
 const LANG_STYLES = `.nds-card { padding: var(--spacing-4); }`;
 const LANG_DATA = `{ "port": 6006, "open": true }`;
 const LANG_SHELL = `npm run build -- --mode production`;
 const LANG_TEXT = `Sem classificação: monoespaçado e sem cor.`;
 
+/** Trecho base do destaque nas stories de paleta. */
+const PALETA_CODE = `const items = await load();
+const total = items.length;
+render(items, total);`;
+
 const rootOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
-/** Classes de token presentes no bloco. `plain` não vira elemento — vira texto. */
-const tokensOf = (root: HTMLElement) =>
-  [...root.querySelectorAll("[data-token]")].map((el) => el.getAttribute("data-token"));
+/**
+ * Spans classificados. `plain` não vira elemento — vira nó de texto —, então
+ * qualquer `[data-token]` aqui é sintaxe reconhecida. É o núcleo do componente:
+ * sem esta contagem, um tokenizador que devolvesse tudo `plain` passaria por
+ * todos os outros testes.
+ */
+const tokensClassificados = (canvasElement: HTMLElement) =>
+  canvasElement.querySelectorAll('[data-token]:not([data-token="plain"])').length;
 
 const meta = {
   title: "UI/CodeBlock/Variants",
@@ -34,62 +49,151 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Script: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_SCRIPT, language: "tsx", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    const tokens = tokensOf(rootOf(canvasElement));
-    await expect(tokens.length).toBeGreaterThan(0);
-    await expect(tokens).not.toContain("plain");
+  play: async ({ canvasElement, step }) => {
+    await step("TypeScript recebe classificação de sintaxe", async () => {
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "tsx");
+      await expect(tokensClassificados(canvasElement)).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Markup: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_MARKUP, language: "vue", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    const tokens = tokensOf(rootOf(canvasElement));
-    await expect(tokens.length).toBeGreaterThan(0);
-    await expect(tokens).not.toContain("plain");
+  play: async ({ canvasElement, step }) => {
+    await step("Marcação recebe classificação de sintaxe", async () => {
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "vue");
+      await expect(tokensClassificados(canvasElement)).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Styles: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_STYLES, language: "css", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    const tokens = tokensOf(rootOf(canvasElement));
-    await expect(tokens.length).toBeGreaterThan(0);
-    await expect(tokens).not.toContain("plain");
+  play: async ({ canvasElement, step }) => {
+    await step("CSS recebe classificação de sintaxe", async () => {
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "css");
+      await expect(tokensClassificados(canvasElement)).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Date: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_DATA, language: "json", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    const tokens = tokensOf(rootOf(canvasElement));
-    await expect(tokens.length).toBeGreaterThan(0);
-    await expect(tokens).not.toContain("plain");
+  play: async ({ canvasElement, step }) => {
+    await step("JSON recebe classificação de sintaxe", async () => {
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "json");
+      await expect(tokensClassificados(canvasElement)).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Shell: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_SHELL, language: "bash", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    const tokens = tokensOf(rootOf(canvasElement));
-    await expect(tokens.length).toBeGreaterThan(0);
-    await expect(tokens).not.toContain("plain");
+  play: async ({ canvasElement, step }) => {
+    await step("Linha de comando recebe classificação de sintaxe", async () => {
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "bash");
+      await expect(tokensClassificados(canvasElement)).toBeGreaterThan(0);
+    });
   },
 };
 
 export const Text: Story = {
+  parameters: { covers: ["visual.item2"] },
   args: { code: LANG_TEXT, language: "txt", showLineNumbers: false },
   render: (args) => <CodeBlock {...args} />,
-  play: async ({ canvasElement }) => {
-    // Texto simples não é classificado: nenhum trecho vira elemento de token.
-    const root = rootOf(canvasElement);
-    await expect(root.querySelectorAll("[data-token]")).toHaveLength(0);
-    await expect(root.querySelector(".nds-code-block-code")).toHaveTextContent(LANG_TEXT);
+  play: async ({ canvasElement, step }) => {
+    await step("Texto simples não recebe nenhuma cor", async () => {
+      // O contrário das outras cinco: aqui a ausência de token é o resultado
+      // correto, e o trecho continua legível e copiável.
+      await expect(rootOf(canvasElement)).toHaveAttribute("data-language", "text");
+      await expect(tokensClassificados(canvasElement)).toBe(0);
+      await expect(rootOf(canvasElement).querySelector(".nds-code-block-code")).toHaveTextContent(
+        LANG_TEXT,
+      );
+    });
+  },
+};
+
+// ─── Paleta por tema ──────────────────────────────────────────────────────────
+//
+// As cores de sintaxe são custom properties da raiz e trocam com o tema. As duas
+// stories abaixo cobrem `testes.accessibility.item4` — "contraste mínimo 4.5:1
+// na paleta de sintaxe", nos dois fundos possíveis (a superfície e a linha em
+// destaque) e nos dois modos.
+//
+// Os trechos vêm do colhedor compartilhado e não da docs page: juntos eles
+// acendem os ONZE tokens da paleta, e a medição das cinco stacks só é comparável
+// sobre dados idênticos. Medir um trecho isolado alcançava cinco cores — as
+// outras seis nunca tinham sido medidas contra fundo nenhum.
+
+const Paleta = () => (
+  <div className="nds-stack" data-spacing="md">
+    {TRECHOS_DA_PALETA.map((t) => (
+      <CodeBlock key={t.language} code={t.code} language={t.language} showLineNumbers={false} />
+    ))}
+    <CodeBlock code={PALETA_CODE} language="ts" highlightLines={[2]} />
+  </div>
+);
+
+export const LightPalette: Story = {
+  parameters: { covers: ["accessibility.item4"] },
+  args: { code: PALETA_CODE },
+  render: () => <Paleta />,
+  play: async ({ canvasElement, step }) => {
+    await step("No claro, nenhuma cor da paleta fica abaixo de 4.5:1", async () => {
+      // A varredura roda nos três temas de marca e devolve a PIOR razão; o fundo
+      // do destaque é semitransparente e é composto antes da conta, senão a
+      // medida mentiria para o alfa. Comparar nome de token não responde a
+      // pergunta — a razão WCAG responde.
+      await expect(laudoDeContraste(canvasElement, "claro")).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      );
+    });
+
+    await step("A linha em destaque não depende só de cor", async () => {
+      // Barra de acento além do fundo: a marcação precisa sobreviver à visão
+      // monocromática (WCAG 1.4.1).
+      const marcada = canvasElement.querySelector<HTMLElement>(
+        '[data-highlighted]:not([data-highlighted="false"])',
+      )!;
+      await expect(marcada).toBeInTheDocument();
+      await expect(getComputedStyle(marcada).boxShadow).not.toBe("none");
+    });
+  },
+};
+
+export const DarkPalette: Story = {
+  parameters: {
+    covers: ["accessibility.item4"],
+    // themeOverride é o canal do addon-themes: a classe volta sozinha na story
+    // seguinte, porque o efeito do decorator depende dele.
+    themes: { themeOverride: "dark" },
+  },
+  args: { code: PALETA_CODE },
+  render: () => <Paleta />,
+  play: async ({ canvasElement, step }) => {
+    await step("O tema escuro está aplicado no documento", async () => {
+      await expect(document.documentElement.classList.contains("dark")).toBe(true);
+    });
+
+    await step("No escuro, nenhuma cor da paleta fica abaixo de 4.5:1", async () => {
+      // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
+      // do runner está sempre no claro. A varredura restaura o className da raiz
+      // no finally — deixá-lo posto envenenaria a story seguinte e o Chromatic.
+      await expect(laudoDeContraste(canvasElement, "escuro")).toContain(
+        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      );
+    });
   },
 };

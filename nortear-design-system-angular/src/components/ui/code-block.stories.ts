@@ -222,10 +222,18 @@ export const Playground: Story = {
       // Núcleo do componente: sem esta verificação um tokenizador que devolvesse
       // tudo `plain` passaria em todos os outros testes. `plain` não vira
       // elemento — vira nó de texto —, então todo [data-token] aqui é sintaxe.
-      const keyword = root.querySelector<HTMLElement>('[data-token="keyword"]')!;
-      await expect(keyword).toBeInTheDocument();
-      // A cor sai de --code-token-keyword, não da cor de corpo herdada.
-      await expect(getComputedStyle(keyword).color).not.toBe(getComputedStyle(root).color);
+      //
+      // Sem fixar QUAL token: cada linguagem acende um conjunto diferente, e
+      // exigir `keyword` reprovava o trecho de marcação — cujo tokenizador
+      // classifica tag, atributo e string, e nenhuma palavra reservada.
+      const classificados = [
+        ...root.querySelectorAll<HTMLElement>('[data-token]:not([data-token="plain"])'),
+      ];
+      await expect(classificados.length).toBeGreaterThan(0);
+      // A cor sai de --code-token-*, não da cor de corpo herdada.
+      const corDeCorpo = getComputedStyle(root).color;
+      const proprias = classificados.filter((el) => getComputedStyle(el).color !== corDeCorpo);
+      await expect(proprias.length).toBeGreaterThan(0);
     });
 
     await step('O destaque marca exatamente as linhas pedidas', async () => {
@@ -269,6 +277,10 @@ export const Playground: Story = {
           const live = root.querySelector('[role="status"]')!;
           await expect(live).toHaveAttribute('aria-live', 'polite');
           await expect(live).toHaveTextContent('Copiado!');
+          // FORA do botão, que é a metade do critério que ninguém verificava:
+          // uma live region DENTRO do botão faria o leitor reanunciar o rótulo
+          // inteiro no meio da interação em vez de só a confirmação.
+          await expect(botao.contains(live)).toBe(false);
 
           const rotulo = root.querySelector<HTMLElement>('.nds-code-block-copy-label')!;
           await expect(rotulo).toBeVisible();

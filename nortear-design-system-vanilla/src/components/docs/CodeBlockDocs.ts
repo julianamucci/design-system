@@ -210,7 +210,7 @@ const DEMO_PLAIN = [
  */
 export const LANGUAGE_ITEMS: Array<{ key: string; language: string; code: string }> = [
   { key: 'script', language: 'tsx',  code: 'const total = items.length; // soma' },
-  { key: 'markup', language: 'vue',  code: '<button class="nds-btn" :disabled="loading">Salvar</button>' },
+  { key: 'markup', language: 'vue',  code: '<button class="nds-button" :disabled="loading">Salvar</button>' },
   { key: 'styles', language: 'css',  code: '.nds-card { padding: var(--spacing-4); }' },
   { key: 'data',   language: 'json', code: '{ "port": 6006, "open": true }' },
   { key: 'shell',  language: 'bash', code: 'npm run build -- --mode production' },

@@ -39,7 +39,11 @@ const props = withDefaults(defineProps<{
   copiedLabel: 'Copiado!',
 })
 
-const lines = computed(() => highlightCode(props.code, resolveLanguage(props.language)))
+// A linguagem RESOLVIDA, não a recebida: `.css` e `css` são a mesma coisa, e um
+// valor desconhecido vira `text`. É o que a raiz registra e o que story, teste e
+// devtools leem — sem isto, "caiu em texto simples" não é observável.
+const resolvedLanguage = computed(() => resolveLanguage(props.language))
+const lines = computed(() => highlightCode(props.code, resolvedLanguage.value))
 const highlighted = computed(() => parseLineRanges(props.highlightLines))
 
 const copied = ref(false)
@@ -64,6 +68,7 @@ async function handleCopy() {
   <div
     data-slot="code-block"
     :data-numbered="showLineNumbers ? 'true' : 'false'"
+    :data-language="resolvedLanguage"
     :class="cn('nds-code-block-root', props.class)"
   >
     <div class="nds-code-block-header">

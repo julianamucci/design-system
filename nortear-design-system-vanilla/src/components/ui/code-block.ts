@@ -1,6 +1,7 @@
 import { Copy, Check } from 'lucide';
 import { cn } from '@/lib/utils';
 import { createButton } from './button';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { copyText } from '@shared/primitives/clipboard';
 import {
   highlightCode,
@@ -60,7 +61,7 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 /** Reseta o feedback de "copiado" depois deste intervalo. */
 const COPIED_RESET_MS = 2000;
 
-export function createCodeBlock(options: CodeBlockOptions): HTMLElement {
+export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
   const {
     code,
     language,
@@ -214,5 +215,10 @@ export function createCodeBlock(options: CodeBlockOptions): HTMLElement {
     root.appendChild(footerEl);
   }
 
-  return root;
+  // O temporizador da confirmação é o que esta fábrica prende fora da própria
+  // raiz: removida a raiz dentro dos 2 segundos, o callback ainda dispararia e
+  // escreveria num nó já órfão. `tornarDestruivel` dá o `destroy()` público e
+  // idempotente e o chama sozinho quando a raiz sai do documento — a mesma forma
+  // das outras fábricas, em vez de exigir disciplina de quem consome.
+  return tornarDestruivel(root, root, () => clearTimeout(timer));
 }

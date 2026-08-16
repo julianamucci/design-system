@@ -113,7 +113,7 @@ const demoTxt = `Valor não reconhecido cai em texto simples.
 O bloco continua rolando e copiando normalmente.`;
 
 const langScript = `const total = items.length; // soma`;
-const langMarkup = `<button class="nds-btn" :disabled="loading">Salvar</button>`;
+const langMarkup = `<button class="nds-button" :disabled="loading">Salvar</button>`;
 const langStyles = `.nds-card { padding: var(--spacing-4); }`;
 const langData = `{ "port": 6006, "open": true }`;
 const langShell = `npm run build -- --mode production`;

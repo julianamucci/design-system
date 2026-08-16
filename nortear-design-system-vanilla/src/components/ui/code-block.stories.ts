@@ -128,6 +128,13 @@ export const Playground: Story = {
   // tokenizado inteiro — ilegível e não é o que o consumidor escreve. Aqui vai a
   // chamada real da factory, montada a partir dos args.
   parameters: {
+    // accessibility.item5 é 'sem violações axe-core': o addon-a11y roda em toda
+    // story, mas o audit só enxerga o critério se alguma story o declarar.
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3', 'accessibility.item5',
+      'visual.item1',
+    ],
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<CodeBlockArgs> }) => {
@@ -167,9 +174,34 @@ export const Playground: Story = {
       await expect(root).toHaveAttribute('data-language', args.language);
     });
 
-    await step('Uma linha por linha do código', async () => {
-      const lines = root.querySelectorAll('.nds-code-block-line');
+    await step('Uma linha por quebra do código, numeradas a partir de 1', async () => {
+      const lines = [...root.querySelectorAll<HTMLElement>('.nds-code-block-line')];
       await expect(lines).toHaveLength(args.code.split('\n').length);
+      const numeros = lines.map(
+        (l) => l.querySelector<HTMLElement>('.nds-code-block-gutter')!.textContent?.trim(),
+      );
+      await expect(numeros[0]).toBe('1');
+      await expect(numeros.at(-1)).toBe(String(lines.length));
+    });
+
+    await step('A linguagem suportada recebe classificação com cor própria', async () => {
+      // Núcleo do componente: sem esta verificação um tokenizador que devolvesse
+      // tudo `plain` passaria em todos os outros testes. `plain` não vira
+      // elemento — vira nó de texto —, então todo [data-token] aqui é sintaxe.
+      //
+      // Sem fixar QUAL token: cada linguagem acende um conjunto diferente, e
+      // exigir `keyword` reprovava o trecho de marcação — cujo tokenizador
+      // classifica tag, atributo e string, e nenhuma palavra reservada.
+      const classificados = [
+        ...root.querySelectorAll<HTMLElement>('[data-token]:not([data-token="plain"])'),
+      ];
+      await expect(classificados.length).toBeGreaterThan(0);
+      // A cor sai de --code-token-*, não da cor de corpo herdada.
+      const corDeCorpo = getComputedStyle(root).color;
+      const proprias = classificados.filter(
+        (el) => getComputedStyle(el).color !== corDeCorpo,
+      );
+      await expect(proprias.length).toBeGreaterThan(0);
     });
 
     await step('O highlight marca exatamente as linhas pedidas', async () => {
@@ -223,6 +255,10 @@ export const Playground: Story = {
       const live = root.querySelector('[role="status"]')!;
       await expect(live).toHaveAttribute('aria-live', 'polite');
       await expect(live).toHaveTextContent('Copiado!');
+      // FORA do botão, que é a metade do critério que ninguém verificava: uma
+      // live region DENTRO do botão faria o leitor reanunciar o rótulo inteiro
+      // no meio da interação em vez de só a confirmação.
+      await expect(button!.contains(live)).toBe(false);
     });
 
     await step('O que é decorativo não é anunciado', async () => {

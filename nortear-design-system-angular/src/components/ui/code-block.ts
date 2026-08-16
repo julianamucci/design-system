@@ -58,10 +58,6 @@ const COPIED_RESET_MS = 2000;
           [hidden]="!copied()"
         >{{ copiedLabel() }}</span>
 
-        <!-- aria-live fora do botão: o leitor de tela anuncia a confirmação sem
-             que o rótulo do botão mude no meio da interação. -->
-        <span class="nds-sr-only" role="status" aria-live="polite">{{ liveText() }}</span>
-
         <button
           #copyButton
           ndsButton
@@ -76,6 +72,13 @@ const COPIED_RESET_MS = 2000;
         </button>
       </span>
     </div>
+
+    <!-- aria-live IRMÃ do header, não filha dele: é a posição do Vanilla, a
+         referência cross-stack. Dentro de \`nds-code-block-actions\` a região
+         entra no flex do header e ganha o \`gap\` entre rótulo e botão, mesmo
+         medindo zero pixel. Fora do botão em qualquer caso — é o que permite
+         anunciar a confirmação sem trocar o rótulo no meio da interação. -->
+    <span class="nds-sr-only" role="status" aria-live="polite">{{ liveText() }}</span>
 
     <div class="nds-code-block-scroll" tabindex="0">
       <!-- lang="en": o conteúdo é código — identificador e palavra reservada.

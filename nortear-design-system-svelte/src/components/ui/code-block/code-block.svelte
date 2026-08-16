@@ -47,7 +47,11 @@
 		copiedLabel?: string;
 	} = $props();
 
-	const lines = $derived(highlightCode(code, resolveLanguage(language)));
+	// A linguagem RESOLVIDA, não a recebida: `.css` e `css` são a mesma coisa, e
+	// um valor desconhecido vira `text`. É o que a raiz registra e o que story,
+	// teste e devtools leem — sem isto, "caiu em texto simples" não é observável.
+	const resolvedLanguage = $derived(resolveLanguage(language));
+	const lines = $derived(highlightCode(code, resolvedLanguage));
 	const highlighted = $derived(parseLineRanges(highlightLines));
 
 	let copied = $state(false);
@@ -73,6 +77,7 @@
 	bind:this={ref}
 	data-slot="code-block"
 	data-numbered={showLineNumbers ? "true" : "false"}
+	data-language={resolvedLanguage}
 	class={cn("nds-code-block-root", className)}
 	{...restProps}
 >

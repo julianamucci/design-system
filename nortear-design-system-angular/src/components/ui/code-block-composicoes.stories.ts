@@ -43,6 +43,22 @@ function linhasMarcadas(canvasElement: HTMLElement): number[] {
 
 const RODAPE = 'A ação de copiar leva apenas o código.';
 
+/**
+ * Seis linhas, porque um intervalo precisa de espaço para existir.
+ *
+ * `COMPOSITION_CODE` tem três: sobre ele, `'1, 3'` é a única forma de "vários" —
+ * e foi exatamente isso que a story de intervalo passou a fazer, afirmando no
+ * nome e no comentário um intervalo que a entrada não continha.
+ */
+const RANGE_CODE = [
+  "import { load } from './api';",
+  '',
+  'const items = await load();',
+  'const total = items.length;',
+  'render(items, total);',
+  'export default total;',
+].join('\n');
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
@@ -79,7 +95,25 @@ export const WithLabel: Story = {
   },
 };
 
-export const WithRowHighlight: Story = {
+export const WithoutNumbering: Story = {
+  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  render: () => ({
+    props: { code: COMPOSITION_CODE },
+    template: `<nds-code-block [code]="code" language="ts" [showLineNumbers]="false" />`,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('A coluna de numeração some', async () => {
+      await expect(root(canvasElement)).toHaveAttribute('data-numbered', 'false');
+      // O gutter permanece no DOM — aria-hidden e não selecionável; quem o
+      // remove da tela é o CSS, via data-numbered.
+      await expect(root(canvasElement).querySelector('.nds-code-block-gutter')).not.toBeVisible();
+    });
+  },
+};
+
+// `WithHighlight`, não `WithRowHighlight`: é o nome que as outras quatro stacks
+// já usavam, e nome de story é o que o Chromatic e o menu do Storybook casam.
+export const WithHighlight: Story = {
   parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
     props: { code: COMPOSITION_CODE, destaque: [2] },
@@ -103,14 +137,28 @@ export const WithRowHighlight: Story = {
 export const WithHighlightedRange: Story = {
   parameters: { covers: ['functional.item5', 'visual.item4'] },
   render: () => ({
-    props: { code: COMPOSITION_CODE },
-    template: `<nds-code-block [code]="code" language="ts" [highlightLines]="'1, 3'" />`,
+    props: { code: RANGE_CODE },
+    template: `<nds-code-block [code]="code" language="ts" [highlightLines]="'1, 4-5'" />`,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Números avulsos e intervalos convivem na mesma entrada', async () => {
-      // A forma string ('1, 3') é a que o control do Playground usa; a forma
-      // array já é exercitada na story anterior.
-      await expect(linhasMarcadas(canvasElement)).toEqual([1, 3]);
+    await step('Número avulso e intervalo convivem na mesma entrada', async () => {
+      // A forma string é a que o control do Playground usa; a forma array já é
+      // exercitada em WithHighlight. `1, 4-5` traz de fato um intervalo — a
+      // versão anterior passava `'1, 3'`, dois números avulsos, e afirmava no
+      // nome e no comentário um intervalo que a entrada não continha.
+      await expect(linhasMarcadas(canvasElement)).toEqual([1, 4, 5]);
+    });
+
+    await step('As linhas de fora seguem sem marcação', async () => {
+      // Sem isto, um componente que marcasse TUDO passaria: a asserção acima
+      // conferiria a presença das três pedidas e ignoraria as outras três.
+      const total = root(canvasElement).querySelectorAll('.nds-code-block-line').length;
+      await expect(total).toBe(RANGE_CODE.split('\n').length);
+      await expect(
+        root(canvasElement).querySelectorAll(
+          '.nds-code-block-line[data-highlighted]:not([data-highlighted="false"])',
+        ),
+      ).toHaveLength(3);
     });
   },
 };

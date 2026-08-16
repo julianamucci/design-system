@@ -47,9 +47,14 @@ function CodeBlock({
 }: CodeBlockProps) {
   const [copied, setCopied] = React.useState(false)
 
+  // A linguagem RESOLVIDA, não a recebida: `.css` e `css` são a mesma coisa, e
+  // um valor desconhecido vira `text`. É o que a raiz registra e o que story,
+  // teste e devtools leem — sem isto, "caiu em texto simples" não é observável.
+  const resolvedLanguage = React.useMemo(() => resolveLanguage(language), [language])
+
   const lines = React.useMemo(
-    () => highlightCode(code, resolveLanguage(language)),
-    [code, language],
+    () => highlightCode(code, resolvedLanguage),
+    [code, resolvedLanguage],
   )
   const highlighted = React.useMemo(() => parseLineRanges(highlightLines), [highlightLines])
 
@@ -71,6 +76,7 @@ function CodeBlock({
     <div
       data-slot="code-block"
       data-numbered={showLineNumbers ? "true" : "false"}
+      data-language={resolvedLanguage}
       className={cn("nds-code-block-root", className)}
       {...props}
     >

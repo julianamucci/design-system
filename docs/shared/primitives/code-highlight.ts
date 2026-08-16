@@ -128,6 +128,26 @@ const JS_RULES: Rule[] = [
   { token: 'number', rx: /0[xXbBoO][\da-fA-F_]+n?|\d[\d_]*(?:\.\d[\d_]*)?(?:[eE][+-]?\d+)?n?/y },
   // Nome de tag JSX/TSX: <Button, </Button, <div
   { token: 'tag', rx: /<\/?[A-Za-z][\w.-]*/y },
+  // Chamada ou declaração de função: identificador colado no parêntese.
+  //
+  // Sem esta regra o token `function` NUNCA era emitido: ele existia no tipo
+  // CodeToken, tinha cor própria em `--code-token-function` nos dois modos e uma
+  // linha na tabela de tokens da docs page ("Nomes de função em chamadas e
+  // declarações") — e nenhum trecho jamais a acendia. Cor documentada que o
+  // tokenizador não produz é promessa não cumprida, não sobra: o que faltava era
+  // a entrega, não a limpeza.
+  //
+  // Vem ANTES do identificador comum porque as regras são testadas em ordem, e
+  // `refine` devolve keyword/builtin primeiro para que `if (`, `for (` e
+  // `Boolean(` não virem nome de função.
+  {
+    token: 'function',
+    rx: /[A-Za-z_$][\w$]*(?=\s*\()/y,
+    refine: (text) =>
+      JS_KEYWORDS.has(text) ? 'keyword'
+      : JS_BUILTINS.has(text) ? 'builtin'
+      : 'function',
+  },
   {
     token: 'plain',
     rx: IDENTIFIER,
