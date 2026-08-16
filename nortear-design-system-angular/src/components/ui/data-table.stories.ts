@@ -1,17 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { NdsDataTable } from './data-table';
-import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT } from './data-table.fixtures';
+import { medirRolagem } from '@shared/testing/data-table-probe';
+import { NdsDataTable, type DataTableLabels } from './data-table';
+import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT, type FaturaDT } from './data-table.fixtures';
 import { NdsDataTableDocs } from '@/components/docs/DataTableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type DataTableArgs = {
+  caption: string;
   enableRowSelection: boolean;
   enableGlobalFilter: boolean;
   enablePagination: boolean;
   pageSize: number;
+  labels: Partial<DataTableLabels>;
+  rowKey: (row: FaturaDT, index: number) => string;
+  rowLabel: (row: FaturaDT) => string;
 };
+
+/** Identidade da linha: a fatura, não a posição dela na página. */
+const CHAVE_DA_FATURA = (fatura: FaturaDT) => fatura.id;
 
 /**
  * O painel Code imprime o `template` da story como está escrito — com todos os
@@ -22,6 +30,7 @@ type DataTableArgs = {
  */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<DataTableArgs> }): string {
   const {
+    caption = 'Faturas recentes',
     enableRowSelection = true,
     enableGlobalFilter = true,
     enablePagination = true,
@@ -58,9 +67,11 @@ const COLUNAS: DataTableColumn<Fatura>[] = [
   template: \`
     <div
       ndsDataTable
-      caption="Faturas recentes"
+      caption="${caption}"
       [columns]="colunas"
       [data]="faturas()"
+      [rowKey]="chaveDaFatura"
+      [labels]="rotulos"
       ${flags}
     ></div>
   \`,
@@ -68,6 +79,18 @@ const COLUNAS: DataTableColumn<Fatura>[] = [
 export class Exemplo {
   readonly colunas = COLUNAS;
   readonly faturas = signal(carregarFaturas());
+  // A marcação pertence à fatura, não à posição: sem chave estável, ordenar
+  // moveria de linha o que estava marcado.
+  readonly chaveDaFatura = (f: Fatura) => f.id;
+  // Sem rowLabel: o nome do checkbox de cada linha sai da primeira coluna, que
+  // é a mesma que identifica a linha para quem enxerga. Passe rowLabel quando
+  // o identificador estiver em OUTRA coluna.
+  // Rótulos são templates com marcador: {row} recebe o identificador da linha e
+  // {col} o da coluna. Só as chaves informadas mudam.
+  readonly rotulos = {
+    selectAll: 'Selecionar todas as faturas',
+    selectRow: 'Selecionar fatura {row}',
+  };
 }`;
 }
 
@@ -88,30 +111,74 @@ const meta: Meta<DataTableArgs> = {
       'visual.item5': 'sem virtualizacao nao ha scroll virtual para capturar',
     },
   },
+  // Sem compodoc (armadilha 2 do CLAUDE.md deste stack) a aba API Reference sai
+  // inteira daqui: `table.type` e `table.defaultValue` escritos à mão são as
+  // colunas "Tipo" e "Padrão". Sem eles a tabela nasce com as células vazias.
   argTypes: {
+    caption: {
+      control: 'text',
+      description:
+        'Nome acessível da tabela. Fica fora da tela e é o que o leitor anuncia ao entrar na grade.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: "''" } },
+    },
     enableRowSelection: {
       control: 'boolean',
       description:
         'Primeira coluna vira checkbox de seleção, com tri-state no cabeçalho e contagem anunciada por região viva.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     enableGlobalFilter: {
       control: 'boolean',
       description: 'Campo de busca livre na toolbar. Casa em todas as colunas, inclusive nas escondidas.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     enablePagination: {
       control: 'boolean',
       description: 'Rodapé com contagem, seletor de tamanho e navegação por página.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     pageSize: {
       control: { type: 'number', min: 1, max: 50, step: 1 },
       description: 'Linhas por página no primeiro render. Depois quem manda é o seletor do rodapé.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '10' } },
+    },
+    // Objeto e funções não têm control útil, mas continuam na tabela: são o
+    // contrato de quem vai escrever a tabela, não ruído de painel.
+    labels: {
+      control: false,
+      description:
+        'Textos da interface, com marcador para a coluna, a linha e as contagens. Só as chaves informadas mudam.',
+      table: { type: { summary: 'Partial<DataTableLabels>' }, defaultValue: { summary: '{}' } },
+    },
+    rowKey: {
+      control: false,
+      description:
+        'Identificador estável da linha. Sem ele a identidade é a posição, e ordenar moveria de linha o que estava marcado.',
+      table: {
+        type: { summary: '(row, index) => string' },
+        defaultValue: { summary: 'índice do array' },
+      },
+    },
+    rowLabel: {
+      control: false,
+      description:
+        'Texto que identifica a linha no nome do checkbox de seleção. Sem ele o identificador sai da primeira coluna.',
+      table: { type: { summary: '(row) => string' }, defaultValue: { summary: '—' } },
     },
   },
   args: {
+    caption: 'Faturas recentes',
     enableRowSelection: true,
     enableGlobalFilter: true,
     enablePagination: true,
     pageSize: 5,
+    labels: ROTULOS_DT,
+    rowKey: CHAVE_DA_FATURA,
+    // Declarado e deixado em branco de propósito: é AQUI que o degrau do meio do
+    // fallback é provado — sem `rowLabel`, o nome do controle de seleção sai da
+    // primeira coluna ("Fatura"). O caminho explícito, em que o rótulo vem de
+    // OUTRA coluna, tem story própria em UI/DataTable/Settings.
+    rowLabel: undefined,
   },
 };
 
@@ -126,23 +193,28 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item3',
       'functional.item4',
+      'functional.item9',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
+      'accessibility.item5',
+      'accessibility.item6',
       'visual.item1',
     ],
     docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
-    props: { ...args, colunas: COLUNAS_FATURAS, faturas: FATURAS_DT, rotulos: ROTULOS_DT },
+    props: { ...args, colunas: COLUNAS_FATURAS, faturas: FATURAS_DT },
     template: `
       <div
         ndsDataTable
-        caption="Faturas recentes"
+        [caption]="caption"
         [columns]="colunas"
         [data]="faturas"
-        [labels]="rotulos"
+        [labels]="labels"
+        [rowKey]="rowKey"
+        [rowLabel]="rowLabel"
         [enableRowSelection]="enableRowSelection"
         [enableGlobalFilter]="enableGlobalFilter"
         [enablePagination]="enablePagination"
@@ -153,8 +225,42 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const primeiraCelula = () =>
-      linhas()[0].querySelector<HTMLElement>('td:not(:has(button[role="checkbox"]))')!;
+    const celulaDeIdentidade = (linha: HTMLElement) =>
+      linha.querySelector<HTMLElement>('td:not(:has(button[role="checkbox"]))')!;
+    const primeiraCelula = () => celulaDeIdentidade(linhas()[0]);
+
+    // Os alvos são funções, e não elementos guardados: ordenar reordena os nós
+    // do corpo, e um elemento capturado antes viraria referência a outra linha.
+    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+    const caixaDaFatura = (id: string) =>
+      canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
+    const regiaoViva = () => canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const botaoDeOrdenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+    const cabecalhoDeValor = () => botaoDeOrdenar().closest('th')!;
+
+    // Precondição em vez de clique cego: o painel Interactions reexecuta a play
+    // no MESMO DOM, e um clique que inverte estado dá resultado oposto na
+    // segunda rodada. Dois cliques bastam para qualquer estado do checkbox —
+    // do misto, o primeiro completa a página.
+    // Os dois `if` são a mesma coisa que o laço de duas voltas que estava aqui,
+    // escritos de forma que a GUARDA fique na linha do clique: é isso que
+    // distingue clique condicional de clique cego, para quem lê e para a regra
+    // `play_nao_idempotente` do audit — que só enxerga a condição quando ela
+    // está na própria linha do `userEvent.click`.
+    const levarCaixa = async (caixa: () => HTMLElement, estado: 'true' | 'false') => {
+      if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
+      // Segundo clique: partindo do misto, o primeiro só completa a página.
+      if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
+      await expect(caixa()).toHaveAttribute('aria-checked', estado);
+    };
+
+    /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
+    const levarOrdenacao = async (estado: 'none' | 'ascending' | 'descending') => {
+      for (let i = 0; i < 3 && cabecalhoDeValor().getAttribute('aria-sort') !== estado; i += 1) {
+        await userEvent.click(botaoDeOrdenar());
+      }
+      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', estado);
+    };
 
     await step('É uma tabela de verdade, com nome e seções semânticas', async () => {
       // accessibility.item1 — o que faz um leitor anunciar "tabela, 6 colunas" é
@@ -171,14 +277,49 @@ export const Playground: Story = {
       await expect(linhas().length).toBe(args.pageSize);
     });
 
+    await step('Uma camada só rola na horizontal, e ela recebe foco', async () => {
+      // accessibility.item5 — medido pelo estilo COMPUTADO, nunca pela presença
+      // de classe: classe não protege nada, e foi justamente uma classe de
+      // neutralização que zerava o overflow do contêiner alcançável por teclado
+      // e empurrava a rolagem para o de fora, que não recebe foco
+      // (WCAG 2.1.1, regra `scrollable-region-focusable` do axe).
+      const r = medirRolagem(canvasElement);
+      await expect(r.camadasRolaveis).toEqual(['nds-table-wrapper']);
+      await expect(r.rolaveisForaDoTeclado).toEqual([]);
+      await expect(r.interno.overflowX).toBe('auto');
+      await expect(r.interno.tabIndex).toBe(0);
+      // A moldura externa é só borda e raio. Devolver `overflow-x` a ela faria
+      // este passo falhar — que é exatamente o que se quer dele.
+      await expect(r.externo.overflowX).toBe('visible');
+      await expect(r.externo.tabIndex).toBe(-1);
+    });
+
+    await step('A legenda nomeia a tabela sem ocupar espaço na tela', async () => {
+      // accessibility.item6 — o contrato é o EFEITO: a legenda abre a tabela,
+      // dá o nome que o leitor anuncia e sai do fluxo numa caixa de 1px.
+      // Afirmar `.nds-sr-only` provaria só que alguém escreveu a classe.
+      const tabela = canvas.getByRole('table', { name: args.caption });
+      const legenda = tabela.firstElementChild!;
+      await expect(legenda.tagName).toBe('CAPTION');
+      await expect(legenda).toHaveTextContent(args.caption);
+
+      const estilo = getComputedStyle(legenda);
+      const caixa = legenda.getBoundingClientRect();
+      await expect(estilo.position).toBe('absolute');
+      await expect(caixa.width).toBeLessThanOrEqual(2);
+      await expect(caixa.height).toBeLessThanOrEqual(2);
+    });
+
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
       // accessibility.item2 — o aria-label carrega o nome da coluna: "Ordenar
       // por" cinco vezes seria indistinguível na lista de controles do leitor.
-      // O aria-sort mora no `th`, que é quem tem a relação com a coluna.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      const cabecalho = botao.closest('th')!;
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'none');
-      await expect(cabecalho).toHaveAttribute('scope', 'col');
+      // `getByRole` com o nome exato é o que prova isso — ele falha se o rótulo
+      // perder a coluna. O aria-sort mora no `th`, que é quem tem a relação
+      // com a coluna.
+      await expect(cabecalhoDeValor()).toHaveAttribute('scope', 'col');
+      // Sem ordem aplicada, o th diz "none" — e dizer algo é o que anuncia que
+      // a coluna ordena.
+      await levarOrdenacao('none');
 
       // Coluna sem ordenação não promete ordenação nenhuma.
       const semOrdem = canvas.getByText('Método').closest('th')!;
@@ -188,31 +329,28 @@ export const Playground: Story = {
     await step('Ordenar percorre ascendente, descendente e nenhum', async () => {
       // functional.item3 — três estados. Sem o terceiro, quem ordenou por
       // engano não tem como voltar à ordem original dos dados.
-      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
-      const cabecalho = botao.closest('th')!;
+      await levarOrdenacao('none');
 
-      await userEvent.click(botao);
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'ascending');
+      await userEvent.click(botaoDeOrdenar());
+      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'ascending');
       await expect(primeiraCelula()).toHaveTextContent('#INV-010');
 
-      await userEvent.click(botao);
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'descending');
+      await userEvent.click(botaoDeOrdenar());
+      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'descending');
       await expect(primeiraCelula()).toHaveTextContent('#INV-011');
 
-      await userEvent.click(botao);
-      await expect(cabecalho).toHaveAttribute('aria-sort', 'none');
+      await userEvent.click(botaoDeOrdenar());
+      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'none');
       await expect(primeiraCelula()).toHaveTextContent('#INV-001');
     });
 
     await step('Cada checkbox de linha tem um nome só dele', async () => {
       // accessibility.item3 — "Selecionar linha" repetido em doze checkboxes é o
       // mesmo que nenhum nome: o leitor lista doze controles idênticos.
-      const caixaDeTudo = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await expect(caixaDeTudo).toBeTruthy();
-
-      const nomes = linhas().map(
-        (linha) => linha.querySelector('button[role="checkbox"]')!.getAttribute('aria-label'),
+      const caixas = linhas().map(
+        (linha) => linha.querySelector<HTMLElement>('button[role="checkbox"]')!,
       );
+      const nomes = caixas.map((caixa) => caixa.getAttribute('aria-label')!);
       await expect(nomes).toEqual([
         'Selecionar fatura #INV-001',
         'Selecionar fatura #INV-002',
@@ -220,32 +358,47 @@ export const Playground: Story = {
         'Selecionar fatura #INV-004',
         'Selecionar fatura #INV-005',
       ]);
+
+      // A lista literal sozinha não diz nada: trocar os cinco rótulos por um
+      // mesmo valor repetido continuaria casando com uma lista escrita à mão.
+      // O que o leitor precisa é de nomes DISTINTOS entre si.
+      await expect(new Set(nomes).size).toBe(nomes.length);
+
+      // E distintos pelo motivo certo: cada nome carrega o identificador da
+      // PRÓPRIA linha — o mesmo texto que quem enxerga lê na primeira célula.
+      for (const [i, caixa] of caixas.entries()) {
+        const identificador = celulaDeIdentidade(linhas()[i]).textContent!.trim();
+        await expect(caixa.getAttribute('aria-label')).toContain(identificador);
+      }
+
+      // O do cabeçalho age sobre a página inteira: confundi-lo com o de uma
+      // linha custaria doze marcações de uma vez.
+      await expect(nomes).not.toContain(caixaDeTudo().getAttribute('aria-label'));
     });
 
     await step('Selecionar tudo marca a página e a contagem é anunciada', async () => {
       // functional.item4 — e visual.item1: a linha marcada muda de fundo. Uma
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
-      const caixaDeTudo = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await userEvent.click(caixaDeTudo);
+      await levarCaixa(caixaDeTudo, 'true');
 
       for (const linha of linhas()) {
         await expect(linha).toHaveAttribute('data-state', 'selected');
       }
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao).toHaveAttribute('aria-live', 'polite');
-      await expect(regiao).toHaveTextContent('5 de 12 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveAttribute('aria-live', 'polite');
+      await expect(regiaoViva()).toHaveTextContent('5 de 12 linha(s) selecionada(s).');
       await expect(getComputedStyle(linhas()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     });
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
-      const primeira = linhas()[0].querySelector<HTMLElement>('button[role="checkbox"]')!;
-      await userEvent.click(primeira);
+      // A linha é escolhida pelo NOME: por índice, o passo continuaria passando
+      // se a marcação tivesse trocado de linha.
+      await levarCaixa(caixaDeTudo, 'true');
+      await levarCaixa(() => caixaDaFatura('#INV-001'), 'false');
 
-      const caixaDeTudo = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await expect(caixaDeTudo).toHaveAttribute('aria-checked', 'mixed');
-      await expect(caixaDeTudo).toHaveAttribute('data-state', 'indeterminate');
-      await expect(linhas()[0].hasAttribute('data-state')).toBe(false);
+      await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
+      await expect(caixaDeTudo()).toHaveAttribute('data-state', 'indeterminate');
+      await expect(caixaDaFatura('#INV-001').closest('tr')!.hasAttribute('data-state')).toBe(false);
     });
 
     await step('Do estado misto, dois cliques marcam tudo e depois limpam', async () => {
@@ -253,22 +406,12 @@ export const Playground: Story = {
       // — estava documentado e NÃO verificado: a play só provava que o
       // cabeçalho MARCA. Partindo do misto, o primeiro clique completa a página
       // e o segundo esvazia.
-      const caixaDeTudo = () =>
-        canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      // Par idempotente: só clica quando o estado atual não é o desejado. O
-      // painel Interactions reexecuta a play no MESMO DOM, e clique cego aqui
-      // inverteria o resultado na segunda rodada.
-      const levarPara = async (estado: 'true' | 'false') => {
-        if (caixaDeTudo().getAttribute('aria-checked') !== estado) await userEvent.click(caixaDeTudo());
-        await expect(caixaDeTudo()).toHaveAttribute('aria-checked', estado);
-      };
-
-      await levarPara('true');
-      await levarPara('false');
+      await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
+      await levarCaixa(caixaDeTudo, 'true');
+      await levarCaixa(caixaDeTudo, 'false');
       await expect(canvasElement.querySelectorAll('tbody tr[data-state="selected"]').length)
         .toBe(0);
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
     });
 
     await step('A busca livre recorta as linhas e a contagem acompanha', async () => {
@@ -276,29 +419,58 @@ export const Playground: Story = {
       // contagem que prova que ele recortou o conjunto inteiro, não só a
       // página visível.
       const busca = canvas.getByRole('searchbox');
+      // `type` acrescenta ao que estiver no campo — limpar antes é o que faz o
+      // passo valer o mesmo na segunda rodada.
+      await userEvent.clear(busca);
       await userEvent.type(busca, 'Karina');
 
       await expect(linhas().length).toBe(1);
       await expect(primeiraCelula()).toHaveTextContent('#INV-011');
       // O denominador acompanha o recorte: sem isto a contagem podia continuar
       // dizendo "de 12" com uma linha na tela.
-      await expect(canvasElement.querySelector<HTMLElement>('[role="status"]')!)
-        .toHaveTextContent('de 1 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
 
       await userEvent.clear(busca);
       await expect(linhas().length).toBe(args.pageSize);
+    });
+
+    await step('Ordenar não move a marcação de linha', async () => {
+      // functional.item9 — a marcação pertence à LINHA, não à posição da tela.
+      // As duas faturas são escolhidas e conferidas pelo NOME: por índice, o
+      // passo passaria mesmo se ordenar tivesse trocado quem está marcado.
+      await levarOrdenacao('none');
+      await levarCaixa(caixaDeTudo, 'false');
+      await levarCaixa(() => caixaDaFatura('#INV-002'), 'true');
+      await levarCaixa(() => caixaDaFatura('#INV-005'), 'true');
+      const contagemAntes = regiaoViva().textContent;
+      await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
+
+      await levarOrdenacao('ascending');
+      // A ordem mudou de verdade — sem esta linha o passo provaria a
+      // conservação de nada.
+      await expect(primeiraCelula()).toHaveTextContent('#INV-010');
+
+      await expect(caixaDaFatura('#INV-002')).toHaveAttribute('aria-checked', 'true');
+      await expect(caixaDaFatura('#INV-005')).toHaveAttribute('aria-checked', 'true');
+      await expect(caixaDaFatura('#INV-002').closest('tr')).toHaveAttribute(
+        'data-state',
+        'selected',
+      );
+      await expect(regiaoViva().textContent).toBe(contagemAntes);
+
+      // Volta ao estado de entrada: ordem original e nada marcado.
+      await levarOrdenacao('none');
+      await levarCaixa(caixaDeTudo, 'false');
     });
 
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção". Antes a play terminava com a
       // busca limpa e a seleção herdada do passo anterior, sem garantia.
-      for (const indice of [0, 2]) {
-        const caixa = linhas()[indice].querySelector<HTMLElement>('button[role="checkbox"]')!;
-        if (caixa.getAttribute('aria-checked') !== 'true') await userEvent.click(caixa);
-      }
-      await expect(canvasElement.querySelector<HTMLElement>('[role="status"]')!)
-        .toHaveTextContent('2 de 12 linha(s) selecionada(s).');
+      await levarCaixa(caixaDeTudo, 'false');
+      await levarCaixa(() => caixaDaFatura('#INV-001'), 'true');
+      await levarCaixa(() => caixaDaFatura('#INV-003'), 'true');
+      await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },
 };

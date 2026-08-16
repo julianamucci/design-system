@@ -1,10 +1,12 @@
 <script lang="ts">
   import { Input } from '@/components/ui/input';
+  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
 
   const {
     initial,
     columnId,
     label,
+    edit,
     onCommit,
   }: {
     initial: string | number | null;
@@ -16,10 +18,17 @@
      * saía "Editar amount" numa interface em português.
      */
     label?: string;
+    /**
+     * Como o rótulo do controle de edição é escrito. Chega pronto do
+     * DataTable (`labels.edit`) para que trocar a palavra "Editar" — ou o
+     * idioma inteiro — seja uma decisão de quem consome, e não texto cravado
+     * numa célula.
+     */
+    edit?: DataTableLabels['edit'];
     onCommit: (value: unknown) => void;
   } = $props();
 
-  const rotulo = $derived(`Editar ${label ?? columnId}`);
+  const rotulo = $derived((edit ?? DATA_TABLE_LABELS_PADRAO.edit)(label ?? columnId));
 
   let value = $derived(initial == null ? '' : String(initial));
   let editing = $state(false);

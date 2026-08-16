@@ -407,6 +407,15 @@ quando não há texto, ou contendo o texto visível.
   interativo é que precisa ter o tamanho; o visual menor sai de um filho.
 - **Região rolável precisa de `tabindex="0"`** mais `role` e rótulo — sem isso
   quem navega por teclado não alcança o conteúdo.
+- **Um eixo, um dono.** Quando dois contêineres aninhados declaram overflow no
+  mesmo eixo, quem rola é o de dentro, e o de fora vira uma promessa que nunca
+  se cumpre. O defeito aparece quando alguém neutraliza o interno por CSS: a
+  rolagem escorrega para o externo, que normalmente é só moldura e **não** tem
+  `tabindex`. Foi o que aconteceu no DataTable, onde uma classe de uma linha
+  (`overflow: visible` no wrapper do primitivo) tirava do teclado as colunas
+  fora da tela em duas das cinco stacks.
+  Verifique pelo **estilo computado**, nunca pela presença da classe: `getComputedStyle(el).overflowX`
+  em cada camada, e `tabIndex` da que rolar. Classe morta não protege nada.
 
 ## Estados ARIA dinâmicos
 

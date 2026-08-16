@@ -140,10 +140,21 @@ export interface DataTableCellEdit {
 /**
  * Textos do componente.
  *
- * São TEMPLATES com marcador, não funções: uma story ou docs page passa este
- * objeto de dentro de um template Angular, onde declarar função por rótulo
- * seria ruído. `{col}` é o rótulo da coluna, `{row}` o identificador da linha,
- * `{n}` o total de linhas e `{s}` o total selecionado.
+ * São TEMPLATES com marcador, não funções: aqui `sortBy` é
+ * `'Ordenar por {col}'`, e nas outras quatro stacks é `(col) => ...`; o mesmo
+ * vale para `selectRow`, `{row}` aqui e `(row) => ...` lá. Template Angular não
+ * declara função, e quem passa este objeto o passa de dentro de um template.
+ *
+ * É DIVERGÊNCIA DE API DE FRAMEWORK — registrada, não "alinhada" (regra do
+ * CLAUDE.md da raiz). A CAPACIDADE é a mesma nas cinco: todo rótulo é
+ * substituível, e os que dependem de contexto recebem o mesmo contexto. `{col}`
+ * é o rótulo da coluna, `{row}` o identificador da linha, `{n}` o total de
+ * linhas e `{s}` o total selecionado.
+ *
+ * O que NÃO tem par aqui são as chaves de fixar e de redimensionar coluna
+ * (`pinLeft`, `unpin`, `resize`): elas nomeiam controles que este stack não
+ * entrega, pelo motivo registrado no cabeçalho deste arquivo. Rótulo sem
+ * controle é promessa de recurso inexistente.
  */
 export interface DataTableLabels {
   columns: string;
@@ -189,6 +200,9 @@ export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
   rowsSelected: '{s} de {n} linha(s) selecionada(s).',
   noFilter: 'Sem filtro para {col}',
 };
+
+/** Vazio tipográfico: o que uma célula sem valor mostra nas cinco stacks. */
+const CELULA_VAZIA = '—';
 
 function preencher(modelo: string, valores: Record<string, string | number>): string {
   let saida = modelo;
@@ -381,7 +395,12 @@ interface LinhaRenderizada {
     }
 
     <div class="nds-data-table-scroll">
-      <div ndsTableWrapper class="nds-data-table-table-wrapper">
+      <!-- Quem rola na horizontal é o wrapper do primitivo Table, que tem
+           tabindex="0". O .nds-data-table-scroll é só moldura (borda e raio):
+           ele NÃO está na ordem de tabulação, e rolar por ali deixaria as
+           colunas de fora inalcançáveis para quem navega sem mouse
+           (WCAG 2.1.1, regra scrollable-region-focusable do axe). -->
+      <div ndsTableWrapper>
         <table ndsTable>
           @if (caption()) {
             <caption ndsTableCaption class="nds-sr-only">{{ caption() }}</caption>
@@ -618,7 +637,11 @@ export class NdsDataTable<TData> implements OnInit {
     (_row, index) => String(index),
   );
 
-  /** Texto que identifica a linha no rótulo do checkbox de seleção. */
+  /**
+   * Texto que identifica a linha no rótulo do checkbox de seleção. Sem ele o
+   * identificador sai da primeira coluna e, se ela vier vazia, da chave da
+   * linha (a cadeia está em `linhasBrutas`).
+   */
   readonly rowLabel = input<((row: TData) => string) | undefined>(undefined);
 
   /** Nome acessível da tabela. Vira `<caption>` fora da tela. */
@@ -724,7 +747,7 @@ export class NdsDataTable<TData> implements OnInit {
     if (coluna.format) return coluna.format(valor, row);
     // Nunca a string "undefined" numa célula: travessão é o vazio tipográfico,
     // e é o que as outras stacks mostram.
-    return valor === null || valor === undefined || valor === '' ? '—' : String(valor);
+    return valor === null || valor === undefined || valor === '' ? CELULA_VAZIA : String(valor);
   }
 
   private readonly linhasBrutas = computed<LinhaRenderizada[]>(() => {
@@ -737,7 +760,16 @@ export class NdsDataTable<TData> implements OnInit {
 
     return this.data().map((row, indice) => {
       const chave = chaveDe(row, indice);
-      const rotulo = rotuloDe ? rotuloDe(row) : this.texto(todas[0], row);
+      // Cadeia do rótulo da linha, a mesma nas cinco stacks:
+      //  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
+      //  2. o valor da PRIMEIRA coluna — é ela que identifica a linha na leitura
+      //     visual, então é o mesmo texto que a pessoa vidente usaria;
+      //  3. a chave da linha, quando a primeira coluna vem vazia.
+      // Nunca cai em "Selecionar linha" puro: nome repetido em doze controles é o
+      // mesmo que nome nenhum (WCAG 4.1.2).
+      const daPrimeiraColuna = todas.length > 0 ? this.texto(todas[0], row) : CELULA_VAZIA;
+      const rotulo =
+        rotuloDe?.(row) || (daPrimeiraColuna === CELULA_VAZIA ? chave : daPrimeiraColuna);
       return {
         chave,
         indice,

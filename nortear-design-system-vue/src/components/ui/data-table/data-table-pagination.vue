@@ -2,11 +2,22 @@
 import type { Table as TanstackTable } from '@tanstack/vue-table';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import type { DataTableLabels } from './data-table.vue';
 
+/*
+ * Os rótulos chegam por PROP, já mesclados com o padrão lá em cima.
+ *
+ * O rodapé é metade do texto visível da tabela — contagem, "Linhas por página",
+ * "Página X de Y" e os quatro nomes da navegação. Enquanto essas frases moravam
+ * aqui cravadas, passar `labels` ao DataTable traduzia o cabeçalho e deixava o
+ * rodapé em português: meia tabela em cada idioma. Mesclar de novo aqui seria a
+ * outra armadilha — dois pontos de mescla divergem no dia em que só um mudar.
+ */
 const props = defineProps<{
   table: TanstackTable<TData>;
   pageSizeOptions: number[];
   enableRowSelection: boolean;
+  labels: DataTableLabels;
 }>();
 </script>
 
@@ -17,18 +28,17 @@ const props = defineProps<{
   >
     <div class="nds-data-table-pagination-count">
       <template v-if="enableRowSelection">
-        {{ props.table.getFilteredSelectedRowModel().rows.length }} de
-        {{ props.table.getFilteredRowModel().rows.length }} linha(s) selecionada(s).
+        {{ props.labels.rowsSelected(props.table.getFilteredSelectedRowModel().rows.length, props.table.getFilteredRowModel().rows.length) }}
       </template>
       <template v-else>
-        {{ props.table.getFilteredRowModel().rows.length }} linha(s).
+        {{ props.labels.rowsTotal(props.table.getFilteredRowModel().rows.length) }}
       </template>
     </div>
     <div class="nds-data-table-pagination-controls">
       <div class="nds-data-table-page-size">
-        <span>Linhas por página</span>
+        <span>{{ props.labels.rowsPerPage }}</span>
         <select
-          aria-label="Linhas por página"
+          :aria-label="props.labels.rowsPerPage"
           :value="props.table.getState().pagination.pageSize"
           class="nds-data-table-page-size-select"
           @change="(e) => props.table.setPageSize(Number((e.target as HTMLSelectElement).value))"
@@ -43,14 +53,14 @@ const props = defineProps<{
         </select>
       </div>
       <div class="nds-data-table-pagination-count">
-        Página {{ props.table.getState().pagination.pageIndex + 1 }} de
+        {{ props.labels.page }} {{ props.table.getState().pagination.pageIndex + 1 }} {{ props.labels.pageOf }}
         {{ Math.max(props.table.getPageCount(), 1) }}
       </div>
       <div class="nds-data-table-pagination-nav">
         <Button
           variant="outline"
           size="icon"
-          aria-label="Primeira página"
+          :aria-label="props.labels.firstPage"
           :disabled="!props.table.getCanPreviousPage()"
           @click="props.table.setPageIndex(0)"
         >
@@ -59,7 +69,7 @@ const props = defineProps<{
         <Button
           variant="outline"
           size="icon"
-          aria-label="Página anterior"
+          :aria-label="props.labels.prevPage"
           :disabled="!props.table.getCanPreviousPage()"
           @click="props.table.previousPage()"
         >
@@ -68,7 +78,7 @@ const props = defineProps<{
         <Button
           variant="outline"
           size="icon"
-          aria-label="Próxima página"
+          :aria-label="props.labels.nextPage"
           :disabled="!props.table.getCanNextPage()"
           @click="props.table.nextPage()"
         >
@@ -77,7 +87,7 @@ const props = defineProps<{
         <Button
           variant="outline"
           size="icon"
-          aria-label="Última página"
+          :aria-label="props.labels.lastPage"
           :disabled="!props.table.getCanNextPage()"
           @click="props.table.setPageIndex(props.table.getPageCount() - 1)"
         >

@@ -90,10 +90,10 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
       'Conjunto grande com paginação: o rodapé diz em que página se está e quantas linhas o recorte tem.',
     'doDont.pair2.dont':
       'Conjunto grande inteiro numa página só: a rolagem vira o único mapa e a contagem some da tela.',
-    'props.table.rowKey':
-      'Identificador estável da linha. O índice do array serviria até a primeira ordenação — com ele, ordenar moveria a seleção de linha.',
-    'props.table.rowLabel': 'Texto que identifica a linha no rótulo do checkbox de seleção.',
-    'props.table.caption': 'Nome acessível da tabela. Fica fora da tela, mas dentro do documento.',
+    // `caption`, `rowKey` e `rowLabel` NÃO são sobrescritos: o conteúdo
+    // compartilhado descreve os três em texto neutro de API, e é o mesmo que as
+    // cinco stacks entregam. Só `labels` fica aqui, porque a forma diverge (ver
+    // o comentário do tipo em `data-table.ts`).
     'props.table.labels':
       'Rótulos do componente, com marcadores para a coluna, a linha e as contagens. Sobrescreve só o que for passado.',
     'props.table.selectionChange': 'Emitido a cada mudança na seleção, com as linhas marcadas na ordem dos dados.',
@@ -132,10 +132,6 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
       'Large set with pagination: the footer says which page you are on and how many rows the current slice has.',
     'doDont.pair2.dont':
       'The whole large set on a single page: scrolling becomes the only map and the count disappears from the screen.',
-    'props.table.rowKey':
-      'Stable row identifier. The array index would do until the first sort — with it, sorting would move the selection from one row to another.',
-    'props.table.rowLabel': 'Text that identifies the row in the selection checkbox label.',
-    'props.table.caption': 'Accessible name of the table. It sits off screen, but inside the document.',
     'props.table.labels':
       'Component labels, with placeholders for the column, the row and the counts. Only what you pass is overridden.',
     'props.table.selectionChange': 'Emitted on every selection change, with the checked rows in data order.',
@@ -174,10 +170,6 @@ const { t, dict } = useTranslation(dataTableTranslations as Record<string, unkno
       'Conjunto grande con paginación: el pie indica en qué página se está y cuántas filas tiene el recorte.',
     'doDont.pair2.dont':
       'Todo el conjunto grande en una sola página: el desplazamiento se vuelve el único mapa y el recuento desaparece de la pantalla.',
-    'props.table.rowKey':
-      'Identificador estable de la fila. El índice del array serviría hasta la primera ordenación — con él, ordenar movería la selección de una fila a otra.',
-    'props.table.rowLabel': 'Texto que identifica la fila en el rótulo del checkbox de selección.',
-    'props.table.caption': 'Nombre accesible de la tabla. Queda fuera de pantalla, pero dentro del documento.',
     'props.table.labels':
       'Rótulos del componente, con marcadores para la columna, la fila y los recuentos. Solo se sobrescribe lo que se pasa.',
     'props.table.selectionChange': 'Se emite en cada cambio de selección, con las filas marcadas en el orden de los datos.',
@@ -1052,9 +1044,11 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
         items: [
           linha('columns', 'columns', 'DataTableColumn<TData>[]', '—', sim),
           linha('data', 'data', 'TData[]', '—', sim),
+          // A cadeia do rótulo da linha: `rowLabel`, senão a primeira coluna,
+          // senão a chave. Por isso `rowLabel` sem valor não vira nome vazio.
           linha('rowKey', 'rowKey', '(row, index) => string', 'índice do array'),
           linha('rowLabel', 'rowLabel', '(row) => string', '—'),
-          linha('caption', 'caption', 'string', '—'),
+          linha('caption', 'caption', 'string', `''`),
           linha('enableGlobalFilter', 'enableGlobalFilter', 'boolean', 'true'),
           linha('globalFilterPlaceholder', 'globalFilterPlaceholder', 'string', `'Buscar...'`),
           linha('enableRowSelection', 'enableRowSelection', 'boolean', 'false'),

@@ -1,4 +1,5 @@
 import type { DataTableColumn } from './index';
+import type { DataTableLabels } from './data-table-labels';
 
 export type Invoice = {
   id: string;
@@ -22,6 +23,21 @@ export const invoices: Invoice[] = [
   { id: 'INV-011', customer: 'Karen Vieira',   status: 'Pendente',  method: 'Boleto bancário',   amount: 220 },
   { id: 'INV-012', customer: 'Lucas Nogueira', status: 'Pago',      method: 'Pix',               amount: 99 },
 ];
+
+/**
+ * Rótulos do domínio "fatura".
+ *
+ * Existe para as stories PROVAREM que `labels` chega ao DOM: os três textos
+ * abaixo não aparecem em lugar nenhum do componente, então uma asserção sobre
+ * eles falha na hora em que a prop parar de ser lida. As demais chaves ficam
+ * de fora de propósito — é o objeto PARCIAL que prova a mesclagem chave a
+ * chave contra o padrão.
+ */
+export const rotulosFatura: Partial<DataTableLabels> = {
+  selectAll: 'Selecionar todas as faturas',
+  selectRow: (r) => `Selecionar fatura ${r}`,
+  rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,
+};
 
 export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 

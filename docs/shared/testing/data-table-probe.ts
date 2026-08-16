@@ -162,6 +162,67 @@ export function contraste(el: Element | null): { razao: number; frente: string; 
   return { razao: Math.round(razao * 100) / 100, frente, fundo };
 }
 
+// ─── Rolagem ──────────────────────────────────────────────────────────────────
+
+export interface CamadaDeRolagem {
+  /** Nome legível da camada, para a mensagem de falha dizer QUEM está errado. */
+  nome: string;
+  achado: boolean;
+  overflowX: string;
+  /** `-1` quando o elemento não está na ordem de tabulação. */
+  tabIndex: number;
+  /** `true` quando o conteúdo é mais largo que a caixa — só aí a rolagem existe. */
+  transborda: boolean;
+}
+
+export interface MedidaDeRolagem {
+  externo: CamadaDeRolagem;
+  interno: CamadaDeRolagem;
+  /** Camadas com `overflow-x: auto|scroll` — tem de ser exatamente uma. */
+  camadasRolaveis: string[];
+  /** Camadas roláveis que NÃO estão na ordem de tabulação (WCAG 2.1.1). */
+  rolaveisForaDoTeclado: string[];
+}
+
+/**
+ * Quem rola a tabela na horizontal, e se está ao alcance do teclado.
+ *
+ * Mede o ESTILO COMPUTADO, não a presença de classe: classe morta não protege
+ * nada, e foi exatamente uma classe (`.nds-data-table-table-wrapper`) que
+ * neutralizava o contêiner alcançável e empurrava a rolagem para o que não é.
+ *
+ * O contrato é: exatamente uma camada rola, e ela está na ordem de tabulação.
+ */
+export function medirRolagem(raiz: HTMLElement): MedidaDeRolagem {
+  const camada = (nome: string, el: Element | null): CamadaDeRolagem => {
+    if (!el) return { nome, achado: false, overflowX: 'ausente', tabIndex: -1, transborda: false };
+    const cs = getComputedStyle(el);
+    return {
+      nome,
+      achado: true,
+      overflowX: cs.overflowX,
+      tabIndex: (el as HTMLElement).tabIndex,
+      transborda: el.scrollWidth > el.clientWidth,
+    };
+  };
+
+  const alvo = raiz.matches('.nds-data-table') ? raiz : (raiz.querySelector<HTMLElement>('.nds-data-table') ?? raiz);
+  const externo = camada('nds-data-table-scroll', alvo.querySelector('.nds-data-table-scroll'));
+  const interno = camada(
+    'nds-table-wrapper',
+    alvo.querySelector('[data-slot="table-container"]') ?? alvo.querySelector('.nds-table-wrapper'),
+  );
+
+  const rolavel = (c: CamadaDeRolagem) => c.achado && (c.overflowX === 'auto' || c.overflowX === 'scroll');
+  const camadas = [externo, interno];
+  return {
+    externo,
+    interno,
+    camadasRolaveis: camadas.filter(rolavel).map((c) => c.nome),
+    rolaveisForaDoTeclado: camadas.filter((c) => rolavel(c) && c.tabIndex < 0).map((c) => c.nome),
+  };
+}
+
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
 /**
@@ -220,7 +281,6 @@ export function medirTabela(raiz: HTMLElement) {
         campoDeBusca: conta('.nds-data-table-search-input'),
         botaoDeColunas: conta('.nds-data-table-columns-btn'),
         scroll: conta('.nds-data-table-scroll'),
-        wrapperDaTabela: conta('.nds-data-table-table-wrapper'),
         wrapperDoPrimitivo: conta('.nds-table-wrapper'),
         tabelaFixa: conta('.nds-table-fixed'),
         th: conta('.nds-data-table-th'),

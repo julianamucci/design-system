@@ -6,6 +6,7 @@ import {
   type ColumnOrderState,
   type ColumnPinningState,
   type ColumnSizingState,
+  type Row,
   type RowData,
   type RowSelectionState,
   type SortingState,
@@ -50,6 +51,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -72,6 +74,72 @@ declare module "@tanstack/react-table" {
 
 export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>
 
+/**
+ * Todo texto que o componente escreve na tela ou entrega ao leitor de tela.
+ *
+ * Existe porque a alternativa — texto cravado no componente — deixa a única
+ * saída de tradução do lado de fora: quem monta a tabela consegue trocar o
+ * cabeçalho de uma coluna, mas não o nome do controle que marca a linha. O
+ * contrato é o MESMO nas quatro stacks TanStack (react, vue, svelte, vanilla):
+ * mesmas chaves, mesmos valores padrão, para que um texto revisado numa stack
+ * possa ser copiado nas outras sem tradução de API.
+ *
+ * As chaves que dependem de um dado — coluna, linha, contagem — são FUNÇÕES, e
+ * não moldes com `{col}`. A função permite ordem de palavras diferente por
+ * idioma e concordância de número, coisa que interpolação posicional não faz.
+ * (No Angular as mesmas chaves são moldes com `{col}`, porque template não
+ * declara função; essa divergência é de API do framework e fica registrada, não
+ * alinhada.)
+ */
+export interface DataTableLabels {
+  columns: string
+  showColumns: string
+  selectAll: string
+  selectRow: (row: string) => string
+  sortBy: (col: string) => string
+  filter: (col: string) => string
+  noFilter: (col: string) => string
+  pinLeft: (col: string) => string
+  unpin: (col: string) => string
+  resize: (col: string) => string
+  edit: (col: string) => string
+  rowsPerPage: string
+  page: string
+  pageOf: string
+  firstPage: string
+  prevPage: string
+  nextPage: string
+  lastPage: string
+  rowsTotal: (n: number) => string
+  rowsSelected: (s: number, n: number) => string
+  allOption: string
+}
+
+/** Português do Brasil — o idioma em que o design system nasce. */
+export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+  columns: "Colunas",
+  showColumns: "Exibir colunas",
+  selectAll: "Selecionar todas as linhas",
+  selectRow: (r) => `Selecionar linha ${r}`,
+  sortBy: (c) => `Ordenar por ${c}`,
+  filter: (c) => `Filtrar ${c}`,
+  noFilter: (c) => `Sem filtro para ${c}`,
+  pinLeft: (c) => `Fixar ${c} à esquerda`,
+  unpin: (c) => `Desafixar ${c}`,
+  resize: (c) => `Redimensionar coluna ${c}`,
+  edit: (c) => `Editar ${c}`,
+  rowsPerPage: "Linhas por página",
+  page: "Página",
+  pageOf: "de",
+  firstPage: "Primeira página",
+  prevPage: "Página anterior",
+  nextPage: "Próxima página",
+  lastPage: "Última página",
+  rowsTotal: (n) => `${n} linha(s).`,
+  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
+  allOption: "Todos",
+}
+
 export interface DataTableProps<TData> {
   columns: DataTableColumn<TData>[]
   data: TData[]
@@ -91,6 +159,14 @@ export interface DataTableProps<TData> {
   pageSizeOptions?: number[]
   pageSize?: number
   emptyMessage?: string
+  /** Nome acessível da tabela. Vira <caption> fora da tela. */
+  caption?: string
+  /** Identificador estável da linha. Sem ele, a identidade da linha é a posição. */
+  rowKey?: (row: TData, index: number) => string
+  /** Texto que identifica a linha no rótulo do controle de seleção. */
+  rowLabel?: (row: TData) => string
+  /** Textos da interface. Só as chaves informadas mudam. */
+  labels?: Partial<DataTableLabels>
   className?: string
   onTableReady?: (table: TanstackTable<TData>) => void
   /** Recebe alteração de célula editável. O caller é responsável por atualizar `data`. */
@@ -115,10 +191,24 @@ function DataTable<TData>({
   pageSizeOptions = [10, 20, 50, 100],
   pageSize = 10,
   emptyMessage = "Sem resultados.",
+  caption,
+  rowKey,
+  rowLabel,
+  labels,
   className,
   onTableReady,
   onCellEdit,
 }: DataTableProps<TData>) {
+  /*
+   * Memoizado porque `L` entra na definição da coluna de seleção: um objeto novo
+   * a cada render trocaria a identidade de `allColumns`, e o TanStack remonta as
+   * colunas quando elas trocam de identidade — perdendo largura, ordem e pin no
+   * meio de um arraste.
+   */
+  const L = React.useMemo(
+    () => ({ ...DATA_TABLE_LABELS_PADRAO, ...labels }),
+    [labels]
+  )
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -135,6 +225,29 @@ function DataTable<TData>({
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
   const [draggedColumnId, setDraggedColumnId] = React.useState<string | null>(
     null
+  )
+
+  /**
+   * Nome que identifica a linha no controle de seleção.
+   *
+   * Ordem do fallback, e o porquê de cada degrau:
+   *  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
+   *  2. o valor da PRIMEIRA coluna de dados — é ela que identifica a linha na
+   *     leitura visual, então é o mesmo texto que a pessoa vidente usaria para
+   *     dizer "esta linha aqui". `getAllCells` e não `getVisibleCells`: esconder
+   *     uma coluna pelo menu é decisão de leitura, e não pode renomear controle;
+   *  3. a chave da linha (`row.id`), quando a primeira coluna vem vazia.
+   * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
+   * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
+   */
+  const rotuloDaLinha = React.useCallback(
+    (row: Row<TData>): string => {
+      if (rowLabel) return rowLabel(row.original)
+      const primeira = row.getAllCells().find((c) => c.column.id !== "__select__")
+      const bruto = primeira?.getValue()
+      return bruto == null || bruto === "" ? row.id : String(bruto)
+    },
+    [rowLabel]
   )
 
   const allColumns = React.useMemo<DataTableColumn<TData>[]>(() => {
@@ -154,7 +267,7 @@ function DataTable<TData>({
       size: 36,
       header: ({ table }) => (
         <Checkbox
-          aria-label="Selecionar todas as linhas"
+          aria-label={L.selectAll}
           checked={table.getIsAllPageRowsSelected()}
           indeterminate={
             !table.getIsAllPageRowsSelected() &&
@@ -167,14 +280,14 @@ function DataTable<TData>({
       ),
       cell: ({ row }) => (
         <Checkbox
-          aria-label="Selecionar linha"
+          aria-label={L.selectRow(rotuloDaLinha(row))}
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
         />
       ),
     }
     return [selectCol, ...enriched]
-  }, [columns, enableRowSelection])
+  }, [columns, enableRowSelection, L, rotuloDaLinha])
 
   const hasColumnFilters =
     enableColumnFilters &&
@@ -199,6 +312,14 @@ function DataTable<TData>({
     enableRowSelection,
     enableColumnResizing,
     enableColumnPinning,
+    /*
+     * Sem `getRowId` a chave da linha é o ÍNDICE, e o estado de seleção fica
+     * preso à posição: ordenar por outra coluna mantinha marcadas as mesmas
+     * linhas da tela, não as mesmas linhas de dados. Com `rowKey` a marcação
+     * viaja com o registro. Sem ele o TanStack volta ao índice — comportamento
+     * antigo, preservado para quem não passa a prop.
+     */
+    getRowId: rowKey ? (row, index) => rowKey(row, index) : undefined,
     /*
      * O primeiro clique ordena ASCENDENTE em qualquer coluna.
      *
@@ -327,13 +448,13 @@ function DataTable<TData>({
                 render={
                   <Button variant="outline" size="sm" className="nds-data-table-columns-btn">
                     <Settings2 aria-hidden="true" />
-                    Colunas
+                    {L.columns}
                   </Button>
                 }
               />
               <DropdownMenuContent align="end" className="nds-data-table-columns-menu-content">
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+                  <DropdownMenuLabel>{L.showColumns}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {table
                     .getAllLeafColumns()
@@ -362,8 +483,8 @@ function DataTable<TData>({
                                 type="button"
                                 aria-label={
                                   pinned === "left"
-                                    ? `Desafixar ${label}`
-                                    : `Fixar ${label} à esquerda`
+                                    ? L.unpin(label)
+                                    : L.pinLeft(label)
                                 }
                                 onClick={() =>
                                   column.pin(
@@ -413,6 +534,17 @@ function DataTable<TData>({
               "nds-table-fixed"
           )}
         >
+          {/*
+            PRIMEIRO filho de <table>: a tag `caption` só é válida nessa posição,
+            e o parser do navegador move para fora da tabela o que vier antes
+            dela. Fica fora da tela — a legenda é o nome que o leitor anuncia ao
+            entrar na grade, e a interface já mostra o mesmo assunto no título da
+            página. Sem ela a tabela chega ao leitor como "tabela, 6 colunas", e
+            nada distingue duas tabelas na mesma tela.
+          */}
+          {caption ? (
+            <TableCaption className="nds-sr-only">{caption}</TableCaption>
+          ) : null}
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -473,7 +605,7 @@ function DataTable<TData>({
                               type="button"
                               onClick={header.column.getToggleSortingHandler()}
                               className="nds-data-table-sort-btn"
-                              aria-label={`Ordenar por ${label}`}
+                              aria-label={L.sortBy(label)}
                             >
                               {flexRender(
                                 header.column.columnDef.header,
@@ -512,7 +644,7 @@ function DataTable<TData>({
                           onTouchStart={header.getResizeHandler()}
                           role="separator"
                           aria-orientation="vertical"
-                          aria-label={`Redimensionar coluna ${label}`}
+                          aria-label={L.resize(label)}
                           className={cn(
                             "nds-data-table-resize-handle",
                             header.column.getIsResizing() && "is-resizing"
@@ -541,6 +673,7 @@ function DataTable<TData>({
                         <ColumnFilter
                           column={header.column}
                           meta={filterMeta}
+                          labels={L}
                         />
                       ) : (
                         // axe empty-table-header: o valor de um campo não entra
@@ -552,10 +685,10 @@ function DataTable<TData>({
                         // o leitor lista três cabeçalhos idênticos e nenhum diz
                         // a que coluna pertence.
                         <span className="nds-sr-only">
-                          {`Sem filtro para ${
+                          {L.noFilter(
                             flexHeaderLabel(header.column.columnDef.header) ??
-                            header.column.id
-                          }`}
+                              header.column.id
+                          )}
                         </span>
                       )}
                     </TableHead>
@@ -601,6 +734,7 @@ function DataTable<TData>({
                         <EditableCell
                           context={cell.getContext()}
                           editable
+                          labels={L}
                         />
                       ) : (
                         flexRender(
@@ -643,9 +777,10 @@ function DataTable<TData>({
       */}
       {enableRowSelection && (
         <div className="nds-sr-only" role="status" aria-live="polite">
-          {`${table.getFilteredSelectedRowModel().rows.length} de ${
+          {L.rowsSelected(
+            table.getFilteredSelectedRowModel().rows.length,
             table.getFilteredRowModel().rows.length
-          } linha(s) selecionada(s).`}
+          )}
         </div>
       )}
 
@@ -654,6 +789,7 @@ function DataTable<TData>({
           table={table}
           pageSizeOptions={pageSizeOptions}
           enableRowSelection={enableRowSelection}
+          labels={L}
         />
       )}
     </div>
@@ -663,11 +799,13 @@ function DataTable<TData>({
 interface ColumnFilterProps<TData, TValue> {
   column: import("@tanstack/react-table").Column<TData, TValue>
   meta: NonNullable<NonNullable<DataTableColumn<TData>["meta"]>["filter"]>
+  labels?: DataTableLabels
 }
 
 function ColumnFilter<TData, TValue>({
   column,
   meta,
+  labels = DATA_TABLE_LABELS_PADRAO,
 }: ColumnFilterProps<TData, TValue>) {
   const value = (column.getFilterValue() ?? "") as string
   // O rótulo sai do CABEÇALHO, não do id. O id é chave de dados —
@@ -681,10 +819,10 @@ function ColumnFilter<TData, TValue>({
         onChange={(e) =>
           column.setFilterValue(e.target.value || undefined)
         }
-        aria-label={`Filtrar ${label}`}
+        aria-label={labels.filter(label)}
         className="nds-data-table-filter-select"
       >
-        <option value="">Todos</option>
+        <option value="">{labels.allOption}</option>
         {meta.options?.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
@@ -698,7 +836,7 @@ function ColumnFilter<TData, TValue>({
       value={value}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={meta.placeholder ?? "Filtrar..."}
-      aria-label={`Filtrar ${label}`}
+      aria-label={labels.filter(label)}
       className="nds-data-table-filter-input"
     />
   )
@@ -707,10 +845,12 @@ function ColumnFilter<TData, TValue>({
 interface EditableCellProps<TData, TValue> {
   context: CellContext<TData, TValue>
   editable: boolean
+  labels?: DataTableLabels
 }
 
 function EditableCell<TData, TValue>({
   context,
+  labels = DATA_TABLE_LABELS_PADRAO,
 }: EditableCellProps<TData, TValue>) {
   // Mesmo rótulo no botão e no campo: quem abriu a edição precisa ouvir de que
   // coluna é o campo que acabou de receber foco. Sai do cabeçalho, não do id.
@@ -749,7 +889,7 @@ function EditableCell<TData, TValue>({
           type="button"
           onClick={() => setEditing(true)}
           className="nds-data-table-edit-btn"
-          aria-label={`Editar ${label}`}
+          aria-label={labels.edit(label)}
         >
           {value === "" ? (
             <span className="nds-dt-icon-muted">—</span>
@@ -778,7 +918,7 @@ function EditableCell<TData, TValue>({
         }}
         // Sem isto o campo aberto não tem NOME nenhum: o leitor anuncia
         // "edição, em branco" e não diz de que coluna. WCAG 4.1.2, nível A.
-        aria-label={`Editar ${label}`}
+        aria-label={labels.edit(label)}
         className="nds-data-table-edit-input"
       />
     </div>
@@ -789,12 +929,15 @@ interface DataTablePaginationProps<TData> {
   table: TanstackTable<TData>
   pageSizeOptions: number[]
   enableRowSelection: boolean
+  /** Já vem mesclado com o padrão quando quem renderiza é o DataTable. */
+  labels?: DataTableLabels
 }
 
 function DataTablePagination<TData>({
   table,
   pageSizeOptions,
   enableRowSelection,
+  labels = DATA_TABLE_LABELS_PADRAO,
 }: DataTablePaginationProps<TData>) {
   const pageIndex = table.getState().pagination.pageIndex
   const pageCount = table.getPageCount()
@@ -808,14 +951,14 @@ function DataTablePagination<TData>({
     >
       <div className="nds-data-table-pagination-count">
         {enableRowSelection
-          ? `${selected} de ${total} linha(s) selecionada(s).`
-          : `${total} linha(s).`}
+          ? labels.rowsSelected(selected, total)
+          : labels.rowsTotal(total)}
       </div>
       <div className="nds-data-table-pagination-controls">
         <div className="nds-data-table-page-size">
-          <span>Linhas por página</span>
+          <span>{labels.rowsPerPage}</span>
           <select
-            aria-label="Linhas por página"
+            aria-label={labels.rowsPerPage}
             value={table.getState().pagination.pageSize}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
             className="nds-data-table-page-size-select"
@@ -828,7 +971,7 @@ function DataTablePagination<TData>({
           </select>
         </div>
         <div className="nds-data-table-pagination-count">
-          Página {pageIndex + 1} de {Math.max(pageCount, 1)}
+          {labels.page} {pageIndex + 1} {labels.pageOf} {Math.max(pageCount, 1)}
         </div>
         <div className="nds-data-table-pagination-nav">
           <Button
@@ -836,7 +979,7 @@ function DataTablePagination<TData>({
             size="icon"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            aria-label="Primeira página"
+            aria-label={labels.firstPage}
           >
             <ChevronsLeft aria-hidden="true" />
           </Button>
@@ -845,7 +988,7 @@ function DataTablePagination<TData>({
             size="icon"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            aria-label="Página anterior"
+            aria-label={labels.prevPage}
           >
             <ChevronLeft aria-hidden="true" />
           </Button>
@@ -854,7 +997,7 @@ function DataTablePagination<TData>({
             size="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            aria-label="Próxima página"
+            aria-label={labels.nextPage}
           >
             <ChevronRight aria-hidden="true" />
           </Button>
@@ -863,7 +1006,7 @@ function DataTablePagination<TData>({
             size="icon"
             onClick={() => table.setPageIndex(pageCount - 1)}
             disabled={!table.getCanNextPage()}
-            aria-label="Última página"
+            aria-label={labels.lastPage}
           >
             <ChevronsRight aria-hidden="true" />
           </Button>

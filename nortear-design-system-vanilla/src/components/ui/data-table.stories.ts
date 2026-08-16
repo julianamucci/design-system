@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, expect, fn } from 'storybook/test';
-import { createDataTable } from './data-table';
+import { createDataTable, type DataTableLabels } from './data-table';
 import { createDataTableDocs } from '@/components/docs/DataTableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
+import { type Invoice, invoices, baseColumns, rotulosFatura } from './data-table.fixtures';
+import { medirRolagem } from '@shared/testing/data-table-probe';
 
 // ─── Meta ──────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,10 @@ type PlaygroundArgs = {
   pageSize: number;
   globalFilterPlaceholder: string;
   emptyMessage: string;
+  caption: string;
+  labels: Partial<DataTableLabels>;
+  rowKey: (row: Invoice, index: number) => string;
+  rowLabel?: (row: Invoice) => string;
   onCellEdit: (rowIndex: number, columnId: string, value: unknown) => void;
   onTableReady: (table: unknown) => void;
 };
@@ -30,6 +35,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PlaygroundArgs>
     enableRowSelection = true,
     enablePagination = true,
     pageSize = 10,
+    caption = 'Faturas recentes',
   } = ctx.args ?? {};
   const flags = [
     enableRowSelection ? '  enableRowSelection: true,' : null,
@@ -57,6 +63,18 @@ const tabela = createDataTable<Invoice>({
   columns,
   data: invoices,
 ${flags}
+  // Nome da grade para quem chega por leitor de tela. Vira <caption> fora da
+  // tela — não ocupa espaço e não some da árvore de acessibilidade.
+  caption: '${caption}',
+  // Identidade da linha. Sem isto ela é a POSIÇÃO, e ordenar levaria a marcação
+  // para quem ocupou o lugar.
+  rowKey: (fatura) => fatura.id,
+  // Sem \`rowLabel\`: o nome do controle de seleção cai no valor da primeira
+  // coluna, que é o mesmo texto que identifica a linha na leitura visual.
+  labels: {
+    selectAll: 'Selecionar todas as faturas',
+    selectRow: (fatura) => \`Selecionar fatura \${fatura}\`,
+  },
   globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
 });
 document.querySelector('#app')!.appendChild(tabela);`;
@@ -85,6 +103,13 @@ export const Playground: Story = {
     pageSize: 10,
     globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
     emptyMessage: 'Sem resultados.',
+    caption: 'Faturas recentes',
+    labels: rotulosFatura,
+    rowKey: (fatura: Invoice) => fatura.id,
+    // Deliberadamente ausente: é aqui que o FALLBACK é provado. Sem `rowLabel`,
+    // o nome de cada controle de seleção sai da primeira coluna — e a play
+    // compara os nomes entre si para mostrar que saem distintos.
+    rowLabel: undefined,
     onCellEdit: fn(),
     onTableReady: fn(),
   },
@@ -125,6 +150,36 @@ export const Playground: Story = {
       description: 'Texto exibido quando o recorte não devolve nenhuma linha.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "'Sem resultados.'" } },
     },
+    caption: {
+      control: 'text',
+      description:
+        'Nome acessível da tabela. Vira uma legenda fora da tela: o leitor a anuncia ao entrar na grade e nenhum pixel muda.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
+    },
+    labels: {
+      control: false,
+      description:
+        'Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam; o resto continua no padrão.',
+      table: {
+        type: { summary: 'Partial<DataTableLabels>' },
+        defaultValue: { summary: 'textos padrão em pt-BR' },
+      },
+    },
+    rowKey: {
+      control: false,
+      description:
+        'Identificador estável da linha. Sem ele a identidade da linha é a posição, e reordenar mudaria de linha o que estava marcado.',
+      table: {
+        type: { summary: '(row: TData, index: number) => string' },
+        defaultValue: { summary: '—' },
+      },
+    },
+    rowLabel: {
+      control: false,
+      description:
+        'Texto que identifica a linha no nome do controle de seleção. Sem ele o identificador sai da primeira coluna, para que duas linhas nunca tenham o mesmo nome.',
+      table: { type: { summary: '(row: TData) => string' }, defaultValue: { summary: '—' } },
+    },
     onCellEdit: {
       description: 'Disparado ao confirmar uma edição inline, com (rowIndex, columnId, value).',
       table: { type: { summary: '(rowIndex, columnId, value) => void' }, defaultValue: { summary: '—' } },
@@ -141,10 +196,13 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item3',
       'functional.item4',
+      'functional.item9',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
+      'accessibility.item5',
+      'accessibility.item6',
       'visual.item1',
     ],
     docs: { source: { transform: playgroundSource } },
@@ -160,15 +218,25 @@ export const Playground: Story = {
       pageSize: args.pageSize,
       globalFilterPlaceholder: args.globalFilterPlaceholder,
       emptyMessage: args.emptyMessage,
+      caption: args.caption,
+      labels: args.labels,
+      rowKey: args.rowKey,
+      // `rowLabel` não é encaminhado de propósito — ver o comentário em `args`.
       onCellEdit: args.onCellEdit,
       onTableReady: args.onTableReady,
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const primeiraCelula = () =>
-      linhas()[0].querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!;
-    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as linhas' });
+    /** Primeira célula de DADOS da linha — é ela que identifica a fatura. */
+    const celulaDeIdentidade = (tr: HTMLElement) =>
+      tr.querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!;
+    const primeiraCelula = () => celulaDeIdentidade(linhas()[0]);
+    // O nome vem da fixture `rotulosFatura`: se `labels` deixasse de chegar aos
+    // controles, nenhuma das buscas por nome abaixo encontraria nada.
+    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+    const caixaDaFatura = (fatura: string) => () =>
+      canvas.getByRole('checkbox', { name: `Selecionar fatura ${fatura}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
@@ -211,6 +279,41 @@ export const Playground: Story = {
       await expect(linhas().length).toBe(10);
     });
 
+    await step('A tabela diz o próprio nome sem ocupar espaço na tela', async () => {
+      // accessibility.item6 — a legenda é o PRIMEIRO filho de `<table>`: em
+      // qualquer outra posição o parser de HTML a move, e a tabela volta a
+      // chegar ao leitor como "tabela, 6 colunas", sem nome.
+      const tabela = canvas.getByRole('table');
+      const legenda = tabela.firstElementChild!;
+      await expect(legenda.tagName).toBe('CAPTION');
+      // O nome ACESSÍVEL, e não o texto do nó: é a pergunta que o leitor faz.
+      await expect(canvas.getByRole('table', { name: 'Faturas recentes' })).toBe(tabela);
+
+      // Fora da tela pela CAIXA COMPUTADA, não pela classe: asserir
+      // `.nds-sr-only` provaria só que alguém escreveu o nome da classe.
+      const estilo = getComputedStyle(legenda);
+      const caixa = legenda.getBoundingClientRect();
+      await expect(estilo.position).toBe('absolute');
+      await expect(caixa.width).toBeLessThanOrEqual(2);
+      await expect(caixa.height).toBeLessThanOrEqual(2);
+    });
+
+    await step('Uma camada rola na horizontal, e o teclado alcança ela', async () => {
+      // accessibility.item5 — medido pelo estilo COMPUTADO. A classe que
+      // neutralizava o wrapper do primitivo empurrava a rolagem para o contêiner
+      // externo, que não está na ordem de tabulação: quem navega por teclado não
+      // chegava às colunas fora da tela (WCAG 2.1.1).
+      const r = medirRolagem(canvasElement);
+      await expect(r.camadasRolaveis).toEqual(['nds-table-wrapper']);
+      await expect(r.rolaveisForaDoTeclado).toEqual([]);
+      await expect(r.interno.overflowX).toBe('auto');
+      await expect(r.interno.tabIndex).toBe(0);
+      // O externo é moldura: rola nada na horizontal e não é parada de teclado.
+      // Um `tabindex` aqui seria parada sem função, que é defeito e não sobra.
+      await expect(r.externo.overflowX).toBe('visible');
+      await expect(r.externo.tabIndex).toBe(-1);
+    });
+
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
       // accessibility.item2 — o aria-label carrega o NOME da coluna: "Ordenar
       // por" cinco vezes seria indistinguível na lista de controles do leitor.
@@ -245,13 +348,26 @@ export const Playground: Story = {
       await expect(primeiraCelula()).toHaveTextContent('INV-001');
     });
 
-    await step('O checkbox do cabeçalho tem nome diferente do das linhas', async () => {
-      // accessibility.item3 — o mesmo nome nos onze controles é o mesmo que
-      // nenhum nome: o leitor lista onze caixas idênticas.
-      await expect(caixaDaLinha(0)()).toHaveAttribute('aria-label', 'Selecionar linha');
-      await expect(caixaDeTudo().getAttribute('aria-label')).not.toBe(
-        caixaDaLinha(0)().getAttribute('aria-label'),
+    await step('Cada checkbox de linha tem um nome só dele', async () => {
+      // accessibility.item3 — a asserção antiga fixava o texto 'Selecionar
+      // linha' e, com isso, GUARDAVA o defeito: dez controles homônimos passavam
+      // por ela todo dia. Nome repetido em dez controles é o mesmo que nome
+      // nenhum na lista do leitor (WCAG 4.1.2).
+      const nomes = linhas().map(
+        (tr) => tr.querySelector<HTMLElement>("[role='checkbox']")!.getAttribute('aria-label')!,
       );
+
+      await expect(nomes.length).toBe(linhas().length);
+      // Distintos ENTRE SI — só verificar a presença deixaria os homônimos
+      // passarem exatamente como antes.
+      await expect(new Set(nomes).size).toBe(nomes.length);
+      // E cada nome é o da PRÓPRIA linha: nomes distintos porém trocados seriam
+      // igualmente inúteis para quem não vê a tabela. O identificador vem da
+      // primeira coluna, que é o fallback em ação — a story não passa `rowLabel`.
+      for (const [i, linha] of linhas().entries()) {
+        await expect(nomes[i]).toContain(celulaDeIdentidade(linha).textContent!.trim());
+      }
+      await expect(nomes).not.toContain(caixaDeTudo().getAttribute('aria-label'));
     });
 
     await step('A busca livre recorta as linhas', async () => {
@@ -264,7 +380,7 @@ export const Playground: Story = {
       await waitFor(() => expect(linhas().length).toBe(1));
       await expect(primeiraCelula()).toHaveTextContent('INV-011');
       // A contagem acompanha o recorte, e não o total do dataset.
-      await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('de 1 fatura(s) selecionada(s).');
 
       await userEvent.tripleClick(busca);
       await userEvent.keyboard('{Delete}');
@@ -283,7 +399,7 @@ export const Playground: Story = {
       await expect(regiaoViva()).toHaveAttribute('aria-live', 'polite');
       // Dez marcadas de doze: o cabeçalho marca a PÁGINA, a contagem conta o
       // conjunto filtrado inteiro.
-      await expect(regiaoViva()).toHaveTextContent('10 de 12 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('10 de 12 fatura(s) selecionada(s).');
       await expect(getComputedStyle(linhas()[0]).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     });
 
@@ -299,10 +415,48 @@ export const Playground: Story = {
       // o segundo esvazia.
       await marcar(caixaDeTudo, 'true');
       await marcar(caixaDeTudo, 'false');
-      await expect(regiaoViva()).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('0 de 12 fatura(s) selecionada(s).');
       await expect(
         canvasElement.querySelectorAll("tbody tr[data-state='selected']").length,
       ).toBe(0);
+    });
+
+    await step('Ordenar carrega a marcação junto com a linha', async () => {
+      // functional.item9 — as linhas são marcadas por NOME e não por posição, que
+      // é exatamente a diferença que o item cobra: sem identidade estável, "a
+      // terceira linha está marcada" continua verdade depois de ordenar, só que
+      // apontando para outra fatura.
+      await zerarOrdenacao();
+      // Precondição idempotente: nada marcado, venha o replay de onde vier.
+      await marcar(caixaDeTudo, 'true');
+      await marcar(caixaDeTudo, 'false');
+
+      await marcar(caixaDaFatura('INV-003'), 'true');
+      await marcar(caixaDaFatura('INV-007'), 'true');
+      const contagemAntes = regiaoViva().textContent;
+
+      const ordenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await userEvent.click(ordenar());
+      await waitFor(() =>
+        expect(ordenar().closest('th')).toHaveAttribute('aria-sort', 'ascending'),
+      );
+      // A ordem mudou DE VERDADE: sem esta linha o passo passaria numa tabela
+      // que engoliu o clique e não mexeu em nada.
+      await expect(primeiraCelula()).toHaveTextContent('INV-009');
+
+      await expect(caixaDaFatura('INV-003')()).toHaveAttribute('aria-checked', 'true');
+      await expect(caixaDaFatura('INV-007')()).toHaveAttribute('aria-checked', 'true');
+      await expect(
+        canvasElement.querySelectorAll("tbody tr[data-state='selected']").length,
+      ).toBe(2);
+      // A contagem anunciada não pode ter se mexido: ordenar não seleciona nem
+      // deseleciona ninguém.
+      await expect(regiaoViva().textContent).toBe(contagemAntes);
+
+      // Devolve o estado ao passo seguinte: sem ordem e sem marcação.
+      await zerarOrdenacao();
+      await marcar(caixaDeTudo, 'true');
+      await marcar(caixaDeTudo, 'false');
     });
 
     await step('A story termina com seleção parcial na tela', async () => {
@@ -310,7 +464,7 @@ export const Playground: Story = {
       // documentado é "estado padrão com seleção".
       await marcar(caixaDaLinha(0), 'true');
       await marcar(caixaDaLinha(2), 'true');
-      await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
+      await expect(regiaoViva()).toHaveTextContent('2 de 12 fatura(s) selecionada(s).');
     });
   },
 };

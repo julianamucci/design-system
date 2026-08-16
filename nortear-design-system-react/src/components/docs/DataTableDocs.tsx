@@ -315,6 +315,10 @@ declare module "@tanstack/react-table" {
   pageSize?: number
   pageSizeOptions?: number[]
   emptyMessage?: string
+  caption?: string
+  rowKey?: (row: TData, index: number) => string
+  rowLabel?: (row: TData) => string
+  labels?: Partial<DataTableLabels>
   className?: string
   onTableReady?: (table: Table<TData>) => void
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void
@@ -730,6 +734,10 @@ declare module "@tanstack/react-table" {
               { name: "pageSize", type: "number", defaultValue: "10", required: "Não", description: tContent("props.table.pageSize") },
               { name: "pageSizeOptions", type: "number[]", defaultValue: "[10, 20, 50, 100]", required: "Não", description: toPlainText(tContent("props.table.pageSizeOptions")) },
               { name: "emptyMessage", type: "string", defaultValue: '"Sem resultados."', required: "Não", description: tContent("props.table.emptyMessage") },
+              { name: "caption", type: "string", defaultValue: "—", required: "Não", description: tContent("props.table.caption") },
+              { name: "labels", type: "Partial<DataTableLabels>", defaultValue: "DATA_TABLE_LABELS_PADRAO", required: "Não", description: tContent("props.table.labels") },
+              { name: "rowKey", type: "(row: TData, index: number) => string", defaultValue: "—", required: "Não", description: tContent("props.table.rowKey") },
+              { name: "rowLabel", type: "(row: TData) => string", defaultValue: "—", required: "Não", description: tContent("props.table.rowLabel") },
               { name: "onCellEdit", type: "(rowIndex, columnId, value) => void", defaultValue: "—", required: "Não", description: toPlainText(tContent("props.table.onCellEdit")) },
               { name: "onTableReady", type: "(table: Table<TData>) => void", defaultValue: "—", required: "Não", description: tContent("props.table.onTableReady") },
             ],

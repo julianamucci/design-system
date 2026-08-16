@@ -489,6 +489,10 @@ export function createDataTableDocs(): HTMLElement {
   pageSize?: number;
   pageSizeOptions?: number[];
   emptyMessage?: string;
+  caption?: string;
+  labels?: Partial<DataTableLabels>;
+  rowKey?: (row: TData, index: number) => string;
+  rowLabel?: (row: TData) => string;
   onTableReady?: (table: Table<TData>) => void;
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
 }`;
@@ -528,6 +532,10 @@ export function createDataTableDocs(): HTMLElement {
                 { name: 'pageSize',                type: 'number',                               defaultValue: '10',             required: NO,  description: toPlainText(t('props.table.pageSize')) },
                 { name: 'pageSizeOptions',         type: 'number[]',                             defaultValue: '[10,20,50,100]', required: NO,  description: toPlainText(t('props.table.pageSizeOptions')) },
                 { name: 'emptyMessage',            type: 'string',                               defaultValue: '"Sem resultados."', required: NO, description: toPlainText(t('props.table.emptyMessage')) },
+                { name: 'caption',                 type: 'string',                               defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.caption')) },
+                { name: 'labels',                  type: 'Partial<DataTableLabels>',             defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.labels')) },
+                { name: 'rowKey',                  type: '(row: TData, index: number) => string', defaultValue: '—',             required: NO,  description: toPlainText(t('props.table.rowKey')) },
+                { name: 'rowLabel',                type: '(row: TData) => string',               defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.rowLabel')) },
                 { name: 'onCellEdit',              type: '(rowIndex, columnId, value) => void',  defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.onCellEdit')) },
                 { name: 'onTableReady',            type: '(table: Table<TData>) => void',        defaultValue: '—',              required: NO,  description: toPlainText(t('props.table.onTableReady')) },
               ],
@@ -641,7 +649,7 @@ export function createDataTableDocs(): HTMLElement {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -650,7 +658,7 @@ export function createDataTableDocs(): HTMLElement {
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: toPlainText(t(`testes.accessibility.item${i}.how`)),

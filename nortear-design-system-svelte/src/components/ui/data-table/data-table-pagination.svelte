@@ -5,16 +5,27 @@
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
   import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
   import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
+  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
 
   const {
     table,
     pageSizeOptions,
     enableRowSelection,
+    labels,
   }: {
     table: TanstackTable<TData>;
     pageSizeOptions: number[];
     enableRowSelection: boolean;
+    /**
+     * Rótulos JÁ resolvidos (padrão + o que veio por prop). O rodapé é montado
+     * pelo DataTable, que é quem tem o objeto completo — mesclar de novo aqui
+     * daria duas fontes para o mesmo texto. Continua opcional porque este
+     * componente também é exportado avulso pelo `index.ts`.
+     */
+    labels?: DataTableLabels;
   } = $props();
+
+  const rotulos = $derived<DataTableLabels>(labels ?? DATA_TABLE_LABELS_PADRAO);
 
   const pageIndex = $derived(table.getState().pagination.pageIndex);
   const pageCount = $derived(table.getPageCount());
@@ -29,16 +40,16 @@
 >
   <div class="nds-data-table-pagination-count">
     {#if enableRowSelection}
-      {selected} de {total} linha(s) selecionada(s).
+      {rotulos.rowsSelected(selected, total)}
     {:else}
-      {total} linha(s).
+      {rotulos.rowsTotal(total)}
     {/if}
   </div>
   <div class="nds-data-table-pagination-controls">
     <div class="nds-data-table-page-size">
-      <span class="nds-data-table-pagination-count">Linhas por página</span>
+      <span class="nds-data-table-pagination-count">{rotulos.rowsPerPage}</span>
       <select
-        aria-label="Linhas por página"
+        aria-label={rotulos.rowsPerPage}
         value={currentPageSize}
         onchange={(e) => table.setPageSize(Number((e.currentTarget as HTMLSelectElement).value))}
         class="nds-data-table-page-size-select"
@@ -49,7 +60,7 @@
       </select>
     </div>
     <div class="nds-data-table-pagination-count">
-      Página {pageIndex + 1} de {Math.max(pageCount, 1)}
+      {rotulos.page} {pageIndex + 1} {rotulos.pageOf} {Math.max(pageCount, 1)}
     </div>
     <div class="nds-data-table-pagination-nav">
       <Button
@@ -57,7 +68,7 @@
         size="icon"
         onclick={() => table.setPageIndex(0)}
         disabled={!table.getCanPreviousPage()}
-        aria-label="Primeira página"
+        aria-label={rotulos.firstPage}
       >
         <ChevronsLeft aria-hidden="true" />
       </Button>
@@ -66,7 +77,7 @@
         size="icon"
         onclick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
-        aria-label="Página anterior"
+        aria-label={rotulos.prevPage}
       >
         <ChevronLeft aria-hidden="true" />
       </Button>
@@ -75,7 +86,7 @@
         size="icon"
         onclick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
-        aria-label="Próxima página"
+        aria-label={rotulos.nextPage}
       >
         <ChevronRight aria-hidden="true" />
       </Button>
@@ -84,7 +95,7 @@
         size="icon"
         onclick={() => table.setPageIndex(pageCount - 1)}
         disabled={!table.getCanNextPage()}
-        aria-label="Última página"
+        aria-label={rotulos.lastPage}
       >
         <ChevronsRight aria-hidden="true" />
       </Button>

@@ -133,6 +133,56 @@ export const Paginated: Story = {
   },
 };
 
+// ─── ExplicitRowLabel ──────────────────────────────────────────────────────
+
+/**
+ * O primeiro degrau do fallback: quem monta a tabela diz qual campo identifica a
+ * linha. O Playground prova o degrau do meio (o identificador sai da primeira
+ * coluna); aqui a escolha é explícita e vence a primeira coluna.
+ */
+export const ExplicitRowLabel: Story = {
+  render: () =>
+    createDataTable<Invoice>({
+      columns: baseColumns,
+      data: invoices,
+      enableRowSelection: true,
+      enableGlobalFilter: false,
+      enablePagination: false,
+      rowKey: (f) => f.id,
+      rowLabel: (f) => f.customer,
+    }),
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
+  play: async ({ canvasElement, step }) => {
+    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const caixaDaLinha = (linha: HTMLElement) =>
+      linha.querySelector<HTMLElement>("[role='checkbox']")!;
+    /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
+    const cliente = (linha: HTMLElement) =>
+      linha.querySelectorAll('td')[2]!.textContent!.trim();
+
+    await step('O nome do controle sai de rowLabel, e não da primeira coluna', async () => {
+      // A prova precisa do CONTRASTE: se `rowLabel` fosse ignorado, o nome
+      // cairia no identificador da primeira coluna ("INV-001") e a asserção
+      // seguinte reprovaria.
+      for (const linha of linhas()) {
+        await expect(caixaDaLinha(linha)).toHaveAttribute(
+          'aria-label',
+          `Selecionar linha ${cliente(linha)}`,
+        );
+      }
+    });
+
+    await step('Nenhuma linha repete o nome de outra', async () => {
+      const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
+      await expect(nomes.length).toBe(invoices.length);
+      await expect(new Set(nomes).size).toBe(nomes.length);
+    });
+  },
+};
+
 // ─── Virtualized1000Rows ───────────────────────────────────────────────────
 
 const bigData: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
@@ -162,6 +212,10 @@ export const Virtualized1000Rows: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    // Quem rola na VERTICAL é o contêiner externo, e só ele: é a altura máxima
+    // dele que o virtualizador mede para saber quantas linhas cabem. A rolagem
+    // HORIZONTAL não mora aqui — ela é do `.nds-table-wrapper` do primitivo, que
+    // é o alcançável por teclado. São dois eixos, dois donos.
     const rolador = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-scroll')!;
     const linhasDeDado = () =>
       [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')].filter(

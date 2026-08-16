@@ -133,6 +133,66 @@ export const Paginated: Story = {
   },
 };
 
+// Rótulo de linha explícito ─────────────────────────────────────────────────
+
+/**
+ * O primeiro degrau do fallback: quem monta a tabela diz qual campo identifica a
+ * linha. O Playground prova o degrau do meio (o identificador sai da primeira
+ * coluna); aqui a escolha é explícita e vence a primeira coluna.
+ */
+export const ExplicitRowLabel: Story = {
+  render: () => ({
+    components: { DataTable },
+    setup() {
+      return {
+        columns: baseColumns,
+        data: invoices,
+        chave: (f: Invoice) => f.id,
+        rotulo: (f: Invoice) => f.customer,
+      };
+    },
+    template: `<DataTable
+      :columns="columns"
+      :data="data"
+      :enable-row-selection="true"
+      :enable-global-filter="false"
+      :enable-pagination="false"
+      :row-key="chave"
+      :row-label="rotulo"
+    />`,
+  }),
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+  },
+  play: async ({ canvasElement, step }) => {
+    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const caixaDaLinha = (linha: HTMLElement) =>
+      linha.querySelector<HTMLElement>("[role='checkbox']")!;
+    /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
+    const cliente = (linha: HTMLElement) =>
+      linha.querySelectorAll('td')[2]!.textContent!.trim();
+
+    await step('O nome do controle sai de rowLabel, e não da primeira coluna', async () => {
+      // A prova precisa do CONTRASTE: se `rowLabel` fosse ignorado, o nome
+      // cairia no identificador da primeira coluna ("INV-001") e a asserção
+      // seguinte reprovaria.
+      for (const linha of linhas()) {
+        await expect(caixaDaLinha(linha)).toHaveAttribute(
+          'aria-label',
+          `Selecionar linha ${cliente(linha)}`,
+        );
+      }
+    });
+
+    await step('Nenhuma linha repete o nome de outra', async () => {
+      const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
+      await expect(nomes.length).toBe(invoices.length);
+      await expect(new Set(nomes).size).toBe(nomes.length);
+    });
+  },
+};
+
 // Virtualização ─────────────────────────────────────────────────────────────
 const bigData: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   id: `INV-${String(i + 1).padStart(5, '0')}`,

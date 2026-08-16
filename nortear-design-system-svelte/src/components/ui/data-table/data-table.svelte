@@ -44,6 +44,7 @@
   import {
     Table,
     TableBody,
+    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -51,8 +52,10 @@
   } from '@/components/ui/table';
   import DataTablePagination from './data-table-pagination.svelte';
   import EditableCell from './data-table-editable-cell.svelte';
+  import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
 
   type Column = ColumnDef<TData, unknown>;
+  type Row = ReturnType<TanstackTable<TData>['getRowModel']>['rows'][number];
 
   const {
     columns,
@@ -72,6 +75,10 @@
     pageSizeOptions = [10, 20, 50, 100],
     pageSize = 10,
     emptyMessage = 'Sem resultados.',
+    caption,
+    rowKey,
+    rowLabel,
+    labels,
     class: className,
     onTableReady,
     onCellEdit,
@@ -93,10 +100,27 @@
     pageSizeOptions?: number[];
     pageSize?: number;
     emptyMessage?: string;
+    /** Nome acessível da tabela. Vira `<caption>` fora da tela. */
+    caption?: string;
+    /**
+     * Identificador estável da linha. Sem ele a identidade da linha é a POSIÇÃO
+     * no array, e reordenar moveria a marcação de linha.
+     */
+    rowKey?: (row: TData, index: number) => string;
+    /** Texto que identifica a linha no nome do controle de seleção. */
+    rowLabel?: (row: TData) => string;
+    /** Só as chaves informadas mudam; o resto continua no padrão. */
+    labels?: Partial<DataTableLabels>;
     class?: string;
     onTableReady?: (table: TanstackTable<TData>) => void;
     onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
   } = $props();
+
+  /**
+   * Padrão por baixo, o que veio por prop por cima — chave a chave. Mesclar o
+   * objeto inteiro faria quem quer trocar um rótulo ter de repetir os vinte.
+   */
+  const rotulos = $derived<DataTableLabels>({ ...DATA_TABLE_LABELS_PADRAO, ...(labels ?? {}) });
 
   // ── State (Svelte 5 runes) ───────────────────────────────────────────────
   let sorting = $state<SortingState>([]);
@@ -173,6 +197,13 @@
       enableColumnResizing,
       enableColumnPinning,
       /*
+       * A chave da linha é o que o mapa de seleção guarda. No padrão do
+       * TanStack ela é o ÍNDICE, então a marcação pertence à posição e não ao
+       * dado — trocar a fonte de dados por outra lista marcaria "a terceira
+       * linha", qualquer que fosse ela. Com `rowKey` a identidade é do registro.
+       */
+      getRowId: rowKey ? (row, index) => rowKey(row, index) : undefined,
+      /*
        * O primeiro clique ordena ASCENDENTE em qualquer coluna.
        *
        * Sem isto o TanStack decide sozinho pelo TIPO do primeiro valor: coluna de
@@ -219,6 +250,7 @@
       ...prev,
       data,
       columns: allColumns,
+      getRowId: rowKey ? (row, index) => rowKey(row, index) : undefined,
       state: {
         ...prev.state,
         sorting,
@@ -351,6 +383,26 @@
   function setGlobalFilter(value: string) {
     globalFilter = value;
   }
+
+  /**
+   * Nome que identifica a linha no controle de seleção.
+   *
+   * Ordem do fallback, e o porquê de cada degrau:
+   *  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
+   *  2. o valor da PRIMEIRA coluna de dados — é ela que identifica a linha na
+   *     leitura visual, então é o mesmo texto que a pessoa vidente usaria para
+   *     dizer "esta linha aqui". `getAllCells` e não `getVisibleCells`: esconder
+   *     uma coluna pelo menu é decisão de leitura, e não pode renomear controle;
+   *  3. a chave da linha (`row.id`), quando a primeira coluna vem vazia.
+   * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
+   * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
+   */
+  function rotuloDaLinha(row: Row): string {
+    if (rowLabel) return rowLabel(row.original);
+    const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
+    const bruto = primeira?.getValue();
+    return bruto == null || bruto === '' ? row.id : String(bruto);
+  }
 </script>
 
 <div data-slot="data-table" class={cn('nds-data-table', className)}>
@@ -387,13 +439,13 @@
               {#snippet child({ props })}
                 <Button {...props} variant="outline" size="sm" class="nds-data-table-columns-btn">
                   <Settings2 aria-hidden="true" />
-                  Colunas
+                  {rotulos.columns}
                 </Button>
               {/snippet}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" class="nds-data-table-columns-menu-content">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+                <DropdownMenuLabel>{rotulos.showColumns}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as column (column.id)}
                   {@const pinned = column.getIsPinned()}
@@ -410,7 +462,7 @@
                       <div class="nds-data-table-pin-wrap">
                         <button
                           type="button"
-                          aria-label={pinned === 'left' ? `Desafixar ${label}` : `Fixar ${label} à esquerda`}
+                          aria-label={pinned === 'left' ? rotulos.unpin(label) : rotulos.pinLeft(label)}
                           onclick={() => column.pin(pinned === 'left' ? false : 'left')}
                           class={cn(
                             'nds-data-table-pin-btn',
@@ -447,6 +499,13 @@
           (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed',
         )}
       >
+        <!-- PRIMEIRO filho de `<table>`: o HTML só aceita `<caption>` nessa
+             posição, e fora dela o navegador a move ou a descarta. Fica fora da
+             tela porque a legenda existe para quem ENTRA na grade pelo leitor
+             de tela — visualmente o título já está na página. -->
+        {#if caption}
+          <TableCaption class="nds-sr-only">{caption}</TableCaption>
+        {/if}
         <TableHeader>
           {#each headerGroups as headerGroup (headerGroup.id)}
             <TableRow>
@@ -484,7 +543,7 @@
                       {/if}
                       {#if header.column.id === '__select__'}
                         <Checkbox
-                          aria-label="Selecionar todas as linhas"
+                          aria-label={rotulos.selectAll}
                           checked={table.getIsAllPageRowsSelected()}
                           indeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
                           onCheckedChange={(v: boolean) => table.toggleAllPageRowsSelected(!!v)}
@@ -494,7 +553,7 @@
                           type="button"
                           onclick={header.column.getToggleSortingHandler()}
                           class="nds-data-table-sort-btn"
-                          aria-label={`Ordenar por ${label}`}
+                          aria-label={rotulos.sortBy(label)}
                         >
                           {label}
                           {#if sortDir === 'asc'}
@@ -515,7 +574,7 @@
                         ontouchstart={header.getResizeHandler()}
                         role="separator"
                         aria-orientation="vertical"
-                        aria-label={`Redimensionar coluna ${label}`}
+                        aria-label={rotulos.resize(label)}
                         class={cn(
                           'nds-data-table-resize-handle',
                           header.column.getIsResizing() && 'is-resizing',
@@ -545,10 +604,10 @@
                       <select
                         value={(header.column.getFilterValue() as string) ?? ''}
                         onchange={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLSelectElement).value || undefined)}
-                        aria-label={`Filtrar ${filtroLabel}`}
+                        aria-label={rotulos.filter(filtroLabel)}
                         class="nds-data-table-filter-select"
                       >
-                        <option value="">Todos</option>
+                        <option value="">{rotulos.allOption}</option>
                         {#each filterMeta.options ?? [] as opt (opt)}
                           <option value={opt}>{opt}</option>
                         {/each}
@@ -558,7 +617,7 @@
                         value={(header.column.getFilterValue() as string) ?? ''}
                         oninput={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLInputElement).value)}
                         placeholder={filterMeta.placeholder ?? 'Filtrar...'}
-                        aria-label={`Filtrar ${filtroLabel}`}
+                        aria-label={rotulos.filter(filtroLabel)}
                         class="nds-data-table-filter-input"
                       />
                     {/if}
@@ -568,7 +627,7 @@
                          chegaria ao leitor de tela como cabeçalho vazio. O nome
                          da coluna entra no texto porque "Sem filtro" repetido em
                          três células é o mesmo que célula vazia. -->
-                    <span class="nds-sr-only">Sem filtro para {filtroLabel}</span>
+                    <span class="nds-sr-only">{rotulos.noFilter(filtroLabel)}</span>
                   {/if}
                 </TableHead>
               {/each}
@@ -597,7 +656,7 @@
                   >
                     {#if colId === '__select__'}
                       <Checkbox
-                        aria-label="Selecionar linha"
+                        aria-label={rotulos.selectRow(rotuloDaLinha(row))}
                         checked={row.getIsSelected()}
                         onCheckedChange={(v: boolean) => row.toggleSelected(!!v)}
                       />
@@ -608,6 +667,7 @@
                         rowIndex={row.index}
                         columnId={colId}
                         label={headerLabel(cell.column)}
+                        edit={rotulos.edit}
                         onCommit={(value) => onCellEdit?.(row.index, colId, value)}
                       />
                     {:else if cell.column.columnDef.meta?.badgeVariant}
@@ -644,12 +704,15 @@
          WCAG 4.1.3 (Status Messages), nível AA. -->
     {#if enableRowSelection}
       <div class="nds-sr-only" role="status" aria-live="polite">
-        {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
+        {rotulos.rowsSelected(
+          table.getFilteredSelectedRowModel().rows.length,
+          table.getFilteredRowModel().rows.length,
+        )}
       </div>
     {/if}
 
     {#if enablePagination && !virtualized}
-      <DataTablePagination {table} {pageSizeOptions} {enableRowSelection} />
+      <DataTablePagination {table} {pageSizeOptions} {enableRowSelection} labels={rotulos} />
     {/if}
   {/if}
 </div>

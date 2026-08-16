@@ -268,6 +268,10 @@
         "pageSize": "Número inicial de linhas por página.",
         "pageSizeOptions": "Opções disponíveis no seletor de tamanho. Default: <code>[10, 20, 50, 100]</code>.",
         "emptyMessage": "Texto exibido quando não há linhas. Contextualize ao recorte da tabela.",
+        "caption": "Nome acessível da tabela. Fica fora da tela — só o leitor de tela alcança — e é o que ele anuncia ao entrar na grade.",
+        "labels": "Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam; o resto continua no padrão.",
+        "rowKey": "Identificador estável de cada linha. Sem ele a identidade da linha é a posição, e reordenar mudaria de linha o que estava marcado.",
+        "rowLabel": "Texto que identifica a linha no nome do controle de seleção. Sem ele o identificador sai da primeira coluna, para que duas linhas nunca tenham o mesmo nome.",
         "onCellEdit": "Callback chamado ao confirmar edição inline. Assinatura: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback que recebe a instância da tabela. Use para acessar API headless (linhas selecionadas, estado de filtros).",
         "metaFilter": "Configuração de filtro por coluna. Use <code>{ type: \"text\" }</code> para input livre ou <code>{ type: \"select\", options: [...] }</code> para select.",
@@ -412,6 +416,11 @@
           "action": "Navegação de paginação",
           "result": "Botões avançam, retrocedem e saltam para primeira/última página; desabilitam corretamente nos extremos",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Ordenar com linhas marcadas",
+          "result": "A marcação continua nas mesmas linhas, e não nas mesmas posições da tela; a contagem não muda",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -428,14 +437,24 @@
           "how": "axe-playwright + inspecionar atributo em cada &lt;button&gt; do cabeçalho"
         },
         "item3": {
-          "criterion": "Checkboxes têm aria-label distinguindo cabeçalho e linha",
+          "criterion": "Cada checkbox tem um nome só dele: o do cabeçalho difere dos das linhas e nenhuma linha repete o da outra",
           "level": "AA",
-          "how": "Inspecionar aria-label em todos os checkboxes"
+          "how": "Comparar os nomes acessíveis de todos os checkboxes entre si"
         },
         "item4": {
           "criterion": "Sem violações axe-core nos estados padrão, filtrado e selecionado",
           "level": "AA",
           "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item5": {
+          "criterion": "A área que rola na horizontal está na ordem de tabulação, e é uma só",
+          "level": "A",
+          "how": "Medir o estilo computado: qual elemento tem overflow horizontal e qual está no tabindex"
+        },
+        "item6": {
+          "criterion": "A legenda da tabela é lida por leitor de tela sem ocupar espaço visual",
+          "level": "A",
+          "how": "Verificar o nome acessível da tabela e a caixa computada da legenda"
         }
       },
       "visual": {
@@ -757,6 +776,10 @@
         "pageSize": "Initial number of rows per page.",
         "pageSizeOptions": "Options available in the size selector. Default: <code>[10, 20, 50, 100]</code>.",
         "emptyMessage": "Text shown when there are no rows. Contextualize to the table scope.",
+        "caption": "Accessible name of the table. It stays off screen — only screen readers reach it — and it is what they announce when entering the grid.",
+        "labels": "Interface texts: control labels, counts, and navigation. Only the keys you pass change; the rest keeps the default.",
+        "rowKey": "Stable identifier for each row. Without it the row identity is its position, and reordering would move the selection to another row.",
+        "rowLabel": "Text identifying the row in the name of the selection control. Without it the identifier comes from the first column, so no two rows share a name.",
         "onCellEdit": "Callback fired on inline-edit confirm. Signature: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback that receives the table instance. Use to access the headless API (selected rows, filter state).",
         "metaFilter": "Per-column filter configuration. Use <code>{ type: \"text\" }</code> for a free input or <code>{ type: \"select\", options: [...] }</code> for a select.",
@@ -901,6 +924,11 @@
           "action": "Pagination navigation",
           "result": "Buttons advance, go back, and jump to first/last; disable correctly at extremes",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Sorting with rows selected",
+          "result": "The selection stays on the same rows, not on the same screen positions; the count does not change",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -917,14 +945,24 @@
           "how": "axe-playwright + inspect attribute on each header &lt;button&gt;"
         },
         "item3": {
-          "criterion": "Checkboxes have aria-label distinguishing header and row",
+          "criterion": "Every checkbox has a name of its own: the header one differs from the row ones, and no row repeats another",
           "level": "AA",
-          "how": "Inspect aria-label on every checkbox"
+          "how": "Compare the accessible names of all checkboxes against each other"
         },
         "item4": {
           "criterion": "No axe-core violations in default, filtered, and selected states",
           "level": "AA",
           "how": "axe-playwright in Storybook test-runner"
+        },
+        "item5": {
+          "criterion": "The area that scrolls horizontally is in tab order, and there is only one of them",
+          "level": "A",
+          "how": "Measure computed style: which element has horizontal overflow and which one is in tab order"
+        },
+        "item6": {
+          "criterion": "The table caption is read by screen readers without taking visual space",
+          "level": "A",
+          "how": "Check the table accessible name and the computed box of the caption"
         }
       },
       "visual": {
@@ -1246,6 +1284,10 @@
         "pageSize": "Número inicial de filas por página.",
         "pageSizeOptions": "Opciones disponibles en el selector de tamaño. Default: <code>[10, 20, 50, 100]</code>.",
         "emptyMessage": "Texto mostrado cuando no hay filas. Contextualiza al alcance de la tabla.",
+        "caption": "Nombre accesible de la tabla. Queda fuera de la pantalla — solo lo alcanza el lector de pantalla — y es lo que anuncia al entrar en la grilla.",
+        "labels": "Textos de la interfaz: rótulos de los controles, conteos y navegación. Solo cambian las claves que pases; el resto queda en el valor por defecto.",
+        "rowKey": "Identificador estable de cada fila. Sin él la identidad de la fila es su posición, y reordenar movería la marca a otra fila.",
+        "rowLabel": "Texto que identifica la fila en el nombre del control de selección. Sin él el identificador sale de la primera columna, para que dos filas nunca compartan nombre.",
         "onCellEdit": "Callback llamado al confirmar edición inline. Firma: <code>(rowIndex, columnId, value) =&gt; void</code>.",
         "onTableReady": "Callback que recibe la instancia de la tabla. Úsalo para acceder a la API headless (filas seleccionadas, estado de filtros).",
         "metaFilter": "Configuración de filtro por columna. Usa <code>{ type: \"text\" }</code> para input libre o <code>{ type: \"select\", options: [...] }</code> para select.",
@@ -1390,6 +1432,11 @@
           "action": "Navegación de paginación",
           "result": "Los botones avanzan, retroceden y saltan a la primera/última; se desactivan correctamente en los extremos",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Ordenar con filas marcadas",
+          "result": "La marca sigue en las mismas filas, no en las mismas posiciones de pantalla; el conteo no cambia",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1406,14 +1453,24 @@
           "how": "axe-playwright + inspeccionar atributo en cada &lt;button&gt; de cabecera"
         },
         "item3": {
-          "criterion": "Los checkboxes tienen aria-label distinguiendo cabecera y fila",
+          "criterion": "Cada checkbox tiene un nombre propio: el de la cabecera difiere de los de las filas y ninguna fila repite el de otra",
           "level": "AA",
-          "how": "Inspeccionar aria-label en todos los checkboxes"
+          "how": "Comparar entre sí los nombres accesibles de todos los checkboxes"
         },
         "item4": {
           "criterion": "Sin violaciones axe-core en estados default, filtrado y seleccionado",
           "level": "AA",
           "how": "axe-playwright en el test-runner de Storybook"
+        },
+        "item5": {
+          "criterion": "El área que hace scroll horizontal está en el orden de tabulación, y es una sola",
+          "level": "A",
+          "how": "Medir el estilo computado: qué elemento tiene overflow horizontal y cuál está en el tabindex"
+        },
+        "item6": {
+          "criterion": "La leyenda de la tabla la lee el lector de pantalla sin ocupar espacio visual",
+          "level": "A",
+          "how": "Verificar el nombre accesible de la tabla y la caja computada de la leyenda"
         }
       },
       "visual": {

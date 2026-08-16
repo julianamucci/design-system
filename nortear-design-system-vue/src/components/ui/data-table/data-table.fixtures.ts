@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Badge } from '@/components/ui/badge';
-import type { DataTableColumn } from './index';
+import type { DataTableColumn, DataTableLabels } from './index';
 
 export type Invoice = {
   id: string;
@@ -24,6 +24,25 @@ export const invoices: Invoice[] = [
   { id: 'INV-011', customer: 'Karen Vieira',   status: 'Pendente',  method: 'Boleto bancário',   amount: 220 },
   { id: 'INV-012', customer: 'Lucas Nogueira', status: 'Pago',      method: 'Pix',               amount: 99  },
 ];
+
+/**
+ * Rótulos do domínio de faturas.
+ *
+ * Só três chaves — e é esse o ponto: a story prova que `labels` é PARCIAL, que
+ * o que não foi informado (paginação, menu de colunas, ordenação) continua no
+ * padrão, e que "linha" vira "fatura" onde a pessoa lê o nome do controle. Sem
+ * uma story passando isto, `labels` seria API declarada e nunca exercida.
+ *
+ * `rowsSelected` repete o texto do padrão de propósito: o mesmo conjunto de
+ * rótulos vale nas stacks TanStack, e mudar a contagem só aqui faria a mesma
+ * story dizer coisas diferentes em cada uma. O que ela precisa provar é a
+ * FORMA — dois números, na ordem que o idioma pedir.
+ */
+export const rotulosFatura: Partial<DataTableLabels> = {
+  selectAll: 'Selecionar todas as faturas',
+  selectRow: (r) => `Selecionar fatura ${r}`,
+  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
+};
 
 export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 

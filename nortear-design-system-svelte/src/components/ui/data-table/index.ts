@@ -1,5 +1,6 @@
 import DataTable from './data-table.svelte';
 import DataTablePagination from './data-table-pagination.svelte';
+import type { DataTableLabels } from './data-table-labels';
 import type {
   ColumnDef,
   RowData,
@@ -46,10 +47,21 @@ export interface DataTableProps<TData> {
   pageSizeOptions?: number[];
   pageSize?: number;
   emptyMessage?: string;
+  /** Nome acessível da tabela. Vira `<caption>` fora da tela. */
+  caption?: string;
+  /** Identificador estável da linha — sem ele a identidade da linha é a posição. */
+  rowKey?: (row: TData, index: number) => string;
+  /** Texto que identifica a linha no nome do controle de seleção. */
+  rowLabel?: (row: TData) => string;
+  /** Só as chaves informadas mudam; o resto continua no padrão. */
+  labels?: Partial<DataTableLabels>;
   class?: string;
   onTableReady?: (table: TanstackTable<TData>) => void;
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
 }
+
+export type { DataTableLabels };
+export { DATA_TABLE_LABELS_PADRAO } from './data-table-labels';
 
 export {
   DataTable,

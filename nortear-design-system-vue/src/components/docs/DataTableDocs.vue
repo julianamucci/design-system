@@ -193,6 +193,10 @@ const interfaceCode = `interface DataTableProps<TData> {
   pageSize?: number;
   pageSizeOptions?: number[];
   emptyMessage?: string;
+  caption?: string;
+  rowKey?: (row: TData, index: number) => string;
+  rowLabel?: (row: TData) => string;
+  labels?: Partial<DataTableLabels>;
 }
 
 // Emits
@@ -203,6 +207,31 @@ const interfaceCode = `interface DataTableProps<TData> {
 interface ColumnMeta<TData, TValue> {
   filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
   editable?: boolean;
+}
+
+// Chaves de labels — as que dependem de um dado são função, não template
+interface DataTableLabels {
+  columns: string;
+  showColumns: string;
+  selectAll: string;
+  selectRow: (row: string) => string;
+  sortBy: (col: string) => string;
+  filter: (col: string) => string;
+  noFilter: (col: string) => string;
+  pinLeft: (col: string) => string;
+  unpin: (col: string) => string;
+  resize: (col: string) => string;
+  edit: (col: string) => string;
+  rowsPerPage: string;
+  page: string;
+  pageOf: string;
+  firstPage: string;
+  prevPage: string;
+  nextPage: string;
+  lastPage: string;
+  rowsTotal: (n: number) => string;
+  rowsSelected: (s: number, n: number) => string;
+  allOption: string;
 }`;
 
 const codeCustomizationTokens = `/* Em globals.css — sobrescreva tokens semânticos */
@@ -296,6 +325,10 @@ const dataTablePropItems = computed(() => [
   { name: 'pageSize',                type: 'number',                   defaultValue: '10',       required: 'Não', description: tContent('props.table.pageSize')                        },
   { name: 'pageSizeOptions',         type: 'number[]',                 defaultValue: '[10,20,50,100]', required: 'Não', description: toPlainText(tContent('props.table.pageSizeOptions')) },
   { name: 'emptyMessage',            type: 'string',                   defaultValue: '"Sem resultados."', required: 'Não', description: tContent('props.table.emptyMessage')      },
+  { name: 'caption',                 type: 'string',                   defaultValue: '—',        required: 'Não', description: toPlainText(tContent('props.table.caption'))   },
+  { name: 'labels',                  type: 'Partial<DataTableLabels>', defaultValue: 'DATA_TABLE_LABELS_PADRAO', required: 'Não', description: toPlainText(tContent('props.table.labels')) },
+  { name: 'rowKey',                  type: '(row: TData, index: number) => string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.rowKey'))  },
+  { name: 'rowLabel',                type: '(row: TData) => string',   defaultValue: '—',        required: 'Não', description: toPlainText(tContent('props.table.rowLabel'))  },
 ]);
 
 const emitsItems = computed(() => [
@@ -373,6 +406,7 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
   { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
   { action: tContent('testes.functional.item8.action'), result: tContent('testes.functional.item8.result'), priority: localPriority(tContent('testes.functional.item8.priority')) },
+  { action: tContent('testes.functional.item9.action'), result: tContent('testes.functional.item9.result'), priority: localPriority(tContent('testes.functional.item9.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -380,6 +414,8 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: toPlainText(tContent('testes.accessibility.item2.how')) },
   { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: toPlainText(tContent('testes.accessibility.item3.how')) },
   { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
+  { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: toPlainText(tContent('testes.accessibility.item5.how')) },
+  { criterion: tContent('testes.accessibility.item6.criterion'), level: tContent('testes.accessibility.item6.level'), how: toPlainText(tContent('testes.accessibility.item6.how')) },
 ]);
 
 const visualTestItems = computed(() => [

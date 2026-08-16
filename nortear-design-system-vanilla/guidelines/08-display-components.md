@@ -159,7 +159,15 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 | `renderCell` | `(ctx) => HTMLElement \| string` | DOM nativo para markup rico (badges, ícones, links). Sem JSX/snippets na stack vanilla |
 | `cellClass` | `string` | Classes extras no `<td>` |
 
-**i18n**: o factory aceita uma opção `labels` para sobrescrever todas as strings (Colunas, Linhas por página, Página, de, Primeira/Anterior/Próxima/Última página, etc.). Sem `labels`, defaults em pt-BR. As docs pages passam `t('demonstration.labels.*')` para refletir o locale ativo.
+**Nome da tabela e identidade da linha** (todas opcionais):
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `caption` | `string` | Nome acessível da grade. Vira legenda fora da tela — anunciada pelo leitor, invisível na página |
+| `rowKey` | `(row, index) => string` | Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar leva a marcação para quem ocupou o lugar |
+| `rowLabel` | `(row) => string` | Texto que identifica a linha no nome do controle de seleção. Sem ela o identificador sai da primeira coluna de dados, e só cai na chave da linha quando essa coluna vem vazia |
+
+**i18n**: o factory aceita uma opção `labels` para sobrescrever todas as strings (Colunas, Linhas por página, Página, de, Primeira/Anterior/Próxima/Última página, etc.). Sem `labels`, defaults em pt-BR. As docs pages passam `t('demonstration.labels.*')` para refletir o locale ativo. Duas chaves são FUNÇÕES por dependerem da linha ou da coluna: `selectRow(linha)` — texto fixo aqui produziria dez controles homônimos — e `noFilter(coluna)`, o texto da célula sem filtro.
 
 **Regras**:
 - Defina `columns` em escopo de módulo ou memoize — recriar zera o estado da engine
@@ -177,5 +185,7 @@ container (data-slot="chart", class .nds-chart, role="img", descrição)
 - `aria-sort` no `<th>` ordenável (`ascending` / `descending` / `none`)
 - `aria-label` contextual em todos os botões via `labels.sortBy(col)`, `labels.filter(col)`, etc.
 - Checkbox de cabeçalho com `indeterminate` em seleção parcial (tri-state)
+- Cada checkbox de linha carrega o identificador daquela linha no nome; nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2)
+- Uma só camada rola na horizontal, e é a do primitivo Table — a única com `tabindex="0"`. O contêiner externo é moldura e, no modo virtualizado, dono da rolagem vertical (WCAG 2.1.1, axe `scrollable-region-focusable`)
 - Handle de resize: `role="separator"` + `aria-orientation="vertical"`
 - Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa

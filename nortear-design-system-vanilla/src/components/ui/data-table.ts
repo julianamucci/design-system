@@ -31,6 +31,7 @@ import {
   createTableHeader,
   createTableBody,
   createTableRow,
+  createTableCaption,
 } from './table';
 import { createCheckbox } from './checkbox';
 import { createInput } from './input';
@@ -77,6 +78,22 @@ export interface DataTableOptions<TData> {
   pageSize?: number;
   pageSizeOptions?: number[];
   emptyMessage?: string;
+  /**
+   * Nome acessível da tabela. Vira `<caption>` fora da tela.
+   *
+   * Fora da tela e não ausente: quem enxerga já sabe que tabela é essa pelo
+   * título da página em volta, e quem entra pela árvore de acessibilidade
+   * encontraria só "tabela, 6 colunas". A legenda é o único jeito de a grade
+   * dizer o próprio nome sem ocupar espaço visual.
+   */
+  caption?: string;
+  /**
+   * Identificador estável da linha. Sem ele, a identidade da linha é a posição
+   * — e ordenar passaria a marcação para quem ocupou o lugar.
+   */
+  rowKey?: (row: TData, index: number) => string;
+  /** Texto que identifica a linha no rótulo do controle de seleção. */
+  rowLabel?: (row: TData) => string;
   /** Labels e textos i18n. */
   labels?: Partial<DataTableLabels>;
   className?: string;
@@ -84,13 +101,24 @@ export interface DataTableOptions<TData> {
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
 }
 
+/**
+ * Contrato de textos comum às quatro stacks que rodam TanStack.
+ *
+ * `selectRow` recebe o identificador da linha em vez de ser texto fixo: dez
+ * controles com o mesmo nome são, para quem navega pela lista de controles do
+ * leitor, dez controles sem nome (WCAG 4.1.2).
+ *
+ * `noFilter` existe porque o texto da célula sem filtro estava cravado em
+ * português dentro do `renderHeader` — invisível para quem troca os labels.
+ */
 export interface DataTableLabels {
   columns: string;
   showColumns: string;
   selectAll: string;
-  selectRow: string;
+  selectRow: (row: string) => string;
   sortBy: (col: string) => string;
   filter: (col: string) => string;
+  noFilter: (col: string) => string;
   pinLeft: (col: string) => string;
   unpin: (col: string) => string;
   resize: (col: string) => string;
@@ -111,9 +139,10 @@ const DEFAULT_LABELS: DataTableLabels = {
   columns: 'Colunas',
   showColumns: 'Exibir colunas',
   selectAll: 'Selecionar todas as linhas',
-  selectRow: 'Selecionar linha',
+  selectRow: (r) => `Selecionar linha ${r}`,
   sortBy: (c) => `Ordenar por ${c}`,
   filter: (c) => `Filtrar ${c}`,
+  noFilter: (c) => `Sem filtro para ${c}`,
   pinLeft: (c) => `Fixar ${c} à esquerda`,
   unpin: (c) => `Desafixar ${c}`,
   resize: (c) => `Redimensionar coluna ${c}`,
@@ -211,6 +240,9 @@ export function createDataTable<TData extends RowData>(
     pageSize = 10,
     pageSizeOptions = [10, 20, 50, 100],
     emptyMessage = 'Sem resultados.',
+    caption,
+    rowKey,
+    rowLabel,
     className,
     onTableReady,
     onCellEdit,
@@ -277,7 +309,19 @@ export function createDataTable<TData extends RowData>(
   toolbar.dataset.slot = 'data-table-toolbar';
   toolbar.className = 'nds-data-table-toolbar';
 
-  // Scroll container
+  // ── Contêiner externo ────────────────────────────────────────────────────
+  //
+  // MOLDURA (borda, raio) e, no modo virtualizado, a rolagem VERTICAL — que
+  // precisa ficar aqui porque é a altura máxima deste elemento que o
+  // virtualizador mede.
+  //
+  // A rolagem HORIZONTAL não é dele. Este `div` não está na ordem de tabulação,
+  // e enquanto ele rolava as colunas fora da tela eram inalcançáveis por teclado
+  // (WCAG 2.1.1, axe `scrollable-region-focusable`). Quem rola na horizontal é o
+  // `.nds-table-wrapper` do primitivo Table, o único dos dois que carrega
+  // `tabindex="0"` — e é por isso que a classe `nds-data-table-table-wrapper`,
+  // que zerava o `overflow` dele, deixou de ser aplicada aqui. Sem ela o dono do
+  // overflow horizontal é um só, e é o alcançável.
   const scrollContainer = document.createElement('div');
   scrollContainer.className = 'nds-data-table-scroll';
   if (virtualized) {
@@ -286,10 +330,14 @@ export function createDataTable<TData extends RowData>(
   }
 
   const { wrapper: tableWrapper, table: tableEl } = createTableWrapper();
-  tableWrapper.classList.add('nds-data-table-table-wrapper');
   if (enableColumnResizing || enableColumnOrdering || virtualized) {
     tableEl.classList.add('nds-table-fixed');
   }
+
+  // A legenda tem de ser o PRIMEIRO filho de `<table>` — em qualquer outra
+  // posição o parser de HTML a move ou a descarta. Por isso ela entra antes do
+  // `thead`, e não em algum ponto conveniente do render.
+  if (caption) tableEl.appendChild(createTableCaption(caption, 'nds-sr-only'));
 
   const thead = createTableHeader();
   const tbody = createTableBody();
@@ -335,6 +383,11 @@ export function createDataTable<TData extends RowData>(
     enableRowSelection,
     enableColumnResizing,
     enableColumnPinning,
+    // Sem `getRowId` a identidade da linha é o índice dela nos dados. Isso
+    // basta enquanto nada muda de lugar, e passa a mentir assim que quem
+    // consome troca o array por um recorte com outra ordem: o que estava
+    // marcado continua "na linha 3", que agora é outra fatura.
+    getRowId: rowKey ? (row: TData, index: number) => rowKey(row, index) : undefined,
     /*
      * O primeiro clique ordena ASCENDENTE em qualquer coluna.
      *
@@ -712,7 +765,7 @@ export function createDataTable<TData extends RowData>(
           const lblForA11y = headerLabel(col.columnDef, col.id);
           const sr = document.createElement('span');
           sr.className = 'nds-sr-only';
-          sr.textContent = `Sem filtro para ${lblForA11y || 'esta coluna'}`;
+          sr.textContent = L.noFilter(lblForA11y || 'esta coluna');
           th.appendChild(sr);
         }
         if (col.getCanFilter() && meta) {
@@ -768,6 +821,29 @@ export function createDataTable<TData extends RowData>(
   }
 
   // ── Body render ──────────────────────────────────────────────────────────
+
+  /**
+   * Nome que identifica a linha no controle de seleção.
+   *
+   * Ordem do fallback, e o porquê de cada degrau:
+   *  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
+   *  2. o valor da PRIMEIRA coluna de dados — é ela que identifica a linha na
+   *     leitura visual, então é o mesmo texto que a pessoa vidente usaria para
+   *     dizer "esta linha aqui". `getAllCells` e não `getVisibleCells`: esconder
+   *     uma coluna pelo menu é decisão de leitura, e não pode renomear controle;
+   *  3. a chave da linha (`row.id`), quando a primeira coluna vem vazia.
+   * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
+   * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
+   */
+  function rotuloDaLinha(
+    tanstackRow: ReturnType<typeof table.getRowModel>['rows'][number],
+  ): string {
+    if (rowLabel) return rowLabel(tanstackRow.original);
+    const primeira = tanstackRow.getAllCells().find((c) => c.column.id !== '__select__');
+    const bruto = primeira?.getValue();
+    return bruto == null || bruto === '' ? tanstackRow.id : String(bruto);
+  }
+
   function buildRow(rowIdx: number, tanstackRow: ReturnType<typeof table.getRowModel>['rows'][number]): HTMLTableRowElement {
     const tr = createTableRow();
     tr.className = 'nds-data-table-tr';
@@ -784,7 +860,7 @@ export function createDataTable<TData extends RowData>(
       if (col.id === '__select__') {
         const cb = createCheckbox({
           checked: tanstackRow.getIsSelected(),
-          'aria-label': L.selectRow,
+          'aria-label': L.selectRow(rotuloDaLinha(tanstackRow)),
           onCheckedChange: (v) => tanstackRow.toggleSelected(!!v),
         });
         td.appendChild(cb);

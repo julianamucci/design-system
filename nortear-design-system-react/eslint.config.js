@@ -43,6 +43,9 @@ export default defineConfig([globalIgnores(['dist', 'storybook-static', 'node_mo
           'useChart', 'useFormField', 'useSidebar', 'useCarousel',
           'badgeVariants', 'buttonVariants', 'toggleVariants', 'tabsListVariants',
           'navigationMenuTriggerStyle',
+          // Contrato de textos do DataTable: mora junto do componente porque é
+          // ele quem mescla o padrão com o que chega em `labels`.
+          'DATA_TABLE_LABELS_PADRAO',
           'buildBarOption', 'buildLineOption', 'buildAreaOption', 'buildPieOption',
         ],
         // Reconhece HOCs do projeto pra Fast Refresh não confundir com componentes

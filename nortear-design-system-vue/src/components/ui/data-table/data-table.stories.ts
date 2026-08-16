@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
+import { medirRolagem } from '@shared/testing/data-table-probe';
 import { DataTable } from './index';
-import { baseColumns, invoices } from './data-table.fixtures';
+import { baseColumns, invoices, rotulosFatura, type Invoice } from './data-table.fixtures';
 import DataTableDocs from '@/components/docs/DataTableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -26,8 +27,10 @@ function playgroundSource(
     .filter(Boolean)
     .join('\n');
 
+  const caption = (a.caption as string) ?? '';
+
   return `<script setup lang="ts">
-import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
+import { DataTable, type DataTableColumn, type DataTableLabels } from '@/components/ui/data-table';
 
 interface Invoice { id: string; customer: string; status: string; method: string; amount: number }
 
@@ -40,6 +43,15 @@ const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'method', header: 'Método', size: 200 },
   { accessorKey: 'amount', header: 'Valor', size: 130 },
 ];
+
+// Só as chaves do domínio: o resto do texto continua no padrão do componente.
+const rotulos: Partial<DataTableLabels> = {
+  selectAll: 'Selecionar todas as faturas',
+  selectRow: (r) => \`Selecionar fatura \${r}\`,
+};
+
+// A identidade da linha é o número da fatura, e não a posição na tela.
+const chaveDaFatura = (f: Invoice) => f.id;
 <\/script>
 
 <template>
@@ -47,7 +59,9 @@ const columns: DataTableColumn<Invoice>[] = [
     :columns="columns"
     :data="invoices"
 ${flags}
-    global-filter-placeholder="Buscar fatura, cliente, método..."
+    global-filter-placeholder="Buscar fatura, cliente, método..."${caption ? `\n    caption="${caption}"` : ''}
+    :labels="rotulos"
+    :row-key="chaveDaFatura"
   />
 </template>`;
 }
@@ -107,6 +121,30 @@ const meta: Meta<Record<string, unknown>> = {
       table: { type: { summary: '(table) => void' }, defaultValue: { summary: '—' } },
       control: false,
     },
+    caption: {
+      control: 'text',
+      description:
+        'Nome acessível da tabela. Sai como legenda fora da tela — só o leitor alcança — e é o que ele anuncia ao entrar na grade.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
+    },
+    labels: {
+      description:
+        'Textos da interface: rótulos dos controles, contagens e navegação. Só as chaves informadas mudam; o resto continua no padrão.',
+      table: { type: { summary: 'Partial<DataTableLabels>' }, defaultValue: { summary: 'DATA_TABLE_LABELS_PADRAO' } },
+      control: false,
+    },
+    rowKey: {
+      description:
+        'Identificador estável de cada linha. Sem ele a identidade é a posição, e reordenar move a marcação de linha.',
+      table: { type: { summary: '(row: TData, index: number) => string' }, defaultValue: { summary: '—' } },
+      control: false,
+    },
+    rowLabel: {
+      description:
+        'Texto que identifica a linha no nome do controle de seleção. Sem ele o identificador sai da primeira coluna.',
+      table: { type: { summary: '(row: TData) => string' }, defaultValue: { summary: '—' } },
+      control: false,
+    },
     // `columns` e `data` são estruturas grandes: control ligado só polui o
     // painel e nenhum valor digitado à mão monta uma tabela válida.
     columns: { control: false, table: { type: { summary: 'DataTableColumn<TData>[]' } } },
@@ -115,6 +153,15 @@ const meta: Meta<Record<string, unknown>> = {
   args: {
     columns: baseColumns,
     data: invoices,
+    caption: 'Faturas recentes',
+    labels: rotulosFatura,
+    rowKey: (f: Invoice) => f.id,
+    // Declarado e NÃO passado, de propósito: é aqui que o fallback do nome da
+    // linha é exercido — sem `rowLabel`, o identificador tem de sair da
+    // primeira coluna sozinho. A chave existe porque toda entrada de `argTypes`
+    // precisa do par em `args` (e vice-versa), senão a aba API Reference lista
+    // uma prop que o painel não conhece.
+    rowLabel: undefined,
     enableRowSelection: true,
     enableGlobalFilter: true,
     enableColumnVisibility: true,
@@ -136,10 +183,13 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item3',
       'functional.item4',
+      'functional.item9',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
+      'accessibility.item5',
+      'accessibility.item6',
       'visual.item1',
     ],
     docs: { source: { transform: playgroundSource } },
@@ -156,7 +206,16 @@ export const Playground: Story = {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     const primeiraCelula = () =>
       linhas()[0].querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!;
-    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as linhas' });
+    /** Identificador da linha como a pessoa vidente o lê: a primeira coluna. */
+    const idDaLinha = (tr: HTMLElement) =>
+      tr.querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!.textContent!.trim();
+    const caixaDaLinha = (tr: HTMLElement) => tr.querySelector<HTMLElement>("[role='checkbox']")!;
+    // O nome vem de `labels.selectAll` — a story passa `rotulosFatura`, então
+    // procurar por "Selecionar todas as linhas" aqui só acharia o padrão de
+    // volta, isto é, `labels` ignorado.
+    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+    const porFatura = (id: string) =>
+      canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
     /** Estabelece a precondição do passo: sem ordem aplicada, venha de onde vier. */
@@ -186,6 +245,41 @@ export const Playground: Story = {
         'nds-data-table',
       );
       await expect(linhas().length).toBe(10);
+    });
+
+    await step('A legenda nomeia a tabela sem ocupar espaço na tela', async () => {
+      // accessibility.item6 — a legenda é a única coisa que diz DE QUÊ é esta
+      // grade a quem entra nela pelo leitor. Fora da tela porque o título já
+      // está acima para quem vê; repeti-lo seria ruído visual.
+      const tabela = canvas.getByRole('table');
+      const legenda = tabela.querySelector('caption');
+      await expect(legenda).not.toBeNull();
+      // Primeiro filho porque o HTML exige: em outra posição o navegador a
+      // descarta e o nome acessível some junto.
+      await expect(tabela.firstElementChild).toBe(legenda);
+      await expect(tabela).toHaveAccessibleName('Faturas recentes');
+      // O efeito COMPUTADO, não o nome da classe: uma classe renomeada no CSS
+      // deixaria a legenda visível sem quebrar asserção nenhuma.
+      const estilo = getComputedStyle(legenda!);
+      const caixa = legenda!.getBoundingClientRect();
+      await expect(estilo.position).toBe('absolute');
+      await expect(caixa.width).toBeLessThanOrEqual(2);
+      await expect(caixa.height).toBeLessThanOrEqual(2);
+    });
+
+    await step('Uma só camada rola na horizontal, e ela recebe foco', async () => {
+      // accessibility.item5 — quem rola tem de estar na ordem de tabulação
+      // (WCAG 2.1.1 / axe scrollable-region-focusable). Duas camadas roláveis
+      // aninhadas são pior que uma: o teclado alcança a de fora e move a de
+      // dentro. A medição é do estilo computado, porque foi justamente uma
+      // classe morta que neutralizava o contêiner alcançável.
+      const r = medirRolagem(canvasElement);
+      await expect(r.camadasRolaveis).toEqual(['nds-table-wrapper']);
+      await expect(r.rolaveisForaDoTeclado).toEqual([]);
+      await expect(r.interno.overflowX).toBe('auto');
+      await expect(r.interno.tabIndex).toBe(0);
+      await expect(r.externo.overflowX).toBe('visible');
+      await expect(r.externo.tabIndex).toBe(-1);
     });
 
     await step('Cabeçalho ordenável anuncia que ordena, e como', async () => {
@@ -221,13 +315,28 @@ export const Playground: Story = {
       await expect(primeiraCelula()).toHaveTextContent('INV-001');
     });
 
-    await step('O checkbox do cabeçalho tem nome diferente do das linhas', async () => {
+    await step('Cada checkbox de seleção tem um nome só dele', async () => {
       // accessibility.item3 — o mesmo nome nos onze controles é o mesmo que
-      // nenhum nome: o leitor lista onze caixas idênticas.
-      const tudo = caixaDeTudo();
-      const daLinha = linhas()[0].querySelector<HTMLElement>("[role='checkbox']")!;
-      await expect(daLinha).toHaveAttribute('aria-label', 'Selecionar linha');
-      await expect(tudo.getAttribute('aria-label')).not.toBe(daLinha.getAttribute('aria-label'));
+      // nenhum nome (WCAG 4.1.2): o leitor lista onze caixas idênticas e
+      // marcar vira aposta. A asserção anterior exigia o literal "Selecionar
+      // linha" em toda linha, ou seja, GUARDAVA o defeito: só passava enquanto
+      // os nomes fossem indistinguíveis.
+      const caixas = [...canvasElement.querySelectorAll<HTMLElement>("tbody [role='checkbox']")];
+      await expect(caixas.length).toBe(linhas().length);
+
+      const nomes = caixas.map((c) => c.getAttribute('aria-label') ?? '');
+      await expect(new Set(nomes).size).toBe(nomes.length);
+
+      // Cada nome carrega o identificador da PRÓPRIA linha. Como a story não
+      // passa `rowLabel`, esse identificador só pode ter vindo da primeira
+      // coluna — é o fallback sendo exercido, e não a prop.
+      for (const [i, tr] of linhas().entries()) {
+        await expect(nomes[i]).toContain(idDaLinha(tr));
+      }
+
+      const nomeDoCabecalho = caixaDeTudo().getAttribute('aria-label');
+      await expect(nomeDoCabecalho).toBe('Selecionar todas as faturas');
+      await expect(nomes).not.toContain(nomeDoCabecalho);
     });
 
     await step('A busca livre recorta as linhas', async () => {
@@ -262,7 +371,7 @@ export const Playground: Story = {
     });
 
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
-      const primeira = linhas()[0].querySelector<HTMLElement>("[role='checkbox']")!;
+      const primeira = caixaDaLinha(linhas()[0]);
       await marcar(primeira, 'false');
       await waitFor(() => expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed'));
       await expect(linhas()[0].hasAttribute('data-state')).toBe(false);
@@ -281,11 +390,54 @@ export const Playground: Story = {
       ).toBe(0);
     });
 
+    await step('Ordenar não transfere a marcação para outra linha', async () => {
+      // functional.item9 — a marcação pertence à LINHA e não à posição. Sem
+      // `rowKey`, a identidade seria o índice: reordenar deixaria marcada a
+      // terceira posição, com outra fatura dentro dela — e ninguém veria, já
+      // que a contagem continuaria em dois.
+      const botao = canvas.getByRole('button', { name: 'Ordenar por Valor' });
+      await zerarOrdenacao(botao);
+      // Reconsulta a cada volta: a linha é reescrita entre um clique e o outro,
+      // e uma referência colhida antes pode não ser mais a que está na tela.
+      const limparMarcacao = async () => {
+        for (let i = 0; i < linhas().length; i++) {
+          await marcar(caixaDaLinha(linhas()[i]), 'false');
+        }
+      };
+      await limparMarcacao();
+
+      // Marcadas por NOME: por posição, o passo não distinguiria "a mesma
+      // linha" de "a mesma linha da tela".
+      await marcar(porFatura('INV-002'), 'true');
+      await marcar(porFatura('INV-009'), 'true');
+      const contagemAntes = regiaoViva().textContent!.trim();
+      await expect(contagemAntes).toBe('2 de 12 linha(s) selecionada(s).');
+
+      await userEvent.click(botao);
+      await waitFor(() =>
+        expect(botao.closest('th')!).toHaveAttribute('aria-sort', 'ascending'),
+      );
+      // INV-009 tem o menor valor: as linhas de fato trocaram de lugar.
+      await expect(primeiraCelula()).toHaveTextContent('INV-009');
+
+      const marcadas = linhas()
+        .filter((tr) => tr.getAttribute('data-state') === 'selected')
+        .map(idDaLinha)
+        .sort();
+      await expect(marcadas).toEqual(['INV-002', 'INV-009']);
+      await expect(regiaoViva().textContent!.trim()).toBe(contagemAntes);
+
+      // Devolve a tabela ao estado em que o passo a encontrou: o painel
+      // Interactions reexecuta a play no MESMO DOM.
+      await zerarOrdenacao(botao);
+      await limparMarcacao();
+    });
+
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção".
-      await marcar(linhas()[0].querySelector<HTMLElement>("[role='checkbox']")!, 'true');
-      await marcar(linhas()[2].querySelector<HTMLElement>("[role='checkbox']")!, 'true');
+      await marcar(caixaDaLinha(linhas()[0]), 'true');
+      await marcar(caixaDaLinha(linhas()[2]), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },

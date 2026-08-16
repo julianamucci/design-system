@@ -1,5 +1,5 @@
 import { createBadge } from './badge';
-import type { DataTableColumn } from './data-table';
+import type { DataTableColumn, DataTableLabels } from './data-table';
 
 // ─── Tipos + dataset ────────────────────────────────────────────────────────
 
@@ -27,6 +27,19 @@ export const invoices: Invoice[] = [
 ];
 
 export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+/**
+ * Textos no vocabulário DESTE domínio — "fatura", e não "linha".
+ *
+ * Só as chaves informadas mudam; o resto continua no padrão. Existe para as
+ * stories provarem que `labels` chega mesmo aos controles: com o texto padrão
+ * em toda parte, uma prop de labels quebrada passaria despercebida.
+ */
+export const rotulosFatura: Partial<DataTableLabels> = {
+  selectAll: 'Selecionar todas as faturas',
+  selectRow: (fatura) => `Selecionar fatura ${fatura}`,
+  rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,
+};
 
 export const statusVariant: Record<Invoice['status'], 'default' | 'secondary' | 'destructive'> = {
   Pago: 'default',

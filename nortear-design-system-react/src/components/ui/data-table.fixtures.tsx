@@ -1,4 +1,4 @@
-import { type DataTableColumn } from "./data-table"
+import { type DataTableColumn, type DataTableLabels } from "./data-table"
 import { Badge } from "@/components/ui/badge"
 
 export type Invoice = {
@@ -23,6 +23,21 @@ export const invoices: Invoice[] = [
   { id: "INV-011", customer: "Karen Vieira",   status: "Pendente",  method: "Boleto bancário",   amount: 220 },
   { id: "INV-012", customer: "Lucas Nogueira", status: "Pago",      method: "Pix",               amount: 99 },
 ]
+
+/**
+ * Rótulos da tabela de FATURAS.
+ *
+ * As stories precisam de um texto que o padrão não produz para que a prova de
+ * `labels` seja real: com "Selecionar todas as linhas" nos dois lados, uma
+ * asserção passaria mesmo se a prop fosse ignorada. "fatura" no lugar de "linha"
+ * é também o texto que a interface deveria ter — quem lê a tela vê faturas, não
+ * linhas de uma grade.
+ */
+export const rotulosFatura: Partial<DataTableLabels> = {
+  selectAll: "Selecionar todas as faturas",
+  selectRow: (r) => `Selecionar fatura ${r}`,
+  rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,
+}
 
 export const currency = new Intl.NumberFormat("pt-BR", {
   style: "currency",

@@ -13,6 +13,70 @@ declare module '@tanstack/vue-table' {
 
 export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>;
 
+/**
+ * Todo texto que a tabela escreve na tela ou entrega ao leitor.
+ *
+ * Existe porque o componente tinha as frases cravadas em português no meio do
+ * markup: quem monta uma tabela de faturas não conseguia dizer "Selecionar
+ * fatura" nem trocar de idioma sem reescrever o componente.
+ *
+ * As chaves que dependem de um dado são FUNÇÃO, e não template com `{col}`:
+ * função é a forma que TypeScript sabe checar (aridade e tipo de argumento) e
+ * que não obriga ninguém a decorar o nome do buraco. `rowsSelected` recebe os
+ * dois números porque a ordem deles muda de idioma para idioma.
+ */
+export interface DataTableLabels {
+  columns: string;
+  showColumns: string;
+  selectAll: string;
+  selectRow: (row: string) => string;
+  sortBy: (col: string) => string;
+  filter: (col: string) => string;
+  noFilter: (col: string) => string;
+  pinLeft: (col: string) => string;
+  unpin: (col: string) => string;
+  resize: (col: string) => string;
+  edit: (col: string) => string;
+  rowsPerPage: string;
+  page: string;
+  pageOf: string;
+  firstPage: string;
+  prevPage: string;
+  nextPage: string;
+  lastPage: string;
+  rowsTotal: (n: number) => string;
+  rowsSelected: (s: number, n: number) => string;
+  allOption: string;
+}
+
+/**
+ * O padrão é o texto que o componente já dizia — trocar de API não podia mudar
+ * o que a tela mostra a quem nunca passou `labels`.
+ */
+export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
+  columns: 'Colunas',
+  showColumns: 'Exibir colunas',
+  selectAll: 'Selecionar todas as linhas',
+  selectRow: (r) => `Selecionar linha ${r}`,
+  sortBy: (c) => `Ordenar por ${c}`,
+  filter: (c) => `Filtrar ${c}`,
+  noFilter: (c) => `Sem filtro para ${c}`,
+  pinLeft: (c) => `Fixar ${c} à esquerda`,
+  unpin: (c) => `Desafixar ${c}`,
+  resize: (c) => `Redimensionar coluna ${c}`,
+  edit: (c) => `Editar ${c}`,
+  rowsPerPage: 'Linhas por página',
+  page: 'Página',
+  pageOf: 'de',
+  firstPage: 'Primeira página',
+  prevPage: 'Página anterior',
+  nextPage: 'Próxima página',
+  lastPage: 'Última página',
+  rowsTotal: (n) => `${n} linha(s).`,
+  rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,
+  allOption: 'Todos',
+};
+
 export interface DataTableProps<TData> {
   columns: DataTableColumn<TData>[];
   data: TData[];
@@ -31,6 +95,21 @@ export interface DataTableProps<TData> {
   pageSizeOptions?: number[];
   pageSize?: number;
   emptyMessage?: string;
+  /**
+   * Nome acessível da tabela. Sai como `<caption>` fora da tela: é o que o
+   * leitor anuncia ao entrar na grade, e sem ele a pessoa cai numa "tabela, 6
+   * colunas" sem saber de quê.
+   */
+  caption?: string;
+  /**
+   * Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar
+   * ou filtrar move a marcação de linha.
+   */
+  rowKey?: (row: TData, index: number) => string;
+  /** Texto que identifica a linha no nome do controle de seleção. */
+  rowLabel?: (row: TData) => string;
+  /** Só as chaves informadas mudam; o resto continua no padrão. */
+  labels?: Partial<DataTableLabels>;
   class?: string;
 }
 </script>
@@ -49,6 +128,7 @@ import {
   type ColumnOrderState,
   type ColumnPinningState,
   type ColumnSizingState,
+  type Row,
   type RowSelectionState,
   type SortingState,
   type Table as TanstackTable,
@@ -81,6 +161,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -112,6 +193,37 @@ const emit = defineEmits<{
 
 const pageSizeOptions = computed(() => props.pageSizeOptions ?? [10, 20, 50, 100]);
 
+/*
+ * Mescla rasa, e de propósito: `labels` é um mapa de folhas (strings e
+ * funções), então quem passa três chaves fica com as outras dezoito no padrão.
+ * Computado porque `labels` pode chegar de um `computed` de idioma lá em cima —
+ * congelar no setup deixaria a tabela em português depois da troca de locale.
+ */
+const rotulos = computed<DataTableLabels>(() => ({
+  ...DATA_TABLE_LABELS_PADRAO,
+  ...(props.labels ?? {}),
+}));
+
+/**
+ * Nome que identifica a linha no controle de seleção.
+ *
+ * Ordem do fallback, e o porquê de cada degrau:
+ *  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
+ *  2. o valor da PRIMEIRA coluna de dados — é ela que identifica a linha na
+ *     leitura visual, então é o mesmo texto que a pessoa vidente usaria para
+ *     dizer "esta linha aqui". `getAllCells` e não `getVisibleCells`: esconder
+ *     uma coluna pelo menu é decisão de leitura, e não pode renomear controle;
+ *  3. a chave da linha (`row.id`), quando a primeira coluna vem vazia.
+ * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
+ * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
+ */
+function rotuloDaLinha(row: Row<TData>): string {
+  if (props.rowLabel) return props.rowLabel(row.original);
+  const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
+  const bruto = primeira?.getValue();
+  return bruto == null || bruto === '' ? row.id : String(bruto);
+}
+
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
 const columnVisibility = ref<VisibilityState>({});
@@ -139,7 +251,7 @@ const allColumns = computed<DataTableColumn<TData>[]>(() => {
     size: 36,
     header: ({ table }) =>
       h(Checkbox, {
-        'aria-label': 'Selecionar todas as linhas',
+        'aria-label': rotulos.value.selectAll,
         modelValue: table.getIsAllPageRowsSelected()
           ? true
           : table.getIsSomePageRowsSelected()
@@ -150,7 +262,10 @@ const allColumns = computed<DataTableColumn<TData>[]>(() => {
       }),
     cell: ({ row }) =>
       h(Checkbox, {
-        'aria-label': 'Selecionar linha',
+        // O identificador da linha entra no nome: dez caixas chamadas
+        // "Selecionar linha" são dez controles indistinguíveis na lista do
+        // leitor, e a marcação vira aposta.
+        'aria-label': rotulos.value.selectRow(rotuloDaLinha(row)),
         modelValue: row.getIsSelected(),
         'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
           row.toggleSelected(!!value),
@@ -195,6 +310,15 @@ const table = useVueTable<TData>({
     get columnSizing() {
       return columnSizing.value;
     },
+  },
+  /*
+   * A identidade da linha vem do DADO, quando quem usa souber dizer qual campo
+   * a identifica. Sem isto a chave é o índice na lista, e o que estava marcado
+   * na terceira posição segue marcado na terceira posição depois de reordenar —
+   * a marcação anda de linha. Getter, e não valor: a função pode trocar.
+   */
+  get getRowId() {
+    return props.rowKey ? (row: TData, index: number) => props.rowKey!(row, index) : undefined;
   },
   get enableRowSelection() {
     return props.enableRowSelection;
@@ -340,11 +464,16 @@ function flexHeaderLabel(header: unknown): string | undefined {
   return typeof header === 'string' ? header : undefined;
 }
 
+/** Rótulo da coluna como a pessoa lê no cabeçalho — nunca o id de dados. */
+function nomeDaColuna(column: Column<TData, unknown>): string {
+  return flexHeaderLabel(column.columnDef.header) ?? column.id;
+}
+
 function pinLabel(column: Column<TData, unknown>): string {
-  const label = flexHeaderLabel(column.columnDef.header) ?? column.id;
+  const label = nomeDaColuna(column);
   return column.getIsPinned() === 'left'
-    ? `Desafixar ${label}`
-    : `Fixar ${label} à esquerda`;
+    ? rotulos.value.unpin(label)
+    : rotulos.value.pinLeft(label);
 }
 
 function togglePin(column: Column<TData, unknown>) {
@@ -393,9 +522,9 @@ const EditableCell = defineComponent({
     return () => {
       // Mesmo rótulo no botão e no campo, e tirado do CABEÇALHO e não do id:
       // o id é chave de dados (`customer`, `amount`) e virava "Editar amount".
-      const rotulo = `Editar ${
-        flexHeaderLabel(p.context.column.columnDef.header) ?? p.context.column.id
-      }`;
+      const rotulo = rotulos.value.edit(
+        flexHeaderLabel(p.context.column.columnDef.header) ?? p.context.column.id,
+      );
       if (!editing.value) {
         return h('div', { class: 'nds-data-table-editable' }, [
           h(
@@ -510,7 +639,7 @@ watch(
             class="nds-data-table-columns-btn"
           >
             <Settings2 aria-hidden="true" />
-            Colunas
+            {{ rotulos.columns }}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -518,7 +647,7 @@ watch(
           class="nds-data-table-columns-menu-content"
         >
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Exibir colunas</DropdownMenuLabel>
+            <DropdownMenuLabel>{{ rotulos.showColumns }}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <template
               v-for="column in table.getAllLeafColumns().filter((c) => c.getCanHide())"
@@ -571,6 +700,19 @@ watch(
       <Table
         :class="cn( (enableColumnResizing || enableColumnOrdering || virtualized) && 'nds-table-fixed', )"
       >
+        <!--
+          PRIMEIRO filho de `<table>` porque o HTML exige isso da tag `caption`
+          — em qualquer outra posição o navegador a move ou a descarta, e o nome
+          acessível da tabela some junto. Fora da tela: é orientação para quem
+          não vê a grade, e repetir na tela um título que já existe acima seria
+          ruído para quem vê.
+        -->
+        <TableCaption
+          v-if="caption"
+          class="nds-sr-only"
+        >
+          {{ caption }}
+        </TableCaption>
         <TableHeader>
           <TableRow
             v-for="headerGroup in table.getHeaderGroups()"
@@ -625,10 +767,7 @@ watch(
                     v-if="header.column.getCanSort()"
                     type="button"
                     class="nds-data-table-sort-btn"
-                    :aria-label="`Ordenar por ${
-                      flexHeaderLabel(header.column.columnDef.header) ??
-                      header.column.id
-                    }`"
+                    :aria-label="rotulos.sortBy(nomeDaColuna(header.column))"
                     @click="header.column.getToggleSortingHandler()?.($event)"
                   >
                     <FlexRender
@@ -666,10 +805,7 @@ watch(
                 v-if="enableColumnResizing && header.column.getCanResize()"
                 role="separator"
                 aria-orientation="vertical"
-                :aria-label="`Redimensionar coluna ${
-                  flexHeaderLabel(header.column.columnDef.header) ??
-                  header.column.id
-                }`"
+                :aria-label="rotulos.resize(nomeDaColuna(header.column))"
                 :class="cn( 'nds-data-table-resize-handle', header.column.getIsResizing() && 'is-resizing', )"
                 @mousedown="header.getResizeHandler()?.($event)"
                 @touchstart="header.getResizeHandler()?.($event)"
@@ -697,12 +833,12 @@ watch(
                 <select
                   v-if="header.column.columnDef.meta.filter.type === 'select'"
                   :value="(header.column.getFilterValue() ?? '') as string"
-                  :aria-label="`Filtrar ${flexHeaderLabel(header.column.columnDef.header) ?? header.column.id}`"
+                  :aria-label="rotulos.filter(nomeDaColuna(header.column))"
                   class="nds-data-table-filter-select"
                   @change="(e) => header.column.setFilterValue((e.target as HTMLSelectElement).value || undefined)"
                 >
                   <option value="">
-                    Todos
+                    {{ rotulos.allOption }}
                   </option>
                   <option
                     v-for="opt in header.column.columnDef.meta.filter.options ?? []"
@@ -716,7 +852,7 @@ watch(
                   v-else
                   :model-value="(header.column.getFilterValue() ?? '') as string"
                   :placeholder="header.column.columnDef.meta.filter.placeholder ?? 'Filtrar...'"
-                  :aria-label="`Filtrar ${flexHeaderLabel(header.column.columnDef.header) ?? header.column.id}`"
+                  :aria-label="rotulos.filter(nomeDaColuna(header.column))"
                   class="nds-data-table-filter-input"
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
@@ -730,7 +866,7 @@ watch(
               <span
                 v-else
                 class="nds-sr-only"
-              >Sem filtro para {{ flexHeaderLabel(header.column.columnDef.header) ?? header.column.id }}</span>
+              >{{ rotulos.noFilter(nomeDaColuna(header.column)) }}</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -806,7 +942,7 @@ watch(
       role="status"
       aria-live="polite"
     >
-      {{ table.getFilteredSelectedRowModel().rows.length }} de {{ table.getFilteredRowModel().rows.length }} linha(s) selecionada(s).
+      {{ rotulos.rowsSelected(table.getFilteredSelectedRowModel().rows.length, table.getFilteredRowModel().rows.length) }}
     </div>
 
     <DataTablePagination
@@ -814,6 +950,7 @@ watch(
       :table="(table as unknown as TanstackTable<TData>)"
       :page-size-options="pageSizeOptions"
       :enable-row-selection="enableRowSelection"
+      :labels="rotulos"
     />
   </div>
 </template>

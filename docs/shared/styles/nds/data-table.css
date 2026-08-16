@@ -117,17 +117,24 @@
   color: hsl(var(--primary));
 }
 
-/* ── Scroll container ──────────────────────────────────────────────────── */
+/* ── Scroll container ──────────────────────────────────────────────────────
+ *
+ * Este elemento MOLDURA (borda, raio, altura máxima do modo virtualizado) e não
+ * rola na horizontal. Quem rola é o `.nds-table-wrapper` do primitivo Table, que
+ * é o único dos dois que carrega `tabindex="0"`.
+ *
+ * Antes havia `overflow-x: auto` aqui também, e dois contêineres roláveis
+ * aninhados. Em duas stacks o interno era neutralizado por
+ * `.nds-data-table-table-wrapper { overflow: visible }` e sobrava rolando este —
+ * que não está na ordem de tabulação. Quem navega por teclado não alcançava as
+ * colunas fora da tela (WCAG 2.1.1, axe scrollable-region-focusable). A classe
+ * de neutralização foi removida junto: sem ela, o dono do overflow é um só.
+ */
 .nds-data-table-scroll {
   position: relative;
   width: 100%;
-  overflow-x: auto;
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-}
-
-.nds-data-table-table-wrapper {
-  overflow: visible;
 }
 
 .nds-table-fixed {

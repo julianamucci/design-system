@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
-import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT } from './data-table.fixtures';
+import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT, type FaturaDT } from './data-table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -143,6 +143,73 @@ export const Paginated: Story = {
       });
       await expect(primeira()).toBeDisabled();
       await expect(anterior()).toBeDisabled();
+    });
+  },
+};
+
+// ─── Rótulo de linha explícito ───────────────────────────────────────────────
+
+/**
+ * O primeiro degrau do fallback: quem monta a tabela diz qual campo identifica a
+ * linha. O Playground prova o degrau do meio (o identificador sai da primeira
+ * coluna); aqui a escolha é explícita e vence a primeira coluna.
+ */
+export const ExplicitRowLabel: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Quando a coluna que identifica a linha para quem enxerga não é a primeira, o rótulo do controle de seleção passa a sair do campo escolhido — e continua sendo um nome por linha, nunca um nome repetido.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      colunas: COLUNAS_FATURAS,
+      faturas: FATURAS_DT,
+      rotulos: ROTULOS_DT,
+      chaveDaFatura: (f: FaturaDT) => f.id,
+      rotuloDaFatura: (f: FaturaDT) => f.cliente,
+    },
+    template: `
+      <div
+        ndsDataTable
+        caption="Faturas recentes"
+        [columns]="colunas"
+        [data]="faturas"
+        [labels]="rotulos"
+        [rowKey]="chaveDaFatura"
+        [rowLabel]="rotuloDaFatura"
+        [enableRowSelection]="true"
+        [enableGlobalFilter]="false"
+        [enablePagination]="false"
+      ></div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+    const caixaDaLinha = (linha: HTMLElement) =>
+      linha.querySelector<HTMLElement>('button[role="checkbox"]')!;
+    /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
+    const cliente = (linha: HTMLElement) =>
+      linha.querySelectorAll('td')[2]!.textContent!.trim();
+
+    await step('O nome do controle sai de rowLabel, e não da primeira coluna', async () => {
+      // A prova precisa do CONTRASTE: se `rowLabel` fosse ignorado, o nome
+      // cairia no identificador da primeira coluna ("#INV-001") e a asserção
+      // seguinte reprovaria.
+      for (const linha of linhas()) {
+        await expect(caixaDaLinha(linha)).toHaveAttribute(
+          'aria-label',
+          `Selecionar fatura ${cliente(linha)}`,
+        );
+      }
+    });
+
+    await step('Nenhuma linha repete o nome de outra', async () => {
+      const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
+      await expect(nomes.length).toBe(FATURAS_DT.length);
+      await expect(new Set(nomes).size).toBe(nomes.length);
     });
   },
 };

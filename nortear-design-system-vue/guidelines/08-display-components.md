@@ -239,6 +239,18 @@ DataTable
 | `@cell-edit` | `(rowIndex, columnId, value)` | Edição inline confirmada (`Enter` ou blur) |
 | `@table-ready` | `(table: Table<TData>)` | Após mount; expõe instância para ações em lote, export, etc. |
 
+
+**Nome da tabela e identidade da linha** (todas opcionais):
+
+| Prop | Tipo | Função |
+|---|---|---|
+| `caption` | `string` | Nome acessível da grade. Vira legenda fora da tela — anunciada pelo leitor, invisível na página |
+| `rowKey` | `(row, index) => string` | Identidade estável da linha. Sem ela a identidade é a POSIÇÃO, e ordenar leva a marcação para quem ocupou o lugar |
+| `rowLabel` | `(row) => string` | Texto que identifica a linha no nome do controle de seleção. Sem ela o identificador sai da primeira coluna de dados, e só cai na chave da linha quando essa coluna vem vazia |
+| `labels` | `Partial<DataTableLabels>` | Textos da interface. Só as chaves informadas mudam; o resto fica no padrão pt-BR |
+
+**i18n**: `labels` cobre rótulos de controle, contagens e navegação. Duas chaves são FUNÇÕES por dependerem da linha ou da coluna: `selectRow(linha)` — texto fixo aqui produziria dez controles homônimos — e `noFilter(coluna)`, o texto da célula sem filtro. Mantenha `labels` numa referência estável (módulo ou `computed`): objeto novo a cada render remonta as colunas.
+
 **Regras**:
 - Defina `columns` numa referência estável (módulo ou `computed`) — recriar a cada render zera o estado da tabela.
 - `enableRowSelection` apenas quando houver ação em lote — checkbox sem ação confunde.
@@ -253,6 +265,8 @@ DataTable
 - `aria-sort="ascending|descending|none"` no `<th>` ordenável — anunciado pelo leitor de tela
 - `aria-label` contextual obrigatório nos botões: "Ordenar por <em>coluna</em>", "Filtrar <em>coluna</em>", "Selecionar linha", "Próxima página"
 - Checkbox de cabeçalho usa `indeterminate` quando há seleção parcial (tri-state)
+- Cada checkbox de linha carrega o identificador daquela linha no nome; nome repetido em dez controles é o mesmo que nome nenhum (WCAG 4.1.2)
+- Uma só camada rola na horizontal, e é a do primitivo Table — a única com tabindex zero. O contêiner externo é moldura e, no modo virtualizado, dono da rolagem vertical (WCAG 2.1.1, axe scrollable-region-focusable)
 - Handle de resize tem `role="separator"` + `aria-orientation="vertical"`
 - Estado vazio é uma linha com mensagem — nunca tabela vazia silenciosa
 
