@@ -248,18 +248,57 @@ export const Playground: Story = {
       await expect(linhas()[0].hasAttribute('data-state')).toBe(false);
     });
 
+    await step('Do estado misto, dois cliques marcam tudo e depois limpam', async () => {
+      // O terceiro trecho de functional.item4 — "segundo clique desmarca tudo"
+      // — estava documentado e NÃO verificado: a play só provava que o
+      // cabeçalho MARCA. Partindo do misto, o primeiro clique completa a página
+      // e o segundo esvazia.
+      const caixaDeTudo = () =>
+        canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+      // Par idempotente: só clica quando o estado atual não é o desejado. O
+      // painel Interactions reexecuta a play no MESMO DOM, e clique cego aqui
+      // inverteria o resultado na segunda rodada.
+      const levarPara = async (estado: 'true' | 'false') => {
+        if (caixaDeTudo().getAttribute('aria-checked') !== estado) await userEvent.click(caixaDeTudo());
+        await expect(caixaDeTudo()).toHaveAttribute('aria-checked', estado);
+      };
+
+      await levarPara('true');
+      await levarPara('false');
+      await expect(canvasElement.querySelectorAll('tbody tr[data-state="selected"]').length)
+        .toBe(0);
+      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+      await expect(regiao).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
+    });
+
     await step('A busca livre recorta as linhas e a contagem acompanha', async () => {
       // functional.item1 — o filtro global casa em qualquer coluna, e é a
-      // contagem do rodapé que prova que ele recortou o conjunto inteiro, não
-      // só a página visível.
+      // contagem que prova que ele recortou o conjunto inteiro, não só a
+      // página visível.
       const busca = canvas.getByRole('searchbox');
       await userEvent.type(busca, 'Karina');
 
       await expect(linhas().length).toBe(1);
       await expect(primeiraCelula()).toHaveTextContent('#INV-011');
+      // O denominador acompanha o recorte: sem isto a contagem podia continuar
+      // dizendo "de 12" com uma linha na tela.
+      await expect(canvasElement.querySelector<HTMLElement>('[role="status"]')!)
+        .toHaveTextContent('de 1 linha(s) selecionada(s).');
 
       await userEvent.clear(busca);
       await expect(linhas().length).toBe(args.pageSize);
+    });
+
+    await step('A story termina com seleção parcial na tela', async () => {
+      // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
+      // documentado é "estado padrão com seleção". Antes a play terminava com a
+      // busca limpa e a seleção herdada do passo anterior, sem garantia.
+      for (const indice of [0, 2]) {
+        const caixa = linhas()[indice].querySelector<HTMLElement>('button[role="checkbox"]')!;
+        if (caixa.getAttribute('aria-checked') !== 'true') await userEvent.click(caixa);
+      }
+      await expect(canvasElement.querySelector<HTMLElement>('[role="status"]')!)
+        .toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },
 };

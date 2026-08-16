@@ -137,7 +137,10 @@
 /* ── Header / cells ────────────────────────────────────────────────────── */
 .nds-data-table-th {
   position: relative;
-  height: var(--spacing-10, 2.5rem);
+  /* `min-block-size` e não `height`, pelo mesmo motivo do `th` do primitivo:
+   * 40px é PISO, não teto — o rótulo do cabeçalho não pode ser recortado
+   * quando a fonte do navegador cresce (WCAG 1.4.4). */
+  min-block-size: var(--spacing-10, 2.5rem);
   padding-inline: var(--spacing-2);
   text-align: left;
   vertical-align: middle;
@@ -262,10 +265,17 @@
   outline-offset: 2px;
 }
 
+/*
+ * Sem `height`. O campo de edição inline é um `<input>` com texto dentro, e
+ * altura cravada o recorta quando a pessoa aumenta a fonte do navegador
+ * (WCAG 1.4.4, Resize Text 200%). A altura sai do `padding-block` mais o
+ * `line-height` que `.nds-input` já define — no tamanho padrão dá os mesmos
+ * ~32px que o `2rem` dava, e cresce junto com o texto.
+ */
 .nds-data-table-edit-input {
   width: 100%;
-  height: var(--spacing-8, 2rem);
   font-size: var(--text-control);
+  padding-block: var(--spacing-1);
   padding-inline: var(--spacing-2);
 }
 

@@ -268,16 +268,16 @@ const columns: DataTableColumn<Invoice>[] = [
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair1.do')),
-        dontCaption: stripHtml($tStore('doDont.pair1.dont')),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: stripHtml($tStore('doDont.pair2.do')),
-        dontCaption: stripHtml($tStore('doDont.pair2.dont')),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
@@ -486,7 +486,7 @@ const columns: DataTableColumn<Invoice>[] = [
       { key: 'Enter',  description: $tStore('accessibility.keyboard.enter')     },
       { key: 'Space',  description: $tStore('accessibility.keyboard.space')     },
       { key: 'Escape', description: $tStore('accessibility.keyboard.escape')    },
-      { key: 'Arrow Up / Arrow Down',    description: $tStore('accessibility.keyboard.arrowKeys') },
+      { key: 'Arrow Up / Arrow Down',    description: toPlainText($tStore('accessibility.keyboard.arrowKeys')) },
     ]}
   />
 
@@ -560,10 +560,10 @@ const columns: DataTableColumn<Invoice>[] = [
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: $tStore('testes.accessibility.item1.how') },
-        { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: $tStore('testes.accessibility.item2.how') },
-        { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
-        { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
+        { criterion: $tStore('testes.accessibility.item1.criterion'), level: $tStore('testes.accessibility.item1.level'), how: toPlainText($tStore('testes.accessibility.item1.how')) },
+        { criterion: $tStore('testes.accessibility.item2.criterion'), level: $tStore('testes.accessibility.item2.level'), how: toPlainText($tStore('testes.accessibility.item2.how')) },
+        { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: toPlainText($tStore('testes.accessibility.item3.how')) },
+        { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: toPlainText($tStore('testes.accessibility.item4.how')) },
       ],
     }}
     visual={{

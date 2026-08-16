@@ -285,7 +285,7 @@ const dataTablePropItems = computed(() => [
   { name: 'globalFilterPlaceholder', type: 'string',                   defaultValue: '"Buscar..."', required: 'Não', description: tContent('props.table.globalFilterPlaceholder')     },
   { name: 'enableRowSelection',      type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableRowSelection')              },
   { name: 'enableColumnVisibility',  type: 'boolean',                  defaultValue: 'true',     required: 'Não', description: tContent('props.table.enableColumnVisibility')          },
-  { name: 'enableColumnFilters',     type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnFilters')             },
+  { name: 'enableColumnFilters',     type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: toPlainText(tContent('props.table.enableColumnFilters'))             },
   { name: 'enableColumnResizing',    type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: toPlainText(tContent('props.table.enableColumnResizing')) },
   { name: 'enableColumnOrdering',    type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnOrdering')            },
   { name: 'enableColumnPinning',     type: 'boolean',                  defaultValue: 'false',    required: 'Não', description: tContent('props.table.enableColumnPinning')             },
@@ -331,7 +331,7 @@ const keyboardItems = computed(() => [
   { key: 'Enter',   description: tContent('accessibility.keyboard.enter')      },
   { key: 'Espaço',  description: tContent('accessibility.keyboard.space')      },
   { key: 'Escape',  description: tContent('accessibility.keyboard.escape')     },
-  { key: 'Arrow Up / Arrow Down',  description: tContent('accessibility.keyboard.arrowKeys')  },
+  { key: 'Arrow Up / Arrow Down',  description: toPlainText(tContent('accessibility.keyboard.arrowKeys'))  },
 ]);
 
 const relatedItems = computed(() => [
@@ -376,10 +376,10 @@ const functionalTestItems = computed(() => [
 ]);
 
 const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: tContent('testes.accessibility.item1.how') },
-  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: tContent('testes.accessibility.item2.how') },
-  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
-  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
+  { criterion: tContent('testes.accessibility.item1.criterion'), level: tContent('testes.accessibility.item1.level'), how: toPlainText(tContent('testes.accessibility.item1.how')) },
+  { criterion: tContent('testes.accessibility.item2.criterion'), level: tContent('testes.accessibility.item2.level'), how: toPlainText(tContent('testes.accessibility.item2.how')) },
+  { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: toPlainText(tContent('testes.accessibility.item3.how')) },
+  { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: toPlainText(tContent('testes.accessibility.item4.how')) },
 ]);
 
 const visualTestItems = computed(() => [
@@ -471,7 +471,7 @@ const visualTestItems = computed(() => [
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: stripHtml(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >

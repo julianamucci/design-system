@@ -11,6 +11,7 @@ import {
   type ColumnFiltersState,
   type ColumnOrderState,
   type ColumnPinningState,
+  type ColumnSizingInfoState,
   type ColumnSizingState,
   type RowData,
   type RowSelectionState,
@@ -227,6 +228,18 @@ export function createDataTable<TData extends RowData>(
   let columnPinning: ColumnPinningState = { left: [], right: [] };
   let columnSizing: ColumnSizingState = {};
   let pagination = { pageIndex: 0, pageSize };
+  // O arrasto da alça acumula o delta em `columnSizingInfo`. Sem este estado
+  // controlado E o handler correspondente, o `onStateChange` vazio engolia cada
+  // atualização e o redimensionamento não movia um pixel — a alça existia, o
+  // ponteiro arrastava e a coluna ficava parada.
+  let columnSizingInfo: ColumnSizingInfoState = {
+    startOffset: null,
+    startSize: null,
+    deltaOffset: null,
+    deltaPercentage: null,
+    isResizingColumn: false,
+    columnSizingStart: [],
+  };
   let draggedColumnId: string | null = null;
 
   // ── Coluna __select__ ────────────────────────────────────────────────────
@@ -268,8 +281,8 @@ export function createDataTable<TData extends RowData>(
   const scrollContainer = document.createElement('div');
   scrollContainer.className = 'nds-data-table-scroll';
   if (virtualized) {
+    scrollContainer.classList.add('nds-data-table-scroll-virtual');
     scrollContainer.style.maxHeight = maxHeight;
-    scrollContainer.style.overflowY = 'auto';
   }
 
   const { wrapper: tableWrapper, table: tableEl } = createTableWrapper();
@@ -287,7 +300,22 @@ export function createDataTable<TData extends RowData>(
   pagFooter.dataset.slot = 'data-table-pagination';
   pagFooter.className = 'nds-data-table-pagination';
 
-  root.append(toolbar, scrollContainer, pagFooter);
+  // A linha marcada muda de FUNDO — e cor sozinha não chega a quem não enxerga.
+  // A contagem existia só no rodapé da paginação, num `div` mudo que sumia
+  // junto com ela quando `enablePagination` era falso ou a tabela era
+  // virtualizada. Aqui ela é região viva e não depende do rodapé.
+  // WCAG 4.1.3 (Status Messages), nível AA.
+  //
+  // O nó é criado UMA vez e só o texto muda: região viva que nasce junto com o
+  // conteúdo não é anunciada.
+  const regiaoViva = document.createElement('div');
+  regiaoViva.className = 'nds-sr-only';
+  regiaoViva.setAttribute('role', 'status');
+  regiaoViva.setAttribute('aria-live', 'polite');
+
+  root.append(toolbar, scrollContainer);
+  if (enableRowSelection) root.appendChild(regiaoViva);
+  root.appendChild(pagFooter);
 
   // ── TanStack table instance ──────────────────────────────────────────────
   const table = createTanstackTable<TData>({
@@ -307,16 +335,34 @@ export function createDataTable<TData extends RowData>(
     enableRowSelection,
     enableColumnResizing,
     enableColumnPinning,
+    /*
+     * O primeiro clique ordena ASCENDENTE em qualquer coluna.
+     *
+     * Sem isto o TanStack decide sozinho pelo TIPO do primeiro valor: coluna de
+     * número começa DESCENDENTE. O resultado era uma tabela em que ordenar por
+     * "Cliente" subia e ordenar por "Valor" descia, sem nada na tela explicando a
+     * diferenca — e contra o que a documentação do componente promete.
+     */
+    sortDescFirst: false,
     columnResizeMode: 'onChange',
     onSortingChange: (u: Updater<SortingState>) => { sorting = resolveUpdater(sorting, u); sync(); rerender(); },
-    onColumnFiltersChange: (u: Updater<ColumnFiltersState>) => { columnFilters = resolveUpdater(columnFilters, u); sync(); rerender(); },
+    onColumnFiltersChange: (u: Updater<ColumnFiltersState>) => { columnFilters = resolveUpdater(columnFilters, u); sync(); rerenderSemCabecalho(); },
     onColumnVisibilityChange: (u: Updater<VisibilityState>) => { columnVisibility = resolveUpdater(columnVisibility, u); sync(); rerender(); },
     onRowSelectionChange: (u: Updater<RowSelectionState>) => { rowSelection = resolveUpdater(rowSelection, u); sync(); rerender(); },
-    onGlobalFilterChange: (u: Updater<string>) => { globalFilter = resolveUpdater(globalFilter, u); sync(); rerender(); },
+    onGlobalFilterChange: (u: Updater<string>) => { globalFilter = resolveUpdater(globalFilter, u); sync(); rerenderSemCabecalho(); },
     onColumnOrderChange: (u: Updater<ColumnOrderState>) => { columnOrder = resolveUpdater(columnOrder, u); sync(); rerender(); },
     onColumnPinningChange: (u: Updater<ColumnPinningState>) => { columnPinning = resolveUpdater(columnPinning, u); sync(); rerender(); },
-    onColumnSizingChange: (u: Updater<ColumnSizingState>) => { columnSizing = resolveUpdater(columnSizing, u); sync(); rerender(); },
-    onPaginationChange: (u: Updater<{ pageIndex: number; pageSize: number }>) => { pagination = resolveUpdater(pagination, u); sync(); rerender(); },
+    // Redimensionar NÃO reconstrói a grade: a alça que está sendo arrastada é
+    // filha do `th`, e reconstruir o cabeçalho a cada pixel destruía o elemento
+    // sob o cursor — o arrasto parava no primeiro movimento. Só as larguras
+    // mudam, e é só elas que este caminho escreve.
+    onColumnSizingChange: (u: Updater<ColumnSizingState>) => { columnSizing = resolveUpdater(columnSizing, u); sync(); atualizarLarguras(); },
+    onColumnSizingInfoChange: (u: Updater<ColumnSizingInfoState>) => { columnSizingInfo = resolveUpdater(columnSizingInfo, u); sync(); },
+    // Trocar de página também NÃO reconstrói o cabeçalho. E não é só economia:
+    // filtrar zera a página automaticamente (`autoResetPageIndex`), então cada
+    // tecla digitada num filtro por coluna passava por aqui e reconstruía o
+    // `thead` — o campo com foco saía do DOM e a segunda letra caía fora dele.
+    onPaginationChange: (u: Updater<{ pageIndex: number; pageSize: number }>) => { pagination = resolveUpdater(pagination, u); sync(); rerenderSemCabecalho(); },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -342,6 +388,7 @@ export function createDataTable<TData extends RowData>(
         columnOrder,
         columnPinning,
         columnSizing,
+        columnSizingInfo,
         pagination,
       },
     }));
@@ -365,6 +412,10 @@ export function createDataTable<TData extends RowData>(
   }
 
   // ── pinStyle helper ──────────────────────────────────────────────────────
+  //
+  // Só a GEOMETRIA sai daqui. O fundo opaco — que é o que impede o conteúdo de
+  // vazar por baixo da coluna fixada — vem da classe `nds-data-table-*-pinned`,
+  // aplicada por `marcarFixada`. Escrito inline, o fundo saía do tema.
   function pinStyle(col: ReturnType<typeof table.getColumn>): Partial<CSSStyleDeclaration> {
     if (!col) return {};
     const pinned = col.getIsPinned();
@@ -374,12 +425,51 @@ export function createDataTable<TData extends RowData>(
       left: pinned === 'left' ? `${col.getStart('left')}px` : '',
       right: pinned === 'right' ? `${col.getAfter('right')}px` : '',
       zIndex: '1',
-      background: 'var(--background)',
     } as Partial<CSSStyleDeclaration>;
   }
 
+  /** Campos de filtro por coluna, criados uma vez e reaproveitados. */
+  const controlesDeFiltro = new Map<string, HTMLInputElement | HTMLSelectElement>();
+
+  /**
+   * Só as larguras, sem reconstruir a grade. É o caminho do redimensionamento,
+   * que roda a cada pixel do arrasto.
+   */
+  function atualizarLarguras(): void {
+    if (!enableColumnResizing) return;
+    const colunas = table.getVisibleLeafColumns();
+    const aplicar = (celulas: ArrayLike<HTMLElement>) => {
+      for (let i = 0; i < celulas.length; i++) {
+        const col = colunas[i];
+        if (col) celulas[i].style.width = `${col.getSize()}px`;
+      }
+    };
+    const primeiraLinha = thead.querySelector('tr');
+    if (primeiraLinha) aplicar(primeiraLinha.querySelectorAll<HTMLElement>('th'));
+    for (const tr of tbody.querySelectorAll('tr')) {
+      aplicar(tr.querySelectorAll<HTMLElement>('td'));
+    }
+  }
+
+  /** Classe de coluna fixada — o mesmo nome que as outras stacks emitem. */
+  function marcarFixada(
+    celula: HTMLElement,
+    col: ReturnType<typeof table.getColumn>,
+    tipo: 'th' | 'td',
+  ): void {
+    if (col?.getIsPinned()) celula.classList.add(`nds-data-table-${tipo}-pinned`);
+  }
+
   // ── Toolbar render ───────────────────────────────────────────────────────
+  //
+  // Construída UMA vez. Reconstruir a cada mudança de estado trocava o `input`
+  // de busca no meio da digitação: o nó com foco morria a cada tecla, a segunda
+  // letra caía fora do campo e limpar a busca deixava de funcionar. Nada aqui
+  // depende do estado da tabela — o menu de colunas se reconstrói ao abrir.
+  let toolbarMontada = false;
   function renderToolbar() {
+    if (toolbarMontada) return;
+    toolbarMontada = true;
     toolbar.replaceChildren();
     if (!(enableGlobalFilter || enableColumnVisibility)) {
       toolbar.style.display = 'none';
@@ -420,7 +510,12 @@ export function createDataTable<TData extends RowData>(
       const menu = document.createElement('div');
       menu.className = 'nds-data-table-columns-menu';
       menu.hidden = true;
-      menu.setAttribute('role', 'menu');
+      // `group`, e não `menu`: um `role="menu"` obriga filhos `menuitem*`, e aqui
+      // dentro moram checkboxes e botões de fixar. O axe reprovava a página
+      // inteira (aria-required-children) e ninguém via, porque nenhuma story
+      // chegava a ABRIR o menu.
+      menu.setAttribute('role', 'group');
+      menu.setAttribute('aria-label', L.showColumns);
 
       function rebuildMenu() {
         menu.replaceChildren();
@@ -499,8 +594,8 @@ export function createDataTable<TData extends RowData>(
         th.scope = 'col';
 
         if (enableColumnResizing) th.style.width = `${header.getSize()}px`;
-        const pin = pinStyle(col);
-        Object.assign(th.style, pin);
+        Object.assign(th.style, pinStyle(col));
+        marcarFixada(th, col, 'th');
 
         const isDraggable = enableColumnOrdering && col.id !== '__select__';
         if (isDraggable) {
@@ -538,7 +633,13 @@ export function createDataTable<TData extends RowData>(
               'aria-label': L.selectAll,
               onCheckedChange: (v) => table.toggleAllPageRowsSelected(!!v),
             });
-            if (isSome) cb.dataset.state = 'indeterminate';
+            if (isSome) {
+              cb.dataset.state = 'indeterminate';
+              // `data-state` é só estilo. Quem anuncia "parcialmente marcado" ao
+              // leitor de tela é `aria-checked="mixed"` — sem ele a seleção
+              // parcial era indistinguível de "nenhuma linha marcada".
+              cb.setAttribute('aria-checked', 'mixed');
+            }
             inner.appendChild(cb);
           } else if (col.getCanSort()) {
             const btn = document.createElement('button');
@@ -558,8 +659,14 @@ export function createDataTable<TData extends RowData>(
               const handler = header.column.getToggleSortingHandler();
               handler?.(e);
             });
-            if (dir === 'asc') th.setAttribute('aria-sort', 'ascending');
-            else if (dir === 'desc') th.setAttribute('aria-sort', 'descending');
+            // `none` explícito, e não atributo ausente: é o que diz ao leitor
+            // de tela que a coluna É ordenável e está sem ordem aplicada.
+            // Ausência é indistinguível de "esta coluna não ordena", e era a
+            // única stack que não emitia.
+            th.setAttribute(
+              'aria-sort',
+              dir === 'asc' ? 'ascending' : dir === 'desc' ? 'descending' : 'none',
+            );
             inner.appendChild(btn);
           } else {
             const div = document.createElement('div');
@@ -598,6 +705,7 @@ export function createDataTable<TData extends RowData>(
         const col = header.column;
         const th = document.createElement('th');
         Object.assign(th.style, pinStyle(col));
+        marcarFixada(th, col, 'th');
         const meta = col.columnDef.meta?.filter;
         if (!col.getCanFilter() || !meta) {
           // axe empty-table-header — colunas sem filtro recebem texto sr-only.
@@ -609,37 +717,49 @@ export function createDataTable<TData extends RowData>(
         }
         if (col.getCanFilter() && meta) {
           const lbl = headerLabel(col.columnDef, col.id);
-          if (meta.type === 'select') {
-            const select = document.createElement('select');
-            select.className = 'nds-data-table-filter-select';
-            select.setAttribute('aria-label', L.filter(lbl));
-            const optAll = document.createElement('option');
-            optAll.value = '';
-            optAll.textContent = L.allOption;
-            select.appendChild(optAll);
-            for (const opt of meta.options ?? []) {
-              const o = document.createElement('option');
-              o.value = opt;
-              o.textContent = opt;
-              if (col.getFilterValue() === opt) o.selected = true;
-              select.appendChild(o);
+          // O controle é criado UMA vez por coluna e reaproveitado a cada
+          // render. Recriá-lo trocava o nó com foco a cada tecla: só a primeira
+          // letra entrava no filtro e o resto caía fora do campo.
+          let controle = controlesDeFiltro.get(col.id);
+          if (!controle) {
+            if (meta.type === 'select') {
+              const select = document.createElement('select');
+              select.className = 'nds-data-table-filter-select';
+              select.setAttribute('aria-label', L.filter(lbl));
+              const optAll = document.createElement('option');
+              optAll.value = '';
+              optAll.textContent = L.allOption;
+              select.appendChild(optAll);
+              for (const opt of meta.options ?? []) {
+                const o = document.createElement('option');
+                o.value = opt;
+                o.textContent = opt;
+                select.appendChild(o);
+              }
+              select.addEventListener('change', () => {
+                col.setFilterValue(select.value || undefined);
+              });
+              controle = select;
+            } else {
+              const input = createInput({
+                placeholder: meta.placeholder ?? 'Filtrar...',
+                class: 'nds-data-table-filter-input',
+              });
+              input.setAttribute('aria-label', L.filter(lbl));
+              input.addEventListener('input', () => {
+                col.setFilterValue(input.value);
+              });
+              controle = input;
             }
-            select.addEventListener('change', () => {
-              col.setFilterValue(select.value || undefined);
-            });
-            th.appendChild(select);
-          } else {
-            const input = createInput({
-              placeholder: meta.placeholder ?? 'Filtrar...',
-              value: (col.getFilterValue() as string) ?? '',
-              class: 'nds-data-table-filter-input',
-            });
-            input.setAttribute('aria-label', L.filter(lbl));
-            input.addEventListener('input', () => {
-              col.setFilterValue(input.value);
-            });
-            th.appendChild(input);
+            controlesDeFiltro.set(col.id, controle);
           }
+          // Só sincroniza quando o campo NÃO está com o foco: escrever nele
+          // durante a digitação moveria o cursor.
+          const valor = (col.getFilterValue() as string) ?? '';
+          if (document.activeElement !== controle && controle.value !== valor) {
+            controle.value = valor;
+          }
+          th.appendChild(controle);
         }
         tr.appendChild(th);
       }
@@ -659,6 +779,7 @@ export function createDataTable<TData extends RowData>(
       td.className = 'nds-data-table-td';
       if (enableColumnResizing) td.style.width = `${col.getSize()}px`;
       Object.assign(td.style, pinStyle(col));
+      marcarFixada(td, col, 'td');
 
       if (col.id === '__select__') {
         const cb = createCheckbox({
@@ -718,7 +839,12 @@ export function createDataTable<TData extends RowData>(
         class: 'nds-data-table-edit-input',
       });
       input.setAttribute('aria-label', L.edit(label));
+      // O `blur` também confirma — e o Escape tira o campo da tela ANTES dele.
+      // Sem esta guarda, descartar com Escape avisava a edição mesmo assim:
+      // o valor voltava na tela e quem consome recebia o que foi cancelado.
+      let descartado = false;
       const commit = () => {
+        if (descartado) return;
         const isNumber = typeof initial === 'number';
         const nextValue: unknown = isNumber ? Number(input.value) : input.value;
         table.options.meta?.updateData?.(rowIndex, columnId, nextValue);
@@ -726,7 +852,7 @@ export function createDataTable<TData extends RowData>(
       input.addEventListener('blur', commit);
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') { e.preventDefault(); commit(); }
-        else if (e.key === 'Escape') { renderView(); }
+        else if (e.key === 'Escape') { descartado = true; renderView(); }
       });
       container.appendChild(input);
       input.focus();
@@ -764,6 +890,11 @@ export function createDataTable<TData extends RowData>(
         scrollToFn: elementScroll,
         onChange: () => rerenderBody(),
       });
+      // `_willUpdate()` a CADA render, como faz o adapter do React. Chamado só
+      // na construção — que é quando o contêiner ainda não está no documento e
+      // portanto tem altura zero — o virtualizador devolvia zero itens e a
+      // tabela virtualizada ficava com o corpo VAZIO para sempre.
+      virtualizer._willUpdate();
       const items = virtualizer.getVirtualItems();
       const totalSize = virtualizer.getTotalSize();
       const paddingTop = items.length > 0 ? items[0].start : 0;
@@ -826,7 +957,6 @@ export function createDataTable<TData extends RowData>(
     pageSizeWrap.className = 'nds-data-table-page-size';
     const psLabel = document.createElement('span');
     psLabel.textContent = L.rowsPerPage;
-    psLabel.className = 'nds-text-muted-foreground';
     const psSelect = document.createElement('select');
     psSelect.className = 'nds-data-table-page-size-select';
     psSelect.setAttribute('aria-label', L.rowsPerPage);
@@ -843,8 +973,11 @@ export function createDataTable<TData extends RowData>(
     pageSizeWrap.append(psLabel, psSelect);
 
     // Page indicator
+    // A classe do componente, e não a utilitária de cor: as duas pintam igual,
+    // mas só a do componente diz o que este bloco É — e era por isso que a
+    // sonda achava a contagem no lugar do indicador de página.
     const pageInd = document.createElement('div');
-    pageInd.className = 'nds-text-muted-foreground';
+    pageInd.className = 'nds-data-table-pagination-count';
     pageInd.textContent = `${L.page} ${pageIndex + 1} ${L.pageOf} ${Math.max(pageCount, 1)}`;
 
     // Nav buttons
@@ -875,14 +1008,53 @@ export function createDataTable<TData extends RowData>(
   }
 
   // ── Re-render orchestration ──────────────────────────────────────────────
+  //
+  // Filtrar NÃO reconstrói o cabeçalho: tirar do DOM o campo que está com o
+  // foco o desfoca, e da segunda letra em diante a digitação caía fora do
+  // campo. Só o corpo, o rodapé e a contagem mudam quando o recorte muda.
+  function rerenderSemCabecalho() {
+    rerenderBody();
+    renderPagination();
+    atualizarRegiaoViva();
+  }
+
+  function atualizarRegiaoViva() {
+    if (!enableRowSelection) return;
+    regiaoViva.textContent = L.rowsSelected(
+      table.getFilteredSelectedRowModel().rows.length,
+      table.getFilteredRowModel().rows.length,
+    );
+  }
+
   function rerender() {
     renderToolbar();
     renderHeader();
     rerenderBody();
     renderPagination();
+    if (enableRowSelection) {
+      regiaoViva.textContent = L.rowsSelected(
+        table.getFilteredSelectedRowModel().rows.length,
+        table.getFilteredRowModel().rows.length,
+      );
+    }
   }
 
   rerender();
+
+  // A primeira montagem acontece com a raiz FORA do documento — quem chama a
+  // factory ainda vai anexá-la. Enquanto o contêiner de rolagem não tem altura,
+  // o virtualizador não sabe quantas linhas cabem. Este observador roda a
+  // primeira medição de verdade e desliga.
+  if (virtualized && typeof ResizeObserver !== 'undefined') {
+    const observador = new ResizeObserver(() => {
+      if (scrollContainer.clientHeight > 0) {
+        observador.disconnect();
+        rerenderBody();
+      }
+    });
+    observador.observe(scrollContainer);
+  }
+
   onTableReady?.(table);
 
   // Expose table on root for play functions / advanced consumers.

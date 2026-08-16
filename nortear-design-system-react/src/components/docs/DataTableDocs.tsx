@@ -494,8 +494,8 @@ declare module "@tanstack/react-table" {
                 enablePagination={false}
               />
             ),
-            doCaption: stripHtml(tContent("doDont.pair1.do")),
-            dontCaption: stripHtml(tContent("doDont.pair1.dont")),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
@@ -520,8 +520,8 @@ declare module "@tanstack/react-table" {
                 enableColumnVisibility={false}
               />
             ),
-            doCaption: stripHtml(tContent("doDont.pair2.do")),
-            dontCaption: stripHtml(tContent("doDont.pair2.dont")),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
@@ -794,7 +794,7 @@ declare module "@tanstack/react-table" {
           { key: "Enter",  description: tContent("accessibility.keyboard.enter") },
           { key: "Space",  description: tContent("accessibility.keyboard.space") },
           { key: "Escape", description: tContent("accessibility.keyboard.escape") },
-          { key: "Arrow Up / Arrow Down", description: tContent("accessibility.keyboard.arrowKeys") },
+          { key: "Arrow Up / Arrow Down", description: toPlainText(tContent("accessibility.keyboard.arrowKeys")) },
         ]}
       />
 
@@ -877,7 +877,7 @@ declare module "@tanstack/react-table" {
           items: [1, 2, 3, 4].map((n) => ({
             criterion: tContent(`testes.accessibility.item${n}.criterion`),
             level: tContent(`testes.accessibility.item${n}.level`),
-            how: tContent(`testes.accessibility.item${n}.how`),
+            how: toPlainText(tContent(`testes.accessibility.item${n}.how`)),
           })),
         }}
         visual={{

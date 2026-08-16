@@ -51,7 +51,7 @@ export const baseColumns: DataTableColumn<Invoice>[] = [
     cell: ({ row }) =>
       h(
         'span',
-        { class: 'font-medium tabular-nums' },
+        { class: 'nds-font-medium nds-tabular-nums' },
         currency.format(row.original.amount),
       ),
   },

@@ -205,6 +205,15 @@ const table = useVueTable<TData>({
   get enableColumnPinning() {
     return props.enableColumnPinning;
   },
+  /*
+   * O primeiro clique ordena ASCENDENTE em qualquer coluna.
+   *
+   * Sem isto o TanStack decide sozinho pelo TIPO do primeiro valor: coluna de
+   * número começa DESCENDENTE. O resultado era uma tabela em que ordenar por
+   * "Cliente" subia e ordenar por "Valor" descia, sem nada na tela explicando a
+   * diferenca — e contra o que a documentação do componente promete.
+   */
+  sortDescFirst: false,
   columnResizeMode: 'onChange',
   onSortingChange: (updater) => {
     sorting.value =
@@ -361,6 +370,10 @@ const EditableCell = defineComponent({
     );
 
     function commit() {
+      // O `blur` também confirma — e o Escape sai da edição ANTES dele. Sem
+      // esta guarda, descartar com Escape disparava `cellEdit` mesmo assim: o
+      // valor voltava na tela e quem consome recebia a edição cancelada.
+      if (!editing.value) return;
       const init = initialVal();
       const isNumber = typeof init === 'number';
       const next = isNumber ? Number(value.value) : value.value;
@@ -378,40 +391,61 @@ const EditableCell = defineComponent({
     }
 
     return () => {
+      // Mesmo rótulo no botão e no campo, e tirado do CABEÇALHO e não do id:
+      // o id é chave de dados (`customer`, `amount`) e virava "Editar amount".
+      const rotulo = `Editar ${
+        flexHeaderLabel(p.context.column.columnDef.header) ?? p.context.column.id
+      }`;
       if (!editing.value) {
-        return h(
-          'button',
-          {
-            type: 'button',
-            class:
-              'nds-data-table-edit-btn',
-            'aria-label': `Editar ${p.context.column.id}`,
-            onClick: () => {
-              editing.value = true;
+        return h('div', { class: 'nds-data-table-editable' }, [
+          h(
+            'button',
+            {
+              type: 'button',
+              class:
+                'nds-data-table-edit-btn',
+              'aria-label': rotulo,
+              onClick: () => {
+                editing.value = true;
+              },
             },
-          },
-          value.value === ''
-            ? h('span', { class: 'nds-dt-icon-muted' }, '—')
-            : value.value,
-        );
+            value.value === ''
+              ? h('span', { class: 'nds-dt-icon-muted' }, '—')
+              : value.value,
+          ),
+        ]);
       }
-      return h(Input, {
-        autofocus: true,
-        modelValue: value.value,
-        'onUpdate:modelValue': (v: string | number) => {
-          value.value = String(v);
-        },
-        onBlur: commit,
-        onKeydown: (e: KeyboardEvent) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            commit();
-          } else if (e.key === 'Escape') {
-            cancel();
-          }
-        },
-        class: 'nds-data-table-edit-input',
-      });
+      return h('div', { class: 'nds-data-table-editable' }, [
+        h(Input, {
+          // `autofocus` é ATRIBUTO: o navegador só o honra no primeiro parse do
+          // documento, e aqui o campo nasce depois, trocado no lugar do botão.
+          // Sem o foco programático quem abriu a edição com Enter perdia o
+          // ponto de partida e o campo ficava inalcançável pelo teclado.
+          autofocus: true,
+          onVnodeMounted: (vnode) => {
+            const el = vnode.el as HTMLInputElement | null;
+            el?.focus();
+            el?.select();
+          },
+          modelValue: value.value,
+          'onUpdate:modelValue': (v: string | number) => {
+            value.value = String(v);
+          },
+          onBlur: commit,
+          onKeydown: (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              commit();
+            } else if (e.key === 'Escape') {
+              cancel();
+            }
+          },
+          // Sem isto o campo aberto não tem NOME nenhum: o leitor anuncia
+          // "edição, em branco" e não diz de que coluna. WCAG 4.1.2, nível A.
+          'aria-label': rotulo,
+          class: 'nds-data-table-edit-input',
+        }),
+      ]);
     };
   },
 });
@@ -455,8 +489,14 @@ watch(
           aria-hidden="true"
           class="nds-dt-icon nds-dt-icon-muted"
         />
+        <!--
+          `type="search"` é o que dá a este campo o papel `searchbox` na árvore
+          de acessibilidade. Sem ele o leitor anuncia "campo de edição" e o
+          filtro global fica indistinguível de um campo de formulário qualquer.
+        -->
         <Input
           v-model="globalFilter"
+          type="search"
           :placeholder="globalFilterPlaceholder"
           :aria-label="globalFilterPlaceholder"
           class="nds-data-table-search-input"
@@ -636,25 +676,28 @@ watch(
               />
             </TableHead>
           </TableRow>
-          <TableRow v-if="hasColumnFilters">
+          <TableRow
+            v-if="hasColumnFilters"
+            class="nds-data-table-filter-row"
+          >
             <TableHead
               v-for="header in table.getHeaderGroups()[0]?.headers ?? []"
               :key="`f-${header.id}`"
               :style="pinStyle(header.column)"
-              :aria-label="
-                header.column.getCanFilter() && header.column.columnDef.meta?.filter
-                  ? undefined
-                  : 'Sem filtro disponível'
-              "
               :class="cn( header.column.getIsPinned() && 'nds-data-table-th-pinned', )"
             >
               <template
                 v-if="header.column.getCanFilter() && header.column.columnDef.meta?.filter"
               >
+                <!--
+                  O rótulo sai do CABEÇALHO, não do id. O id é chave de dados —
+                  `customer`, `amount` — e virava "Filtrar customer" numa
+                  interface em português.
+                -->
                 <select
                   v-if="header.column.columnDef.meta.filter.type === 'select'"
                   :value="(header.column.getFilterValue() ?? '') as string"
-                  :aria-label="`Filtrar ${header.column.id}`"
+                  :aria-label="`Filtrar ${flexHeaderLabel(header.column.columnDef.header) ?? header.column.id}`"
                   class="nds-data-table-filter-select"
                   @change="(e) => header.column.setFilterValue((e.target as HTMLSelectElement).value || undefined)"
                 >
@@ -673,15 +716,21 @@ watch(
                   v-else
                   :model-value="(header.column.getFilterValue() ?? '') as string"
                   :placeholder="header.column.columnDef.meta.filter.placeholder ?? 'Filtrar...'"
-                  :aria-label="`Filtrar ${header.column.id}`"
+                  :aria-label="`Filtrar ${flexHeaderLabel(header.column.columnDef.header) ?? header.column.id}`"
                   class="nds-data-table-filter-input"
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
               </template>
+              <!--
+                axe empty-table-header: o valor de um campo não entra no nome
+                acessível da célula, então a coluna sem filtro chegaria ao leitor
+                como cabeçalho vazio. O nome da coluna entra no texto porque
+                "Sem filtro" repetido em três células é o mesmo que vazio.
+              -->
               <span
                 v-else
                 class="nds-sr-only"
-              >Sem filtro</span>
+              >Sem filtro para {{ flexHeaderLabel(header.column.columnDef.header) ?? header.column.id }}</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -699,6 +748,7 @@ watch(
             <TableRow
               v-for="row in displayedRows"
               :key="row.id"
+              class="nds-data-table-tr"
               :data-state="row.getIsSelected() ? 'selected' : undefined"
             >
               <TableCell
@@ -708,7 +758,7 @@ watch(
                   width: enableColumnResizing ? `${cell.column.getSize()}px` : undefined,
                   ...pinStyle(cell.column),
                 }"
-                :class="cn(cell.column.getIsPinned() && 'nds-data-table-td-pinned')"
+                :class="cn('nds-data-table-td', cell.column.getIsPinned() && 'nds-data-table-td-pinned')"
               >
                 <EditableCell
                   v-if="cell.column.columnDef.meta?.editable"
@@ -741,6 +791,22 @@ watch(
           </tr>
         </TableBody>
       </Table>
+    </div>
+
+    <!--
+      A linha marcada muda de FUNDO — e cor sozinha não chega a quem não
+      enxerga. A contagem existia só no rodapé da paginação, num `div` mudo que
+      sumia junto com ela quando `enablePagination` era falso ou a tabela era
+      virtualizada. Aqui ela é região viva e não depende do rodapé.
+      WCAG 4.1.3 (Status Messages), nível AA.
+    -->
+    <div
+      v-if="enableRowSelection"
+      class="nds-sr-only"
+      role="status"
+      aria-live="polite"
+    >
+      {{ table.getFilteredSelectedRowModel().rows.length }} de {{ table.getFilteredRowModel().rows.length }} linha(s) selecionada(s).
     </div>
 
     <DataTablePagination

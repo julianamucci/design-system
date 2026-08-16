@@ -1199,7 +1199,13 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly testesAccessibility = computed(() => {
     const d = dict();
     // A forma varia por componente: trinca criterion/level/how ou string solta.
-    const trinca = itemsFromDict(d, 'testes.accessibility', ['criterion', 'level', 'how']);
+    // `how` guarda o nome da tag como ENTIDADE (`&lt;button&gt;`) porque o mesmo
+    // JSON alimenta destinos que renderizam HTML. Aqui o destino escreve
+    // textNode, então a entidade precisa ser decodificada — sem isto a célula
+    // mostraria "&lt;button&gt;" na tela.
+    const trinca = itemsFromDict(d, 'testes.accessibility', ['criterion', 'level', 'how']).map(
+      (r) => ({ ...r, how: toPlainText(r.how) }),
+    );
     const items = trinca.length
       ? trinca.map((r) => ({
           criterion: toPlainText(r.criterion),

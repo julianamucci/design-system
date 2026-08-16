@@ -314,8 +314,8 @@ export function createDataTableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair1.do')),
-              dontCaption: stripHtml(t('doDont.pair1.dont')),
+              doCaption: toPlainText(t('doDont.pair1.do')),
+              dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const t2 = createDataTable<Invoice>({
                   columns: demoColumns(),
@@ -337,8 +337,8 @@ export function createDataTableDocs(): HTMLElement {
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
-              doCaption: stripHtml(t('doDont.pair2.do')),
-              dontCaption: stripHtml(t('doDont.pair2.dont')),
+              doCaption: toPlainText(t('doDont.pair2.do')),
+              dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createDataTable<Invoice>({
                 columns: demoColumns(),
                 data: demoInvoices(),
@@ -593,7 +593,7 @@ export function createDataTableDocs(): HTMLElement {
             { key: 'Enter',  description: t('accessibility.keyboard.enter') },
             { key: 'Space',  description: t('accessibility.keyboard.space') },
             { key: 'Escape', description: t('accessibility.keyboard.escape') },
-            { key: 'Arrow Up / Arrow Down',    description: t('accessibility.keyboard.arrowKeys') },
+            { key: 'Arrow Up / Arrow Down',    description: toPlainText(t('accessibility.keyboard.arrowKeys')) },
           ],
         });
 
@@ -653,7 +653,7 @@ export function createDataTableDocs(): HTMLElement {
             items: [1, 2, 3, 4].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
-              how: t(`testes.accessibility.item${i}.how`),
+              how: toPlainText(t(`testes.accessibility.item${i}.how`)),
             })),
           },
           visual: {

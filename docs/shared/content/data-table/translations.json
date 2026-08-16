@@ -425,7 +425,7 @@
         "item2": {
           "criterion": "Botões de ordenação têm aria-label contextual com nome da coluna",
           "level": "AA",
-          "how": "axe-playwright + inspecionar atributo em cada <button> do cabeçalho"
+          "how": "axe-playwright + inspecionar atributo em cada &lt;button&gt; do cabeçalho"
         },
         "item3": {
           "criterion": "Checkboxes têm aria-label distinguindo cabeçalho e linha",
@@ -914,7 +914,7 @@
         "item2": {
           "criterion": "Sort buttons have contextual aria-label with column name",
           "level": "AA",
-          "how": "axe-playwright + inspect attribute on each header <button>"
+          "how": "axe-playwright + inspect attribute on each header &lt;button&gt;"
         },
         "item3": {
           "criterion": "Checkboxes have aria-label distinguishing header and row",
@@ -1403,7 +1403,7 @@
         "item2": {
           "criterion": "Botones de orden tienen aria-label contextual con el nombre de la columna",
           "level": "AA",
-          "how": "axe-playwright + inspeccionar atributo en cada <button> de cabecera"
+          "how": "axe-playwright + inspeccionar atributo en cada &lt;button&gt; de cabecera"
         },
         "item3": {
           "criterion": "Los checkboxes tienen aria-label distinguiendo cabecera y fila",

@@ -172,6 +172,15 @@
       enableRowSelection,
       enableColumnResizing,
       enableColumnPinning,
+      /*
+       * O primeiro clique ordena ASCENDENTE em qualquer coluna.
+       *
+       * Sem isto o TanStack decide sozinho pelo TIPO do primeiro valor: coluna de
+       * número começa DESCENDENTE. O resultado era uma tabela em que ordenar por
+       * "Cliente" subia e ordenar por "Valor" descia, sem nada na tela explicando a
+       * diferenca — e contra o que a documentação do componente promete.
+       */
+      sortDescFirst: false,
       columnResizeMode: 'onChange',
       onStateChange: () => {
         /* state lives in runes — see onChange handlers below */
@@ -233,17 +242,62 @@
   let scrollRef = $state<HTMLDivElement | null>(null);
   const rowsCount = $derived(virtualized && table ? table.getRowModel().rows.length : 0);
 
-  const virtualizerStore = $derived(
-    createVirtualizer<HTMLDivElement, HTMLTableRowElement>({
-      count: rowsCount,
-      getScrollElement: () => scrollRef,
-      estimateSize: () => virtualRowHeight,
-      overscan: 10,
-    })
-  );
+  /**
+   * Contador de medições do virtualizador.
+   *
+   * O store do adapter emite SEMPRE o mesmo objeto (`Object.assign(instance,…)`),
+   * então `$derived` sobre ele nunca invalida: a primeira leitura acontecia com
+   * o contêiner ainda sem altura, devolvia zero itens, e nada recalculava
+   * depois que ele era medido — a tabela virtualizada ficava com o corpo VAZIO,
+   * e nenhuma story reparava porque nenhuma tinha play.
+   *
+   * O tique é o que muda de valor, e é ele que os `$derived` abaixo observam.
+   */
+  let medicoes = $state(0);
 
-  const virtualItems = $derived($virtualizerStore?.getVirtualItems() ?? []);
-  const totalSize = $derived($virtualizerStore?.getTotalSize() ?? 0);
+  /**
+   * O store é criado UMA vez e reconfigurado por `setOptions`, que é o caminho
+   * que o adapter expõe: ele chama `_willUpdate()` e reemite o valor. Recriar o
+   * store a cada mudança de `count` remontava o virtualizador do zero e jogava
+   * fora a medição do contêiner — que é justamente o que ele precisa guardar.
+   */
+  const virtualizerStore = createVirtualizer<HTMLDivElement, HTMLTableRowElement>({
+    count: 0,
+    getScrollElement: () => scrollRef,
+    estimateSize: () => virtualRowHeight,
+    overscan: 10,
+    onChange: () => {
+      medicoes += 1;
+    },
+  });
+
+  $effect(() => {
+    const conta = rowsCount;
+    const elemento = scrollRef;
+    // `untrack`: `setOptions` reemite o store, e sem isto o próprio efeito se
+    // reagendaria em laço — o que travava a paginação da tabela NÃO
+    // virtualizada na primeira página.
+    untrack(() =>
+      $virtualizerStore.setOptions({
+        count: conta,
+        getScrollElement: () => elemento,
+        estimateSize: () => virtualRowHeight,
+        overscan: 10,
+        onChange: () => {
+          medicoes += 1;
+        },
+      }),
+    );
+  });
+
+  const virtualItems = $derived.by(() => {
+    medicoes;
+    return $virtualizerStore?.getVirtualItems() ?? [];
+  });
+  const totalSize = $derived.by(() => {
+    medicoes;
+    return $virtualizerStore?.getTotalSize() ?? 0;
+  });
   const paddingTop = $derived(
     virtualized && virtualItems.length > 0 ? virtualItems[0].start : 0
   );
@@ -313,7 +367,12 @@
               aria-hidden="true"
               class="nds-dt-icon nds-dt-icon-muted"
             />
+            <!-- `type="search"` é o que dá a este campo o papel `searchbox` na
+                 árvore de acessibilidade. Sem ele o leitor anuncia "campo de
+                 edição" e o filtro global fica indistinguível de um campo de
+                 formulário qualquer. -->
             <Input
+              type="search"
               value={globalFilter}
               oninput={(e: Event) => setGlobalFilter((e.currentTarget as HTMLInputElement).value)}
               placeholder={globalFilterPlaceholder}
@@ -408,14 +467,18 @@
                     enableColumnResizing ? `width: ${header.getSize()}px;` : '',
                     pinStyle(header.column),
                   ].join(' ')}
-                  class={cn('nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-td-pinned')}
+                  class={cn('nds-data-table-th', header.column.getIsPinned() && 'nds-data-table-th-pinned')}
                   draggable={isDraggable}
                   ondragstart={isDraggable ? () => handleDragStart(header.column.id) : undefined}
                   ondragover={isDraggable ? handleDragOver : undefined}
                   ondrop={isDraggable ? () => handleDrop(header.column.id) : undefined}
                 >
                   {#if !header.isPlaceholder}
-                    <div class="nds-data-table-columns-menu-row">
+                    <!-- `nds-data-table-th-inner`, e não a classe do menu de
+                         colunas: a do menu traz padding, raio e um FUNDO no
+                         hover, e o cabeçalho ficava 8px mais alto que nas outras
+                         stacks e acendia ao passar o mouse. -->
+                    <div class="nds-data-table-th-inner">
                       {#if isDraggable}
                         <GripVertical aria-hidden="true" class="nds-dt-icon nds-dt-icon-grip" />
                       {/if}
@@ -465,20 +528,24 @@
             </TableRow>
           {/each}
           {#if hasColumnFilters}
-            <TableRow>
+            <TableRow class="nds-data-table-filter-row">
               {#each headerGroups[0]?.headers ?? [] as header (header.id)}
                 {@const filterMeta = header.column.columnDef.meta?.filter}
                 {@const canFilter = header.column.getCanFilter()}
+                {@const filtroLabel = headerLabel(header.column)}
                 <TableHead
                   style={pinStyle(header.column)}
-                  class={cn('', header.column.getIsPinned() && 'nds-data-table-td-pinned')}
+                  class={cn('', header.column.getIsPinned() && 'nds-data-table-th-pinned')}
                 >
                   {#if canFilter && filterMeta}
+                    <!-- O rótulo sai do CABEÇALHO, não do id. O id é chave de
+                         dados (`customer`, `amount`) e virava "Filtrar amount"
+                         numa interface em português. -->
                     {#if filterMeta.type === 'select'}
                       <select
                         value={(header.column.getFilterValue() as string) ?? ''}
                         onchange={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLSelectElement).value || undefined)}
-                        aria-label={`Filtrar ${header.column.id}`}
+                        aria-label={`Filtrar ${filtroLabel}`}
                         class="nds-data-table-filter-select"
                       >
                         <option value="">Todos</option>
@@ -491,16 +558,17 @@
                         value={(header.column.getFilterValue() as string) ?? ''}
                         oninput={(e: Event) => header.column.setFilterValue((e.currentTarget as HTMLInputElement).value)}
                         placeholder={filterMeta.placeholder ?? 'Filtrar...'}
-                        aria-label={`Filtrar ${header.column.id}`}
+                        aria-label={`Filtrar ${filtroLabel}`}
                         class="nds-data-table-filter-input"
                       />
                     {/if}
                   {:else}
                     <!-- axe empty-table-header: o valor de um campo não entra no
                          nome acessível da célula, então a coluna sem filtro
-                         chegaria ao leitor de tela como cabeçalho vazio. Vue,
-                         Vanilla e Angular já traziam este rótulo. -->
-                    <span class="nds-sr-only">Sem filtro</span>
+                         chegaria ao leitor de tela como cabeçalho vazio. O nome
+                         da coluna entra no texto porque "Sem filtro" repetido em
+                         três células é o mesmo que célula vazia. -->
+                    <span class="nds-sr-only">Sem filtro para {filtroLabel}</span>
                   {/if}
                 </TableHead>
               {/each}
@@ -513,7 +581,7 @@
           {/if}
           {#if rows.length}
             {#each virtualized ? virtualItems.map((vi) => rows[vi.index]) : rows as row (row.id)}
-              <TableRow data-state={row.getIsSelected() ? 'selected' : undefined}>
+              <TableRow class="nds-data-table-tr" data-state={row.getIsSelected() ? 'selected' : undefined}>
                 {#each row.getVisibleCells() as cell (cell.id)}
                   {@const colId = cell.column.id}
                   <TableCell
@@ -522,7 +590,8 @@
                       pinStyle(cell.column),
                     ].join(' ')}
                     class={cn(
-                      cell.column.getIsPinned() && 'nds-data-table-th-pinned',
+                      'nds-data-table-td',
+                      cell.column.getIsPinned() && 'nds-data-table-td-pinned',
                       cell.column.columnDef.meta?.cellClass,
                     )}
                   >
@@ -538,6 +607,7 @@
                         {initial}
                         rowIndex={row.index}
                         columnId={colId}
+                        label={headerLabel(cell.column)}
                         onCommit={(value) => onCellEdit?.(row.index, colId, value)}
                       />
                     {:else if cell.column.columnDef.meta?.badgeVariant}
@@ -566,6 +636,17 @@
         </TableBody>
       </Table>
     </div>
+
+    <!-- A linha marcada muda de FUNDO — e cor sozinha não chega a quem não
+         enxerga. A contagem existia só no rodapé da paginação, num `div` mudo
+         que sumia junto com ela quando `enablePagination` era falso ou a tabela
+         era virtualizada. Aqui ela é região viva e não depende do rodapé.
+         WCAG 4.1.3 (Status Messages), nível AA. -->
+    {#if enableRowSelection}
+      <div class="nds-sr-only" role="status" aria-live="polite">
+        {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
+      </div>
+    {/if}
 
     {#if enablePagination && !virtualized}
       <DataTablePagination {table} {pageSizeOptions} {enableRowSelection} />

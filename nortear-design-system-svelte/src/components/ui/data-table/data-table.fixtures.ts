@@ -47,7 +47,7 @@ export const baseColumns: DataTableColumn<Invoice>[] = [
     size: 130,
     meta: {
       format: (v) => currency.format(Number(v)),
-      cellClass: 'font-medium tabular-nums',
+      cellClass: 'nds-font-medium nds-tabular-nums',
     },
   },
 ];

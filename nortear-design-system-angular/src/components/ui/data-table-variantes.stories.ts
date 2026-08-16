@@ -37,7 +37,11 @@ type Story = StoryObj;
 
 export const WithColumnFilters: Story = {
   parameters: {
-    covers: ['functional.item2', 'visual.item2'],
+    // `accessibility.item4` fala em "estados padrão, filtrado e selecionado", e
+    // o axe roda no DOM FINAL de cada story. O Playground cobria padrão e
+    // selecionado; o estado filtrado só existe ao fim desta — declarar o item
+    // só lá era cobertura parcial passando por completa.
+    covers: ['functional.item2', 'accessibility.item4', 'visual.item2'],
     docs: {
       description: {
         story:

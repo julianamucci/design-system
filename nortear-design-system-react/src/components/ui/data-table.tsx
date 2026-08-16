@@ -199,6 +199,15 @@ function DataTable<TData>({
     enableRowSelection,
     enableColumnResizing,
     enableColumnPinning,
+    /*
+     * O primeiro clique ordena ASCENDENTE em qualquer coluna.
+     *
+     * Sem isto o TanStack decide sozinho pelo TIPO do primeiro valor: coluna de
+     * número começa DESCENDENTE. O resultado era uma tabela em que ordenar por
+     * "Cliente" subia e ordenar por "Valor" descia, sem nada na tela explicando a
+     * diferenca — e contra o que a documentação do componente promete.
+     */
+    sortDescFirst: false,
     columnResizeMode: "onChange",
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -299,6 +308,11 @@ function DataTable<TData>({
                 className="nds-dt-icon nds-dt-icon-muted"
               />
               <Input
+                // `type="search"` é o que dá a este campo o papel `searchbox`
+                // na árvore de acessibilidade. Sem ele o leitor anuncia "campo
+                // de edição" e o filtro global fica indistinguível de um
+                // campo de formulário qualquer.
+                type="search"
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
                 placeholder={globalFilterPlaceholder}
@@ -531,9 +545,18 @@ function DataTable<TData>({
                       ) : (
                         // axe empty-table-header: o valor de um campo não entra
                         // no nome acessível da célula, então a coluna sem filtro
-                        // chegaria ao leitor de tela como cabeçalho vazio. Vue,
-                        // Vanilla e Angular já traziam este rótulo.
-                        <span className="nds-sr-only">Sem filtro</span>
+                        // chegaria ao leitor de tela como cabeçalho vazio.
+                        //
+                        // O nome da coluna entra no texto porque "Sem filtro"
+                        // repetido em três células é o mesmo que célula vazia:
+                        // o leitor lista três cabeçalhos idênticos e nenhum diz
+                        // a que coluna pertence.
+                        <span className="nds-sr-only">
+                          {`Sem filtro para ${
+                            flexHeaderLabel(header.column.columnDef.header) ??
+                            header.column.id
+                          }`}
+                        </span>
                       )}
                     </TableHead>
                   )
@@ -557,6 +580,7 @@ function DataTable<TData>({
               ).map((row) => (
                 <TableRow
                   key={row.id}
+                  className="nds-data-table-tr"
                   data-state={row.getIsSelected() ? "selected" : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -569,6 +593,7 @@ function DataTable<TData>({
                         ...pinStyle(cell.column),
                       }}
                       className={cn(
+                        "nds-data-table-td",
                         cell.column.getIsPinned() && "nds-data-table-td-pinned"
                       )}
                     >
@@ -609,6 +634,21 @@ function DataTable<TData>({
         </Table>
       </div>
 
+      {/*
+        A linha marcada muda de FUNDO — e cor sozinha não chega a quem não
+        enxerga. A contagem existia só no rodapé da paginação, num `div` mudo
+        que somia junto com ela quando `enablePagination` era falso ou a tabela
+        era virtualizada. Aqui ela é região viva e não depende do rodapé.
+        WCAG 4.1.3 (Status Messages), nível AA.
+      */}
+      {enableRowSelection && (
+        <div className="nds-sr-only" role="status" aria-live="polite">
+          {`${table.getFilteredSelectedRowModel().rows.length} de ${
+            table.getFilteredRowModel().rows.length
+          } linha(s) selecionada(s).`}
+        </div>
+      )}
+
       {enablePagination && !virtualized && (
         <DataTablePagination
           table={table}
@@ -630,6 +670,10 @@ function ColumnFilter<TData, TValue>({
   meta,
 }: ColumnFilterProps<TData, TValue>) {
   const value = (column.getFilterValue() ?? "") as string
+  // O rótulo sai do CABEÇALHO, não do id. O id é chave de dados —
+  // `customer`, `amount` — e virava "Filtrar customer" numa interface em
+  // português. Só cai no id quando o header não é string.
+  const label = flexHeaderLabel(column.columnDef.header) ?? column.id
   if (meta.type === "select") {
     return (
       <select
@@ -637,7 +681,7 @@ function ColumnFilter<TData, TValue>({
         onChange={(e) =>
           column.setFilterValue(e.target.value || undefined)
         }
-        aria-label={`Filtrar ${column.id}`}
+        aria-label={`Filtrar ${label}`}
         className="nds-data-table-filter-select"
       >
         <option value="">Todos</option>
@@ -654,7 +698,7 @@ function ColumnFilter<TData, TValue>({
       value={value}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={meta.placeholder ?? "Filtrar..."}
-      aria-label={`Filtrar ${column.id}`}
+      aria-label={`Filtrar ${label}`}
       className="nds-data-table-filter-input"
     />
   )
@@ -668,6 +712,10 @@ interface EditableCellProps<TData, TValue> {
 function EditableCell<TData, TValue>({
   context,
 }: EditableCellProps<TData, TValue>) {
+  // Mesmo rótulo no botão e no campo: quem abriu a edição precisa ouvir de que
+  // coluna é o campo que acabou de receber foco. Sai do cabeçalho, não do id.
+  const label =
+    flexHeaderLabel(context.column.columnDef.header) ?? context.column.id
   const initial = context.getValue() as string | number | null
   const [value, setValue] = React.useState<string>(
     initial == null ? "" : String(initial)
@@ -696,37 +744,44 @@ function EditableCell<TData, TValue>({
 
   if (!editing) {
     return (
-      <button
-        type="button"
-        onClick={() => setEditing(true)}
-        className="nds-data-table-edit-btn"
-        aria-label={`Editar ${context.column.id}`}
-      >
-        {value === "" ? (
-          <span className="nds-dt-icon-muted">—</span>
-        ) : (
-          value
-        )}
-      </button>
+      <div className="nds-data-table-editable">
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="nds-data-table-edit-btn"
+          aria-label={`Editar ${label}`}
+        >
+          {value === "" ? (
+            <span className="nds-dt-icon-muted">—</span>
+          ) : (
+            value
+          )}
+        </button>
+      </div>
     )
   }
   return (
-    <Input
-      autoFocus
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={commit}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault()
-          commit()
-        } else if (e.key === "Escape") {
-          setValue(initial == null ? "" : String(initial))
-          setEditing(false)
-        }
-      }}
-      className="nds-data-table-edit-input"
-    />
+    <div className="nds-data-table-editable">
+      <Input
+        autoFocus
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault()
+            commit()
+          } else if (e.key === "Escape") {
+            setValue(initial == null ? "" : String(initial))
+            setEditing(false)
+          }
+        }}
+        // Sem isto o campo aberto não tem NOME nenhum: o leitor anuncia
+        // "edição, em branco" e não diz de que coluna. WCAG 4.1.2, nível A.
+        aria-label={`Editar ${label}`}
+        className="nds-data-table-edit-input"
+      />
+    </div>
   )
 }
 
