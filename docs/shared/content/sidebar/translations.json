@@ -189,8 +189,8 @@
       },
       "mobile": {
         "label": "Mobile (overlay)",
-        "trigger": "Viewport mobile detectada pelo <code>useIsMobile()</code>",
-        "behavior": "Sidebar renderizada como Sheet overlay (18rem). Abre via SidebarTrigger ou toggleSidebar()."
+        "trigger": "Largura abaixo do ponto de virada",
+        "behavior": "A barra sai do fluxo e vira gaveta modal sobreposta (18rem), aberta pelo gatilho ou pelo atalho de teclado."
       },
       "hidden": {
         "label": "Fixo (none)",
@@ -256,7 +256,7 @@
       "sidebarRing": "Anel de foco nos itens interativos",
       "sidebarWidth": "Largura em desktop expandido (16rem)",
       "sidebarWidthIcon": "Largura no modo icon colapsado (3rem)",
-      "sidebarWidthMobile": "Largura do Sheet em mobile (18rem)",
+      "sidebarWidthMobile": "Largura da gaveta sobreposta (18rem)",
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
@@ -353,8 +353,8 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Redimensionar para viewport mobile",
-          "result": "Sidebar renderiza como Sheet; SidebarTrigger abre o overlay",
+          "action": "Atingir a largura estreita do ponto de virada",
+          "result": "A barra sai do fluxo e vira gaveta modal sobreposta; o gatilho a abre, Escape a fecha e o foco volta para o gatilho",
           "priority": "high"
         },
         "item4": {
@@ -442,7 +442,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Mobile — Sheet overlay aberto",
+          "story": "Mobile — gaveta sobreposta aberta",
           "priority": "high"
         },
         "item6": {
@@ -663,8 +663,8 @@
       },
       "mobile": {
         "label": "Mobile (overlay)",
-        "trigger": "Mobile viewport detected by <code>useIsMobile()</code>",
-        "behavior": "Sidebar rendered as Sheet overlay (18rem). Opens via SidebarTrigger or toggleSidebar()."
+        "trigger": "Width below the switching point",
+        "behavior": "The bar leaves the flow and becomes an overlaid modal drawer (18rem), opened by the trigger or by the keyboard shortcut."
       },
       "hidden": {
         "label": "Fixed (none)",
@@ -730,7 +730,7 @@
       "sidebarRing": "Focus ring on interactive items",
       "sidebarWidth": "Desktop expanded width (16rem)",
       "sidebarWidthIcon": "Icon collapsed mode width (3rem)",
-      "sidebarWidthMobile": "Mobile Sheet width (18rem)",
+      "sidebarWidthMobile": "Overlaid drawer width (18rem)",
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
@@ -827,8 +827,8 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Resize to mobile viewport",
-          "result": "Sidebar renders as Sheet; SidebarTrigger opens the overlay",
+          "action": "Reach the narrow width of the switching point",
+          "result": "The bar leaves the flow and becomes an overlaid modal drawer; the trigger opens it, Escape closes it and focus returns to the trigger",
           "priority": "high"
         },
         "item4": {
@@ -916,7 +916,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Mobile — Sheet overlay open",
+          "story": "Mobile — overlaid drawer open",
           "priority": "high"
         },
         "item6": {
@@ -1137,8 +1137,8 @@
       },
       "mobile": {
         "label": "Mobile (overlay)",
-        "trigger": "Viewport mobile detectado por <code>useIsMobile()</code>",
-        "behavior": "Sidebar renderizada como Sheet overlay (18rem). Abre vía SidebarTrigger o toggleSidebar()."
+        "trigger": "Ancho por debajo del punto de cambio",
+        "behavior": "La barra sale del flujo y se vuelve un cajón modal superpuesto (18rem), abierto por el disparador o por el atajo de teclado."
       },
       "hidden": {
         "label": "Fijo (none)",
@@ -1204,7 +1204,7 @@
       "sidebarRing": "Anillo de foco en ítems interactivos",
       "sidebarWidth": "Ancho en desktop expandido (16rem)",
       "sidebarWidthIcon": "Ancho en modo icon colapsado (3rem)",
-      "sidebarWidthMobile": "Ancho del Sheet en mobile (18rem)",
+      "sidebarWidthMobile": "Ancho del cajón superpuesto (18rem)",
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
@@ -1301,8 +1301,8 @@
           "priority": "high"
         },
         "item3": {
-          "action": "Redimensionar a viewport mobile",
-          "result": "Sidebar se renderiza como Sheet; SidebarTrigger abre el overlay",
+          "action": "Alcanzar el ancho estrecho del punto de cambio",
+          "result": "La barra sale del flujo y se vuelve un cajón modal superpuesto; el disparador lo abre, Escape lo cierra y el foco vuelve al disparador",
           "priority": "high"
         },
         "item4": {
@@ -1390,7 +1390,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Mobile — Sheet overlay abierto",
+          "story": "Mobile — cajón superpuesto abierto",
           "priority": "high"
         },
         "item6": {

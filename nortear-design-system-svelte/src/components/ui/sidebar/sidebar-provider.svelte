@@ -5,6 +5,7 @@
 	import {
 		SIDEBAR_COOKIE_MAX_AGE,
 		SIDEBAR_COOKIE_NAME,
+		SIDEBAR_MOBILE_QUERY,
 		SIDEBAR_WIDTH,
 		SIDEBAR_WIDTH_ICON,
 	} from "./constants.js";
@@ -14,6 +15,7 @@
 		ref = $bindable(null),
 		open = $bindable(true),
 		onOpenChange = () => {},
+		mobileQuery = SIDEBAR_MOBILE_QUERY,
 		class: className,
 		style,
 		children,
@@ -21,10 +23,18 @@
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
 		open?: boolean;
 		onOpenChange?: (open: boolean) => void;
+		/**
+		 * Consulta de mídia abaixo da qual a barra vira gaveta sobreposta.
+		 *
+		 * O ponto de virada é do produto, não do design system — e é por aqui que
+		 * um teste exercita o caminho móvel sem redimensionar o navegador.
+		 */
+		mobileQuery?: string;
 	} = $props();
 
 	const sidebar = setSidebar({
 		open: () => open,
+		mobileQuery: () => mobileQuery,
 		setOpen: (value: boolean) => {
 			open = value;
 			onOpenChange(value);

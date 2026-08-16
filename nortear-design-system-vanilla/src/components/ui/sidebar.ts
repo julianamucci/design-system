@@ -25,6 +25,18 @@ import { createSkeleton } from './skeleton';
 
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
+/**
+ * A consulta de mídia que decide se a barra é coluna ou gaveta.
+ *
+ * Abaixo deste ponto a barra deixa de ser coluna e vira gaveta sobreposta: não
+ * é escolha estética, 16rem numa tela de 360px não deixa conteúdo.
+ *
+ * `matchMedia` e não `innerWidth`: `innerWidth` conta a barra de rolagem e não
+ * responde a zoom nem a mudança de fonte, então duas telas da mesma largura
+ * trocariam de modo em momentos diferentes.
+ */
+export const SIDEBAR_MOBILE_QUERY = '(max-width: 767px)';
+
 export type SidebarState = 'expanded' | 'collapsed';
 export type SidebarSide = 'left' | 'right';
 export type SidebarVariant = 'sidebar' | 'floating' | 'inset';
@@ -38,6 +50,20 @@ export type SidebarOptions = {
   variant?: SidebarVariant;
   onOpenChange?: (open: boolean) => void;
   class?: string;
+  /**
+   * A consulta que decide coluna × gaveta.
+   *
+   * Injetável porque o ponto de virada é do produto, não do design system: uma
+   * aplicação com barra mais estreita vira mais tarde. Também é o que permite
+   * exercitar o caminho da gaveta sem redimensionar o navegador — sem isto o
+   * ramo móvel é código que nenhuma story alcança.
+   */
+  mobileQuery?: string;
+  /** Nome da gaveta, só para leitor de tela: um diálogo sem nome é anunciado como "diálogo" e mais nada. */
+  mobileTitle?: string;
+  mobileDescription?: string;
+  /** Avisa a abertura e o fechamento da gaveta (o `onOpenChange` é da coluna). */
+  onMobileOpenChange?: (open: boolean) => void;
 };
 
 export type SidebarMenuItemOptions = {
@@ -61,6 +87,12 @@ export type SidebarInstance = {
   open: () => void;
   close: () => void;
   getState: () => SidebarState;
+  /** Se a largura corrente está abaixo do ponto de virada. */
+  isMobile: () => boolean;
+  /** Se a gaveta sobreposta está aberta. Fora do modo estreito é sempre `false`. */
+  isMobileOpen: () => boolean;
+  /** Solta os ouvintes de documento. Chamado sozinho quando a raiz sai do documento. */
+  destroy: () => void;
 };
 
 export function createSidebarProvider(
@@ -73,8 +105,36 @@ export function createSidebarProvider(
   return wrapper;
 }
 
+let _sidebarCounter = 0;
+
+/**
+ * Alcançáveis por Tab dentro de um contêiner.
+ *
+ * `getClientRects().length` corta o que está fora da tela por `display: none` —
+ * um elemento assim casa com o seletor mas não recebe foco, e como extremo da
+ * prisão de foco ele mandaria o Tab para o `<body>`.
+ */
+function focaveis(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((el) => el.getClientRects().length > 0);
+}
+
 export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
-  const { defaultOpen = true, side = 'left', variant = 'sidebar', onOpenChange } = options;
+  const {
+    defaultOpen = true,
+    side = 'left',
+    variant = 'sidebar',
+    onOpenChange,
+    mobileQuery = SIDEBAR_MOBILE_QUERY,
+    // Padrão em inglês para bater com o que as outras stacks de navegador já
+    // emitem — lá o texto é literal cravado no componente; aqui dá para trocar.
+    mobileTitle = 'Sidebar',
+    mobileDescription = 'Displays the mobile sidebar.',
+    onMobileOpenChange,
+  } = options;
   let isOpen = defaultOpen;
 
   const root = document.createElement('div');
@@ -112,20 +172,220 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     onOpenChange?.(open);
   }
 
+  // ─── Gaveta sobreposta (largura estreita) ─────────────────────────────────
+  //
+  // Abaixo do ponto de virada a barra sai do fluxo e vira gaveta modal. O
+  // arranjo é o mesmo que as outras stacks montam com o Sheet: overlay,
+  // `role="dialog"` com `aria-modal`, nome e descrição só para leitor de tela,
+  // e `.nds-sidebar-mobile` no painel — a folha compartilhada já declara a
+  // medida e o fundo dessa classe, e `.nds-sidebar-mobile-inner` como filha.
+  //
+  // A prisão de foco, o Escape e a devolução do foco são escritos aqui e não
+  // reaproveitados do `createSheet`: aquela fábrica é dirigida pelo gatilho que
+  // ela mesma embrulha e não expõe abertura por código, e o painel dela põe o
+  // conteúdo dentro de `.nds-sheet-body` — um nível a mais do que a folha
+  // compartilhada espera sob `.nds-sidebar-mobile`.
+
+  const idGaveta = ++_sidebarCounter;
+  const idTitulo = `sidebar-mobile-title-${idGaveta}`;
+  const idDescricao = `sidebar-mobile-desc-${idGaveta}`;
+
+  const mql = window.matchMedia(mobileQuery);
+  let movel = mql.matches;
+  let gavetaAberta = false;
+  let overlayEl: HTMLElement | null = null;
+  let gavetaEl: HTMLElement | null = null;
+  let focoAntesDaGaveta: HTMLElement | null = null;
+
+  function montarGaveta(): void {
+    overlayEl = document.createElement('div');
+    overlayEl.className = 'nds-sheet-overlay';
+    overlayEl.dataset.slot = 'sheet-overlay';
+    overlayEl.addEventListener('click', () => fecharGaveta());
+
+    gavetaEl = document.createElement('div');
+    gavetaEl.className = cn('nds-sheet-content', 'nds-sidebar-mobile', options.class);
+    gavetaEl.dataset.side = side;
+    gavetaEl.dataset.slot = 'sidebar';
+    gavetaEl.dataset.mobile = 'true';
+    // `data-sidebar="sidebar"` não se repete aqui: ele continua no
+    // `.nds-sidebar-inner`, que entra na gaveta junto com o conteúdo. Duas
+    // respostas para o mesmo seletor é o que faz asserção pegar o elemento
+    // errado.
+    gavetaEl.setAttribute('role', 'dialog');
+    gavetaEl.setAttribute('aria-modal', 'true');
+    gavetaEl.setAttribute('aria-labelledby', idTitulo);
+    gavetaEl.setAttribute('aria-describedby', idDescricao);
+
+    const cabecalho = document.createElement('div');
+    cabecalho.className = 'nds-sheet-header nds-sr-only';
+    cabecalho.dataset.slot = 'sheet-header';
+    const titulo = document.createElement('h2');
+    titulo.id = idTitulo;
+    titulo.className = 'nds-sheet-title';
+    titulo.textContent = mobileTitle;
+    const descricao = document.createElement('p');
+    descricao.id = idDescricao;
+    descricao.className = 'nds-sheet-description';
+    descricao.textContent = mobileDescription;
+    cabecalho.append(titulo, descricao);
+    gavetaEl.appendChild(cabecalho);
+
+    // O conteúdo é MOVIDO, não copiado: quem compôs a barra guarda referências
+    // para os próprios itens, e uma cópia deixaria os ouvintes do lado errado.
+    inner.classList.add('nds-sidebar-mobile-inner');
+    gavetaEl.appendChild(inner);
+
+    document.body.append(overlayEl, gavetaEl);
+    document.addEventListener('keydown', handleGavetaKeydown);
+  }
+
+  function abrirGaveta(): void {
+    if (gavetaAberta) return;
+    focoAntesDaGaveta = document.activeElement as HTMLElement | null;
+    montarGaveta();
+    gavetaAberta = true;
+    // O foco entra no painel; sem isto o teclado continua na página por baixo,
+    // que está coberta por um modal.
+    (focaveis(gavetaEl!)[0] ?? gavetaEl!).focus();
+    onMobileOpenChange?.(true);
+  }
+
+  function fecharGaveta(devolverFoco = true): void {
+    if (!gavetaAberta) return;
+    // O conteúdo volta para a coluna antes de o painel sair, senão ele sairia
+    // do documento junto e a barra ficaria vazia ao voltar à largura cheia.
+    inner.classList.remove('nds-sidebar-mobile-inner');
+    panel.appendChild(inner);
+    overlayEl?.remove();
+    gavetaEl?.remove();
+    overlayEl = null;
+    gavetaEl = null;
+    document.removeEventListener('keydown', handleGavetaKeydown);
+    gavetaAberta = false;
+
+    // Devolver o foco é trabalho de quem abriu. Sem isto o Escape fecha a
+    // gaveta e o foco cai no <body>: quem navega por teclado volta ao começo
+    // da página.
+    const alvo = focoAntesDaGaveta;
+    focoAntesDaGaveta = null;
+    if (devolverFoco && alvo?.isConnected) alvo.focus();
+    onMobileOpenChange?.(false);
+  }
+
+  function handleGavetaKeydown(e: KeyboardEvent): void {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      fecharGaveta();
+      return;
+    }
+    if (e.key !== 'Tab' || !gavetaEl) return;
+    const lista = focaveis(gavetaEl);
+    if (!lista.length) {
+      e.preventDefault();
+      return;
+    }
+    const primeiro = lista[0];
+    const ultimo = lista[lista.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === primeiro) {
+        e.preventDefault();
+        ultimo.focus();
+      }
+    } else if (document.activeElement === ultimo) {
+      e.preventDefault();
+      primeiro.focus();
+    }
+  }
+
+  /**
+   * Põe a barra no arranjo da largura corrente.
+   *
+   * Na largura estreita a coluna sai do fluxo inteira — é o que as outras
+   * stacks fazem ao trocar o painel fixo por um portal. Enquanto a gaveta está
+   * fechada, o conteúdo continua guardado na coluna escondida: é para lá que
+   * quem compõe segue apontando (`[data-sidebar="sidebar"]`).
+   */
+  function aplicarModo(): void {
+    movel = mql.matches;
+    if (movel) {
+      if (!gavetaAberta) {
+        root.hidden = true;
+        // Sem `data-slot` na raiz escondida existe UM `[data-slot="sidebar"]`
+        // no documento: a gaveta, quando aberta. Duas respostas para o mesmo
+        // seletor é o que faz asserção passar pelo elemento errado.
+        delete root.dataset.slot;
+      }
+      return;
+    }
+    fecharGaveta(false);
+    root.hidden = false;
+    root.dataset.slot = 'sidebar';
+  }
+
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === SIDEBAR_KEYBOARD_SHORTCUT && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      setState(!isOpen);
+      alternar();
     }
   }
+
+  function alternar(): void {
+    if (movel) {
+      if (gavetaAberta) fecharGaveta();
+      else abrirGaveta();
+      return;
+    }
+    setState(!isOpen);
+  }
+
   document.addEventListener('keydown', handleKeydown);
+  mql.addEventListener('change', aplicarModo);
+  aplicarModo();
+
+  function destroy(): void {
+    fecharGaveta(false);
+    document.removeEventListener('keydown', handleKeydown);
+    mql.removeEventListener('change', aplicarModo);
+  }
+
+  /*
+   * Quem tira a barra do documento não chama `destroy`.
+   *
+   * O ouvinte de `keydown` era registrado no `document` e nunca removido: cada
+   * story montada deixava para trás mais um Ctrl+B vivo, alternando barras já
+   * desmontadas. É o mesmo cuidado que `sheet.ts` e `dialog.ts` já tomam.
+   *
+   * `jaConectou` separa "saiu do documento" de "ainda não entrou": a fábrica
+   * devolve a raiz e quem chama a insere depois.
+   */
+  if (typeof MutationObserver !== 'undefined') {
+    let jaConectou = false;
+    const observador = new MutationObserver(() => {
+      // Enquanto a gaveta está aberta, a raiz continua conectada — é o painel
+      // que vive no `body`. O conteúdo é que sai da raiz, e isso não conta.
+      if (root.isConnected) {
+        jaConectou = true;
+        return;
+      }
+      if (!jaConectou) return;
+      destroy();
+      observador.disconnect();
+    });
+    const observar = () => observador.observe(document.body, { childList: true, subtree: true });
+    if (document.body) observar();
+    else queueMicrotask(observar);
+  }
 
   return {
     element: root,
-    toggle: () => setState(!isOpen),
-    open: () => setState(true),
-    close: () => setState(false),
+    toggle: alternar,
+    open: () => (movel ? abrirGaveta() : setState(true)),
+    close: () => (movel ? fecharGaveta() : setState(false)),
     getState: () => (isOpen ? 'expanded' : 'collapsed'),
+    isMobile: () => movel,
+    isMobileOpen: () => gavetaAberta,
+    destroy,
   };
 }
 

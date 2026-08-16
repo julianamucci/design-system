@@ -1,6 +1,6 @@
 import { IsMobile } from "@/lib/hooks/is-mobile.svelte.js";
 import { getContext, setContext } from "svelte";
-import { SIDEBAR_KEYBOARD_SHORTCUT } from "./constants.js";
+import { SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_MOBILE_QUERY } from "./constants.js";
 
 type Getter<T> = () => T;
 
@@ -18,6 +18,15 @@ export type SidebarStateProps = {
 	 * the sub-components and any `bind:` references.
 	 */
 	setOpen: (open: boolean) => void;
+
+	/**
+	 * Getter da consulta de mídia que decide entre coluna e gaveta.
+	 *
+	 * Getter, e não string solta, pelo mesmo motivo de `open`: é uma prop do
+	 * `Sidebar.Provider`, e uma string capturada por valor congelaria no primeiro
+	 * render. Quem não passa nada fica com `SIDEBAR_MOBILE_QUERY`.
+	 */
+	mobileQuery?: Getter<string>;
 };
 
 class SidebarState {
@@ -25,12 +34,21 @@ class SidebarState {
 	open = $derived.by(() => this.props.open());
 	openMobile = $state(false);
 	setOpen: SidebarStateProps["setOpen"];
-	#isMobile: IsMobile;
 	state = $derived.by(() => (this.open ? "expanded" : "collapsed"));
+
+	// A instância acompanha a consulta em vez de nascer com ela.
+	//
+	// `MediaQuery` fixa a string no construtor — trocar de critério exige objeto
+	// novo, e não há como "reconfigurar" o existente. Com a consulta estável (o
+	// caso de toda aplicação) o derived calcula uma vez e nunca mais; quem troca
+	// a prop em tempo de execução — uma story que força o ramo móvel — recebe a
+	// virada em vez de ficar preso ao valor da montagem.
+	#isMobile = $derived.by(
+		() => new IsMobile(this.props.mobileQuery?.() ?? SIDEBAR_MOBILE_QUERY),
+	);
 
 	constructor(props: SidebarStateProps) {
 		this.setOpen = props.setOpen;
-		this.#isMobile = new IsMobile();
 		this.props = props;
 	}
 

@@ -5,7 +5,7 @@ import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { SIDEBAR_MOBILE_QUERY, useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -57,6 +57,7 @@ function SidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
+  mobileQuery = SIDEBAR_MOBILE_QUERY,
   className,
   style,
   children,
@@ -65,8 +66,21 @@ function SidebarProvider({
   defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  /**
+   * A consulta de mídia que decide se a barra vira gaveta sobreposta.
+   *
+   * Existe como prop, e não só como constante, porque o ponto de virada é do
+   * produto e não do design system — uma aplicação com sidebar mais estreita
+   * vira mais tarde. É também o que permite exercitar o caminho móvel sem
+   * redimensionar o navegador: uma consulta sempre verdadeira força a gaveta de
+   * forma determinística, inclusive no runner headless.
+   *
+   * Fica DESESTRUTURADA de propósito: se caísse no `...props` viraria atributo
+   * desconhecido no `<div>` e o React reclamaria no console.
+   */
+  mobileQuery?: string
 }) {
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile(mobileQuery)
   const [openMobile, setOpenMobile] = React.useState(false)
 
   // This is the internal state of the sidebar.
@@ -180,20 +194,29 @@ function Sidebar({
   }
 
   if (isMobile) {
+    // `className` e o resto das props vão para o PAINEL, não para a raiz do
+    // Sheet: a raiz não renderiza elemento nenhum, então tudo o que caísse ali
+    // sumiria em silêncio — a classe de quem compõe desaparecia só em tela
+    // estreita. Na coluna elas pousam em `.nds-sidebar-panel`; aqui, na gaveta,
+    // que é o mesmo papel. O `style` de fora entra depois da medida móvel para
+    // poder sobrescrevê-la.
+    const { style: estiloDeFora, ...restante } = props
     return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
         <SheetContent
           dir={dir}
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="nds-sidebar-mobile"
+          className={cn("nds-sidebar-mobile", className)}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+              ...estiloDeFora,
             } as React.CSSProperties
           }
           side={side}
+          {...restante}
         >
           <SheetHeader className="nds-sr-only">
             <SheetTitle>Sidebar</SheetTitle>
@@ -521,14 +544,20 @@ function SidebarMenuButton({
   }
 
   return (
-    <Tooltip>
+    /**
+     * O balão só faz sentido com a barra recolhida em ícones: é ali que o
+     * rótulo do item some. Antes ele era montado sempre e apenas ESCONDIDO por
+     * `hidden` — e um balão escondido continua sendo um flutuante ABERTO. Ele
+     * abria ao foco e engolia o Escape (a lib fecha o flutuante mais interno e
+     * interrompe a propagação): dentro da gaveta móvel, quem navega por teclado
+     * precisava apertar Escape DUAS vezes para fechá-la, e a primeira não
+     * fechava nada visível. `disabled` impede a abertura em vez de tapar o
+     * resultado — e mantém a árvore estável, porque desmontar o `Tooltip` aqui
+     * remontaria o próprio botão e derrubaria o foco a cada recolhimento.
+     */
+    <Tooltip disabled={state !== "collapsed" || isMobile}>
       {comp}
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltip}
-      />
+      <TooltipContent side="right" align="center" {...tooltip} />
     </Tooltip>
   )
 }

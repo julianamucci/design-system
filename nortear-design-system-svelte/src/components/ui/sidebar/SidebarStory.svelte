@@ -27,6 +27,10 @@
     variant = 'sidebar' as 'sidebar' | 'floating' | 'inset',
     collapsible = 'offcanvas' as 'offcanvas' | 'icon' | 'none',
     defaultOpen = true,
+    // Repassada ao provider. `undefined` cai no default do componente
+    // (`SIDEBAR_MOBILE_QUERY`); a story móvel passa uma consulta sempre
+    // verdadeira para forçar a gaveta sem depender da largura do iframe.
+    mobileQuery = undefined as string | undefined,
   } = $props();
 
   // O provider desta stack não tem prop `defaultOpen` — o estado é `open`, e é
@@ -57,13 +61,18 @@
 </script>
 
 <div class="nds-cluster nds-min-h-100 nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden">
-  <SidebarProvider bind:open>
-    <nav aria-label="Navegação principal">
-      <Sidebar {side} {variant} {collapsible}>
-        <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
-          <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
-        </SidebarHeader>
-        <SidebarContent>
+  <SidebarProvider bind:open {mobileQuery}>
+    <Sidebar {side} {variant} {collapsible}>
+      <SidebarHeader class="nds-px-4 nds-py-2 nds-border-b">
+        <span class="nds-font-semibold nds-text-body nds-text-muted-foreground">Design System</span>
+      </SidebarHeader>
+      <SidebarContent>
+        <!-- O marco de navegação fica DENTRO da barra, e não em volta dela.
+             Em largura estreita o conteúdo da barra troca de lugar: vai para a
+             gaveta, que é um portal no fim do <body>. Um <nav> por fora ficaria
+             para trás vazio, anunciando "navegação principal" sem nada dentro,
+             enquanto os itens de verdade estariam num diálogo sem marco. -->
+        <nav aria-label="Navegação principal">
           <SidebarGroup>
             <SidebarGroupLabel>Navegação</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -83,13 +92,13 @@
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
-          <span class="nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed">v1.0.0</span>
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-    </nav>
+        </nav>
+      </SidebarContent>
+      <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
+        <span class="nds-text-caption nds-text-muted-foreground nds-sidebar-hide-collapsed">v1.0.0</span>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
     <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
       <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
         <SidebarTrigger />

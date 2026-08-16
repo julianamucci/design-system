@@ -1,25 +1,37 @@
 <script setup lang="ts">
 import type { HTMLAttributes, Ref } from 'vue'
-import { defaultDocument, useEventListener, useMediaQuery, useVModel } from '@vueuse/core'
+import { defaultDocument, useEventListener, useVModel } from '@vueuse/core'
 import { TooltipProvider } from 'reka-ui'
 import { computed, ref } from 'vue'
 import { cn } from '@/lib/utils'
-import { provideSidebarContext, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from './utils'
+import { useIsMobile } from '@/composables/use-mobile'
+import { provideSidebarContext, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_MOBILE_QUERY, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from './utils'
 
 const props = withDefaults(defineProps<{
   defaultOpen?: boolean
   open?: boolean
+  /**
+   * A consulta de mídia que decide entre coluna e gaveta.
+   *
+   * Existe como prop porque o ponto de virada é do produto, não do design
+   * system — e porque sem ela o caminho móvel só seria alcançável
+   * redimensionando o navegador, o que nenhum teste headless faz.
+   */
+  mobileQuery?: string
   class?: HTMLAttributes['class']
 }>(), {
   defaultOpen: !defaultDocument?.cookie.includes(`${SIDEBAR_COOKIE_NAME}=false`),
   open: undefined,
+  mobileQuery: SIDEBAR_MOBILE_QUERY,
 })
 
 const emits = defineEmits<{
   'update:open': [open: boolean]
 }>()
 
-const isMobile = useMediaQuery('(max-width: 768px)')
+// Getter, e não o valor: trocar a consulta em tempo de execução tem de
+// reavaliar o modo, sem remontar o provider.
+const isMobile = useIsMobile(() => props.mobileQuery)
 const openMobile = ref(false)
 
 const open = useVModel(props, 'open', emits, {

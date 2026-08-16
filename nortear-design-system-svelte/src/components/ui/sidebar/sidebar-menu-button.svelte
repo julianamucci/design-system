@@ -67,6 +67,21 @@
 		"data-sidebar": "menu-button",
 	};
 
+	// O balão só tem o que dizer onde o rótulo NÃO está escrito na tela: barra
+	// recolhida em ícones. Expandida — e dentro da gaveta móvel — o nome está por
+	// extenso ao lado do ícone.
+	//
+	// A decisão é de MONTAGEM, e não de visibilidade. Antes o conteúdo do balão
+	// era montado sempre e apenas marcado `hidden`: some da tela, mas a camada
+	// do primitivo continua de pé, e ela registra um tratador global de Escape.
+	// Dentro da gaveta móvel, que é um diálogo modal, o foco cai no primeiro item
+	// da navegação; o item é gatilho de balão, o foco abre o balão invisível, e a
+	// camada dele entra DEPOIS da camada do diálogo. O bits-ui entrega o Escape à
+	// última camada registrada: o primeiro Escape fechava um balão que ninguém
+	// via e a gaveta não se mexia. Quem navega por teclado ficava preso num painel
+	// modal que só o segundo Escape soltava.
+	const balaoUtil = $derived(sidebar.state === "collapsed" && !sidebar.isMobile);
+
 	const buttonProps = $derived({
 		class: cn(sidebarMenuButtonVariants({ variant, size }), className),
 		...identidade,
@@ -89,7 +104,7 @@
 	{/if}
 {/snippet}
 
-{#if !tooltipContent}
+{#if !tooltipContent || !balaoUtil}
 	{@render Button({})}
 {:else}
 	<Tooltip.Root>
@@ -98,12 +113,7 @@
 				{@render Button({ props })}
 			{/snippet}
 		</Tooltip.Trigger>
-		<Tooltip.Content
-			side="right"
-			align="center"
-			hidden={sidebar.state !== "collapsed" || sidebar.isMobile}
-			{...tooltipContentProps}
-		>
+		<Tooltip.Content side="right" align="center" {...tooltipContentProps}>
 			{#if typeof tooltipContent === "string"}
 				{tooltipContent}
 			{:else if tooltipContent}

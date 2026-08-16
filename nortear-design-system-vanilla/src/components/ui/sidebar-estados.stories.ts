@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import DOMPurify from 'dompurify';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
   createSidebarProvider,
   createSidebar,
@@ -68,8 +69,12 @@ function envolverEmNav(sidebar: HTMLElement, rotulo = 'Navegação principal'): 
   return nav;
 }
 
-function buildBase(defaultOpen: boolean, collapsible?: 'offcanvas' | 'icon' | 'none'): HTMLElement {
-  const instance = createSidebar({ defaultOpen, variant: 'sidebar' });
+function buildBase(
+  defaultOpen: boolean,
+  collapsible?: 'offcanvas' | 'icon' | 'none',
+  opcoes: { mobileQuery?: string } = {},
+): HTMLElement {
+  const instance = createSidebar({ defaultOpen, variant: 'sidebar', mobileQuery: opcoes.mobileQuery });
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
 
   const header = createSidebarHeader();
@@ -347,50 +352,135 @@ export const WithoutToggle: Story = {
   },
 };
 
+/**
+ * A consulta sempre verdadeira é o que torna este cenário determinístico.
+ *
+ * O parâmetro `viewport` redimensiona o iframe no Storybook e no Chromatic, mas
+ * não no runner headless — a virada dependia de uma largura que nenhum passo
+ * controla, e por isso o ramo da gaveta era código que nenhuma story alcançava.
+ * Injetando a consulta, a virada passa a ser entrada do teste.
+ */
+const SEMPRE_ESTREITO = '(min-width: 0px)';
+
 export const MobileOverlay: Story = {
-  name: 'Mobile (Sheet overlay)',
-  render: () => {
-    const container = buildBase(true);
-    const infoEl = document.createElement('div');
-    infoEl.className = 'nds-rounded nds-bg-muted nds-text-caption nds-text-muted-foreground';
-    infoEl.style.position = 'absolute';
-    infoEl.style.top = '0.5rem';
-    infoEl.style.right = '0.5rem';
-    infoEl.style.padding = '0.25rem 0.5rem';
-    infoEl.textContent = 'Em mobile: Sheet overlay';
-    container.style.position = 'relative';
-    container.appendChild(infoEl);
-    return container;
-  },
+  name: 'Mobile (gaveta sobreposta)',
+  render: () => buildBase(true, undefined, { mobileQuery: SEMPRE_ESTREITO }),
   parameters: {
     viewport: {
       defaultViewport: 'mobile1',
     },
-    covers: ['visual.item5'],
-    coversNotApplicable: {
-      'functional.item3':
-        'a fábrica desta stack não monta o painel móvel; o overlay é composto com o Sheet pelo consumidor',
-    },
+    covers: ['functional.item3', 'visual.item5'],
     docs: {
       description: {
-        story: 'Em viewports mobile, a Sidebar é renderizada como Sheet overlay (18rem). Abre via SidebarTrigger ou atalho Ctrl+B.',
+        story: 'Abaixo do ponto de virada a barra sai do fluxo e vira gaveta modal sobreposta (18rem), aberta pelo gatilho ou pelo atalho Ctrl+B e fechada por Escape ou por clique fora.',
       },
     },
   },
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gaveta = () => document.querySelector<HTMLElement>('[data-slot="sidebar"][data-mobile="true"]');
 
-    await step('A navegação e o gatilho existem em qualquer largura', async () => {
-      // O que vale nas duas larguras: a barra tem nome de marco e há um único
-      // controle de abertura. O resto do cenário é a foto do Chromatic.
-      await expect(canvas.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
-      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
+    await step('Na largura estreita a coluna não ocupa lugar no fluxo', async () => {
+      // Precondição própria: o replay pode entrar aqui com a gaveta aberta.
+      if (gaveta()) {
+        await userEvent.keyboard('{Escape}');
+        await waitForPortalGone('dialog');
+      }
+      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      await expect(raiz.hidden).toBe(true);
+      await expect(raiz.getBoundingClientRect().width).toBe(0);
+      // Fechada, a gaveta não está no documento — e não há dois elementos
+      // respondendo por `[data-slot="sidebar"]`.
+      await expect(gaveta()).toBeNull();
+      await expect(document.querySelectorAll('[data-slot="sidebar"]').length).toBe(0);
     });
 
-    await step('O item ativo continua anunciado como página atual', async () => {
-      const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+    await step('O gatilho abre a gaveta como diálogo modal nomeado', async () => {
+      await userEvent.click(gatilho());
+      const painel = await waitForPortal('dialog', { name: 'Sidebar' });
+      await expect(painel.getAttribute('aria-modal')).toBe('true');
+      await expect(painel.dataset.mobile).toBe('true');
+      // A navegação inteira mudou de lugar: é a MESMA barra, não uma cópia.
+      const ativo = painel.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(ativo).not.toBeNull();
       await expect(ativo.getAttribute('aria-current')).toBe('page');
+      await expect(ativo.textContent).toContain('Dashboard');
+    });
+
+    await step('O foco entra no painel', async () => {
+      // Sem isto o teclado continua na página coberta pelo modal.
+      await expect(gaveta()!.contains(document.activeElement)).toBe(true);
+    });
+
+    await step('Escape fecha a gaveta e devolve o foco ao gatilho', async () => {
+      const alvo = gatilho();
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+      await expect(gaveta()).toBeNull();
+      await expect(document.activeElement).toBe(alvo);
+    });
+
+    await step('Fechada, a navegação volta inteira para dentro da barra', async () => {
+      // O conteúdo é movido, não copiado: se a volta falhasse, a barra ficaria
+      // vazia ao retornar à largura cheia — e nenhuma foto mostraria isso.
+      const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+      const interno = raiz.querySelector<HTMLElement>('[data-sidebar="sidebar"]')!;
+      await expect(interno).not.toBeNull();
+      await expect(interno.classList.contains('nds-sidebar-mobile-inner')).toBe(false);
+      const dashboard = interno.querySelector<HTMLElement>('[aria-label="Dashboard"]')!;
+      await expect(dashboard).not.toBeNull();
+      await expect(dashboard.tagName).toBe('A');
+    });
+
+    await step('A coluna escondida não duplica a navegação para o leitor de tela', async () => {
+      // Por atributo acima, por papel aqui: enquanto a largura é estreita a
+      // coluna está fora da árvore de acessibilidade, e é por isso que a
+      // consulta por papel — a que enxerga o que o leitor de tela enxerga —
+      // não encontra o item que o atributo achou.
+      await expect(within(canvasElement).queryByRole('link', { name: 'Dashboard' })).toBeNull();
+    });
+  },
+};
+
+/**
+ * O par negativo do cenário acima: com a consulta sempre FALSA nada vira gaveta.
+ *
+ * É o que impede a asserção de mobilidade de passar por acidente — sem este
+ * lado, "abriu um diálogo" poderia ser verdade em qualquer largura.
+ */
+export const MobileOff: Story = {
+  name: 'Largura cheia (sem gaveta)',
+  render: () => buildBase(true, undefined, { mobileQuery: '(max-width: 0px)' }),
+  parameters: {
+    covers: ['functional.item1'],
+    docs: {
+      description: {
+        story: 'Acima do ponto de virada o gatilho alterna a coluna entre expandida e recolhida, e nenhum painel sobreposto é montado.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /toggle sidebar/i });
+    const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+
+    await step('A coluna está no fluxo e não há diálogo', async () => {
+      // Precondição própria: devolve a barra ao estado aberto que a story monta.
+      if (raiz.dataset.state === 'collapsed') await userEvent.click(gatilho);
+      await expect(raiz.hidden).toBe(false);
+      await expect(raiz.dataset.state).toBe('expanded');
+      await expect(document.querySelector('[data-mobile="true"]')).toBeNull();
+    });
+
+    await step('O gatilho recolhe a coluna em vez de abrir um painel', async () => {
+      await userEvent.click(gatilho);
+      await expect(raiz.dataset.state).toBe('collapsed');
+      await expect(document.querySelector('[role="dialog"]')).toBeNull();
+      // Devolve o DOM ao estado de entrada para o replay.
+      await userEvent.click(gatilho);
+      await expect(raiz.dataset.state).toBe('expanded');
     });
   },
 };

@@ -168,22 +168,20 @@ export const Fixed: Story = {
 };
 
 /**
- * DÍVIDA DECLARADA: `functional.item3` pede a virada para o overlay em viewport
- * estreita. Nesta stack o corte vem de uma media query global lida por
- * `IsMobile`, sem ponto de injeção — o parâmetro `viewport` redimensiona o
- * iframe no Storybook e no Chromatic (é o que esta story fotografa), mas não no
- * runner headless, onde nenhum passo consegue forçar a virada. Por isso a story
- * declara só o item visual.
+ * Em largura estreita a barra deixa de ser coluna e vira gaveta sobreposta:
+ * 16rem numa tela de 360px não deixa conteúdo.
+ *
+ * A virada vem de `mobileQuery`, e não do tamanho da janela. Redimensionar o
+ * iframe é o que o parâmetro `viewport` faz no Storybook e no Chromatic — é o
+ * que esta story fotografa —, mas o runner headless não o aplica. Com a consulta
+ * injetada (`(min-width: 0px)`, sempre verdadeira) o ramo da gaveta é o mesmo
+ * código em qualquer largura, e os passos abaixo o exercitam de verdade.
  */
 export const Mobile: Story = {
-  name: 'Mobile (Sheet overlay)',
+  name: 'Mobile (gaveta sobreposta)',
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
-    covers: ['visual.item5'],
-    coversNotApplicable: {
-      'functional.item3':
-        'a virada para o overlay depende de media query global sem ponto de injeção nesta stack; nenhum passo a força de forma determinística',
-    },
+    covers: ['functional.item3', 'visual.item5'],
   },
   render: () => ({
     Component: SidebarStory,
@@ -192,16 +190,84 @@ export const Mobile: Story = {
       collapsible: 'offcanvas',
       side: 'left',
       defaultOpen: false,
+      mobileQuery: '(min-width: 0px)',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    // A gaveta vive num portal no fim do <body>, fora do canvasElement.
+    const gaveta = () => document.querySelector<HTMLElement>('.nds-sidebar-mobile');
 
-    await step('A navegação e o gatilho existem em qualquer largura', async () => {
-      // O que vale nas duas larguras: a barra tem nome de marco e há um único
-      // controle de abertura. O resto do cenário é a foto do Chromatic.
-      await expect(canvas.getByRole('navigation', { name: /navegação principal/i })).toBeInTheDocument();
-      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
+    // Precondição própria: o replay do painel Interactions parte do DOM que o
+    // passo anterior deixou, não de uma montagem limpa.
+    if (gaveta()) {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(gaveta()).toBeNull());
+    }
+
+    await step('Fechada, a barra não é coluna nem diálogo', async () => {
+      // Nada de painel fixo e nada de vão reservado no fluxo: em largura
+      // estreita a barra não ocupa espaço nenhum até ser pedida.
+      await expect(canvasElement.querySelector('.nds-sidebar-root')).toBeNull();
+      await expect(canvasElement.querySelector('.nds-sidebar-panel')).toBeNull();
+      await expect(canvasElement.querySelector('.nds-sidebar-gap-inner')).toBeNull();
+      await expect(document.querySelector('[role="dialog"]')).toBeNull();
+    });
+
+    await step('O gatilho abre a gaveta como diálogo modal com nome', async () => {
+      await userEvent.click(gatilho());
+      await waitFor(() => expect(gaveta()).not.toBeNull());
+
+      const dialogo = gaveta()!;
+      await expect(dialogo.getAttribute('role')).toBe('dialog');
+      // Sem `aria-modal` o leitor de tela continua lendo a página atrás da
+      // gaveta, que o foco preso já tornou inalcançável.
+      await expect(dialogo.getAttribute('aria-modal')).toBe('true');
+      // Sem nome, o anúncio é "diálogo" e mais nada. O par título/descrição é
+      // sr-only: existe para quem ouve, não para quem vê.
+      const rotuladoPor = dialogo.getAttribute('aria-labelledby');
+      await expect(rotuladoPor).toBeTruthy();
+      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe('Sidebar');
+    });
+
+    await step('A navegação inteira mudou de lugar junto com a gaveta', async () => {
+      const dentro = within(gaveta()!);
+      await expect(
+        dentro.getByRole('navigation', { name: /navegação principal/i }),
+      ).toBeInTheDocument();
+      await expect(gaveta()!.querySelectorAll('[data-slot="sidebar-menu-item"]').length).toBe(5);
+      await expect(dentro.getByRole('button', { current: 'page' })).toHaveTextContent('Dashboard');
+      // E não sobrou um marco de navegação vazio na página: um `nav` sem itens
+      // é uma promessa que o leitor de tela cobra e ninguém cumpre.
+      await expect(canvas.queryByRole('navigation', { name: /navegação principal/i })).toBeNull();
+    });
+
+    await step('O foco entra na gaveta', async () => {
+      // Gaveta modal com foco fora dela é armadilha: o Tab seguinte anda pela
+      // página de trás, que está coberta pelo overlay.
+      await waitFor(() => expect(gaveta()!.contains(document.activeElement)).toBe(true));
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(gaveta()).toBeNull());
+      // Devolver o foco é trabalho de quem abriu. Sem isto o foco cai no
+      // <body> e quem navega por teclado volta ao começo da página.
+      // O `waitFor` é obrigatório: a devolução acontece depois da animação de
+      // saída, não junto com a desmontagem.
+      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+    });
+
+    await step('Ctrl+B alterna a mesma gaveta', async () => {
+      // O atalho vale de qualquer lugar da página, inclusive de dentro da
+      // gaveta, onde o foco está preso.
+      await userEvent.keyboard('{Control>}b{/Control}');
+      await waitFor(() => expect(gaveta()).not.toBeNull());
+      await userEvent.keyboard('{Control>}b{/Control}');
+      await waitFor(() => expect(gaveta()).toBeNull());
+      // DOM devolvido ao estado de entrada: gaveta fechada, foco no gatilho.
+      await waitFor(() => expect(document.activeElement).toBe(gatilho()));
     });
   },
 };

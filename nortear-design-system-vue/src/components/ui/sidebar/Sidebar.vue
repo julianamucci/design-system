@@ -18,6 +18,14 @@ const props = withDefaults(defineProps<SidebarProps>(), {
 })
 
 const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+
+// A devolução do foco ao gatilho quando a gaveta fecha NÃO é escrita aqui, e
+// isso foi medido, não presumido: o primitivo desta stack adota como "gatilho"
+// o elemento que estava focado no momento em que o painel monta (desde que não
+// seja o `<body>`), então o `SidebarTrigger` — que o diálogo nunca vê, porque a
+// gaveta abre pelo estado da sidebar — acaba registrado assim mesmo. Outras
+// stacks precisam de código próprio para isto. A story `MobileOverlay` mantém a
+// asserção de qualquer forma: o comportamento é contrato, não detalhe da lib.
 </script>
 
 <template>
@@ -30,10 +38,16 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     <slot />
   </div>
 
+  <!-- A classe e os atributos de quem compõe vão para o PAINEL, não para a raiz
+       do Sheet: a raiz não renderiza elemento nenhum, então tudo o que pousasse
+       ali sumia em silêncio — a classe do consumidor desaparecia só em tela
+       estreita. Na coluna eles pousam em `.nds-sidebar-panel`; aqui, na gaveta,
+       que cumpre o mesmo papel. O `v-bind="$attrs"` vem depois do `:style` de
+       propósito: assim um estilo de fora sobrescreve a medida móvel em vez de
+       ser engolido por ela. -->
   <Sheet
     v-else-if="isMobile"
     :open="openMobile"
-    v-bind="$attrs"
     @update:open="setOpenMobile"
   >
     <SheetContent
@@ -41,10 +55,11 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
       data-slot="sidebar"
       data-mobile="true"
       :side="side"
-      class="nds-sidebar-mobile"
+      :class="cn('nds-sidebar-mobile', props.class)"
       :style="{
         '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
       }"
+      v-bind="$attrs"
     >
       <SheetHeader class="nds-sr-only">
         <SheetTitle>Sidebar</SheetTitle>

@@ -400,22 +400,18 @@ export const LoadingSkeleton: Story = {
 // ─── Mobile (viewport simulada) ───────────────────────────────────────────────
 
 /**
- * DÍVIDA DECLARADA: `functional.item3` pede a virada para o overlay em viewport
- * estreita. Nesta stack o corte vem de uma media query global, sem ponto de
- * injeção — o parâmetro `viewport` redimensiona o iframe no Storybook e no
- * Chromatic (é o que esta story fotografa), mas não no runner headless, onde
- * nenhum passo consegue forçar a virada. Por isso só o item visual é declarado.
+ * A virada para a gaveta não depende da largura real da janela: a consulta de
+ * mídia entra por `mobile-query`, e aqui ela é sempre verdadeira. É o que torna
+ * o caminho móvel exercitável no runner headless, onde ninguém redimensiona o
+ * navegador. O `viewport` continua servindo à foto do Chromatic.
  */
 export const MobileOverlay: Story = {
+  name: 'Mobile (gaveta sobreposta)',
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
-    covers: ['visual.item5'],
-    coversNotApplicable: {
-      'functional.item3':
-        'a virada para o overlay depende de media query global sem ponto de injeção nesta stack; nenhum passo a força de forma determinística',
-    },
+    covers: ['functional.item3', 'visual.item5'],
     docs: {
-      description: { story: 'Em viewport mobile, a Sidebar é renderizada como Sheet overlay (18rem). Abre via SidebarTrigger.' },
+      description: { story: 'Em largura de telefone a Sidebar sai do fluxo e vira gaveta sobreposta (18rem), aberta pelo SidebarTrigger e fechada por Escape, que devolve o foco ao gatilho.' },
     },
   },
   render: () => ({
@@ -425,10 +421,18 @@ export const MobileOverlay: Story = {
       SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger,
       LayoutDashboard, Blocks, Palette,
     },
+    setup() {
+      // Marca de quem compõe: só existe para o passo que prova que a classe
+      // chega ao painel nas duas larguras. Vem daqui, e não escrita como
+      // atributo literal no template, porque uma classe literal fora do
+      // vocabulário `nds-*` é resíduo de migração aos olhos do auditor — e
+      // esta não é: é o dado do teste.
+      return { marcaDoConsumidor: 'story-sidebar-marca' };
+    },
     template: `
-      <SidebarProvider>
+      <SidebarProvider mobile-query="(min-width: 0px)">
         <nav aria-label="Navegação principal">
-          <Sidebar collapsible="offcanvas">
+          <Sidebar collapsible="offcanvas" :class="marcaDoConsumidor">
             <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -469,12 +473,81 @@ export const MobileOverlay: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    // A gaveta é levada para fora do canvas por um portal: quem procura por ela
+    // dentro de `canvasElement` não acha nada.
+    const corpo = within(document.body);
+    const gaveta = () => document.querySelector<HTMLElement>('[data-slot="sidebar"][data-mobile="true"]');
+    // Guardado antes de qualquer abertura: com a gaveta aberta o resto da página
+    // fica `aria-hidden`, e o gatilho deixa de ser alcançável por papel.
+    const gatilho = canvas.getByRole('button', { name: /toggle sidebar/i });
 
-    await step('A navegação e o gatilho existem em qualquer largura', async () => {
-      // O que vale nas duas larguras: a barra tem nome de marco e há um único
-      // controle de abertura. O resto do cenário é a foto do Chromatic.
+    await step('Precondição: a gaveta começa fechada', async () => {
+      // O replay do painel Interactions reexecuta os passos sobre o DOM que
+      // ficou. Fechar antes de medir é o que separa "abriu" de "já estava".
+      if (gaveta()) {
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(gaveta()).toBeNull());
+      }
+    });
+
+    await step('Fechada, não há diálogo nem coluna ocupando o fluxo', async () => {
+      await expect(corpo.queryByRole('dialog')).toBeNull();
+      // Prova que o ramo móvel é o ativo: o ramo de coluna monta o vão que
+      // reserva a largura e o painel fixo, e nenhum dos dois existe aqui.
+      // Medido por atributo, e não por papel, porque um contêiner escondido
+      // sai da árvore de acessibilidade e some das consultas por papel — o que
+      // faria o passo passar mesmo com a coluna montada.
+      await expect(canvasElement.querySelector('[data-slot="sidebar-gap"]')).toBeNull();
+      await expect(canvasElement.querySelector('[data-slot="sidebar-container"]')).toBeNull();
+      // E o marco de navegação continua na página, ainda que vazio: quem lê a
+      // estrutura não perde a referência enquanto a gaveta está fechada.
       await expect(canvas.getByRole('navigation', { name: /navegação principal/i })).toBeInTheDocument();
-      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
+    });
+
+    await step('O gatilho abre um diálogo modal, com nome e com a navegação dentro', async () => {
+      await userEvent.click(gatilho);
+      // `findByRole` já espera a animação de entrada — sem tempo fixo.
+      const painel = await corpo.findByRole('dialog', { name: /sidebar/i });
+      await expect(painel).toHaveAttribute('aria-modal', 'true');
+      const dentro = within(painel);
+      await expect(dentro.getByRole('button', { name: /dashboard/i })).toBeInTheDocument();
+      await expect(dentro.getByRole('button', { name: /componentes/i })).toBeInTheDocument();
+      await expect(dentro.getByRole('button', { name: /tokens/i })).toBeInTheDocument();
+      // Um item, uma vez. Se os dois ramos montassem ao mesmo tempo, o leitor
+      // de tela anunciaria a navegação inteira em dobro — e a consulta por
+      // papel no documento todo é justamente o que enxerga isso.
+      await expect(corpo.getAllByRole('button', { name: /dashboard/i })).toHaveLength(1);
+    });
+
+    await step('A classe de quem compõe chega ao painel da gaveta', async () => {
+      // Na coluna ela pousa em `.nds-sidebar-panel`. Se sumisse aqui, o estilo
+      // de quem compõe existiria numa largura e evaporaria na outra — e em
+      // silêncio, que é o pior modo de falhar.
+      const painel = gaveta()!;
+      await expect(painel).toHaveClass('nds-sidebar-mobile');
+      await expect(painel).toHaveClass('story-sidebar-marca');
+    });
+
+    await step('O foco entra no painel', async () => {
+      const painel = gaveta()!;
+      await waitFor(() => expect(painel.contains(document.activeElement)).toBe(true));
+    });
+
+    await step('Escape fecha a gaveta e devolve o foco ao gatilho', async () => {
+      // Devolver o foco é o que decide se quem navega por teclado continua de
+      // onde estava ou volta ao começo da página.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(gaveta()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(gatilho));
+    });
+
+    await step('O atalho de teclado também alterna a gaveta', async () => {
+      await userEvent.keyboard('{Control>}b{/Control}');
+      await waitFor(() => expect(gaveta()).not.toBeNull());
+      await userEvent.keyboard('{Control>}b{/Control}');
+      // Fecha ao sair: o DOM volta ao estado de entrada, e o passo seguinte de
+      // um replay encontra o mesmo cenário que este encontrou.
+      await waitFor(() => expect(gaveta()).toBeNull());
     });
   },
 };
