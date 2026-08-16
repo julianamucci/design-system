@@ -2,6 +2,7 @@
   import { untrack } from 'svelte';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
+  import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -26,7 +27,31 @@
   } from '@/components/docs/shared/sections';
   import uiTranslations from '@/i18n/ui.json';
   import inputTranslations from '@shared/content/input/translations.json';
+
+
   import { toPlainText } from '@/lib/strip-html';
+
+// ─── Tokens do campo ──────────────────────────────────────────────────────────
+//
+// Token, seletor que o consome e a chave de conteúdo que o descreve. Cada linha
+// foi medida com getComputedStyle antes de entrar aqui — a tabela é o que quem
+// customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
+// `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
+// ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
+const TOKENS_DO_CAMPO = [
+  ['--input', '.nds-input', 'border'],
+  ['--ring', '.nds-input:hover', 'borderHover'],
+  ['--ring', '.nds-input:focus-visible', 'borderFocus'],
+  ['--destructive', '.nds-input[aria-invalid="true"]', 'borderError'],
+  ['--background', '.nds-input', 'background'],
+  ['--foreground', '.nds-input', 'text'],
+  ['--muted-foreground', '.nds-input::placeholder', 'placeholder'],
+  ['--muted', '.nds-input:disabled', 'bgDisabled'],
+  ['--radius', '.nds-input', 'radius'],
+  ['--spacing-2', '.nds-input', 'paddingBlock'],
+  ['--text-control', '.nds-input', 'fontSize'],
+  ['--muted', '.nds-input[type="file"]::file-selector-button', 'fileButton'],
+] as const;
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(inputTranslations);
@@ -149,10 +174,14 @@ import { Label } from "@/components/ui/label";`;
   <Input id="arquivo" type="file" />
 </div>`;
 
-  const codeTokenCustomization = `/* Em globals.css */
+  const codeTokenCustomization = `/* Em globals.css — sobrescrever os tokens que o campo consome */
 :root {
-  --height-default: 2.25rem; /* altura do campo */
-  --radius-input: 0.375rem;  /* border-radius */
+  --input: 0 0% 56%;         /* borda em repouso — mantenha 3:1 contra o fundo */
+  --ring: 0 0% 45%;          /* borda no hover e no foco, e a cor do halo */
+  --destructive: 0 74% 42%;  /* borda e halo do estado de erro */
+  --radius: 0.625rem;        /* arredondamento das quinas */
+  --spacing-2: 0.5rem;       /* respiro vertical: a altura acompanha */
+  --text-control: 0.875rem;  /* tipografia do campo: a altura acompanha */
 }`;
 
   const interfaceCode = `// Input — estende todos os atributos HTML nativos de <input>
@@ -432,9 +461,9 @@ interface InputProps extends HTMLInputAttributes {
             preview: compWithHint,
           },
           {
-            name: $tStore('variants.compositions.withError.name'),
-            description: $tStore('variants.compositions.withError.description'),
-            useWhen: $tStore('variants.compositions.withError.use'),
+            name: $tStore('variants.compositions.errorMessage.name'),
+            description: $tStore('variants.compositions.errorMessage.description'),
+            useWhen: $tStore('variants.compositions.errorMessage.use'),
             code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-email-error">Email</Label>\n  <Input id="input-email-error" type="email" aria-invalid="true" aria-describedby="input-email-error-error" placeholder="ex: joao@empresa.com" />\n  <p id="input-email-error-error" class="nds-text-caption nds-text-destructive">Email inválido. Use o formato nome@dominio.com</p>\n</div>`,
             preview: compWithError,
           },
@@ -442,7 +471,10 @@ interface InputProps extends HTMLInputAttributes {
             name: $tStore('variants.compositions.withPrefix.name'),
             description: $tStore('variants.compositions.withPrefix.description'),
             useWhen: $tStore('variants.compositions.withPrefix.use'),
-            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-url">URL do site</Label>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">\n    <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>\n    <Input class="nds-flex-1" style="border: 0" type="url" id="input-url" placeholder="meusite.com" />\n  </div>\n</div>`,
+            // A moldura e o anel de foco são do GRUPO; o campo interno fica nu.
+            // A versão anterior montava a caixa à mão e zerava a borda por style
+            // inline — o que vencia a folha e tirava o exemplo do tema.
+            code: `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label for="input-url">URL do site</Label>\n  <InputGroup>\n    <InputGroupAddon align="inline-start">\n      <InputGroupText>https://</InputGroupText>\n    </InputGroupAddon>\n    <InputGroupInput type="url" id="input-url" placeholder="meusite.com" />\n  </InputGroup>\n</div>`,
             preview: compWithPrefix,
           },
         ]}
@@ -471,10 +503,12 @@ interface InputProps extends HTMLInputAttributes {
       {#snippet compWithPrefix()}
         <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
           <Label for="input-url">URL do site</Label>
-          <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
-            <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>
-            <Input class="nds-flex-1" style="border: 0" type="url" id="input-url" placeholder="meusite.com" />
-          </div>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <InputGroupText>https://</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput type="url" id="input-url" placeholder="meusite.com" />
+          </InputGroup>
         </div>
       {/snippet}
 
@@ -531,19 +565,11 @@ interface InputProps extends HTMLInputAttributes {
           value: $tStore('tokens.table.class'),
           description: $tStore('tokens.table.part'),
         }}
-        items={[
-          { token: '--height-default',   value: 'h-(--height-default)',               description: $tStore('tokens.table.height')       },
-          { token: '--radius-input',     value: 'rounded-(--radius-input)',            description: $tStore('tokens.table.radius')       },
-          { token: '--border-input',     value: 'border-input',                        description: $tStore('tokens.table.border')       },
-          { token: '--ring',             value: 'nds-focus-ring',           description: $tStore('tokens.table.borderFocus')  },
-          { token: '--ring / 50%',       value: 'nds-focus-ring',          description: $tStore('tokens.table.ring')         },
-          { token: '--destructive',      value: 'aria-invalid:border-destructive',     description: $tStore('tokens.table.borderError')  },
-          { token: '--destructive / 20%', value: 'aria-invalid:ring-destructive/20',  description: $tStore('tokens.table.ringError')    },
-          { token: '--input / 50%',      value: 'disabled:bg-input/50',               description: $tStore('tokens.table.bgDisabled')   },
-          { token: '--input / 80%',      value: 'dark:disabled:bg-input/80',          description: $tStore('tokens.table.bgDisabledDark') },
-          { token: '--muted-foreground', value: 'placeholder:nds-text-muted-foreground',  description: $tStore('tokens.table.placeholder')  },
-          { token: '--input / 30%',      value: 'dark:bg-input/30',                   description: $tStore('tokens.table.bgDark')       },
-        ]}
+        items={TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+          token,
+          value: seletor,
+          description: $tStore(`tokens.table.${chave}`),
+        }))}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeTokenCustomization}
       />

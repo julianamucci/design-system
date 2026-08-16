@@ -1,17 +1,111 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
+import {
+  bordasPorEstado,
+  campoDe,
+  contrastesNosDoisModos,
+  corDoToken,
+  haloDeFoco,
+} from '@shared/testing/input-probe';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 
 const meta: Meta = {
   title: 'UI/Input/States',
   decorators: [moduleMetadata({ imports: [NdsInput, NdsLabel] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
 };
 
 export default meta;
 type Story = StoryObj;
+
+export const Default: Story = {
+  // O contraste é medido AQUI, na story clara, porque `contrastesNosDoisModos`
+  // liga o escuro e desliga: numa story que já nasce escura os dois lados da
+  // medição sairiam escuros e o item ficaria meio verificado. Era declarado na
+  // Playground como "coberto pelo axe", que nunca olhou o escuro.
+  parameters: { covers: ['accessibility.item5'] },
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-max-w-sm" data-spacing="sm">
+        <label ndsLabel for="est-padrao">Nome completo</label>
+        <input ndsInput id="est-padrao" type="text" placeholder="ex: João da Silva" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('O fundo do campo é opaco, não transparente', async () => {
+      // A documentação afirmou "fundo transparente" por meses. O campo pinta
+      // --background: medir é o que separa a afirmação do que se vê.
+      const fundo = getComputedStyle(campoDe(canvasElement)!).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo).not.toBe('transparent');
+    });
+
+    await step('Contraste nos DOIS modos (accessibility.item5)', async () => {
+      const medidas = contrastesNosDoisModos(canvasElement);
+      await expect(medidas).not.toBeNull();
+      await expect(medidas!.length).toBe(2);
+      for (const m of medidas!) {
+        await expect(m.texto ?? 0).toBeGreaterThanOrEqual(4.5);
+        await expect(m.placeholder ?? 0).toBeGreaterThanOrEqual(4.5);
+        await expect(m.borda ?? 0).toBeGreaterThanOrEqual(3);
+      }
+    });
+  },
+};
+
+/**
+ * O anel de foco é o que o Chromatic precisa fotografar, então a play TERMINA
+ * com o campo focado — story cujo propósito é um estado visual não pode acabar
+ * em outro.
+ *
+ * Ler o estilo logo após `focus()` devolveria o primeiro quadro da transição
+ * (`rgba(0,0,0,0) 0px 0px 0px 0px`), e foi assim que "o campo não tem anel de
+ * foco" virou diagnóstico falso nas cinco stacks. `haloDeFoco` congela a
+ * transição antes de medir.
+ */
+export const Focus: Story = {
+  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-max-w-sm" data-spacing="sm">
+        <label ndsLabel for="est-foco">Nome completo</label>
+        <input ndsInput id="est-foco" type="text" placeholder="ex: João da Silva" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const input = campoDe(canvasElement)!;
+
+    await step('O halo de foco tem 2px e 30% de opacidade', async () => {
+      const halo = haloDeFoco(input);
+      await expect(halo).not.toBeNull();
+      await expect(halo!.espessura).toBe(2);
+      await expect(halo!.alfa).toBeCloseTo(0.3, 2);
+    });
+
+    await step('A borda de foco difere da borda em repouso', async () => {
+      const bordas = bordasPorEstado(input);
+      await expect(bordas.foco.cor).not.toBe(bordas.repouso.cor);
+      await expect(bordas.foco.casaFocusVisible).toBe(true);
+    });
+
+    await step('O hover é opaco, e não some sob o ponteiro', async () => {
+      // O hover translúcido de antes APAGAVA a borda depois que o repouso
+      // escureceu para 3:1. A declaração da folha é lida porque evento
+      // sintético não acende `:hover`.
+      const bordas = bordasPorEstado(input);
+      await expect(bordas.hover.declarado).toBeTruthy();
+      await expect(bordas.hover.declarado).not.toMatch(/\/\s*0?\.\d/);
+    });
+
+    // O foco fica posto de propósito: é o estado que esta story documenta.
+    await userEvent.click(input);
+    await expect(input).toHaveFocus();
+  },
+};
 
 export const Disabled: Story = {
   parameters: { covers: ['functional.item3'] },
@@ -37,12 +131,27 @@ export const Disabled: Story = {
       const label = canvasElement.querySelector<HTMLLabelElement>('label.nds-label')!;
       await expect(Number(getComputedStyle(label).opacity)).toBeLessThan(1);
     });
+
+    await step('O apagamento é visível: opacidade e cursor de bloqueio', async () => {
+      // A documentação afirmava `bg-input/50` — nome de utilitário morto. O que
+      // existe é opacidade 0.5 e fundo em --muted; medir foi o que revelou.
+      const cs = getComputedStyle(campoDe(canvasElement)!);
+      await expect(Number(cs.opacity)).toBeLessThan(1);
+      await expect(cs.cursor).toBe('not-allowed');
+    });
+
+    await step('Desabilitado não ganha halo de foco', async () => {
+      await expect(haloDeFoco(campoDe(canvasElement)!)).toBeNull();
+    });
   },
 };
 
 export const Invalid: Story = {
+  // `visual.item2` saiu daqui: o item pede a foto do trio foco/desabilitado/
+  // erro, e o foco não aparecia em captura nenhuma. Passou para `Focus`, que é
+  // a story que termina com o anel na tela.
   parameters: {
-    covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4', 'visual.item2'],
+    covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4'],
   },
   render: () => ({
     template: `
@@ -83,13 +192,26 @@ export const Invalid: Story = {
         await expect(canvasElement.querySelector(`#${id}`)).toBeTruthy();
       }
     });
+
+    await step('A borda é a cor destrutiva, e o halo de foco também', async () => {
+      // Afirmar o token resolvido, não um rgb literal: a paleta muda por tema
+      // de marca e um literal reprovaria em warm e cold sem defeito nenhum.
+      const destrutivo = corDoToken(canvasElement, '--destructive');
+      const bordas = bordasPorEstado(campoDe(canvasElement)!);
+      await expect(bordas.repouso.cor).toBe(destrutivo);
+      await expect(haloDeFoco(campoDe(canvasElement)!)!.cor).toContain(
+        destrutivo!.replace(/rgba?\(|\)/g, '').split(',').slice(0, 3).map((n) => n.trim()).join(', '),
+      );
+    });
   },
 };
 
 export const Types: Story = {
-  parameters: {
-    covers: ['functional.item5', 'functional.item6', 'accessibility.item2', 'visual.item3'],
-  },
+  // `functional.item6` (digitar) e `accessibility.item2` (rótulo alcança o
+  // campo) migraram para a Playground, que já os verifica; `visual.item3` foi
+  // para a story `Search`, criada nas cinco stacks nesta rodada. Aqui fica o
+  // que só esta story prova: o `type` de cada campo, incluindo o `file`.
+  parameters: { covers: ['functional.item5'] },
   render: () => ({
     props: {
       tipos: [
@@ -126,10 +248,48 @@ export const Types: Story = {
       }
     });
 
-    await step('O campo de texto aceita digitação', async () => {
-      const email = canvas.getByLabelText('Email') as HTMLInputElement;
-      await userEvent.type(email, 'ana@empresa.com');
-      await expect(email.value).toBe('ana@empresa.com');
+    await step('O botão nativo do type=file recebe estilo próprio', async () => {
+      // `::file-selector-button` é a única parte do campo que o navegador
+      // desenha sozinho; sem a regra do design system ele sai com o cinza do
+      // sistema operacional e o exemplo mente sobre o resultado.
+      const arquivo = canvasElement.querySelector<HTMLInputElement>('#tipo-file')!;
+      const botao = getComputedStyle(arquivo, '::file-selector-button');
+      await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
+    });
+  },
+};
+
+/**
+ * `type="search"` estava dentro da grade de Types e não tinha captura própria
+ * em stack nenhuma. Fecha `visual.item3` nas cinco.
+ */
+export const Search: Story = {
+  parameters: { covers: ['visual.item3'] },
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-max-w-sm" data-spacing="sm">
+        <label ndsLabel for="tipo-search">Buscar</label>
+        <input ndsInput id="tipo-search" type="search" placeholder="Buscar componentes..." />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O campo de busca é anunciado como busca, não como texto', async () => {
+      // `type="search"` muda o papel implícito para searchbox — é o que o
+      // leitor de tela anuncia, e nada no visual denuncia se estiver errado.
+      const input = canvas.getByRole('searchbox', { name: 'Buscar' });
+      await expect(input).toHaveAttribute('type', 'search');
+    });
+
+    await step('Aceita digitação', async () => {
+      const input = canvas.getByRole('searchbox', { name: 'Buscar' }) as HTMLInputElement;
+      await userEvent.clear(input);
+      await userEvent.type(input, 'Button');
+      await expect(input.value).toBe('Button');
+      await userEvent.clear(input);
     });
   },
 };

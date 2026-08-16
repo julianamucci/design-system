@@ -6,9 +6,12 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations   from '@/i18n/ui.json';
 import inputTranslations from '@shared/content/input/translations.json';
+
+
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsDemonstration from '@/components/docs/shared/sections/DocsDemonstration.vue';
@@ -27,6 +30,28 @@ import DocsNotes         from '@/components/docs/shared/sections/DocsNotes.vue';
 import DocsAnalytics     from '@/components/docs/shared/sections/DocsAnalytics.vue';
 import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue';
 import { toPlainText } from '@/lib/strip-html';
+
+// ─── Tokens do campo ──────────────────────────────────────────────────────────
+//
+// Token, seletor que o consome e a chave de conteúdo que o descreve. Cada linha
+// foi medida com getComputedStyle antes de entrar aqui — a tabela é o que quem
+// customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
+// `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
+// ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
+const TOKENS_DO_CAMPO = [
+  ['--input', '.nds-input', 'border'],
+  ['--ring', '.nds-input:hover', 'borderHover'],
+  ['--ring', '.nds-input:focus-visible', 'borderFocus'],
+  ['--destructive', '.nds-input[aria-invalid="true"]', 'borderError'],
+  ['--background', '.nds-input', 'background'],
+  ['--foreground', '.nds-input', 'text'],
+  ['--muted-foreground', '.nds-input::placeholder', 'placeholder'],
+  ['--muted', '.nds-input:disabled', 'bgDisabled'],
+  ['--radius', '.nds-input', 'radius'],
+  ['--spacing-2', '.nds-input', 'paddingBlock'],
+  ['--text-control', '.nds-input', 'fontSize'],
+  ['--muted', '.nds-input[type="file"]::file-selector-button', 'fileButton'],
+] as const;
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -164,10 +189,14 @@ const codeError = `<Input type="email" aria-invalid="true" placeholder="ex: joao
 
 const codeFile = `<Input type="file" />`;
 
-const codeCustomizationTokens = `/* Em globals.css — sobrescrever tokens de tema */
+const codeCustomizationTokens = `/* Em globals.css — sobrescrever os tokens que o campo consome */
 :root {
-  --height-default: 2.5rem;  /* altura do campo */
-  --radius-input: 0.375rem;  /* border-radius */
+  --input: 0 0% 56%;         /* borda em repouso — mantenha 3:1 contra o fundo */
+  --ring: 0 0% 45%;          /* borda no hover e no foco, e a cor do halo */
+  --destructive: 0 74% 42%;  /* borda e halo do estado de erro */
+  --radius: 0.625rem;        /* arredondamento das quinas */
+  --spacing-2: 0.5rem;       /* respiro vertical: a altura acompanha */
+  --text-control: 0.875rem;  /* tipografia do campo: a altura acompanha */
 }`;
 
 const interfaceCode = `// Input
@@ -214,12 +243,17 @@ const codeCompWithError = `<div class="nds-stack nds-w-full nds-max-w-sm" data-s
   <p class="nds-text-caption nds-text-destructive" id="input-email-error-error">Email inválido. Use o formato nome@dominio.com</p>
 </div>`;
 
+// A moldura e o anel de foco são do GRUPO; o campo interno fica nu. A versão
+// anterior montava a caixa à mão e zerava a borda por style inline — o que
+// vencia a folha e tirava o exemplo do tema e da densidade.
 const codeCompWithPrefix = `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
   <Label for="input-url">URL do site</Label>
-  <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
-    <span class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style="border-right: 1px solid var(--input)">https://</span>
-    <Input class="nds-flex-1" style="border: 0" type="url" id="input-url" placeholder="meusite.com" />
-  </div>
+  <InputGroup>
+    <InputGroupAddon align="inline-start">
+      <InputGroupText>https://</InputGroupText>
+    </InputGroupAddon>
+    <InputGroupInput type="url" id="input-url" placeholder="meusite.com" />
+  </InputGroup>
 </div>`;
 
 const compositionItems = computed(() => [
@@ -236,9 +270,9 @@ const compositionItems = computed(() => [
     code: codeCompWithHint,
   },
   {
-    name: tContent('variants.compositions.withError.name'),
-    description: tContent('variants.compositions.withError.description'),
-    useWhen: tContent('variants.compositions.withError.use'),
+    name: tContent('variants.compositions.errorMessage.name'),
+    description: tContent('variants.compositions.errorMessage.description'),
+    useWhen: tContent('variants.compositions.errorMessage.use'),
     code: codeCompWithError,
   },
   {
@@ -274,16 +308,13 @@ const inputPropItems = computed(() => [
   { name: 'autoComplete', type: 'string',                    defaultValue: '—',      required: 'Não', description: tContent('props.table.autoComplete') },
 ]);
 
-const tokenRows = computed(() => [
-  { token: '--height-default', value: 'h-(--height-default)',        description: tContent('tokens.table.height')       },
-  { token: '--radius-input',   value: 'rounded-(--radius-input)',    description: tContent('tokens.table.radius')       },
-  { token: '--border-input',   value: 'border-input',                description: tContent('tokens.table.border')       },
-  { token: '--ring',           value: 'nds-focus-ring',   description: tContent('tokens.table.borderFocus')  },
-  { token: '--ring',           value: 'nds-focus-ring',  description: tContent('tokens.table.ring')         },
-  { token: '--destructive',    value: 'aria-invalid:border-destructive', description: tContent('tokens.table.borderError') },
-  { token: '--destructive',    value: 'aria-invalid:ring-destructive/20', description: tContent('tokens.table.ringError') },
-  { token: '--input',          value: 'disabled:bg-input/50',        description: tContent('tokens.table.bgDisabled')   },
-]);
+const tokenRows = computed(() =>
+  TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+    token,
+    value: seletor,
+    description: tContent(`tokens.table.${chave}`),
+  })),
+);
 
 const accessibilityItems = computed(() => [
   tContent('accessibility.item1'),
@@ -722,19 +753,12 @@ const visualTestItems = computed(() => [
           data-spacing="xs"
         >
           <Label for="input-url">URL do site</Label>
-          <div class="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
-            <span
-              class="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0"
-              style="border-right: 1px solid var(--input)"
-            >https://</span>
-            <Input
-              id="input-url"
-              class="nds-flex-1"
-              style="border: 0"
-              type="url"
-              placeholder="meusite.com"
-            />
-          </div>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <InputGroupText>https://</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput id="input-url" type="url" placeholder="meusite.com" />
+          </InputGroup>
         </div>
       </template>
     </DocsCompositions>

@@ -21,6 +21,29 @@ import { NdsLabel } from '@/components/ui/label';
 import uiTranslations from '@/i18n/ui.json';
 import inputTranslations from '@shared/content/input/translations.json';
 
+// ─── Tokens do campo ──────────────────────────────────────────────────────────
+//
+// Token, seletor que o consome e a chave de conteúdo que o descreve. Cada linha
+// foi medida com getComputedStyle antes de entrar aqui — a tabela é o que quem
+// customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
+// `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
+// ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
+const TOKENS_DO_CAMPO = [
+  ['--input', '.nds-input', 'border'],
+  ['--ring', '.nds-input:hover', 'borderHover'],
+  ['--ring', '.nds-input:focus-visible', 'borderFocus'],
+  ['--destructive', '.nds-input[aria-invalid="true"]', 'borderError'],
+  ['--background', '.nds-input', 'background'],
+  ['--foreground', '.nds-input', 'text'],
+  ['--muted-foreground', '.nds-input::placeholder', 'placeholder'],
+  ['--muted', '.nds-input:disabled', 'bgDisabled'],
+  ['--radius', '.nds-input', 'radius'],
+  ['--spacing-2', '.nds-input', 'paddingBlock'],
+  ['--text-control', '.nds-input', 'fontSize'],
+  ['--muted', '.nds-input[type="file"]::file-selector-button', 'fileButton'],
+] as const;
+
+
 import {
   NdsDocsPageLayout,
   NdsDocsHeader,
@@ -437,7 +460,7 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
     const mapa: { key: string; tpl: TemplateRef<unknown> }[] = [
       { key: 'withLabel',  tpl: this.tplCompLabel()  },
       { key: 'withHint',   tpl: this.tplCompHint()   },
-      { key: 'withError',  tpl: this.tplCompError()  },
+      { key: 'errorMessage', tpl: this.tplCompError() },
       { key: 'withPrefix', tpl: this.tplCompPrefix() },
     ];
     return mapa.map(({ key, tpl }) => ({
@@ -551,18 +574,10 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return [
-      { token: '--height-input', k: 'height'      },
-      { token: '--radius',       k: 'radius'      },
-      { token: '--border',       k: 'border'      },
-      { token: '--ring',         k: 'ring'        },
-      { token: '--destructive',  k: 'borderError' },
-      { token: '--muted',        k: 'bgDisabled'  },
-      { token: '--muted-foreground', k: 'placeholder' },
-    ].map(({ token, k }) => ({
+    return TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
       token,
-      value: '.nds-input',
-      description: toPlainText(t(`tokens.table.${k}`)),
+      value: seletor,
+      description: toPlainText(t(`tokens.table.${chave}`)),
     }));
   });
 

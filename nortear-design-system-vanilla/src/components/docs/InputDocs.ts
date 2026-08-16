@@ -27,6 +27,28 @@ import {
 } from '@/components/docs/shared/sections';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 
+// ─── Tokens do campo ──────────────────────────────────────────────────────────
+//
+// Token, seletor que o consome e a chave de conteúdo que o descreve. Cada linha
+// foi medida com getComputedStyle antes de entrar aqui — a tabela é o que quem
+// customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
+// `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
+// ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
+const TOKENS_DO_CAMPO: readonly (readonly [string, string, string])[] = [
+  ['--input', '.nds-input', 'border'],
+  ['--ring', '.nds-input:hover', 'borderHover'],
+  ['--ring', '.nds-input:focus-visible', 'borderFocus'],
+  ['--destructive', '.nds-input[aria-invalid="true"]', 'borderError'],
+  ['--background', '.nds-input', 'background'],
+  ['--foreground', '.nds-input', 'text'],
+  ['--muted-foreground', '.nds-input::placeholder', 'placeholder'],
+  ['--muted', '.nds-input:disabled', 'bgDisabled'],
+  ['--radius', '.nds-input', 'radius'],
+  ['--spacing-2', '.nds-input', 'paddingBlock'],
+  ['--text-control', '.nds-input', 'fontSize'],
+  ['--muted', '.nds-input[type="file"]::file-selector-button', 'fileButton'],
+] as const;
+
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
@@ -488,12 +510,15 @@ export function createInputDocs(): HTMLElement {
           `label.className = 'nds-text-body nds-font-medium';\n` +
           `label.textContent = 'URL do site';\n` +
           `const row = document.createElement('div');\n` +
-          `row.className = 'nds-cluster nds-rounded-md nds-border-default border-input focus-within:ring-2 focus-within:ring-ring/50 nds-overflow-hidden';\n` +
+          `row.className = 'nds-input-group';\n` +
           `const prefix = document.createElement('span');\n` +
-          `prefix.className = 'nds-cluster nds-px-3 nds-text-body nds-text-muted-foreground nds-bg-muted border-r border-input nds-shrink-0';\n` +
+          `prefix.className = 'nds-input-group-addon';\n` +
+          `prefix.dataset.align = 'inline-start';\n` +
           `prefix.textContent = 'https://';\n` +
           `const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });\n` +
-          `input.className = 'border-0 nds-flex-1';\n` +
+          `// classList.add, nunca className=: substituir apagaria .nds-input\n` +
+          `input.classList.add('nds-input-group-control');\n` +
+          `input.dataset.slot = 'input-group-control';   // o anel de foco é do GRUPO\n` +
           `row.append(prefix, input);\n` +
           `wrapper.append(label, row);`;
 
@@ -542,9 +567,9 @@ export function createInputDocs(): HTMLElement {
               },
             },
             {
-              name: t('variants.compositions.withError.name'),
-              description: t('variants.compositions.withError.description'),
-              useWhen: t('variants.compositions.withError.use'),
+              name: t('variants.compositions.errorMessage.name'),
+              description: t('variants.compositions.errorMessage.description'),
+              useWhen: t('variants.compositions.errorMessage.use'),
               code: codeWithError,
               previewFactory: () => {
                 const wrapper = document.createElement('div');
@@ -579,14 +604,14 @@ export function createInputDocs(): HTMLElement {
                 label.className = 'nds-text-body nds-font-medium';
                 label.textContent = 'URL do site';
                 const row = document.createElement('div');
-                row.className = 'nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden';
+                row.className = 'nds-input-group';
                 const prefix = document.createElement('span');
-                prefix.className = 'nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0';
-                prefix.style.borderRight = '1px solid var(--input)';
+                prefix.className = 'nds-input-group-addon';
+                prefix.dataset.align = 'inline-start';
                 prefix.textContent = 'https://';
                 const input = createInput({ type: 'url', id: 'input-url', placeholder: 'meusite.com' });
-                input.className = 'nds-flex-1';
-                input.style.border = '0';
+                input.classList.add('nds-input-group-control');
+                input.dataset.slot = 'input-group-control';
                 row.append(prefix, input);
                 wrapper.append(label, row);
                 return wrapper;
@@ -657,13 +682,18 @@ export type InputOptions = {
       }
 
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — sobrescrever tokens do input */
+        // Cada linha abaixo foi conferida no navegador com getComputedStyle, não
+        // lida a olho na folha. A versão anterior ensinava `--height-default` e
+        // `--radius-input` (que o campo não consome) e nomes de utilitário do
+        // Tailwind na coluna de seletor — customização inteiramente inerte.
+        const customizationCode = `/* Em styles.css — sobrescrever os tokens que o campo consome */
 :root {
-  --height-default: 2.5rem;   /* altura padrão do input */
-  --radius-input: 0.375rem;   /* border-radius do input */
-  --input: 214 32% 91%;       /* cor da borda padrão */
-  --ring: 222 84% 5%;         /* cor do ring de foco */
-  --destructive: 0 84% 60%;   /* cor da borda de erro */
+  --input: 0 0% 56%;         /* borda em repouso — mantenha 3:1 contra o fundo */
+  --ring: 0 0% 45%;          /* borda no hover e no foco, e a cor do halo */
+  --destructive: 0 74% 42%;  /* borda e halo do estado de erro */
+  --radius: 0.625rem;        /* arredondamento das quinas */
+  --spacing-2: 0.5rem;       /* respiro vertical: a altura acompanha */
+  --text-control: 0.875rem;  /* tipografia do campo: a altura acompanha */
 }`;
 
         return createDocsTokens({
@@ -673,16 +703,11 @@ export type InputOptions = {
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: [
-            { token: '--height-default', value: 'h-(--height-default)', description: t('tokens.table.height') },
-            { token: '--radius-input',   value: 'rounded-(--radius-input)', description: t('tokens.table.radius') },
-            { token: '--input',          value: 'border-input',          description: t('tokens.table.border') },
-            { token: '--ring',           value: 'ring-ring',             description: t('tokens.table.ring') },
-            { token: '--destructive',    value: 'border-destructive',    description: t('tokens.table.borderError') },
-            { token: '--destructive',    value: 'ring-destructive/20',   description: t('tokens.table.ringError') },
-            { token: '--input',          value: 'bg-input/50',           description: t('tokens.table.bgDisabled') },
-            { token: '--muted-foreground', value: 'nds-text-muted-foreground', description: t('tokens.table.placeholder') },
-          ],
+          items: TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+            token,
+            value: seletor,
+            description: t(`tokens.table.${chave}`),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
         });

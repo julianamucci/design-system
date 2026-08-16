@@ -16,6 +16,7 @@ import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import inputTranslations from "@shared/content/input/translations.json";
 
+
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
 import { DocsDemonstration } from "@/components/docs/shared/sections/DocsDemonstration";
@@ -34,6 +35,28 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
+
+// ─── Tokens do campo ──────────────────────────────────────────────────────────
+//
+// Token, seletor que o consome e a chave de conteúdo que o descreve. Cada linha
+// foi medida com getComputedStyle antes de entrar aqui — a tabela é o que quem
+// customiza copia, e a versão anterior mandava sobrescrever `--height-default` e
+// `--radius-input`, dois tokens que `.nds-input` não lê. Não existe token de
+// ALTURA: ela nasce de `--spacing-2` mais `--text-control` (WCAG 1.4.4).
+const TOKENS_DO_CAMPO = [
+  ["--input", ".nds-input", "border"],
+  ["--ring", ".nds-input:hover", "borderHover"],
+  ["--ring", ".nds-input:focus-visible", "borderFocus"],
+  ["--destructive", '.nds-input[aria-invalid="true"]', "borderError"],
+  ["--background", ".nds-input", "background"],
+  ["--foreground", ".nds-input", "text"],
+  ["--muted-foreground", ".nds-input::placeholder", "placeholder"],
+  ["--muted", ".nds-input:disabled", "bgDisabled"],
+  ["--radius", ".nds-input", "radius"],
+  ["--spacing-2", ".nds-input", "paddingBlock"],
+  ["--text-control", ".nds-input", "fontSize"],
+  ["--muted", '.nds-input[type="file"]::file-selector-button', "fileButton"],
+] as const;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -232,10 +255,14 @@ import {
   </InputGroupAddon>
 </InputGroup>`;
 
-  const codeTokensCustom = `/* Em globals.css */
+  const codeTokensCustom = `/* Em globals.css — sobrescrever os tokens que o campo consome */
 :root {
-  --height-default: 2.25rem; /* 36px */
-  --radius-input: var(--radius);
+  --input: 0 0% 56%;         /* borda em repouso — mantenha 3:1 contra o fundo */
+  --ring: 0 0% 45%;          /* borda no hover e no foco, e a cor do halo */
+  --destructive: 0 74% 42%;  /* borda e halo do estado de erro */
+  --radius: 0.625rem;        /* arredondamento das quinas */
+  --spacing-2: 0.5rem;       /* respiro vertical: a altura acompanha */
+  --text-control: 0.875rem;  /* tipografia do campo: a altura acompanha */
 }`;
 
   const interfaceCode = `// Input — estende React.ComponentProps<"input">
@@ -645,9 +672,9 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             ),
           },
           {
-            name: tContent("variants.compositions.withError.name"),
-            description: tContent("variants.compositions.withError.description"),
-            useWhen: tContent("variants.compositions.withError.use"),
+            name: tContent("variants.compositions.errorMessage.name"),
+            description: tContent("variants.compositions.errorMessage.description"),
+            useWhen: tContent("variants.compositions.errorMessage.use"),
             code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-email-error">Email</Label>\n  <Input\n    id="input-email-error"\n    type="email"\n    placeholder="ex: joao@empresa.com"\n    aria-invalid="true"\n    aria-describedby="input-email-error-error"\n  />\n  <p id="input-email-error-error" className="nds-text-caption nds-text-destructive">\n    Email inválido. Use o formato nome@dominio.com\n  </p>\n</div>`,
             preview: (
               <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
@@ -669,19 +696,19 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
             name: tContent("variants.compositions.withPrefix.name"),
             description: tContent("variants.compositions.withPrefix.description"),
             useWhen: tContent("variants.compositions.withPrefix.use"),
-            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-url">URL do site</Label>\n  <div className="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">\n    <span className="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style={{ borderRight: "1px solid var(--input)" }}>https://</span>\n    <Input\n      className="nds-flex-1" style={{ border: 0 }}\n      type="url"\n      id="input-url"\n      placeholder="meusite.com"\n    />\n  </div>\n</div>`,
+            // A moldura e o anel de foco são do GRUPO; o campo interno fica nu.
+            // A versão anterior montava a caixa à mão e zerava a borda por style
+            // inline — o que vencia a folha e tirava o exemplo do tema.
+            code: `<div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">\n  <Label htmlFor="input-url">URL do site</Label>\n  <InputGroup>\n    <InputGroupAddon align="inline-start">\n      <InputGroupText>https://</InputGroupText>\n    </InputGroupAddon>\n    <InputGroupInput type="url" id="input-url" placeholder="meusite.com" />\n  </InputGroup>\n</div>`,
             preview: (
               <div className="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs">
                 <Label htmlFor="input-url">URL do site</Label>
-                <div className="nds-cluster nds-rounded-md nds-border-default nds-overflow-hidden">
-                  <span className="nds-cluster nds-px-2 nds-text-body nds-text-muted-foreground nds-bg-muted nds-shrink-0" style={{ borderRight: "1px solid var(--input)" }}>https://</span>
-                  <Input
-                    className="nds-flex-1" style={{ border: 0 }}
-                    type="url"
-                    id="input-url"
-                    placeholder="meusite.com"
-                  />
-                </div>
+                <InputGroup>
+                  <InputGroupAddon align="inline-start">
+                    <InputGroupText>https://</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput type="url" id="input-url" placeholder="meusite.com" />
+                </InputGroup>
               </div>
             ),
           },
@@ -816,19 +843,11 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={[
-          { token: "--height-default", value: "h-(--height-default)",        description: tContent("tokens.table.height") },
-          { token: "--radius-input",   value: "rounded-(--radius-input)",     description: tContent("tokens.table.radius") },
-          { token: "--input",          value: "border-input",                 description: tContent("tokens.table.border") },
-          { token: "--ring",           value: "nds-focus-ring",    description: tContent("tokens.table.borderFocus") },
-          { token: "--ring",           value: "nds-focus-ring",   description: tContent("tokens.table.ring") },
-          { token: "--destructive",    value: "aria-invalid:border-destructive", description: tContent("tokens.table.borderError") },
-          { token: "--destructive",    value: "aria-invalid:ring-destructive/20", description: tContent("tokens.table.ringError") },
-          { token: "--input",          value: "disabled:bg-input/50",         description: tContent("tokens.table.bgDisabled") },
-          { token: "--input",          value: "dark:disabled:bg-input/80",    description: tContent("tokens.table.bgDisabledDark") },
-          { token: "--muted-foreground", value: "placeholder:nds-text-muted-foreground", description: tContent("tokens.table.placeholder") },
-          { token: "--input",          value: "dark:bg-input/30",             description: tContent("tokens.table.bgDark") },
-        ]}
+        items={TOKENS_DO_CAMPO.map(([token, seletor, chave]) => ({
+          token,
+          value: seletor,
+          description: tContent(`tokens.table.${chave}`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeTokensCustom}
       />

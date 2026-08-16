@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
+import { alturaResultante, campoDe } from '@shared/testing/input-probe';
 import { Input } from './index';
 
 const meta = {
@@ -78,16 +79,73 @@ export const Number: Story = {
   },
 };
 
-export const File: Story = {
+/**
+ * `type="search"` não tinha story em stack nenhuma — e é um dos tipos que a
+ * seção Variantes documenta e que o contrato pede em `visual.item3`.
+ */
+export const Search: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => ({
     components: { Input },
-    template: '<div class="nds-w-xs"><label for="arquivo-input" class="nds-block nds-text-body nds-font-medium nds-mb-1">Anexar arquivo</label><Input id="arquivo-input" type="file" /></div>',
+    template: `
+      <div class="nds-stack nds-w-xs" data-spacing="xs">
+        <label for="tipo-search" class="nds-text-body nds-font-medium">Buscar</label>
+        <Input id="tipo-search" type="search" placeholder="Buscar componentes..." />
+      </div>
+    `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Input type=file está renderizado', async () => {
-      const input = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
-      await expect(input).toBeTruthy();
-      await expect(input).toHaveAttribute('data-slot', 'input');
+    const canvas = within(canvasElement);
+
+    await step('O campo de busca é anunciado como busca, não como texto', async () => {
+      // `type="search"` muda o papel implícito para searchbox — é o que o
+      // leitor de tela anuncia, e nada no visual denuncia se estiver errado.
+      const input = canvas.getByRole('searchbox', { name: 'Buscar' });
+      await expect(input).toHaveAttribute('type', 'search');
+    });
+
+    await step('Aceita digitação', async () => {
+      const input = canvas.getByRole('searchbox', { name: 'Buscar' });
+      await userEvent.clear(input);
+      await userEvent.type(input, 'Button');
+      await expect(input).toHaveValue('Button');
+      await userEvent.clear(input);
+    });
+  },
+};
+
+export const File: Story = {
+  parameters: { covers: ['functional.item5'] },
+  render: () => ({
+    components: { Input },
+    template: `
+      <div class="nds-stack nds-w-xs" data-spacing="xs">
+        <label for="tipo-file" class="nds-text-body nds-font-medium">Arquivo</label>
+        <Input id="tipo-file" type="file" />
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Input type file está presente e rotulado', async () => {
+      const input = canvas.getByLabelText('Arquivo');
+      await expect(input).toHaveAttribute('type', 'file');
+    });
+
+    await step('O botão nativo recebe estilo próprio do design system', async () => {
+      // `::file-selector-button` é a única parte do campo que o navegador
+      // desenha sozinho; sem a regra do design system ele sai com o cinza do
+      // sistema operacional e o exemplo mente sobre o resultado.
+      const botao = getComputedStyle(campoDe(canvasElement)!, '::file-selector-button');
+      await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
+    });
+
+    await step('A altura continua saindo do respiro, não de um valor cravado', async () => {
+      const medida = alturaResultante(campoDe(canvasElement)!);
+      await expect(medida.alturaCravada).toBe(false);
+      await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
     });
   },
 };

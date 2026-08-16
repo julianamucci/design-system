@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
+import { alturaResultante, campoDe, contrasteDaBorda } from '@shared/testing/input-probe';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import { NdsInputDocs } from '@/components/docs/InputDocs';
@@ -79,12 +80,17 @@ type Story = StoryObj<InputArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    // visual.item1 e item2 (default e o trio focus/disabled/error) saem desta
-    // story e da Estados; accessibility.item5 é contraste, medido pelo axe em
-    // toda story — o audit só o enxerga se alguma declarar.
+    // Revalidado nesta rodada. Duas declarações eram falsas e saíram daqui:
+    //  · `functional.item2` (foco) — a play nunca focava nem media o halo; foi
+    //    para a story `Focus`, que afere 2px e 30% de opacidade;
+    //  · `accessibility.item5` (contraste) — dizia "medido pelo axe em toda
+    //    story", e o axe do test-runner só olha a tela, que está sempre no tema
+    //    claro. Foi para `Default`, que mede os DOIS modos e calcula a razão.
+    // `functional.item6` (digitar) e `accessibility.item2` (rótulo alcança o
+    // campo) entram porque esta play já os verifica de verdade.
     covers: [
-      'functional.item1', 'functional.item2',
-      'accessibility.item1', 'accessibility.item5',
+      'functional.item1', 'functional.item6',
+      'accessibility.item1', 'accessibility.item2',
       'visual.item1',
     ],
   },
@@ -111,6 +117,21 @@ export const Playground: Story = {
       const input = canvasElement.querySelector<HTMLInputElement>('[data-slot="input"]')!;
       await expect(input.tagName).toBe('INPUT');
       await expect(input).toHaveClass(/nds-input/);
+    });
+
+    await step('A borda em repouso alcança 3:1 contra o fundo (functional.item1)', async () => {
+      // WCAG 1.4.11: o fundo do campo é igual ao da página, então a borda é a
+      // única coisa que identifica o campo. Antes de b149f41f eram 1.25:1.
+      const contraste = contrasteDaBorda(campoDe(canvasElement)!);
+      await expect(contraste?.razao ?? 0).toBeGreaterThanOrEqual(3);
+    });
+
+    await step('A altura nasce do respiro, não de um valor cravado', async () => {
+      // WCAG 1.4.4: `height` fixa impede o campo de crescer com a fonte do
+      // navegador. A tabela de tokens já ensinou `--height-input` por engano.
+      const medida = alturaResultante(campoDe(canvasElement)!);
+      await expect(medida.alturaCravada).toBe(false);
+      await expect(medida.heightCss).not.toBe('0px');
     });
 
     await step('O tipo escolhido chega ao DOM', async () => {

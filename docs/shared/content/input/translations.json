@@ -8,7 +8,7 @@
       "title": "Input — Formulário",
       "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
       "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
+      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, campo de formulário, design system"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -34,7 +34,7 @@
       "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo com <code>data-slot=\"input\"</code>. Aceita todos os atributos HTML do input.",
       "item2": "<strong>type</strong> — define o tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — exemplo do formato esperado, nunca instrução. Nunca substitui o Label.",
-      "item4": "<strong>Label (externo)</strong> — rótulo associado via <code>htmlFor</code> ou via <code>FormLabel</code> dentro de <code>FormField</code>.",
+      "item4": "<strong>Label (externo)</strong> — rótulo associado ao campo pelo atributo <code>for</code> apontando para o <code>id</code>, ou pelo rótulo do componente de formulário.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obrigatório */}\n      <FormControl>\n        <Input type=\"email\"               {/* type adequado */}\n               placeholder=\"ex: joao@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoio.</FormDescription>\n      <FormMessage />                      {/* Erro do Zod */}\n    </FormItem>\n  )}\n</FormField>",
@@ -130,7 +130,7 @@
       "compositions": {
         "withLabel": {
           "name": "Com label",
-          "description": "Input associado a um <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label fica acima do input em coluna; o clique no label foca o input.",
+          "description": "Input associado a um <code>&lt;label&gt;</code> pelo par <code>for</code>/<code>id</code>. Label fica acima do input em coluna; o clique no label foca o input.",
           "use": "Padrão de todo formulário. Sempre forneça label visível — placeholder não substitui label."
         },
         "withHint": {
@@ -138,9 +138,9 @@
           "description": "Input com label + parágrafo de hint abaixo (texto auxiliar explicando formato ou uso). Hint usa cor <code>--muted-foreground</code>.",
           "use": "Quando o label sozinho não explica o formato esperado (ex.: política de senha, máscara de CPF, exemplos de input)."
         },
-        "withError": {
+        "errorMessage": {
           "name": "Com mensagem de erro",
-          "description": "Input com <code>aria-invalid=\"true\"</code> + mensagem de erro abaixo na cor <code>--destructive</code>. <code>aria-describedby</code> aponta para o id da mensagem.",
+          "description": "Rótulo, campo e um parágrafo de mensagem abaixo, ligados por <code>aria-describedby</code> — o leitor de tela anuncia o texto do erro junto com o nome do campo. O estado visual em si é o da seção Estados.",
           "use": "Validação síncrona ou após submit. A mensagem deve explicar o problema E sugerir correção — nunca apenas \"campo inválido\"."
         },
         "withPrefix": {
@@ -186,22 +186,22 @@
       "default": {
         "label": "Padrão",
         "trigger": "Sem props adicionais",
-        "behavior": "Borda <code>border-input</code>, fundo transparente, texto <code>foreground</code>"
+        "behavior": "Borda em --input, a 3:1 contra o fundo. Fundo em --background e texto em --foreground."
       },
       "focus": {
         "label": "Foco",
         "trigger": "Ao clicar ou navegar via Tab",
-        "behavior": "Borda <code>ring-ring</code> + ring de 3px com opacidade 50%"
+        "behavior": "Borda em --ring, mais um halo de 2px na mesma cor com 30% de opacidade."
       },
       "disabled": {
         "label": "Desabilitado",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "Cursor not-allowed, opacidade 50%, fundo <code>bg-input/50</code>, sem interação"
+        "behavior": "Opacidade 50%, fundo em --muted a 30%, cursor de bloqueio. Não recebe foco nem digitação."
       },
       "error": {
         "label": "Erro",
         "trigger": "<code>aria-invalid=\"true\"</code> (aplicado pelo FormControl automaticamente)",
-        "behavior": "Borda <code>border-destructive</code> + ring vermelho. FormMessage exibe a mensagem."
+        "behavior": "Borda em --destructive. Ao focar, o halo de 2px também fica em --destructive."
       },
       "file": {
         "label": "Arquivo",
@@ -224,41 +224,42 @@
         "className": "Classes .nds-* adicionais para customização pontual.",
         "placeholder": "Texto de exemplo do formato esperado — nunca instrução.",
         "disabled": "Desabilita o campo. Aplica estilos e remove interatividade.",
-        "ariaInvalid": "Estado de erro. Aplicado automaticamente pelo <code>FormControl</code> dentro de <code>FormField</code>.",
-        "autoComplete": "Valor para o atributo <code>autocomplete</code> do HTML. Melhora UX mobile e gestores de senhas.",
+        "ariaInvalid": "Estado de erro. Dentro do componente de formulário é aplicado automaticamente ao campo com erro.",
+        "autoComplete": "Valor do atributo autocomplete do HTML. Melhora a experiência em mobile e em gestores de senha.",
         "align_addon": "Posição do addon: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "O Input estende <code>React.ComponentProps&lt;\"input\"&gt;</code> — aceita todos os atributos HTML nativos do input. Use <code>className</code> para customizações pontuais com tokens do projeto."
+      "extensibility": "O Input aceita todos os atributos HTML nativos do elemento <code>&lt;input&gt;</code>. Para customizações pontuais, acrescente classes <code>.nds-*</code> em cima da classe base."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Classe .nds-*",
+        "class": "Seletor CSS",
         "part": "Parte do componente",
-        "height": "Altura do campo via token de densidade",
-        "radius": "Border radius via token de tema",
-        "border": "Borda padrão do input",
-        "borderFocus": "Borda no estado de foco",
-        "ring": "Ring de foco (3px, 50% opacidade)",
-        "borderError": "Borda no estado de erro",
-        "ringError": "Ring de erro",
-        "bgDisabled": "Fundo no estado disabled (light)",
-        "bgDisabledDark": "Fundo no estado disabled (dark)",
-        "placeholder": "Cor do texto placeholder",
-        "bgDark": "Fundo em dark mode"
+        "border": "Cor da borda em repouso — mantenha 3:1 contra o fundo",
+        "borderHover": "Cor da borda sob o ponteiro",
+        "borderFocus": "Cor da borda e do halo no foco",
+        "borderError": "Cor da borda e do halo no estado de erro",
+        "background": "Fundo do campo",
+        "text": "Cor do texto digitado",
+        "placeholder": "Cor do texto de exemplo",
+        "bgDisabled": "Fundo do campo desabilitado",
+        "radius": "Arredondamento das quatro quinas",
+        "paddingBlock": "Respiro vertical — é ele, com a tipografia, que dá a altura",
+        "fontSize": "Tamanho do texto do campo",
+        "fileButton": "Fundo do botão de seleção de arquivo"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
       "title": "Acessibilidade",
       "summary": "O Input usa o elemento <code>&lt;input&gt;</code> nativo com semântica HTML completa. O <code>FormControl</code> aplica <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente. Cumpre WCAG 2.2 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificação de erro).",
-      "item1": "<strong>Label obrigatório</strong> — sempre associe via <code>htmlFor</code> (fora de FormField) ou <code>FormLabel</code> (dentro de FormField). Nunca use apenas placeholder.",
+      "item1": "<strong>Label obrigatório</strong> — associe sempre o rótulo ao campo pelo atributo <code>for</code>, ou use o rótulo do componente de formulário. Nunca use apenas placeholder.",
       "item2": "<strong>aria-invalid automático</strong> — o <code>FormControl</code> aplica <code>aria-invalid=\"true\"</code> quando há erro no campo. Não adicione manualmente.",
       "item3": "<strong>aria-describedby automático</strong> — o <code>FormControl</code> vincula <code>FormDescription</code> e <code>FormMessage</code> ao campo via <code>aria-describedby</code>.",
       "item4": "<strong>aria-required</strong> — adicione <code>aria-required=\"true\"</code> em campos obrigatórios para anunciar ao leitor de tela.",
-      "item5": "<strong>autoComplete</strong> — use <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumpre WCAG 1.3.5.",
+      "item5": "<strong>autocomplete</strong> — use <code>autocomplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumpre WCAG 1.3.5.",
       "keyboard": {
         "tab": "Move o foco para o próximo campo do formulário.",
         "shiftTab": "Move o foco para o campo anterior.",
@@ -285,7 +286,7 @@
       "textarea": "Para entradas de texto com múltiplas linhas.",
       "inputOTP": "Para entrada de códigos OTP, PIN e verificação de dois fatores.",
       "select": "Para seleção de uma opção em lista fixa de 3+ itens.",
-      "form": "Wrapper de acessibilidade para formulários com React Hook Form e Zod.",
+      "form": "Wrapper de acessibilidade para formulários com validação por esquema.",
       "label": "Rótulo acessível para campos de formulário.",
       "inputGroup": "Composição do Input com prefixos, sufixos, ícones e botões internos."
     },
@@ -294,8 +295,8 @@
       "tip1": "Use sempre o <code>type</code> semântico correto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Além de melhorar a UX mobile, ativa validações nativas do browser.",
       "tip2": "O <code>InputGroup</code> é um componente separado, não uma prop do Input. Use-o quando precisar de prefixo, sufixo, ícone interno ou botão dentro do campo.",
       "tip3": "Dentro de <code>FormField</code>, o <code>FormControl</code> injeta <code>aria-invalid</code> e <code>aria-describedby</code> automaticamente — não adicione esses atributos manualmente.",
-      "tip4": "Para formulários de busca, sempre inclua um <code>Button type='submit'</code> com <code>className='sr-only'</code> — necessário para acessibilidade por teclado.",
-      "tip5": "Altura e border-radius são controlados por tokens de tema (<code>--height-default</code>, <code>--radius-input</code>) — não sobrescrever diretamente."
+      "tip4": "Para formulários de busca, sempre inclua um botão de envio com a classe <code>nds-sr-only</code> — necessário para acessibilidade por teclado.",
+      "tip5": "A altura do campo não é um token: ela nasce do respiro vertical mais a tipografia, para o campo crescer junto quando alguém aumenta a fonte do navegador. Ajuste <code>--spacing-2</code> e <code>--text-control</code> — nunca crave uma altura."
     },
     "analytics": {
       "title": "Analytics",
@@ -331,32 +332,32 @@
         "description": "O que deve acontecer para cada estado e configuração do Input.",
         "item1": {
           "action": "Renderizar Input padrão",
-          "result": "Elemento input com data-slot='input', borda border-input, fundo transparente",
+          "result": "Elemento input com data-slot=\"input\" e a classe base; borda a 3:1 contra o fundo e fundo opaco igual ao da página",
           "priority": "high"
         },
         "item2": {
-          "action": "Focar via Tab",
-          "result": "Borda muda para ring-ring, ring de 3px com opacidade 50% visível",
+          "action": "Focar o campo",
+          "result": "Borda na cor do anel e halo de 2px com 30% de opacidade",
           "priority": "high"
         },
         "item3": {
-          "action": "Prop disabled=true",
-          "result": "cursor-not-allowed, opacidade 50%, bg-input/50, campo não editável",
+          "action": "Campo desabilitado",
+          "result": "Opacidade 50%, cursor de bloqueio e fundo suave; não recebe foco nem digitação",
           "priority": "high"
         },
         "item4": {
-          "action": "aria-invalid='true' no campo",
-          "result": "Borda border-destructive, ring vermelho (ring-destructive/20)",
+          "action": "aria-invalid=\"true\" no campo",
+          "result": "Borda na cor destrutiva; ao focar, o halo também fica destrutivo",
           "priority": "high"
         },
         "item5": {
-          "action": "type='file' renderizado",
-          "result": "Botão de seleção nativo, altura vinda do padding, com estilo próprio",
+          "action": "type=\"file\" renderizado",
+          "result": "Botão nativo de seleção com fundo e raio próprios; a altura continua saindo do respiro vertical",
           "priority": "medium"
         },
         "item6": {
           "action": "Digitar no campo",
-          "result": "Valor atualizado, onChange chamado (React) ou v-model sincronizado (Vue)",
+          "result": "O valor do campo acompanha o que foi digitado",
           "priority": "high"
         },
         "item7": {
@@ -377,7 +378,7 @@
         "item2": "Campo associado a label via htmlFor ou FormLabel — getByLabelText retorna o input",
         "item3": "aria-invalid presente quando FormMessage exibe erro",
         "item4": "aria-describedby aponta para FormMessage e FormDescription quando presentes",
-        "item5": "Contraste mínimo 4.5:1 no texto e placeholder em todos os temas"
+        "item5": "Contraste de 4.5:1 no texto e no placeholder, e de 3:1 na borda, nos modos claro e escuro"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -435,7 +436,7 @@
       "title": "Input — Form",
       "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
       "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
+      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, form field, design system"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -461,7 +462,7 @@
       "item1": "<strong>Input</strong> — native <code>&lt;input&gt;</code> element with <code>data-slot=\"input\"</code>. Accepts all HTML input attributes.",
       "item2": "<strong>type</strong> — defines the input type: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — example of the expected format, never an instruction. Never replaces Label.",
-      "item4": "<strong>Label (external)</strong> — associated via <code>htmlFor</code> or via <code>FormLabel</code> inside <code>FormField</code>.",
+      "item4": "<strong>Label (external)</strong> — associated with the field by the <code>for</code> attribute pointing at the <code>id</code>, or by the form component label.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Required label */}\n      <FormControl>\n        <Input type=\"email\"               {/* Semantic type */}\n               placeholder=\"e.g. john@company.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Helper text.</FormDescription>\n      <FormMessage />                      {/* Zod error */}\n    </FormItem>\n  )}\n</FormField>",
@@ -557,7 +558,7 @@
       "compositions": {
         "withLabel": {
           "name": "With label",
-          "description": "Input associated with a <code>&lt;label&gt;</code> via <code>htmlFor</code>/<code>id</code>. Label sits above the input; clicking the label focuses the input.",
+          "description": "Input associated with a <code>&lt;label&gt;</code> through the <code>for</code>/<code>id</code> pair. Label sits above the input; clicking the label focuses the input.",
           "use": "Standard for every form. Always provide a visible label — placeholder is not a label substitute."
         },
         "withHint": {
@@ -565,9 +566,9 @@
           "description": "Input with label + hint paragraph below (helper text explaining format or usage). Hint uses <code>--muted-foreground</code> color.",
           "use": "When the label alone doesn't explain the expected format (e.g., password policy, ID mask, input examples)."
         },
-        "withError": {
+        "errorMessage": {
           "name": "With error message",
-          "description": "Input with <code>aria-invalid=\"true\"</code> + error message below in <code>--destructive</code> color. <code>aria-describedby</code> points to the message id.",
+          "description": "Label, field and a message paragraph below, wired by <code>aria-describedby</code> — the screen reader announces the error text alongside the field name. The visual state itself belongs to the States section.",
           "use": "Sync or post-submit validation. The message must explain the problem AND suggest a fix — never just \"invalid field\"."
         },
         "withPrefix": {
@@ -613,22 +614,22 @@
       "default": {
         "label": "Default",
         "trigger": "No additional props",
-        "behavior": "Border <code>border-input</code>, transparent background, <code>foreground</code> text"
+        "behavior": "Border in --input, at 3:1 against the background. Background in --background and text in --foreground."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Click or Tab navigation",
-        "behavior": "<code>ring-ring</code> border + 3px ring with 50% opacity"
+        "behavior": "Border in --ring, plus a 2px halo in the same colour at 30% opacity."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "cursor not-allowed, 50% opacity, <code>bg-input/50</code> background, no interaction"
+        "behavior": "50% opacity, --muted background at 30%, blocked cursor. Takes neither focus nor typing."
       },
       "error": {
         "label": "Error",
         "trigger": "<code>aria-invalid=\"true\"</code> (applied by FormControl automatically)",
-        "behavior": "<code>border-destructive</code> border + red ring. FormMessage displays the message."
+        "behavior": "Border in --destructive. On focus the 2px halo turns --destructive as well."
       },
       "file": {
         "label": "File",
@@ -651,41 +652,42 @@
         "className": "Additional .nds-* classes for custom styling.",
         "placeholder": "Example text showing the expected format — never an instruction.",
         "disabled": "Disables the field. Applies styles and removes interactivity.",
-        "ariaInvalid": "Error state. Applied automatically by <code>FormControl</code> inside <code>FormField</code>.",
-        "autoComplete": "Value for HTML <code>autocomplete</code> attribute. Improves mobile UX and password managers.",
+        "ariaInvalid": "Error state. Inside the form component it is applied automatically to the field with an error.",
+        "autoComplete": "Value for the HTML autocomplete attribute. Improves mobile UX and password managers.",
         "align_addon": "Addon position: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "Input extends <code>React.ComponentProps&lt;\"input\"&gt;</code> — accepts all native HTML input attributes. Use <code>className</code> for custom styling with project tokens."
+      "extensibility": "Input accepts every native HTML attribute of the <code>&lt;input&gt;</code> element. For one-off customisation, add <code>.nds-*</code> classes on top of the base class."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
-        "class": ".nds-* Class",
+        "class": "CSS Selector",
         "part": "Component Part",
-        "height": "Field height via density token",
-        "radius": "Border radius via theme token",
-        "border": "Default input border",
-        "borderFocus": "Border in focus state",
-        "ring": "Focus ring (3px, 50% opacity)",
-        "borderError": "Border in error state",
-        "ringError": "Error ring",
-        "bgDisabled": "Background in disabled state (light)",
-        "bgDisabledDark": "Background in disabled state (dark)",
-        "placeholder": "Placeholder text color",
-        "bgDark": "Background in dark mode"
+        "border": "Resting border colour — keep it at 3:1 against the background",
+        "borderHover": "Border colour under the pointer",
+        "borderFocus": "Border and halo colour on focus",
+        "borderError": "Border and halo colour in the error state",
+        "background": "Field background",
+        "text": "Typed text colour",
+        "placeholder": "Example text colour",
+        "bgDisabled": "Disabled field background",
+        "radius": "Corner rounding",
+        "paddingBlock": "Vertical breathing room — together with typography, this is what sets the height",
+        "fontSize": "Field text size",
+        "fileButton": "File picker button background"
       },
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
       "title": "Accessibility",
       "summary": "Input uses the native <code>&lt;input&gt;</code> element with full HTML semantics. <code>FormControl</code> applies <code>aria-invalid</code> and <code>aria-describedby</code> automatically. Meets WCAG 2.2 AA: 1.3.5 (input purpose), 1.4.3 (contrast), 3.3.1 (error identification).",
-      "item1": "<strong>Label required</strong> — always associate via <code>htmlFor</code> (outside FormField) or <code>FormLabel</code> (inside FormField). Never use placeholder alone.",
+      "item1": "<strong>Label required</strong> — always associate the label with the field through the <code>for</code> attribute, or use the form component label. Never use placeholder alone.",
       "item2": "<strong>Automatic aria-invalid</strong> — <code>FormControl</code> applies <code>aria-invalid=\"true\"</code> when the field has an error. Do not add manually.",
       "item3": "<strong>Automatic aria-describedby</strong> — <code>FormControl</code> links <code>FormDescription</code> and <code>FormMessage</code> to the field via <code>aria-describedby</code>.",
       "item4": "<strong>aria-required</strong> — add <code>aria-required=\"true\"</code> to required fields to announce to screen readers.",
-      "item5": "<strong>autoComplete</strong> — use <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Meets WCAG 1.3.5.",
+      "item5": "<strong>autocomplete</strong> — use <code>autocomplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Meets WCAG 1.3.5.",
       "keyboard": {
         "tab": "Moves focus to the next form field.",
         "shiftTab": "Moves focus to the previous field.",
@@ -712,7 +714,7 @@
       "textarea": "For multi-line text entries.",
       "inputOTP": "For OTP, PIN and two-factor verification code entry.",
       "select": "For selecting an option from a fixed list of 3+ items.",
-      "form": "Accessibility wrapper for forms with React Hook Form and Zod.",
+      "form": "Accessibility wrapper for forms with schema validation.",
       "label": "Accessible label for form fields.",
       "inputGroup": "Composes Input with prefixes, suffixes, icons and internal buttons."
     },
@@ -721,8 +723,8 @@
       "tip1": "Always use the correct semantic <code>type</code> — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Beyond improving mobile UX, it enables native browser validations.",
       "tip2": "<code>InputGroup</code> is a separate component, not a prop of Input. Use it when a prefix, suffix, internal icon or button inside the field is needed.",
       "tip3": "Inside <code>FormField</code>, <code>FormControl</code> injects <code>aria-invalid</code> and <code>aria-describedby</code> automatically — do not add these attributes manually.",
-      "tip4": "For search forms, always include a <code>Button type='submit'</code> with <code>className='sr-only'</code> — required for keyboard accessibility.",
-      "tip5": "Height and border-radius are controlled by theme tokens (<code>--height-default</code>, <code>--radius-input</code>) — do not override directly."
+      "tip4": "For search forms, always include a submit button with the <code>nds-sr-only</code> class — required for keyboard accessibility.",
+      "tip5": "Field height is not a token: it comes from vertical padding plus typography, so the field grows when someone increases the browser font size. Adjust <code>--spacing-2</code> and <code>--text-control</code> — never hard-code a height."
     },
     "analytics": {
       "title": "Analytics",
@@ -758,32 +760,32 @@
         "description": "What should happen for each Input state and configuration.",
         "item1": {
           "action": "Render default Input",
-          "result": "Input element with data-slot='input', border-input border, transparent background",
+          "result": "Input element with data-slot=\"input\" and the base class; border at 3:1 against the background and an opaque background matching the page",
           "priority": "high"
         },
         "item2": {
-          "action": "Focus via Tab",
-          "result": "Border changes to ring-ring, 3px ring with 50% opacity visible",
+          "action": "Focus the field",
+          "result": "Border in the ring colour and a 2px halo at 30% opacity",
           "priority": "high"
         },
         "item3": {
-          "action": "Prop disabled=true",
-          "result": "cursor-not-allowed, 50% opacity, bg-input/50, field not editable",
+          "action": "Disabled field",
+          "result": "50% opacity, blocked cursor and soft background; takes neither focus nor typing",
           "priority": "high"
         },
         "item4": {
-          "action": "aria-invalid='true' on field",
-          "result": "border-destructive border, red ring (ring-destructive/20)",
+          "action": "aria-invalid=\"true\" on the field",
+          "result": "Border in the destructive colour; on focus the halo turns destructive too",
           "priority": "high"
         },
         "item5": {
-          "action": "type='file' rendered",
-          "result": "Native file picker button, height from padding, with its own styling",
+          "action": "type=\"file\" rendered",
+          "result": "Native picker button with its own background and radius; height still comes from vertical padding",
           "priority": "medium"
         },
         "item6": {
-          "action": "Typing in field",
-          "result": "Value updated, onChange called (React) or v-model synced (Vue)",
+          "action": "Typing in the field",
+          "result": "The field value follows what was typed",
           "priority": "high"
         },
         "item7": {
@@ -804,7 +806,7 @@
         "item2": "Field associated with label via htmlFor or FormLabel — getByLabelText returns the input",
         "item3": "aria-invalid present when FormMessage shows an error",
         "item4": "aria-describedby points to FormMessage and FormDescription when present",
-        "item5": "Minimum contrast 4.5:1 for text and placeholder across all themes"
+        "item5": "4.5:1 contrast for text and placeholder, and 3:1 for the border, in light and dark modes"
       },
       "visual": {
         "title": "Visual Regression",
@@ -862,7 +864,7 @@
       "title": "Input — Formulario",
       "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
       "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
-      "aiEntities": "Input, InputGroup, React, Vue, Svelte, WCAG 2.2, aria-invalid, FormField"
+      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, campo de formulario, design system"
     },
     "demonstration": {
       "title": "Demostración",
@@ -888,7 +890,7 @@
       "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo con <code>data-slot=\"input\"</code>. Acepta todos los atributos HTML del input.",
       "item2": "<strong>type</strong> — define el tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — ejemplo del formato esperado, nunca una instrucción. Nunca reemplaza al Label.",
-      "item4": "<strong>Label (externo)</strong> — rótulo asociado vía <code>htmlFor</code> o vía <code>FormLabel</code> dentro de <code>FormField</code>.",
+      "item4": "<strong>Label (externo)</strong> — rótulo asociado al campo por el atributo <code>for</code> que apunta al <code>id</code>, o por el rótulo del componente de formulario.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<FormField control={form.control} name=\"email\">\n  {({ field }) => (\n    <FormItem>\n      <FormLabel>Email</FormLabel>         {/* Label obligatorio */}\n      <FormControl>\n        <Input type=\"email\"               {/* type semántico */}\n               placeholder=\"ej: juan@empresa.com\"\n               {...field} />\n      </FormControl>\n      <FormDescription>Texto de apoyo.</FormDescription>\n      <FormMessage />                      {/* Error de Zod */}\n    </FormItem>\n  )}\n</FormField>",
@@ -984,7 +986,7 @@
       "compositions": {
         "withLabel": {
           "name": "Con label",
-          "description": "Input asociado a un <code>&lt;label&gt;</code> vía <code>htmlFor</code>/<code>id</code>. El label queda encima del input; el clic en el label enfoca el input.",
+          "description": "Input asociado a un <code>&lt;label&gt;</code> por el par <code>for</code>/<code>id</code>. El label queda encima del input; el clic en el label enfoca el input.",
           "use": "Estándar de todo formulario. Provee siempre un label visible — el placeholder no reemplaza al label."
         },
         "withHint": {
@@ -992,9 +994,9 @@
           "description": "Input con label + párrafo de hint debajo (texto auxiliar explicando formato o uso). El hint usa el color <code>--muted-foreground</code>.",
           "use": "Cuando el label por sí solo no explica el formato esperado (ej.: política de contraseña, máscara de RUT, ejemplos)."
         },
-        "withError": {
+        "errorMessage": {
           "name": "Con mensaje de error",
-          "description": "Input con <code>aria-invalid=\"true\"</code> + mensaje de error debajo en color <code>--destructive</code>. <code>aria-describedby</code> apunta al id del mensaje.",
+          "description": "Rótulo, campo y un párrafo de mensaje debajo, enlazados por <code>aria-describedby</code> — el lector de pantalla anuncia el texto del error junto al nombre del campo. El estado visual en sí es el de la sección Estados.",
           "use": "Validación sincrónica o tras envío. El mensaje debe explicar el problema Y sugerir corrección — nunca solo \"campo inválido\"."
         },
         "withPrefix": {
@@ -1040,22 +1042,22 @@
       "default": {
         "label": "Predeterminado",
         "trigger": "Sin props adicionales",
-        "behavior": "Borde <code>border-input</code>, fondo transparente, texto <code>foreground</code>"
+        "behavior": "Borde en --input, a 3:1 contra el fondo. Fondo en --background y texto en --foreground."
       },
       "focus": {
         "label": "Foco",
         "trigger": "Al hacer clic o navegar con Tab",
-        "behavior": "Borde <code>ring-ring</code> + ring de 3px con opacidad 50%"
+        "behavior": "Borde en --ring, más un halo de 2px del mismo color con 30% de opacidad."
       },
       "disabled": {
         "label": "Deshabilitado",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "Cursor not-allowed, opacidad 50%, fondo <code>bg-input/50</code>, sin interacción"
+        "behavior": "Opacidad 50%, fondo en --muted al 30%, cursor de bloqueo. No recibe foco ni escritura."
       },
       "error": {
         "label": "Error",
         "trigger": "<code>aria-invalid=\"true\"</code> (aplicado por FormControl automáticamente)",
-        "behavior": "Borde <code>border-destructive</code> + ring rojo. FormMessage muestra el mensaje."
+        "behavior": "Borde en --destructive. Al enfocar, el halo de 2px también se vuelve --destructive."
       },
       "file": {
         "label": "Archivo",
@@ -1078,41 +1080,42 @@
         "className": "Clases .nds-* adicionales para personalización puntual.",
         "placeholder": "Texto de ejemplo del formato esperado — nunca una instrucción.",
         "disabled": "Deshabilita el campo. Aplica estilos y elimina la interactividad.",
-        "ariaInvalid": "Estado de error. Aplicado automáticamente por <code>FormControl</code> dentro de <code>FormField</code>.",
-        "autoComplete": "Valor para el atributo <code>autocomplete</code> del HTML. Mejora la UX mobile y gestores de contraseñas.",
+        "ariaInvalid": "Estado de error. Dentro del componente de formulario se aplica automáticamente al campo con error.",
+        "autoComplete": "Valor del atributo autocomplete de HTML. Mejora la experiencia en mobile y en gestores de contraseñas.",
         "align_addon": "Posición del addon: <code>inline-start</code>, <code>inline-end</code>, <code>block-start</code>, <code>block-end</code>."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "El Input extiende <code>React.ComponentProps&lt;\"input\"&gt;</code> — acepta todos los atributos HTML nativos del input. Usa <code>className</code> para personalizaciones con tokens del proyecto."
+      "extensibility": "El Input acepta todos los atributos HTML nativos del elemento <code>&lt;input&gt;</code>. Para personalizaciones puntuales, añade clases <code>.nds-*</code> sobre la clase base."
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
-        "class": "Clase .nds-*",
+        "class": "Selector CSS",
         "part": "Parte del componente",
-        "height": "Altura del campo vía token de densidad",
-        "radius": "Border radius vía token de tema",
-        "border": "Borde predeterminado del input",
-        "borderFocus": "Borde en estado de foco",
-        "ring": "Ring de foco (3px, 50% opacidad)",
-        "borderError": "Borde en estado de error",
-        "ringError": "Ring de error",
-        "bgDisabled": "Fondo en estado disabled (light)",
-        "bgDisabledDark": "Fondo en estado disabled (dark)",
-        "placeholder": "Color del texto placeholder",
-        "bgDark": "Fondo en dark mode"
+        "border": "Color del borde en reposo — mantén 3:1 contra el fondo",
+        "borderHover": "Color del borde bajo el puntero",
+        "borderFocus": "Color del borde y del halo al enfocar",
+        "borderError": "Color del borde y del halo en estado de error",
+        "background": "Fondo del campo",
+        "text": "Color del texto escrito",
+        "placeholder": "Color del texto de ejemplo",
+        "bgDisabled": "Fondo del campo deshabilitado",
+        "radius": "Redondeo de las cuatro esquinas",
+        "paddingBlock": "Respiro vertical — junto con la tipografía, es lo que da la altura",
+        "fontSize": "Tamaño del texto del campo",
+        "fileButton": "Fondo del botón de selección de archivo"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
       "title": "Accesibilidad",
       "summary": "El Input usa el elemento <code>&lt;input&gt;</code> nativo con semántica HTML completa. El <code>FormControl</code> aplica <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente. Cumple WCAG 2.2 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificación de error).",
-      "item1": "<strong>Label obligatorio</strong> — asocia siempre vía <code>htmlFor</code> (fuera de FormField) o <code>FormLabel</code> (dentro de FormField). Nunca uses solo el placeholder.",
+      "item1": "<strong>Label obligatorio</strong> — asocia siempre el rótulo al campo mediante el atributo <code>for</code>, o usa el rótulo del componente de formulario. Nunca uses solo el placeholder.",
       "item2": "<strong>aria-invalid automático</strong> — el <code>FormControl</code> aplica <code>aria-invalid=\"true\"</code> cuando el campo tiene un error. No lo agregues manualmente.",
       "item3": "<strong>aria-describedby automático</strong> — el <code>FormControl</code> vincula <code>FormDescription</code> y <code>FormMessage</code> al campo vía <code>aria-describedby</code>.",
       "item4": "<strong>aria-required</strong> — agrega <code>aria-required=\"true\"</code> en campos obligatorios para anunciar al lector de pantalla.",
-      "item5": "<strong>autoComplete</strong> — usa <code>autoComplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumple WCAG 1.3.5.",
+      "item5": "<strong>autocomplete</strong> — usa <code>autocomplete=\"email\"</code>, <code>\"tel\"</code>, <code>\"name\"</code>, etc. Cumple WCAG 1.3.5.",
       "keyboard": {
         "tab": "Mueve el foco al siguiente campo del formulario.",
         "shiftTab": "Mueve el foco al campo anterior.",
@@ -1139,7 +1142,7 @@
       "textarea": "Para entradas de texto con múltiples líneas.",
       "inputOTP": "Para entrada de códigos OTP, PIN y verificación de dos factores.",
       "select": "Para seleccionar una opción de una lista fija de 3+ elementos.",
-      "form": "Wrapper de accesibilidad para formularios con React Hook Form y Zod.",
+      "form": "Wrapper de accesibilidad para formularios con validación por esquema.",
       "label": "Rótulo accesible para campos de formulario.",
       "inputGroup": "Compone el Input con prefijos, sufijos, íconos y botones internos."
     },
@@ -1148,8 +1151,8 @@
       "tip1": "Usa siempre el <code>type</code> semántico correcto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Además de mejorar la UX mobile, activa validaciones nativas del browser.",
       "tip2": "El <code>InputGroup</code> es un componente separado, no una prop del Input. Úsalo cuando necesites prefijo, sufijo, ícono interno o botón dentro del campo.",
       "tip3": "Dentro de <code>FormField</code>, el <code>FormControl</code> inyecta <code>aria-invalid</code> y <code>aria-describedby</code> automáticamente — no agregues esos atributos manualmente.",
-      "tip4": "En formularios de búsqueda, incluye siempre un <code>Button type='submit'</code> con <code>className='sr-only'</code> — necesario para la accesibilidad por teclado.",
-      "tip5": "La altura y el border-radius son controlados por tokens de tema (<code>--height-default</code>, <code>--radius-input</code>) — no sobreescribir directamente."
+      "tip4": "Para formularios de búsqueda, incluye siempre un botón de envío con la clase <code>nds-sr-only</code> — necesario para la accesibilidad por teclado.",
+      "tip5": "La altura del campo no es un token: nace del respiro vertical más la tipografía, para que el campo crezca cuando alguien aumenta la fuente del navegador. Ajusta <code>--spacing-2</code> y <code>--text-control</code> — nunca fijes una altura."
     },
     "analytics": {
       "title": "Analytics",
@@ -1184,33 +1187,33 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada estado y configuración del Input.",
         "item1": {
-          "action": "Renderizar Input predeterminado",
-          "result": "Elemento input con data-slot='input', borde border-input, fondo transparente",
+          "action": "Renderizar Input estándar",
+          "result": "Elemento input con data-slot=\"input\" y la clase base; borde a 3:1 contra el fondo y fondo opaco igual al de la página",
           "priority": "high"
         },
         "item2": {
-          "action": "Enfocar vía Tab",
-          "result": "Borde cambia a ring-ring, ring de 3px con opacidad 50% visible",
+          "action": "Enfocar el campo",
+          "result": "Borde en el color del anillo y halo de 2px con 30% de opacidad",
           "priority": "high"
         },
         "item3": {
-          "action": "Prop disabled=true",
-          "result": "cursor-not-allowed, opacidad 50%, bg-input/50, campo no editable",
+          "action": "Campo deshabilitado",
+          "result": "Opacidad 50%, cursor de bloqueo y fondo suave; no recibe foco ni escritura",
           "priority": "high"
         },
         "item4": {
-          "action": "aria-invalid='true' en el campo",
-          "result": "Borde border-destructive, ring rojo (ring-destructive/20)",
+          "action": "aria-invalid=\"true\" en el campo",
+          "result": "Borde en el color destructivo; al enfocar, el halo también se vuelve destructivo",
           "priority": "high"
         },
         "item5": {
-          "action": "type='file' renderizado",
-          "result": "Botón nativo de selección, altura desde el padding, con estilo propio",
+          "action": "type=\"file\" renderizado",
+          "result": "Botón nativo de selección con fondo y radio propios; la altura sigue naciendo del respiro vertical",
           "priority": "medium"
         },
         "item6": {
           "action": "Escribir en el campo",
-          "result": "Valor actualizado, onChange llamado (React) o v-model sincronizado (Vue)",
+          "result": "El valor del campo acompaña lo que se escribió",
           "priority": "high"
         },
         "item7": {
@@ -1231,7 +1234,7 @@
         "item2": "Campo asociado a label vía htmlFor o FormLabel — getByLabelText retorna el input",
         "item3": "aria-invalid presente cuando FormMessage muestra un error",
         "item4": "aria-describedby apunta a FormMessage y FormDescription cuando están presentes",
-        "item5": "Contraste mínimo 4.5:1 en texto y placeholder en todos los temas"
+        "item5": "Contraste de 4.5:1 en el texto y en el placeholder, y de 3:1 en el borde, en los modos claro y oscuro"
       },
       "visual": {
         "title": "Regresión Visual",

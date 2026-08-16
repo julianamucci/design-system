@@ -17,6 +17,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -298,6 +299,123 @@ export const WithError: Story = {
     await step("Mensagem de erro visível", async () => {
       const errorMsg = canvas.getByText(/Email inválido/);
       await expect(errorMsg).toBeVisible();
+    });
+  },
+};
+
+/**
+ * Fecha `functional.item7` e `visual.item4`. Os três alinhamentos numa captura
+ * só — e as asserções afirmam o PIXEL, não o atributo: quem posiciona é a
+ * propriedade `order` no CSS, e um `align` no elemento errado passaria batido.
+ */
+export const Alignments: Story = {
+  parameters: { covers: ["functional.item7", "visual.item4"] },
+  render: () => (
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+      <div className="nds-stack" data-spacing="xs">
+        <label htmlFor="ig-inicio" className="nds-text-body nds-font-medium">Buscar</label>
+        <InputGroup>
+          <InputGroupAddon align="inline-start" data-testid="addon-inicio">
+            <Search aria-hidden="true" />
+          </InputGroupAddon>
+          <InputGroupInput id="ig-inicio" type="search" placeholder="Buscar" />
+        </InputGroup>
+      </div>
+
+      <div className="nds-stack" data-spacing="xs">
+        <label htmlFor="ig-fim" className="nds-text-body nds-font-medium">Atalho</label>
+        <InputGroup>
+          <InputGroupInput id="ig-fim" placeholder="Comando" />
+          <InputGroupAddon align="inline-end" data-testid="addon-fim">
+            <InputGroupText>Ctrl+K</InputGroupText>
+          </InputGroupAddon>
+        </InputGroup>
+      </div>
+
+      <div className="nds-stack" data-spacing="xs">
+        <label htmlFor="ig-bloco" className="nds-text-body nds-font-medium">Mensagem</label>
+        <InputGroup>
+          <InputGroupAddon align="block-start" data-testid="addon-bloco">
+            <InputGroupText>Para: suporte</InputGroupText>
+          </InputGroupAddon>
+          <InputGroupInput id="ig-bloco" placeholder="Assunto" />
+        </InputGroup>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const q = <T extends HTMLElement>(sel: string) => canvasElement.querySelector<T>(sel)!;
+
+    await step("O alinhamento vira data-align, que é o que o CSS lê", async () => {
+      for (const [id, align] of [
+        ["addon-inicio", "inline-start"],
+        ["addon-fim", "inline-end"],
+        ["addon-bloco", "block-start"],
+      ] as const) {
+        await expect(q(`[data-testid="${id}"]`)).toHaveAttribute("data-align", align);
+      }
+    });
+
+    await step("O addon fica DO LADO que o nome promete", async () => {
+      await expect(q('[data-testid="addon-inicio"]').getBoundingClientRect().left)
+        .toBeLessThan(q("#ig-inicio").getBoundingClientRect().left);
+      await expect(q('[data-testid="addon-fim"]').getBoundingClientRect().left)
+        .toBeGreaterThan(q("#ig-fim").getBoundingClientRect().left);
+    });
+
+    await step("block-start empilha: o grupo vira coluna", async () => {
+      await expect(q('[data-testid="addon-bloco"]').getBoundingClientRect().bottom)
+        .toBeLessThanOrEqual(q("#ig-bloco").getBoundingClientRect().top + 1);
+    });
+
+    await step("A moldura é do GRUPO; o campo interno fica nu", async () => {
+      // É o ponto do componente: uma borda só em volta de tudo. Se o campo
+      // mantivesse a própria, apareceria uma linha dupla no meio.
+      const grupo = q('[data-slot="input-group"]');
+      await expect(parseFloat(getComputedStyle(grupo).borderTopWidth)).toBeGreaterThan(0);
+      await expect(parseFloat(getComputedStyle(q("#ig-inicio")).borderTopWidth)).toBe(0);
+    });
+
+    await step("O grupo é uma região só para o leitor de tela", async () => {
+      await expect(q('[data-slot="input-group"]')).toHaveAttribute("role", "group");
+    });
+  },
+};
+
+/** Fecha `functional.item8`. */
+export const AddonClick: Story = {
+  parameters: { covers: ["functional.item8"] },
+  render: () => (
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+      <label htmlFor="ig-clique" className="nds-text-body nds-font-medium">Usuário</label>
+      <InputGroup>
+        <InputGroupAddon align="inline-start" data-testid="addon">
+          <InputGroupText>@</InputGroupText>
+        </InputGroupAddon>
+        <InputGroupInput id="ig-clique" placeholder="nome.usuario" />
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton type="button" aria-label="Limpar">
+            <Search aria-hidden="true" />
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const campo = () => canvasElement.querySelector<HTMLInputElement>("#ig-clique")!;
+
+    await step("Clicar no addon leva o foco ao campo", async () => {
+      // A área toda parece o campo. Quem mira o "@" espera começar a digitar.
+      await userEvent.click(canvasElement.querySelector<HTMLElement>('[data-testid="addon"]')!);
+      await expect(campo()).toHaveFocus();
+    });
+
+    await step("Clicar no BOTÃO dentro do addon não devolve o foco ao campo", async () => {
+      // Sem esta distinção, apertar "Limpar" devolveria o foco ao campo no meio
+      // da ação — e quem navega por teclado perderia o lugar.
+      await userEvent.click(canvas.getByRole("button", { name: "Limpar" }));
+      await expect(campo()).not.toHaveFocus();
     });
   },
 };
