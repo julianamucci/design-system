@@ -5,12 +5,27 @@ import {
   createSidebarProvider,
   createSidebar,
   createSidebarTrigger,
+  createSidebarRail,
+  createSidebarInset,
   createSidebarContent,
   createSidebarHeader,
   createSidebarFooter,
+  createSidebarInput,
   createSidebarGroup,
+  createSidebarGroupLabel,
+  createSidebarGroupContent,
+  createSidebarGroupAction,
+  createSidebarMenu,
   createSidebarMenuItem,
+  createSidebarMenuButton,
+  createSidebarMenuBadge,
+  createSidebarMenuAction,
+  createSidebarMenuSkeleton,
+  createSidebarMenuSub,
+  createSidebarMenuSubItem,
+  createSidebarMenuSubButton,
   createSidebarSeparator,
+  type SidebarMenuSubButtonOptions,
 } from './sidebar';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -58,6 +73,8 @@ const ICON_SETTINGS = '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73
 const ICON_BELL     = '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>';
 const ICON_USER     = '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
 const ICON_SEARCH   = '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>';
+const ICON_PLUS     = '<path d="M5 12h14"/><path d="M12 5v14"/>';
+const ICON_MORE     = '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>';
 
 // ─── Wrapper ──────────────────────────────────────────────────────────────────
 
@@ -78,6 +95,37 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
   container.style.minHeight = '400px';
   container.appendChild(wrapper);
   return container;
+}
+
+/** Barra superior com o gatilho e um rótulo de contexto. */
+function buildTopbar(instance: ReturnType<typeof createSidebar>, texto: string): HTMLElement {
+  const topbar = document.createElement('div');
+  topbar.className = 'nds-cluster nds-border-b';
+  topbar.dataset.spacing = 'sm';
+  topbar.style.height = '3rem';
+  topbar.style.paddingLeft = '1rem';
+  topbar.style.paddingRight = '1rem';
+  topbar.appendChild(createSidebarTrigger(instance.toggle));
+  const lbl = document.createElement('span');
+  lbl.className = 'nds-text-body nds-text-muted-foreground';
+  lbl.textContent = texto;
+  topbar.appendChild(lbl);
+  return topbar;
+}
+
+/** Andaime de conteúdo principal, quando a story não usa `SidebarInset`. */
+function buildPlainInset(instance: ReturnType<typeof createSidebar>, topo: string, corpo: string): HTMLElement {
+  const inset = document.createElement('div');
+  inset.className = 'nds-flex-1';
+  inset.style.display = 'flex';
+  inset.style.flexDirection = 'column';
+  const mainContent = document.createElement('div');
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.dataset.justify = 'center';
+  mainContent.style.padding = '2rem';
+  mainContent.textContent = corpo;
+  inset.append(buildTopbar(instance, topo), mainContent);
+  return inset;
 }
 
 // ─── Grupos de Navegação ──────────────────────────────────────────────────────
@@ -125,36 +173,10 @@ export const WithGroups: Story = {
 
     inner.appendChild(content);
 
-    const inset = document.createElement('div');
-    inset.className = 'nds-flex-1';
-    inset.style.display = 'flex';
-    inset.style.flexDirection = 'column';
-    const topbar = document.createElement('div');
-    topbar.className = 'nds-cluster nds-border-b';
-    topbar.dataset.spacing = 'sm';
-    topbar.style.height = '3rem';
-    topbar.style.paddingLeft = '1rem';
-    topbar.style.paddingRight = '1rem';
-    topbar.appendChild(createSidebarTrigger(instance.toggle));
-    const lbl = document.createElement('span');
-    lbl.className = 'nds-text-body nds-text-muted-foreground';
-    lbl.textContent = 'Dashboard';
-    topbar.appendChild(lbl);
-    const mainContent = document.createElement('div');
-    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
-    mainContent.dataset.justify = 'center';
-    mainContent.style.padding = '2rem';
-    mainContent.textContent = 'Conteúdo principal';
-    inset.append(topbar, mainContent);
-
-    return wrapSidebar(instance, inset);
+    return wrapSidebar(instance, buildPlainInset(instance, 'Dashboard', 'Conteúdo principal'));
   },
   parameters: {
     covers: ['accessibility.item6'],
-    coversNotApplicable: {
-      'functional.item9':
-        'a fábrica desta stack não expõe skeleton de item de menu — o placeholder de carregamento é composto com o Skeleton pelo consumidor',
-    },
     docs: {
       description: {
         story: 'Sidebar com dois grupos de navegação separados por <code>SidebarSeparator</code>. Itens com ícones e badge.',
@@ -169,6 +191,7 @@ export const WithGroups: Story = {
       await expect(Array.from(rotulos).map((r) => r.textContent)).toEqual(['Principal', 'Conta']);
       const sep = canvasElement.querySelector<HTMLElement>('[data-sidebar="separator"]')!;
       await expect(sep.getAttribute('role')).toBe('separator');
+      await expect(sep.getAttribute('aria-orientation')).toBe('horizontal');
     });
 
     await step('O contador entra no item, não como parada solta', async () => {
@@ -204,6 +227,213 @@ export const WithGroups: Story = {
   },
 };
 
+// ─── Grupo com ação, contador ancorado e faixa ────────────────────────────────
+
+export const WithGroupActions: Story = {
+  name: 'With group action, anchored badge and rail',
+  render: () => {
+    const instance = createSidebar({ defaultOpen: true });
+    const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+    const header = createSidebarHeader();
+    const logoRow = document.createElement('div');
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
+    logoRow.textContent = 'Design System';
+    header.appendChild(logoRow);
+    inner.appendChild(header);
+
+    const content = createSidebarContent();
+
+    // Grupo montado peça a peça: rótulo com id, ação no canto e a lista ligada
+    // ao rótulo por `aria-labelledby`.
+    const group = document.createElement('div');
+    group.className = 'nds-sidebar-group';
+    group.dataset.slot = 'sidebar-group';
+    group.setAttribute('data-sidebar', 'group');
+
+    const rotulo = createSidebarGroupLabel({ text: 'Projetos', id: 'grupo-projetos' });
+    group.appendChild(rotulo);
+
+    let adicionados = 0;
+    group.appendChild(
+      createSidebarGroupAction({
+        label: 'Adicionar projeto',
+        icon: makeIcon(ICON_PLUS),
+        onClick: () => { adicionados += 1; group.dataset.adicionados = String(adicionados); },
+      }),
+    );
+
+    const groupContent = createSidebarGroupContent();
+    const menu = createSidebarMenu({ labelledBy: 'grupo-projetos' });
+
+    // Item completo: botão + contador ancorado + ação flutuante, os três irmãos
+    // dentro do mesmo <li>.
+    const itemNortear = createSidebarMenuItem();
+    itemNortear.appendChild(
+      createSidebarMenuButton({
+        label: 'Nortear',
+        // A contagem entra no NOME do item porque o contador ao lado é
+        // `aria-hidden` — senão o número seria anunciado solto.
+        ariaLabel: 'Nortear, 12 pendências',
+        icon: makeIcon(ICON_LAYOUT),
+        href: '#',
+        active: true,
+      }),
+    );
+    itemNortear.appendChild(createSidebarMenuBadge({ text: '12' }));
+    let acoesAbertas = 0;
+    itemNortear.appendChild(
+      createSidebarMenuAction({
+        label: 'Mais opções de Nortear',
+        icon: makeIcon(ICON_MORE),
+        showOnHover: true,
+        onClick: () => { acoesAbertas += 1; itemNortear.dataset.acoes = String(acoesAbertas); },
+      }),
+    );
+    menu.appendChild(itemNortear);
+
+    const itemArquivo = createSidebarMenuItem();
+    itemArquivo.appendChild(
+      createSidebarMenuButton({ label: 'Arquivados', icon: makeIcon(ICON_LAYERS), href: '#' }),
+    );
+    menu.appendChild(itemArquivo);
+
+    const itemRascunho = createSidebarMenuItem();
+    itemRascunho.appendChild(
+      createSidebarMenuButton({ label: 'Rascunhos', icon: makeIcon(ICON_HOME), size: 'sm', variant: 'outline' }),
+    );
+    menu.appendChild(itemRascunho);
+
+    groupContent.appendChild(menu);
+    group.appendChild(groupContent);
+    content.appendChild(group);
+    inner.appendChild(content);
+
+    const footer = createSidebarFooter();
+    const footerMenu = createSidebarMenu();
+    footerMenu.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(ICON_USER), href: '#' }));
+    footer.appendChild(footerMenu);
+    inner.appendChild(footer);
+
+    // A faixa é irmã do conteúdo, dentro do painel: o posicionamento é absoluto
+    // e o bloco que a contém é o painel fixo.
+    inner.appendChild(createSidebarRail(instance.toggle));
+
+    const inset = createSidebarInset();
+    inset.appendChild(buildTopbar(instance, 'Projetos'));
+    const corpo = document.createElement('p');
+    corpo.className = 'nds-text-body nds-text-muted-foreground';
+    corpo.style.padding = '2rem';
+    corpo.textContent = 'Ação de grupo, contador ancorado e ação por item.';
+    inset.appendChild(corpo);
+
+    return wrapSidebar(instance, inset);
+  },
+  parameters: {
+    covers: ['accessibility.item2', 'accessibility.item3'],
+    docs: {
+      description: {
+        story:
+          'Grupo montado peça a peça: <code>SidebarGroupLabel</code> nomeia a lista via <code>aria-labelledby</code>, ' +
+          '<code>SidebarGroupAction</code> fica no canto, e cada item combina <code>SidebarMenuButton</code>, ' +
+          '<code>SidebarMenuBadge</code> e <code>SidebarMenuAction</code>. A <code>SidebarRail</code> alterna a barra pela borda.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const raiz = () => canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
+
+    await step('O rótulo do grupo nomeia a lista que ele encabeça', async () => {
+      // Sem a ligação, a <ul> é anunciada como "lista, 3 itens" e o rótulo ao
+      // lado é só pintura.
+      const rotulo = canvasElement.querySelector<HTMLElement>('[data-sidebar="group-label"]')!;
+      const menu = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu"]')!;
+      await expect(rotulo.id).toBe('grupo-projetos');
+      await expect(menu.getAttribute('aria-labelledby')).toBe(rotulo.id);
+      await expect(rotulo.textContent).toBe('Projetos');
+    });
+
+    await step('A ação do grupo é um botão com nome, e responde', async () => {
+      const acao = canvas.getByRole('button', { name: 'Adicionar projeto' });
+      await expect(acao.getAttribute('data-sidebar')).toBe('group-action');
+      // Relativo, não absoluto: o painel Interactions reexecuta a play no mesmo
+      // DOM, e um valor cravado falharia na segunda rodada.
+      const grupo = acao.closest<HTMLElement>('[data-sidebar="group"]')!;
+      const antes = Number(grupo.dataset.adicionados ?? 0);
+      await userEvent.click(acao);
+      await expect(Number(grupo.dataset.adicionados)).toBe(antes + 1);
+    });
+
+    await step('O contador ancorado não é lido solto — a contagem está no nome do item', async () => {
+      const contador = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-badge"]')!;
+      await expect(contador.textContent).toBe('12');
+      await expect(contador.getAttribute('aria-hidden')).toBe('true');
+      // Irmão do botão, não filho: é o que o posicionamento absoluto do CSS pede.
+      await expect(contador.parentElement?.getAttribute('data-sidebar')).toBe('menu-item');
+      await expect(canvas.getByRole('link', { name: 'Nortear, 12 pendências' })).toBeInTheDocument();
+    });
+
+    await step('O item ativo é anunciado como página atual', async () => {
+      const ativo = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-button"][data-active="true"]')!;
+      await expect(ativo.getAttribute('aria-current')).toBe('page');
+      await expect(ativo.tagName).toBe('A');
+    });
+
+    await step('A ação do item tem nome próprio e mora no mesmo item', async () => {
+      const acao = canvas.getByRole('button', { name: 'Mais opções de Nortear' });
+      await expect(acao.classList.contains('nds-sidebar-menu-action-hover')).toBe(true);
+      const item = acao.closest<HTMLElement>('[data-sidebar="menu-item"]')!;
+      await expect(item.querySelector('[data-sidebar="menu-button"]')).not.toBeNull();
+      const antes = Number(item.dataset.acoes ?? 0);
+      await userEvent.click(acao);
+      await expect(Number(item.dataset.acoes)).toBe(antes + 1);
+    });
+
+    await step('Os ícones dos controles são decorativos', async () => {
+      const icones = canvasElement.querySelectorAll<SVGElement>('[data-sidebar="group-action"] svg, [data-sidebar="menu-action"] svg');
+      await expect(icones.length).toBe(2);
+      for (const icone of icones) {
+        await expect(icone.getAttribute('aria-hidden')).toBe('true');
+      }
+    });
+
+    await step('O tamanho e a variante do botão viram atributo e classe', async () => {
+      const pequeno = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-button"][data-size="sm"]')!;
+      await expect(pequeno.classList.contains('nds-sidebar-menu-button-outline')).toBe(true);
+      // Sem destino é <button>, não âncora sem href — que não recebe foco nem é
+      // anunciada como link.
+      await expect(pequeno.tagName).toBe('BUTTON');
+      await expect(pequeno.getAttribute('type')).toBe('button');
+    });
+
+    await step('A faixa não duplica a parada de teclado do gatilho', async () => {
+      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
+      await expect(faixa.getAttribute('aria-hidden')).toBe('true');
+      await expect(faixa.tabIndex).toBe(-1);
+      await expect(faixa.title).toBe('Toggle sidebar');
+      // Um único controle na ordem de tabulação para a mesma ação.
+      await expect(canvas.getAllByRole('button', { name: /toggle sidebar/i }).length).toBe(1);
+    });
+
+    await step('A faixa alterna a barra — e devolve ao estado de partida', async () => {
+      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
+      const antes = raiz().dataset.state;
+      faixa.click();
+      await expect(raiz().dataset.state).not.toBe(antes);
+      faixa.click();
+      await expect(raiz().dataset.state).toBe(antes);
+    });
+
+    await step('A área ao lado da barra é o marco principal da página', async () => {
+      const principal = canvas.getByRole('main');
+      await expect(principal.classList.contains('nds-sidebar-inset')).toBe(true);
+    });
+  },
+};
+
 // ─── Com Sub-menu ─────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
@@ -221,102 +451,53 @@ export const WithSubmenu: Story = {
     inner.appendChild(header);
 
     const content = createSidebarContent();
+
     const group = document.createElement('div');
-    group.className = 'nds-stack nds-w-full nds-min-w-0';
-    group.dataset.spacing = 'xs';
-    group.style.position = 'relative';
-    group.style.padding = '0.5rem';
+    group.className = 'nds-sidebar-group';
+    group.dataset.slot = 'sidebar-group';
     group.setAttribute('data-sidebar', 'group');
+    group.appendChild(createSidebarGroupLabel({ text: 'Componentes', id: 'grupo-componentes' }));
 
-    const groupLabel = document.createElement('div');
-    groupLabel.className = 'nds-cluster nds-shrink-0 nds-rounded-md nds-text-caption nds-font-medium';
-    groupLabel.style.height = '2rem';
-    groupLabel.style.paddingLeft = '0.5rem';
-    groupLabel.style.paddingRight = '0.5rem';
-    groupLabel.style.color = 'color-mix(in oklab, var(--sidebar-foreground) 70%, transparent)';
-    groupLabel.setAttribute('data-sidebar', 'group-label');
-    groupLabel.textContent = 'Componentes';
-    group.appendChild(groupLabel);
+    const groupContent = createSidebarGroupContent();
+    const menu = createSidebarMenu({ labelledBy: 'grupo-componentes' });
 
-    const menu = document.createElement('ul');
-    menu.className = 'nds-stack nds-w-full nds-min-w-0';
-    menu.dataset.spacing = 'xs';
-    menu.setAttribute('data-sidebar', 'menu');
-
-    // Dashboard item
     menu.appendChild(createSidebarMenuItem({ label: 'Dashboard', icon: makeIcon(ICON_HOME), active: true, href: '#' }));
 
-    // Componentes item with collapsible sub-menu
-    const parentLi = document.createElement('li');
-    parentLi.className = 'group/menu-item';
-    parentLi.style.position = 'relative';
-    parentLi.setAttribute('data-sidebar', 'menu-item');
-
-    let subOpen = false;
-    const parentBtn = document.createElement('button');
-    parentBtn.className = 'peer/menu-button nds-cluster nds-w-full nds-overflow-hidden nds-rounded-md nds-text-body';
-    parentBtn.dataset.spacing = 'sm';
-    parentBtn.style.padding = '0.5rem';
-    parentBtn.style.textAlign = 'left';
-    parentBtn.style.outline = 'none';
-    parentBtn.style.background = 'transparent';
-    parentBtn.style.border = 'none';
-    parentBtn.style.cursor = 'pointer';
-    parentBtn.setAttribute('data-sidebar', 'menu-button');
+    // Item pai com sub-menu recolhível.
+    const parentLi = createSidebarMenuItem();
+    const parentBtn = createSidebarMenuButton({
+      label: 'Componentes',
+      ariaLabel: 'Componentes',
+      icon: makeIcon(ICON_LAYOUT),
+    });
     parentBtn.setAttribute('aria-expanded', 'false');
-    parentBtn.appendChild(makeIcon(ICON_LAYOUT));
 
-    const parentLabel = document.createElement('span');
-    parentLabel.textContent = 'Componentes';
-    parentBtn.appendChild(parentLabel);
-
-    const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const chevron = makeIcon('<path d="m6 9 6 6 6-6"/>');
     chevron.setAttribute('width', '12');
     chevron.setAttribute('height', '12');
-    chevron.setAttribute('viewBox', '0 0 24 24');
-    chevron.setAttribute('fill', 'none');
-    chevron.setAttribute('stroke', 'currentColor');
-    chevron.setAttribute('stroke-width', '2');
-    chevron.setAttribute('stroke-linecap', 'round');
-    chevron.setAttribute('stroke-linejoin', 'round');
-    chevron.setAttribute('aria-hidden', 'true');
-    chevron.innerHTML = DOMPurify.sanitize('<path d="m6 9 6 6 6-6"/>');
     chevron.style.marginLeft = 'auto';
-    chevron.style.transition = 'transform 200ms';
     parentBtn.appendChild(chevron);
 
-    const subList = document.createElement('ul');
-    subList.className = 'nds-stack';
-    subList.dataset.spacing = 'xs';
-    subList.style.marginLeft = '1rem';
-    subList.style.marginTop = '0.25rem';
-    subList.style.paddingLeft = '0.75rem';
-    subList.style.borderLeft = '1px solid var(--sidebar-border)';
-    subList.setAttribute('data-sidebar', 'menu-sub');
+    const subList = createSidebarMenuSub();
+    subList.setAttribute('aria-label', 'Componentes');
     subList.style.display = 'none';
 
-    const subItems = ['Alert', 'Button', 'Card', 'Dialog'];
-    subItems.forEach(name => {
-      const subLi = document.createElement('li');
-      subLi.setAttribute('data-sidebar', 'menu-sub-item');
-      const subBtn = document.createElement('a');
-      subBtn.href = '#';
-      subBtn.className = 'nds-cluster nds-rounded-md nds-text-caption';
-      subBtn.dataset.spacing = 'sm';
-      subBtn.style.padding = '0.375rem 0.5rem';
-      subBtn.style.color = 'var(--sidebar-foreground)';
-      subBtn.style.transition = 'background 150ms, color 150ms';
-      subBtn.setAttribute('data-sidebar', 'menu-sub-button');
-      subBtn.textContent = name;
-      subLi.appendChild(subBtn);
-      subList.appendChild(subLi);
+    const subItens: SidebarMenuSubButtonOptions[] = [
+      { label: 'Alert',  href: '#' },
+      { label: 'Button', href: '#', active: true },
+      { label: 'Card',   href: '#' },
+      { label: 'Dialog', disabled: true },
+    ];
+    subItens.forEach((sub) => {
+      const li = createSidebarMenuSubItem();
+      li.appendChild(createSidebarMenuSubButton({ ...sub, size: 'sm' }));
+      subList.appendChild(li);
     });
 
     parentBtn.addEventListener('click', () => {
-      subOpen = !subOpen;
-      subList.style.display = subOpen ? '' : 'none';
-      parentBtn.setAttribute('aria-expanded', subOpen ? 'true' : 'false');
-      chevron.style.transform = subOpen ? 'rotate(180deg)' : '';
+      const aberto = parentBtn.getAttribute('aria-expanded') === 'true';
+      subList.style.display = aberto ? 'none' : '';
+      parentBtn.setAttribute('aria-expanded', aberto ? 'false' : 'true');
     });
 
     parentLi.appendChild(parentBtn);
@@ -324,41 +505,21 @@ export const WithSubmenu: Story = {
     menu.appendChild(parentLi);
     menu.appendChild(createSidebarMenuItem({ label: 'Tokens', icon: makeIcon(ICON_LAYERS), href: '#' }));
 
-    group.appendChild(menu);
+    groupContent.appendChild(menu);
+    group.appendChild(groupContent);
     content.appendChild(group);
     inner.appendChild(content);
 
     const footer = createSidebarFooter();
-    const footerMenu = document.createElement('ul');
-    footerMenu.className = 'nds-sidebar-menu';
-    footerMenu.setAttribute('data-sidebar', 'menu');
+    const footerMenu = createSidebarMenu();
     footerMenu.appendChild(createSidebarMenuItem({ label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' }));
     footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
-    const inset = document.createElement('div');
-    inset.className = 'nds-flex-1';
-    inset.style.display = 'flex';
-    inset.style.flexDirection = 'column';
-    const topbar = document.createElement('div');
-    topbar.className = 'nds-cluster nds-border-b';
-    topbar.dataset.spacing = 'sm';
-    topbar.style.height = '3rem';
-    topbar.style.paddingLeft = '1rem';
-    topbar.style.paddingRight = '1rem';
-    topbar.appendChild(createSidebarTrigger(instance.toggle));
-    const lbl = document.createElement('span');
-    lbl.className = 'nds-text-body nds-text-muted-foreground';
-    lbl.textContent = 'Dashboard';
-    topbar.appendChild(lbl);
-    const mainContent = document.createElement('div');
-    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
-    mainContent.dataset.justify = 'center';
-    mainContent.style.padding = '2rem';
-    mainContent.textContent = 'Clique em "Componentes" para expandir o sub-menu';
-    inset.append(topbar, mainContent);
-
-    return wrapSidebar(instance, inset);
+    return wrapSidebar(
+      instance,
+      buildPlainInset(instance, 'Dashboard', 'Clique em "Componentes" para expandir o sub-menu'),
+    );
   },
   parameters: {
     docs: {
@@ -380,7 +541,7 @@ export const WithSubmenu: Story = {
     };
 
     await step('O submenu nasce fechado, e o botão pai diz isso', async () => {
-      await expect(pai().getAttribute('aria-expanded')).toBe('false');
+      await definir(false);
       await expect(getComputedStyle(sub()).display).toBe('none');
     });
 
@@ -394,8 +555,132 @@ export const WithSubmenu: Story = {
       await definir(true);
       await expect(getComputedStyle(sub()).display).not.toBe('none');
 
+      const botoes = sub().querySelectorAll<HTMLElement>('[data-sidebar="menu-sub-button"]');
+      await expect(botoes.length).toBe(4);
+
       await definir(false);
       await expect(getComputedStyle(sub()).display).toBe('none');
+    });
+
+    await step('O subitem ativo é anunciado como página atual', async () => {
+      const ativo = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][data-active="true"]')!;
+      await expect(ativo.getAttribute('aria-current')).toBe('page');
+      await expect(ativo.getAttribute('data-size')).toBe('sm');
+    });
+
+    await step('O subitem desabilitado não navega nem se anuncia clicável', async () => {
+      const desabilitado = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][aria-disabled="true"]')!;
+      await expect(desabilitado.textContent).toBe('Dialog');
+      // Sem destino, é <button disabled> — não uma âncora que continua navegando.
+      await expect(desabilitado.tagName).toBe('BUTTON');
+      await expect((desabilitado as HTMLButtonElement).disabled).toBe(true);
+    });
+  },
+};
+
+// ─── Carregando (skeleton) ────────────────────────────────────────────────────
+
+export const LoadingSkeleton: Story = {
+  name: 'Loading skeleton',
+  render: () => {
+    const instance = createSidebar({ defaultOpen: true });
+    const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
+
+    const header = createSidebarHeader();
+    const logoRow = document.createElement('div');
+    logoRow.className = 'nds-text-body nds-font-semibold';
+    logoRow.style.padding = '0.25rem 0.5rem';
+    logoRow.style.color = 'var(--sidebar-foreground)';
+    logoRow.textContent = 'Design System';
+    header.appendChild(logoRow);
+    inner.appendChild(header);
+
+    const content = createSidebarContent();
+
+    const group = document.createElement('div');
+    group.className = 'nds-sidebar-group';
+    group.dataset.slot = 'sidebar-group';
+    group.setAttribute('data-sidebar', 'group');
+    group.appendChild(createSidebarGroupLabel({ text: 'Navegação', id: 'grupo-carregando' }));
+
+    const groupContent = createSidebarGroupContent();
+    const menu = createSidebarMenu({ labelledBy: 'grupo-carregando' });
+
+    // A primeira linha se anuncia (`role="status"`); as demais são decoração
+    // muda. Três regiões vivas repetindo o mesmo aviso seria pior que nenhuma.
+    const linhas = [
+      { showIcon: true,  label: 'Carregando navegação', width: '70%' },
+      { showIcon: true,  width: '55%' },
+      { showIcon: false, width: '85%' },
+    ];
+    linhas.forEach((linha) => {
+      const li = createSidebarMenuItem();
+      li.appendChild(createSidebarMenuSkeleton(linha));
+      menu.appendChild(li);
+    });
+
+    groupContent.appendChild(menu);
+    group.appendChild(groupContent);
+    content.appendChild(group);
+    inner.appendChild(content);
+
+    return wrapSidebar(
+      instance,
+      buildPlainInset(instance, 'Carregando', 'A navegação chega do servidor; o esqueleto reserva a caixa.'),
+    );
+  },
+  parameters: {
+    covers: ['functional.item9'],
+    docs: {
+      description: {
+        story:
+          'Espaço reservado enquanto o menu carrega. <code>SidebarMenuSkeleton</code> com <code>showIcon</code> desenha a caixa do ícone à esquerda da caixa do texto.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const linhas = () => canvasElement.querySelectorAll<HTMLElement>('[data-sidebar="menu-skeleton"]');
+
+    await step('Com showIcon, a caixa do ícone vem antes da caixa do texto', async () => {
+      const primeira = linhas()[0];
+      const filhos = Array.from(primeira.children).map((f) => f.getAttribute('data-sidebar'));
+      await expect(filhos).toEqual(['menu-skeleton-icon', 'menu-skeleton-text']);
+    });
+
+    await step('Sem showIcon, só a caixa do texto é desenhada', async () => {
+      const terceira = linhas()[2];
+      const filhos = Array.from(terceira.children).map((f) => f.getAttribute('data-sidebar'));
+      await expect(filhos).toEqual(['menu-skeleton-text']);
+    });
+
+    await step('As caixas são esqueletos de verdade, não divs sem pintura', async () => {
+      // A pulsação e o fundo moram em `.nds-skeleton`; as classes
+      // `.nds-sidebar-menu-skeleton-*` só dão a medida. Sem a peça por baixo, o
+      // placeholder fica invisível — e ninguém percebe olhando o markup.
+      const caixas = canvasElement.querySelectorAll<HTMLElement>(
+        '.nds-sidebar-menu-skeleton-icon, .nds-sidebar-menu-skeleton-text',
+      );
+      await expect(caixas.length).toBe(5);
+      for (const caixa of caixas) {
+        await expect(caixa.classList.contains('nds-skeleton')).toBe(true);
+        await expect(getComputedStyle(caixa).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      }
+    });
+
+    await step('A largura declarada chega à folha pela custom property', async () => {
+      const texto = linhas()[1].querySelector<HTMLElement>('[data-sidebar="menu-skeleton-text"]')!;
+      await expect(texto.style.getPropertyValue('--skeleton-width')).toBe('55%');
+    });
+
+    await step('Uma linha anuncia o carregamento; as outras são mudas', async () => {
+      const [primeira, segunda, terceira] = Array.from(linhas());
+      await expect(canvas.getByRole('status', { name: 'Carregando navegação' })).toBe(primeira);
+      await expect(segunda.getAttribute('aria-hidden')).toBe('true');
+      await expect(terceira.getAttribute('aria-hidden')).toBe('true');
+      // Um bloco cinza pulsando não é conteúdo: nenhuma linha entra na ordem de
+      // tabulação nem carrega texto para o leitor.
+      await expect(primeira.textContent).toBe('');
     });
   },
 };
@@ -417,30 +702,27 @@ export const WithSearch: Story = {
     logoRow.textContent = 'Design System';
     header.appendChild(logoRow);
 
-    // Search input
     const searchWrapper = document.createElement('div');
     searchWrapper.style.position = 'relative';
-    searchWrapper.style.paddingLeft = '0.25rem';
-    searchWrapper.style.paddingRight = '0.25rem';
-    searchWrapper.style.paddingBottom = '0.25rem';
-    searchWrapper.setAttribute('data-sidebar', 'input');
     const searchIcon = makeIcon(ICON_SEARCH);
     searchIcon.setAttribute('width', '14');
     searchIcon.setAttribute('height', '14');
     searchIcon.setAttribute('class', 'nds-text-muted-foreground');
-    searchIcon.setAttribute('style', 'position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);pointer-events:none');
-    const searchInput = document.createElement('input');
-    searchInput.type = 'search';
-    searchInput.placeholder = 'Buscar...';
-    // O placeholder some ao digitar; o nome acessível não pode sumir junto.
-    searchInput.setAttribute('aria-label', 'Buscar na navegação');
-    searchInput.className = 'nds-w-full nds-rounded-md nds-text-caption';
-    searchInput.style.border = '1px solid var(--sidebar-border)';
-    searchInput.style.background = 'var(--sidebar)';
-    searchInput.style.padding = '0.375rem 0.5rem 0.375rem 2rem';
-    searchInput.style.color = 'var(--sidebar-foreground)';
-    searchWrapper.appendChild(searchIcon);
-    searchWrapper.appendChild(searchInput);
+    searchIcon.style.position = 'absolute';
+    searchIcon.style.left = '0.5rem';
+    searchIcon.style.top = '50%';
+    searchIcon.style.transform = 'translateY(-50%)';
+    searchIcon.style.pointerEvents = 'none';
+
+    // O nome acessível é obrigatório na fábrica: o placeholder some no primeiro
+    // caractere digitado, e um campo que perde o nome ao ser usado é um campo
+    // sem nome.
+    const searchInput = createSidebarInput({
+      label: 'Buscar na navegação',
+      placeholder: 'Buscar...',
+    });
+
+    searchWrapper.append(searchIcon, searchInput);
     header.appendChild(searchWrapper);
 
     inner.appendChild(header);
@@ -460,32 +742,15 @@ export const WithSearch: Story = {
     inner.appendChild(content);
 
     const footer = createSidebarFooter();
-    const footerMenu = document.createElement('ul');
-    footerMenu.className = 'nds-sidebar-menu';
-    footerMenu.setAttribute('data-sidebar', 'menu');
+    const footerMenu = createSidebarMenu();
     footerMenu.appendChild(createSidebarMenuItem({ label: 'Perfil', icon: makeIcon(ICON_USER), href: '#' }));
     footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
-    const inset = document.createElement('div');
-    inset.className = 'nds-flex-1';
-    inset.style.display = 'flex';
-    inset.style.flexDirection = 'column';
-    const topbar = document.createElement('div');
-    topbar.className = 'nds-cluster nds-border-b';
-    topbar.dataset.spacing = 'sm';
-    topbar.style.height = '3rem';
-    topbar.style.paddingLeft = '1rem';
-    topbar.style.paddingRight = '1rem';
-    topbar.appendChild(createSidebarTrigger(instance.toggle));
-    const mainContent = document.createElement('div');
-    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
-    mainContent.dataset.justify = 'center';
-    mainContent.style.padding = '2rem';
-    mainContent.textContent = 'SidebarInput no header para busca rápida';
-    inset.append(topbar, mainContent);
-
-    return wrapSidebar(instance, inset);
+    return wrapSidebar(
+      instance,
+      buildPlainInset(instance, 'Busca', 'SidebarInput no header para busca rápida'),
+    );
   },
   parameters: {
     docs: {
@@ -500,12 +765,29 @@ export const WithSearch: Story = {
     await step('O campo de busca tem nome — o placeholder some ao digitar', async () => {
       const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
       await expect(busca.closest('[data-sidebar="header"]')).not.toBeNull();
+      await expect(busca.getAttribute('data-sidebar')).toBe('input');
+    });
+
+    await step('O campo herda o primitivo de entrada e só acrescenta o ajuste da barra', async () => {
+      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' });
+      await expect(busca.classList.contains('nds-input')).toBe(true);
+      await expect(busca.classList.contains('nds-sidebar-input')).toBe(true);
+      await expect(busca.getAttribute('data-slot')).toBe('sidebar-input');
+    });
+
+    await step('Digitar não apaga o nome do campo', async () => {
+      const busca = canvas.getByRole('searchbox', { name: 'Buscar na navegação' }) as HTMLInputElement;
+      busca.value = '';
+      await userEvent.type(busca, 'card');
+      await expect(busca.value).toBe('card');
+      await expect(canvas.getByRole('searchbox', { name: 'Buscar na navegação' })).toBe(busca);
+      busca.value = '';
     });
 
     await step('O ícone de lupa é decorativo', async () => {
       // O nome do campo já está no aria-label; um ícone lido em cima disso vira
       // ruído duplicado.
-      const lupa = canvasElement.querySelector<SVGElement>('[data-sidebar="input"] svg')!;
+      const lupa = canvasElement.querySelector<SVGElement>('[data-sidebar="header"] svg')!;
       await expect(lupa.getAttribute('aria-hidden')).toBe('true');
     });
   },
@@ -541,25 +823,10 @@ export const WithBadges: Story = {
     );
     inner.appendChild(content);
 
-    const inset = document.createElement('div');
-    inset.className = 'nds-flex-1';
-    inset.style.display = 'flex';
-    inset.style.flexDirection = 'column';
-    const topbar = document.createElement('div');
-    topbar.className = 'nds-cluster nds-border-b';
-    topbar.dataset.spacing = 'sm';
-    topbar.style.height = '3rem';
-    topbar.style.paddingLeft = '1rem';
-    topbar.style.paddingRight = '1rem';
-    topbar.appendChild(createSidebarTrigger(instance.toggle));
-    const mainContent = document.createElement('div');
-    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
-    mainContent.dataset.justify = 'center';
-    mainContent.style.padding = '2rem';
-    mainContent.textContent = 'Badges indicam contadores de notificação';
-    inset.append(topbar, mainContent);
-
-    return wrapSidebar(instance, inset);
+    return wrapSidebar(
+      instance,
+      buildPlainInset(instance, 'Badges', 'Badges indicam contadores de notificação'),
+    );
   },
   parameters: {
     docs: {
