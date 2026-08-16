@@ -947,8 +947,18 @@ function auditStoryQuality(slug) {
       // uma classe chamada `captionClass`, que ninguém escreveu. A forma de
       // objeto em JS (`class: 'nds-x'`) continua casando: ali o caractere
       // anterior é espaço ou `{`, não `:`.
+      // `cellClass`, `headerClass`, `triggerClass`…: chave de configuração que
+      // carrega classe e cai direto no `class` do elemento. O lookbehind
+      // `(?<![:[\w-])` as excluía — o caractere antes de "class" é uma letra —
+      // e por isso `cellClass: 'font-medium tabular-nums'` sobreviveu no Svelte
+      // do data-table, inerte, enquanto a MESMA classe era acusada no Vue por
+      // estar escrita como `class:`. O sufixo `Class` só é aceito depois de
+      // outra palavra em camelCase, para não voltar a casar `captionClass` do
+      // lado do VALOR (que é nome de expressão, não classe).
       const seen = new Set();
-      for (const m of content.matchAll(/(?<![:[\w-])class(?:Name)?[:=]\s*["'`]([^"'`]+)["'`]/g)) {
+      const RX_CLASSE_LITERAL =
+        /(?<![:[\w-])(?:class(?:Name)?|[a-z]+Class)[:=]\s*["'`]([^"'`]+)["'`]/g;
+      for (const m of content.matchAll(RX_CLASSE_LITERAL)) {
         if (m[1].includes('${')) continue;
         for (const cls of m[1].split(/\s+/)) {
           if (!cls || ALLOWED_CLASS_RX.test(cls) || seen.has(cls)) continue;
@@ -3226,7 +3236,11 @@ function auditQuality(slug) {
     // Check mais leve: conta quantas stories têm `play:` no arquivo
     // O auditor agent valida critérios específicos; aqui só reporta "zero play".
     for (const file of storyFiles) {
-      if (basename(file).match(/-(modos|variantes|composicoes|layouts|estados|tamanhos)\.stories\./)) {
+      // `configuracoes` entrou tarde na lista: o arquivo existe em quatro
+      // stacks do data-table com uma story cada e ZERO play, e a regra passava
+      // por ele porque o nome não estava aqui. O sufixo é convenção do projeto;
+      // faltar um deles é ponto cego, não permissão.
+      if (basename(file).match(/-(modos|variantes|composicoes|configuracoes|layouts|estados|tamanhos)\.stories\./)) {
         const content = readFile(file);
         if (!content) continue;
         if (!/\bplay:\s*async/.test(content)) {

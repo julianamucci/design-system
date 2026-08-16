@@ -77,7 +77,7 @@ export const Default: Story = {
     id: 'var-default',
     labelText: 'Descrição',
     placeholder: 'ex: Descreva o produto em até 500 caracteres...',
-    resizeClass: 'resize-y',
+    resizeClass: 'nds-resize-y',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -94,7 +94,7 @@ export const WithCounter: Story = {
     id: 'var-counter',
     labelText: 'Descrição',
     placeholder: 'ex: Descreva o produto...',
-    resizeClass: 'resize-y',
+    resizeClass: 'nds-resize-y',
     maxLength: 500,
   }),
   play: async ({ canvasElement, step }) => {
@@ -122,7 +122,7 @@ export const NoResize: Story = {
     id: 'var-noresize',
     labelText: 'Feedback',
     placeholder: 'O que poderíamos melhorar?',
-    resizeClass: 'resize-none',
+    resizeClass: 'nds-resize-none',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
