@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
 import { createInput } from './input';
 import { createCheckbox } from './checkbox';
@@ -10,12 +10,13 @@ const meta: Meta = {
   tags: ['form'],
   title: 'UI/Label/Compositions',
   parameters: {
+    layout: 'centered',
     actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes comuns do Label: com Input, com Checkbox, e com campo obrigatório.',
+          'Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.',
       },
     },
   },
@@ -24,35 +25,45 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Com Input ────────────────────────────────────────────────────────────────
+function bloco(): HTMLDivElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
+  wrapper.dataset.spacing = 'xs';
+  return wrapper;
+}
+
+// ─── Com campo de texto ───────────────────────────────────────────────────────
 
 export const WithInput: Story = {
+  parameters: { covers: ['visual.item4'] },
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '16rem';
-
-    const inputId = 'comp-input-telefone';
-    const label = createLabel({ text: 'Telefone', htmlFor: inputId });
-    const input = createInput({ id: inputId, type: 'tel', placeholder: '(11) 99999-9999' });
-
-    wrapper.append(label, input);
+    const wrapper = bloco();
+    const inputId = 'comp-input';
+    wrapper.append(
+      createLabel({ text: 'Telefone', htmlFor: inputId }),
+      createInput({ id: inputId, type: 'tel', placeholder: '(11) 99999-9999' }),
+    );
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('Telefone');
+    const input = canvasElement.querySelector<HTMLInputElement>('#comp-input')!;
 
-    await step('Label está associado ao Input via htmlFor', async () => {
-      const label = canvasElement.querySelector('label') as HTMLLabelElement;
-      await expect(label?.htmlFor).toBe('comp-input-telefone');
-      const input = canvas.getByRole('textbox');
-      await expect(input).toBeInTheDocument();
+    await step('O campo é alcançável pelo texto do rótulo', async () => {
+      await expect(canvas.getByLabelText('Telefone')).toBe(input);
+    });
+
+    await step('Clicar no rótulo move o foco para o campo', async () => {
+      input.blur();
+      await expect(input).not.toHaveFocus();
+      await userEvent.click(label);
+      await expect(input).toHaveFocus();
     });
   },
 };
 
-// ─── Com Checkbox ─────────────────────────────────────────────────────────────
+// ─── Com caixa de seleção ─────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
   render: () => {
@@ -60,55 +71,54 @@ export const WithCheckbox: Story = {
     wrapper.className = 'nds-cluster';
     wrapper.dataset.spacing = 'sm';
 
-    const checkboxId = 'comp-checkbox-termos';
+    const checkboxId = 'comp-checkbox';
     const checkbox = createCheckbox({ id: checkboxId });
-    const label = createLabel({ text: 'Aceito os termos de uso', htmlFor: checkboxId });
+    const label = createLabel({ text: 'Concordo com os termos de uso', htmlFor: checkboxId });
+
+    // A caixa desta stack é um elemento com `role="checkbox"`, e o atributo
+    // `for` do <label> só alcança controle rotulável do HTML. Quem carrega o
+    // nome acessível aqui é o `aria-labelledby`, e é ELE que a story verifica.
     label.id = `${checkboxId}-label`;
-    checkbox.setAttribute('aria-labelledby', `${checkboxId}-label`);
+    checkbox.setAttribute('aria-labelledby', label.id);
 
     wrapper.append(checkbox, label);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvasElement.querySelector<HTMLLabelElement>('label[data-slot="label"]')!;
+    const checkbox = canvas.getByRole('checkbox');
 
-    await step('Label do checkbox está visível', async () => {
-      const label = canvas.getByText('Aceito os termos de uso');
-      await expect(label).toBeVisible();
+    await step('A caixa recebe o nome acessível do rótulo', async () => {
+      await expect(checkbox).toHaveAccessibleName('Concordo com os termos de uso');
+      await expect(checkbox).toHaveAttribute('aria-labelledby', label.id);
     });
 
-    await step('Label está associado ao checkbox via htmlFor', async () => {
-      const label = canvasElement.querySelector('label') as HTMLLabelElement;
-      await expect(label?.htmlFor).toBe('comp-checkbox-termos');
+    await step('O rótulo aponta para a mesma caixa', async () => {
+      await expect(label.htmlFor).toBe('comp-checkbox');
+      await expect(canvasElement.querySelector('#comp-checkbox')).toBe(checkbox);
     });
   },
 };
 
-// ─── Campo Obrigatório ────────────────────────────────────────────────────────
+// ─── Campo obrigatório ────────────────────────────────────────────────────────
 
 export const RequiredField: Story = {
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '16rem';
-
-    const inputId = 'comp-required-email';
+    const wrapper = bloco();
+    const inputId = 'comp-required';
     const label = createLabel({ htmlFor: inputId });
 
-    const labelText = document.createTextNode('Email profissional');
-    const asterisk = document.createElement('span');
-    asterisk.setAttribute('aria-hidden', 'true');
-    asterisk.className = 'nds-text-destructive';
-    asterisk.style.marginLeft = '0.125rem';
-    asterisk.textContent = '*';
-
-    label.append(labelText, asterisk);
+    const asterisco = document.createElement('span');
+    asterisco.setAttribute('aria-hidden', 'true');
+    asterisco.className = 'nds-text-destructive';
+    asterisco.textContent = '*';
+    label.append(document.createTextNode('Email profissional'), asterisco);
 
     const input = createInput({
       id: inputId,
       type: 'email',
-      placeholder: 'seu@empresa.com',
+      placeholder: 'ex: joao@empresa.com',
     });
     input.setAttribute('aria-required', 'true');
 
@@ -117,21 +127,19 @@ export const RequiredField: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+    const marcador = canvasElement.querySelector<HTMLElement>('.nds-text-destructive')!;
 
-    await step('Label está visível com marcador required', async () => {
-      const label = canvas.getByText(/Email profissional/);
-      await expect(label).toBeVisible();
+    await step('O asterisco é decorativo', async () => {
+      await expect(marcador).toHaveAttribute('aria-hidden', 'true');
+      await expect(marcador.textContent?.trim()).toBe('*');
     });
 
-    await step('Asterisco possui aria-hidden="true"', async () => {
-      const asterisk = canvasElement.querySelector('span[aria-hidden="true"]');
-      await expect(asterisk).toBeInTheDocument();
-      await expect(asterisk?.getAttribute('aria-hidden')).toBe('true');
-    });
-
-    await step('Input possui aria-required="true"', async () => {
-      const input = canvasElement.querySelector('input') as HTMLInputElement;
-      await expect(input?.getAttribute('aria-required')).toBe('true');
+    await step('O nome acessível do campo não carrega o asterisco', async () => {
+      // É o que `aria-hidden` no marcador compra: o leitor anuncia o rótulo, e
+      // a obrigatoriedade vem do `aria-required`, não de um "asterisco" falado.
+      await expect(input).toHaveAccessibleName('Email profissional');
+      await expect(input).toHaveAttribute('aria-required', 'true');
     });
   },
 };

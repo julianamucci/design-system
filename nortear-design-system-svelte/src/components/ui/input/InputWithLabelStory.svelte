@@ -29,7 +29,9 @@
   const describedBy = $derived([hint ? hintId : '', errorMessage ? errorId : ''].filter(Boolean).join(' ') || undefined);
 </script>
 
-<div class="nds-stack" data-spacing="xs" style="width: 16rem">
+<!-- `nds-w-xs` no lugar de `style="width: 16rem"`: inline vence a folha e tirava
+     o andaime do tema, da densidade e da escala de fonte. -->
+<div class="nds-stack nds-w-xs" data-spacing="xs">
   <Label for={id}>{labelText}</Label>
   <Input
     {id}

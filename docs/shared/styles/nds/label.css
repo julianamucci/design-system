@@ -5,10 +5,11 @@
  *   <label class="nds-label" for="email">E-mail</label>
  *
  * Comportamento:
- *   - Reduz opacidade quando o controle associado (irmão com .peer) está :disabled
+ *   - Reduz opacidade quando o controle irmão marcado com .nds-peer está
+ *     desabilitado (por :disabled, [disabled] ou aria-disabled="true")
  *   - Reduz opacidade quando ancestral com data-disabled="true" (form/fieldset)
  *
- * Tokens: --foreground, --spacing-*
+ * Tokens: --foreground, --text-control, --font-weight-medium, --spacing-2
  *
  * Acessibilidade: usar `for` (htmlFor) para associar ao input. Sem altura
  * fixa (WCAG 1.4.4 — Resize Text 200%).
@@ -27,9 +28,26 @@
   user-select: none;
 }
 
-/* Controle irmão (.peer) desabilitado → label fica esmaecida */
-.peer:disabled ~ .nds-label,
-.nds-label:has(~ .peer:disabled) {
+/* Controle irmão marcado com .nds-peer e desabilitado → rótulo esmaecido.
+ *
+ * A marcação é opt-in NO CONTROLE porque o CSS não segue `for`→`id`: um seletor
+ * que casasse qualquer irmão desabilitado esmaeceria os rótulos de todos os
+ * campos do mesmo bloco quando só um deles fosse desligado.
+ *
+ * Vale nas duas ordens — rótulo antes ou depois do controle — e nas três formas
+ * de desabilitar que as stacks emitem: `:disabled` do controle nativo,
+ * `[disabled]` de elemento customizado e `aria-disabled` das libs headless, que
+ * mantêm o botão focável de propósito.
+ *
+ * A classe antes chamava-se `peer`, sem prefixo, herdada do framework utilitário
+ * que saiu. Só duas das cinco stacks a aplicavam, então o esmaecimento prometido
+ * pela documentação não acontecia nas outras três — medido pela sonda do label. */
+.nds-peer:disabled ~ .nds-label,
+.nds-peer[disabled] ~ .nds-label,
+.nds-peer[aria-disabled="true"] ~ .nds-label,
+.nds-label:has(~ .nds-peer:disabled),
+.nds-label:has(~ .nds-peer[disabled]),
+.nds-label:has(~ .nds-peer[aria-disabled="true"]) {
   cursor: not-allowed;
   opacity: 0.5;
 }

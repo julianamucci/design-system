@@ -138,7 +138,7 @@ const codeRequired = `<Label for="email">
 </Label>
 <input id="email" type="email" aria-required="true" />`;
 
-const codeDisabled = `<!-- peer-disabled: Label e Input devem ser siblings no DOM -->
+const codeDisabled = `<!-- A marca nds-peer vai no CONTROLE; os dois precisam ser irmãos no DOM -->
 <Label for="cpf">CPF</Label>
 <input id="cpf" type="text" class="nds-peer" disabled />`;
 
@@ -203,12 +203,11 @@ const labelPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--foreground',  value: 'text-foreground',  description: tContent('tokens.table.foreground')      },
-  { token: '--foreground',  value: 'opacity-50',        description: tContent('tokens.table.foregroundMuted') },
-  { token: '—',             value: 'text-sm',           description: tContent('tokens.table.fontSize')        },
-  { token: '—',             value: 'font-medium',       description: tContent('tokens.table.fontWeight')      },
-  { token: '—',             value: 'leading-none',      description: tContent('tokens.table.lineHeight')      },
-  { token: '--destructive', value: 'text-destructive',  description: tContent('tokens.table.destructive')     },
+  { token: '--foreground',         value: '.nds-label',            description: tContent('tokens.table.foreground')  },
+  { token: '--text-control',       value: '.nds-label',            description: tContent('tokens.table.fontSize')    },
+  { token: '--font-weight-medium', value: '.nds-label',            description: tContent('tokens.table.fontWeight')  },
+  { token: '--spacing-2',          value: '.nds-label',            description: tContent('tokens.table.gap')         },
+  { token: '--destructive',        value: '.nds-text-destructive', description: tContent('tokens.table.destructive') },
 ]);
 
 const accessibilityItems = computed(() => [

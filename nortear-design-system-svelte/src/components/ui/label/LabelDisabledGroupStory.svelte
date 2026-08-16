@@ -3,7 +3,7 @@
   import { Input } from '@/components/ui/input';
 </script>
 
-<div class="nds-stack group" data-spacing="sm" data-disabled="true">
+<div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs" data-disabled="true">
   <Label for="grupo-disabled">Documento</Label>
-  <Input id="grupo-disabled" disabled />
+  <Input id="grupo-disabled" disabled placeholder="ex: 000.000.000-00" />
 </div>

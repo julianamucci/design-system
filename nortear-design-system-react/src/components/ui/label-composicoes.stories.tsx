@@ -11,10 +11,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Composicoes do Label com outros elementos de formulário: Input, Checkbox e campo obrigatório.",
+          "Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.",
       },
     },
   },
@@ -24,31 +25,33 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithInput: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      description: {
+        story:
+          "Par clássico rótulo + campo. O `for` do rótulo corresponde ao `id` do campo, e é isso que faz o clique no texto focar o campo.",
+      },
+    },
+  },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
       <Label htmlFor="comp-input">Telefone</Label>
       <Input id="comp-input" type="tel" placeholder="(11) 99999-9999" />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Par clássico Label + Input. O htmlFor do Label corresponde ao id do Input. Clicar no Label foca o campo.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText("Telefone");
-    const input = canvas.getByRole("textbox");
+    const input = canvasElement.querySelector<HTMLInputElement>("#comp-input")!;
 
-    await step("Label está associado ao Input via htmlFor", async () => {
-      await expect(label).toHaveAttribute("for", "comp-input");
-      await expect(input).toHaveAttribute("id", "comp-input");
+    await step("O campo é alcançável pelo texto do rótulo", async () => {
+      await expect(canvas.getByLabelText("Telefone")).toBe(input);
     });
 
-    await step("Clicar no Label foca o Input", async () => {
+    await step("Clicar no rótulo move o foco para o campo", async () => {
+      input.blur();
+      await expect(input).not.toHaveFocus();
       await userEvent.click(label);
       await expect(input).toHaveFocus();
     });
@@ -56,30 +59,34 @@ export const WithInput: Story = {
 };
 
 export const WithCheckbox: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Rótulo associado a uma caixa de seleção. Clicar no texto alterna a caixa — é o alcance de clique que a associação entrega.",
+      },
+    },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Checkbox id="comp-checkbox" />
       <Label htmlFor="comp-checkbox">Concordo com os termos de uso</Label>
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Label associado a um Checkbox via htmlFor. Clicar no texto do Label alterna o estado do Checkbox.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText("Concordo com os termos de uso");
     const checkbox = canvas.getByRole("checkbox");
 
-    await step("Label está associado ao Checkbox via htmlFor", async () => {
-      await expect(label).toHaveAttribute("for", "comp-checkbox");
+    await step("A caixa recebe o nome acessível do rótulo", async () => {
+      await expect(checkbox).toHaveAccessibleName("Concordo com os termos de uso");
     });
 
-    await step("Clicar no Label alterna o Checkbox", async () => {
+    await step("Clicar no rótulo alterna a caixa", async () => {
+      // Par idempotente: o painel Interactions reexecuta no mesmo DOM, e sem
+      // desmarcar antes a segunda rodada partiria de "marcada" e inverteria o
+      // resultado.
+      if (checkbox.getAttribute("aria-checked") === "true") await userEvent.click(label);
       await expect(checkbox).not.toBeChecked();
       await userEvent.click(label);
       await expect(checkbox).toBeChecked();
@@ -88,8 +95,16 @@ export const WithCheckbox: Story = {
 };
 
 export const RequiredField: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Campo obrigatório: asterisco decorativo no rótulo e `aria-required` no campo. As duas partes são necessárias — uma é visual, a outra é semântica.",
+      },
+    },
+  },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
       <Label htmlFor="comp-required">
         Email profissional
         <span className="nds-text-destructive" aria-hidden="true">*</span>
@@ -102,25 +117,20 @@ export const RequiredField: Story = {
       />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Campo obrigatório: asterisco em text-destructive com aria-hidden=\"true\" no Label, aria-required=\"true\" no Input. As duas partes são necessárias: visual e semântica.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole("textbox");
-    const asterisk = canvasElement.querySelector("[aria-hidden='true']");
+    const marcador = canvasElement.querySelector<HTMLElement>(".nds-text-destructive")!;
 
-    await step("Asterisco tem aria-hidden=true", async () => {
-      await expect(asterisk).toHaveAttribute("aria-hidden", "true");
-      await expect(asterisk).toHaveTextContent("*");
+    await step("O asterisco é decorativo", async () => {
+      await expect(marcador).toHaveAttribute("aria-hidden", "true");
+      await expect(marcador).toHaveTextContent("*");
     });
 
-    await step("Input tem aria-required=true", async () => {
+    await step("O nome acessível do campo não carrega o asterisco", async () => {
+      // É o que `aria-hidden` no marcador compra: o leitor anuncia o rótulo, e
+      // a obrigatoriedade vem do `aria-required`, não de um "asterisco" falado.
+      await expect(input).toHaveAccessibleName("Email profissional");
       await expect(input).toHaveAttribute("aria-required", "true");
     });
   },

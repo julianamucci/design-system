@@ -3,7 +3,7 @@
   import { Input } from '@/components/ui/input';
 </script>
 
-<div class="nds-stack" data-spacing="sm">
-  <Label for="telefone">Telefone</Label>
-  <Input id="telefone" type="tel" placeholder="+55 (11) 99999-9999" />
+<div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+  <Label for="comp-input">Telefone</Label>
+  <Input id="comp-input" type="tel" placeholder="(11) 99999-9999" />
 </div>

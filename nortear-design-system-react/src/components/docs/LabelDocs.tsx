@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import labelTranslations from "@shared/content/label/translations.json";
@@ -178,7 +177,10 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
             <Label htmlFor="demo-disabled">
               {tContent("demonstration.labels.disabled")}
             </Label>
-            <Input id="demo-disabled" disabled placeholder="000.000.000-00" />
+            {/* `nds-peer` no CONTROLE é o que faz o rótulo esmaecer junto —
+                sem ela a demonstração do estado desabilitado mostraria um
+                rótulo em opacidade cheia, contradizendo a tabela de estados. */}
+            <Input id="demo-disabled" disabled className="nds-peer" placeholder="000.000.000-00" />
           </div>
         </div>
       </DocsDemonstration>
@@ -354,7 +356,10 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
                 type: "string",
                 defaultValue: "—",
                 required: "Não",
-                description: DOMPurify.sanitize(tContent("props.table.htmlFor")),
+                // A célula é textNode: `sanitize` deixaria a tag `<code>` na
+                // string e ela apareceria literal na tabela. `toPlainText` tira
+                // as tags E decodifica as entidades.
+                description: toPlainText(tContent("props.table.htmlFor")),
               },
               {
                 name: "className",
@@ -386,12 +391,11 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
           description: tContent("tokens.table.part"),
         }}
         items={[
-          { token: "--foreground", value: "text-foreground", description: tContent("tokens.table.foreground") },
-          { token: "--foreground / opacity-50", value: "opacity-50", description: tContent("tokens.table.foregroundMuted") },
-          { token: "--font-size-sm", value: "text-sm", description: tContent("tokens.table.fontSize") },
-          { token: "--font-weight-medium", value: "font-medium", description: tContent("tokens.table.fontWeight") },
-          { token: "--leading-none", value: "leading-none", description: tContent("tokens.table.lineHeight") },
-          { token: "--destructive", value: "text-destructive", description: tContent("tokens.table.destructive") },
+          { token: "--foreground",         value: ".nds-label",            description: tContent("tokens.table.foreground") },
+          { token: "--text-control",       value: ".nds-label",            description: tContent("tokens.table.fontSize") },
+          { token: "--font-weight-medium", value: ".nds-label",            description: tContent("tokens.table.fontWeight") },
+          { token: "--spacing-2",          value: ".nds-label",            description: tContent("tokens.table.gap") },
+          { token: "--destructive",        value: ".nds-text-destructive", description: tContent("tokens.table.destructive") },
         ]}
         customizationTitle="Personalização"
         customizationCode={codeCustomization}

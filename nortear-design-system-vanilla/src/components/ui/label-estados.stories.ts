@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
+import {
+  contrastePorTema,
+  cursorComputado,
+  opacidadeComputada,
+} from '@shared/testing/label-probe';
 import { createLabel } from './label';
+import { createInput } from './input';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -8,12 +14,13 @@ const meta: Meta = {
   tags: ['form'],
   title: 'UI/Label/States',
   parameters: {
+    layout: 'centered',
     actions: { disable: true },
     controls: { disable: true },
     docs: {
       description: {
         component:
-          'Estados visuais do Label: padrão, disabled (via peer-disabled) e required (via span asterisco).',
+          'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
       },
     },
   },
@@ -22,113 +29,133 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+function bloco(): HTMLDivElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
+  wrapper.dataset.spacing = 'xs';
+  return wrapper;
+}
+
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
+  parameters: {
+    covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
+  },
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-
-    const inputId = 'estado-default-input';
-    const label = createLabel({ text: 'Nome completo', htmlFor: inputId });
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = inputId;
-    input.className = 'input';
-    input.placeholder = 'Digite seu nome…';
-
-    wrapper.append(label, input);
+    const wrapper = bloco();
+    const inputId = 'estado-padrao';
+    wrapper.append(
+      createLabel({ text: 'Nome completo', htmlFor: inputId }),
+      createInput({ id: inputId, placeholder: 'ex: João da Silva' }),
+    );
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('Nome completo');
 
-    await step('Label está visível', async () => {
-      const label = canvas.getByText('Nome completo');
-      await expect(label).toBeVisible();
+    await step('O rótulo está em opacidade cheia', async () => {
+      // Efeito computado, não nome de classe.
+      await expect(opacidadeComputada(label)).toBe(1);
     });
 
-    await step('Label possui htmlFor correto', async () => {
-      const label = canvasElement.querySelector('label');
-      await expect(label?.htmlFor).toBe('estado-default-input');
+    await step('O contraste do texto passa em AA nos dois temas', async () => {
+      // O axe do test-runner só vê o tema claro. 4.5 porque o rótulo é texto
+      // normal: 14px em peso 500 não alcança o limite de texto grande.
+      const { claro, escuro } = contrastePorTema(label);
+      await expect(claro).toBeGreaterThanOrEqual(4.5);
+      await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
-// ─── Disabled ─────────────────────────────────────────────────────────────────
-// Disabled state is demonstrated via the peer-disabled CSS pattern:
-// Label and Input must be siblings in the DOM; when Input has `disabled`,
-// the label receives `peer-disabled:opacity-50 peer-disabled:cursor-not-allowed` automatically.
+// ─── Disabled — controle irmão ────────────────────────────────────────────────
+// A marca do esmaecimento vai no CONTROLE (.nds-peer). O rótulo não recebe
+// classe nenhuma: quem reage é o próprio .nds-label, nas duas ordens de DOM.
 
 export const Disabled: Story = {
+  parameters: {
+    covers: ['functional.item2', 'visual.item3'],
+  },
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-
-    const inputId = 'estado-disabled-input';
-
-    // Input must come BEFORE the label in the DOM for peer-disabled to work
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = inputId;
-    input.className = 'input peer';
-    input.placeholder = 'Campo desabilitado';
-    input.disabled = true;
-
-    const label = createLabel({
-      text: 'CPF',
-      htmlFor: inputId,
-      className: 'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed',
+    const wrapper = bloco();
+    const inputId = 'estado-disabled';
+    const input = createInput({
+      id: inputId,
+      class: 'nds-peer',
+      placeholder: '000.000.000-00',
+      disabled: true,
     });
-
-    wrapper.append(input, label);
+    wrapper.append(input, createLabel({ text: 'CPF', htmlFor: inputId }));
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('CPF');
+    const input = canvasElement.querySelector<HTMLInputElement>('#estado-disabled')!;
 
-    await step('Input está desabilitado', async () => {
-      const input = canvasElement.querySelector('input') as HTMLInputElement;
+    await step('O controle está desabilitado', async () => {
       await expect(input).toBeDisabled();
     });
 
-    await step('Label está presente no DOM', async () => {
-      const label = canvas.getByText('CPF');
-      await expect(label).toBeInTheDocument();
+    await step('O rótulo esmaece junto e mostra o cursor de bloqueio', async () => {
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(cursorComputado(label)).toBe('not-allowed');
+    });
+  },
+};
+
+// ─── Disabled — bloco inteiro ─────────────────────────────────────────────────
+
+export const DisabledViaGroup: Story = {
+  parameters: {
+    covers: ['functional.item4'],
+  },
+  render: () => {
+    const wrapper = bloco();
+    wrapper.dataset.disabled = 'true';
+    const inputId = 'estado-grupo-disabled';
+    wrapper.append(
+      createLabel({ text: 'Documento', htmlFor: inputId }),
+      createInput({ id: inputId, placeholder: 'ex: 000.000.000-00', disabled: true }),
+    );
+    return wrapper;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const label = canvas.getByText('Documento');
+
+    await step('O rótulo herda o estado do bloco desabilitado', async () => {
+      await expect(label.closest('[data-disabled="true"]')).toBeInTheDocument();
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(getComputedStyle(label).pointerEvents).toBe('none');
     });
   },
 };
 
 // ─── Required ─────────────────────────────────────────────────────────────────
-// Required state uses a <span aria-hidden="true" class="text-destructive">*</span>
-// appended after the label text. The field itself carries aria-required="true".
 
 export const Required: Story = {
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+  },
   render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
-
-    const inputId = 'estado-required-input';
+    const wrapper = bloco();
+    const inputId = 'estado-required';
     const label = createLabel({ htmlFor: inputId });
 
-    const labelText = document.createTextNode('Email profissional');
-    const asterisk = document.createElement('span');
-    asterisk.setAttribute('aria-hidden', 'true');
-    asterisk.className = 'nds-text-destructive';
-    asterisk.style.marginLeft = '0.125rem';
-    asterisk.textContent = '*';
+    const asterisco = document.createElement('span');
+    asterisco.setAttribute('aria-hidden', 'true');
+    asterisco.className = 'nds-text-destructive';
+    asterisco.textContent = '*';
+    label.append(document.createTextNode('Email profissional'), asterisco);
 
-    label.append(labelText, asterisk);
-
-    const input = document.createElement('input');
-    input.type = 'email';
-    input.id = inputId;
-    input.className = 'input';
-    input.placeholder = 'seu@email.com';
+    const input = createInput({
+      id: inputId,
+      type: 'email',
+      placeholder: 'ex: joao@empresa.com',
+    });
     input.setAttribute('aria-required', 'true');
 
     wrapper.append(label, input);
@@ -136,21 +163,17 @@ export const Required: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const marcador = canvasElement.querySelector<HTMLElement>('.nds-text-destructive')!;
+    const input = canvas.getByRole('textbox');
 
-    await step('Label está visível', async () => {
-      const label = canvas.getByText(/Email profissional/);
-      await expect(label).toBeVisible();
+    await step('O asterisco é visível e decorativo', async () => {
+      await expect(marcador).toBeVisible();
+      await expect(marcador.textContent?.trim()).toBe('*');
+      await expect(marcador).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Asterisco possui aria-hidden="true"', async () => {
-      const asterisk = canvasElement.querySelector('span[aria-hidden="true"]');
-      await expect(asterisk).toBeInTheDocument();
-      await expect(asterisk?.getAttribute('aria-hidden')).toBe('true');
-    });
-
-    await step('Input possui aria-required="true"', async () => {
-      const input = canvasElement.querySelector('input') as HTMLInputElement;
-      await expect(input?.getAttribute('aria-required')).toBe('true');
+    await step('A obrigatoriedade é anunciada pelo controle', async () => {
+      await expect(input).toHaveAttribute('aria-required', 'true');
     });
   },
 };

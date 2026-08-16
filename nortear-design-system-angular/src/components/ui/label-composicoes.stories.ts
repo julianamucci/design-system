@@ -1,24 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/svelte-vite';
-
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 import { userEvent, within, expect } from 'storybook/test';
-import LabelWithInputStory from './LabelWithInputStory.svelte';
-import LabelWithCheckboxStory from './LabelWithCheckboxStory.svelte';
-import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
+import { NdsLabel } from './label';
+import { NdsInput } from './input';
+import { NdsCheckbox } from './checkbox';
 
-/**
- * Composições do rótulo com outros elementos de formulário.
- *
- * O rótulo é sempre associado ao controle por `for`/`id` — é isso que dá o
- * alcance de clique e o nome acessível.
- */
 const meta: Meta = {
   title: 'UI/Label/Compositions',
-  component: LabelWithInputStory,
+  decorators: [moduleMetadata({ imports: [NdsLabel, NdsInput, NdsCheckbox] })],
   tags: ['form'],
   parameters: {
+    layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
-    layout: 'centered',
     docs: {
       description: {
         component:
@@ -33,7 +27,14 @@ type Story = StoryObj;
 
 export const WithInput: Story = {
   parameters: { covers: ['visual.item4'] },
-  render: () => ({ Component: LabelWithInputStory, props: {} }),
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+        <label ndsLabel for="comp-input">Telefone</label>
+        <input class="nds-input" id="comp-input" type="tel" placeholder="(11) 99999-9999" />
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText('Telefone');
@@ -53,7 +54,14 @@ export const WithInput: Story = {
 };
 
 export const WithCheckbox: Story = {
-  render: () => ({ Component: LabelWithCheckboxStory, props: {} }),
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="sm">
+        <button ndsCheckbox id="comp-checkbox"></button>
+        <label ndsLabel for="comp-checkbox">Concordo com os termos de uso</label>
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText('Concordo com os termos de uso');
@@ -77,7 +85,17 @@ export const WithCheckbox: Story = {
 
 export const RequiredField: Story = {
   name: 'With required input',
-  render: () => ({ Component: LabelCampoObrigatorioStory, props: {} }),
+  render: () => ({
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+        <label ndsLabel for="comp-required">
+          Email profissional
+          <span class="nds-text-destructive" aria-hidden="true">*</span>
+        </label>
+        <input class="nds-input" id="comp-required" type="email" aria-required="true" placeholder="ex: joao@empresa.com" />
+      </div>
+    `,
+  }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('textbox');

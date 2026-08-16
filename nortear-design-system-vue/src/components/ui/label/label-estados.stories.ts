@@ -1,17 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
+import {
+  contrastePorTema,
+  cursorComputado,
+  opacidadeComputada,
+} from '@shared/testing/label-probe';
 import { Label } from './index';
+import { Input } from '@/components/ui/input';
 
 const meta = {
   title: 'UI/Label/States',
   component: Label,
   tags: ['form'],
   parameters: {
+    layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
-        component: 'Estados do Label: padrão, disabled (via peer-disabled ou group-data-[disabled=true]) e required (via span com aria-hidden).',
+        component:
+          'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
       },
     },
   },
@@ -21,130 +29,119 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
+  },
   render: () => ({
-    components: { Label },
-    setup() { return {}; },
+    components: { Label, Input },
     template: `
-      <div class="nds-stack" data-spacing="sm">
-        <Label for="input-padrao">Nome completo</Label>
-        <input id="input-padrao" type="text" class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem" placeholder="Digite aqui" />
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+        <Label for="estado-padrao">Nome completo</Label>
+        <Input id="estado-padrao" type="text" placeholder="ex: João da Silva" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('Nome completo');
 
-    await step('Label padrão está visível', async () => {
-      const label = canvas.getByText('Nome completo');
-      await expect(label).toBeVisible();
+    await step('O rótulo está em opacidade cheia', async () => {
+      // Efeito computado, não nome de classe.
+      await expect(opacidadeComputada(label)).toBe(1);
     });
 
-    await step('Label tem data-slot="label"', async () => {
-      const label = canvas.getByText('Nome completo');
-      await expect(label).toHaveAttribute('data-slot', 'label');
+    await step('O contraste do texto passa em AA nos dois temas', async () => {
+      // O axe do test-runner só vê o tema claro. 4.5 porque o rótulo é texto
+      // normal: 14px em peso 500 não alcança o limite de texto grande.
+      const { claro, escuro } = contrastePorTema(label);
+      await expect(claro).toBeGreaterThanOrEqual(4.5);
+      await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
 export const Disabled: Story = {
+  parameters: {
+    covers: ['functional.item2', 'visual.item3'],
+  },
   render: () => ({
-    components: { Label },
-    setup() { return {}; },
+    components: { Label, Input },
     template: `
-      <div class="nds-stack" data-spacing="sm">
-        <Label for="input-disabled" class="peer-disabled:opacity-50 peer-disabled:cursor-not-allowed">CPF</Label>
-        <input
-          id="input-disabled"
-          type="text"
-          class="nds-border-default nds-rounded nds-py-1 nds-text-body peer" style="padding-inline: 0.75rem"
-          placeholder="000.000.000-00"
-          disabled
-        />
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+        <Label for="estado-disabled">CPF</Label>
+        <Input id="estado-disabled" type="text" class="nds-peer" placeholder="000.000.000-00" disabled />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('CPF');
+    const input = canvasElement.querySelector<HTMLInputElement>('#estado-disabled')!;
 
-    await step('Input está desabilitado', async () => {
-      const input = canvas.getByPlaceholderText('000.000.000-00');
+    await step('O controle está desabilitado', async () => {
       await expect(input).toBeDisabled();
     });
 
-    await step('Label está presente', async () => {
-      const label = canvas.getByText('CPF');
-      await expect(label).toBeInTheDocument();
+    await step('O rótulo esmaece junto e mostra o cursor de bloqueio', async () => {
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(cursorComputado(label)).toBe('not-allowed');
     });
   },
 };
 
 export const DisabledViaGroup: Story = {
+  parameters: {
+    covers: ['functional.item4'],
+  },
   render: () => ({
-    components: { Label },
-    setup() { return {}; },
+    components: { Label, Input },
     template: `
-      <div class="nds-stack group" data-spacing="sm" data-disabled="true">
-        <Label for="input-group-disabled">CPF</Label>
-        <input
-          id="input-group-disabled"
-          type="text"
-          class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem"
-          placeholder="000.000.000-00"
-          disabled
-        />
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs" data-disabled="true">
+        <Label for="estado-grupo-disabled">Documento</Label>
+        <Input id="estado-grupo-disabled" type="text" placeholder="ex: 000.000.000-00" disabled />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvas.getByText('Documento');
 
-    await step('Grupo pai tem data-disabled="true"', async () => {
-      const group = canvasElement.querySelector('[data-disabled="true"]');
-      await expect(group).toBeInTheDocument();
-    });
-
-    await step('Label está presente no grupo', async () => {
-      const label = canvas.getByText('CPF');
-      await expect(label).toBeInTheDocument();
+    await step('O rótulo herda o estado do bloco desabilitado', async () => {
+      await expect(label.closest('[data-disabled="true"]')).toBeInTheDocument();
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(getComputedStyle(label).pointerEvents).toBe('none');
     });
   },
 };
 
 export const Required: Story = {
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+  },
   render: () => ({
-    components: { Label },
-    setup() { return {}; },
+    components: { Label, Input },
     template: `
-      <div class="nds-stack" data-spacing="sm">
-        <Label for="input-required">
+      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+        <Label for="estado-required">
           Email profissional
           <span class="nds-text-destructive" aria-hidden="true">*</span>
         </Label>
-        <input
-          id="input-required"
-          type="email"
-          class="nds-border-default nds-rounded nds-py-1 nds-text-body" style="padding-inline: 0.75rem"
-          placeholder="voce@empresa.com"
-          aria-required="true"
-        />
+        <Input id="estado-required" type="email" aria-required="true" placeholder="ex: joao@empresa.com" />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const marcador = canvasElement.querySelector<HTMLElement>('.nds-text-destructive')!;
+    const input = canvas.getByRole('textbox');
 
-    await step('Label com texto está visível', async () => {
-      await expect(canvas.getByText('Email profissional')).toBeInTheDocument();
+    await step('O asterisco é visível e decorativo', async () => {
+      await expect(marcador).toBeVisible();
+      await expect(marcador.textContent?.trim()).toBe('*');
+      await expect(marcador).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Asterisco tem aria-hidden="true"', async () => {
-      const asterisk = canvasElement.querySelector('span[aria-hidden="true"]');
-      await expect(asterisk).toBeInTheDocument();
-      await expect(asterisk?.textContent).toBe('*');
-    });
-
-    await step('Input tem aria-required="true"', async () => {
-      const input = canvas.getByPlaceholderText('voce@empresa.com');
+    await step('A obrigatoriedade é anunciada pelo controle', async () => {
       await expect(input).toHaveAttribute('aria-required', 'true');
     });
   },

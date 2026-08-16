@@ -8,7 +8,7 @@
       "title": "Label — Formulário",
       "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
       "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
+      "aiEntities": "Label, formulário, rótulo, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -27,7 +27,7 @@
       "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> adicionado pelo código consumidor quando o campo é obrigatório.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "{/* Fora de FormField — htmlFor obrigatório */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obrigatório */}\n<Label htmlFor=\"nome\">\n  Nome completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nome\" aria-required=\"true\" />",
+        "react": "{/* Fora de FormField — htmlFor obrigatório */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obrigatório */}\n<Label htmlFor=\"nome\">\n  Nome completo\n  <span className=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nome\" aria-required=\"true\" />",
         "angular": "<!-- Fora de nds-form-field — for obrigatório -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Campo obrigatório -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
       }
     },
@@ -64,8 +64,8 @@
         },
         "item4": {
           "s": "Campo disabled",
-          "u": "Label herdará opacity-50",
-          "a": "Via peer-disabled"
+          "u": "Rótulo esmaece junto",
+          "a": "Marcar o controle com nds-peer"
         }
       },
       "do": {
@@ -97,11 +97,11 @@
     },
     "variants": {
       "title": "Variantes",
-      "note": "O Label não possui variantes nativas — é unstyled por padrão (font-medium, text-sm, leading-none). Comportamentos visuais de required e disabled são aplicados pelo código consumidor via className ou pelo estado do campo associado.",
+      "note": "O Label não possui variantes: o texto sai sempre no mesmo tamanho, peso e cor do tema. Obrigatório e desabilitado não são variantes — o primeiro é um marcador acrescentado pelo código consumidor, o segundo é herdado do estado do campo associado.",
       "items": {
         "default": {
           "label": "Padrão",
-          "description": "Texto com <code>font-medium text-sm leading-none</code>. Sem variante de cor — herda do tema."
+          "description": "Texto no tamanho de controle, peso médio, na cor de primeiro plano do tema. Sem variante de cor."
         }
       }
     },
@@ -115,12 +115,12 @@
       "default": {
         "label": "Padrão",
         "trigger": "Campo associado ativo",
-        "behavior": "Texto com opacity total, cursor padrão, font-medium"
+        "behavior": "Texto com opacidade total, cursor padrão e peso médio"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Campo associado com <code>disabled</code> ou grupo com <code>data-disabled=true</code>",
-        "behavior": "<code>opacity-50</code> e <code>cursor-not-allowed</code> via <code>peer-disabled</code> ou <code>group-data-[disabled=true]</code>"
+        "trigger": "Controle irmão marcado com <code>nds-peer</code> e desabilitado, ou ancestral com <code>data-disabled=\"true\"</code>",
+        "behavior": "Opacidade reduzida à metade e cursor de bloqueio, aplicados pelo próprio rótulo — não há classe a acrescentar nele"
       },
       "required": {
         "label": "Required",
@@ -140,7 +140,7 @@
         "className": "Classes .nds-* adicionais para personalização do rótulo.",
         "children": "Texto do rótulo. Use substantivo ou frase nominal curta."
       },
-      "note": "O Label estende <code>React.ComponentProps&lt;\"label\"&gt;</code> — aceita todos os atributos HTML nativos do elemento <code>&lt;label&gt;</code>."
+      "note": "O Label repassa ao elemento <code>&lt;label&gt;</code> os atributos HTML nativos que receber — <code>for</code>, <code>id</code>, <code>title</code> e os demais."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -149,11 +149,10 @@
         "class": "Classe .nds-*",
         "part": "Parte do componente",
         "foreground": "Cor do texto padrão",
-        "foregroundMuted": "Cor do texto quando disabled",
         "fontSize": "Tamanho do texto",
         "fontWeight": "Peso da fonte",
-        "lineHeight": "Altura de linha",
-        "destructive": "Cor do marcador required (*)"
+        "destructive": "Cor do marcador required (*)",
+        "gap": "Espaço entre o texto e o ícone"
       }
     },
     "accessibility": {
@@ -191,7 +190,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "tip1": "Fora de FormField, o <code>htmlFor</code> do Label e o <code>id</code> do campo devem ser idênticos — o vínculo quebra se houver divergência.",
-      "tip2": "O comportamento disabled (<code>peer-disabled:opacity-50</code>) é aplicado via classe CSS quando o campo irmão está disabled — o Label e o Input devem ser siblings no DOM.",
+      "tip2": "Para o rótulo esmaecer junto com o campo, marque o CONTROLE com <code>nds-peer</code> e mantenha os dois como irmãos no DOM — o rótulo não precisa de classe. Bloco inteiro desabilitado: <code>data-disabled=\"true\"</code> no ancestral.",
       "tip3": "Para campos obrigatórios, adicione <code>aria-required=\"true\"</code> no Input e o span com asterisco no Label — as duas partes são necessárias: visual e semântica."
     },
     "analytics": {
@@ -209,18 +208,18 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Renderizar com campo disabled",
-          "result": "Label com opacity-50 e cursor-not-allowed via peer-disabled",
+          "action": "Desabilitar o controle irmão marcado com nds-peer",
+          "result": "Rótulo com opacidade reduzida e cursor de bloqueio",
           "priority": "high"
         },
         "item3": {
           "action": "Renderizar com span de asterisco",
-          "result": "Asterisco visível em text-destructive com aria-hidden=\"true\"",
+          "result": "Asterisco visível na cor de erro, com aria-hidden=\"true\"",
           "priority": "high"
         },
         "item4": {
           "action": "Renderizar dentro de grupo com data-disabled=true",
-          "result": "Label com pointer-events-none e opacity-50 via group-data-[disabled=true]",
+          "result": "Rótulo com opacidade reduzida e sem alcance de ponteiro",
           "priority": "medium"
         }
       },
@@ -245,7 +244,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Disabled — via peer-disabled",
+          "story": "Disabled — controle irmão desabilitado",
           "priority": "high"
         },
         "item4": {
@@ -284,7 +283,7 @@
       "title": "Label — Form",
       "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
       "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
+      "aiEntities": "Label, form, field label, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -303,8 +302,8 @@
       "item3": "<strong>Required marker (optional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> added by the consumer when the field is required.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "{/* Outside FormField — htmlFor required */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Required field */}\n<Label htmlFor=\"name\">\n  Full name\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"name\" aria-required=\"true\" />",
-        "angular": "<!-- Outside nds-form-field — for is required -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Required field -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
+        "react": "{/* Outside FormField — htmlFor required */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Required field */}\n<Label htmlFor=\"name\">\n  Full name\n  <span className=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"name\" aria-required=\"true\" />",
+        "angular": "<!-- Outside nds-form-field — for is required -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Required field -->\n<label ndsLabel for=\"name\">\n  Full name\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"name\" aria-required=\"true\" />"
       }
     },
     "usage": {
@@ -340,8 +339,8 @@
         },
         "item4": {
           "s": "Disabled field",
-          "u": "Label inherits opacity-50",
-          "a": "Via peer-disabled"
+          "u": "Label dims along with it",
+          "a": "Mark the control with nds-peer"
         }
       },
       "do": {
@@ -373,11 +372,11 @@
     },
     "variants": {
       "title": "Variants",
-      "note": "Label has no native variants — it is unstyled by default (font-medium, text-sm, leading-none). Required and disabled visual behaviors are applied by the consumer via className or by the associated field state.",
+      "note": "Label has no variants: the text always comes out at the same size, weight and theme colour. Required and disabled are not variants — the first is a marker added by consumer code, the second is inherited from the associated field state.",
       "items": {
         "default": {
           "label": "Default",
-          "description": "Text with <code>font-medium text-sm leading-none</code>. No color variant — inherits from the theme."
+          "description": "Text at control size, medium weight, in the theme foreground colour. No colour variant."
         }
       }
     },
@@ -391,12 +390,12 @@
       "default": {
         "label": "Default",
         "trigger": "Associated field is active",
-        "behavior": "Full opacity text, default cursor, font-medium"
+        "behavior": "Full opacity text, default cursor, medium weight"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Associated field has <code>disabled</code> or group has <code>data-disabled=true</code>",
-        "behavior": "<code>opacity-50</code> and <code>cursor-not-allowed</code> via <code>peer-disabled</code> or <code>group-data-[disabled=true]</code>"
+        "trigger": "Sibling control marked with <code>nds-peer</code> and disabled, or an ancestor with <code>data-disabled=\"true\"</code>",
+        "behavior": "Opacity halved and blocked cursor, applied by the label itself — no class to add to it"
       },
       "required": {
         "label": "Required",
@@ -416,7 +415,7 @@
         "className": "Additional .nds-* classes for label customization.",
         "children": "Label text. Use a short noun or noun phrase."
       },
-      "note": "Label extends <code>React.ComponentProps&lt;\"label\"&gt;</code> — accepts all native HTML attributes of the <code>&lt;label&gt;</code> element."
+      "note": "Label forwards to the <code>&lt;label&gt;</code> element any native HTML attributes it receives — <code>for</code>, <code>id</code>, <code>title</code> and the rest."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -425,11 +424,10 @@
         "class": ".nds-* Class",
         "part": "Component part",
         "foreground": "Default text color",
-        "foregroundMuted": "Text color when disabled",
         "fontSize": "Text size",
         "fontWeight": "Font weight",
-        "lineHeight": "Line height",
-        "destructive": "Required marker (*) color"
+        "destructive": "Required marker (*) color",
+        "gap": "Space between text and icon"
       }
     },
     "accessibility": {
@@ -467,7 +465,7 @@
     "notes": {
       "title": "Implementation Notes",
       "tip1": "Outside FormField, the Label's <code>htmlFor</code> and the field's <code>id</code> must be identical — the link breaks if they differ.",
-      "tip2": "The disabled behavior (<code>peer-disabled:opacity-50</code>) is applied via CSS class when the sibling field is disabled — Label and Input must be siblings in the DOM.",
+      "tip2": "For the label to dim along with the field, mark the CONTROL with <code>nds-peer</code> and keep both as siblings in the DOM — the label needs no class. For a whole block, use <code>data-disabled=\"true\"</code> on the ancestor.",
       "tip3": "For required fields, add <code>aria-required=\"true\"</code> to the Input and the asterisk span to the Label — both parts are needed: visual and semantic."
     },
     "analytics": {
@@ -485,18 +483,18 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Render with disabled field",
-          "result": "Label with opacity-50 and cursor-not-allowed via peer-disabled",
+          "action": "Disable the sibling control marked with nds-peer",
+          "result": "Label with reduced opacity and blocked cursor",
           "priority": "high"
         },
         "item3": {
           "action": "Render with asterisk span",
-          "result": "Asterisk visible in text-destructive with aria-hidden=\"true\"",
+          "result": "Asterisk visible in the error colour, with aria-hidden=\"true\"",
           "priority": "high"
         },
         "item4": {
           "action": "Render inside group with data-disabled=true",
-          "result": "Label with pointer-events-none and opacity-50 via group-data-[disabled=true]",
+          "result": "Label with reduced opacity and no pointer reach",
           "priority": "medium"
         }
       },
@@ -521,7 +519,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Disabled — via peer-disabled",
+          "story": "Disabled — sibling control disabled",
           "priority": "high"
         },
         "item4": {
@@ -560,7 +558,7 @@
       "title": "Label — Formulario",
       "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
       "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
-      "aiEntities": "Label, React, Vue, Svelte, WCAG 2.2, htmlFor, aria-required"
+      "aiEntities": "Label, formulario, etiqueta, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demostración",
@@ -579,8 +577,8 @@
       "item3": "<strong>Marcador required (opcional)</strong> — <code>&lt;span aria-hidden=\"true\"&gt;*&lt;/span&gt;</code> agregado por el código consumidor cuando el campo es obligatorio.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "{/* Fuera de FormField — htmlFor obligatorio */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obligatorio */}\n<Label htmlFor=\"nombre\">\n  Nombre completo\n  <span className=\"text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nombre\" aria-required=\"true\" />",
-        "angular": "<!-- Fuera de nds-form-field — for obligatorio -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Campo obligatorio -->\n<label ndsLabel for=\"nome\">\n  Nome completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nome\" aria-required=\"true\" />"
+        "react": "{/* Fuera de FormField — htmlFor obligatorio */}\n<Label htmlFor=\"email\">Email</Label>\n<Input id=\"email\" />\n\n{/* Campo obligatorio */}\n<Label htmlFor=\"nombre\">\n  Nombre completo\n  <span className=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</Label>\n<Input id=\"nombre\" aria-required=\"true\" />",
+        "angular": "<!-- Fuera de nds-form-field — for obligatorio -->\n<label ndsLabel for=\"email\">Email</label>\n<input ndsInput id=\"email\" />\n\n<!-- Campo obligatorio -->\n<label ndsLabel for=\"nombre\">\n  Nombre completo\n  <span class=\"nds-text-destructive\" aria-hidden=\"true\">*</span>\n</label>\n<input ndsInput id=\"nombre\" aria-required=\"true\" />"
       }
     },
     "usage": {
@@ -616,8 +614,8 @@
         },
         "item4": {
           "s": "Campo disabled",
-          "u": "Label hereda opacity-50",
-          "a": "Via peer-disabled"
+          "u": "La etiqueta se atenúa con él",
+          "a": "Marcar el control con nds-peer"
         }
       },
       "do": {
@@ -649,11 +647,11 @@
     },
     "variants": {
       "title": "Variantes",
-      "note": "El Label no tiene variantes nativas — es unstyled por defecto (font-medium, text-sm, leading-none). Los comportamientos visuales de required y disabled los aplica el código consumidor via className o el estado del campo asociado.",
+      "note": "El Label no tiene variantes: el texto siempre sale en el mismo tamaño, peso y color del tema. Obligatorio y deshabilitado no son variantes — el primero es un marcador que agrega el código consumidor, el segundo se hereda del estado del campo asociado.",
       "items": {
         "default": {
           "label": "Predeterminado",
-          "description": "Texto con <code>font-medium text-sm leading-none</code>. Sin variante de color — hereda del tema."
+          "description": "Texto en tamaño de control, peso medio, en el color de primer plano del tema. Sin variante de color."
         }
       }
     },
@@ -667,12 +665,12 @@
       "default": {
         "label": "Predeterminado",
         "trigger": "Campo asociado activo",
-        "behavior": "Texto con opacidad total, cursor predeterminado, font-medium"
+        "behavior": "Texto con opacidad total, cursor predeterminado y peso medio"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "Campo asociado con <code>disabled</code> o grupo con <code>data-disabled=true</code>",
-        "behavior": "<code>opacity-50</code> y <code>cursor-not-allowed</code> via <code>peer-disabled</code> o <code>group-data-[disabled=true]</code>"
+        "trigger": "Control hermano marcado con <code>nds-peer</code> y deshabilitado, o un ancestro con <code>data-disabled=\"true\"</code>",
+        "behavior": "Opacidad reducida a la mitad y cursor de bloqueo, aplicados por la propia etiqueta — no hay clase que agregarle"
       },
       "required": {
         "label": "Required",
@@ -692,7 +690,7 @@
         "className": "Clases .nds-* adicionales para personalización del rótulo.",
         "children": "Texto del rótulo. Usa sustantivo o frase nominal corta."
       },
-      "note": "Label extiende <code>React.ComponentProps&lt;\"label\"&gt;</code> — acepta todos los atributos HTML nativos del elemento <code>&lt;label&gt;</code>."
+      "note": "El Label reenvía al elemento <code>&lt;label&gt;</code> los atributos HTML nativos que reciba — <code>for</code>, <code>id</code>, <code>title</code> y los demás."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -701,11 +699,10 @@
         "class": "Clase .nds-*",
         "part": "Parte del componente",
         "foreground": "Color de texto predeterminado",
-        "foregroundMuted": "Color de texto cuando disabled",
         "fontSize": "Tamaño del texto",
         "fontWeight": "Peso de la fuente",
-        "lineHeight": "Altura de línea",
-        "destructive": "Color del marcador required (*)"
+        "destructive": "Color del marcador required (*)",
+        "gap": "Espacio entre el texto y el icono"
       }
     },
     "accessibility": {
@@ -743,7 +740,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "tip1": "Fuera de FormField, el <code>htmlFor</code> del Label y el <code>id</code> del campo deben ser idénticos — el vínculo se rompe si hay divergencia.",
-      "tip2": "El comportamiento disabled (<code>peer-disabled:opacity-50</code>) se aplica via clase CSS cuando el campo hermano está disabled — Label e Input deben ser siblings en el DOM.",
+      "tip2": "Para que la etiqueta se atenúe junto al campo, marca el CONTROL con <code>nds-peer</code> y mantén ambos como hermanos en el DOM — la etiqueta no necesita clase. Para un bloque entero, usa <code>data-disabled=\"true\"</code> en el ancestro.",
       "tip3": "Para campos obligatorios, agrega <code>aria-required=\"true\"</code> en el Input y el span con asterisco en el Label — ambas partes son necesarias: visual y semántica."
     },
     "analytics": {
@@ -761,18 +758,18 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Renderizar con campo disabled",
-          "result": "Label con opacity-50 y cursor-not-allowed via peer-disabled",
+          "action": "Deshabilitar el control hermano marcado con nds-peer",
+          "result": "Etiqueta con opacidad reducida y cursor de bloqueo",
           "priority": "high"
         },
         "item3": {
           "action": "Renderizar con span de asterisco",
-          "result": "Asterisco visible en text-destructive con aria-hidden=\"true\"",
+          "result": "Asterisco visible en el color de error, con aria-hidden=\"true\"",
           "priority": "high"
         },
         "item4": {
           "action": "Renderizar dentro de grupo con data-disabled=true",
-          "result": "Label con pointer-events-none y opacity-50 via group-data-[disabled=true]",
+          "result": "Etiqueta con opacidad reducida y sin alcance de puntero",
           "priority": "medium"
         }
       },
@@ -797,7 +794,7 @@
           "priority": "high"
         },
         "item3": {
-          "story": "Disabled — via peer-disabled",
+          "story": "Disabled — control hermano deshabilitado",
           "priority": "high"
         },
         "item4": {

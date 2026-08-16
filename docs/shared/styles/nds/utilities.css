@@ -347,14 +347,13 @@
 .nds-disabled-opacity-50[disabled],
 .nds-disabled-opacity-50[aria-disabled="true"] { opacity: 0.5; }
 
-/* ── peer-disabled: label associada a um controle desabilitado (irmão) ───── */
-/* substitui `peer` no controle + `peer-disabled:*` na label. Usa o irmão
-   anterior desabilitado via :has() do container, ou o padrão input+label. */
-.nds-peer:disabled ~ .nds-peer-label,
-.nds-peer[disabled] ~ .nds-peer-label {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
+/* ── peer-disabled: o rótulo esmaece com o controle irmão desabilitado ───── */
+/* A regra mora em `label.css`, junto do componente que ela pinta, e reage a
+   `.nds-peer` sozinha — o rótulo não precisa de classe nenhuma. Aqui havia uma
+   segunda família (`.nds-peer-label`, opacidade 0.7) que ninguém aplicava em
+   lugar nenhum do repositório e que contradizia a de `label.css` (0.5): duas
+   cópias da mesma intenção, e a errada era a viva. `.nds-peer` continua sendo a
+   marca do controle; o que saiu foi a exigência de marcar também o rótulo. */
 
 /* ── último item sem borda inferior (listas divididas) ───────────────────── */
 .nds-flush-last > *:last-child { border-bottom: 0; }

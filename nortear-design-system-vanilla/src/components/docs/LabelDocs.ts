@@ -61,15 +61,12 @@ function buildLabelWithInput(labelText: string, inputId: string, opts: { require
   wrapper.dataset.spacing = 'xs';
 
   if (opts.disabled) {
-    // peer-disabled pattern: input (with peer class) BEFORE label
+    // A marca do esmaecimento vai no CONTROLE (.nds-peer). O rótulo não recebe
+    // classe nenhuma: quem reage é o próprio .nds-label.
     const input = createInput({ id: inputId, placeholder: labelText, disabled: true });
-    input.classList.add('peer');
+    input.classList.add('nds-peer');
 
-    const label = createLabel({
-      text: labelText,
-      htmlFor: inputId,
-      className: 'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed',
-    });
+    const label = createLabel({ text: labelText, htmlFor: inputId });
 
     wrapper.append(input, label);
   } else {
@@ -202,7 +199,7 @@ export function createLabelDocs(): HTMLElement {
             // Required label
             wrap.appendChild(buildLabelWithInput(t('demonstration.labels.required'), 'demo-required', { required: true }));
 
-            // Disabled label (peer pattern)
+            // Desabilitado: a marca nds-peer vai no controle
             wrap.appendChild(buildLabelWithInput(t('demonstration.labels.disabled'), 'demo-disabled', { disabled: true }));
 
             return wrap;
@@ -324,7 +321,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'variantes': {
         const codeDefault = `const label = createLabel({ text: 'Nome completo', htmlFor: 'nome' });\nconst input = createInput({ id: 'nome', type: 'text' });\nwrapper.append(label, input);`;
-        const codeRequired = `const label = createLabel({ htmlFor: 'email' });\nconst textNode = document.createTextNode('Email profissional');\nconst asterisk = document.createElement('span');\nasterisk.setAttribute('aria-hidden', 'true');\nasterisk.className = 'nds-text-destructive';\nasterisk.style.marginLeft = 'var(--spacing-0-5)';\nasterisk.textContent = '*';\nlabel.append(textNode, asterisk);\nconst input = createInput({ id: 'email', type: 'email' });\ninput.setAttribute('aria-required', 'true');`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -334,12 +330,6 @@ export function createLabelDocs(): HTMLElement {
               description: DOMPurify.sanitize(t('variants.items.default.description')),
               code: codeDefault,
               previewFactory: () => buildLabelWithInput('Nome completo', 'var-default-input'),
-            },
-            {
-              name: t('states.required.label'),
-              description: DOMPurify.sanitize(t('states.required.behavior')),
-              code: codeRequired,
-              previewFactory: () => buildLabelWithInput('Email profissional', 'var-required-input', { required: true }),
             },
           ],
         });
@@ -391,7 +381,7 @@ export function createLabelDocs(): HTMLElement {
               cols: propsCols,
               items: [
                 { name: 'text',      type: 'string', defaultValue: '""',  required: 'Não', description: t('props.table.children') },
-                { name: 'htmlFor',   type: 'string', defaultValue: '—',   required: 'Não', description: DOMPurify.sanitize(t('props.table.htmlFor')) },
+                { name: 'htmlFor',   type: 'string', defaultValue: '—',   required: 'Não', description: toPlainText(t('props.table.htmlFor')) },
                 { name: 'className', type: 'string', defaultValue: '—',   required: 'Não', description: t('props.table.className') },
               ],
             },
@@ -412,12 +402,11 @@ export function createLabelDocs(): HTMLElement {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--foreground',  value: 'text-foreground',   description: t('tokens.table.foreground') },
-            { token: '--foreground',  value: 'opacity-50',        description: t('tokens.table.foregroundMuted') },
-            { token: '—',             value: 'text-sm',           description: t('tokens.table.fontSize') },
-            { token: '—',             value: 'font-medium',       description: t('tokens.table.fontWeight') },
-            { token: '—',             value: 'leading-none',      description: t('tokens.table.lineHeight') },
-            { token: '--destructive', value: 'text-destructive',  description: t('tokens.table.destructive') },
+            { token: '--foreground',         value: '.nds-label',            description: t('tokens.table.foreground') },
+            { token: '--text-control',       value: '.nds-label',            description: t('tokens.table.fontSize') },
+            { token: '--font-weight-medium', value: '.nds-label',            description: t('tokens.table.fontWeight') },
+            { token: '--spacing-2',          value: '.nds-label',            description: t('tokens.table.gap') },
+            { token: '--destructive',        value: '.nds-text-destructive', description: t('tokens.table.destructive') },
           ],
           customizationCode,
         });

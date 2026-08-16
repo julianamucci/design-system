@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
+import { createInput } from './input';
 import { createLabelDocs } from '@/components/docs/LabelDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -15,16 +16,19 @@ const meta: Meta<LabelArgs> = {
   title: 'UI/Label',
   tags: ['autodocs', 'form'],
   parameters: {
+    layout: 'centered',
     docs: { page: withAutoDocsTab(createLabelDocs) },
   },
   argTypes: {
     text: {
       control: 'text',
       description: 'Texto do rótulo exibido ao usuário.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '""' } },
     },
     className: {
       control: 'text',
       description: 'Classes utilitárias .nds-* adicionais para personalização.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
   },
   args: {
@@ -39,39 +43,46 @@ type Story = StoryObj<LabelArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: ['functional.item1', 'accessibility.item2'],
+  },
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
-    wrapper.dataset.spacing = 'sm';
+    wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
+    wrapper.dataset.spacing = 'xs';
 
-    const inputId = 'playground-input';
+    const inputId = 'playground-label';
     const label = createLabel({ text: args.text, htmlFor: inputId, className: args.className });
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = inputId;
-    input.className = 'input';
-    input.placeholder = 'Digite aqui…';
+    const input = createInput({ id: inputId, placeholder: 'ex: João da Silva' });
 
     wrapper.append(label, input);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const label = canvasElement.querySelector<HTMLLabelElement>('label[data-slot="label"]')!;
 
-    await step('Label está presente no DOM', async () => {
-      const label = canvas.getByText('Nome completo');
+    await step('O rótulo é um <label> com a classe do design system', async () => {
       await expect(label.tagName.toLowerCase()).toBe('label');
+      await expect(label).toHaveClass('nds-label');
     });
 
-    await step('Label possui htmlFor correto', async () => {
-      const label = canvasElement.querySelector('label');
-      await expect(label?.htmlFor).toBe('playground-input');
+    await step('O campo é alcançável pelo texto do rótulo', async () => {
+      // É o que `accessibility.item2` promete: `getByLabelText` só encontra o
+      // campo se a associação `for`/`id` estiver de pé. Conferir o atributo
+      // sozinho passaria com um id que não aponta para nada.
+      const campo = canvas.getByLabelText('Nome completo');
+      await expect(campo).toBe(canvasElement.querySelector('#playground-label'));
     });
 
-    await step('Input associado está presente', async () => {
-      const input = canvasElement.querySelector('#playground-input');
-      await expect(input).toBeInTheDocument();
+    await step('Clicar no rótulo move o foco para o campo', async () => {
+      // Precondição própria: o replay reexecuta no mesmo DOM, e sem tirar o
+      // foco daqui a asserção passaria pelo estado que a rodada anterior deixou.
+      const campo = canvasElement.querySelector<HTMLInputElement>('#playground-label')!;
+      campo.blur();
+      await expect(campo).not.toHaveFocus();
+      await userEvent.click(label);
+      await expect(campo).toHaveFocus();
     });
   },
 };

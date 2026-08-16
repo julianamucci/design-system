@@ -175,39 +175,31 @@ const CODE_DEFAULT = `<label ndsLabel for="nome">Nome completo</label>
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
+          <!-- O texto do rótulo VEM do conteúdo compartilhado, como nas outras
+               stacks. A legenda acima de cada par repetia o mesmo texto, e a
+               demonstração aparecia com o rótulo escrito duas vezes. -->
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="sm">
-              <p class="nds-text-caption nds-text-muted-foreground">
-                {{ t('demonstration.labels.default') }}
-              </p>
-              <label ndsLabel for="demo-default">Nome completo</label>
+              <label ndsLabel for="demo-default">{{ t('demonstration.labels.default') }}</label>
               <input class="nds-input" id="demo-default" type="text" />
             </div>
 
             <div class="nds-stack" data-spacing="sm">
-              <p class="nds-text-caption nds-text-muted-foreground">
-                {{ t('demonstration.labels.required') }}
-              </p>
               <label ndsLabel for="demo-required">
-                Email profissional
-                <span class="nds-text-destructive" aria-hidden="true">*</span>
+                {{ t('demonstration.labels.required') }}
+                <span class="nds-text-destructive" aria-hidden="true">{{ t('demonstration.labels.requiredMarker') }}</span>
               </label>
               <input class="nds-input" id="demo-required" type="email" aria-required="true" />
             </div>
 
-            <div class="nds-stack" data-spacing="sm" data-disabled="true">
-              <p class="nds-text-caption nds-text-muted-foreground">
-                {{ t('demonstration.labels.disabled') }}
-              </p>
-              <label ndsLabel for="demo-disabled">CPF</label>
-              <input class="nds-input" id="demo-disabled" type="text" disabled />
+            <div class="nds-stack" data-spacing="sm">
+              <!-- nds-peer no CONTROLE é o que esmaece o rótulo junto -->
+              <label ndsLabel for="demo-disabled">{{ t('demonstration.labels.disabled') }}</label>
+              <input class="nds-input nds-peer" id="demo-disabled" type="text" disabled />
             </div>
 
             <div class="nds-stack" data-spacing="sm">
-              <p class="nds-text-caption nds-text-muted-foreground">
-                {{ t('demonstration.labels.withInput') }}
-              </p>
-              <label ndsLabel for="demo-with-input">Cidade</label>
+              <label ndsLabel for="demo-with-input">{{ t('demonstration.labels.withInput') }}</label>
               <input class="nds-input" id="demo-with-input" type="text" placeholder="ex: Recife" />
             </div>
           </div>
@@ -460,14 +452,24 @@ export class NdsLabelDocs implements AfterViewInit, OnDestroy {
     };
   });
 
+  // A coluna "Token CSS" mostrava a DESCRIÇÃO da linha, não o nome do token: o
+  // map usava a mesma chave nas duas colunas, e a tabela que o consumidor copia
+  // para customizar não trazia um único nome de custom property.
   protected readonly tokenItems = computed(() => {
     dict();
-    return ['foreground', 'foregroundMuted', 'fontSize', 'fontWeight', 'lineHeight', 'destructive']
-      .map((k) => ({
-        token: t(`tokens.table.${k}`),
-        value: '.nds-label',
-        description: t(`tokens.table.${k}`),
-      }));
+    return (
+      [
+        ['--foreground', '.nds-label', 'foreground'],
+        ['--text-control', '.nds-label', 'fontSize'],
+        ['--font-weight-medium', '.nds-label', 'fontWeight'],
+        ['--spacing-2', '.nds-label', 'gap'],
+        ['--destructive', '.nds-text-destructive', 'destructive'],
+      ] as const
+    ).map(([token, value, chave]) => ({
+      token,
+      value,
+      description: t(`tokens.table.${chave}`),
+    }));
   });
 
   protected readonly a11yItems = computed(() => {

@@ -1,5 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
+import {
+  contrastePorTema,
+  cursorComputado,
+  opacidadeComputada,
+} from "@shared/testing/label-probe";
 import { Label } from "./label";
 import { Input } from "./input";
 
@@ -10,10 +15,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados do Label: padrão, disabled (via peer-disabled ou group-data-[disabled=true]) e required (via span com aria-hidden).",
+          "Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.",
       },
     },
   },
@@ -23,88 +29,122 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    covers: ["accessibility.item1", "accessibility.item4", "visual.item1"],
+    docs: {
+      description: {
+        story:
+          "Estado padrão: opacidade cheia, tamanho de controle, peso médio e a cor de primeiro plano do tema.",
+      },
+    },
+  },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
       <Label htmlFor="estado-padrao">Nome completo</Label>
       <Input id="estado-padrao" placeholder="ex: João da Silva" />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Estado padrão. Texto com opacity total, font-medium, text-sm, leading-none. Herda cor do tema.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText("Nome completo");
 
-    await step("Label está visível com opacity total", async () => {
-      await expect(label).toBeVisible();
-      await expect(label).not.toHaveClass("opacity-50");
+    await step("O rótulo está em opacidade cheia", async () => {
+      // Efeito computado, não nome de classe: a asserção antiga afirmava a
+      // AUSÊNCIA de `opacity-50`, uma classe que não existe no CSS do design
+      // system — ela passaria mesmo com o rótulo apagado.
+      await expect(opacidadeComputada(label)).toBe(1);
     });
 
-    await step("Label tem data-slot=label", async () => {
-      await expect(label).toHaveAttribute("data-slot", "label");
+    await step("O contraste do texto passa em AA nos dois temas", async () => {
+      // O axe do test-runner só vê o tema claro. O escuro é metade do produto e
+      // não era medido em lugar nenhum. 4.5 porque o rótulo é texto normal:
+      // 14px em peso 500 não alcança o limite de texto grande.
+      const { claro, escuro } = contrastePorTema(label);
+      await expect(claro).toBeGreaterThanOrEqual(4.5);
+      await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
 export const Disabled: Story = {
-  render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
-      <Label htmlFor="estado-disabled">CPF</Label>
-      <Input id="estado-disabled" disabled placeholder="000.000.000-00" />
-    </div>
-  ),
   parameters: {
+    covers: ["functional.item2", "visual.item3"],
     docs: {
       description: {
         story:
-          "Estado disabled via peer-disabled. O Label aplica opacity-50 e cursor-not-allowed quando o Input irmão tem o atributo disabled. Label e Input devem ser siblings no DOM.",
+          "Controle irmão desabilitado. A marca `nds-peer` vai no CONTROLE; o rótulo esmaece sozinho e troca o cursor.",
       },
     },
   },
+  render: () => (
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+      <Label htmlFor="estado-disabled">CPF</Label>
+      <Input id="estado-disabled" disabled className="nds-peer" placeholder="000.000.000-00" />
+    </div>
+  ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const input = canvas.getByRole("textbox");
+    const label = canvas.getByText("CPF");
+    const input = canvasElement.querySelector<HTMLInputElement>("#estado-disabled")!;
 
-    await step("Input está desabilitado", async () => {
+    await step("O controle está desabilitado", async () => {
       await expect(input).toBeDisabled();
+    });
+
+    await step("O rótulo esmaece junto e mostra o cursor de bloqueio", async () => {
+      // Este par ficou anos sem asserção: a story afirmava só que o input
+      // estava desabilitado, e o rótulo continuava em opacidade cheia em três
+      // das cinco stacks sem ninguém notar.
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(cursorComputado(label)).toBe("not-allowed");
     });
   },
 };
 
 export const DisabledViaGroup: Story = {
+  parameters: {
+    covers: ["functional.item4"],
+    docs: {
+      description: {
+        story:
+          "Bloco inteiro desabilitado por `data-disabled=\"true\"` no ancestral: todos os rótulos descendentes esmaecem e saem do alcance do ponteiro.",
+      },
+    },
+  },
   render: () => (
-    <div className="nds-stack group" data-spacing="xs" style={{ width: "16rem" }} data-disabled="true">
+    <div
+      className="nds-stack nds-w-full nds-max-w-xs"
+      data-spacing="xs"
+      data-disabled="true"
+    >
       <Label htmlFor="estado-grupo-disabled">Documento</Label>
       <Input id="estado-grupo-disabled" disabled placeholder="ex: 000.000.000-00" />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Estado disabled via group-data-[disabled=true]. O Label aplica pointer-events-none e opacity-50 quando o container pai tem data-disabled=\"true\" e a classe group.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const label = canvas.getByText("Documento");
 
-    await step("Label está dentro de grupo disabled", async () => {
+    await step("O rótulo herda o estado do bloco desabilitado", async () => {
       await expect(label.closest("[data-disabled='true']")).toBeInTheDocument();
+      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(getComputedStyle(label).pointerEvents).toBe("none");
     });
   },
 };
 
 export const Required: Story = {
+  parameters: {
+    covers: ["functional.item3", "accessibility.item3", "visual.item2"],
+    docs: {
+      description: {
+        story:
+          "Campo obrigatório: o asterisco é decorativo (`aria-hidden`) e quem informa a obrigatoriedade ao leitor de tela é o `aria-required` do controle.",
+      },
+    },
+  },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
       <Label htmlFor="estado-required">
         Email profissional
         <span className="nds-text-destructive" aria-hidden="true">*</span>
@@ -112,25 +152,20 @@ export const Required: Story = {
       <Input id="estado-required" type="email" aria-required="true" placeholder="ex: joao@empresa.com" />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Estado required. O asterisco é adicionado pelo código consumidor como <span aria-hidden=\"true\">*</span> em text-destructive. O campo recebe aria-required=\"true\" para comunicar a obrigatoriedade via leitor de tela.",
-      },
-    },
-  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const asterisk = canvasElement.querySelector("[aria-hidden='true']");
+    const marcador = canvasElement.querySelector<HTMLElement>(".nds-text-destructive")!;
     const input = canvas.getByRole("textbox");
 
-    await step("Asterisco está visível com aria-hidden=true", async () => {
-      await expect(asterisk).toBeInTheDocument();
-      await expect(asterisk).toHaveAttribute("aria-hidden", "true");
+    await step("O asterisco é visível e decorativo", async () => {
+      await expect(marcador).toBeVisible();
+      await expect(marcador).toHaveTextContent("*");
+      await expect(marcador).toHaveAttribute("aria-hidden", "true");
     });
 
-    await step("Input tem aria-required=true", async () => {
+    await step("A obrigatoriedade é anunciada pelo controle", async () => {
+      // Sem esta parte o marcador seria só pintura: `aria-hidden` esconde o
+      // asterisco do leitor, e nada mais diria que o campo é obrigatório.
       await expect(input).toHaveAttribute("aria-required", "true");
     });
   },

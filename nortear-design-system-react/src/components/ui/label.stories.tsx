@@ -14,13 +14,20 @@ const meta = {
     docs: { page: withAutoDocsTab(LabelDocs) },
   },
   argTypes: {
+    children: {
+      control: "text",
+      description: "Texto do rótulo. Use substantivo ou frase nominal curta.",
+      table: { type: { summary: "React.ReactNode" }, defaultValue: { summary: "—" } },
+    },
     className: {
       control: "text",
       description: "Classes utilitárias .nds-* adicionais para personalização do rótulo.",
+      table: { type: { summary: "string" }, defaultValue: { summary: "—" } },
     },
   },
   args: {
     children: "Nome completo",
+    className: "",
   },
 } satisfies Meta<typeof Label>;
 
@@ -28,33 +35,40 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: ["functional.item1", "accessibility.item2"],
+  },
   render: (args) => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "16rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
       <Label htmlFor="playground-label" {...args} />
       <Input id="playground-label" placeholder="ex: João da Silva" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const label = canvas.getByText("Nome completo");
+    const label = canvasElement.querySelector<HTMLLabelElement>('label[data-slot="label"]')!;
 
-    await step("Label está presente e visível no DOM", async () => {
-      await expect(label).toBeInTheDocument();
-      await expect(label).toBeVisible();
+    await step("O rótulo é um <label> com a classe do design system", async () => {
+      await expect(label.tagName.toLowerCase()).toBe("label");
+      await expect(label).toHaveClass("nds-label");
     });
 
-    await step("Label tem atributo data-slot=label", async () => {
-      await expect(label).toHaveAttribute("data-slot", "label");
+    await step("O campo é alcançável pelo texto do rótulo", async () => {
+      // É o que `accessibility.item2` promete: `getByLabelText` só encontra o
+      // campo se a associação `for`/`id` estiver de pé. Conferir o atributo
+      // sozinho passaria com um id que não aponta para nada.
+      const campo = canvas.getByLabelText("Nome completo");
+      await expect(campo).toBe(canvasElement.querySelector("#playground-label"));
     });
 
-    await step("Label está associado ao campo via htmlFor", async () => {
-      await expect(label).toHaveAttribute("for", "playground-label");
-    });
-
-    await step("Clicar no Label foca o campo associado", async () => {
-      const input = canvas.getByRole("textbox");
+    await step("Clicar no rótulo move o foco para o campo", async () => {
+      // Precondição própria: o replay reexecuta no mesmo DOM, e sem tirar o
+      // foco daqui a asserção passaria pelo estado que a rodada anterior deixou.
+      const campo = canvasElement.querySelector<HTMLInputElement>("#playground-label")!;
+      campo.blur();
+      await expect(campo).not.toHaveFocus();
       await userEvent.click(label);
-      await expect(input).toHaveFocus();
+      await expect(campo).toHaveFocus();
     });
   },
 };

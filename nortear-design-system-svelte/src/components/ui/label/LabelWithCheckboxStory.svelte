@@ -4,6 +4,6 @@
 </script>
 
 <div class="nds-cluster" data-spacing="sm">
-  <Checkbox id="termos" />
-  <Label for="termos">Aceito os termos de uso</Label>
+  <Checkbox id="comp-checkbox" />
+  <Label for="comp-checkbox">Concordo com os termos de uso</Label>
 </div>

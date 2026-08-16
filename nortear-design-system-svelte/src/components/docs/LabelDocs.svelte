@@ -117,7 +117,7 @@
 </Label>
 <Input id="email" type="email" aria-required="true" />`;
 
-  const codeDisabled = `<!-- Input com peer + disabled dispara peer-disabled no Label -->
+  const codeDisabled = `<!-- A marca nds-peer vai no CONTROLE; os dois precisam ser irmãos no DOM -->
 <Input id="cpf" disabled class="nds-peer" />
 <Label for="cpf">CPF</Label>`;
 
@@ -163,7 +163,7 @@ interface LabelProps {
         <Input id="demo-required" type="email" aria-required="true" />
       </div>
 
-      <!-- Disabled via peer -->
+      <!-- Desabilitado: a marca nds-peer vai no controle -->
       <div class="nds-stack" data-spacing="sm">
         <Input id="demo-disabled" disabled class="nds-peer" />
         <Label for="demo-disabled">{$tStore('demonstration.labels.disabled')}</Label>
@@ -363,12 +363,11 @@ interface LabelProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--foreground',  value: 'text-foreground',  description: $tStore('tokens.table.foreground')       },
-      { token: '--muted',       value: 'opacity-50',       description: $tStore('tokens.table.foregroundMuted')  },
-      { token: '--font-size-sm', value: 'text-sm',         description: $tStore('tokens.table.fontSize')         },
-      { token: '--font-weight',  value: 'font-medium',     description: $tStore('tokens.table.fontWeight')       },
-      { token: '--leading-none', value: 'leading-none',    description: $tStore('tokens.table.lineHeight')       },
-      { token: '--destructive',  value: 'text-destructive', description: $tStore('tokens.table.destructive')     },
+      { token: '--foreground',         value: '.nds-label',            description: $tStore('tokens.table.foreground')  },
+      { token: '--text-control',       value: '.nds-label',            description: $tStore('tokens.table.fontSize')    },
+      { token: '--font-weight-medium', value: '.nds-label',            description: $tStore('tokens.table.fontWeight')  },
+      { token: '--spacing-2',          value: '.nds-label',            description: $tStore('tokens.table.gap')         },
+      { token: '--destructive',        value: '.nds-text-destructive', description: $tStore('tokens.table.destructive') },
     ]}
     customizationTitle="Personalização"
     customizationCode={codeCustomization}
