@@ -939,8 +939,16 @@ function auditStoryQuality(slug) {
 
       // Classes fora do vocabulário nds-* — resíduo da migração do Tailwind,
       // inertes em runtime. Ignora interpolação (`${...}`), que não é literal.
+      //
+      // O lookbehind é o mesmo de `dead_class_in_component` (ver a nota lá), e
+      // entrou aqui pelo mesmo motivo: `:class="captionClass"` e
+      // `v-bind:class="x"` casavam por terminarem em `class=`, e o que entrava
+      // como "classe" era o nome da EXPRESSÃO. A regra reprovava a story por
+      // uma classe chamada `captionClass`, que ninguém escreveu. A forma de
+      // objeto em JS (`class: 'nds-x'`) continua casando: ali o caractere
+      // anterior é espaço ou `{`, não `:`.
       const seen = new Set();
-      for (const m of content.matchAll(/class(?:Name)?[:=]\s*["'`]([^"'`]+)["'`]/g)) {
+      for (const m of content.matchAll(/(?<![:[\w-])class(?:Name)?[:=]\s*["'`]([^"'`]+)["'`]/g)) {
         if (m[1].includes('${')) continue;
         for (const cls of m[1].split(/\s+/)) {
           if (!cls || ALLOWED_CLASS_RX.test(cls) || seen.has(cls)) continue;
