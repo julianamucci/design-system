@@ -1,48 +1,54 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
-import { Textarea } from './index';
-import { Label } from '@/components/ui/label';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent } from 'storybook/test';
+import { NdsTextarea } from './textarea';
+import { NdsLabel } from './label';
 import {
   anelDeFocoAssentado,
   contrasteTextoFundo,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
 
-const meta = {
+const meta: Meta = {
   title: 'UI/Textarea/States',
-  component: Textarea,
   tags: ['form'],
+  decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel] })],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'O Textarea possui 6 estados visuais: default, focus, filled, disabled, invalid (aria-invalid) e read-only. Os estilos de cada estado são controlados por tokens de tema.',
+          'Estados do Textarea: default, focus, filled, disabled, invalid (aria-invalid) e read-only.',
       },
     },
   },
-} satisfies Meta<typeof Textarea>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj;
 
 export const Default: Story = {
   parameters: { covers: ['accessibility.item1', 'visual.item1'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-default">Descrição</Label>
-        <Textarea id="estado-default" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
+        <label ndsLabel for="est-default">Descrição</label>
+        <textarea
+          ndsTextarea
+          id="est-default"
+          class="nds-resize-y nds-min-h-30"
+          placeholder="ex: Descreva o produto..."
+        ></textarea>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea padrão está vazio, visível e habilitado', async () => {
-      const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
+    const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
+
+    await step('Textarea padrão vazio, visível e habilitado', async () => {
       await expect(textarea).toBeVisible();
       await expect(textarea).not.toBeDisabled();
       await expect(textarea.value).toBe('');
@@ -53,11 +59,15 @@ export const Default: Story = {
 export const Focus: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-focus">Descrição</Label>
-        <Textarea id="estado-focus" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
+        <label ndsLabel for="est-focus">Descrição</label>
+        <textarea
+          ndsTextarea
+          id="est-focus"
+          class="nds-resize-y nds-min-h-30"
+          placeholder="ex: Descreva o produto..."
+        ></textarea>
       </div>
     `,
   }),
@@ -85,15 +95,14 @@ export const Focus: Story = {
 export const Filled: Story = {
   parameters: { covers: ['accessibility.item2', 'visual.item2'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-filled">Biografia</Label>
-        <Textarea
-          id="estado-filled"
-          default-value="Designer e desenvolvedora apaixonada por design systems e acessibilidade."
+        <label ndsLabel for="est-filled">Biografia</label>
+        <textarea
+          ndsTextarea
+          id="est-filled"
           class="nds-resize-y nds-min-h-30"
-        />
+        >Designer multidisciplinar com 8 anos de experiência em produtos digitais.</textarea>
       </div>
     `,
   }),
@@ -101,8 +110,8 @@ export const Filled: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText('Biografia') as HTMLTextAreaElement;
 
-    await step('Textarea preenchido tem conteúdo inicial', async () => {
-      await expect(textarea.value).toContain('Designer e desenvolvedora');
+    await step('Textarea com valor pré-preenchido', async () => {
+      await expect(textarea.value).toContain('Designer multidisciplinar');
     });
 
     await step('Texto digitado tem contraste de pelo menos 4.5:1', async () => {
@@ -116,11 +125,16 @@ export const Filled: Story = {
 export const Disabled: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-disabled">Descrição</Label>
-        <Textarea id="estado-disabled" placeholder="Não disponível" disabled class="nds-resize-y nds-min-h-30" />
+        <label ndsLabel for="est-disabled">Descrição</label>
+        <textarea
+          ndsTextarea
+          id="est-disabled"
+          class="nds-resize-y nds-min-h-30"
+          placeholder="Não disponível"
+          disabled
+        ></textarea>
       </div>
     `,
   }),
@@ -128,11 +142,11 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
 
-    await step('Textarea está desabilitado', async () => {
+    await step('Textarea possui atributo disabled', async () => {
       await expect(textarea).toBeDisabled();
     });
 
-    await step('Não é possível digitar no textarea desabilitado', async () => {
+    await step('Digitação não altera o value', async () => {
       await userEvent.type(textarea, 'teste', { pointerEventsCheck: 0 });
       await expect(textarea.value).toBe('');
     });
@@ -146,18 +160,17 @@ export const Disabled: Story = {
 export const Invalid: Story = {
   parameters: { covers: ['accessibility.item5', 'visual.item3'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-invalid">Descrição</Label>
-        <Textarea
-          id="estado-invalid"
-          default-value="curto"
-          aria-invalid="true"
-          aria-describedby="estado-invalid-msg"
+        <label ndsLabel for="est-invalid">Descrição</label>
+        <textarea
+          ndsTextarea
+          id="est-invalid"
           class="nds-resize-y nds-min-h-30"
-        />
-        <p id="estado-invalid-msg" class="nds-text-caption nds-text-destructive">
+          aria-invalid="true"
+          aria-describedby="est-invalid-msg"
+        >curto</textarea>
+        <p id="est-invalid-msg" class="nds-text-caption nds-text-destructive">
           A descrição precisa de pelo menos 20 caracteres.
         </p>
       </div>
@@ -192,16 +205,15 @@ export const Invalid: Story = {
 export const ReadOnly: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
-    components: { Textarea, Label },
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
-        <Label for="estado-readonly">Observações</Label>
-        <Textarea
-          id="estado-readonly"
-          default-value="Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis."
-          readonly
+        <label ndsLabel for="est-readonly">Observações</label>
+        <textarea
+          ndsTextarea
+          id="est-readonly"
           class="nds-resize-y nds-min-h-30"
-        />
+          readonly
+        >Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis.</textarea>
       </div>
     `,
   }),
@@ -209,7 +221,7 @@ export const ReadOnly: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText('Observações') as HTMLTextAreaElement;
 
-    await step('Textarea está em modo somente leitura', async () => {
+    await step('Textarea possui atributo readonly', async () => {
       await expect(textarea).toHaveAttribute('readonly');
     });
 

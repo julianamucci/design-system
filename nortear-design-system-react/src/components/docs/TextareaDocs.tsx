@@ -199,15 +199,6 @@ const max = 500;
   />
 </div>`;
 
-  const codeTokensCustom = `/* Em globals.css — customização do Textarea */
-[data-slot="textarea"] {
-  min-height: 180px;
-}
-
-[data-slot="textarea"][aria-invalid="true"]:focus-visible {
-  --ring-color: hsl(var(--destructive));
-}`;
-
   const interfaceCode = `// Textarea — estende React.ComponentProps<"textarea">
 function Textarea({
   className,
@@ -223,7 +214,7 @@ function Textarea({
   // rows?: number
   // disabled?: boolean
   // readOnly?: boolean
-  // className?: string  (use resize-y | resize-none | resize)
+  // className?: string  (use .nds-resize-y | .nds-resize-none | .nds-resize)
 }`;
 
   // ─── Counter helpers (acessível) ──────────────────────────────────────────
@@ -484,7 +475,7 @@ function Textarea({
                 <Textarea
                   id="dodont-2-dont"
                   placeholder="Conte um pouco sobre você..."
-                  className="resize nds-min-h-25"
+                  className="nds-resize nds-min-h-25"
                 />
               </div>
             ),
@@ -793,14 +784,19 @@ function Textarea({
         }}
         items={[
           { token: "--input",            value: tContent("tokens.table.input.class"),            description: tContent("tokens.table.input.part") },
-          { token: "—",                  value: tContent("tokens.table.background.class"),       description: tContent("tokens.table.background.part") },
+          { token: "--background",       value: tContent("tokens.table.background.class"),       description: tContent("tokens.table.background.part") },
           { token: "--foreground",       value: tContent("tokens.table.foreground.class"),       description: tContent("tokens.table.foreground.part") },
           { token: "--muted-foreground", value: tContent("tokens.table.mutedForeground.class"),  description: tContent("tokens.table.mutedForeground.part") },
           { token: "--ring",             value: tContent("tokens.table.ring.class"),             description: tContent("tokens.table.ring.part") },
           { token: "--destructive",      value: tContent("tokens.table.destructive.class"),      description: tContent("tokens.table.destructive.part") },
+          { token: "--muted",            value: tContent("tokens.table.muted.class"),            description: tContent("tokens.table.muted.part") },
+          { token: "--radius",           value: tContent("tokens.table.radius.class"),           description: tContent("tokens.table.radius.part") },
+          { token: "--spacing-2 · --spacing-3", value: tContent("tokens.table.padding.class"),   description: tContent("tokens.table.padding.part") },
+          { token: "--spacing-8",        value: tContent("tokens.table.minHeight.class"),        description: tContent("tokens.table.minHeight.part") },
+          { token: "--text-control",     value: tContent("tokens.table.fontSize.class"),         description: tContent("tokens.table.fontSize.part") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeTokensCustom}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       {/* ── Acessibilidade ──────────────────────────────────────────── */}

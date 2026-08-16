@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/svelte-vite';
-
-import { userEvent, within, expect } from 'storybook/test';
-import TextareaStory from './TextareaStory.svelte';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
+import { within, expect, userEvent } from 'storybook/test';
+import { NdsTextarea } from './textarea';
+import { NdsLabel } from './label';
 import {
   alturaMinimaPx,
   preencherAte,
@@ -10,16 +11,16 @@ import {
 
 const meta: Meta = {
   title: 'UI/Textarea/Variants',
-  component: TextareaStory,
   tags: ['form'],
+  decorators: [moduleMetadata({ imports: [NdsTextarea, NdsLabel] })],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do Textarea: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.',
+          'Variantes do Textarea: padrão (redimensiona na vertical, altura mínima de 120px), com contador de caracteres e sem redimensionamento.',
       },
     },
   },
@@ -30,21 +31,23 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => ({
-    Component: TextareaStory,
-    props: {
-      id: 'var-default',
-      labelText: 'Biografia',
-      placeholder: 'Conte um pouco sobre você...',
-      resize: 'y',
-    },
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <label ndsLabel for="var-default">Biografia</label>
+        <textarea
+          ndsTextarea
+          id="var-default"
+          class="nds-resize-y nds-min-h-30"
+          placeholder="Conte um pouco sobre você..."
+        ></textarea>
+      </div>
+    `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText('Biografia');
 
     await step('Redimensiona só na vertical', async () => {
-      // Efeito computado, não nome de classe: `resize-y` sem prefixo é inerte
-      // e a asserção antiga passava sem nada estar aplicado.
       await expect(resizeComputado(textarea)).toBe('vertical');
     });
 
@@ -57,25 +60,38 @@ export const Default: Story = {
 export const WithCounter: Story = {
   parameters: { covers: ['functional.item3', 'visual.item4'] },
   render: () => ({
-    Component: TextareaStory,
-    props: {
-      id: 'var-counter',
-      labelText: 'Descrição',
-      placeholder: 'ex: Camiseta de algodão, gola redonda...',
-      maxLength: 500,
-      showCounter: true,
-      helpText: 'Descreva com clareza.',
-    },
+    props: { valor: '', max: 500 },
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <label ndsLabel for="var-counter">Descrição</label>
+        <textarea
+          ndsTextarea
+          id="var-counter"
+          class="nds-resize-y nds-min-h-30"
+          [attr.maxlength]="max"
+          placeholder="ex: Camiseta de algodão, gola redonda..."
+          [value]="valor"
+          (input)="valor = $any($event.target).value"
+        ></textarea>
+        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
+          <span>Descreva com clareza.</span>
+          <span
+            aria-live="polite"
+            [attr.aria-label]="valor.length + ' de ' + max + ' caracteres usados'"
+          >{{ valor.length }}/{{ max }}</span>
+        </div>
+      </div>
+    `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
 
-    await step('maxLength está aplicado no textarea', async () => {
+    await step('Textarea com maxlength=500', async () => {
       await expect(textarea).toHaveAttribute('maxlength', '500');
     });
 
-    await step('Contador possui aria-live e aria-label descritivo', async () => {
+    await step('Contador possui aria-live="polite"', async () => {
       const counter = canvas.getByLabelText(/de 500 caracteres usados/);
       await expect(counter).toHaveAttribute('aria-live', 'polite');
     });
@@ -94,13 +110,17 @@ export const WithCounter: Story = {
 
 export const NoResize: Story = {
   render: () => ({
-    Component: TextareaStory,
-    props: {
-      id: 'var-noresize',
-      labelText: 'Feedback',
-      placeholder: 'O que poderíamos melhorar?',
-      resize: 'none',
-    },
+    template: `
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <label ndsLabel for="var-noresize">Feedback</label>
+        <textarea
+          ndsTextarea
+          id="var-noresize"
+          class="nds-resize-none nds-min-h-30"
+          placeholder="O que poderíamos melhorar?"
+        ></textarea>
+      </div>
+    `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

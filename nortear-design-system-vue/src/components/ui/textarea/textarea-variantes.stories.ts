@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  alturaMinimaPx,
+  preencherAte,
+  resizeComputado,
+} from '@shared/testing/textarea-probe';
 
 const meta = {
   title: 'UI/Textarea/Variants',
@@ -14,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'O Textarea expõe 3 variantes via classes .nds-*: `default` (resize-y), `withCounter` (maxLength + contador com aria-live) e `noResize` (resize-none, ideal para modais).',
+          'O Textarea expõe 3 variantes via classes .nds-*: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.',
       },
     },
   },
@@ -27,44 +32,50 @@ export const Default: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
-        <Label for="var-default">Descrição</Label>
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <Label for="var-default">Biografia</Label>
         <Textarea
           id="var-default"
-          placeholder="ex: Descreva o produto..."
-          class="resize-y min-h-[120px]"
+          placeholder="Conte um pouco sobre você..."
+          class="nds-resize-y nds-min-h-30"
         />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea default renderiza com data-slot', async () => {
-      const textarea = canvas.getByRole('textbox');
-      await expect(textarea).toHaveAttribute('data-slot', 'textarea');
+    const textarea = canvas.getByLabelText('Biografia');
+
+    await step('Redimensiona só na vertical', async () => {
+      // Efeito computado, não nome de classe: `resize-y` sem prefixo é inerte
+      // e a asserção antiga passava sem nada estar aplicado.
+      await expect(resizeComputado(textarea)).toBe('vertical');
     });
-    await step('Textarea default permite resize vertical', async () => {
-      const textarea = canvas.getByRole('textbox');
-      await expect(textarea).toHaveClass('resize-y');
+
+    await step('Altura mínima de 120px', async () => {
+      await expect(alturaMinimaPx(textarea)).toBe(120);
     });
   },
 };
 
 export const WithCounter: Story = {
+  parameters: {
+    covers: ['functional.item3', 'visual.item4'],
+  },
   render: () => ({
     components: { Textarea, Label },
     data() {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="var-counter">Descrição</Label>
         <Textarea
           id="var-counter"
           v-model="value"
           :maxlength="max"
-          placeholder="ex: Descreva o produto..."
-          class="resize-y min-h-[120px]"
+          placeholder="ex: Camiseta de algodão, gola redonda..."
+          class="nds-resize-y nds-min-h-30"
         />
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva com clareza.</span>
@@ -80,28 +91,25 @@ export const WithCounter: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
 
     await step('Textarea com maxlength está configurado', async () => {
-      const textarea = canvas.getByRole('textbox') as HTMLTextAreaElement;
       await expect(textarea).toHaveAttribute('maxlength', '500');
     });
 
-    await step('Contador inicia em 0/500', async () => {
-      await expect(canvas.getByText('0/500')).toBeVisible();
-    });
-
     await step('Contador possui aria-live="polite"', async () => {
-      const counter = canvasElement.querySelector('[aria-live="polite"]') as HTMLElement;
-      await expect(counter).toBeTruthy();
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
       await expect(counter).toHaveAttribute('aria-live', 'polite');
     });
 
-    await step('Digitar atualiza contador e aria-label', async () => {
-      const textarea = canvas.getByRole('textbox');
-      await userEvent.type(textarea, 'Olá');
-      await expect(canvas.getByText('3/500')).toBeVisible();
-      const counter = canvasElement.querySelector('[aria-live="polite"]') as HTMLElement;
-      await expect(counter).toHaveAttribute('aria-label', '3 de 500 caracteres usados');
+    await step('Atingir o limite bloqueia novos caracteres', async () => {
+      // Chega à borda por escrita programática (maxLength não se aplica a ela)
+      // e digita os últimos de verdade — é aí que o bloqueio acontece.
+      preencherAte(textarea, 496);
+      await userEvent.type(textarea, 'abcdefgh');
+      await expect(textarea.value.length).toBe(500);
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
+      await expect(counter).toHaveTextContent('500/500');
     });
   },
 };
@@ -110,21 +118,22 @@ export const NoResize: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
-        <Label for="var-noresize">Mensagem</Label>
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <Label for="var-noresize">Feedback</Label>
         <Textarea
           id="var-noresize"
-          placeholder="Digite sua mensagem..."
-          class="resize-none min-h-[120px]"
+          placeholder="O que poderíamos melhorar?"
+          class="nds-resize-none nds-min-h-30"
         />
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea aplica classe resize-none', async () => {
-      const textarea = canvas.getByRole('textbox');
-      await expect(textarea).toHaveClass('resize-none');
+    const textarea = canvas.getByLabelText('Feedback');
+
+    await step('Redimensionamento desligado', async () => {
+      await expect(resizeComputado(textarea)).toBe('none');
     });
   },
 };

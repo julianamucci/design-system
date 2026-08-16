@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
+import { createLabel } from './label';
+import {
+  alturaMinimaPx,
+  preencherAte,
+  resizeComputado,
+} from '@shared/testing/textarea-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -12,8 +18,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Textarea: Default (resize-y min-h-[120px]), WithCounter (maxLength + contador aria-live), NoResize (resize-none). ' +
-          'NOTA: o factory Vanilla é wrapper enxuto — props como maxLength/readOnly/aria-invalid são aplicadas via DOM nativa após criação.',
+          'Variantes do Textarea: padrão (redimensiona na vertical, altura mínima de 120px), com contador de caracteres e sem redimensionamento. ' +
+          'NOTA: o factory Vanilla é wrapper enxuto — maxLength, readOnly e aria-invalid são aplicados via API DOM nativa após a criação.',
       },
     },
   },
@@ -29,42 +35,48 @@ function buildLabeled(opts: {
   labelText: string;
   placeholder?: string;
   resizeClass: string;
+  hintText?: string;
   maxLength?: number;
 }): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
-  wrapper.dataset.spacing = 'xs';
+  wrapper.dataset.spacing = 'sm';
 
-  const label = document.createElement('label');
-  label.htmlFor = opts.id;
-  label.className = 'nds-text-body nds-font-medium';
-  label.textContent = opts.labelText;
+  const label = createLabel({ htmlFor: opts.id, text: opts.labelText });
 
   const textarea = createTextarea({
     id: opts.id,
     placeholder: opts.placeholder,
-    class: opts.resizeClass,
+    class: `${opts.resizeClass} nds-min-h-30`,
   });
-  textarea.style.minHeight = '120px';
 
   if (opts.maxLength !== undefined) textarea.maxLength = opts.maxLength;
 
   wrapper.append(label, textarea);
 
   if (opts.maxLength !== undefined) {
+    const max = opts.maxLength;
+    const row = document.createElement('div');
+    row.className = 'nds-cluster nds-text-caption nds-text-muted-foreground';
+    row.dataset.justify = 'between';
+
+    const hint = document.createElement('span');
+    hint.textContent = opts.hintText ?? '';
+
     const counter = document.createElement('span');
+    counter.className = 'nds-tabular-nums nds-shrink-0';
     counter.setAttribute('aria-live', 'polite');
-    counter.setAttribute('aria-label', `0 de ${opts.maxLength} caracteres usados`);
-    counter.className = 'nds-text-caption nds-text-muted-foreground';
-    counter.style.fontVariantNumeric = 'tabular-nums';
-    counter.style.alignSelf = 'flex-end';
-    counter.textContent = `0/${opts.maxLength}`;
-    textarea.addEventListener('input', () => {
-      const len = textarea.value.length;
-      counter.textContent = `${len}/${opts.maxLength}`;
-      counter.setAttribute('aria-label', `${len} de ${opts.maxLength} caracteres usados`);
-    });
-    wrapper.appendChild(counter);
+
+    const atualizar = () => {
+      const n = textarea.value.length;
+      counter.textContent = `${n}/${max}`;
+      counter.setAttribute('aria-label', `${n} de ${max} caracteres usados`);
+    };
+    atualizar();
+    textarea.addEventListener('input', atualizar);
+
+    row.append(hint, counter);
+    wrapper.appendChild(row);
   }
 
   return wrapper;
@@ -75,44 +87,58 @@ function buildLabeled(opts: {
 export const Default: Story = {
   render: () => buildLabeled({
     id: 'var-default',
-    labelText: 'Descrição',
-    placeholder: 'ex: Descreva o produto em até 500 caracteres...',
+    labelText: 'Biografia',
+    placeholder: 'Conte um pouco sobre você...',
     resizeClass: 'nds-resize-y',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea presente com label associado', async () => {
-      const ta = canvas.getByLabelText('Descrição');
-      await expect(ta).toBeInTheDocument();
-      await expect(ta).not.toBeDisabled();
+    const textarea = canvas.getByLabelText('Biografia');
+
+    await step('Redimensiona só na vertical', async () => {
+      await expect(resizeComputado(textarea)).toBe('vertical');
+    });
+
+    await step('Altura mínima de 120px', async () => {
+      // A classe morta `min-h-[120px]` prometia isto e não aplicava nada; e o
+      // `style.minHeight` que a substituía cravava a medida fora do tema.
+      await expect(alturaMinimaPx(textarea)).toBe(120);
     });
   },
 };
 
 export const WithCounter: Story = {
+  parameters: { covers: ['functional.item3', 'visual.item4'] },
   render: () => buildLabeled({
     id: 'var-counter',
     labelText: 'Descrição',
-    placeholder: 'ex: Descreva o produto...',
+    placeholder: 'ex: Camiseta de algodão, gola redonda...',
     resizeClass: 'nds-resize-y',
+    hintText: 'Descreva com clareza.',
     maxLength: 500,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const textarea = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
+
     await step('Textarea com maxLength=500', async () => {
-      const ta = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
-      await expect(ta.maxLength).toBe(500);
+      await expect(textarea.maxLength).toBe(500);
     });
+
     await step('Contador inicial "0/500" com aria-live="polite"', async () => {
-      const counter = canvas.getByText('0/500');
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
       await expect(counter).toHaveAttribute('aria-live', 'polite');
-      await expect(counter).toHaveAttribute('aria-label', '0 de 500 caracteres usados');
+      await expect(counter).toHaveTextContent('0/500');
     });
-    await step('Digitar atualiza o contador e o aria-label', async () => {
-      const ta = canvas.getByLabelText('Descrição') as HTMLTextAreaElement;
-      await userEvent.type(ta, 'Camiseta');
-      const counter = canvas.getByText('8/500');
-      await expect(counter).toHaveAttribute('aria-label', '8 de 500 caracteres usados');
+
+    await step('Atingir o limite bloqueia novos caracteres', async () => {
+      // Chega à borda por escrita programática (maxLength não se aplica a ela)
+      // e digita os últimos de verdade — é aí que o bloqueio acontece.
+      preencherAte(textarea, 496);
+      await userEvent.type(textarea, 'abcdefgh');
+      await expect(textarea.value.length).toBe(500);
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
+      await expect(counter).toHaveTextContent('500/500');
     });
   },
 };
@@ -126,9 +152,12 @@ export const NoResize: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea com classe resize-none', async () => {
-      const ta = canvas.getByLabelText('Feedback');
-      await expect(ta).toHaveClass('resize-none');
+    const textarea = canvas.getByLabelText('Feedback');
+
+    await step('Redimensionamento desligado', async () => {
+      // A asserção anterior era `toHaveClass('resize-none')` sobre um elemento
+      // que recebia `nds-resize-none`: nome que não casa com nada aplicado.
+      await expect(resizeComputado(textarea)).toBe('none');
     });
   },
 };

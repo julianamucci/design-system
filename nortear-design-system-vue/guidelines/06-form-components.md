@@ -367,16 +367,17 @@ Select (value, onValueChange)
 
 **API e exemplos**: `src/components/ui/textarea/textarea.vue` + stories + `TextareaDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Classes de resize**:
+**Classes de resize** (`.nds-textarea` já redimensiona na vertical por padrão):
 
 | Classe | Uso |
 |--------|-----|
-| `resize-none` | sem redimensionamento (modais, layouts fixos) |
-| `resize-y` | vertical apenas (padrão recomendado) |
-| `resize` | livre (evitar — quebra layouts) |
+| `.nds-resize-none` | sem redimensionamento (modais, layouts fixos) |
+| `.nds-resize-y` | vertical apenas (padrão recomendado) |
+| `.nds-resize` | livre (evitar — quebra layouts) |
 
 **Regras**:
-- `min-h-[120px]` como altura mínima padrão (~3 linhas)
+- `.nds-min-h-30` como altura mínima padrão (120px, ~3 linhas). Sem utilitário, o mínimo é ~64px
+- A altura **não** acompanha o conteúdo: passando das linhas visíveis, o texto rola. Campo maior se pede por `rows` ou por `.nds-min-h-*`
 - Contador de caracteres com `aria-live="polite"` — anuncia ao leitor de tela sem interromper
 - `maxLength` no elemento + validação Zod — defesa em profundidade
 

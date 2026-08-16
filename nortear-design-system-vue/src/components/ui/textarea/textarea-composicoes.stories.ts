@@ -24,12 +24,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithLabel: Story = {
+  parameters: { covers: ['accessibility.item4'] },
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="comp-label">Descrição</Label>
-        <Textarea id="comp-label" placeholder="ex: Descreva o produto..." class="resize-y min-h-[120px]" />
+        <Textarea id="comp-label" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
       </div>
     `,
   }),
@@ -52,13 +53,13 @@ export const WithSupportText: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="comp-apoio">Biografia</Label>
         <Textarea
           id="comp-apoio"
           placeholder="Conte um pouco sobre você..."
           aria-describedby="comp-apoio-help"
-          class="resize-y min-h-[120px]"
+          class="nds-resize-y nds-min-h-30"
         />
         <p id="comp-apoio-help" class="nds-text-body">
           Aparece no seu perfil público.
@@ -86,14 +87,14 @@ export const WithCounter: Story = {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="comp-counter">Descrição</Label>
         <Textarea
           id="comp-counter"
           v-model="value"
           :maxlength="max"
           placeholder="ex: Descreva o produto..."
-          class="resize-y min-h-[120px]"
+          class="nds-resize-y nds-min-h-30"
         />
         <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
           <span>Descreva com clareza.</span>
@@ -130,14 +131,14 @@ export const WithErrorMessage: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="comp-erro">Descrição</Label>
         <Textarea
           id="comp-erro"
           placeholder="ex: Descreva o produto..."
           aria-invalid="true"
           aria-describedby="comp-erro-msg"
-          class="resize-y min-h-[120px]"
+          class="nds-resize-y nds-min-h-30"
         />
         <p id="comp-erro-msg" class="nds-text-body nds-text-destructive">
           A descrição deve ter no mínimo 20 caracteres.
@@ -165,7 +166,7 @@ export const RequiredField: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="" data-spacing="xs" style="width: 20rem">
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
         <Label for="comp-obrig">
           Feedback
           <span class="nds-text-destructive" aria-hidden="true">*</span>
@@ -174,7 +175,7 @@ export const RequiredField: Story = {
           id="comp-obrig"
           placeholder="O que poderíamos melhorar?"
           aria-required="true"
-          class="resize-y min-h-[120px]"
+          class="nds-resize-y nds-min-h-30"
         />
         <p class="nds-text-caption nds-text-muted-foreground">Campos com * são obrigatórios.</p>
       </div>

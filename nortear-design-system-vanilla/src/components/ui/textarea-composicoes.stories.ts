@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
 import { createButton } from './button';
+import { createLabel } from './label';
 
 const meta: Meta = {
   tags: ['form'],
@@ -35,12 +36,9 @@ function createTextareaField(opts: {
 }): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
-  wrapper.dataset.spacing = 'xs';
+  wrapper.dataset.spacing = 'sm';
 
-  const label = document.createElement('label');
-  label.htmlFor = opts.labelFor;
-  label.className = 'nds-text-body nds-font-medium';
-  label.textContent = opts.labelText;
+  const label = createLabel({ htmlFor: opts.labelFor, text: opts.labelText });
 
   opts.textareaEl.id = opts.labelFor;
 
@@ -67,8 +65,7 @@ function createTextareaField(opts: {
       const max = opts.maxLength!;
       counter.setAttribute('aria-live', 'polite');
       counter.setAttribute('aria-label', `0 de ${max} caracteres usados`);
-      counter.className = 'nds-shrink-0';
-      counter.style.fontVariantNumeric = 'tabular-nums';
+      counter.className = 'nds-tabular-nums nds-shrink-0';
       counter.textContent = `0/${max}`;
       opts.textareaEl.addEventListener('input', () => {
         const len = opts.textareaEl.value.length;
@@ -96,10 +93,11 @@ function createTextareaField(opts: {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
+  parameters: { covers: ['accessibility.item4'] },
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y',
+      class: 'nds-resize-y nds-min-h-30',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -120,7 +118,7 @@ export const WithSupportText: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y',
+      class: 'nds-resize-y nds-min-h-30',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -142,7 +140,7 @@ export const WithAccessibleCounter: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto em até 500 caracteres...',
-      class: 'resize-y',
+      class: 'nds-resize-y nds-min-h-30',
     });
     return createTextareaField({
       labelText: 'Descrição',
@@ -172,7 +170,7 @@ export const WithErrorMessage: Story = {
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
-      class: 'resize-y',
+      class: 'nds-resize-y nds-min-h-30',
     });
     textarea.setAttribute('aria-invalid', 'true');
     return createTextareaField({
@@ -203,7 +201,7 @@ export const InForm: Story = {
     const textarea = createTextarea({
       name: 'feedback',
       placeholder: 'O que poderíamos melhorar?',
-      class: 'resize-y',
+      class: 'nds-resize-y nds-min-h-30',
     });
 
     const field = createTextareaField({

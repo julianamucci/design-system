@@ -255,6 +255,11 @@
 /* ── resize / min-height (textarea) ──────────────────────────────────────── */
 .nds-resize-y    { resize: vertical; }
 .nds-resize-none { resize: none; }
+/* O trio estava documentado em três idiomas e só duas classes existiam: quem
+ * seguisse a tabela de props escrevia `.nds-resize` e não obtinha nada. O Do &
+ * Don't precisa dela para MOSTRAR o redimensionamento livre que desaconselha —
+ * sem a regra, o exemplo "não faça" renderizava idêntico ao "faça". */
+.nds-resize      { resize: both; }
 .nds-min-h-25 { min-height: 6.25rem; }  /* 100px */
 .nds-min-h-30 { min-height: 7.5rem; }   /* 120px */
 .nds-min-h-100 { min-height: 25rem; }   /* 400px */

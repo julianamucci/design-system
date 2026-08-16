@@ -84,9 +84,9 @@ function buildField(opts: FieldOpts): HTMLElement {
   wrapper.appendChild(label);
 
   const resizeClass =
-    opts.resize === 'none' ? 'resize-none' :
-    opts.resize === 'free' ? 'resize' :
-    'resize-y';
+    opts.resize === 'none' ? 'nds-resize-none' :
+    opts.resize === 'free' ? 'nds-resize' :
+    'nds-resize-y';
 
   const textarea = createTextarea({
     id: opts.id,
@@ -94,7 +94,7 @@ function buildField(opts: FieldOpts): HTMLElement {
     disabled: opts.disabled,
     value: opts.value,
     rows: opts.rows,
-    class: `${resizeClass} min-h-[120px]`,
+    class: `${resizeClass} nds-min-h-30`,
   });
 
   if (opts.readOnly) textarea.readOnly = true;
@@ -385,7 +385,7 @@ export function createTextareaDocs(): HTMLElement {
                 const ta = createTextarea({
                   id: 'dodont-dont-counter',
                   placeholder: t('demonstration.labels.descriptionPlaceholder'),
-                  class: 'resize-y min-h-[120px]',
+                  class: 'nds-resize-y nds-min-h-30',
                 });
                 ta.maxLength = 500;
                 wrapper.append(label, ta);
@@ -430,7 +430,7 @@ label.textContent = 'Descrição';
 const textarea = createTextarea({
   id,
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 textarea.maxLength = max;
 
@@ -458,7 +458,7 @@ textarea.addEventListener('input', () => {
               code: `const textarea = createTextarea({
   id: 'description',
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });`,
               previewFactory: () => buildField({
                 id: 'v-default',
@@ -472,7 +472,7 @@ textarea.addEventListener('input', () => {
               code: `const textarea = createTextarea({
   id: 'description',
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 textarea.maxLength = 500;
 
@@ -500,7 +500,7 @@ textarea.addEventListener('input', () => {
               code: `const textarea = createTextarea({
   id: 'feedback',
   placeholder: 'O que poderíamos melhorar?',
-  class: 'resize-none min-h-[120px]',
+  class: 'nds-resize-none nds-min-h-30',
 });`,
               previewFactory: () => buildField({
                 id: 'v-no-resize',
@@ -583,7 +583,7 @@ textarea.addEventListener('input', () => {
 
         const codeWithLabel = `const textarea = createTextarea({
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 
 const wrapper = document.createElement('div');
@@ -599,7 +599,7 @@ wrapper.append(label, textarea);`;
 
         const codeWithHint = `const textarea = createTextarea({
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 
 // ... label + textarea ...
@@ -611,7 +611,7 @@ wrapper.appendChild(hint);`;
 
         const codeWithError = `const textarea = createTextarea({
   placeholder: 'ex: Descreva o produto...',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 textarea.setAttribute('aria-invalid', 'true');
 
@@ -629,7 +629,7 @@ form.setAttribute('aria-label', 'Formulário de feedback');
 const textarea = createTextarea({
   name: 'feedback',
   placeholder: 'O que poderíamos melhorar?',
-  class: 'resize-y min-h-[120px]',
+  class: 'nds-resize-y nds-min-h-30',
 });
 textarea.maxLength = 280;
 
@@ -657,7 +657,7 @@ form.addEventListener('submit', (e) => {
               previewFactory: () => {
                 const ta = createTextarea({
                   placeholder: 'ex: Descreva o produto...',
-                  class: 'resize-y min-h-[120px]',
+                  class: 'nds-resize-y nds-min-h-30',
                 });
                 return createTextareaField({
                   labelText: 'Descrição',
@@ -674,7 +674,7 @@ form.addEventListener('submit', (e) => {
               previewFactory: () => {
                 const ta = createTextarea({
                   placeholder: 'ex: Descreva o produto...',
-                  class: 'resize-y min-h-[120px]',
+                  class: 'nds-resize-y nds-min-h-30',
                 });
                 return createTextareaField({
                   labelText: 'Descrição',
@@ -692,7 +692,7 @@ form.addEventListener('submit', (e) => {
               previewFactory: () => {
                 const ta = createTextarea({
                   placeholder: 'ex: Descreva o produto...',
-                  class: 'resize-y min-h-[120px]',
+                  class: 'nds-resize-y nds-min-h-30',
                 });
                 ta.setAttribute('aria-invalid', 'true');
                 return createTextareaField({
@@ -717,7 +717,7 @@ form.dataset.spacing = 'md';
                 const textarea = createTextarea({
                   name: 'feedback',
                   placeholder: 'O que poderíamos melhorar?',
-                  class: 'resize-y min-h-[120px]',
+                  class: 'nds-resize-y nds-min-h-30',
                 });
 
                 const field = createTextareaField({
@@ -872,12 +872,17 @@ export type TextareaOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--input',            value: toPlainText(t('tokens.table.input.class')),           description: toPlainText(t('tokens.table.input.part'))           },
-            { token: '—',                  value: toPlainText(t('tokens.table.background.class')),      description: toPlainText(t('tokens.table.background.part'))      },
-            { token: '--foreground',       value: toPlainText(t('tokens.table.foreground.class')),      description: toPlainText(t('tokens.table.foreground.part'))      },
+            { token: '--input', value: toPlainText(t('tokens.table.input.class')), description: toPlainText(t('tokens.table.input.part')) },
+            { token: '--background', value: toPlainText(t('tokens.table.background.class')), description: toPlainText(t('tokens.table.background.part')) },
+            { token: '--foreground', value: toPlainText(t('tokens.table.foreground.class')), description: toPlainText(t('tokens.table.foreground.part')) },
             { token: '--muted-foreground', value: toPlainText(t('tokens.table.mutedForeground.class')), description: toPlainText(t('tokens.table.mutedForeground.part')) },
-            { token: '--ring',             value: toPlainText(t('tokens.table.ring.class')),            description: toPlainText(t('tokens.table.ring.part'))            },
-            { token: '--destructive',      value: toPlainText(t('tokens.table.destructive.class')),     description: toPlainText(t('tokens.table.destructive.part'))     },
+            { token: '--ring', value: toPlainText(t('tokens.table.ring.class')), description: toPlainText(t('tokens.table.ring.part')) },
+            { token: '--destructive', value: toPlainText(t('tokens.table.destructive.class')), description: toPlainText(t('tokens.table.destructive.part')) },
+            { token: '--muted', value: toPlainText(t('tokens.table.muted.class')), description: toPlainText(t('tokens.table.muted.part')) },
+            { token: '--radius', value: toPlainText(t('tokens.table.radius.class')), description: toPlainText(t('tokens.table.radius.part')) },
+            { token: '--spacing-2 · --spacing-3', value: toPlainText(t('tokens.table.padding.class')), description: toPlainText(t('tokens.table.padding.part')) },
+            { token: '--spacing-8', value: toPlainText(t('tokens.table.minHeight.class')), description: toPlainText(t('tokens.table.minHeight.part')) },
+            { token: '--text-control', value: toPlainText(t('tokens.table.fontSize.class')), description: toPlainText(t('tokens.table.fontSize.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

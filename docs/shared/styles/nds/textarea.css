@@ -8,8 +8,14 @@
  * normalmente quebra layout). min-height proporcional ao input para um
  * "campo curto" coerente.
  *
+ * A altura NÃO acompanha o conteúdo: `field-sizing: content` não é aplicado
+ * (suporte irregular entre navegadores faria o mesmo campo ter alturas
+ * diferentes por navegador). Quem precisa de campo mais alto usa `rows` ou os
+ * utilitários `.nds-min-h-*`; passando disso, o conteúdo rola.
+ *
  * Tokens: --input (border), --background, --foreground, --muted-foreground,
- *         --ring, --destructive, --radius, --spacing-*
+ *         --ring, --destructive, --muted, --radius, --spacing-*,
+ *         --text-control, --duration-fast
  */
 
 .nds-textarea {
@@ -63,13 +69,10 @@
 }
 
 /*
- * ─── nds-textarea-tall ───────────────────────────────────────────────────────
- * Campo de texto longo — descrição, comentário, observação.
- *
- * `rows` já define quantas linhas cabem, e é ele que faz a altura crescer com a
- * tipografia. Esta classe só solta o redimensionamento vertical, que o default
- * trava. Sem `height` e sem `min-height`: a altura continua vindo do conteúdo.
+ * `.nds-textarea-tall` foi removida: declarava `resize: vertical`, que é o
+ * default desta mesma folha desde sempre — o comentário dela afirmava o
+ * contrário ("o default trava"), e por isso a classe existia. Era um no-op com
+ * nome que prometia altura, usado só pelos snippets de uma stack. Campo mais
+ * alto se faz com `rows` ou com os utilitários `.nds-min-h-*`, como nas outras
+ * quatro.
  */
-.nds-textarea-tall {
-  resize: vertical;
-}

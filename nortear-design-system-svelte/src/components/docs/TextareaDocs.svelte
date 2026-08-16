@@ -167,16 +167,6 @@ import { Label } from "@/components/ui/label";`;
   />
 </div>`;
 
-  const codeTokenCustomization = `/* Altura mínima customizada */
-[data-slot="textarea"] {
-  min-height: 180px;
-}
-
-/* Borda colorida quando inválido + foco */
-[data-slot="textarea"][aria-invalid="true"]:focus-visible {
-  --ring-color: hsl(var(--destructive));
-}`;
-
   const interfaceCode = `// Textarea — estende todos os atributos HTML nativos de <textarea>
 interface TextareaProps extends HTMLTextareaAttributes {
   class?: string;
@@ -357,7 +347,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {#snippet dontPair2()}
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <Label for="dont2-obs">Observações</Label>
-      <Textarea id="dont2-obs" placeholder="Adicione observações..." class="resize nds-min-h-25" />
+      <Textarea id="dont2-obs" placeholder="Adicione observações..." class="nds-resize nds-min-h-25" />
     </div>
   {/snippet}
 
@@ -526,14 +516,14 @@ interface TextareaProps extends HTMLTextareaAttributes {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',        type: $tStore('props.table.value.type'),        defaultValue: $tStore('props.table.value.default'),        required: $tStore('props.table.value.required'),        description: $tStore('props.table.value.description')        },
+          { name: 'value',        type: $tStore('props.table.value.type'),        defaultValue: $tStore('props.table.value.default'),        required: $tStore('props.table.value.required'),        description: toPlainText($tStore('props.table.value.description'))        },
           { name: 'defaultValue', type: $tStore('props.table.defaultValue.type'), defaultValue: $tStore('props.table.defaultValue.default'), required: $tStore('props.table.defaultValue.required'), description: $tStore('props.table.defaultValue.description') },
           { name: 'placeholder',  type: $tStore('props.table.placeholder.type'),  defaultValue: $tStore('props.table.placeholder.default'),  required: $tStore('props.table.placeholder.required'),  description: $tStore('props.table.placeholder.description')  },
           { name: 'maxlength',    type: $tStore('props.table.maxLength.type'),    defaultValue: $tStore('props.table.maxLength.default'),    required: $tStore('props.table.maxLength.required'),    description: $tStore('props.table.maxLength.description')    },
-          { name: 'rows',         type: $tStore('props.table.rows.type'),         defaultValue: $tStore('props.table.rows.default'),         required: $tStore('props.table.rows.required'),         description: $tStore('props.table.rows.description')         },
+          { name: 'rows',         type: $tStore('props.table.rows.type'),         defaultValue: $tStore('props.table.rows.default'),         required: $tStore('props.table.rows.required'),         description: toPlainText($tStore('props.table.rows.description'))         },
           { name: 'disabled',     type: $tStore('props.table.disabled.type'),     defaultValue: $tStore('props.table.disabled.default'),     required: $tStore('props.table.disabled.required'),     description: $tStore('props.table.disabled.description')     },
           { name: 'readonly',     type: $tStore('props.table.readOnly.type'),     defaultValue: $tStore('props.table.readOnly.default'),     required: $tStore('props.table.readOnly.required'),     description: $tStore('props.table.readOnly.description')     },
-          { name: 'class',        type: $tStore('props.table.className.type'),    defaultValue: $tStore('props.table.className.default'),    required: $tStore('props.table.className.required'),    description: $tStore('props.table.className.description')    },
+          { name: 'class',        type: $tStore('props.table.className.type'),    defaultValue: $tStore('props.table.className.default'),    required: $tStore('props.table.className.required'),    description: toPlainText($tStore('props.table.className.description'))    },
         ],
       },
     ]}
@@ -550,15 +540,20 @@ interface TextareaProps extends HTMLTextareaAttributes {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--input',             value: $tStore('tokens.table.input.class'),           description: $tStore('tokens.table.input.part')           },
-      { token: 'transparent',         value: $tStore('tokens.table.background.class'),      description: $tStore('tokens.table.background.part')      },
-      { token: '--foreground',        value: $tStore('tokens.table.foreground.class'),      description: $tStore('tokens.table.foreground.part')      },
-      { token: '--muted-foreground',  value: $tStore('tokens.table.mutedForeground.class'), description: $tStore('tokens.table.mutedForeground.part') },
-      { token: '--ring',              value: $tStore('tokens.table.ring.class'),            description: $tStore('tokens.table.ring.part')            },
-      { token: '--destructive',       value: $tStore('tokens.table.destructive.class'),     description: $tStore('tokens.table.destructive.part')     },
+      { token: '--input', value: $tStore('tokens.table.input.class'), description: $tStore('tokens.table.input.part') },
+      { token: '--background', value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
+      { token: '--foreground', value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
+      { token: '--muted-foreground', value: $tStore('tokens.table.mutedForeground.class'), description: $tStore('tokens.table.mutedForeground.part') },
+      { token: '--ring', value: $tStore('tokens.table.ring.class'), description: $tStore('tokens.table.ring.part') },
+      { token: '--destructive', value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },
+      { token: '--muted', value: $tStore('tokens.table.muted.class'), description: $tStore('tokens.table.muted.part') },
+      { token: '--radius', value: $tStore('tokens.table.radius.class'), description: $tStore('tokens.table.radius.part') },
+      { token: '--spacing-2 · --spacing-3', value: $tStore('tokens.table.padding.class'), description: $tStore('tokens.table.padding.part') },
+      { token: '--spacing-8', value: $tStore('tokens.table.minHeight.class'), description: $tStore('tokens.table.minHeight.part') },
+      { token: '--text-control', value: $tStore('tokens.table.fontSize.class'), description: $tStore('tokens.table.fontSize.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeTokenCustomization}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->

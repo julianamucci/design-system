@@ -1,0 +1,422 @@
+/**
+ * Sonda de comparação do Textarea entre as cinco stacks.
+ *
+ * Um campo de texto parece simples demais para merecer sonda — e foi exatamente
+ * por isso que ninguém percebeu que a documentação ensinava seis classes mortas,
+ * que três stacks afirmavam `resize-y` sem prefixo (classe inerte) e que a
+ * altura mínima prometida em `min-h-[120px]` não existia em lugar nenhum.
+ * Contagem de `expect()` não acha nada disso: o que falta é o que NENHUMA das
+ * cinco verifica.
+ *
+ * A sonda procura os elementos pelo contrato `.nds-*`. Onde o contrato não é
+ * cumprido o campo vem `null` — e isso É o achado, não falha da medição.
+ *
+ * Armadilhas evitadas aqui:
+ *
+ *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
+ *     da play). O canal é a exceção — ver `reportarSonda`.
+ *   - divergência de NOME de classe entre stacks faz o seletor não casar e o
+ *     campo vir `null`. As duas formas conhecidas (`nds-resize-y` e `resize-y`)
+ *     são aceitas e `familiaDeResize` registra qual casou — a divergência de
+ *     vocabulário é, ela própria, o achado.
+ *   - `aria-describedby` presente não quer dizer alvo existente. A sonda resolve
+ *     o id: `alvoDescribedbyExiste: false` é apontar para o nada.
+ *   - foco muda o estado medido; a sonda devolve o foco a quem o tinha.
+ */
+
+// ─── Tipos ────────────────────────────────────────────────────────────────────
+
+export interface Contraste {
+  razao: number;
+  frente: string;
+  fundo: string;
+}
+
+export interface MedidaDeContador {
+  existe: boolean;
+  ariaLive: string | null;
+  ariaLabel: string | null;
+  texto: string | null;
+  /** Um contador fora do fluxo de leitura não é anunciado ao mudar. */
+  ehRegiaoViva: boolean;
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const CLASSES_DE_RESIZE = [
+  'nds-resize-y',
+  'nds-resize-none',
+  'nds-resize',
+  'nds-textarea-tall',
+  'resize-y',
+  'resize-none',
+  'resize',
+] as const;
+
+const CLASSES_DE_ALTURA = [
+  'nds-min-h-24',
+  'nds-min-h-25',
+  'nds-min-h-30',
+  'nds-min-h-50',
+  'nds-min-h-100',
+  'min-h-[120px]',
+  'min-h-[100px]',
+] as const;
+
+function luminancia(cor: string): number | null {
+  const m = /rgba?\(([^)]+)\)/.exec(cor);
+  if (!m) return null;
+  const [r, g, b] = m[1].split(',').map((p) => parseFloat(p) / 255);
+  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+/** Primeiro fundo OPACO acima do elemento — `backgroundColor` com alfa mente. */
+function fundoEfetivo(el: Element | null): string | null {
+  let atual: Element | null = el;
+  while (atual) {
+    const cor = getComputedStyle(atual).backgroundColor;
+    const m = /rgba?\(([^)]+)\)/.exec(cor);
+    if (m) {
+      const partes = m[1].split(',').map((p) => parseFloat(p));
+      if ((partes[3] ?? 1) > 0.99) return cor;
+    }
+    atual = atual.parentElement;
+  }
+  return null;
+}
+
+function razao(frente: string, fundo: string): Contraste | null {
+  const a = luminancia(frente);
+  const b = luminancia(fundo);
+  if (a === null || b === null) return null;
+  const [claro, escuro] = a > b ? [a, b] : [b, a];
+  return { razao: Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100, frente, fundo };
+}
+
+const texto = (el: Element | null | undefined): string | null =>
+  el?.textContent?.trim().replace(/\s+/g, ' ') || null;
+
+/** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
+function nomeAcessivel(el: Element | null | undefined): string | null {
+  if (!el) return null;
+  const rotulado = el.getAttribute('aria-labelledby');
+  if (rotulado) {
+    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+    if (alvo?.textContent?.trim()) return alvo.textContent.trim();
+  }
+  const rotulo = el.getAttribute('aria-label');
+  if (rotulo?.trim()) return rotulo.trim();
+  const id = el.getAttribute('id');
+  if (id) {
+    const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
+    if (label?.textContent?.trim()) return label.textContent.trim();
+  }
+  const dentro = el.closest('label');
+  if (dentro?.textContent?.trim()) return dentro.textContent.trim();
+  return null;
+}
+
+/**
+ * Liga o tema escuro NO LUGAR CERTO e devolve como desfazer.
+ *
+ * Os tokens escuros vivem em `.dark`, mas o tema de marca RE-DECLARA os mesmos
+ * tokens em `.tema-*`, que mora mais abaixo na árvore e vence para tudo que
+ * está dentro. Por isso a classe entra também em quem carrega `tema-*`.
+ */
+export function ligarTemaEscuro(doc: Document): () => void {
+  const alvos = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
+  const postos = alvos.filter((el) => !el.classList.contains('dark'));
+  postos.forEach((el) => el.classList.add('dark'));
+  return () => postos.forEach((el) => el.classList.remove('dark'));
+}
+
+// ─── Medição ──────────────────────────────────────────────────────────────────
+
+/**
+ * Altura antes e depois de encher o campo de linhas.
+ *
+ * É a pergunta que o conteúdo compartilhado respondia errado havia meses:
+ * `field-sizing-content` foi documentado como "ajusta a altura automaticamente
+ * ao conteúdo", e nenhuma stack aplica a propriedade. O valor `cresceu` responde
+ * pelo navegador em vez de pela prosa.
+ *
+ * Não dispara evento: escreve `.value`, lê o layout no mesmo tick e restaura.
+ * Componente controlado não re-renderiza porque nada foi notificado.
+ */
+function crescimento(ta: HTMLTextAreaElement) {
+  const original = ta.value;
+  const antes = Math.round(ta.getBoundingClientRect().height);
+  ta.value = Array.from({ length: 12 }, (_, i) => `linha ${i + 1} de conteúdo`).join('\n');
+  const depois = Math.round(ta.getBoundingClientRect().height);
+  const transbordaSemCrescer = ta.scrollHeight > ta.clientHeight + 1;
+  ta.value = original;
+  return { antes, depois, cresceu: depois > antes + 1, transbordaSemCrescer };
+}
+
+/**
+ * Roda `fn` com a transição do elemento desligada, e devolve o `style` como
+ * estava.
+ *
+ * Sem isso a sonda mede o PRIMEIRO QUADRO da transição, não o estado final:
+ * `.nds-textarea` declara `transition: border-color, box-shadow`, então logo
+ * após `focus()` a borda ainda está na cor de repouso e a sombra vem como
+ * `rgba(0,0,0,0) 0px 0px 0px 0px` — o valor de onde a interpolação PARTE quando
+ * a origem é `none`. Lido assim, um anel de foco perfeitamente pintado é
+ * relatado como inexistente. Mesma armadilha do "contraste ~1.0 = elemento em
+ * fade" registrada no CLAUDE.md.
+ */
+function semTransicao<T>(el: HTMLElement, fn: () => T): T {
+  const antes = el.style.transition;
+  el.style.transition = 'none';
+  void el.offsetHeight;
+  try {
+    return fn();
+  } finally {
+    el.style.transition = antes;
+  }
+}
+
+/** Sombra e contorno com o campo focado — e o foco volta para quem o tinha. */
+function aoFocar(ta: HTMLTextAreaElement) {
+  const doc = ta.ownerDocument;
+  const anterior = doc.activeElement as HTMLElement | null;
+  return semTransicao(ta, () => {
+    ta.focus();
+    const cs = getComputedStyle(ta);
+    const medida = {
+      boxShadow: cs.boxShadow,
+      corDaBorda: cs.borderTopColor,
+      outlineWidth: cs.outlineWidth,
+      outlineStyle: cs.outlineStyle,
+      casaFocusVisible: ta.matches(':focus-visible'),
+    };
+    ta.blur();
+    if (anterior && anterior !== doc.body) anterior.focus();
+    return medida;
+  });
+}
+
+// ─── Aferições reusadas pelas stories ─────────────────────────────────────────
+//
+// As três funções abaixo existem para que as stories afirmem EFEITO COMPUTADO
+// em vez de nome de classe. Asserção de classe passou anos verde afirmando
+// `resize-y` — uma classe sem prefixo, inerte, que não redimensionava nada.
+
+/** `resize` de fato aplicado: `vertical`, `none`, `both` ou `horizontal`. */
+export function resizeComputado(el: Element): string {
+  return getComputedStyle(el).resize;
+}
+
+/** `min-height` de fato aplicado, em pixels. */
+export function alturaMinimaPx(el: Element): number {
+  return Math.round(parseFloat(getComputedStyle(el).minHeight) || 0);
+}
+
+/**
+ * Anel de foco DEPOIS da transição — o valor que a pessoa vê.
+ *
+ * Lido logo após `focus()`, o computado devolve o primeiro quadro da transição:
+ * `rgba(0, 0, 0, 0) 0px 0px 0px 0px`, que faz um anel perfeitamente pintado
+ * parecer inexistente. Ver `semTransicao`.
+ */
+export function anelDeFocoAssentado(el: HTMLElement): { boxShadow: string; corDaBorda: string } {
+  return semTransicao(el, () => {
+    el.focus();
+    const cs = getComputedStyle(el);
+    return { boxShadow: cs.boxShadow, corDaBorda: cs.borderTopColor };
+  });
+}
+
+/** Razão WCAG entre o texto do campo e o primeiro fundo opaco acima dele. */
+export function contrasteTextoFundo(el: Element): number | null {
+  const fundo = fundoEfetivo(el);
+  if (!fundo) return null;
+  return razao(getComputedStyle(el).color, fundo)?.razao ?? null;
+}
+
+/**
+ * Leva o campo até `n` caracteres sem gastar `n` eventos de teclado.
+ *
+ * Serve ao item de contrato "atingir maxLength bloqueia novos caracteres":
+ * digitar 500 caracteres levaria a play a minutos, e `maxLength` não se aplica
+ * a escrita programática — então a story chega à BORDA por aqui e digita os
+ * últimos de verdade, que é onde o bloqueio precisa acontecer.
+ *
+ * Usa o setter nativo do protótipo porque o React instala um setter próprio
+ * para rastrear valor: escrever em `ta.value` direto não marca o campo como
+ * sujo e o `onChange` não dispara.
+ */
+export function preencherAte(ta: HTMLTextAreaElement, n: number): void {
+  const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set;
+  setter?.call(ta, 'x'.repeat(n));
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/** Mede UM textarea e o que o acompanha. `raiz` é o wrapper do cenário. */
+export function medirTextarea(raiz: HTMLElement) {
+  const ta =
+    raiz.querySelector<HTMLTextAreaElement>('textarea[data-slot="textarea"]') ??
+    raiz.querySelector<HTMLTextAreaElement>('textarea.nds-textarea') ??
+    raiz.querySelector<HTMLTextAreaElement>('textarea');
+
+  if (!ta) {
+    return { presente: false } as const;
+  }
+
+  const classes = (ta.getAttribute('class') || '').split(/\s+/).filter(Boolean);
+  const cs = getComputedStyle(ta);
+  const csPlaceholder = getComputedStyle(ta, '::placeholder');
+  const caixa = ta.getBoundingClientRect();
+
+  const describedby = ta.getAttribute('aria-describedby');
+  const alvoDescrito = describedby
+    ? describedby
+        .split(/\s+/)
+        .map((id) => ta.ownerDocument.getElementById(id))
+        .filter(Boolean)
+    : [];
+
+  const contadorEl =
+    raiz.querySelector<HTMLElement>('[aria-live]') ?? raiz.querySelector<HTMLElement>('[role="status"]');
+  const contador: MedidaDeContador = {
+    existe: !!contadorEl,
+    ariaLive: contadorEl?.getAttribute('aria-live') ?? null,
+    ariaLabel: contadorEl?.getAttribute('aria-label') ?? null,
+    texto: texto(contadorEl),
+    ehRegiaoViva: contadorEl?.getAttribute('aria-live') === 'polite' || contadorEl?.getAttribute('role') === 'status',
+  };
+
+  const fundo = fundoEfetivo(ta);
+
+  return {
+    presente: true,
+    estrutura: {
+      tag: ta.tagName.toLowerCase(),
+      dataSlot: ta.getAttribute('data-slot'),
+      temClasseBase: classes.includes('nds-textarea'),
+      classes,
+      /** Qual vocabulário de resize casou — `null` é campo sem nenhum. */
+      familiaDeResize: CLASSES_DE_RESIZE.filter((c) => classes.includes(c)),
+      familiaDeAltura: CLASSES_DE_ALTURA.filter((c) => classes.includes(c)),
+      /** Classe sem o prefixo do design system: inerte, não pinta nada. */
+      classesInertes: classes.filter((c) => !c.startsWith('nds-')),
+      estiloInline: ta.getAttribute('style'),
+      wrapper: {
+        tag: raiz.firstElementChild?.tagName.toLowerCase() ?? null,
+        classes: (raiz.firstElementChild?.getAttribute('class') || '').split(/\s+/).filter(Boolean),
+        estiloInline: raiz.firstElementChild?.getAttribute('style') ?? null,
+      },
+    },
+    semantica: {
+      nomeAcessivel: nomeAcessivel(ta),
+      papel: ta.getAttribute('role'),
+      placeholder: ta.getAttribute('placeholder'),
+      rowsAtributo: ta.getAttribute('rows'),
+      rowsPropriedade: ta.rows,
+      maxLength: ta.maxLength > 0 ? ta.maxLength : null,
+      ariaInvalid: ta.getAttribute('aria-invalid'),
+      ariaRequired: ta.getAttribute('aria-required'),
+      desabilitado: ta.disabled,
+      somenteLeitura: ta.readOnly,
+      nome: ta.name || null,
+      ariaDescribedby: describedby,
+      alvoDescribedbyExiste: describedby ? alvoDescrito.length === describedby.split(/\s+/).length : null,
+      textoDescrito: alvoDescrito.map((el) => texto(el)),
+      contador,
+    },
+    geometria: {
+      largura: Math.round(caixa.width),
+      altura: Math.round(caixa.height),
+      minHeight: cs.minHeight,
+      height: cs.height,
+      paddingBloco: `${cs.paddingTop} ${cs.paddingBottom}`,
+      paddingInline: `${cs.paddingLeft} ${cs.paddingRight}`,
+      alturaDeLinha: cs.lineHeight,
+      tamanhoDaFonte: cs.fontSize,
+      familiaDaFonte: cs.fontFamily.split(',')[0],
+      raio: cs.borderTopLeftRadius,
+      espessuraDaBorda: cs.borderTopWidth,
+      larguraCss: cs.width,
+      displayCss: cs.display,
+    },
+    comportamento: {
+      resize: cs.resize,
+      fieldSizing: (cs as unknown as Record<string, string>).fieldSizing ?? null,
+      overflow: cs.overflowY,
+      crescimento: crescimento(ta),
+      aoFocar: aoFocar(ta),
+    },
+    estado: {
+      fundo: cs.backgroundColor,
+      fundoEfetivo: fundo,
+      cor: cs.color,
+      corDaBorda: cs.borderTopColor,
+      corDoPlaceholder: csPlaceholder.color || null,
+      opacidade: cs.opacity,
+      cursor: cs.cursor,
+    },
+    contraste: {
+      textoNoFundo: fundo ? razao(cs.color, fundo) : null,
+      placeholderNoFundo: fundo && csPlaceholder.color ? razao(csPlaceholder.color, fundo) : null,
+      bordaNoFundo: fundo ? razao(cs.borderTopColor, fundo) : null,
+      contadorNoFundo: contadorEl
+        ? razao(getComputedStyle(contadorEl).color, fundoEfetivo(contadorEl) ?? fundo ?? 'rgb(255,255,255)')
+        : null,
+    },
+  };
+}
+
+/**
+ * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
+ * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
+ */
+export function medirTextareas(raiz: HTMLElement, cenarios: string[]) {
+  const registro: Record<string, unknown> = {};
+  for (const cenario of cenarios) {
+    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    registro[cenario] = alvo ? medirTextarea(alvo) : null;
+  }
+  return registro;
+}
+
+/**
+ * Mede o cenário padrão no tema ESCURO — metade do produto que o axe do
+ * test-runner nunca vê, porque a tela está sempre no claro.
+ *
+ * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
+ * do Chromatic.
+ */
+export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
+  const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+  const campo = alvo?.querySelector<HTMLTextAreaElement>('textarea');
+  if (!alvo || !campo) return null;
+
+  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  try {
+    // Trocar o tema troca `border-color`, que é uma propriedade em transição:
+    // sem desligá-la a sonda leria a cor do tema CLARO e relataria uma borda
+    // que não escurece. Ver `semTransicao`.
+    return semTransicao(campo, () => {
+      const medida = medirTextarea(alvo);
+      if (!medida.presente) return null;
+      return { estado: medida.estado, contraste: medida.contraste };
+    });
+  } finally {
+    desfazer();
+  }
+}
+
+/**
+ * Emite o registro para fora do navegador.
+ *
+ * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
+ * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
+ */
+export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]) {
+  const registro = {
+    claro: medirTextareas(raiz, cenarios),
+    escuro: medirNoEscuro(raiz, cenarios[0]),
+  };
+  throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
+}

@@ -56,7 +56,9 @@
       "cssClass": "Classe",
       "screenReader": "Leitor de tela",
       "min": "Mínimo",
-      "max": "Máximo"
+      "max": "Máximo",
+      "pageMount": "Página de docs é montada",
+      "sectionViewed": "Seção entra no viewport"
     }
   },
   "en": {
@@ -116,7 +118,9 @@
       "cssClass": "Class",
       "screenReader": "Screen reader",
       "min": "Minimum",
-      "max": "Maximum"
+      "max": "Maximum",
+      "pageMount": "Docs page mounts",
+      "sectionViewed": "Section enters the viewport"
     }
   },
   "es": {
@@ -176,7 +180,9 @@
       "cssClass": "Clase",
       "screenReader": "Lector de pantalla",
       "min": "Mínimo",
-      "max": "Máximo"
+      "max": "Máximo",
+      "pageMount": "La página de docs se monta",
+      "sectionViewed": "La sección entra en el viewport"
     }
   }
 }

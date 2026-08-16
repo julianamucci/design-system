@@ -205,15 +205,6 @@ const codeNoResize = `<div class="nds-stack" data-spacing="sm">
   />
 </div>`;
 
-const codeCustomizationTokens = `/* Altura mínima customizada */
-[data-slot="textarea"] {
-  min-height: 180px;
-}
-
-/* Borda colorida quando inválido + foco */
-[data-slot="textarea"][aria-invalid="true"]:focus-visible {
-  --ring-color: hsl(var(--destructive));
-}`;
 
 const interfaceCode = `interface TextareaProps {
   modelValue?: string | number;   // controlado (v-model)
@@ -311,6 +302,11 @@ const tokenRows = computed(() => [
   { token: '--muted-foreground', value: tContent('tokens.table.mutedForeground.class'), description: tContent('tokens.table.mutedForeground.part') },
   { token: '--ring',             value: tContent('tokens.table.ring.class'),            description: tContent('tokens.table.ring.part')            },
   { token: '--destructive',      value: tContent('tokens.table.destructive.class'),     description: tContent('tokens.table.destructive.part')     },
+  { token: '--muted',            value: tContent('tokens.table.muted.class'),           description: tContent('tokens.table.muted.part')           },
+  { token: '--radius',           value: tContent('tokens.table.radius.class'),          description: tContent('tokens.table.radius.part')          },
+  { token: '--spacing-2 · --spacing-3', value: tContent('tokens.table.padding.class'),  description: tContent('tokens.table.padding.part')         },
+  { token: '--spacing-8',        value: tContent('tokens.table.minHeight.class'),       description: tContent('tokens.table.minHeight.part')       },
+  { token: '--text-control',     value: tContent('tokens.table.fontSize.class'),        description: tContent('tokens.table.fontSize.part')        },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -624,7 +620,7 @@ const visualTestItems = computed(() => [
           <Textarea
             id="dodont-dont-2"
             placeholder="Conte um pouco sobre você..."
-            class="resize nds-min-h-25"
+            class="nds-resize nds-min-h-25"
           />
         </div>
       </template>
@@ -842,7 +838,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->

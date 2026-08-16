@@ -7,8 +7,8 @@
     "seo": {
       "title": "Textarea — Formulário",
       "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.2 AA.",
-      "aiSummary": "Componente Textarea para entrada de múltiplas linhas, com field-sizing-content, classes .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres com aria-live e integração com FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
+      "aiSummary": "Componente Textarea para entrada de múltiplas linhas: classes .nds-resize-y, .nds-resize-none e .nds-resize para redimensionamento, altura mínima pelos utilitários .nds-min-h-*, contador de caracteres com aria-live e integração com campos de formulário.",
+      "aiEntities": "Textarea, Input, Label, Formulário, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamento, altura mínima"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -34,8 +34,11 @@
       "item4": "<strong>Contador de caracteres</strong> — texto adjacente com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo, vinculado a <code>maxLength</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
-        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descrição</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
+        "react": "<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={500}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vue": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"500\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{{ value.length }}/500</span>\n  </div>\n</div>",
+        "svelte": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={500}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vanilla": "const campo = createTextarea({\n  id: 'description',\n  placeholder: 'ex: Descreva o produto...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = 500;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground';\ncontador.setAttribute('aria-live', 'polite');\ncontador.textContent = '0/500';\ncampo.addEventListener('input', () => {\n  contador.textContent = campo.value.length + '/500';\n});",
+        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descrição</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -45,7 +48,7 @@
         "item1": "Use para textos com 3+ linhas. Para linha única, use <code>Input</code>.",
         "item2": "Sempre forneça <code>Label</code> associado via <code>htmlFor</code> + <code>id</code>.",
         "item3": "Combine <code>maxLength</code> + contador de caracteres com <code>aria-live=\"polite\"</code>.",
-        "item4": "Padrão: <code>resize-y min-h-[120px]</code> — vertical apenas, mínimo 3 linhas."
+        "item4": "Padrão: <code>.nds-resize-y</code> com <code>.nds-min-h-30</code> — vertical apenas, 120px de altura mínima."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -111,7 +114,7 @@
         "title": "Use quando",
         "item1": "O texto esperado tem 3 ou mais linhas",
         "item2": "Há limite de caracteres relevante (até 500-2000)",
-        "item3": "O usuário precisa redimensionar o campo (resize-y)",
+        "item3": "O usuário precisa redimensionar o campo na vertical",
         "item4": "É descrição, biografia, observação ou mensagem"
       },
       "dont": {
@@ -129,8 +132,8 @@
         "dont": "Não use maxLength sem mostrar o contador ao usuário."
       },
       "pair2": {
-        "do": "Use resize-y para redimensionamento vertical apenas.",
-        "dont": "Não use resize livre — usuários quebram o layout."
+        "do": "Use .nds-resize-y para redimensionamento apenas vertical.",
+        "dont": "Não use .nds-resize — arrastar na horizontal quebra o layout."
       }
     },
     "import": {
@@ -144,9 +147,9 @@
         "noResize": "Sem resize"
       },
       "styles": {
-        "default": "Padrão — <code>resize-y min-h-[120px]</code>, vertical apenas.",
+        "default": "Padrão — <code>.nds-resize-y</code> com <code>.nds-min-h-30</code>, vertical apenas.",
         "withCounter": "Com contador de caracteres — <code>maxLength</code> + span com <code>aria-live=\"polite\"</code>.",
-        "noResize": "<code>resize-none</code> — útil em modais ou layouts onde o redimensionamento quebra a UI."
+        "noResize": "<code>.nds-resize-none</code> — útil em modais ou layouts onde o redimensionamento quebra a UI."
       },
       "compositionsTitle": "Composições",
       "compositions": {
@@ -177,32 +180,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Estado padrão — borda <code>input</code>, placeholder <code>muted-foreground</code>."
+        "behavior": "Estado padrão — borda de 1px na cor <code>--input</code> e placeholder em <code>--muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab ou click no textarea",
-        "behavior": "Focado — borda <code>ring</code> + anel <code>ring-3 ring-ring/50</code>."
+        "behavior": "Focado — borda em <code>--ring</code> e anel de 2px da mesma cor, a 30% de opacidade."
       },
       "filled": {
         "label": "Filled",
         "trigger": "Usuário digita conteúdo",
-        "behavior": "Com conteúdo — texto <code>foreground</code>, placeholder some."
+        "behavior": "Com conteúdo — texto em <code>--foreground</code>, placeholder some. A altura não muda: passando das linhas visíveis, o conteúdo rola."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Quando o consumidor desabilita o campo",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fundo <code>input/50</code>."
+        "behavior": "Desabilitado — opacidade de 50%, cursor bloqueado, fundo <code>--muted</code> a 30% e redimensionamento travado."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" no textarea",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borda <code>destructive</code>, anel <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — borda em <code>--destructive</code>; ao focar, o anel de 2px também fica destrutivo."
       },
       "readonly": {
         "label": "Read-only",
         "trigger": "textarea.readOnly = true",
-        "behavior": "<code>readOnly</code> — texto selecionável mas não editável; sem mudança de fundo."
+        "behavior": "<code>readOnly</code> — texto selecionável mas não editável; sem mudança de fundo nem de borda."
       },
       "cols": {
         "state": "Estado",
@@ -275,44 +278,67 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Textarea com contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
-        "angular": "<!-- Textarea com contador de caracteres acessível -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descrição</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' de ' + max + ' caracteres usados'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
+        "react": "// Contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ex: Descreva o produto...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={max}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} de ${max} caracteres usados`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vue": "<!-- Contador de caracteres acessível -->\n<!-- const value = ref(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"max\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\" :aria-label=\"`${value.length} de ${max} caracteres usados`\">\n      {{ value.length }}/{{ max }}\n    </span>\n  </div>\n</div>",
+        "svelte": "<!-- Contador de caracteres acessível -->\n<!-- let value = $state(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descrição</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={max}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} de ${max} caracteres usados`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vanilla": "// Contador de caracteres acessível\nconst max = 500;\nconst campo = createTextarea({\n  id: 'description',\n  placeholder: 'ex: Descreva o produto...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = max;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground nds-tabular-nums';\ncontador.setAttribute('aria-live', 'polite');\n\nconst atualizar = () => {\n  const n = campo.value.length;\n  contador.textContent = n + '/' + max;\n  contador.setAttribute('aria-label', n + ' de ' + max + ' caracteres usados');\n};\ncampo.addEventListener('input', atualizar);\natualizar();",
+        "angular": "<!-- Contador de caracteres acessível -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descrição</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    [attr.maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' de ' + max + ' caracteres usados'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe",
+        "class": "Seletor",
         "part": "Aplicação",
         "input": {
-          "class": "border-input",
-          "part": "Borda do Textarea no estado padrão"
+          "class": ".nds-textarea",
+          "part": "Cor da borda de 1px em repouso; usa --border como reserva"
         },
         "background": {
-          "class": "bg-transparent",
-          "part": "Fundo transparente (herda do container)"
+          "class": ".nds-textarea",
+          "part": "Cor de fundo do campo — opaca, o container não aparece através dela"
         },
         "foreground": {
-          "class": "text-foreground",
+          "class": ".nds-textarea",
           "part": "Cor do texto digitado"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Cor do placeholder e contador"
+          "class": ".nds-textarea::placeholder",
+          "part": "Cor do texto de exemplo"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco"
+          "class": ".nds-textarea:focus-visible",
+          "part": "Borda e anel de 2px, a 30% de opacidade, quando o campo recebe foco"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borda no estado inválido"
+          "class": ".nds-textarea[aria-invalid=\"true\"]",
+          "part": "Borda do estado inválido, e o anel de foco enquanto ele durar"
+        },
+        "muted": {
+          "class": ".nds-textarea:disabled",
+          "part": "Fundo a 30% quando o campo está desabilitado"
+        },
+        "radius": {
+          "class": ".nds-textarea",
+          "part": "Arredondamento dos quatro cantos"
+        },
+        "padding": {
+          "class": ".nds-textarea",
+          "part": "Respiro interno: 8px acima e abaixo, 12px nas laterais"
+        },
+        "minHeight": {
+          "class": ".nds-textarea",
+          "part": "Altura mínima de cerca de 64px, dois passos da escala; os utilitários .nds-min-h-* sobrepõem"
+        },
+        "fontSize": {
+          "class": ".nds-textarea",
+          "part": "Tamanho do texto digitado e do placeholder"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Altura mínima customizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borda colorida quando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+        "web": "/* Campo mais alto que os 64px de origem */\n.nds-textarea {\n  min-height: 11.25rem;   /* 180px */\n}\n\n/* Anel de foco na cor da marca */\n.nds-textarea:focus-visible {\n  border-color: hsl(var(--primary));\n  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3);\n}"
       }
     },
     "accessibility": {
@@ -324,7 +350,7 @@
         "item3": "<code>aria-invalid=\"true\"</code> quando há erro de validação",
         "item4": "Contador de caracteres com <code>aria-live=\"polite\"</code> + <code>aria-label</code> descritivo",
         "item5": "<code>aria-describedby</code> vinculando descrição/erro ao textarea",
-        "item6": "Anel de foco visível com <code>ring-3 ring-ring/50</code>"
+        "item6": "Anel de foco visível — borda em <code>--ring</code> mais anel de 2px da mesma cor a 30% de opacidade"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
@@ -342,7 +368,6 @@
         "live": "<code>aria-live=\"polite\"</code> no contador adjacente"
       },
       "screenReader": {
-        "title": "Leitor de Tela",
         "focus": "Anuncia o Label + \"caixa de texto, múltiplas linhas\"",
         "counter": "Anuncia atualização do contador via aria-live (a cada caractere)",
         "error": "Anuncia a mensagem de erro vinculada via aria-describedby"
@@ -361,7 +386,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integração com validação via React Hook Form."
+          "description": "Integração com validação de formulário."
         },
         "inputOTP": {
           "name": "InputOTP",
@@ -372,7 +397,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sem lib upstream. Estilizado via classes .nds-*.",
-      "item2": "<strong>field-sizing-content</strong> — propriedade CSS moderna que ajusta a altura automaticamente ao conteúdo. Combinada com <code>min-h-[…]</code> para garantir altura mínima.",
+      "item2": "<strong>Altura</strong> — não acompanha o conteúdo. <code>field-sizing: content</code> não é aplicado: o suporte entre navegadores é irregular e o mesmo campo teria alturas diferentes em cada um. A altura vem de <code>rows</code> ou dos utilitários <code>.nds-min-h-*</code>; passando disso, o conteúdo rola.",
       "item3": "<strong>Resize</strong> — controlado via classe .nds-* (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), não prop CSS direta.",
       "item4": "<strong>Contador acessível</strong> — sempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> com \"X de Y caracteres usados\" para leitores de tela."
     },
@@ -420,7 +445,7 @@
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto digitado e fundo",
-        "item3": "Focus ring visível com ring-3 ring-ring/50",
+        "item3": "Anel de foco assentado ao focar: borda --ring e sombra de 2px",
         "item4": "Label associado via htmlFor + id em todos os exemplos",
         "item5": "aria-invalid reflete o estado de validação"
       },
@@ -479,8 +504,8 @@
     "seo": {
       "title": "Textarea — Form",
       "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.2 AA support.",
-      "aiSummary": "Textarea component for multi-line input, with field-sizing-content, .nds-resize-y/.nds-resize-none/.nds-resize classes, character counter with aria-live and FormField integration.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
+      "aiSummary": "Textarea component for multi-line input: .nds-resize-y, .nds-resize-none and .nds-resize classes for resizing, minimum height through the .nds-min-h-* utilities, character counter with aria-live and form field integration.",
+      "aiEntities": "Textarea, Input, Label, Form, WCAG 2.2, aria-invalid, aria-live, maxlength, resize, minimum height"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -506,8 +531,11 @@
       "item4": "<strong>Character counter</strong> — adjacent text with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>, linked to <code>maxLength</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
-        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Description</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
+        "react": "<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={500}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vue": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"500\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{{ value.length }}/500</span>\n  </div>\n</div>",
+        "svelte": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={500}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vanilla": "const campo = createTextarea({\n  id: 'description',\n  placeholder: 'e.g.: Describe the product...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = 500;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground';\ncontador.setAttribute('aria-live', 'polite');\ncontador.textContent = '0/500';\ncampo.addEventListener('input', () => {\n  contador.textContent = campo.value.length + '/500';\n});",
+        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Description</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -517,7 +545,7 @@
         "item1": "Use for text with 3+ lines. For single line, use <code>Input</code>.",
         "item2": "Always provide associated <code>Label</code> via <code>htmlFor</code> + <code>id</code>.",
         "item3": "Combine <code>maxLength</code> + character counter with <code>aria-live=\"polite\"</code>.",
-        "item4": "Default: <code>resize-y min-h-[120px]</code> — vertical only, minimum 3 lines."
+        "item4": "Default: <code>.nds-resize-y</code> with <code>.nds-min-h-30</code> — vertical only, 120px minimum height."
       },
       "scenarios": {
         "title": "Scenarios Table",
@@ -583,7 +611,7 @@
         "title": "Use when",
         "item1": "The expected text has 3 or more lines",
         "item2": "There is a relevant character limit (up to 500-2000)",
-        "item3": "The user needs to resize the field (resize-y)",
+        "item3": "The user needs to resize the field vertically",
         "item4": "It's description, bio, observation or message"
       },
       "dont": {
@@ -601,8 +629,8 @@
         "dont": "Don't use maxLength without showing the counter to the user."
       },
       "pair2": {
-        "do": "Use resize-y for vertical-only resize.",
-        "dont": "Don't use free resize — users break the layout."
+        "do": "Use .nds-resize-y for vertical-only resizing.",
+        "dont": "Don't use .nds-resize — dragging sideways breaks the layout."
       }
     },
     "import": {
@@ -616,9 +644,9 @@
         "noResize": "No resize"
       },
       "styles": {
-        "default": "Default — <code>resize-y min-h-[120px]</code>, vertical only.",
+        "default": "Default — <code>.nds-resize-y</code> with <code>.nds-min-h-30</code>, vertical only.",
         "withCounter": "With character counter — <code>maxLength</code> + span with <code>aria-live=\"polite\"</code>.",
-        "noResize": "<code>resize-none</code> — useful in modals or layouts where resizing breaks the UI."
+        "noResize": "<code>.nds-resize-none</code> — useful in modals or layouts where resizing breaks the UI."
       },
       "compositionsTitle": "Compositions",
       "compositions": {
@@ -649,32 +677,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Default state — <code>input</code> border, <code>muted-foreground</code> placeholder."
+        "behavior": "Default state — 1px border in <code>--input</code> and placeholder in <code>--muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab or click on the textarea",
-        "behavior": "Focused — <code>ring</code> border + <code>ring-3 ring-ring/50</code> ring."
+        "behavior": "Focused — border in <code>--ring</code> plus a 2px ring of the same colour at 30% opacity."
       },
       "filled": {
         "label": "Filled",
         "trigger": "User types content",
-        "behavior": "With content — <code>foreground</code> text, placeholder disappears."
+        "behavior": "With content — text in <code>--foreground</code>, placeholder disappears. Height does not change: past the visible lines, the content scrolls."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "When the consumer disables the field",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, <code>input/50</code> background."
+        "behavior": "Disabled — 50% opacity, blocked cursor, <code>--muted</code> background at 30% and resizing locked."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" on the textarea",
-        "behavior": "<code>aria-invalid=\"true\"</code> — <code>destructive</code> border, <code>destructive/20</code> ring."
+        "behavior": "<code>aria-invalid=\"true\"</code> — border in <code>--destructive</code>; on focus the 2px ring turns destructive too."
       },
       "readonly": {
         "label": "Read-only",
         "trigger": "textarea.readOnly = true",
-        "behavior": "<code>readOnly</code> — selectable but not editable; no background change."
+        "behavior": "<code>readOnly</code> — selectable but not editable; no background or border change."
       },
       "cols": {
         "state": "State",
@@ -747,44 +775,67 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Textarea with accessible character counter\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe clearly.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} of ${max} characters used`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
-        "angular": "<!-- Textarea with accessible character counter -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Description</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' de ' + max + ' caracteres usados'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
+        "react": "// Contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"e.g.: Describe the product...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={max}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} of ${max} characters used`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vue": "<!-- Contador de caracteres acessível -->\n<!-- const value = ref(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"max\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\" :aria-label=\"`${value.length} of ${max} characters used`\">\n      {{ value.length }}/{{ max }}\n    </span>\n  </div>\n</div>",
+        "svelte": "<!-- Contador de caracteres acessível -->\n<!-- let value = $state(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Description</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={max}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} of ${max} characters used`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vanilla": "// Contador de caracteres acessível\nconst max = 500;\nconst campo = createTextarea({\n  id: 'description',\n  placeholder: 'e.g.: Describe the product...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = max;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground nds-tabular-nums';\ncontador.setAttribute('aria-live', 'polite');\n\nconst atualizar = () => {\n  const n = campo.value.length;\n  contador.textContent = n + '/' + max;\n  contador.setAttribute('aria-label', n + ' of ' + max + ' characters used');\n};\ncampo.addEventListener('input', atualizar);\natualizar();",
+        "angular": "<!-- Contador de caracteres acessível -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Description</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"e.g.: Describe the product...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    [attr.maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe clearly.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' of ' + max + ' characters used'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Class",
+        "class": "Selector",
         "part": "Application",
         "input": {
-          "class": "border-input",
-          "part": "Textarea border in default state"
+          "class": ".nds-textarea",
+          "part": "1px resting border colour; falls back to --border"
         },
         "background": {
-          "class": "bg-transparent",
-          "part": "Transparent background (inherits from container)"
+          "class": ".nds-textarea",
+          "part": "Field background colour — opaque, the container does not show through"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Typed text color"
+          "class": ".nds-textarea",
+          "part": "Typed text colour"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Placeholder and counter color"
+          "class": ".nds-textarea::placeholder",
+          "part": "Placeholder colour"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Focus ring"
+          "class": ".nds-textarea:focus-visible",
+          "part": "Border and 2px ring at 30% opacity when the field takes focus"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Border in invalid state"
+          "class": ".nds-textarea[aria-invalid=\"true\"]",
+          "part": "Invalid-state border, and the focus ring while it lasts"
+        },
+        "muted": {
+          "class": ".nds-textarea:disabled",
+          "part": "Background at 30% when the field is disabled"
+        },
+        "radius": {
+          "class": ".nds-textarea",
+          "part": "Corner rounding on all four corners"
+        },
+        "padding": {
+          "class": ".nds-textarea",
+          "part": "Inner spacing: 8px top and bottom, 12px on the sides"
+        },
+        "minHeight": {
+          "class": ".nds-textarea",
+          "part": "Minimum height of about 64px, two steps of the scale; the .nds-min-h-* utilities override it"
+        },
+        "fontSize": {
+          "class": ".nds-textarea",
+          "part": "Size of the typed text and the placeholder"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Custom minimum height */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Colored border when invalid + focus */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+        "web": "/* Taller field than the 64px baseline */\n.nds-textarea {\n  min-height: 11.25rem;   /* 180px */\n}\n\n/* Focus ring in the brand colour */\n.nds-textarea:focus-visible {\n  border-color: hsl(var(--primary));\n  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3);\n}"
       }
     },
     "accessibility": {
@@ -796,7 +847,7 @@
         "item3": "<code>aria-invalid=\"true\"</code> when validation fails",
         "item4": "Character counter with <code>aria-live=\"polite\"</code> + descriptive <code>aria-label</code>",
         "item5": "<code>aria-describedby</code> linking description/error to the textarea",
-        "item6": "Visible focus ring with <code>ring-3 ring-ring/50</code>"
+        "item6": "Visible focus ring — border in <code>--ring</code> plus a 2px ring of the same colour at 30% opacity"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
@@ -814,7 +865,6 @@
         "live": "<code>aria-live=\"polite\"</code> on adjacent counter"
       },
       "screenReader": {
-        "title": "Screen Reader",
         "focus": "Announces Label + \"text box, multi-line\"",
         "counter": "Announces counter update via aria-live (each character)",
         "error": "Announces the error message linked via aria-describedby"
@@ -833,7 +883,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Validation integration via React Hook Form."
+          "description": "Form validation integration."
         },
         "inputOTP": {
           "name": "InputOTP",
@@ -844,7 +894,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Native element</strong> — uses HTML5 <code>&lt;textarea&gt;</code> with no upstream lib. Styled via .nds-* classes.",
-      "item2": "<strong>field-sizing-content</strong> — modern CSS property that auto-adjusts height to content. Combined with <code>min-h-[…]</code> to guarantee minimum height.",
+      "item2": "<strong>Height</strong> — does not follow the content. <code>field-sizing: content</code> is not applied: browser support is uneven and the same field would be a different height in each one. Height comes from <code>rows</code> or from the <code>.nds-min-h-*</code> utilities; past that, the content scrolls.",
       "item3": "<strong>Resize</strong> — controlled via .nds-* class (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), not direct CSS prop.",
       "item4": "<strong>Accessible counter</strong> — always <code>aria-live=\"polite\"</code> + <code>aria-label</code> with \"X of Y characters used\" for screen readers."
     },
@@ -892,7 +942,7 @@
         "description": "Criteria that automated tools should confirm.",
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 4.5:1 contrast between typed text and background",
-        "item3": "Visible focus ring with ring-3 ring-ring/50",
+        "item3": "Settled focus ring after focusing: --ring border and 2px shadow",
         "item4": "Label associated via htmlFor + id in all examples",
         "item5": "aria-invalid reflects the validation state"
       },
@@ -951,8 +1001,8 @@
     "seo": {
       "title": "Textarea — Formulario",
       "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.2 AA.",
-      "aiSummary": "Componente Textarea para entrada multilínea, con field-sizing-content, clases .nds-resize-y/.nds-resize-none/.nds-resize, contador de caracteres con aria-live e integración con FormField.",
-      "aiEntities": "Textarea, Input, React, Vue, Svelte, WCAG 2.2, resize-y, aria-invalid, maxLength"
+      "aiSummary": "Componente Textarea para entrada multilínea: clases .nds-resize-y, .nds-resize-none y .nds-resize para el redimensionamiento, altura mínima mediante las utilidades .nds-min-h-*, contador de caracteres con aria-live e integración con campos de formulario.",
+      "aiEntities": "Textarea, Input, Label, Formulario, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamiento, altura mínima"
     },
     "demonstration": {
       "title": "Demostración",
@@ -978,8 +1028,11 @@
       "item4": "<strong>Contador de caracteres</strong> — texto adyacente con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo, vinculado a <code>maxLength</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"Describe...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={500}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
-        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descripción</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    placeholder=\"Descreva...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
+        "react": "<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    placeholder=\"ej: Describe el producto...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={500}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vue": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"500\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{{ value.length }}/500</span>\n  </div>\n</div>",
+        "svelte": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={500}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{value.length}/500</span>\n  </div>\n</div>",
+        "vanilla": "const campo = createTextarea({\n  id: 'description',\n  placeholder: 'ej: Describe el producto...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = 500;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground';\ncontador.setAttribute('aria-live', 'polite');\ncontador.textContent = '0/500';\ncampo.addEventListener('input', () => {\n  contador.textContent = campo.value.length + '/500';\n});",
+        "angular": "<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descripción</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength=\"500\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\">{{ value().length }}/500</span>\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -989,7 +1042,7 @@
         "item1": "Usa para textos con 3+ líneas. Para una sola línea, usa <code>Input</code>.",
         "item2": "Provee siempre <code>Label</code> asociado vía <code>htmlFor</code> + <code>id</code>.",
         "item3": "Combina <code>maxLength</code> + contador de caracteres con <code>aria-live=\"polite\"</code>.",
-        "item4": "Por defecto: <code>resize-y min-h-[120px]</code> — solo vertical, mínimo 3 líneas."
+        "item4": "Por defecto: <code>.nds-resize-y</code> con <code>.nds-min-h-30</code> — solo vertical, 120px de altura mínima."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -1055,7 +1108,7 @@
         "title": "Usa cuando",
         "item1": "El texto esperado tiene 3 o más líneas",
         "item2": "Hay límite de caracteres relevante (hasta 500-2000)",
-        "item3": "El usuario necesita redimensionar el campo (resize-y)",
+        "item3": "El usuario necesita redimensionar el campo en vertical",
         "item4": "Es descripción, biografía, observación o mensaje"
       },
       "dont": {
@@ -1073,8 +1126,8 @@
         "dont": "No uses maxLength sin mostrar el contador al usuario."
       },
       "pair2": {
-        "do": "Usa resize-y para redimensionamiento solo vertical.",
-        "dont": "No uses resize libre — los usuarios rompen el layout."
+        "do": "Usa .nds-resize-y para redimensionar solo en vertical.",
+        "dont": "No uses .nds-resize — arrastrar en horizontal rompe el layout."
       }
     },
     "import": {
@@ -1088,9 +1141,9 @@
         "noResize": "Sin resize"
       },
       "styles": {
-        "default": "Por defecto — <code>resize-y min-h-[120px]</code>, solo vertical.",
+        "default": "Por defecto — <code>.nds-resize-y</code> con <code>.nds-min-h-30</code>, solo vertical.",
         "withCounter": "Con contador de caracteres — <code>maxLength</code> + span con <code>aria-live=\"polite\"</code>.",
-        "noResize": "<code>resize-none</code> — útil en modales o layouts donde el redimensionamiento rompe la UI."
+        "noResize": "<code>.nds-resize-none</code> — útil en modales o layouts donde el redimensionamiento rompe la UI."
       },
       "compositionsTitle": "Composiciones",
       "compositions": {
@@ -1121,32 +1174,32 @@
       "default": {
         "label": "Default",
         "trigger": "—",
-        "behavior": "Estado por defecto — borde <code>input</code>, placeholder <code>muted-foreground</code>."
+        "behavior": "Estado por defecto — borde de 1px en <code>--input</code> y placeholder en <code>--muted-foreground</code>."
       },
       "focus": {
         "label": "Focus",
         "trigger": "Tab o click en el textarea",
-        "behavior": "Enfocado — borde <code>ring</code> + anillo <code>ring-3 ring-ring/50</code>."
+        "behavior": "Enfocado — borde en <code>--ring</code> y anillo de 2px del mismo color al 30% de opacidad."
       },
       "filled": {
         "label": "Filled",
         "trigger": "El usuario escribe contenido",
-        "behavior": "Con contenido — texto <code>foreground</code>, el placeholder desaparece."
+        "behavior": "Con contenido — texto en <code>--foreground</code>, el placeholder desaparece. La altura no cambia: pasadas las líneas visibles, el contenido se desplaza."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "Cuando el consumidor deshabilita el campo",
-        "behavior": "<code>disabled</code> — <code>opacity-50</code>, <code>cursor-not-allowed</code>, fondo <code>input/50</code>."
+        "behavior": "Deshabilitado — opacidad del 50%, cursor bloqueado, fondo <code>--muted</code> al 30% y redimensionamiento bloqueado."
       },
       "invalid": {
         "label": "Invalid",
         "trigger": "aria-invalid=\"true\" en el textarea",
-        "behavior": "<code>aria-invalid=\"true\"</code> — borde <code>destructive</code>, anillo <code>destructive/20</code>."
+        "behavior": "<code>aria-invalid=\"true\"</code> — borde en <code>--destructive</code>; al enfocar, el anillo de 2px también se vuelve destructivo."
       },
       "readonly": {
         "label": "Read-only",
         "trigger": "textarea.readOnly = true",
-        "behavior": "<code>readOnly</code> — texto seleccionable pero no editable; sin cambio de fondo."
+        "behavior": "<code>readOnly</code> — seleccionable pero no editable; sin cambio de fondo ni de borde."
       },
       "cols": {
         "state": "Estado",
@@ -1219,44 +1272,67 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Textarea con contador de caracteres accesible\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"space-y-2\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ej: Describe el producto...\"\n    className=\"resize-y min-h-[120px]\"\n    maxLength={max}\n  />\n  <div className=\"flex justify-between text-xs text-muted-foreground\">\n    <span>Describe con claridad.</span>\n    <span\n      aria-live=\"polite\"\n      aria-label={`${value.length} de ${max} caracteres usados`}\n    >\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
-        "angular": "<!-- Textarea con contador de caracteres accesible -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descripción</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ex: Descreva o produto...\"\n    class=\"nds-textarea-tall\"\n    [maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Descreva com clareza.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' de ' + max + ' caracteres usados'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
+        "react": "// Contador de caracteres acessível\nconst [value, setValue] = useState('');\nconst max = 500;\n\n<div className=\"nds-stack\" data-spacing=\"sm\">\n  <Label htmlFor=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    value={value}\n    onChange={(e) => setValue(e.target.value)}\n    placeholder=\"ej: Describe el producto...\"\n    className=\"nds-resize-y nds-min-h-30\"\n    maxLength={max}\n  />\n  <div className=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} de ${max} caracteres usados`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vue": "<!-- Contador de caracteres acessível -->\n<!-- const value = ref(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    v-model=\"value\"\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    :maxlength=\"max\"\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\" :aria-label=\"`${value.length} de ${max} caracteres usados`\">\n      {{ value.length }}/{{ max }}\n    </span>\n  </div>\n</div>",
+        "svelte": "<!-- Contador de caracteres acessível -->\n<!-- let value = $state(''); const max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <Label for=\"description\">Descripción</Label>\n  <Textarea\n    id=\"description\"\n    bind:value\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    maxlength={max}\n  />\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span aria-live=\"polite\" aria-label={`${value.length} de ${max} caracteres usados`}>\n      {value.length}/{max}\n    </span>\n  </div>\n</div>",
+        "vanilla": "// Contador de caracteres acessível\nconst max = 500;\nconst campo = createTextarea({\n  id: 'description',\n  placeholder: 'ej: Describe el producto...',\n  class: 'nds-resize-y nds-min-h-30',\n});\ncampo.maxLength = max;\n\nconst contador = document.createElement('span');\ncontador.className = 'nds-text-caption nds-text-muted-foreground nds-tabular-nums';\ncontador.setAttribute('aria-live', 'polite');\n\nconst atualizar = () => {\n  const n = campo.value.length;\n  contador.textContent = n + '/' + max;\n  contador.setAttribute('aria-label', n + ' de ' + max + ' caracteres usados');\n};\ncampo.addEventListener('input', atualizar);\natualizar();",
+        "angular": "<!-- Contador de caracteres acessível -->\n<!-- value = signal(''); max = 500 -->\n<div class=\"nds-stack\" data-spacing=\"sm\">\n  <label ndsLabel for=\"description\">Descripción</label>\n  <textarea\n    ndsTextarea\n    id=\"description\"\n    [value]=\"value()\"\n    (input)=\"value.set($any($event.target).value)\"\n    placeholder=\"ej: Describe el producto...\"\n    class=\"nds-resize-y nds-min-h-30\"\n    [attr.maxlength]=\"max\"\n  ></textarea>\n  <div class=\"nds-cluster nds-text-caption nds-text-muted-foreground\" data-justify=\"between\">\n    <span>Describe con claridad.</span>\n    <span\n      aria-live=\"polite\"\n      [attr.aria-label]=\"value().length + ' de ' + max + ' caracteres usados'\"\n    >{{ value().length }}/{{ max }}</span>\n  </div>\n</div>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase",
+        "class": "Selector",
         "part": "Aplicación",
         "input": {
-          "class": "border-input",
-          "part": "Borde del Textarea en estado por defecto"
+          "class": ".nds-textarea",
+          "part": "Color del borde de 1px en reposo; usa --border como reserva"
         },
         "background": {
-          "class": "bg-transparent",
-          "part": "Fondo transparente (hereda del contenedor)"
+          "class": ".nds-textarea",
+          "part": "Color de fondo del campo — opaco, el contenedor no se transparenta"
         },
         "foreground": {
-          "class": "text-foreground",
+          "class": ".nds-textarea",
           "part": "Color del texto escrito"
         },
         "mutedForeground": {
-          "class": "text-muted-foreground",
-          "part": "Color del placeholder y contador"
+          "class": ".nds-textarea::placeholder",
+          "part": "Color del texto de ejemplo"
         },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco"
+          "class": ".nds-textarea:focus-visible",
+          "part": "Borde y anillo de 2px al 30% de opacidad cuando el campo recibe el foco"
         },
         "destructive": {
-          "class": "border-destructive",
-          "part": "Borde en estado inválido"
+          "class": ".nds-textarea[aria-invalid=\"true\"]",
+          "part": "Borde del estado inválido, y el anillo de foco mientras dure"
+        },
+        "muted": {
+          "class": ".nds-textarea:disabled",
+          "part": "Fondo al 30% cuando el campo está deshabilitado"
+        },
+        "radius": {
+          "class": ".nds-textarea",
+          "part": "Redondeo de las cuatro esquinas"
+        },
+        "padding": {
+          "class": ".nds-textarea",
+          "part": "Espacio interno: 8px arriba y abajo, 12px a los lados"
+        },
+        "minHeight": {
+          "class": ".nds-textarea",
+          "part": "Altura mínima de unos 64px, dos pasos de la escala; las utilidades .nds-min-h-* la sobrescriben"
+        },
+        "fontSize": {
+          "class": ".nds-textarea",
+          "part": "Tamaño del texto escrito y del placeholder"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Altura mínima personalizada */\n[data-slot=\"textarea\"] {\n  min-height: 180px;\n}\n\n/* Borde coloreado cuando inválido + foco */\n[data-slot=\"textarea\"][aria-invalid=\"true\"]:focus-visible {\n  --ring-color: hsl(var(--destructive));\n}"
+        "web": "/* Campo más alto que los 64px de origen */\n.nds-textarea {\n  min-height: 11.25rem;   /* 180px */\n}\n\n/* Anillo de foco en el color de marca */\n.nds-textarea:focus-visible {\n  border-color: hsl(var(--primary));\n  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.3);\n}"
       }
     },
     "accessibility": {
@@ -1268,7 +1344,7 @@
         "item3": "<code>aria-invalid=\"true\"</code> cuando hay error de validación",
         "item4": "Contador de caracteres con <code>aria-live=\"polite\"</code> + <code>aria-label</code> descriptivo",
         "item5": "<code>aria-describedby</code> vinculando descripción/error al textarea",
-        "item6": "Anillo de foco visible con <code>ring-3 ring-ring/50</code>"
+        "item6": "Anillo de foco visible — borde en <code>--ring</code> más anillo de 2px del mismo color al 30% de opacidad"
       },
       "keyboard": {
         "title": "Navegación por Teclado",
@@ -1286,7 +1362,6 @@
         "live": "<code>aria-live=\"polite\"</code> en el contador adyacente"
       },
       "screenReader": {
-        "title": "Lector de Pantalla",
         "focus": "Anuncia el Label + \"cuadro de texto, multilínea\"",
         "counter": "Anuncia la actualización del contador vía aria-live (a cada carácter)",
         "error": "Anuncia el mensaje de error vinculado vía aria-describedby"
@@ -1305,7 +1380,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integración de validación vía React Hook Form."
+          "description": "Integración con la validación de formularios."
         },
         "inputOTP": {
           "name": "InputOTP",
@@ -1316,7 +1391,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Elemento nativo</strong> — usa <code>&lt;textarea&gt;</code> HTML5 sin lib upstream. Estilizado vía clases .nds-*.",
-      "item2": "<strong>field-sizing-content</strong> — propiedad CSS moderna que ajusta la altura automáticamente al contenido. Combinada con <code>min-h-[…]</code> para garantizar altura mínima.",
+      "item2": "<strong>Altura</strong> — no acompaña al contenido. <code>field-sizing: content</code> no se aplica: el soporte entre navegadores es irregular y el mismo campo tendría alturas distintas en cada uno. La altura viene de <code>rows</code> o de las utilidades <code>.nds-min-h-*</code>; pasado eso, el contenido se desplaza.",
       "item3": "<strong>Resize</strong> — controlado vía clase .nds-* (<code>.nds-resize-y</code>, <code>.nds-resize-none</code>, <code>.nds-resize</code>), no prop CSS directa.",
       "item4": "<strong>Contador accesible</strong> — siempre <code>aria-live=\"polite\"</code> + <code>aria-label</code> con \"X de Y caracteres usados\" para lectores de pantalla."
     },
@@ -1364,7 +1439,7 @@
         "description": "Criterios que las herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 4.5:1 entre texto escrito y fondo",
-        "item3": "Anillo de foco visible con ring-3 ring-ring/50",
+        "item3": "Anillo de foco asentado al enfocar: borde --ring y sombra de 2px",
         "item4": "Label asociado vía htmlFor + id en todos los ejemplos",
         "item5": "aria-invalid refleja el estado de validación"
       },

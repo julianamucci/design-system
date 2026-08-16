@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
+import { resizeComputado } from '@shared/testing/textarea-probe';
 
 const meta: Meta = {
   title: 'UI/Textarea/Compositions',
@@ -10,6 +11,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -23,6 +25,7 @@ export default meta;
 type Story = StoryObj;
 
 export const WithLabelAndHelp: Story = {
+  parameters: { covers: ['accessibility.item4'] },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -37,6 +40,11 @@ export const WithLabelAndHelp: Story = {
     await step('Label associado ao textarea', async () => {
       const textarea = canvas.getByLabelText('Descrição');
       await expect(textarea).toBeInTheDocument();
+    });
+    await step('Clicar no Label move o foco para o campo', async () => {
+      const label = canvasElement.querySelector('label[for="comp-help"]') as HTMLLabelElement;
+      await userEvent.click(label);
+      await expect(canvas.getByLabelText('Descrição')).toHaveFocus();
     });
     await step('Texto de apoio está visível', async () => {
       await expect(canvas.getByText('Descreva o produto com clareza.')).toBeVisible();
@@ -59,21 +67,18 @@ export const WithAccessibleCounter: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Contador inicia em 0/200', async () => {
+    await step('Contador começa zerado', async () => {
       const counter = canvasElement.querySelector('[aria-live="polite"]');
       await expect(counter?.textContent?.trim()).toBe('0/200');
     });
 
     await step('Contador atualiza ao digitar', async () => {
       const textarea = canvas.getByLabelText('Biografia') as HTMLTextAreaElement;
+      await userEvent.clear(textarea);
       await userEvent.type(textarea, 'Olá');
       const counter = canvasElement.querySelector('[aria-live="polite"]');
       await expect(counter?.textContent?.trim()).toBe('3/200');
-    });
-
-    await step('Contador possui aria-label descritivo', async () => {
-      const counter = canvasElement.querySelector('[aria-live="polite"]') as HTMLElement;
-      await expect(counter.getAttribute('aria-label')).toMatch(/3 de 200 caracteres/);
+      await expect(counter?.getAttribute('aria-label')).toMatch(/3 de 200 caracteres/);
     });
   },
 };
@@ -85,22 +90,23 @@ export const WithError: Story = {
       id: 'comp-error',
       labelText: 'Feedback',
       placeholder: 'O que poderíamos melhorar?',
-      helpText: 'O feedback precisa ter pelo menos 10 caracteres.',
       'aria-invalid': 'true',
-      'aria-describedby': 'comp-error-msg',
+      errorText: 'O feedback precisa ter pelo menos 10 caracteres.',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const textarea = canvas.getByLabelText('Feedback');
 
     await step('Textarea com aria-invalid="true"', async () => {
-      const textarea = canvas.getByLabelText('Feedback');
       await expect(textarea).toHaveAttribute('aria-invalid', 'true');
     });
 
-    await step('aria-describedby aponta para mensagem', async () => {
-      const textarea = canvas.getByLabelText('Feedback');
-      await expect(textarea).toHaveAttribute('aria-describedby', 'comp-error-msg');
+    await step('aria-describedby aponta para a mensagem renderizada', async () => {
+      const id = textarea.getAttribute('aria-describedby')!;
+      const alvo = canvasElement.ownerDocument.getElementById(id);
+      await expect(alvo).toBeInTheDocument();
+      await expect(alvo).toHaveTextContent(/pelo menos 10 caracteres/);
     });
   },
 };
@@ -118,9 +124,9 @@ export const ModalNoResize: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Textarea aplica resize-none', async () => {
+    await step('Redimensionamento desligado', async () => {
       const textarea = canvas.getByLabelText('Observações');
-      await expect(textarea.className).toContain('resize-none');
+      await expect(resizeComputado(textarea)).toBe('none');
     });
   },
 };

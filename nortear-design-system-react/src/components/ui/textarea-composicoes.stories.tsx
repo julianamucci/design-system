@@ -12,6 +12,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -26,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const WithLabelAndDescription: Story = {
   render: () => (
-    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="comp-desc">Descrição</Label>
       <Textarea
         id="comp-desc"
@@ -40,6 +41,7 @@ export const WithLabelAndDescription: Story = {
     </div>
   ),
   parameters: {
+    covers: ["accessibility.item4"],
     docs: {
       description: {
         story:
@@ -57,8 +59,9 @@ export const WithLabelAndDescription: Story = {
       await expect(textarea).toHaveFocus();
     });
 
-    await step("aria-describedby aponta para o texto auxiliar", async () => {
-      await expect(textarea).toHaveAttribute("aria-describedby", "comp-desc-help");
+    await step("aria-describedby aponta para um texto que existe", async () => {
+      const id = textarea.getAttribute("aria-describedby")!;
+      await expect(canvasElement.ownerDocument.getElementById(id)).toBeInTheDocument();
     });
   },
 };
@@ -67,7 +70,7 @@ function ComContadorRender() {
   const [value, setValue] = useState("");
   const max = 280;
   return (
-    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="comp-counter">Mensagem</Label>
       <Textarea
         id="comp-counter"
@@ -104,14 +107,16 @@ export const WithAccessibleCounter: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText("Mensagem") as HTMLTextAreaElement;
 
+    await step("maxLength está aplicado no campo", async () => {
+      await expect(textarea).toHaveAttribute("maxLength", "280");
+    });
+
     await step("Digitar atualiza o contador acessível", async () => {
+      await userEvent.clear(textarea);
       await userEvent.type(textarea, "Olá mundo");
       const counter = canvas.getByLabelText(/9 de 280 caracteres usados/);
       await expect(counter).toHaveTextContent("9/280");
-    });
-
-    await step("maxLength bloqueia entrada além do limite", async () => {
-      await expect(textarea).toHaveAttribute("maxLength", "280");
+      await expect(counter).toHaveAttribute("aria-live", "polite");
     });
   },
 };
@@ -122,7 +127,7 @@ function EmFormularioRender() {
   const max = 500;
   return (
     <form
-      className="" data-spacing="md" style={{ width: "24rem" }}
+      className="nds-stack nds-w-full nds-max-w-md" data-spacing="md"
       onSubmit={(e) => {
         e.preventDefault();
         setSubmitted(bio);
@@ -186,7 +191,7 @@ export const InForm: Story = {
 function ControladoRender() {
   const [value, setValue] = useState("Texto inicial controlado.");
   return (
-    <div className="" data-spacing="sm" style={{ width: "24rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="comp-controlled">Observações</Label>
       <Textarea
         id="comp-controlled"

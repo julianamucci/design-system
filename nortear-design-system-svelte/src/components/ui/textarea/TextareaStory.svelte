@@ -13,6 +13,8 @@
     maxLength?: number;
     showCounter?: boolean;
     helpText?: string;
+    /** Mensagem de erro. Renderiza o <p> e liga o aria-describedby a ELE. */
+    errorText?: string;
     counterAriaLabelTemplate?: string;
     resize?: 'y' | 'none' | 'both';
     minHeight?: string;
@@ -31,16 +33,22 @@
     maxLength,
     showCounter = false,
     helpText = '',
+    errorText = '',
     counterAriaLabelTemplate = '{count} de {max} caracteres usados',
     resize = 'y',
-    minHeight = 'min-h-[120px]',
+    minHeight = 'nds-min-h-30',
     class: className = '',
     ...rest
   }: Props = $props();
 
+  // Vocabulário `.nds-*`: as formas sem prefixo (`resize-y`, `resize-none`)
+  // não existem em CSS nenhum do projeto — eram string inerte no atributo, e
+  // as stories afirmavam a presença delas como se fosse comportamento.
   const resizeClass = $derived(
-    resize === 'none' ? 'resize-none' : resize === 'both' ? 'resize' : 'resize-y'
+    resize === 'none' ? 'nds-resize-none' : resize === 'both' ? 'nds-resize' : 'nds-resize-y'
   );
+
+  const errorId = $derived(`${id}-error`);
 
   const counterAriaLabel = $derived(
     counterAriaLabelTemplate
@@ -49,7 +57,7 @@
   );
 </script>
 
-<div class="nds-stack" data-spacing="xs" style="width: 20rem">
+<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
   <Label for={id}>{labelText}</Label>
   <Textarea
     {id}
@@ -57,6 +65,7 @@
     {disabled}
     {readonly}
     aria-invalid={ariaInvalid}
+    aria-describedby={errorText ? errorId : undefined}
     maxlength={maxLength}
     bind:value
     class={`${resizeClass} ${minHeight} ${className}`}
@@ -71,5 +80,8 @@
     </div>
   {:else if helpText}
     <p class="nds-text-caption nds-text-muted-foreground">{helpText}</p>
+  {/if}
+  {#if errorText}
+    <p id={errorId} class="nds-text-caption nds-text-destructive">{errorText}</p>
   {/if}
 </div>

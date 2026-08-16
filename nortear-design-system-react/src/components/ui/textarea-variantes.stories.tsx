@@ -1,8 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect } from "storybook/test";
+import { userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
 import { Label } from "./label";
+import {
+  alturaMinimaPx,
+  preencherAte,
+  resizeComputado,
+} from "@shared/testing/textarea-probe";
 
 const meta = {
   title: "UI/Textarea/Variants",
@@ -11,10 +16,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Variantes visuais do Textarea: padrão (resize-y), com contador de caracteres e sem redimensionamento (resize-none).",
+          "Variantes visuais do Textarea: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.",
       },
     },
   },
@@ -25,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="var-default">Biografia</Label>
       <Textarea
         id="var-default"
@@ -38,7 +44,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          "Variante padrão com resize-y e min-h-[120px]. Redimensionamento vertical apenas.",
+          "Variante padrão: redimensionamento vertical e 120px de altura mínima.",
       },
     },
   },
@@ -46,9 +52,14 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText("Biografia");
 
-    await step("Textarea tem classes nds-resize-y e nds-min-h-30", async () => {
-      await expect(textarea).toHaveClass("nds-resize-y");
-      await expect(textarea).toHaveClass("nds-min-h-30");
+    await step("Redimensiona só na vertical", async () => {
+      await expect(resizeComputado(textarea)).toBe("vertical");
+    });
+
+    await step("Altura mínima de 120px", async () => {
+      // A classe morta `min-h-[120px]` prometia isto e não aplicava nada;
+      // a asserção mede o valor computado, não o nome.
+      await expect(alturaMinimaPx(textarea)).toBe(120);
     });
   },
 };
@@ -57,7 +68,7 @@ function WithCounterRender() {
   const [value, setValue] = useState("");
   const max = 500;
   return (
-    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="var-counter">Descrição</Label>
       <Textarea
         id="var-counter"
@@ -83,32 +94,42 @@ function WithCounterRender() {
 export const WithCounter: Story = {
   render: () => <WithCounterRender />,
   parameters: {
+    covers: ["functional.item3", "visual.item4"],
     docs: {
       description: {
         story:
-          'Com contador de caracteres — combina maxLength + span com aria-live="polite" + aria-label descritivo.',
+          'Com contador de caracteres — maxLength + span com aria-live="polite" e aria-label descritivo.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText("Descrição") as HTMLTextAreaElement;
-    const counter = canvas.getByLabelText(/de 500 caracteres usados/);
 
     await step("Textarea tem maxLength=500", async () => {
       await expect(textarea).toHaveAttribute("maxLength", "500");
     });
 
     await step("Contador tem aria-live polite", async () => {
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
       await expect(counter).toHaveAttribute("aria-live", "polite");
-      await expect(counter).toHaveTextContent("0/500");
+    });
+
+    await step("Atingir o limite bloqueia novos caracteres", async () => {
+      // Chega à borda por escrita programática (maxLength não se aplica a
+      // ela) e digita os últimos de verdade — é aí que o bloqueio acontece.
+      preencherAte(textarea, 496);
+      await userEvent.type(textarea, "abcdefgh");
+      await expect(textarea.value.length).toBe(500);
+      const counter = canvas.getByLabelText(/de 500 caracteres usados/);
+      await expect(counter).toHaveTextContent("500/500");
     });
   },
 };
 
 export const NoResize: Story = {
   render: () => (
-    <div className="nds-stack" data-spacing="sm" style={{ width: "20rem" }}>
+    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <Label htmlFor="var-noresize">Feedback</Label>
       <Textarea
         id="var-noresize"
@@ -121,7 +142,7 @@ export const NoResize: Story = {
     docs: {
       description: {
         story:
-          "resize-none — útil em modais ou layouts onde o redimensionamento quebra a UI.",
+          "Sem redimensionamento — útil em modais ou layouts onde arrastar a alça quebra a UI.",
       },
     },
   },
@@ -129,8 +150,8 @@ export const NoResize: Story = {
     const canvas = within(canvasElement);
     const textarea = canvas.getByLabelText("Feedback");
 
-    await step("Textarea tem classe resize-none", async () => {
-      await expect(textarea).toHaveClass("nds-resize-none");
+    await step("Redimensionamento desligado", async () => {
+      await expect(resizeComputado(textarea)).toBe("none");
     });
   },
 };
