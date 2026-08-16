@@ -78,8 +78,27 @@ export const VerticalHeaderContentFooter: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
+  play: async ({ canvasElement, step }) => {
+    await step('Três faixas empilhadas dividem a ALTURA em 20/60/20', async () => {
+      // A asserção anterior era `canvasElement.firstElementChild` ser truthy:
+      // passava com a tela vazia, com o eixo trocado e com os três painéis do
+      // mesmo tamanho. A medida agora é a proporção que a story existe para
+      // demonstrar.
+      const alturas = [
+        ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]'),
+      ].map((p) => p.getBoundingClientRect().height);
+      await expect(alturas).toHaveLength(3);
+      const total = alturas.reduce((a, b) => a + b, 0);
+      await expect(alturas[0] / total).toBeCloseTo(0.2, 1);
+      await expect(alturas[1] / total).toBeCloseTo(0.6, 1);
+      await expect(alturas[2] / total).toBeCloseTo(0.2, 1);
+    });
+
+    await step('E os dois divisores são linhas deitadas', async () => {
+      const punhos = [...canvasElement.querySelectorAll('[data-slot="resizable-handle"]')];
+      await expect(punhos).toHaveLength(2);
+      for (const p of punhos) await expect(p).toHaveAttribute('aria-orientation', 'horizontal');
+    });
   },
 };
 

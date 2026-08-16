@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). NOTA Vanilla: a factory custom NÃO suporta autoSaveId, onLayout nem maxSize — para persistência e callbacks, use as stacks React/Vue/Svelte.',
+          'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). A fábrica expõe onLayout, minSize e maxSize; persistir o layout fica a cargo de quem consome.',
       },
     },
   },
@@ -23,11 +23,20 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Um eixo, um dono.
+ *
+ * O conteúdo do painel pedia `overflow: auto` para si, dentro de um painel que
+ * JÁ rola (`.nds-resizable-panel`). Dois contêineres roláveis empilhados no
+ * mesmo eixo: o de dentro ficava fora da ordem de tabulação e o axe reprovava
+ * com `scrollable-region-focusable` — conteúdo alcançável só com mouse (WCAG
+ * 2.1.1). Quem rola é o painel, que é focável; o bloco de dentro só desenha.
+ * Mesma regra registrada em `01-acessibilidade.md` na rodada do data-table.
+ */
 function block(title: string, body: string, extraClass = ''): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = `nds-w-full nds-p-4 ${extraClass}`.trim();
   wrap.style.height = '100%';
-  wrap.style.overflow = 'auto';
 
   const h = document.createElement('p');
   h.className = 'nds-text-body nds-font-semibold nds-mb-2';
@@ -46,7 +55,6 @@ function listBlock(title: string, items: string[]): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-p-4 nds-bg-muted-soft';
   wrap.style.height = '100%';
-  wrap.style.overflow = 'auto';
 
   const h = document.createElement('p');
   h.className = 'nds-text-body nds-font-semibold nds-mb-2';
@@ -66,10 +74,15 @@ function listBlock(title: string, items: string[]): HTMLElement {
   return wrap;
 }
 
-function frame(child: HTMLElement, minHeight = '320px'): HTMLElement {
+function frame(child: HTMLElement, altura = '320px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
-  wrap.style.minHeight = minHeight;
+  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
+  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
+  // contêiner de altura automática — os painéis colapsavam para zero. Com
+  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
+  // A suíte só viu isso quando a asserção passou a medir a geometria.
+  wrap.style.height = altura;
   wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
@@ -99,6 +112,7 @@ export const EditorWithPreview: Story = {
 
     const root = createResizablePanel({
       direction: 'horizontal',
+      withHandle: true,
       panels: [
         { defaultSize: 50, minSize: 25, content: editor },
         { defaultSize: 50, minSize: 25, content: preview },
@@ -137,6 +151,7 @@ export const SidebarWithContentAndConsole: Story = {
 
     const right = createResizablePanel({
       direction: 'vertical',
+      withHandle: true,
       panels: [
         { defaultSize: 70, minSize: 30, content },
         { defaultSize: 30, minSize: 15, content: console_ },
@@ -149,6 +164,7 @@ export const SidebarWithContentAndConsole: Story = {
 
     const root = createResizablePanel({
       direction: 'horizontal',
+      withHandle: true,
       panels: [
         { defaultSize: 25, minSize: 15, content: sidebar },
         { defaultSize: 75, minSize: 40, content: rightWrap },
@@ -188,6 +204,7 @@ export const ListDetail: Story = {
 
     const root = createResizablePanel({
       direction: 'horizontal',
+      withHandle: true,
       panels: [
         { defaultSize: 35, minSize: 20, content: list },
         { defaultSize: 65, minSize: 35, content: detail },
@@ -197,10 +214,14 @@ export const ListDetail: Story = {
     return frame(root, '300px');
   },
   play: async ({ canvasElement, step }) => {
-    await step('Renderiza dois painéis com tamanhos iniciais corretos', async () => {
-      const panels = canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]');
-      await expect(panels[0].style.width).toBe('35%');
-      await expect(panels[1].style.width).toBe('65%');
+    await step('Renderiza dois painéis na proporção declarada', async () => {
+      // A medida é a da TELA. A versão anterior afirmava `style.width === '35%'`
+      // — largura inline que o `flex-basis: 0` da folha compartilhada ignora:
+      // a asserção passava com os dois painéis desenhados 50/50.
+      const [a, b] = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')].map(
+        (p) => p.getBoundingClientRect().width,
+      );
+      await expect(a / (a + b)).toBeCloseTo(0.35, 1);
     });
   },
 };
@@ -217,6 +238,7 @@ export const ThreeColumns: Story = {
 
     const root = createResizablePanel({
       direction: 'horizontal',
+      withHandle: true,
       panels: [
         { defaultSize: 20, minSize: 12, content: nav },
         { defaultSize: 55, minSize: 30, content },

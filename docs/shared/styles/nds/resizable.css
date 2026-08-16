@@ -35,9 +35,16 @@
  * `.nds-aspect-ratio`.
  *
  * Fator de crescimento, e não largura em porcentagem: com `flex-basis: 0` os
- * painéis dividem o espaço livre na proporção pedida sem exigir que o container
- * tenha altura definida (que é o caso do grupo vertical), e os punhos — 1px cada
- * — saem da divisão em vez de estourarem os 100%.
+ * painéis dividem o espaço LIVRE na proporção pedida, e os punhos — 1px cada —
+ * saem da divisão em vez de estourarem os 100%.
+ *
+ * Espaço livre exige tamanho definido no eixo do grupo. Um grupo vertical
+ * dentro de um contêiner de altura automática não tem altura livre nenhuma para
+ * repartir, e os painéis colapsam para zero: dê ao grupo (ou ao invólucro dele)
+ * uma `height`, e não apenas `min-height` no elemento de fora. A frase anterior
+ * deste comentário afirmava o contrário, e uma story vertical inteira nasceu
+ * com os painéis em 0px por causa disso — invisível enquanto a asserção olhava
+ * `style.height` em vez da geometria.
  *
  * O padrão `1` mantém o comportamento de quem não emite nada: painéis iguais.
  */
@@ -94,6 +101,7 @@
 .nds-resizable-handle:focus-visible {
   box-shadow: 0 0 0 1px hsl(var(--ring));
 }
+
 
 /* ── Grip (alça com pontos) ──────────────────────────────────────────────── */
 .nds-resizable-grip {
@@ -162,6 +170,33 @@
   transform: rotate(90deg);
 }
 
+/*
+ * Libs Vue de painéis emitem também `data-orientation` no punho, com a direção
+ * do GRUPO — vocabulário que a folha não conhecia, e por isso um grupo vertical
+ * saía com o divisor de 1px de LARGURA e cursor `col-resize`, roubando 24px da
+ * altura dos painéis. Medido pela sonda; nenhuma story olhava para a geometria
+ * do punho.
+ */
+.nds-resizable-handle[data-orientation="vertical"] {
+  width: 100%;
+  height: 1px;
+  cursor: row-resize;
+}
+
+.nds-resizable-handle[data-orientation="vertical"]::after {
+  inset-block: auto;
+  inset-inline: 0;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: var(--spacing-1, 0.25rem);
+  transform: translateY(-50%);
+}
+
+.nds-resizable-handle[data-orientation="vertical"] > .nds-resizable-grip-bar {
+  transform: rotate(90deg);
+}
+
 /* Libs Svelte de painéis (paneforge) emitem data-direction no próprio handle */
 .nds-resizable-handle[data-direction="vertical"] {
   width: 100%;
@@ -223,6 +258,38 @@
 
 .nds-resizable-handle[aria-orientation="horizontal"] > .nds-resizable-grip-bar {
   transform: rotate(90deg);
+}
+
+/*
+ * ─── Divisor travado ────────────────────────────────────────────────────────
+ *
+ * O conteúdo compartilhado descreve o estado desabilitado como "sem cursor de
+ * resize", e não havia regra nenhuma: o divisor travado seguia anunciando
+ * `col-resize`, prometendo um arrasto que não acontece. A cor não muda — o
+ * divisor continua sendo a linha que separa dois painéis, e apagá-la esconderia
+ * a estrutura de quem só está lendo. O que sai é a resposta ao ponteiro.
+ *
+ * NO FIM DA FOLHA, e com o seletor do grupo repetido: as regras de eixo acima
+ * têm duas classes e três atributos, e a primeira versão desta correção — só
+ * `.nds-resizable-handle[data-disabled]` — perdia a disputa de especificidade e
+ * não mudava nada. A suíte do Vue pegou; a leitura da folha a olho não pegaria.
+ *
+ * `:not([data-disabled="false"])`: atributo de presença casa o valor "false",
+ * que algumas libs emitem em TODOS os elementos.
+ */
+.nds-resizable-handle[data-disabled]:not([data-disabled="false"]),
+.nds-resizable-handle[aria-disabled="true"],
+.nds-resizable[data-direction] > .nds-resizable-handle[data-disabled]:not([data-disabled="false"]),
+.nds-resizable[data-direction] > .nds-resizable-handle[aria-disabled="true"],
+.nds-resizable:not([data-direction]) > .nds-resizable-handle[data-disabled]:not([data-disabled="false"]),
+.nds-resizable:not([data-direction]) > .nds-resizable-handle[aria-disabled="true"] {
+  cursor: default;
+}
+
+/* Sem resposta ao ponteiro: o hover prometeria um gesto que está travado. */
+.nds-resizable-handle[data-disabled]:not([data-disabled="false"]):hover,
+.nds-resizable-handle[aria-disabled="true"]:hover {
+  background-color: hsl(var(--ring));
 }
 
 @media (prefers-reduced-motion: reduce) {

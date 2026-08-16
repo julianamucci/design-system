@@ -283,12 +283,14 @@ const handlePropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--border',                value: tContent('tokens.table.border.class'),       description: tContent('tokens.table.border.part')       },
-  { token: '--ring',                  value: tContent('tokens.table.ring.class'),         description: tContent('tokens.table.ring.part')         },
-  { token: '--background',            value: tContent('tokens.table.background.class'),   description: tContent('tokens.table.background.part')   },
-  { token: '--foreground',            value: tContent('tokens.table.foreground.class'),   description: tContent('tokens.table.foreground.part')   },
-  { token: '--muted',                 value: tContent('tokens.table.muted.class'),        description: tContent('tokens.table.muted.part')        },
-  { token: '--ring-offset-background', value: tContent('tokens.table.ringOffset.class'),  description: tContent('tokens.table.ringOffset.part')   },
+  { token: '--ring', value: tContent('tokens.table.ring.class'), description: tContent('tokens.table.ring.part') },
+  { token: '--foreground', value: tContent('tokens.table.foreground.class'), description: tContent('tokens.table.foreground.part') },
+  { token: '--radius-xs', value: tContent('tokens.table.radiusXs.class'), description: tContent('tokens.table.radiusXs.part') },
+  { token: '--radius', value: tContent('tokens.table.radius.class'), description: tContent('tokens.table.radius.part') },
+  { token: '--spacing-1', value: tContent('tokens.table.spacing1.class'), description: tContent('tokens.table.spacing1.part') },
+  { token: '--spacing-4', value: tContent('tokens.table.spacing4.class'), description: tContent('tokens.table.spacing4.part') },
+  { token: '--spacing-6', value: tContent('tokens.table.spacing6.class'), description: tContent('tokens.table.spacing6.part') },
+  { token: '--duration-fast', value: tContent('tokens.table.durationFast.class'), description: tContent('tokens.table.durationFast.part') },
 ]);
 
 const accessibilityItems = computed(() => [

@@ -1,6 +1,6 @@
 // ─── Resizable — Vanilla factory standalone ─────────────────────────────────
 // Visual: classes .nds-resizable-* (standalone).
-// Drag handle + keyboard resize (Arrow keys).
+// Divisor arrastável + redimensionamento por teclado (setas, Home, End, Enter).
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -9,20 +9,44 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type ResizablePanel = {
   content: HTMLElement;
+  /** Tamanho inicial em porcentagem do grupo (0–100). */
   defaultSize?: number;
+  /** Mínimo em porcentagem — é o que impede o painel de sumir. */
   minSize?: number;
+  /** Máximo em porcentagem. */
+  maxSize?: number;
 };
 
 export type ResizablePanelOptions = {
   direction?: 'horizontal' | 'vertical';
   panels: ResizablePanel[];
+  /**
+   * Mostra o pegador visual centralizado nos divisores.
+   *
+   * Existe como opção, e não como sempre-ligado, porque a fábrica exibia o
+   * pegador incondicionalmente enquanto a story anunciava um controle
+   * `withHandle` que não chegava a lugar nenhum — controle morto no painel e
+   * documentação que prometia um padrão (`false`) que esta stack não cumpria.
+   */
+  withHandle?: boolean;
+  /** Divisores travados: continuam anunciados e focáveis, mas não movem nada. */
+  disabled?: boolean;
+  /** Tamanhos finais, em porcentagem, ao fim de cada gesto. */
+  onLayout?: (sizes: number[]) => void;
   class?: string;
 };
+
+/** Passo de cada seta, em pontos percentuais. Mesmo valor das outras stacks. */
+const PASSO_TECLADO = 2;
+
+function limitar(valor: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, valor));
+}
 
 // ─── createResizablePanel ─────────────────────────────────────────────────────
 
 export function createResizablePanel(options: ResizablePanelOptions): DestroyableElement {
-  const { direction = 'horizontal', panels } = options;
+  const { direction = 'horizontal', panels, disabled = false, withHandle = false, onLayout } = options;
   const isHorizontal = direction === 'horizontal';
   const count = panels.length;
 
@@ -34,105 +58,148 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   root.dataset.direction = direction;
   root.className = cn('nds-resizable', options.class);
 
-  // Distribute sizes
-  const defaultSizes = panels.map((p) => p.defaultSize ?? 100 / count);
-  const sizes = [...defaultSizes];
+  const minimoDe = (i: number) => panels[i]?.minSize ?? 10;
+  const maximoDe = (i: number) => panels[i]?.maxSize ?? 100;
+
+  // `defaultSize` declarado manda; quem não declarou divide a sobra por igual.
+  const declarados = panels.map((p) => p.defaultSize);
+  const semDeclaracao = declarados.filter((d) => d === undefined).length;
+  const somaDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
+  const fatia = semDeclaracao > 0 ? Math.max(0, 100 - somaDeclarada) / semDeclaracao : 0;
+  const bruto = declarados.map((d, i) => limitar(d ?? fatia, minimoDe(i), maximoDe(i)));
+  const somaBruta = bruto.reduce((a, b) => a + b, 0);
+  /** Sempre normalizado para somar 100 — é o que o `aria-valuenow` anuncia. */
+  const sizes = somaBruta > 0 ? bruto.map((s) => (s / somaBruta) * 100) : bruto.map(() => 100 / count);
 
   const panelEls: HTMLElement[] = [];
+  const handleEls: HTMLElement[] = [];
 
+  /**
+   * O tamanho viaja por `--panel-size`, e não por `width`/`height` inline.
+   *
+   * A folha compartilhada dá `flex-basis: 0` ao painel: com isso o eixo
+   * principal sai de `flex-grow`, e `width` inline é IGNORADO. A fábrica
+   * escrevia `width: 30%` desde sempre, as stories afirmavam esse `style.width`
+   * — e os painéis apareciam todos do mesmo tamanho na tela, com a suíte verde.
+   */
   function applySize(i: number): void {
-    const p = panelEls[i];
-    if (isHorizontal) {
-      p.style.width = `${sizes[i]}%`;
-      p.style.height = '100%';
-    } else {
-      p.style.height = `${sizes[i]}%`;
-      p.style.width = '100%';
-    }
+    panelEls[i]?.style.setProperty('--panel-size', String(Math.round(sizes[i] * 1e4) / 1e4));
+  }
+
+  /** `aria-valuenow` só serve se for o tamanho REAL do painel anterior. */
+  function anunciar(i: number): void {
+    const h = handleEls[i];
+    if (!h) return;
+    const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
+    h.setAttribute('aria-valuenow', String(Math.round(sizes[i])));
+    h.setAttribute('aria-valuemin', String(Math.round(minimoDe(i))));
+    // O teto não é o `maxSize` do painel: o vizinho também tem um mínimo, e é o
+    // menor dos dois que o gesto respeita.
+    h.setAttribute('aria-valuemax', String(Math.round(Math.min(maximoDe(i), soma - minimoDe(i + 1)))));
+  }
+
+  /**
+   * Move o divisor `i`: o que um painel ganha, o vizinho perde. Só os dois se
+   * mexem — num grupo de cinco painéis, arrastar um divisor não pode empurrar o
+   * layout inteiro.
+   */
+  function aplicar(i: number, deltaPct: number, base: number[]): void {
+    const soma = (base[i] ?? 0) + (base[i + 1] ?? 0);
+    const teto = Math.min(maximoDe(i), soma - minimoDe(i + 1));
+    const piso = Math.max(minimoDe(i), soma - maximoDe(i + 1));
+    if (piso > teto) return;
+
+    sizes[i] = limitar(base[i] + deltaPct, piso, teto);
+    sizes[i + 1] = soma - sizes[i];
+    applySize(i);
+    applySize(i + 1);
+    anunciar(i);
+  }
+
+  /** Fim de interação: uma emissão por gesto, não uma por pixel. */
+  function finalizar(): void {
+    onLayout?.(sizes.map((s) => Math.round(s * 10) / 10));
   }
 
   panels.forEach((panel, i) => {
     const panelEl = document.createElement('div');
     panelEl.dataset.slot = 'resizable-panel';
     panelEl.className = 'nds-resizable-panel';
-    // Panels may overflow — make them focusable for keyboard scroll (WCAG SC 2.1.1).
+    // O painel rola (`overflow: auto` na folha compartilhada). Região rolável
+    // precisa ser alcançável por teclado, senão o conteúdo escondido fica
+    // inacessível a quem não usa mouse (WCAG 2.1.1).
     panelEl.setAttribute('tabindex', '0');
     panelEl.appendChild(panel.content);
     panelEls.push(panelEl);
     root.appendChild(panelEl);
     applySize(i);
 
-    // Add handle between panels (not after the last)
+    // Divisor entre painéis (não depois do último)
     if (i < panels.length - 1) {
       const handle = document.createElement('div');
       handle.dataset.slot = 'resizable-handle';
       handle.setAttribute('role', 'separator');
       handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
-      handle.setAttribute('aria-valuenow', '50');
-      handle.setAttribute('aria-valuemin', '0');
-      handle.setAttribute('aria-valuemax', '100');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
+      if (disabled) {
+        // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que
+        // desaparece do Tab não tem como explicar por que está travado.
+        handle.setAttribute('aria-disabled', 'true');
+        handle.dataset.disabled = '';
+      }
 
       // Grip (alça com pontos) — SVG via createElementNS (sem innerHTML).
-      const grip = document.createElement('div');
-      grip.className = 'nds-resizable-grip';
-      const SVG_NS = 'http://www.w3.org/2000/svg';
-      const svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('xmlns', SVG_NS);
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.setAttribute('fill', 'none');
-      svg.setAttribute('stroke', 'currentColor');
-      svg.setAttribute('stroke-width', '2');
-      svg.setAttribute('stroke-linecap', 'round');
-      svg.setAttribute('stroke-linejoin', 'round');
-      svg.setAttribute('aria-hidden', 'true');
-      for (const [cx, cy] of [['9','5'],['9','12'],['9','19'],['15','5'],['15','12'],['15','19']]) {
-        const c = document.createElementNS(SVG_NS, 'circle');
-        c.setAttribute('cx', cx);
-        c.setAttribute('cy', cy);
-        c.setAttribute('r', '1');
-        svg.appendChild(c);
+      if (withHandle) {
+        const grip = document.createElement('div');
+        grip.className = 'nds-resizable-grip';
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('xmlns', SVG_NS);
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        // Seis pontinhos não têm nada a dizer a um leitor de tela: quem carrega
+        // o significado é o aria-label do separator.
+        svg.setAttribute('aria-hidden', 'true');
+        for (const [cx, cy] of [['9','5'],['9','12'],['9','19'],['15','5'],['15','12'],['15','19']]) {
+          const c = document.createElementNS(SVG_NS, 'circle');
+          c.setAttribute('cx', cx);
+          c.setAttribute('cy', cy);
+          c.setAttribute('r', '1');
+          svg.appendChild(c);
+        }
+        grip.appendChild(svg);
+        handle.appendChild(grip);
       }
-      grip.appendChild(svg);
-      handle.appendChild(grip);
-
-      // Drag logic
-      let dragging = false;
-      let startPos = 0;
-      let startSizeA = 0;
-      let startSizeB = 0;
-      const minA = panels[i].minSize ?? 10;
-      const minB = panels[i + 1].minSize ?? 10;
 
       handle.addEventListener('mousedown', (e) => {
+        if (disabled) return;
         e.preventDefault();
-        dragging = true;
-        startPos = isHorizontal ? e.clientX : e.clientY;
-        startSizeA = sizes[i];
-        startSizeB = sizes[i + 1];
+        const inicio = isHorizontal ? e.clientX : e.clientY;
+        // A conta parte SEMPRE do tamanho do mousedown: somar incrementos a cada
+        // mousemove acumula o erro e o divisor descola do cursor.
+        const base = [...sizes];
+        let arrastando = true;
 
-        const onMove = (e: MouseEvent) => {
-          if (!dragging) return;
-          const pos = isHorizontal ? e.clientX : e.clientY;
-          const delta = pos - startPos;
+        const onMove = (ev: MouseEvent) => {
+          if (!arrastando) return;
           const totalPx = isHorizontal ? root.offsetWidth : root.offsetHeight;
-          const deltaPct = (delta / totalPx) * 100;
-          let newA = startSizeA + deltaPct;
-          let newB = startSizeB - deltaPct;
-          if (newA < minA) { newB += newA - minA; newA = minA; }
-          if (newB < minB) { newA += newB - minB; newB = minB; }
-          sizes[i] = newA;
-          sizes[i + 1] = newB;
-          applySize(i);
-          applySize(i + 1);
+          if (!totalPx) return;
+          const pos = isHorizontal ? ev.clientX : ev.clientY;
+          aplicar(i, ((pos - inicio) / totalPx) * 100, base);
         };
 
         const onUp = () => {
-          dragging = false;
+          if (!arrastando) return;
+          arrastando = false;
           document.removeEventListener('mousemove', onMove);
           document.removeEventListener('mouseup', onUp);
           soltarArrasto = null;
+          finalizar();
         };
 
         document.addEventListener('mousemove', onMove);
@@ -144,31 +211,39 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
         soltarArrasto = onUp;
       });
 
-      // Keyboard resize
+      /**
+       * O equivalente por teclado do arrasto (WCAG 2.1.1 e 2.5.7).
+       *
+       * As setas do eixo do grupo movem um passo; as do outro eixo são
+       * ignoradas de propósito, para não roubar a rolagem de quem só está
+       * passando o foco.
+       */
       handle.addEventListener('keydown', (e) => {
-        const step = 2;
-        const minA = panels[i].minSize ?? 10;
-        const minB = panels[i + 1].minSize ?? 10;
+        if (disabled) return;
+        const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
         let delta = 0;
-        if (isHorizontal && e.key === 'ArrowRight') delta = step;
-        if (isHorizontal && e.key === 'ArrowLeft') delta = -step;
-        if (!isHorizontal && e.key === 'ArrowDown') delta = step;
-        if (!isHorizontal && e.key === 'ArrowUp') delta = -step;
-        if (delta === 0) return;
+        switch (e.key) {
+          case 'ArrowRight': if (isHorizontal) delta = PASSO_TECLADO; break;
+          case 'ArrowLeft':  if (isHorizontal) delta = -PASSO_TECLADO; break;
+          case 'ArrowDown':  if (!isHorizontal) delta = PASSO_TECLADO; break;
+          case 'ArrowUp':    if (!isHorizontal) delta = -PASSO_TECLADO; break;
+          case 'Home': delta = minimoDe(i) - sizes[i]; break;
+          case 'End':  delta = Math.min(maximoDe(i), soma - minimoDe(i + 1)) - sizes[i]; break;
+          case 'Enter': delta = (panels[i].defaultSize ?? sizes[i]) - sizes[i]; break;
+          default: return;
+        }
+        if (delta === 0 && !['Home', 'End', 'Enter'].includes(e.key)) return;
         e.preventDefault();
-        let newA = sizes[i] + delta;
-        let newB = sizes[i + 1] - delta;
-        if (newA < minA) { newB += newA - minA; newA = minA; }
-        if (newB < minB) { newA += newB - minB; newB = minB; }
-        sizes[i] = newA;
-        sizes[i + 1] = newB;
-        applySize(i);
-        applySize(i + 1);
+        aplicar(i, delta, [...sizes]);
+        finalizar();
       });
 
+      handleEls.push(handle);
       root.appendChild(handle);
     }
   });
+
+  handleEls.forEach((_, i) => anunciar(i));
 
   return tornarDestruivel(root, root, () => {
     soltarArrasto?.();

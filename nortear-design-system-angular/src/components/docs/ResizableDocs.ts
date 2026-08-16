@@ -705,12 +705,14 @@ export class NdsResizableDocs implements AfterViewInit, OnDestroy {
   protected readonly tokenItems = computed(() => {
     dict();
     return [
-      { token: '--border',                   k: 'border'     },
-      { token: '--ring',                     k: 'ring'       },
-      { token: '--background',               k: 'background' },
-      { token: '--foreground',               k: 'foreground' },
-      { token: '--muted',                    k: 'muted'      },
-      { token: '--ring-offset-background',   k: 'ringOffset' },
+      { token: '--ring', k: 'ring' },
+      { token: '--foreground', k: 'foreground' },
+      { token: '--radius-xs', k: 'radiusXs' },
+      { token: '--radius', k: 'radius' },
+      { token: '--spacing-1', k: 'spacing1' },
+      { token: '--spacing-4', k: 'spacing4' },
+      { token: '--spacing-6', k: 'spacing6' },
+      { token: '--duration-fast', k: 'durationFast' },
     ].map(({ token, k }) => ({
       token,
       value: toPlainText(t(`tokens.table.${k}.class`)),

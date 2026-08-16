@@ -684,7 +684,7 @@ interface PanelResizeHandleProps {
                 type: tContent("props.table.direction.type"),
                 defaultValue: tContent("props.table.direction.default"),
                 required: tContent("props.table.direction.required"),
-                description: DOMPurify.sanitize(tContent("props.table.direction.description")),
+                description: toPlainText(tContent("props.table.direction.description")),
               },
               {
                 name: "defaultSize",
@@ -719,14 +719,14 @@ interface PanelResizeHandleProps {
                 type: tContent("props.table.withHandle.type"),
                 defaultValue: tContent("props.table.withHandle.default"),
                 required: tContent("props.table.withHandle.required"),
-                description: DOMPurify.sanitize(tContent("props.table.withHandle.description")),
+                description: toPlainText(tContent("props.table.withHandle.description")),
               },
               {
                 name: "onLayout",
                 type: tContent("props.table.onLayout.type"),
                 defaultValue: tContent("props.table.onLayout.default"),
                 required: tContent("props.table.onLayout.required"),
-                description: DOMPurify.sanitize(tContent("props.table.onLayout.description")),
+                description: toPlainText(tContent("props.table.onLayout.description")),
               },
             ],
           },
@@ -746,19 +746,9 @@ interface PanelResizeHandleProps {
         }}
         items={[
           {
-            token: "--border",
-            value: tContent("tokens.table.border.class"),
-            description: tContent("tokens.table.border.part"),
-          },
-          {
             token: "--ring",
             value: tContent("tokens.table.ring.class"),
             description: tContent("tokens.table.ring.part"),
-          },
-          {
-            token: "--background",
-            value: tContent("tokens.table.background.class"),
-            description: tContent("tokens.table.background.part"),
           },
           {
             token: "--foreground",
@@ -766,14 +756,34 @@ interface PanelResizeHandleProps {
             description: tContent("tokens.table.foreground.part"),
           },
           {
-            token: "--muted",
-            value: tContent("tokens.table.muted.class"),
-            description: tContent("tokens.table.muted.part"),
+            token: "--radius-xs",
+            value: tContent("tokens.table.radiusXs.class"),
+            description: tContent("tokens.table.radiusXs.part"),
           },
           {
-            token: "--ring-offset-background",
-            value: tContent("tokens.table.ringOffset.class"),
-            description: tContent("tokens.table.ringOffset.part"),
+            token: "--radius",
+            value: tContent("tokens.table.radius.class"),
+            description: tContent("tokens.table.radius.part"),
+          },
+          {
+            token: "--spacing-1",
+            value: tContent("tokens.table.spacing1.class"),
+            description: tContent("tokens.table.spacing1.part"),
+          },
+          {
+            token: "--spacing-4",
+            value: tContent("tokens.table.spacing4.class"),
+            description: tContent("tokens.table.spacing4.part"),
+          },
+          {
+            token: "--spacing-6",
+            value: tContent("tokens.table.spacing6.class"),
+            description: tContent("tokens.table.spacing6.part"),
+          },
+          {
+            token: "--duration-fast",
+            value: tContent("tokens.table.durationFast.class"),
+            description: tContent("tokens.table.durationFast.part"),
           },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

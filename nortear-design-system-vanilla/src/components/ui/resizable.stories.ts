@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createResizablePanel } from './resizable';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
+const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
+
 type ResizableArgs = {
   direction: 'horizontal' | 'vertical';
-  defaultSizeA: number;
-  minSizeA: number;
-  defaultSizeB: number;
-  minSizeB: number;
+  defaultSize: number;
+  minSize: number;
+  maxSize: number;
   withHandle: boolean;
 };
 
@@ -26,36 +27,35 @@ const meta: Meta<ResizableArgs> = {
     direction: {
       control: { type: 'inline-radio' },
       options: ['horizontal', 'vertical'],
-      description: 'Direção do PanelGroup — horizontal (split lateral) ou vertical (split vertical).',
+      description: 'Split lateral (horizontal) ou empilhado (vertical).',
+      table: { type: { summary: '"horizontal" | "vertical"' }, defaultValue: { summary: 'horizontal' } },
     },
-    defaultSizeA: {
-      control: { type: 'number', min: 5, max: 95, step: 5 },
-      description: 'Tamanho inicial do painel A (porcentagem 0–100).',
+    defaultSize: {
+      control: { type: 'range', min: 20, max: 60, step: 5 },
+      description: 'Tamanho inicial do primeiro painel, em porcentagem do grupo.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '—' } },
     },
-    minSizeA: {
-      control: { type: 'number', min: 0, max: 50, step: 5 },
-      description: 'Tamanho mínimo do painel A em porcentagem.',
+    minSize: {
+      control: { type: 'range', min: 10, max: 40, step: 5 },
+      description: 'Tamanho mínimo de cada painel, em porcentagem do grupo.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '10' } },
     },
-    defaultSizeB: {
-      control: { type: 'number', min: 5, max: 95, step: 5 },
-      description: 'Tamanho inicial do painel B (porcentagem 0–100).',
-    },
-    minSizeB: {
-      control: { type: 'number', min: 0, max: 50, step: 5 },
-      description: 'Tamanho mínimo do painel B em porcentagem.',
+    maxSize: {
+      control: { type: 'range', min: 40, max: 90, step: 5 },
+      description: 'Tamanho máximo do primeiro painel, em porcentagem do grupo.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '100' } },
     },
     withHandle: {
       control: 'boolean',
-      description:
-        'Pegador visual no Handle. NOTA: factory Vanilla SEMPRE exibe o grip visual — argType para paridade conceitual com react-resizable-panels/reka-ui Splitter/paneforge.',
+      description: 'Mostra o pegador visual centralizado no divisor.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
   },
   args: {
     direction: 'horizontal',
-    defaultSizeA: 30,
-    minSizeA: 15,
-    defaultSizeB: 70,
-    minSizeB: 30,
+    defaultSize: 30,
+    minSize: 20,
+    maxSize: 60,
     withHandle: true,
   },
 };
@@ -65,74 +65,129 @@ type Story = StoryObj<ResizableArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function panelContent(label: string, extraClass = ''): HTMLElement {
+function panelContent(titulo: string, apoio: string): HTMLElement {
   const el = document.createElement('div');
-  el.className = `nds-cluster nds-text-body nds-font-medium ${extraClass}`.trim();
-  el.dataset.justify = 'center';
-  el.dataset.align = 'center';
-  el.style.height = '100%';
-  el.style.width = '100%';
-  el.style.padding = '1rem';
-  const span = document.createElement('span');
-  span.textContent = label;
-  el.appendChild(span);
+  el.className = 'nds-stack nds-p-4';
+  el.dataset.spacing = 'xs';
+  const h = document.createElement('p');
+  h.className = 'nds-text-body nds-font-semibold';
+  h.textContent = titulo;
+  const p = document.createElement('p');
+  p.className = 'nds-text-caption nds-text-muted-foreground';
+  p.textContent = apoio;
+  el.append(h, p);
   return el;
 }
 
-function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
+function frame(child: HTMLElement, altura: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
-  wrap.style.minHeight = minHeight;
+  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
+  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
+  // contêiner de altura automática — os painéis colapsavam para zero. Com
+  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
+  // A suíte só viu isso quando a asserção passou a medir a geometria.
+  wrap.style.height = altura;
   wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
 
+/** Geometria real: `flex-basis: 0` faz `style.width` não decidir nada. */
+function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal: boolean): number {
+  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+  const medidas = paineis.map((p) =>
+    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
+  );
+  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
+}
+
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item2',
+      'accessibility.item1',
+      'accessibility.item4',
+      'accessibility.item5',
+    ],
+  },
   render: (args) => {
     const root = createResizablePanel({
       direction: args.direction,
+      withHandle: args.withHandle,
       panels: [
-        { defaultSize: args.defaultSizeA, minSize: args.minSizeA, content: panelContent('Painel A', 'nds-bg-muted nds-text-muted-foreground')},
-        { defaultSize: args.defaultSizeB, minSize: args.minSizeB, content: panelContent('Painel B') },
+        {
+          defaultSize: args.defaultSize,
+          minSize: args.minSize,
+          maxSize: args.maxSize,
+          content: panelContent('Sidebar', 'Navegação do projeto'),
+        },
+        {
+          defaultSize: 100 - args.defaultSize,
+          minSize: args.minSize,
+          content: panelContent('Conteúdo principal', 'Arraste o divisor ou use as setas com ele focado.'),
+        },
       ],
     });
-    const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-    handle?.setAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
+    root
+      .querySelector<HTMLElement>('[data-slot="resizable-handle"]')
+      ?.setAttribute('aria-label', ROTULO_PUNHO);
     return frame(root, args.direction === 'vertical' ? '280px' : '220px');
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
+    const horizontal = args.direction === 'horizontal';
 
-    await step('Root tem data-slot=resizable', async () => {
-      const root = canvasElement.querySelector('[data-slot="resizable"]');
-      await expect(root).toBeTruthy();
+    await step('O divisor é um separator com nome e valor', async () => {
+      // accessibility.item4 e item5 — o `getByRole` acima já falharia sem papel
+      // ou sem nome. Aqui fica o VALOR, que é o que um separator focável precisa
+      // ter para o leitor de tela anunciar o tamanho ao mover.
+      await expect(punho).toHaveAttribute('aria-orientation', horizontal ? 'vertical' : 'horizontal');
+      await expect(punho).toHaveAttribute('aria-valuemin', String(args.minSize));
+      await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(
+        Math.round(fracaoDoPrimeiro(canvasElement, horizontal) * 100),
+      );
     });
 
-    await step('Handle tem role=separator + aria-orientation correto', async () => {
-      const handle = canvas.getByRole('separator');
-      await expect(handle).toBeTruthy();
-      const expectedOrientation = args.direction === 'horizontal' ? 'vertical' : 'horizontal';
-      await expect(handle).toHaveAttribute('aria-orientation', expectedOrientation);
-      await expect(handle).toHaveAttribute('tabindex', '0');
+    await step('O tamanho declarado chega à tela na proporção pedida', async () => {
+      // A porcentagem viaja por `--panel-size` e é consumida pelo CSS
+      // (`flex-grow`). Escrever largura inline não teria efeito nenhum, e era
+      // exatamente o que a fábrica fazia — com a story afirmando o `style.width`
+      // que ninguém aplicava.
+      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(args.defaultSize / 100, 1);
     });
 
-    await step('Handle tem aria-label descritivo', async () => {
-      const handle = canvas.getByRole('separator');
-      await expect(handle).toHaveAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
+    await step('As setas movem o divisor — o equivalente por teclado do arrasto', async () => {
+      // functional.item2. Sem isto, ajustar o layout seria um gesto de arrasto
+      // sem alternativa (WCAG 2.1.1 e 2.5.7).
+      //
+      // O par cresce/encolhe é de saldo ZERO: o painel Interactions reexecuta a
+      // play no mesmo DOM, e um passo que só cresce iria encostando no limite até
+      // a asserção inverter de sentido numa rodada qualquer.
+      const antes = Number(punho.getAttribute('aria-valuenow'));
+      punho.focus();
+      await expect(punho).toHaveFocus();
+
+      const cresce = horizontal ? '{ArrowRight}' : '{ArrowDown}';
+      const encolhe = horizontal ? '{ArrowLeft}' : '{ArrowUp}';
+
+      await userEvent.keyboard(cresce);
+      await waitFor(() => expect(Number(punho.getAttribute('aria-valuenow'))).toBeGreaterThan(antes));
+      await expect(fracaoDoPrimeiro(canvasElement, horizontal) * 100).toBeGreaterThan(antes);
+
+      await userEvent.keyboard(encolhe);
+      await waitFor(() => expect(Number(punho.getAttribute('aria-valuenow'))).toBe(antes));
     });
 
-    await step('Seta de teclado ajusta o tamanho (WCAG 2.5.7)', async () => {
-      const handle = canvas.getByRole('separator');
-      handle.focus();
-      const panels = canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]');
-      const before = args.direction === 'horizontal' ? panels[0].style.width : panels[0].style.height;
-      const key = args.direction === 'horizontal' ? '{ArrowRight}' : '{ArrowDown}';
-      await userEvent.keyboard(key);
-      const after = args.direction === 'horizontal' ? panels[0].style.width : panels[0].style.height;
-      await expect(after).not.toBe(before);
+    await step('A seta do outro eixo não é sequestrada', async () => {
+      // Um separator vertical que consumisse ArrowUp roubaria a rolagem de quem
+      // só está de passagem pelo foco.
+      const antes = punho.getAttribute('aria-valuenow');
+      await userEvent.keyboard(horizontal ? '{ArrowUp}' : '{ArrowLeft}');
+      await expect(punho.getAttribute('aria-valuenow')).toBe(antes);
     });
   },
 };

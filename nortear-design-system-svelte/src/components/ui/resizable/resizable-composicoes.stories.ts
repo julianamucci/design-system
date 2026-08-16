@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 
 const meta: Meta = {
@@ -10,10 +10,11 @@ const meta: Meta = {
   parameters: {
     layout: 'padded',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes reais do Resizable — Sidebar + Conteúdo, Editor + Preview e layout aninhado tipo IDE (Sidebar | Editor / Console).',
+          'Composicoes reais do Resizable — Sidebar + Conteúdo, Editor + Preview, Lista + Detalhe empilhados e layout aninhado tipo IDE (Sidebar | Editor / Console).',
       },
     },
   },
@@ -22,14 +23,27 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
+function fracoes(canvasElement: HTMLElement, horizontal: boolean): number[] {
+  const grupo = canvasElement.querySelector('[data-slot="resizable-pane-group"]')!;
+  const paineis = [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+  const medida = (p: HTMLElement) =>
+    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
+  const total = paineis.reduce((a, p) => a + medida(p), 0);
+  return paineis.map((p) => medida(p) / total);
+}
+
 export const SidebarLayout: Story = {
   render: () => ({
     Component: ResizableStory,
     props: {
-      variant: 'horizontal',
+      variant: 'simples',
+      direction: 'horizontal',
       withHandle: true,
-      sidebarLabel: 'Navegação',
-      contentLabel: 'Conteúdo principal',
+      defaultSize: 30,
+      minSize: 20,
+      labelA: 'Navegação',
+      labelB: 'Conteúdo principal',
       ariaLabel: 'Redimensionar sidebar — use setas para ajustar',
       height: '280px',
     },
@@ -40,9 +54,11 @@ export const SidebarLayout: Story = {
       await expect(canvas.getByText('Navegação')).toBeVisible();
       await expect(canvas.getByText('Conteúdo principal')).toBeVisible();
     });
+    await step('A sidebar ocupa a fatia declarada', async () => {
+      await expect(fracoes(canvasElement, true)[0]).toBeCloseTo(0.3, 1);
+    });
     await step('Handle com aria-label contextual', async () => {
-      const handle = canvas.getByRole('separator', { name: /sidebar/i });
-      await expect(handle).toBeInTheDocument();
+      await expect(canvas.getByRole('separator', { name: /sidebar/i })).toBeInTheDocument();
     });
   },
 };
@@ -51,10 +67,13 @@ export const EditorPreview: Story = {
   render: () => ({
     Component: ResizableStory,
     props: {
-      variant: 'withHandle',
+      variant: 'simples',
       direction: 'horizontal',
-      leftLabel: 'Editor',
-      rightLabel: 'Preview',
+      withHandle: true,
+      defaultSize: 50,
+      minSize: 20,
+      labelA: 'Editor',
+      labelB: 'Preview',
       ariaLabel: 'Redimensionar editor e preview — use setas',
       height: '320px',
     },
@@ -65,6 +84,9 @@ export const EditorPreview: Story = {
       await expect(canvas.getByText('Editor')).toBeVisible();
       await expect(canvas.getByText('Preview')).toBeVisible();
     });
+    await step('E dividem a largura ao meio', async () => {
+      await expect(fracoes(canvasElement, true)[0]).toBeCloseTo(0.5, 1);
+    });
   },
 };
 
@@ -72,17 +94,34 @@ export const VerticalSplit: Story = {
   render: () => ({
     Component: ResizableStory,
     props: {
-      variant: 'vertical',
+      variant: 'simples',
+      direction: 'vertical',
       withHandle: true,
-      topLabel: 'Lista',
-      bottomLabel: 'Detalhe',
+      defaultSize: 40,
+      minSize: 20,
+      labelA: 'Lista',
+      labelB: 'Detalhe',
       ariaLabel: 'Redimensionar lista e detalhe — use setas',
       height: '360px',
     },
   }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
-  play: async ({ canvasElement }) => {
-    await waitFor(() => expect(canvasElement.firstElementChild).toBeTruthy());
+    await step('Lista e detalhe empilhados dividem a ALTURA em 40/60', async () => {
+      // A asserção anterior era `canvasElement.firstElementChild` ser truthy:
+      // passava com a tela vazia, com o eixo trocado e com os dois painéis do
+      // mesmo tamanho. A medida agora é a proporção que a story demonstra.
+      const [a, b] = fracoes(canvasElement, false);
+      await expect(a).toBeCloseTo(0.4, 1);
+      await expect(b).toBeCloseTo(0.6, 1);
+    });
+
+    await step('E o divisor é uma linha deitada', async () => {
+      await expect(
+        canvas.getByRole('separator', { name: /lista e detalhe/i }),
+      ).toHaveAttribute('aria-orientation', 'horizontal');
+    });
   },
 };
 
@@ -91,18 +130,32 @@ export const IDELayout: Story = {
     Component: ResizableStory,
     props: {
       variant: 'nested',
+      direction: 'horizontal',
       withHandle: true,
-      sidebarLabel: 'Arquivos',
-      topLabel: 'Editor',
-      bottomLabel: 'Console',
-      ariaLabel: 'Redimensionar painéis — use setas para ajustar',
+      defaultSize: 30,
+      minSize: 20,
+      labelA: 'Arquivos',
+      innerTop: 'Editor',
+      innerBottom: 'Console',
+      ariaLabel: 'Redimensionar arquivos e área principal — use setas',
+      innerAriaLabel: 'Redimensionar editor e console — use setas',
       height: '380px',
     },
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Composição IDE com 2 PaneGroups', async () => {
-      const groups = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
-      await expect(groups.length).toBe(2);
+    await step('Composição IDE com 2 grupos e 4 painéis', async () => {
+      const grupos = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
+      await expect(grupos).toHaveLength(2);
+      const paineis = canvasElement.querySelectorAll('[data-slot="resizable-panel"]');
+      await expect(paineis).toHaveLength(4);
+    });
+
+    await step('Os dois divisores têm eixos distintos', async () => {
+      const eixos = [...canvasElement.querySelectorAll('[data-slot="resizable-handle"]')].map((h) =>
+        h.getAttribute('aria-orientation'),
+      );
+      await expect(eixos).toContain('vertical');
+      await expect(eixos).toContain('horizontal');
     });
   },
 };

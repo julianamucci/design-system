@@ -557,12 +557,14 @@ interface HandleProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--border',                  value: $tStore('tokens.table.border.class'),     description: $tStore('tokens.table.border.part')     },
-      { token: '--ring',                    value: $tStore('tokens.table.ring.class'),       description: $tStore('tokens.table.ring.part')       },
-      { token: '--background',              value: $tStore('tokens.table.background.class'), description: $tStore('tokens.table.background.part') },
-      { token: '--foreground',              value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
-      { token: '--muted',                   value: $tStore('tokens.table.muted.class'),      description: $tStore('tokens.table.muted.part')      },
-      { token: '--ring-offset-background',  value: $tStore('tokens.table.ringOffset.class'), description: $tStore('tokens.table.ringOffset.part') },
+      { token: '--ring', value: $tStore('tokens.table.ring.class'), description: $tStore('tokens.table.ring.part') },
+      { token: '--foreground', value: $tStore('tokens.table.foreground.class'), description: $tStore('tokens.table.foreground.part') },
+      { token: '--radius-xs', value: $tStore('tokens.table.radiusXs.class'), description: $tStore('tokens.table.radiusXs.part') },
+      { token: '--radius', value: $tStore('tokens.table.radius.class'), description: $tStore('tokens.table.radius.part') },
+      { token: '--spacing-1', value: $tStore('tokens.table.spacing1.class'), description: $tStore('tokens.table.spacing1.part') },
+      { token: '--spacing-4', value: $tStore('tokens.table.spacing4.class'), description: $tStore('tokens.table.spacing4.part') },
+      { token: '--spacing-6', value: $tStore('tokens.table.spacing6.class'), description: $tStore('tokens.table.spacing6.part') },
+      { token: '--duration-fast', value: $tStore('tokens.table.durationFast.class'), description: $tStore('tokens.table.durationFast.part') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

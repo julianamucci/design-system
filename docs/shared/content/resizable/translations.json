@@ -8,7 +8,7 @@
       "title": "Resizable — Layout",
       "description": "Documentação do Resizable: PanelGroup, Panel e Handle com redimensionamento por arrasto, teclado e suporte WCAG 2.2.",
       "aiSummary": "Componente Resizable com ResizablePanelGroup, ResizablePanel e ResizableHandle, redimensionamento via arrasto e teclado, suporte a layouts horizontal/vertical e aninhados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle, painéis redimensionáveis, divisor, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -151,12 +151,12 @@
       "idle": {
         "label": "Idle",
         "trigger": "estado inicial",
-        "behavior": "Estado padrão — handle visível com cor <code>border</code>."
+        "behavior": "Estado padrão — a linha do divisor usa a cor de anel do tema, que garante 3:1 contra o fundo."
       },
       "hover": {
         "label": "Hover",
         "trigger": "mouse sobre handle",
-        "behavior": "Mouse sobre o handle — sem mudança visual obrigatória; aplique <code>hover:</code> se necessário."
+        "behavior": "Ponteiro sobre o divisor — a linha escurece para a cor de texto principal, dando resposta visível ao gesto."
       },
       "dragging": {
         "label": "Dragging",
@@ -166,12 +166,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab até o handle",
-        "behavior": "Handle focado via teclado — <code>ring-1 ring-ring</code>, setas ajustam tamanho."
+        "behavior": "Divisor focado pelo teclado — anel de 1px na cor de anel do tema; as setas ajustam o tamanho."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "data-disabled no handle",
-        "behavior": "Handle desabilitado — <code>data-disabled</code>, sem cursor de resize."
+        "behavior": "Divisor travado — anunciado como desabilitado, ainda alcançável pelo Tab, e sem cursor de redimensionamento."
       },
       "cols": {
         "state": "Estado",
@@ -240,31 +240,39 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe",
+        "class": "Seletor",
         "part": "Aplicação",
-        "border": {
-          "class": "bg-border",
-          "part": "Cor do handle e do pegador visual"
-        },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anel de foco no handle"
-        },
-        "background": {
-          "class": "bg-background",
-          "part": "Fundo dos painéis (consumidor define)"
+          "class": ".nds-resizable-handle",
+          "part": "Cor da linha do divisor, do pegador e do anel de foco"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto dentro dos painéis"
+          "class": ".nds-resizable-handle:hover",
+          "part": "Cor da linha sob o ponteiro"
         },
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fundo de painéis secundários (sidebar)"
+        "radiusXs": {
+          "class": ".nds-resizable-grip",
+          "part": "Arredondamento do pegador de pontos"
         },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Offset do anel de foco"
+        "radius": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Arredondamento da barra de alça"
+        },
+        "spacing1": {
+          "class": ".nds-resizable-handle::after",
+          "part": "Área de toque invisível sobre a linha de 1px"
+        },
+        "spacing4": {
+          "class": ".nds-resizable-grip",
+          "part": "Altura do pegador de pontos"
+        },
+        "spacing6": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Altura da barra de alça"
+        },
+        "durationFast": {
+          "class": ".nds-resizable-handle",
+          "part": "Transição da cor ao passar o ponteiro"
         }
       },
       "customizationTitle": "Customização",
@@ -280,7 +288,7 @@
         "item2": "<code>ResizableHandle</code> é focável e operável por teclado (setas)",
         "item3": "<code>aria-label</code> obrigatório no handle descrevendo a ação",
         "item4": "WCAG 2.5.7 atendido — toda ação de arrasto tem equivalente por teclado",
-        "item5": "Anel de foco visível com <code>ring-1 ring-ring</code>",
+        "item5": "Anel de foco visível de 1px no divisor",
         "item6": "<code>aria-valuenow</code> e <code>aria-valuemin/max</code> derivados do tamanho atual"
       },
       "keyboard": {
@@ -331,9 +339,9 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Base de cada stack</strong> — cada stack apoia-se na biblioteca de painéis idiomática ou numa implementação própria; a marcação <code>.nds-*</code>, os papéis ARIA e o comportamento de teclado são os mesmos em todas.",
       "item2": "<strong>Tamanhos em porcentagem</strong> — <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> são percentuais do grupo (0–100), não pixels.",
-      "item3": "<strong>autoSaveId</strong> (React) — persiste tamanhos no <code>localStorage</code> automaticamente quando definido no <code>PanelGroup</code>.",
+      "item3": "<strong>Persistência</strong> — onde a stack expõe uma chave de persistência, o layout final de cada gesto é gravado no <code>localStorage</code> e restaurado na visita seguinte. Sem chave, nada é gravado.",
       "item4": "<strong>Mobile</strong> — considere ocultar o componente em telas pequenas e usar layout empilhado ou <code>Sheet</code> em vez."
     },
     "analytics": {
@@ -436,7 +444,7 @@
       "title": "Resizable — Layout",
       "description": "Resizable documentation: PanelGroup, Panel and Handle with drag and keyboard resizing, WCAG 2.2 support.",
       "aiSummary": "Resizable component with ResizablePanelGroup, ResizablePanel and ResizableHandle, drag and keyboard resizing, horizontal/vertical and nested layouts.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle, resizable panels, divider, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -579,12 +587,12 @@
       "idle": {
         "label": "Idle",
         "trigger": "initial state",
-        "behavior": "Default state — handle visible with <code>border</code> color."
+        "behavior": "Default state — the divider line uses the theme ring color, which guarantees 3:1 against the background."
       },
       "hover": {
         "label": "Hover",
         "trigger": "mouse over handle",
-        "behavior": "Mouse over handle — no required visual change; apply <code>hover:</code> as needed."
+        "behavior": "Pointer over the divider — the line darkens to the main text color, giving the gesture a visible response."
       },
       "dragging": {
         "label": "Dragging",
@@ -594,12 +602,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab to the handle",
-        "behavior": "Keyboard-focused handle — <code>ring-1 ring-ring</code>, arrows adjust size."
+        "behavior": "Keyboard-focused divider — 1px ring in the theme ring color; arrow keys adjust the size."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "data-disabled on handle",
-        "behavior": "Disabled handle — <code>data-disabled</code>, no resize cursor."
+        "behavior": "Locked divider — announced as disabled, still reachable by Tab, and with no resize cursor."
       },
       "cols": {
         "state": "State",
@@ -668,31 +676,39 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Class",
+        "class": "Selector",
         "part": "Application",
-        "border": {
-          "class": "bg-border",
-          "part": "Handle and visual grabber color"
-        },
         "ring": {
-          "class": "ring-ring",
-          "part": "Handle focus ring"
-        },
-        "background": {
-          "class": "bg-background",
-          "part": "Panel background (consumer defines)"
+          "class": ".nds-resizable-handle",
+          "part": "Divider line, grabber and focus ring color"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Text inside panels"
+          "class": ".nds-resizable-handle:hover",
+          "part": "Line color under the pointer"
         },
-        "muted": {
-          "class": "bg-muted",
-          "part": "Secondary panel background (sidebar)"
+        "radiusXs": {
+          "class": ".nds-resizable-grip",
+          "part": "Dotted grabber corner radius"
         },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Focus ring offset"
+        "radius": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Grabber bar corner radius"
+        },
+        "spacing1": {
+          "class": ".nds-resizable-handle::after",
+          "part": "Invisible hit area over the 1px line"
+        },
+        "spacing4": {
+          "class": ".nds-resizable-grip",
+          "part": "Dotted grabber height"
+        },
+        "spacing6": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Grabber bar height"
+        },
+        "durationFast": {
+          "class": ".nds-resizable-handle",
+          "part": "Color transition on pointer hover"
         }
       },
       "customizationTitle": "Customization",
@@ -708,7 +724,7 @@
         "item2": "<code>ResizableHandle</code> is focusable and keyboard-operable (arrows)",
         "item3": "<code>aria-label</code> required on handle describing the action",
         "item4": "WCAG 2.5.7 met — every drag action has keyboard equivalent",
-        "item5": "Visible focus ring with <code>ring-1 ring-ring</code>",
+        "item5": "Visible 1px focus ring on the divider",
         "item6": "<code>aria-valuenow</code> and <code>aria-valuemin/max</code> derived from current size"
       },
       "keyboard": {
@@ -759,9 +775,9 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Foundation per stack</strong> — each stack builds on the idiomatic panel library or on its own implementation; the <code>.nds-*</code> markup, the ARIA roles and the keyboard behavior are the same across all of them.",
       "item2": "<strong>Sizes in percentage</strong> — <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> are group percentages (0–100), not pixels.",
-      "item3": "<strong>autoSaveId</strong> (React) — persists sizes in <code>localStorage</code> automatically when defined on <code>PanelGroup</code>.",
+      "item3": "<strong>Persistence</strong> — where the stack exposes a persistence key, the final layout of each gesture is written to <code>localStorage</code> and restored on the next visit. Without a key, nothing is stored.",
       "item4": "<strong>Mobile</strong> — consider hiding the component on small screens and using stacked layout or <code>Sheet</code> instead."
     },
     "analytics": {
@@ -864,7 +880,7 @@
       "title": "Resizable — Layout",
       "description": "Documentación de Resizable: PanelGroup, Panel y Handle con redimensionamiento por arrastre y teclado, soporte WCAG 2.2.",
       "aiSummary": "Componente Resizable con ResizablePanelGroup, ResizablePanel y ResizableHandle, redimensionamiento por arrastre y teclado, layouts horizontal/vertical y anidados.",
-      "aiEntities": "Resizable, ResizablePanel, react-resizable-panels, splitpanes, paneforge, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle, paneles redimensionables, divisor, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1007,12 +1023,12 @@
       "idle": {
         "label": "Idle",
         "trigger": "estado inicial",
-        "behavior": "Estado por defecto — handle visible con color <code>border</code>."
+        "behavior": "Estado por defecto — la línea del divisor usa el color de anillo del tema, que garantiza 3:1 contra el fondo."
       },
       "hover": {
         "label": "Hover",
         "trigger": "mouse sobre el handle",
-        "behavior": "Mouse sobre el handle — sin cambio visual obligatorio; aplica <code>hover:</code> si es necesario."
+        "behavior": "Puntero sobre el divisor — la línea se oscurece al color de texto principal, dando respuesta visible al gesto."
       },
       "dragging": {
         "label": "Dragging",
@@ -1022,12 +1038,12 @@
       "focus": {
         "label": "Focus",
         "trigger": "Tab hasta el handle",
-        "behavior": "Handle enfocado por teclado — <code>ring-1 ring-ring</code>, flechas ajustan tamaño."
+        "behavior": "Divisor enfocado por teclado — anillo de 1px en el color de anillo del tema; las flechas ajustan el tamaño."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "data-disabled en el handle",
-        "behavior": "Handle deshabilitado — <code>data-disabled</code>, sin cursor de resize."
+        "behavior": "Divisor bloqueado — anunciado como deshabilitado, aún alcanzable con Tab, y sin cursor de redimensionamiento."
       },
       "cols": {
         "state": "Estado",
@@ -1096,31 +1112,39 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase",
+        "class": "Selector",
         "part": "Aplicación",
-        "border": {
-          "class": "bg-border",
-          "part": "Color del handle y agarre visual"
-        },
         "ring": {
-          "class": "ring-ring",
-          "part": "Anillo de foco del handle"
-        },
-        "background": {
-          "class": "bg-background",
-          "part": "Fondo de los paneles (el consumidor define)"
+          "class": ".nds-resizable-handle",
+          "part": "Color de la línea del divisor, del agarre y del anillo de foco"
         },
         "foreground": {
-          "class": "text-foreground",
-          "part": "Texto dentro de los paneles"
+          "class": ".nds-resizable-handle:hover",
+          "part": "Color de la línea bajo el puntero"
         },
-        "muted": {
-          "class": "bg-muted",
-          "part": "Fondo de paneles secundarios (sidebar)"
+        "radiusXs": {
+          "class": ".nds-resizable-grip",
+          "part": "Redondeo del agarre de puntos"
         },
-        "ringOffset": {
-          "class": "ring-offset-background",
-          "part": "Offset del anillo de foco"
+        "radius": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Redondeo de la barra de agarre"
+        },
+        "spacing1": {
+          "class": ".nds-resizable-handle::after",
+          "part": "Área táctil invisible sobre la línea de 1px"
+        },
+        "spacing4": {
+          "class": ".nds-resizable-grip",
+          "part": "Altura del agarre de puntos"
+        },
+        "spacing6": {
+          "class": ".nds-resizable-grip-bar",
+          "part": "Altura de la barra de agarre"
+        },
+        "durationFast": {
+          "class": ".nds-resizable-handle",
+          "part": "Transición de color al pasar el puntero"
         }
       },
       "customizationTitle": "Personalización",
@@ -1136,7 +1160,7 @@
         "item2": "<code>ResizableHandle</code> es focalizable y operable por teclado (flechas)",
         "item3": "<code>aria-label</code> obligatorio en el handle describiendo la acción",
         "item4": "WCAG 2.5.7 cumplido — toda acción de arrastre tiene equivalente por teclado",
-        "item5": "Anillo de foco visible con <code>ring-1 ring-ring</code>",
+        "item5": "Anillo de foco visible de 1px en el divisor",
         "item6": "<code>aria-valuenow</code> y <code>aria-valuemin/max</code> derivados del tamaño actual"
       },
       "keyboard": {
@@ -1187,9 +1211,9 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>react-resizable-panels</code> (React), <code>splitpanes</code> (Vue), <code>paneforge</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Base de cada stack</strong> — cada stack se apoya en la biblioteca de paneles idiomática o en una implementación propia; el marcado <code>.nds-*</code>, los roles ARIA y el comportamiento de teclado son los mismos en todas.",
       "item2": "<strong>Tamaños en porcentaje</strong> — <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> son porcentajes del grupo (0–100), no píxeles.",
-      "item3": "<strong>autoSaveId</strong> (React) — persiste tamaños en <code>localStorage</code> automáticamente cuando se define en el <code>PanelGroup</code>.",
+      "item3": "<strong>Persistencia</strong> — donde el stack expone una clave de persistencia, el layout final de cada gesto se guarda en <code>localStorage</code> y se restaura en la visita siguiente. Sin clave, no se guarda nada.",
       "item4": "<strong>Móvil</strong> — considera ocultar el componente en pantallas pequeñas y usar layout apilado o <code>Sheet</code> en su lugar."
     },
     "analytics": {

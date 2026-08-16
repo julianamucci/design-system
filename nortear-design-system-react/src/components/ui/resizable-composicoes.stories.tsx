@@ -13,6 +13,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -53,7 +54,7 @@ export const EditorPreview: Story = {
           <div className="nds-stack nds-p-4 nds-text-caption nds-font-mono" style={{ height: "100%" }}>
             <div className="nds-text-muted-foreground nds-mb-2">editor.tsx</div>
             <div>export function App() {`{`}</div>
-            <div className="" style={{ paddingLeft: "1rem" }}>return &lt;Hello /&gt;;</div>
+            <div style={{ paddingLeft: "1rem" }}>return &lt;Hello /&gt;;</div>
             <div>{`}`}</div>
           </div>
         </ResizablePanel>
@@ -97,8 +98,8 @@ export const IDELayout: Story = {
           <div className="nds-stack nds-bg-muted nds-text-caption" style={{ height: "100%", padding: "0.75rem" }}>
             <div className="nds-font-medium nds-mb-2">Explorer</div>
             <div>📁 src</div>
-            <div className="" style={{ paddingLeft: "0.75rem" }}>📄 App.tsx</div>
-            <div className="" style={{ paddingLeft: "0.75rem" }}>📄 main.tsx</div>
+            <div style={{ paddingLeft: "0.75rem" }}>📄 App.tsx</div>
+            <div style={{ paddingLeft: "0.75rem" }}>📄 main.tsx</div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
@@ -113,7 +114,7 @@ export const IDELayout: Story = {
             <ResizablePanel id="console" defaultSize={30} minSize={15}>
               <div className="nds-cluster nds-bg-muted-60 nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
                 <span className="nds-text-muted-foreground">{">"}</span>
-                <span className="" style={{ marginLeft: "0.5rem" }}>npm run dev</span>
+                <span style={{ marginLeft: "0.5rem" }}>npm run dev</span>
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
@@ -123,9 +124,34 @@ export const IDELayout: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Layout IDE tem 2 handles (1 horizontal split, 1 vertical split)", async () => {
-      const handles = canvas.getAllByRole("separator");
-      await expect(handles.length).toBe(2);
+    await step("Layout IDE tem 2 grupos e 4 painéis", async () => {
+      const grupos = canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]');
+      await expect(grupos).toHaveLength(2);
+      await expect(canvasElement.querySelectorAll('[data-slot="resizable-panel"]')).toHaveLength(4);
+    });
+
+    await step("Os dois divisores têm eixos distintos", async () => {
+      // Contar divisores não distingue um IDE de duas colunas: o que faz o
+      // layout ser um IDE é o eixo do grupo de dentro ser o outro.
+      const eixos = canvas.getAllByRole("separator").map((h) => h.getAttribute("aria-orientation"));
+      await expect(eixos).toHaveLength(2);
+      await expect(eixos).toContain("vertical");
+      await expect(eixos).toContain("horizontal");
+    });
+
+    await step("A sidebar nasce estreita e o editor domina a altura", async () => {
+      const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
+      const fatia = (grupo: Element, horizontal: boolean) => {
+        const paineis = [
+          ...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]'),
+        ];
+        const medida = (p: HTMLElement) =>
+          horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
+        const total = paineis.reduce((a, p) => a + medida(p), 0);
+        return medida(paineis[0]) / total;
+      };
+      await expect(fatia(grupos[0], true)).toBeCloseTo(0.2, 1);
+      await expect(fatia(grupos[1], false)).toBeCloseTo(0.7, 1);
     });
   },
 };
@@ -165,11 +191,23 @@ export const TripleSplit: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("Triple split renderiza 2 handles verticais", async () => {
+      // `for..of`, e não `forEach(async …)`: a callback assíncrona devolvia uma
+      // promessa que ninguém aguardava, e a asserção de dentro nunca era
+      // cobrada — dois divisores com o eixo errado passariam sem ruído.
       const handles = canvas.getAllByRole("separator");
       await expect(handles.length).toBe(2);
-      handles.forEach(async (h) => {
+      for (const h of handles) {
         await expect(h).toHaveAttribute("aria-orientation", "vertical");
-      });
+      }
+    });
+
+    await step("Os três painéis nascem em 25/50/25", async () => {
+      const larguras = [
+        ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]'),
+      ].map((p) => p.getBoundingClientRect().width);
+      const total = larguras.reduce((a, b) => a + b, 0);
+      await expect(larguras[0] / total).toBeCloseTo(0.25, 1);
+      await expect(larguras[1] / total).toBeCloseTo(0.5, 1);
     });
   },
 };

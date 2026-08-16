@@ -10,10 +10,11 @@ const meta: Meta = {
   parameters: {
     layout: 'padded',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do Resizable — horizontal (split lateral), vertical (split vertical) e nested (PaneGroup dentro de Pane).',
+          'Variantes do Resizable: Horizontal (split lateral), Vertical (split empilhado), Nested (grupo dentro de painel) e WithHandle (pegador visual centralizado).',
       },
     },
   },
@@ -22,74 +23,165 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
+function fracoes(paineis: HTMLElement[], horizontal: boolean): number[] {
+  const medida = (p: HTMLElement) =>
+    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
+  const total = paineis.reduce((a, p) => a + medida(p), 0);
+  return paineis.map((p) => medida(p) / total);
+}
+
+function paineisDiretos(grupo: Element): HTMLElement[] {
+  return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+}
+
+const SEL_GRUPO = '[data-slot="resizable-pane-group"]';
+
 export const Horizontal: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => ({
     Component: ResizableStory,
     props: {
-      variant: 'horizontal',
-      sidebarLabel: 'Sidebar',
-      contentLabel: 'Conteúdo principal',
-      ariaLabel: 'Redimensionar painéis — use setas para ajustar',
+      variant: 'simples',
+      direction: 'horizontal',
+      defaultSize: 30,
+      minSize: 20,
+      labelA: 'Sidebar',
+      labelB: 'Conteúdo principal',
+      ariaLabel: 'Redimensionar as colunas — use setas para ajustar',
       height: '240px',
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('PaneGroup horizontal renderizado', async () => {
-      const group = canvasElement.querySelector('[data-slot="resizable-pane-group"][data-direction="horizontal"]');
-      await expect(group).toBeInTheDocument();
+    await step('Split lateral: o divisor é uma linha vertical', async () => {
+      // O CSS decide espessura e cursor pelo eixo do punho. Um grupo horizontal
+      // é dividido por uma linha VERTICAL — a inversão é a fonte clássica de
+      // erro aqui.
+      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GRUPO)!;
+      const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
+      await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(getComputedStyle(grupo).flexDirection).toBe('row');
+      await expect(punho.getBoundingClientRect().width).toBeLessThan(4);
     });
-    await step('Handle vertical com aria-orientation', async () => {
-      const handle = canvas.getByRole('separator', { name: /Redimensionar/ });
-      await expect(handle).toHaveAttribute('aria-orientation', 'vertical');
+
+    await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
+      const grupo = canvasElement.querySelector(SEL_GRUPO)!;
+      await expect(fracoes(paineisDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
 
 export const Vertical: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => ({
     Component: ResizableStory,
     props: {
-      variant: 'vertical',
-      topLabel: 'Topo',
-      bottomLabel: 'Rodapé',
-      ariaLabel: 'Redimensionar painéis verticalmente — use setas',
+      variant: 'simples',
+      direction: 'vertical',
+      defaultSize: 40,
+      minSize: 20,
+      labelA: 'Topo',
+      labelB: 'Rodapé',
+      ariaLabel: 'Redimensionar as faixas — use setas para ajustar',
       height: '300px',
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('PaneGroup vertical renderizado', async () => {
-      const group = canvasElement.querySelector('[data-slot="resizable-pane-group"][data-direction="vertical"]');
-      await expect(group).toBeInTheDocument();
+    await step('Split empilhado: o divisor é uma linha deitada', async () => {
+      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GRUPO)!;
+      const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
+      await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
+      await expect(getComputedStyle(grupo).flexDirection).toBe('column');
+      await expect(punho.getBoundingClientRect().height).toBeLessThan(4);
     });
-    await step('Handle horizontal com aria-orientation', async () => {
-      const handle = canvas.getByRole('separator', { name: /Redimensionar/ });
-      await expect(handle).toHaveAttribute('aria-orientation', 'horizontal');
+
+    await step('Os painéis dividem a ALTURA, e não a largura', async () => {
+      // O eixo trocado é invisível numa foto quadrada: os dois painéis
+      // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
+      const grupo = canvasElement.querySelector(SEL_GRUPO)!;
+      await expect(fracoes(paineisDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
 
 export const Nested: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => ({
     Component: ResizableStory,
     props: {
       variant: 'nested',
-      sidebarLabel: 'Sidebar',
-      topLabel: 'Editor',
-      bottomLabel: 'Console',
-      ariaLabel: 'Redimensionar painéis — use setas para ajustar',
+      direction: 'horizontal',
+      defaultSize: 30,
+      minSize: 20,
+      labelA: 'Sidebar',
+      innerTop: 'Editor',
+      innerBottom: 'Console',
+      ariaLabel: 'Redimensionar sidebar e conteúdo — use setas',
+      innerAriaLabel: 'Redimensionar editor e console — use setas',
       height: '320px',
     },
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Dois PaneGroups renderizados (aninhado)', async () => {
-      const groups = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
-      await expect(groups.length).toBe(2);
+    const canvas = within(canvasElement);
+
+    await step('Cada grupo governa só os próprios painéis', async () => {
+      // O grupo de dentro é outro grupo: os painéis dele não podem entrar na
+      // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
+      const grupos = [...canvasElement.querySelectorAll(SEL_GRUPO)];
+      await expect(grupos).toHaveLength(2);
+      for (const g of grupos) await expect(paineisDiretos(g)).toHaveLength(2);
     });
-    await step('Dois handles (separators) presentes', async () => {
-      const handles = canvasElement.querySelectorAll('[data-slot="resizable-handle"]');
-      await expect(handles.length).toBe(2);
+
+    await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
+      await expect(
+        canvas.getByRole('separator', { name: 'Redimensionar sidebar e conteúdo — use setas' }),
+      ).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(
+        canvas.getByRole('separator', { name: 'Redimensionar editor e console — use setas' }),
+      ).toHaveAttribute('aria-orientation', 'horizontal');
+    });
+
+    await step('E as proporções de cada grupo são independentes', async () => {
+      const grupos = [...canvasElement.querySelectorAll(SEL_GRUPO)];
+      await expect(fracoes(paineisDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(paineisDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
+    });
+  },
+};
+
+export const WithHandle: Story = {
+  parameters: { covers: ['visual.item4'] },
+  render: () => ({
+    Component: ResizableStory,
+    props: {
+      variant: 'simples',
+      direction: 'horizontal',
+      withHandle: true,
+      defaultSize: 50,
+      minSize: 20,
+      labelA: 'Antes',
+      labelB: 'Depois',
+      ariaLabel: 'Redimensionar painéis — use setas',
+      height: '240px',
+    },
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O pegador aparece e é maior que a linha de 1px', async () => {
+      // A linha sozinha é quase invisível; o pegador é o que anuncia que ali
+      // existe um controle. É por isso que a guideline pede o pegador em
+      // desktop.
+      const grip = canvasElement.querySelector<HTMLElement>('.nds-resizable-grip-bar')!;
+      await expect(grip).toBeInTheDocument();
+      await expect(grip.getBoundingClientRect().height).toBeGreaterThan(8);
+    });
+
+    await step('O pegador não rouba o nome acessível do divisor', async () => {
+      // Quem carrega o significado é o `aria-label` do separator; o pegador é
+      // desenho. Um elemento com texto ali dentro passaria a compor o nome.
+      const punho = canvas.getByRole('separator', { name: 'Redimensionar painéis — use setas' });
+      await expect(punho.querySelector('.nds-resizable-grip-bar')?.textContent?.trim()).toBe('');
     });
   },
 };

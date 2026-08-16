@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect } from 'storybook/test';
+import { expect, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
 
 const meta: Meta = {
@@ -12,7 +12,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Resizable: Horizontal (split lateral com handle vertical), Vertical (split vertical com handle horizontal) e Nested (PanelGroup dentro de Panel combinando direções).',
+          'Variantes do Resizable: Horizontal (split lateral com handle vertical), Vertical (split vertical com handle horizontal), Nested (PanelGroup dentro de Panel combinando direções) e WithHandle (pegador visual centralizado).',
       },
     },
   },
@@ -34,18 +34,44 @@ function panelContent(label: string, extraClass = ''): HTMLElement {
   return el;
 }
 
-function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
+function frame(child: HTMLElement, altura = '220px'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
-  wrap.style.minHeight = minHeight;
+  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
+  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
+  // contêiner de altura automática — os painéis colapsavam para zero. Com
+  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
+  // A suíte só viu isso quando a asserção passou a medir a geometria.
+  wrap.style.height = altura;
   wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
   wrap.appendChild(child);
   return wrap;
 }
 
+/**
+ * Fração do eixo principal que o painel realmente ocupa na tela.
+ *
+ * A medida é `getBoundingClientRect`, e nunca `style.width`: a folha
+ * compartilhada dá `flex-basis: 0` ao painel, então largura inline não decide
+ * nada. As stories afirmavam `style.width === '30%'` e passavam com os painéis
+ * desenhados 50/50 — a asserção guardava o defeito em vez de pegá-lo.
+ */
+function fracao(paineis: HTMLElement[], horizontal: boolean): number[] {
+  const medida = (p: HTMLElement) =>
+    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
+  const total = paineis.reduce((acc, p) => acc + medida(p), 0);
+  return paineis.map((p) => medida(p) / total);
+}
+
+function paineisDe(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
+  const grupo = raiz.querySelector<HTMLElement>(seletorGrupo)!;
+  return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+}
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
+  parameters: { covers: ['visual.item1'] },
   render: () => {
     const root = createResizablePanel({
       direction: 'horizontal',
@@ -59,28 +85,34 @@ export const Horizontal: Story = {
     return frame(root, '220px');
   },
   play: async ({ canvasElement, step }) => {
-    await step('PanelGroup horizontal: handle com aria-orientation=vertical', async () => {
-      const handle = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-      await expect(handle).toBeTruthy();
-      await expect(handle).toHaveAttribute('role', 'separator');
-      await expect(handle).toHaveAttribute('aria-orientation', 'vertical');
+    await step('Split lateral: o divisor é uma linha vertical', async () => {
+      // O CSS decide espessura e cursor pelo eixo do punho. Um grupo horizontal
+      // é dividido por uma linha VERTICAL — a inversão é a fonte clássica de
+      // erro aqui.
+      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
+      await expect(grupo).toHaveAttribute('data-direction', 'horizontal');
+      await expect(punho).toHaveAttribute('role', 'separator');
+      await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
+      await expect(getComputedStyle(grupo).flexDirection).toBe('row');
+      await expect(getComputedStyle(punho).cursor).toBe('col-resize');
     });
-    await step('Painéis aplicam width em porcentagem', async () => {
-      const panels = canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]');
-      await expect(panels.length).toBe(2);
-      await expect(panels[0].style.width).toBe('30%');
-      await expect(panels[1].style.width).toBe('70%');
+
+    await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
+      const [a] = fracao(paineisDe(canvasElement), true);
+      await expect(a).toBeCloseTo(0.3, 1);
     });
   },
 };
 
 export const Vertical: Story = {
+  parameters: { covers: ['visual.item2'] },
   render: () => {
     const root = createResizablePanel({
       direction: 'vertical',
       panels: [
-        { defaultSize: 50, minSize: 20, content: panelContent('Topo') },
-        { defaultSize: 50, minSize: 20, content: panelContent('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 40, minSize: 20, content: panelContent('Topo') },
+        { defaultSize: 60, minSize: 20, content: panelContent('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
@@ -88,19 +120,25 @@ export const Vertical: Story = {
     return frame(root, '280px');
   },
   play: async ({ canvasElement, step }) => {
-    await step('PanelGroup vertical: handle com aria-orientation=horizontal', async () => {
-      const handle = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-      await expect(handle).toHaveAttribute('aria-orientation', 'horizontal');
+    await step('Split empilhado: o divisor é uma linha deitada', async () => {
+      const grupo = canvasElement.querySelector<HTMLElement>('[data-slot="resizable"]')!;
+      const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
+      await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
+      await expect(getComputedStyle(grupo).flexDirection).toBe('column');
+      await expect(getComputedStyle(punho).cursor).toBe('row-resize');
     });
-    await step('Painéis aplicam height em porcentagem', async () => {
-      const panels = canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]');
-      await expect(panels[0].style.height).toBe('50%');
-      await expect(panels[1].style.height).toBe('50%');
+
+    await step('Os painéis dividem a ALTURA, e não a largura', async () => {
+      // O eixo trocado é invisível numa foto quadrada: os dois painéis
+      // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
+      const [a] = fracao(paineisDe(canvasElement), false);
+      await expect(a).toBeCloseTo(0.4, 1);
     });
   },
 };
 
 export const Nested: Story = {
+  parameters: { covers: ['visual.item3'] },
   render: () => {
     const inner = createResizablePanel({
       direction: 'vertical',
@@ -127,12 +165,70 @@ export const Nested: Story = {
     return frame(root, '320px');
   },
   play: async ({ canvasElement, step }) => {
-    await step('Nested: dois PanelGroups com handles em orientações distintas', async () => {
-      const handles = canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-handle"]');
-      await expect(handles.length).toBe(2);
-      const orientations = Array.from(handles).map(h => h.getAttribute('aria-orientation'));
-      await expect(orientations).toContain('vertical');
-      await expect(orientations).toContain('horizontal');
+    await step('Cada grupo governa só os próprios painéis', async () => {
+      // O grupo de dentro é outro grupo: os painéis dele não podem entrar na
+      // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
+      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      await expect(grupos).toHaveLength(2);
+      for (const g of grupos) {
+        await expect(g.querySelectorAll(':scope > [data-slot="resizable-panel"]')).toHaveLength(2);
+      }
+    });
+
+    await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
+      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      const eixo = (g: HTMLElement) =>
+        g.querySelector(':scope > [data-slot="resizable-handle"]')!.getAttribute('aria-orientation');
+      await expect(eixo(grupos[0])).toBe('vertical');
+      await expect(eixo(grupos[1])).toBe('horizontal');
+    });
+
+    await step('E as proporções de cada grupo são independentes', async () => {
+      const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
+      const externo = [...grupos[0].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+      const interno = [...grupos[1].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
+      await expect(fracao(externo, true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracao(interno, false)[0]).toBeCloseTo(0.6, 1);
+    });
+  },
+};
+
+export const WithHandle: Story = {
+  parameters: { covers: ['visual.item4'] },
+  render: () => {
+    const root = createResizablePanel({
+      direction: 'horizontal',
+      withHandle: true,
+      panels: [
+        { defaultSize: 50, minSize: 20, content: panelContent('Antes') },
+        { defaultSize: 50, minSize: 20, content: panelContent('Depois', 'nds-bg-muted nds-text-muted-foreground') },
+      ],
+    });
+    const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
+    handle?.setAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
+    return frame(root, '220px');
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O pegador aparece e é maior que a linha de 1px', async () => {
+      // A linha sozinha é quase invisível; o pegador é o que anuncia que ali
+      // existe um controle.
+      const grip = canvasElement.querySelector<HTMLElement>('.nds-resizable-grip')!;
+      await expect(grip).toBeInTheDocument();
+      await expect(grip.getBoundingClientRect().width).toBeGreaterThan(4);
+    });
+
+    await step('O ícone do pegador fica fora da árvore de acessibilidade', async () => {
+      // Seis pontinhos não têm nada a dizer a um leitor de tela: quem carrega o
+      // significado é o aria-label do separator.
+      await expect(canvasElement.querySelector('.nds-resizable-grip svg')).toHaveAttribute(
+        'aria-hidden',
+        'true',
+      );
+      await expect(
+        canvas.getByRole('separator', { name: 'Redimensionar painéis — use setas para ajustar' }),
+      ).toBeInTheDocument();
     });
   },
 };
