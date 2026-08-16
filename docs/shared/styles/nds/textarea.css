@@ -44,8 +44,10 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* Anel opaco no hover — `--ring / 0.4` compõe em ~1.7:1 e ficaria ABAIXO do
+ * repouso (3.2:1) depois que --input escureceu. Ver nota em input.css. */
 .nds-textarea:hover:not(:disabled):not([aria-invalid="true"]) {
-  border-color: hsl(var(--ring) / 0.4);
+  border-color: hsl(var(--ring));
 }
 
 .nds-textarea:focus-visible {

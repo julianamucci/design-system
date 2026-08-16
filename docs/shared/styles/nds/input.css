@@ -33,8 +33,14 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* O hover era `--ring / 0.4`, que composto sobre a página dá 1.6–2.0:1. Isso
+ * funcionava enquanto o repouso era 1.25:1 (hover = ficar mais visível). Com o
+ * repouso em 3.2:1 o mesmo valor passou a APAGAR a borda no hover — o campo
+ * ficava menos identificável justamente sob o ponteiro. O anel opaco mantém o
+ * hover acima do repouso nos três temas e nos dois modos; o foco continua se
+ * distinguindo do hover pelo halo de 2px, que o hover não tem. */
 .nds-input:hover:not(:disabled):not([aria-invalid="true"]) {
-  border-color: hsl(var(--ring) / 0.4);
+  border-color: hsl(var(--ring));
 }
 
 .nds-input:focus-visible {

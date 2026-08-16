@@ -26,11 +26,14 @@
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface Contraste {
-  razao: number;
-  frente: string;
-  fundo: string;
-}
+// As primitivas de cor (luminância, razão WCAG, fundo opaco efetivo, congelar
+// transição, ligar o escuro) saíram deste arquivo para `cor.ts` quando a rodada
+// de foundations precisou das mesmas quatro funções fora do textarea. Ficam
+// re-exportadas aqui porque as stories das cinco stacks já importam daqui.
+import { fundoEfetivo, ligarTemaEscuro, razao, semTransicao } from './cor';
+
+export type { Contraste } from './cor';
+export { ligarTemaEscuro };
 
 export interface MedidaDeContador {
   existe: boolean;
@@ -63,37 +66,6 @@ const CLASSES_DE_ALTURA = [
   'min-h-[100px]',
 ] as const;
 
-function luminancia(cor: string): number | null {
-  const m = /rgba?\(([^)]+)\)/.exec(cor);
-  if (!m) return null;
-  const [r, g, b] = m[1].split(',').map((p) => parseFloat(p) / 255);
-  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
-/** Primeiro fundo OPACO acima do elemento — `backgroundColor` com alfa mente. */
-function fundoEfetivo(el: Element | null): string | null {
-  let atual: Element | null = el;
-  while (atual) {
-    const cor = getComputedStyle(atual).backgroundColor;
-    const m = /rgba?\(([^)]+)\)/.exec(cor);
-    if (m) {
-      const partes = m[1].split(',').map((p) => parseFloat(p));
-      if ((partes[3] ?? 1) > 0.99) return cor;
-    }
-    atual = atual.parentElement;
-  }
-  return null;
-}
-
-function razao(frente: string, fundo: string): Contraste | null {
-  const a = luminancia(frente);
-  const b = luminancia(fundo);
-  if (a === null || b === null) return null;
-  const [claro, escuro] = a > b ? [a, b] : [b, a];
-  return { razao: Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100, frente, fundo };
-}
-
 const texto = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
@@ -117,20 +89,6 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
   return null;
 }
 
-/**
- * Liga o tema escuro NO LUGAR CERTO e devolve como desfazer.
- *
- * Os tokens escuros vivem em `.dark`, mas o tema de marca RE-DECLARA os mesmos
- * tokens em `.tema-*`, que mora mais abaixo na árvore e vence para tudo que
- * está dentro. Por isso a classe entra também em quem carrega `tema-*`.
- */
-export function ligarTemaEscuro(doc: Document): () => void {
-  const alvos = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
-  const postos = alvos.filter((el) => !el.classList.contains('dark'));
-  postos.forEach((el) => el.classList.add('dark'));
-  return () => postos.forEach((el) => el.classList.remove('dark'));
-}
-
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
 /**
@@ -152,29 +110,6 @@ function crescimento(ta: HTMLTextAreaElement) {
   const transbordaSemCrescer = ta.scrollHeight > ta.clientHeight + 1;
   ta.value = original;
   return { antes, depois, cresceu: depois > antes + 1, transbordaSemCrescer };
-}
-
-/**
- * Roda `fn` com a transição do elemento desligada, e devolve o `style` como
- * estava.
- *
- * Sem isso a sonda mede o PRIMEIRO QUADRO da transição, não o estado final:
- * `.nds-textarea` declara `transition: border-color, box-shadow`, então logo
- * após `focus()` a borda ainda está na cor de repouso e a sombra vem como
- * `rgba(0,0,0,0) 0px 0px 0px 0px` — o valor de onde a interpolação PARTE quando
- * a origem é `none`. Lido assim, um anel de foco perfeitamente pintado é
- * relatado como inexistente. Mesma armadilha do "contraste ~1.0 = elemento em
- * fade" registrada no CLAUDE.md.
- */
-function semTransicao<T>(el: HTMLElement, fn: () => T): T {
-  const antes = el.style.transition;
-  el.style.transition = 'none';
-  void el.offsetHeight;
-  try {
-    return fn();
-  } finally {
-    el.style.transition = antes;
-  }
 }
 
 /** Sombra e contorno com o campo focado — e o foco volta para quem o tinha. */

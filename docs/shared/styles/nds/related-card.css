@@ -35,9 +35,16 @@
   box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
 }
 
+/* Estas duas linhas foram escritas quando --input e --border tinham o MESMO
+ * valor: diziam "--input" mas queriam dizer "o cinza estrutural do tema". O
+ * card não é campo — ninguém digita nele —, e --input passou a ser a borda de
+ * 3:1 dos campos. Mantê-lo aqui daria ao card um contorno de campo no escuro e
+ * clarearia o preenchimento (o fundo do card subiria de L≈11% para L≈19%, e o
+ * título em --primary do tema cold cairia de 6.15:1 para 4.83:1). --border
+ * preserva o valor e a intenção: superfície decorativa. */
 .dark .nds-related-card {
-  border-color: hsl(var(--input));
-  background-color: hsl(var(--input) / 0.3);
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--border) / 0.3);
 }
 .dark .nds-related-card:hover {
   background-color: hsl(var(--accent) / 0.5);

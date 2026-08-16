@@ -7,7 +7,7 @@
  *     <button class="nds-button nds-button-outline">B</button>
  *   </div>
  *
- * Tokens: --input, --muted, --radius, --spacing-*
+ * Tokens: --border, --muted, --radius, --spacing-*
  */
 
 .nds-button-group {
@@ -61,7 +61,10 @@
 
   padding-inline: var(--spacing-2-5, 0.625rem);
   background-color: hsl(var(--muted));
-  border: 1px solid hsl(var(--input, var(--border)));
+  /* --border para emendar com os botões vizinhos, que usam --border. --input
+   * agora é a borda de 3:1 dos campos e deixaria uma costura visível no meio
+   * do grupo. Ver nota em toggle.css. */
+  border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
@@ -77,7 +80,7 @@
 .nds-button-group-separator {
   position: relative;
   align-self: stretch;
-  background-color: hsl(var(--input, var(--border)));
+  background-color: hsl(var(--border));
 }
 
 .nds-button-group-separator[data-orientation="vertical"],

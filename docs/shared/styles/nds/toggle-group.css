@@ -20,9 +20,10 @@
 }
 
 /* ── Variante outline (toggles emendados num único container) ────────────── */
+/* --border acompanha o toggle e o botão outline — ver nota em toggle.css. */
 .nds-toggle-group[data-variant="outline"] {
   gap: 0;
-  border: 1px solid hsl(var(--input, var(--border)));
+  border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
   overflow: hidden;
@@ -37,7 +38,7 @@
 
 /* Divisor entre toggles do outline group */
 .nds-toggle-group[data-variant="outline"] > .nds-toggle + .nds-toggle {
-  border-left: 1px solid hsl(var(--input, var(--border)));
+  border-left: 1px solid hsl(var(--border));
 }
 
 /* ── Orientação vertical ─────────────────────────────────────────────────── */
@@ -47,7 +48,7 @@
 }
 .nds-toggle-group[data-orientation="vertical"][data-variant="outline"] > .nds-toggle + .nds-toggle {
   border-left: 0;
-  border-top: 1px solid hsl(var(--input, var(--border)));
+  border-top: 1px solid hsl(var(--border));
 }
 
 /* ── Espaçamento configurável (--gap em unidades do grid; 0 = emendado) ───── */

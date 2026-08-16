@@ -90,8 +90,13 @@
 }
 
 /* ── Variante outline ────────────────────────────────────────────────────── */
+/* --border, não --input: o toggle é da família do botão, e `.nds-button-outline`
+ * já usa --border (a linha --input foi removida de lá pelo mesmo argumento).
+ * --input agora carrega os 3:1 exigidos da borda de CAMPO; usá-lo aqui deixaria
+ * o toggle com contorno visivelmente mais escuro que o botão ao lado dele numa
+ * mesma barra de ferramentas. */
 .nds-toggle[data-variant="outline"] {
-  border: 1px solid hsl(var(--input, var(--border)));
+  border: 1px solid hsl(var(--border));
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
 }
 

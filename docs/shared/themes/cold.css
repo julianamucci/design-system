@@ -45,7 +45,7 @@
 
   /* Structure */
   --border: 210 18% 88%;
-  --input: 210 18% 88%;
+  --input: 210 18% 56%;             /* 3.27:1 sobre --background; matiz frio preservado */
   --input-background: 210 30% 99%;
   --ring: 215 80% 48%;              /* alinhado com primary */
   --ring-offset-color: 210 30% 99%;
@@ -97,7 +97,7 @@
   --info: 215 85% 60%;
   --info-foreground: 0 0% 0%;
   --border: 215 15% 16%;
-  --input: 215 15% 16%;
+  --input: 215 15% 42%;             /* 3.22:1 sobre --background; matiz frio preservado */
   --input-background: 215 25% 9%;
   --ring: 210 90% 58%;
   --ring-offset-color: 215 25% 9%;

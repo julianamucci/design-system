@@ -111,7 +111,11 @@
 
   /* Structure */
   --border: 0 0% 90%;
-  --input: 0 0% 90%;
+  /* --input é a borda do CAMPO, e o fundo do campo é o fundo da página: a borda
+     é a única coisa que diz onde o campo começa. Por isso ela responde a WCAG
+     1.4.11 (Non-text Contrast, 3:1) e NÃO acompanha mais --border, que é linha
+     decorativa e continua em 90%. Medido: 56% sobre 100% = 3.24:1. */
+  --input: 0 0% 56%;
   --input-background: 0 0% 100%;
   --ring: 0 0% 45%;
   --ring-offset-width: 2px;
@@ -254,7 +258,8 @@
   --info: 221 83% 53%;
   --info-foreground: 0 0% 100%;
   --border: 0 0% 15%;
-  --input: 0 0% 15%;
+  /* 41% sobre o fundo 9% = 3.25:1 (WCAG 1.4.11). Ver comentário no claro. */
+  --input: 0 0% 41%;
   --input-background: 0 0% 9%;
   --ring: 0 0% 45%;
   --ring-offset-color: 0 0% 9%;

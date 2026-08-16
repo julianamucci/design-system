@@ -40,7 +40,7 @@
   --info-foreground: 0 0% 100%;
 
   --border: 0 0% 90%;
-  --input: 0 0% 90%;
+  --input: 0 0% 56%;                /* 3.24:1 sobre --background (WCAG 1.4.11) */
   --input-background: 0 0% 100%;
   --ring: 0 0% 45%;
   --ring-offset-color: 0 0% 100%;
@@ -101,7 +101,7 @@
   --info-foreground: 0 0% 0%;
 
   --border: 0 0% 15%;
-  --input: 0 0% 15%;
+  --input: 0 0% 41%;                /* 3.25:1 sobre --background (WCAG 1.4.11) */
   --input-background: 0 0% 9%;
   --ring: 0 0% 45%;
   --ring-offset-color: 0 0% 9%;
