@@ -955,9 +955,14 @@ function auditStoryQuality(slug) {
       // estar escrita como `class:`. O sufixo `Class` só é aceito depois de
       // outra palavra em camelCase, para não voltar a casar `captionClass` do
       // lado do VALOR (que é nome de expressão, não classe).
+      // O `\s*` antes de `[:=]` é o que faz a ATRIBUIÇÃO ser vista. Sem ele a
+      // regra exigia o operador colado ao nome, então `el.className = '…'`
+      // escapava e `el.className='…'` não — diferença de um espaço. As
+      // composições do dropdown-menu no Vanilla montavam o menu à mão assim e
+      // passavam limpas com ~120 linhas de utilitário morto.
       const seen = new Set();
       const RX_CLASSE_LITERAL =
-        /(?<![:[\w-])(?:class(?:Name)?|[a-z]+Class)[:=]\s*["'`]([^"'`]+)["'`]/g;
+        /(?<![:[\w-])(?:class(?:Name)?|[a-z]+Class)\s*[:=]\s*["'`]([^"'`]+)["'`]/g;
       for (const m of content.matchAll(RX_CLASSE_LITERAL)) {
         if (m[1].includes('${')) continue;
         for (const cls of m[1].split(/\s+/)) {
