@@ -42,14 +42,14 @@
 		variant = "default",
 		size = "default",
 		isActive = false,
-		tooltipContent,
+		tooltip,
 		tooltipContentProps,
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
 		isActive?: boolean;
 		variant?: SidebarMenuButtonVariant;
 		size?: SidebarMenuButtonSize;
-		tooltipContent?: Snippet | string;
+		tooltip?: Snippet | string;
 		tooltipContentProps?: WithoutChildrenOrChild<ComponentProps<typeof Tooltip.Content>>;
 		child?: Snippet<[{ props: Record<string, unknown> }]>;
 	} = $props();
@@ -104,7 +104,7 @@
 	{/if}
 {/snippet}
 
-{#if !tooltipContent || !balaoUtil}
+{#if !tooltip || !balaoUtil}
 	{@render Button({})}
 {:else}
 	<Tooltip.Root>
@@ -114,10 +114,10 @@
 			{/snippet}
 		</Tooltip.Trigger>
 		<Tooltip.Content side="right" align="center" {...tooltipContentProps}>
-			{#if typeof tooltipContent === "string"}
-				{tooltipContent}
-			{:else if tooltipContent}
-				{@render tooltipContent()}
+			{#if typeof tooltip === "string"}
+				{tooltip}
+			{:else if tooltip}
+				{@render tooltip()}
 			{/if}
 		</Tooltip.Content>
 	</Tooltip.Root>

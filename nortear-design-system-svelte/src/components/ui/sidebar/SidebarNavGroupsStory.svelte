@@ -65,7 +65,7 @@
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltipContent={item.label}
+                      tooltip={item.label}
                       aria-current={item.isActive ? 'page' : undefined}
                     >
                       <item.icon aria-hidden="true" />
@@ -88,7 +88,7 @@
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={item.isActive}
-                      tooltipContent={item.label}
+                      tooltip={item.label}
                     >
                       <item.icon aria-hidden="true" />
                       <span>{item.label}</span>

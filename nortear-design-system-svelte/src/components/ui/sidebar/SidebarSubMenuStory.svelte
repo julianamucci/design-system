@@ -54,7 +54,7 @@
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltipContent="Dashboard">
+                  <SidebarMenuButton tooltip="Dashboard">
                     <LayoutDashboard aria-hidden="true" />
                     <span>Dashboard</span>
                   </SidebarMenuButton>
@@ -62,7 +62,7 @@
 
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    tooltipContent="Componentes"
+                    tooltip="Componentes"
                     onclick={() => (componentsOpen = !componentsOpen)}
                     aria-expanded={componentsOpen}
                   >
@@ -93,14 +93,14 @@
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltipContent="Tokens">
+                  <SidebarMenuButton tooltip="Tokens">
                     <Palette aria-hidden="true" />
                     <span>Tokens</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
-                  <SidebarMenuButton tooltipContent="Configurações">
+                  <SidebarMenuButton tooltip="Configurações">
                     <Settings aria-hidden="true" />
                     <span>Configurações</span>
                   </SidebarMenuButton>
