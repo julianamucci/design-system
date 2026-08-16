@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 
 const meta: Meta = {
@@ -10,10 +10,11 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Composicoes do InputOTP: com label, com texto de ajuda, com mensagem de erro e com botão reenviar.',
+          'Composicoes do InputOTP: WithLabel (rótulo visível associado), WithHelpText (origem + validade), WithErrorMessage (aria-describedby + aria-invalid) e WithResendButton (botão para reenviar o código).',
       },
     },
   },
@@ -22,15 +23,26 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+function campo(raiz: HTMLElement): HTMLInputElement {
+  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
+  if (!el) throw new Error('input do OTP não encontrado');
+  return el;
+}
+
 export const WithLabel: Story = {
   args: {
     maxLength: 6,
     label: 'Código de verificação',
     variant: 'withLabel',
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByText('Código de verificação')).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step('O rótulo visível é o nome do campo', async () => {
+      // `for`/`id` e não só texto na tela: é a ligação que faz o leitor
+      // anunciar o rótulo ao entrar no campo.
+      const rotulo = canvasElement.querySelector<HTMLLabelElement>('label[for]')!;
+      await expect(rotulo.textContent?.trim()).toBe('Código de verificação');
+      await expect(rotulo.htmlFor).toBe(campo(canvasElement).id);
+    });
   },
 };
 
@@ -38,12 +50,15 @@ export const WithHelpText: Story = {
   args: {
     maxLength: 6,
     label: 'Código de verificação',
-    helpText: 'Enviamos por SMS, expira em 5 min',
+    helpText: 'Enviamos por SMS, expira em 5 min.',
     variant: 'withHelpText',
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByText(/enviamos por sms/i)).toBeInTheDocument();
+  play: async ({ canvasElement, step }) => {
+    await step('A ajuda é lida junto com o campo', async () => {
+      const descrito = campo(canvasElement).getAttribute('aria-describedby');
+      await expect(descrito).toBeTruthy();
+      await expect(canvasElement.querySelector(`#${descrito}`)?.textContent).toContain('SMS');
+    });
   },
 };
 
@@ -51,18 +66,20 @@ export const WithErrorMessage: Story = {
   args: {
     maxLength: 6,
     hasError: true,
-    defaultValue: '999999',
+    defaultValue: '482913',
     label: 'Código de verificação',
     errorMessage: 'Código incorreto. Verifique e tente novamente.',
     variant: 'withErrorMessage',
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByText(/código incorreto/i)).toBeInTheDocument();
-    const input = canvasElement.querySelector(
-      'input[autocomplete="one-time-code"]'
-    ) as HTMLInputElement;
-    await expect(input).toHaveAttribute('aria-invalid', 'true');
+  play: async ({ canvasElement, step }) => {
+    await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
+      const input = campo(canvasElement);
+      await expect(input).toHaveAttribute('aria-invalid', 'true');
+      const descrito = input.getAttribute('aria-describedby');
+      await expect(canvasElement.querySelector(`#${descrito}`)?.textContent).toContain(
+        'tente novamente',
+      );
+    });
   },
 };
 
@@ -72,10 +89,15 @@ export const WithResendButton: Story = {
     label: 'Código de verificação',
     variant: 'withResendButton',
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await expect(
-      canvas.getByRole('button', { name: /reenviar código/i })
-    ).toBeInTheDocument();
+
+    await step('O reenvio é alcançável pelo teclado depois do campo', async () => {
+      // O botão vem DEPOIS do campo na ordem do DOM: quem chega ao fim do
+      // código encontra o reenvio no próximo Tab, sem voltar pelo caminho.
+      campo(canvasElement).focus();
+      await userEvent.tab();
+      await expect(canvas.getByRole('button', { name: 'Reenviar código' })).toHaveFocus();
+    });
   },
 };

@@ -81,7 +81,7 @@ function buildFourDigits(): HTMLElement {
 }
 
 function buildWithSeparator(): HTMLElement {
-  return createInputOTP({ length: 6, separator: [3] });
+  return createInputOTP({ length: 6, separatorAt: [3] });
 }
 
 function buildAlphanumeric(): HTMLElement {
@@ -323,7 +323,7 @@ export function createInputOTPDocs(): HTMLElement {
         const codeSix = `const otp = createInputOTP({ length: 6 });`;
         const codeFour = `const otp = createInputOTP({ length: 4 });`;
         const codeSep = `// separator: array de índices ANTES dos quais inserir o divisor visual.
-const otp = createInputOTP({ length: 6, separator: [3] });`;
+const otp = createInputOTP({ length: 6, separatorAt: [3] });`;
         const codeAlpha = `// DIVERGÊNCIA IDIOMÁTICA:
 // O factory Nortear aceita apenas dígitos (inputMode=numeric, paste filtra \\D).
 // 'pattern' alfanumérico não é suportado — use as stacks React/Vue/Svelte
@@ -559,13 +559,22 @@ row.append(note, btn);`;
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createInputOTP(options)
+        const interfaceCode = `// createInputOTP(options) — um <input maxlength="1"> por dígito
 export type InputOTPOptions = {
   length: number;
-  separator?: string | number[];
+  mode?: 'numeric' | 'alphanumeric';   // conjunto aceito + teclado
+  value?: string;                      // valor inicial
+  separatorAt?: number[];              // [3] → formato 3+3
+  separatorChar?: string;              // travessão por padrão
   onComplete?: (value: string) => void;
   onValueChange?: (value: string) => void;
   disabled?: boolean;
+  invalid?: boolean;                   // aria-invalid nos slots
+  describedBy?: string;                // aria-describedby nos slots
+  autoFocus?: boolean;
+  autocomplete?: string;               // vai só no primeiro slot
+  ariaLabel?: string;                  // nome do conjunto
+  digitLabel?: string;                 // prefixo do nome de cada slot
   class?: string;
 };
 
@@ -586,12 +595,21 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
               title: 'createInputOTP(options)',
               cols: propsCols,
               items: [
-                { name: 'length',        type: 'number',                          defaultValue: '—',     required: 'Sim', description: 'Número total de slots/caracteres do código.' },
-                { name: 'separator',     type: 'string | number[]',               defaultValue: '—',     required: 'Não', description: 'Índices antes dos quais inserir um separator visual; ou string com caractere customizado.' },
-                { name: 'onValueChange', type: '(value: string) => void',         defaultValue: '—',     required: 'Não', description: 'Callback chamado a cada alteração do valor.' },
-                { name: 'onComplete',    type: '(value: string) => void',         defaultValue: '—',     required: 'Não', description: 'Callback chamado quando todos os slots estão preenchidos.' },
-                { name: 'disabled',      type: 'boolean',                         defaultValue: 'false', required: 'Não', description: 'Bloqueia interação e aplica opacity-50.' },
-                { name: 'class',         type: 'string',                          defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao container.' },
+                { name: 'length',        type: 'number',                          defaultValue: '—',                       required: 'Sim', description: 'Número total de slots/caracteres do código.' },
+                { name: 'mode',          type: `'numeric' | 'alphanumeric'`,      defaultValue: `'numeric'`,               required: 'Não', description: 'Conjunto de caracteres aceitos. Também escolhe o teclado do dispositivo.' },
+                { name: 'value',         type: 'string',                          defaultValue: `''`,                      required: 'Não', description: 'Valor inicial, distribuído da esquerda para a direita.' },
+                { name: 'separatorAt',   type: 'number[]',                        defaultValue: '[]',                      required: 'Não', description: 'Índices antes dos quais entra um separador — [3] num código de 6 dá o formato 3+3.' },
+                { name: 'separatorChar', type: 'string',                          defaultValue: `'—'`,                     required: 'Não', description: 'Texto do separador.' },
+                { name: 'onValueChange', type: '(value: string) => void',         defaultValue: '—',                       required: 'Não', description: 'Chamado a cada alteração do valor.' },
+                { name: 'onComplete',    type: '(value: string) => void',         defaultValue: '—',                       required: 'Não', description: 'Chamado quando todos os slots estão preenchidos.' },
+                { name: 'disabled',      type: 'boolean',                         defaultValue: 'false',                   required: 'Não', description: 'Bloqueia a interação e esmaece o campo.' },
+                { name: 'invalid',       type: 'boolean',                         defaultValue: 'false',                   required: 'Não', description: 'Marca os slots com aria-invalid e pinta a borda de erro.' },
+                { name: 'describedBy',   type: 'string',                          defaultValue: '—',                       required: 'Não', description: 'Id do texto de ajuda ou de erro, aplicado a cada slot.' },
+                { name: 'autoFocus',     type: 'boolean',                         defaultValue: 'false',                   required: 'Não', description: 'Foca o primeiro slot ao montar.' },
+                { name: 'autocomplete',  type: 'string',                          defaultValue: `'one-time-code'`,         required: 'Não', description: 'Vai só no primeiro slot; os demais recebem off.' },
+                { name: 'ariaLabel',     type: 'string',                          defaultValue: `'Código de verificação'`, required: 'Não', description: 'Nome acessível do conjunto.' },
+                { name: 'digitLabel',    type: 'string',                          defaultValue: `'Dígito'`,                required: 'Não', description: 'Prefixo do nome de cada slot: "Dígito 1", "Dígito 2"…' },
+                { name: 'class',         type: 'string',                          defaultValue: '—',                       required: 'Não', description: 'Classes adicionais aplicadas ao container.' },
               ],
             },
           ],
@@ -612,13 +630,15 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: 'size',        value: t('tokens.table.slotSize.class'), description: t('tokens.table.slotSize.part') },
-            { token: '--input',     value: t('tokens.table.border.class'),   description: t('tokens.table.border.part')   },
-            { token: '--radius',    value: t('tokens.table.rounded.class'),  description: t('tokens.table.rounded.part')  },
-            { token: '--ring',      value: t('tokens.table.active.class'),   description: t('tokens.table.active.part')   },
-            { token: '--destructive', value: t('tokens.table.invalid.class'), description: t('tokens.table.invalid.part') },
-            { token: 'opacity',     value: t('tokens.table.disabled.class'), description: t('tokens.table.disabled.part') },
-            { token: 'animation',   value: t('tokens.table.caret.class'),    description: t('tokens.table.caret.part')    },
+            { token: '--spacing-9',        value: t('tokens.table.slotSize.class'),  description: t('tokens.table.slotSize.part')  },
+            { token: '--input',            value: t('tokens.table.border.class'),    description: t('tokens.table.border.part')    },
+            { token: '--radius',           value: t('tokens.table.rounded.class'),   description: t('tokens.table.rounded.part')   },
+            { token: '--ring',             value: t('tokens.table.hover.class'),     description: t('tokens.table.hover.part')     },
+            { token: '--ring',             value: t('tokens.table.active.class'),    description: t('tokens.table.active.part')    },
+            { token: '--destructive',      value: t('tokens.table.invalid.class'),   description: t('tokens.table.invalid.part')   },
+            { token: '—',                  value: t('tokens.table.disabled.class'),  description: t('tokens.table.disabled.part')  },
+            { token: '--foreground',       value: t('tokens.table.caret.class'),     description: t('tokens.table.caret.part')     },
+            { token: '--muted-foreground', value: t('tokens.table.separator.class'), description: t('tokens.table.separator.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

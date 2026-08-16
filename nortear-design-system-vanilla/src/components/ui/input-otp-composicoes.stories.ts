@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do InputOTP: ComLabel (label visível associado), ComHelpText (origem + validade), ComErrorMessage (aria-describedby + aria-invalid) e ComResendButton (botão para reenviar código).',
+          'Composicoes do InputOTP: WithLabel (rótulo visível associado), WithHelpText (origem + validade), WithErrorMessage (aria-describedby + aria-invalid) e WithResendButton (botão para reenviar o código).',
       },
     },
   },
@@ -34,78 +34,64 @@ function wrap(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-function setAriaDescribedBy(otp: HTMLElement, id: string): void {
-  const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
-  for (const input of inputs) input.setAttribute('aria-describedby', id);
+function coluna(): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'nds-stack';
+  root.dataset.spacing = 'sm';
+  root.style.width = 'fit-content';
+  return root;
 }
 
-function applyError(otp: HTMLElement): void {
-  const inputs = Array.from(otp.querySelectorAll('input')) as HTMLInputElement[];
-  for (const input of inputs) {
-    input.setAttribute('aria-invalid', 'true');
-    input.classList.add('border-destructive');
-    input.style.boxShadow = '0 0 0 2px hsl(var(--destructive) / 0.2)';
-  }
+function rotulo(texto: string, id?: string): HTMLElement {
+  const label = document.createElement('span');
+  label.className = 'nds-text-label';
+  if (id) label.id = id;
+  label.textContent = texto;
+  return label;
 }
+
+const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
+  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+];
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
   render: () => {
-    const root = document.createElement('div');
-    root.className = 'nds-stack';
-    root.dataset.spacing = 'sm';
-    root.style.width = 'fit-content';
-
-    const label = document.createElement('label');
-    label.className = 'nds-text-body nds-font-medium';
-    label.id = 'otp-label-1';
-    label.textContent = 'Código de verificação';
-
+    const root = coluna();
     const otp = createInputOTP({ length: 6 });
-    otp.setAttribute('aria-labelledby', 'otp-label-1');
-
-    root.append(label, otp);
+    otp.removeAttribute('aria-label');
+    otp.setAttribute('aria-labelledby', 'comp-label-texto');
+    root.append(rotulo('Código de verificação', 'comp-label-texto'), otp);
     return wrap(root);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Label associado via aria-labelledby', async () => {
-      const text = canvas.getByText(/Código de verificação/);
-      await expect(text).toBeVisible();
+
+    await step('O rótulo visível é o nome do conjunto', async () => {
+      // `aria-labelledby` tem precedência sobre o `aria-label` padrão — o texto
+      // que a pessoa vê é o mesmo que o leitor anuncia.
+      await expect(canvas.getByRole('group', { name: 'Código de verificação' })).toBeTruthy();
     });
   },
 };
 
 export const WithHelpText: Story = {
   render: () => {
-    const root = document.createElement('div');
-    root.className = 'nds-stack';
-    root.dataset.spacing = 'sm';
-    root.style.width = 'fit-content';
-
-    const label = document.createElement('label');
-    label.className = 'nds-text-body nds-font-medium';
-    label.textContent = 'Código de verificação';
-
-    const otp = createInputOTP({ length: 6 });
-    setAriaDescribedBy(otp, 'otp-help-1');
-
+    const root = coluna();
+    const otp = createInputOTP({ length: 6, describedBy: 'comp-ajuda-texto' });
     const help = document.createElement('p');
-    help.id = 'otp-help-1';
+    help.id = 'comp-ajuda-texto';
     help.className = 'nds-text-caption nds-text-muted-foreground';
     help.textContent = 'Enviamos por SMS, expira em 5 min.';
-
-    root.append(label, otp, help);
+    root.append(rotulo('Código de verificação'), otp, help);
     return wrap(root);
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Help text visível e conectado via aria-describedby', async () => {
-      const help = canvas.getByText(/Enviamos por SMS/);
-      await expect(help).toBeVisible();
-      const inputs = canvas.getAllByRole('textbox') as HTMLInputElement[];
-      await expect(inputs[0].getAttribute('aria-describedby')).toBe('otp-help-1');
+    await step('A ajuda é lida junto com o campo', async () => {
+      const slot = slotsDe(canvasElement)[0];
+      await expect(slot).toHaveAttribute('aria-describedby', 'comp-ajuda-texto');
+      await expect(canvasElement.querySelector('#comp-ajuda-texto')?.textContent).toContain('SMS');
     });
   },
 };
@@ -113,34 +99,28 @@ export const WithHelpText: Story = {
 export const WithErrorMessage: Story = {
   name: 'With error message',
   render: () => {
-    const root = document.createElement('div');
-    root.className = 'nds-stack';
-    root.dataset.spacing = 'sm';
-    root.style.width = 'fit-content';
-
-    const label = document.createElement('label');
-    label.className = 'nds-text-body nds-font-medium';
-    label.textContent = 'Código de verificação';
-
-    const otp = createInputOTP({ length: 6 });
-    applyError(otp);
-    setAriaDescribedBy(otp, 'otp-error-1');
-
+    const root = coluna();
+    const otp = createInputOTP({
+      length: 6,
+      value: '482913',
+      invalid: true,
+      describedBy: 'comp-erro-texto',
+    });
     const err = document.createElement('p');
-    err.id = 'otp-error-1';
+    err.id = 'comp-erro-texto';
     err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = 'Código incorreto. Verifique e tente novamente.';
-
-    root.append(label, otp, err);
+    root.append(rotulo('Código de verificação'), otp, err);
     return wrap(root);
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Mensagem de erro visível e aria-invalid aplicado', async () => {
-      const err = canvas.getByText(/Código incorreto/);
-      await expect(err).toBeVisible();
-      const inputs = canvas.getAllByRole('textbox') as HTMLInputElement[];
-      await expect(inputs[0].getAttribute('aria-invalid')).toBe('true');
+    await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
+      const slot = slotsDe(canvasElement)[0];
+      await expect(slot).toHaveAttribute('aria-invalid', 'true');
+      await expect(slot).toHaveAttribute('aria-describedby', 'comp-erro-texto');
+      await expect(canvasElement.querySelector('#comp-erro-texto')?.textContent).toContain(
+        'tente novamente',
+      );
     });
   },
 };
@@ -148,38 +128,32 @@ export const WithErrorMessage: Story = {
 export const WithResendButton: Story = {
   name: 'With resend button',
   render: () => {
-    const root = document.createElement('div');
-    root.className = 'nds-stack';
-    root.dataset.spacing = 'sm';
-    root.style.width = 'fit-content';
-
-    const label = document.createElement('label');
-    label.className = 'nds-text-body nds-font-medium';
-    label.textContent = 'Código de verificação';
-
+    const root = coluna();
     const otp = createInputOTP({ length: 6 });
 
     const row = document.createElement('div');
     row.className = 'nds-cluster';
-    row.dataset.justify = 'between';
-    row.dataset.spacing = 'md';
+    row.dataset.spacing = 'xs';
+    row.dataset.align = 'center';
 
-    const note = document.createElement('p');
+    const note = document.createElement('span');
     note.className = 'nds-text-caption nds-text-muted-foreground';
     note.textContent = 'Não recebeu?';
 
-    const btn = createButton({ variant: 'link', label: 'Reenviar código' });
-
-    row.append(note, btn);
-    root.append(label, otp, row);
+    row.append(note, createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' }));
+    root.append(rotulo('Código de verificação'), otp, row);
     return wrap(root);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Botão reenviar é clicável', async () => {
-      const btn = canvas.getByRole('button', { name: /Reenviar código/i });
-      await userEvent.click(btn);
-      await expect(btn).toBeVisible();
+
+    await step('O reenvio é alcançável pelo teclado depois do último slot', async () => {
+      // O botão vem DEPOIS do campo na ordem do DOM: quem chega ao fim do
+      // código encontra o reenvio no próximo Tab, sem voltar pelo caminho.
+      const slots = slotsDe(canvasElement);
+      slots[slots.length - 1].focus();
+      await userEvent.tab();
+      await expect(canvas.getByRole('button', { name: 'Reenviar código' })).toHaveFocus();
     });
   },
 };

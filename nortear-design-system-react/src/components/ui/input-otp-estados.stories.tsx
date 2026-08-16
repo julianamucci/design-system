@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect } from "storybook/test";
+import { userEvent, expect } from "storybook/test";
+import { razao } from "@shared/testing/cor";
 import {
   InputOTP,
   InputOTPGroup,
@@ -14,10 +15,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do InputOTP: Vazio, Preenchendo (3/6), Completo (6/6), Desabilitado e Erro.",
+          "Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.",
       },
     },
   },
@@ -26,23 +28,36 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof InputOTP>;
 
-const slotsArray = (n: number) => Array.from({ length: n });
+const seis = Array.from({ length: 6 });
 
-function findOtpInput(canvasElement: HTMLElement): HTMLInputElement | null {
-  return canvasElement.querySelector(
+function campo(canvasElement: HTMLElement): HTMLInputElement {
+  const el = canvasElement.querySelector<HTMLInputElement>(
     'input[autocomplete="one-time-code"]'
-  ) as HTMLInputElement | null;
+  );
+  // `globalThis.Error`, e não `Error`: este arquivo exporta uma story chamada
+  // `Error` — o estado de erro do componente —, e o nome dela sombreia o
+  // construtor global no escopo do módulo. Escrito `new Error(...)`, o TypeScript
+  // acusa "expression is not constructable" e em runtime a linha só quebraria no
+  // dia em que o campo faltasse, que é justamente o dia em que ela precisa falar.
+  if (!el) throw new globalThis.Error("input do OTP não encontrado");
+  return el;
 }
+
+const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
+  ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+];
+
+const textos = (canvasElement: HTMLElement): string[] =>
+  caixas(canvasElement).map((c) => c.textContent?.trim() ?? "");
 
 export const Empty: Story = {
   parameters: {
-    docs: {
-      description: { story: "Nenhum slot preenchido. value=''." },
-    },
+    covers: ["visual.item1"],
+    docs: { description: { story: "Nenhuma caixa preenchida, com o campo já em foco." } },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
-      <label htmlFor="otp-empty" className="nds-text-body nds-font-medium">
+      <label htmlFor="otp-empty" className="nds-text-label">
         Código de verificação
       </label>
       <InputOTP
@@ -50,12 +65,12 @@ export const Empty: Story = {
         maxLength={6}
         value=""
         onChange={() => {}}
+        autoFocus
         autoComplete="one-time-code"
         inputMode="numeric"
-        aria-label="Código vazio"
       >
         <InputOTPGroup>
-          {slotsArray(6).map((_, i) => (
+          {seis.map((_, i) => (
             <InputOTPSlot key={i} index={i} />
           ))}
         </InputOTPGroup>
@@ -63,27 +78,26 @@ export const Empty: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await step("Input vazio", async () => {
-      const input = findOtpInput(canvasElement);
-      await expect(input).toBeTruthy();
-      await expect(input).toHaveValue("");
+    await step("Nasce vazio com o campo pronto para receber", async () => {
+      await expect(caixas(canvasElement)).toHaveLength(6);
+      await expect(textos(canvasElement).join("")).toBe("");
+      await expect(campo(canvasElement)).toHaveFocus();
     });
   },
 };
 
 export const Filling: Story = {
   parameters: {
-    docs: {
-      description: { story: "Parcialmente preenchido (3 de 6 slots)." },
-    },
+    covers: ["visual.item2", "accessibility.item6"],
+    docs: { description: { story: "Parcialmente preenchido — 3 de 6 caixas." } },
   },
   render: () => {
     const Demo = () => {
       const [value, setValue] = useState("123");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-filling" className="nds-text-body nds-font-medium">
-            Código (preenchendo)
+          <label htmlFor="otp-filling" className="nds-text-label">
+            Código de verificação
           </label>
           <InputOTP
             id="otp-filling"
@@ -92,10 +106,9 @@ export const Filling: Story = {
             onChange={setValue}
             autoComplete="one-time-code"
             inputMode="numeric"
-            aria-label="Código preenchendo"
           >
             <InputOTPGroup>
-              {slotsArray(6).map((_, i) => (
+              {seis.map((_, i) => (
                 <InputOTPSlot key={i} index={i} />
               ))}
             </InputOTPGroup>
@@ -106,26 +119,33 @@ export const Filling: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Input com 3 caracteres", async () => {
-      const input = findOtpInput(canvasElement);
-      await expect(input).toHaveValue("123");
+    await step("O valor inicial se distribui da esquerda para a direita", async () => {
+      await expect(textos(canvasElement)).toEqual(["1", "2", "3", "", "", ""]);
+    });
+
+    await step("O dígito tem contraste suficiente contra a caixa", async () => {
+      // Uma caixa pequena com um caractere só: se o contraste cair, não há
+      // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
+      // compartilhado, não olhômetro nem comparação de nome de token.
+      const cs = getComputedStyle(caixas(canvasElement)[0]);
+      const medida = razao(cs.color, cs.backgroundColor);
+      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
 
 export const Complete: Story = {
   parameters: {
-    docs: {
-      description: { story: "Todos os 6 slots preenchidos (onComplete já disparou)." },
-    },
+    covers: ["visual.item3"],
+    docs: { description: { story: "Todas as 6 caixas preenchidas." } },
   },
   render: () => {
     const Demo = () => {
-      const [value, setValue] = useState("123456");
+      const [value, setValue] = useState("482913");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-complete" className="nds-text-body nds-font-medium">
-            Código (completo)
+          <label htmlFor="otp-complete" className="nds-text-label">
+            Código de verificação
           </label>
           <InputOTP
             id="otp-complete"
@@ -134,10 +154,9 @@ export const Complete: Story = {
             onChange={setValue}
             autoComplete="one-time-code"
             inputMode="numeric"
-            aria-label="Código completo"
           >
             <InputOTPGroup>
-              {slotsArray(6).map((_, i) => (
+              {seis.map((_, i) => (
                 <InputOTPSlot key={i} index={i} />
               ))}
             </InputOTPGroup>
@@ -148,38 +167,33 @@ export const Complete: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Input com 6 caracteres", async () => {
-      const input = findOtpInput(canvasElement);
-      await expect(input).toHaveValue("123456");
+    await step("Todas as caixas preenchidas, na ordem do código", async () => {
+      await expect(textos(canvasElement).join("")).toBe("482913");
     });
   },
 };
 
 export const Disabled: Story = {
   parameters: {
-    docs: {
-      description: {
-        story: "disabled=true aplica has-disabled:opacity-50 e bloqueia interação.",
-      },
-    },
+    covers: ["functional.item6"],
+    docs: { description: { story: "Bloqueado: não aceita foco nem digitação, e o campo esmaece." } },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
-      <label htmlFor="otp-disabled" className="nds-text-body nds-font-medium">
-        Código (desabilitado)
+      <label htmlFor="otp-disabled" className="nds-text-label">
+        Código de verificação
       </label>
       <InputOTP
         id="otp-disabled"
         maxLength={6}
-        value="42"
+        value="4829"
         onChange={() => {}}
         disabled
         autoComplete="one-time-code"
         inputMode="numeric"
-        aria-label="Código desabilitado"
       >
         <InputOTPGroup>
-          {slotsArray(6).map((_, i) => (
+          {seis.map((_, i) => (
             <InputOTPSlot key={i} index={i} />
           ))}
         </InputOTPGroup>
@@ -187,58 +201,101 @@ export const Disabled: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    await step("Input com atributo disabled", async () => {
-      const input = findOtpInput(canvasElement);
+    await step("O campo não aceita foco nem digitação", async () => {
+      const input = campo(canvasElement);
       await expect(input).toBeDisabled();
+      await userEvent.click(input);
+      await expect(input).not.toHaveFocus();
+      await expect(textos(canvasElement).join("")).toBe("4829");
+    });
+
+    await step("O bloqueio também se vê", async () => {
+      // Efeito computado: a folha esmaece o campo inteiro. Medir a opacidade é
+      // o que prova que a cascata chegou — nome de classe não prova nada.
+      const container = canvasElement.querySelector<HTMLElement>(".nds-input-otp-container")!;
+      await expect(Number(getComputedStyle(container).opacity)).toBeLessThan(1);
     });
   },
 };
 
 export const Error: Story = {
   parameters: {
+    covers: ["functional.item7", "accessibility.item5", "visual.item4"],
     docs: {
       description: {
         story:
-          "aria-invalid=true aplica borda border-destructive e ring vermelho. Mensagem conectada via aria-describedby.",
+          "Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.",
       },
     },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
-      <label htmlFor="otp-error" className="nds-text-body nds-font-medium">
-        Código (erro)
+      <label htmlFor="otp-error" className="nds-text-label">
+        Código de verificação
       </label>
-      <InputOTP
-        id="otp-error"
-        maxLength={6}
-        value="111"
-        onChange={() => {}}
-        aria-invalid="true"
-        aria-describedby="otp-error-msg"
-        autoComplete="one-time-code"
-        inputMode="numeric"
-        aria-label="Código com erro"
-      >
-        <InputOTPGroup>
-          {slotsArray(6).map((_, i) => (
-            <InputOTPSlot key={i} index={i} />
-          ))}
-        </InputOTPGroup>
-      </InputOTP>
+      <div data-testid="com-erro">
+        <InputOTP
+          id="otp-error"
+          maxLength={6}
+          value="482913"
+          onChange={() => {}}
+          aria-invalid="true"
+          aria-describedby="otp-error-msg"
+          autoComplete="one-time-code"
+          inputMode="numeric"
+        >
+          <InputOTPGroup>
+            {seis.map((_, i) => (
+              <InputOTPSlot key={i} index={i} />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
       <p id="otp-error-msg" className="nds-text-caption nds-text-destructive">
         Código incorreto. Verifique e tente novamente.
       </p>
+
+      <p id="otp-ok-label" className="nds-text-caption nds-text-muted-foreground">
+        Comparação — sem erro
+      </p>
+      <div data-testid="sem-erro">
+        <InputOTP
+          id="otp-ok"
+          aria-labelledby="otp-ok-label"
+          maxLength={6}
+          value="482913"
+          onChange={() => {}}
+          autoComplete="one-time-code"
+          inputMode="numeric"
+        >
+          <InputOTPGroup>
+            {seis.map((_, i) => (
+              <InputOTPSlot key={i} index={i} />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Input com aria-invalid=true", async () => {
-      const input = findOtpInput(canvasElement);
-      await expect(input).toHaveAttribute("aria-invalid", "true");
+    const comErro = canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
+    const semErro = canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!;
+
+    await step("O erro é anunciado por ARIA, não só pela borda", async () => {
+      await expect(campo(comErro)).toHaveAttribute("aria-invalid", "true");
     });
-    await step("Mensagem de erro associada via aria-describedby", async () => {
-      const msg = canvas.getByText(/Código incorreto/i);
-      await expect(msg).toHaveAttribute("id", "otp-error-msg");
+
+    await step("A mensagem de erro está ligada ao campo", async () => {
+      await expect(campo(comErro)).toHaveAttribute("aria-describedby", "otp-error-msg");
+      await expect(canvasElement.querySelector("#otp-error-msg")).toBeTruthy();
+    });
+
+    await step("A borda da caixa troca para a cor de erro", async () => {
+      // Comparação contra uma SEGUNDA instância sem erro: mexer no atributo da
+      // primeira deixaria a asserção medindo o mesmo estado dos dois lados.
+      const bordaComErro = getComputedStyle(caixas(comErro)[0]).borderTopColor;
+      const bordaSemErro = getComputedStyle(caixas(semErro)[0]).borderTopColor;
+      await expect(bordaComErro).not.toBe(bordaSemErro);
     });
   },
 };

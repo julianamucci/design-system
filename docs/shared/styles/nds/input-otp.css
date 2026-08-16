@@ -2,10 +2,10 @@
  * ─── nds-input-otp ──────────────────────────────────────────────────────────
  * Input de código OTP (One-Time Password) com slots individuais conectados.
  *
- *   <div class="nds-input-otp" role="group" aria-label="One-time password input">
+ *   <div class="nds-input-otp" role="group" aria-label="Código de verificação">
  *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
  *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
- *     <div class="nds-input-otp-separator">—</div>
+ *     <div class="nds-input-otp-separator" role="separator">—</div>
  *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
  *     <input class="nds-input-otp-slot" type="text" inputmode="numeric" maxlength="1" />
  *   </div>
@@ -14,10 +14,15 @@
  *         --radius, --spacing-*
  */
 
+/* Sem `gap` aqui. A intenção sempre foi "8px entre GRUPOS com separador", mas
+ * na família nativa os slots são filhos DIRETOS do contêiner — o gap caía entre
+ * cada par de caixas e, como o desenho suprime a borda esquerda do miolo, cada
+ * caixa do meio ficava aberta de um lado, 8px longe da vizinha. Medido: 8px
+ * entre slots aqui contra 0px nas stacks de lib. O respiro passou a ser margem
+ * do PRÓPRIO separador, que é onde ele é devido, e vale nas duas famílias. */
 .nds-input-otp {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);                          /* 8px entre grupos com separador */
 }
 
 /* ── Slot (cada input de 1 caractere) ────────────────────────────────────── */
@@ -59,6 +64,20 @@
   border-end-end-radius: var(--radius);
 }
 
+/* Hover — o campo era o único da família de entrada (input, select, textarea)
+ * sem nenhuma resposta ao ponteiro. Anel OPACO, e não `--ring / 0.4`: com o
+ * repouso em 3.2:1 o valor com alfa compõe abaixo do repouso e APAGA a borda
+ * justamente sob o ponteiro (mesma correção de `input.css`).
+ *
+ * O gatilho é o CONTÊINER, não o slot: na família de lib o `<input>` recortado
+ * cobre as caixas e `:hover` no slot nunca acenderia — o hover existiria em
+ * duas stacks e não nas outras três. O conjunto é UM campo, então acender
+ * inteiro é também o que descreve o alvo do clique. */
+.nds-input-otp:hover .nds-input-otp-slot:not(:disabled):not([aria-invalid="true"]),
+.nds-input-otp-container:hover:not(:has(input:disabled)) .nds-input-otp-slot:not([aria-invalid="true"]) {
+  border-color: hsl(var(--ring));
+}
+
 .nds-input-otp-slot:focus {
   z-index: 1;
   box-shadow: 0 0 0 1px hsl(var(--ring));
@@ -75,6 +94,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* O respiro do separador mora aqui, e não num `gap` do contêiner: assim ele
+   * vale tanto entre dois grupos quanto entre dois slots soltos. */
+  margin-inline: var(--spacing-2);
   color: hsl(var(--muted-foreground));
   user-select: none;
   pointer-events: none;
@@ -106,11 +128,6 @@
   border-radius: var(--radius);
 }
 
-.nds-input-otp-group:has([aria-invalid="true"]) {
-  border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.2);
-}
-
 /* Slots dentro de grupo: mesmas regras de borda/radius do fluxo nativo */
 .nds-input-otp-group > .nds-input-otp-slot:first-child {
   border-inline-start: 1px solid hsl(var(--input, var(--border)));
@@ -123,19 +140,35 @@
   border-end-end-radius: var(--radius);
 }
 
-/* Slot ativo (data-active, para slots-div com input oculto) — par do :focus */
-.nds-input-otp-slot[data-active="true"] {
+/* Slot ativo (data-active, para slots-div com input oculto) — par do :focus.
+ *
+ * Casa a PRESENÇA do atributo, e não o valor `"true"`: as bibliotecas de OTP
+ * marcam o slot em edição de formas diferentes — umas escrevem `data-active`
+ * vazio, outras `data-active="true"` —, e o seletor preso ao valor deixava o
+ * anel do slot ativo simplesmente sem aparecer numa das stacks. O `:not` exclui
+ * o `"false"`, que algumas libs emitem em TODOS os slots. */
+.nds-input-otp-slot[data-active]:not([data-active="false"]) {
   z-index: 1;
   box-shadow: 0 0 0 1px hsl(var(--ring));
   border-color: hsl(var(--ring));
 }
 
-.nds-input-otp-slot[aria-invalid="true"] {
+/* Erro. Duas formas porque o atributo cai em lugares diferentes: na família
+ * nativa `aria-invalid` vai em CADA slot; na de lib ele vai no `<input>` único,
+ * e as caixas são irmãs dele dentro do contêiner. Antes só existia a primeira
+ * — e o anel vermelho vivia em `.nds-input-otp-group`, que não existe na
+ * família nativa. Resultado medido: a borda de erro aparecia em duas stacks e
+ * não nas outras três, com o conteúdo compartilhado prometendo as cinco. */
+.nds-input-otp-slot[aria-invalid="true"],
+.nds-input-otp-container:has(input[aria-invalid="true"]) .nds-input-otp-slot {
   border-color: hsl(var(--destructive));
 }
 
-.nds-input-otp-slot[data-active="true"][aria-invalid="true"] {
-  box-shadow: 0 0 0 1px hsl(var(--destructive));
+/* Halo de erro só no slot ATIVO, como em `.nds-input:focus-visible` — erro em
+ * repouso é borda, erro sob o cursor é borda + halo. */
+.nds-input-otp-slot[aria-invalid="true"]:focus,
+.nds-input-otp-container:has(input[aria-invalid="true"]) .nds-input-otp-slot[data-active]:not([data-active="false"]) {
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
 }
 
 /* ── Caret fake (pisca enquanto o slot ativo aguarda dígito) ─────────────── */

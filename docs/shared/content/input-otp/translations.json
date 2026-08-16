@@ -6,9 +6,9 @@
     "description": "Campo de entrada para códigos de verificação (OTP/PIN) com slots individuais, autofill SMS e suporte a paste.",
     "seo": {
       "title": "InputOTP — Formulário",
-      "description": "Documentação do InputOTP: campo de código de verificação via input-otp, com slots individuais, autoFocus, paste e WCAG 2.2 AA.",
-      "aiSummary": "Componente InputOTP construído sobre a lib input-otp (React/Vue/Svelte) e factory custom (Vanilla) que apresenta slots individuais para códigos de verificação OTP/PIN, suporta paste, autoFocus, autocomplete one-time-code e formatos como 4-6 dígitos com separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
+      "description": "Documentação do InputOTP: campo de código de verificação com uma caixa por dígito, foco automático, colar e WCAG 2.2 AA.",
+      "aiSummary": "Componente InputOTP para códigos de verificação OTP/PIN, com uma caixa por dígito, suporte a colar, foco automático, pedido de código de uso único ao sistema e formatos de 4 a 8 caracteres com separador opcional.",
+      "aiEntities": "InputOTP, OTP, PIN, one-time-code, código de verificação, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -194,12 +194,12 @@
       "disabled": {
         "label": "Desabilitado",
         "trigger": "prop disabled=true",
-        "behavior": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> e bloqueia interação."
+        "behavior": "O campo inteiro fica esmaecido e nenhuma caixa aceita foco ou digitação."
       },
       "error": {
         "label": "Erro",
         "trigger": "aria-invalid=true",
-        "behavior": "<code>aria-invalid=\"true\"</code> aplica borda <code>border-destructive</code> e ring vermelho."
+        "behavior": "A borda de todas as caixas passa para a cor de erro, e a caixa em edição ganha um halo da mesma cor."
       },
       "cols": {
         "state": "Estado",
@@ -249,7 +249,7 @@
           "type": "boolean",
           "default": "false",
           "required": "Não",
-          "description": "Bloqueia interação e aplica opacity-50."
+          "description": "Bloqueia a interação e esmaece o campo."
         },
         "autoFocus": {
           "type": "boolean",
@@ -268,49 +268,57 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe",
+        "class": "Seletor",
         "part": "Aplicação",
         "slotSize": {
-          "class": "size-8",
-          "part": "Tamanho de cada slot (32px × 32px)"
+          "class": ".nds-input-otp-slot",
+          "part": "Caixa de cada dígito — 36 × 36 px, com o caractere em 14 px centralizado"
         },
         "border": {
-          "class": "border-input",
-          "part": "Borda padrão dos slots"
+          "class": ".nds-input-otp-slot",
+          "part": "Borda de 1 px de cada caixa; as do meio não repetem a borda esquerda, para as caixas ficarem coladas"
         },
         "rounded": {
-          "class": "rounded-l-lg / rounded-r-lg",
-          "part": "Cantos arredondados nos slots de borda do grupo"
+          "class": ".nds-input-otp-slot:first-child · :last-child",
+          "part": "Cantos arredondados só nas pontas do bloco — 10 px; o miolo fica reto"
         },
         "active": {
-          "class": "border-ring ring-3 ring-ring/50",
-          "part": "Slot ativo (foco)"
+          "class": ".nds-input-otp-slot:focus · [data-active=\"true\"]",
+          "part": "Caixa em edição: borda e anel de 1 px na cor de foco"
         },
         "invalid": {
-          "class": "border-destructive ring-destructive/20",
-          "part": "Estado de erro (aria-invalid=true)"
+          "class": "[aria-invalid=\"true\"]",
+          "part": "Borda de erro em todas as caixas; halo de 2 px na caixa em edição"
         },
         "disabled": {
-          "class": "has-disabled:opacity-50",
-          "part": "Container quando algum slot está disabled"
+          "class": ".nds-input-otp-slot:disabled · :has(input:disabled)",
+          "part": "Campo bloqueado: opacidade 0.5 e cursor de bloqueio. Sem token próprio — a opacidade está cravada na regra"
         },
         "caret": {
-          "class": "animate-caret-blink",
-          "part": "Caret falso piscando no slot ativo"
+          "class": ".nds-input-otp-caret",
+          "part": "Cursor falso de 1 px de largura por 16 px de altura, piscando em 1,2 s na caixa em edição"
+        },
+        "hover": {
+          "class": ".nds-input-otp:hover · .nds-input-otp-container:hover",
+          "part": "Borda do conjunto sob o ponteiro — anel opaco, mais escuro que o repouso"
+        },
+        "separator": {
+          "class": ".nds-input-otp-separator",
+          "part": "Divisor entre blocos: 8 px de margem de cada lado — é ele que dá o respiro do formato 3+3"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Slot maior para conteúdo touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+        "web": "/* Caixa maior, para toque confortável no celular */\n.nds-input-otp-slot {\n  width: 3rem;\n  height: 3rem;\n  font-size: var(--text-control-lg);\n}\n\n/* Respiro maior entre os dois blocos do formato 3+3 */\n.nds-input-otp-separator {\n  margin-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
       "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via input + role=separator), 2.1.1 (operável por teclado: setas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
       "items": {
-        "item1": "<code>InputOTP</code> renderiza um <code>&lt;input&gt;</code> real internamente — leitor de tela anuncia como input de texto.",
+        "item1": "O campo é um controle de texto de verdade — o leitor de tela o anuncia como campo editável, e não como um bloco de caixas decorativas.",
         "item2": "Sempre forneça <code>aria-label</code> ou <code>label</code> visível descrevendo o que o código representa.",
-        "item3": "<code>autoComplete=\"one-time-code\"</code> aciona autofill de SMS no iOS Safari e Android Chrome.",
+        "item3": "O pedido de código de uso único aciona o preenchimento automático do SMS no iOS e no Android.",
         "item4": "Setas Esquerda/Direita movem entre slots; Backspace apaga e volta um slot; Paste cola o código completo distribuindo nos slots.",
         "item5": "<code>aria-invalid=\"true\"</code> no input aplica visual de erro e é anunciado pelo leitor de tela.",
         "item6": "Mensagem de erro deve ser conectada via <code>aria-describedby</code> apontando para o elemento de erro."
@@ -360,11 +368,11 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartilhado com Vue e Svelte via wrappers. <strong>Vanilla</strong> usa factory custom com inputs HTML nativos.",
+      "item1": "<strong>Duas famílias de markup</strong>: onde há biblioteca de OTP, o campo é um <code>&lt;input&gt;</code> único recortado por trás de caixas desenhadas; onde não há, é um <code>&lt;input maxlength=\"1\"&gt;</code> por dígito. O visual e as classes são os mesmos; o que muda é quem recebe o foco.",
       "item2": "<strong>autoComplete one-time-code</strong>: essencial para autofill nativo. Sem isso, o usuário precisa digitar manualmente mesmo com SMS recebido.",
-      "item3": "<strong>Paste</strong>: a lib distribui automaticamente o código colado nos slots; testar em Safari iOS especialmente.",
+      "item3": "<strong>Colar</strong>: o código colado é distribuído pelas caixas a partir da que está em edição; caracteres fora do conjunto aceito são descartados.",
       "item4": "<strong>Patterns prontos</strong>: <code>REGEXP_ONLY_DIGITS</code> (padrão), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados pela lib.",
-      "item5": "<strong>Mobile</strong>: slot de 32px é apertado em mobile — considere <code>size-10</code> ou <code>size-12</code> via className quando o componente é a ação principal."
+      "item5": "<strong>Toque</strong>: a caixa de 36 px é apertada no celular quando o código é a ação principal da tela — aumente <code>width</code> e <code>height</code> de <code>.nds-input-otp-slot</code> para 44 px ou mais."
     },
     "analytics": {
       "title": "Analytics",
@@ -402,12 +410,12 @@
         },
         "item6": {
           "action": "Renderizar com disabled=true",
-          "result": "Container tem opacity-50 e slots bloqueados",
+          "result": "O campo fica esmaecido e nenhuma caixa aceita foco ou digitação",
           "priority": "medium"
         },
         "item7": {
           "action": "Renderizar com aria-invalid=true",
-          "result": "Borda destructive e ring vermelho aplicados",
+          "result": "A borda de todas as caixas passa para a cor de erro",
           "priority": "high"
         }
       },
@@ -415,7 +423,7 @@
         "title": "Acessibilidade Verificável",
         "description": "Critérios que ferramentas automatizadas devem confirmar.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "Input interno tem autoComplete=one-time-code (WCAG 1.3.5)",
+        "item2": "O campo pede o código de uso único ao sistema, para acionar o preenchimento automático (WCAG 1.3.5)",
         "item3": "aria-label ou label associado descreve o propósito (WCAG 3.3.2)",
         "item4": "Separator tem role=separator (WCAG 4.1.2)",
         "item5": "aria-invalid=true reflete estado de erro (WCAG 4.1.2)",
@@ -476,9 +484,9 @@
     "description": "Input field for verification codes (OTP/PIN) with individual slots, SMS autofill, and paste support.",
     "seo": {
       "title": "InputOTP — Form",
-      "description": "InputOTP documentation: verification code field via input-otp, with individual slots, autoFocus, paste, and WCAG 2.2 AA.",
-      "aiSummary": "InputOTP component built on the input-otp lib (React/Vue/Svelte) and a custom factory (Vanilla) presenting individual slots for OTP/PIN verification codes, supporting paste, autoFocus, autocomplete one-time-code, and formats like 4-6 digits with optional separator.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
+      "description": "InputOTP documentation: verification code field with one box per digit, auto focus, paste and WCAG 2.2 AA.",
+      "aiSummary": "InputOTP component for OTP/PIN verification codes, with one box per digit, paste support, auto focus, one-time-code autofill request and formats from 4 to 8 characters with an optional separator.",
+      "aiEntities": "InputOTP, OTP, PIN, one-time-code, verification code, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -664,12 +672,12 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "prop disabled=true",
-        "behavior": "<code>disabled</code> applies <code>has-disabled:opacity-50</code> and blocks interaction."
+        "behavior": "The whole field dims and no box accepts focus or typing."
       },
       "error": {
         "label": "Error",
         "trigger": "aria-invalid=true",
-        "behavior": "<code>aria-invalid=\"true\"</code> applies <code>border-destructive</code> and red ring."
+        "behavior": "Every box border switches to the error colour, and the box being edited gains a halo in the same colour."
       },
       "cols": {
         "state": "State",
@@ -719,7 +727,7 @@
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "Blocks interaction and applies opacity-50."
+          "description": "Blocks interaction and dims the field."
         },
         "autoFocus": {
           "type": "boolean",
@@ -738,49 +746,57 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Class",
+        "class": "Selector",
         "part": "Application",
         "slotSize": {
-          "class": "size-8",
-          "part": "Each slot size (32px × 32px)"
+          "class": ".nds-input-otp-slot",
+          "part": "Box for each digit — 36 × 36 px, with the character centred at 14 px"
         },
         "border": {
-          "class": "border-input",
-          "part": "Default slot border"
+          "class": ".nds-input-otp-slot",
+          "part": "A 1 px border on each box; middle boxes drop the left border so the boxes stay joined"
         },
         "rounded": {
-          "class": "rounded-l-lg / rounded-r-lg",
-          "part": "Rounded corners on group edge slots"
+          "class": ".nds-input-otp-slot:first-child · :last-child",
+          "part": "Rounded corners only at the ends of the block — 10 px; the middle stays square"
         },
         "active": {
-          "class": "border-ring ring-3 ring-ring/50",
-          "part": "Active slot (focus)"
+          "class": ".nds-input-otp-slot:focus · [data-active=\"true\"]",
+          "part": "Box being edited: border plus a 1 px ring in the focus colour"
         },
         "invalid": {
-          "class": "border-destructive ring-destructive/20",
-          "part": "Error state (aria-invalid=true)"
+          "class": "[aria-invalid=\"true\"]",
+          "part": "Error border on every box; a 2 px halo on the box being edited"
         },
         "disabled": {
-          "class": "has-disabled:opacity-50",
-          "part": "Container when any slot is disabled"
+          "class": ".nds-input-otp-slot:disabled · :has(input:disabled)",
+          "part": "Blocked field: 0.5 opacity and a blocked cursor. No token of its own — the opacity is hard-coded in the rule"
         },
         "caret": {
-          "class": "animate-caret-blink",
-          "part": "Fake blinking caret on active slot"
+          "class": ".nds-input-otp-caret",
+          "part": "Fake caret, 1 px wide by 16 px tall, blinking every 1.2 s in the box being edited"
+        },
+        "hover": {
+          "class": ".nds-input-otp:hover · .nds-input-otp-container:hover",
+          "part": "Border of the whole field under the pointer — opaque ring, darker than at rest"
+        },
+        "separator": {
+          "class": ".nds-input-otp-separator",
+          "part": "Divider between blocks: 8 px margin on each side — it is what gives the 3+3 format its breathing room"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Larger slot for touch-friendly content */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+        "web": "/* Larger box, for comfortable touch on mobile */\n.nds-input-otp-slot {\n  width: 3rem;\n  height: 3rem;\n  font-size: var(--text-control-lg);\n}\n\n/* More breathing room between the two blocks of the 3+3 format */\n.nds-input-otp-separator {\n  margin-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
       "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via input + role=separator), 2.1.1 (keyboard operable: arrows, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
       "items": {
-        "item1": "<code>InputOTP</code> renders a real <code>&lt;input&gt;</code> internally — screen reader announces it as a text input.",
+        "item1": "The field is a real text control — screen readers announce it as an editable field, not as a row of decorative boxes.",
         "item2": "Always provide <code>aria-label</code> or visible <code>label</code> describing what the code represents.",
-        "item3": "<code>autoComplete=\"one-time-code\"</code> triggers SMS autofill on iOS Safari and Android Chrome.",
+        "item3": "Asking for the one-time code triggers SMS autofill on iOS and Android.",
         "item4": "Left/Right arrows move between slots; Backspace deletes and goes back; Paste fills the entire code distributing across slots.",
         "item5": "<code>aria-invalid=\"true\"</code> on the input applies error visuals and is announced by screen readers.",
         "item6": "Error message must be connected via <code>aria-describedby</code> pointing to the error element."
@@ -830,11 +846,11 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: InputOTP uses <code>input-otp</code> (React) — shared with Vue and Svelte via wrappers. <strong>Vanilla</strong> uses a custom factory with native HTML inputs.",
+      "item1": "<strong>Two markup families</strong>: where an OTP library is available, the field is a single clipped <code>&lt;input&gt;</code> behind drawn boxes; where it is not, it is one <code>&lt;input maxlength=\"1\"&gt;</code> per digit. Visuals and classes are the same; what changes is which element takes focus.",
       "item2": "<strong>autoComplete one-time-code</strong>: essential for native autofill. Without it, the user must type manually even when SMS is received.",
-      "item3": "<strong>Paste</strong>: the lib automatically distributes pasted code across slots; test on iOS Safari especially.",
+      "item3": "<strong>Paste</strong>: the pasted code is spread across the boxes starting from the one being edited; characters outside the accepted set are dropped.",
       "item4": "<strong>Ready-made patterns</strong>: <code>REGEXP_ONLY_DIGITS</code> (default), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exported by the lib.",
-      "item5": "<strong>Mobile</strong>: 32px slot is cramped on mobile — consider <code>size-10</code> or <code>size-12</code> via className when the component is the main action."
+      "item5": "<strong>Touch</strong>: the 36 px box is cramped on mobile when the code is the main action on screen — raise <code>width</code> and <code>height</code> on <code>.nds-input-otp-slot</code> to 44 px or more."
     },
     "analytics": {
       "title": "Analytics",
@@ -872,12 +888,12 @@
         },
         "item6": {
           "action": "Render with disabled=true",
-          "result": "Container has opacity-50 and slots blocked",
+          "result": "The field dims and no box accepts focus or typing",
           "priority": "medium"
         },
         "item7": {
           "action": "Render with aria-invalid=true",
-          "result": "destructive border and red ring applied",
+          "result": "Every box border switches to the error colour",
           "priority": "high"
         }
       },
@@ -885,7 +901,7 @@
         "title": "Verifiable Accessibility",
         "description": "Criteria automated tools should confirm.",
         "item1": "No violations reported by axe-core in default state",
-        "item2": "Internal input has autoComplete=one-time-code (WCAG 1.3.5)",
+        "item2": "The field asks the system for the one-time code, triggering autofill (WCAG 1.3.5)",
         "item3": "aria-label or associated label describes purpose (WCAG 3.3.2)",
         "item4": "Separator has role=separator (WCAG 4.1.2)",
         "item5": "aria-invalid=true reflects error state (WCAG 4.1.2)",
@@ -946,9 +962,9 @@
     "description": "Campo de entrada para códigos de verificación (OTP/PIN) con slots individuales, autofill SMS y soporte para paste.",
     "seo": {
       "title": "InputOTP — Formulario",
-      "description": "Documentación de InputOTP: campo de código de verificación vía input-otp, con slots individuales, autoFocus, paste y WCAG 2.2 AA.",
-      "aiSummary": "Componente InputOTP construido sobre la lib input-otp (React/Vue/Svelte) y factory custom (Vanilla) que presenta slots individuales para códigos de verificación OTP/PIN, soporta paste, autoFocus, autocomplete one-time-code y formatos como 4-6 dígitos con separator opcional.",
-      "aiEntities": "InputOTP, input-otp, OTP, PIN, one-time-code, React, Vue, Svelte, Vanilla, autocomplete, paste, WCAG 2.2, aria-invalid"
+      "description": "Documentación de InputOTP: campo de código de verificación con una caja por dígito, foco automático, pegar y WCAG 2.2 AA.",
+      "aiSummary": "Componente InputOTP para códigos de verificación OTP/PIN, con una caja por dígito, soporte para pegar, foco automático, petición de código de un solo uso al sistema y formatos de 4 a 8 caracteres con separador opcional.",
+      "aiEntities": "InputOTP, OTP, PIN, one-time-code, código de verificación, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demostración",
@@ -1134,12 +1150,12 @@
       "disabled": {
         "label": "Deshabilitado",
         "trigger": "prop disabled=true",
-        "behavior": "<code>disabled</code> aplica <code>has-disabled:opacity-50</code> y bloquea interacción."
+        "behavior": "Todo el campo se atenúa y ninguna caja acepta foco ni escritura."
       },
       "error": {
         "label": "Error",
         "trigger": "aria-invalid=true",
-        "behavior": "<code>aria-invalid=\"true\"</code> aplica <code>border-destructive</code> y ring rojo."
+        "behavior": "El borde de todas las cajas pasa al color de error, y la caja en edición gana un halo del mismo color."
       },
       "cols": {
         "state": "Estado",
@@ -1189,7 +1205,7 @@
           "type": "boolean",
           "default": "false",
           "required": "No",
-          "description": "Bloquea interacción y aplica opacity-50."
+          "description": "Bloquea la interacción y atenúa el campo."
         },
         "autoFocus": {
           "type": "boolean",
@@ -1208,49 +1224,57 @@
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase",
+        "class": "Selector",
         "part": "Aplicación",
         "slotSize": {
-          "class": "size-8",
-          "part": "Tamaño de cada slot (32px × 32px)"
+          "class": ".nds-input-otp-slot",
+          "part": "Caja de cada dígito — 36 × 36 px, con el carácter centrado a 14 px"
         },
         "border": {
-          "class": "border-input",
-          "part": "Borde predeterminado de los slots"
+          "class": ".nds-input-otp-slot",
+          "part": "Borde de 1 px en cada caja; las del medio no repiten el borde izquierdo, para que las cajas queden unidas"
         },
         "rounded": {
-          "class": "rounded-l-lg / rounded-r-lg",
-          "part": "Esquinas redondeadas en slots de borde del grupo"
+          "class": ".nds-input-otp-slot:first-child · :last-child",
+          "part": "Esquinas redondeadas solo en los extremos del bloque — 10 px; el medio queda recto"
         },
         "active": {
-          "class": "border-ring ring-3 ring-ring/50",
-          "part": "Slot activo (foco)"
+          "class": ".nds-input-otp-slot:focus · [data-active=\"true\"]",
+          "part": "Caja en edición: borde y anillo de 1 px en el color de foco"
         },
         "invalid": {
-          "class": "border-destructive ring-destructive/20",
-          "part": "Estado de error (aria-invalid=true)"
+          "class": "[aria-invalid=\"true\"]",
+          "part": "Borde de error en todas las cajas; halo de 2 px en la caja en edición"
         },
         "disabled": {
-          "class": "has-disabled:opacity-50",
-          "part": "Container cuando algún slot está disabled"
+          "class": ".nds-input-otp-slot:disabled · :has(input:disabled)",
+          "part": "Campo bloqueado: opacidad 0.5 y cursor de bloqueo. Sin token propio — la opacidad está fijada en la regla"
         },
         "caret": {
-          "class": "animate-caret-blink",
-          "part": "Caret falso parpadeando en slot activo"
+          "class": ".nds-input-otp-caret",
+          "part": "Cursor falso de 1 px de ancho por 16 px de alto, parpadeando cada 1,2 s en la caja en edición"
+        },
+        "hover": {
+          "class": ".nds-input-otp:hover · .nds-input-otp-container:hover",
+          "part": "Borde del conjunto bajo el puntero — anillo opaco, más oscuro que en reposo"
+        },
+        "separator": {
+          "class": ".nds-input-otp-separator",
+          "part": "Divisor entre bloques: 8 px de margen a cada lado — es lo que da el respiro del formato 3+3"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Slot mayor para contenido touch-friendly */\n[data-slot='input-otp-slot'] {\n  width: 48px;\n  height: 48px;\n  font-size: 1.125rem;\n}"
+        "web": "/* Caja más grande, para un toque cómodo en el móvil */\n.nds-input-otp-slot {\n  width: 3rem;\n  height: 3rem;\n  font-size: var(--text-control-lg);\n}\n\n/* Más respiro entre los dos bloques del formato 3+3 */\n.nds-input-otp-separator {\n  margin-inline: var(--spacing-4);\n}"
       }
     },
     "accessibility": {
       "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía input + role=separator), 2.1.1 (operable por teclado: flechas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value vía aria-invalid).",
       "items": {
-        "item1": "<code>InputOTP</code> renderiza un <code>&lt;input&gt;</code> real internamente — el lector de pantalla lo anuncia como input de texto.",
+        "item1": "El campo es un control de texto real — el lector de pantalla lo anuncia como campo editable, no como un bloque de cajas decorativas.",
         "item2": "Proporciona siempre <code>aria-label</code> o <code>label</code> visible describiendo qué representa el código.",
-        "item3": "<code>autoComplete=\"one-time-code\"</code> activa autofill de SMS en iOS Safari y Android Chrome.",
+        "item3": "Pedir el código de un solo uso activa el autocompletado del SMS en iOS y Android.",
         "item4": "Flechas Izquierda/Derecha mueven entre slots; Backspace borra y vuelve un slot; Paste pega el código completo distribuyéndolo en los slots.",
         "item5": "<code>aria-invalid=\"true\"</code> en el input aplica visual de error y es anunciado por el lector de pantalla.",
         "item6": "El mensaje de error debe estar conectado vía <code>aria-describedby</code> apuntando al elemento de error."
@@ -1300,11 +1324,11 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: InputOTP usa <code>input-otp</code> (React) — compartido con Vue y Svelte vía wrappers. <strong>Vanilla</strong> usa factory custom con inputs HTML nativos.",
+      "item1": "<strong>Dos familias de markup</strong>: donde hay biblioteca de OTP, el campo es un <code>&lt;input&gt;</code> único recortado detrás de cajas dibujadas; donde no la hay, es un <code>&lt;input maxlength=\"1\"&gt;</code> por dígito. El visual y las clases son los mismos; lo que cambia es quién recibe el foco.",
       "item2": "<strong>autoComplete one-time-code</strong>: esencial para autofill nativo. Sin esto, el usuario debe escribir manualmente aún recibiendo SMS.",
-      "item3": "<strong>Paste</strong>: la lib distribuye automáticamente el código pegado en los slots; probar en Safari iOS especialmente.",
+      "item3": "<strong>Pegar</strong>: el código pegado se reparte por las cajas a partir de la que está en edición; los caracteres fuera del conjunto aceptado se descartan.",
       "item4": "<strong>Patterns listos</strong>: <code>REGEXP_ONLY_DIGITS</code> (predeterminado), <code>REGEXP_ONLY_CHARS</code>, <code>REGEXP_ONLY_DIGITS_AND_CHARS</code> exportados por la lib.",
-      "item5": "<strong>Mobile</strong>: slot de 32px es apretado en mobile — considera <code>size-10</code> o <code>size-12</code> vía className cuando el componente es la acción principal."
+      "item5": "<strong>Toque</strong>: la caja de 36 px queda apretada en el móvil cuando el código es la acción principal de la pantalla — sube <code>width</code> y <code>height</code> de <code>.nds-input-otp-slot</code> a 44 px o más."
     },
     "analytics": {
       "title": "Analytics",
@@ -1342,12 +1366,12 @@
         },
         "item6": {
           "action": "Renderizar con disabled=true",
-          "result": "Container tiene opacity-50 y slots bloqueados",
+          "result": "El campo se atenúa y ninguna caja acepta foco ni escritura",
           "priority": "medium"
         },
         "item7": {
           "action": "Renderizar con aria-invalid=true",
-          "result": "Borde destructive y ring rojo aplicados",
+          "result": "El borde de todas las cajas pasa al color de error",
           "priority": "high"
         }
       },
@@ -1355,7 +1379,7 @@
         "title": "Accesibilidad Verificable",
         "description": "Criterios que herramientas automatizadas deben confirmar.",
         "item1": "Sin violaciones reportadas por axe-core en estado predeterminado",
-        "item2": "Input interno tiene autoComplete=one-time-code (WCAG 1.3.5)",
+        "item2": "El campo pide el código de un solo uso al sistema, para activar el autocompletado (WCAG 1.3.5)",
         "item3": "aria-label o label asociada describe el propósito (WCAG 3.3.2)",
         "item4": "Separator tiene role=separator (WCAG 4.1.2)",
         "item5": "aria-invalid=true refleja estado de error (WCAG 4.1.2)",

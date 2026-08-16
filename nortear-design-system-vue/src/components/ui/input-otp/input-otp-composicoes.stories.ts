@@ -145,7 +145,7 @@ export const WithErrorMessage: Story = {
         >
           <template #default="{ slots }">
             <InputOTPGroup>
-              <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" aria-invalid="true" />
+              <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
             </InputOTPGroup>
           </template>
         </InputOTP>
@@ -174,8 +174,7 @@ export const WithResendButton: Story = {
     components: sharedComponents,
     setup() {
       const value = ref('');
-      const resends = ref(0);
-      return { value, resends };
+      return { value };
     },
     template: `
       <div style="contain: layout; min-height: 140px;" class="nds-stack" data-spacing="sm">
@@ -193,12 +192,9 @@ export const WithResendButton: Story = {
             </InputOTPGroup>
           </template>
         </InputOTP>
-        <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-align="center" data-spacing="sm">
-          <span>Não recebeu?</span>
-          <Button variant="link" class="h-auto nds-p-0 nds-text-caption" @click="resends++">
-            Reenviar código
-          </Button>
-          <span v-if="resends > 0" data-testid="resend-count">({{ resends }})</span>
+        <div class="nds-cluster" data-align="center" data-spacing="xs">
+          <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
+          <Button variant="link" size="sm" type="button">Reenviar código</Button>
         </div>
       </div>
     `,
@@ -206,15 +202,17 @@ export const WithResendButton: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Botão Reenviar visível', async () => {
-      const btn = canvas.getByRole('button', { name: /Reenviar código/i });
-      await expect(btn).toBeVisible();
-    });
-
-    await step('Click incrementa contagem', async () => {
-      const btn = canvas.getByRole('button', { name: /Reenviar código/i });
-      await userEvent.click(btn);
-      await waitFor(() => expect(canvas.getByTestId('resend-count')).toHaveTextContent('(1)'));
+    await step('O reenvio é alcançável pelo teclado depois do campo', async () => {
+      // O botão vem DEPOIS do campo na ordem do DOM: quem chega ao fim do
+      // código encontra o reenvio no próximo Tab, sem voltar pelo caminho.
+      // Uma contagem de cliques mora mal aqui — o painel Interactions reexecuta
+      // a play no mesmo DOM e o número esperado muda a cada rodada.
+      const input = canvasElement.querySelector<HTMLInputElement>(
+        'input[autocomplete="one-time-code"]',
+      )!;
+      input.focus();
+      await userEvent.tab();
+      await expect(canvas.getByRole('button', { name: 'Reenviar código' })).toHaveFocus();
     });
   },
 };

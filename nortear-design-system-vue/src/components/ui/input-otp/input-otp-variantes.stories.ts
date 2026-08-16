@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'vue-input-otp';
 import {
   InputOTP,
@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Variantes do InputOTP: SeisDigitos (padrão SMS de 6 dígitos), QuatroDigitos (PIN de 4 dígitos), ComSeparator (formato 3+3 com InputOTPSeparator) e Alfanumerico (pattern REGEXP_ONLY_DIGITS_AND_CHARS).',
+          'Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação).',
       },
     },
   },
@@ -31,12 +31,27 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot };
 
+function campo(canvasElement: HTMLElement): HTMLInputElement {
+  const el = canvasElement.querySelector<HTMLInputElement>(
+    'input[autocomplete="one-time-code"]',
+  );
+  if (!el) throw new Error('input do OTP não encontrado');
+  return el;
+}
+
+const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
+  ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+];
+
+const textos = (canvasElement: HTMLElement): string[] =>
+  caixas(canvasElement).map((c) => c.textContent?.trim() ?? '');
+
 export const SixDigits: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          'maxLength=6 — padrão para códigos OTP enviados via SMS/email. inputMode=numeric.',
+          '6 dígitos — padrão para códigos enviados por SMS/email; teclado numérico e pedido de código de uso único.',
       },
     },
   },
@@ -47,14 +62,10 @@ export const SixDigits: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP
-          :max-length="6"
-          v-model="value"
-          autocomplete="one-time-code"
-          inputmode="numeric"
-          aria-label="Código de 6 dígitos"
-        >
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-six" class="nds-text-label">Código enviado por SMS</label>
+        <InputOTP id="otp-six" :max-length="6" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -64,16 +75,21 @@ export const SixDigits: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await waitFor(() => {
-      const el = canvasElement.querySelector('input');
-      if (!el) throw new Error('input not mounted');
-      return el as HTMLInputElement;
+  play: async ({ canvasElement, step }) => {
+    await step('Seis caixas, teclado numérico', async () => {
+      await expect(caixas(canvasElement)).toHaveLength(6);
+      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'numeric');
     });
-    // vue-input-otp não seta maxlength no <input> — o limite é gerenciado via
-    // props/state. Validar contando os slots renderizados.
-    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
-    await expect(slots.length).toBe(6);
+
+    await step('Letra não entra no modo numérico', async () => {
+      const input = campo(canvasElement);
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.type(input, 'a');
+      await expect(input).toHaveValue('');
+      await userEvent.type(input, '7');
+      await waitFor(() => expect(textos(canvasElement)[0]).toBe('7'));
+    });
   },
 };
 
@@ -81,7 +97,7 @@ export const FourDigits: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'maxLength=4 — PIN local de 4 dígitos (carteira, conta, app travado).',
+        story: 'PIN de 4 dígitos — PINs locais (carteira, conta, app travado).',
       },
     },
   },
@@ -92,13 +108,10 @@ export const FourDigits: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP
-          :max-length="4"
-          v-model="value"
-          inputmode="numeric"
-          aria-label="PIN de 4 dígitos"
-        >
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-four" class="nds-text-label">PIN do aplicativo</label>
+        <InputOTP id="otp-four" :max-length="4" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -108,23 +121,31 @@ export const FourDigits: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    await waitFor(() => {
-      const el = canvasElement.querySelector('input');
-      if (!el) throw new Error('input not mounted');
-      return el as HTMLInputElement;
+  play: async ({ canvasElement, step }) => {
+    await step('O comprimento pedido chega ao componente', async () => {
+      // Quatro e não seis: renderizar com o default passaria despercebido —
+      // foi exatamente esse o defeito que deixou o campo sem caixa nenhuma.
+      await expect(caixas(canvasElement)).toHaveLength(4);
     });
-    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
-    await expect(slots.length).toBe(4);
+
+    await step('O quinto caractere não entra', async () => {
+      const input = campo(canvasElement);
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.type(input, '12345');
+      await waitFor(() => expect(input).toHaveValue('1234'));
+      await expect(textos(canvasElement).join('')).toBe('1234');
+    });
   },
 };
 
 export const WithSeparator: Story = {
   parameters: {
+    covers: ['accessibility.item4', 'visual.item5'],
     docs: {
       description: {
         story:
-          'Dois InputOTPGroup separados por InputOTPSeparator (formato 3+3). Útil para códigos de backup tipo xxx-xxx.',
+          'Dois grupos de 3 caixas com um separador entre eles — formato xxx-xxx de códigos de recuperação.',
       },
     },
   },
@@ -135,14 +156,10 @@ export const WithSeparator: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP
-          :max-length="6"
-          v-model="value"
-          autocomplete="one-time-code"
-          inputmode="numeric"
-          aria-label="Código com separador"
-        >
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-sep" class="nds-text-label">Código de recuperação</label>
+        <InputOTP id="otp-sep" :max-length="6" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default>
             <InputOTPGroup>
               <InputOTPSlot :index="0" />
@@ -160,16 +177,34 @@ export const WithSeparator: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const separator = canvasElement.querySelector('[role="separator"]');
-    await expect(separator).toBeInTheDocument();
-    await waitFor(() => {
-      const el = canvasElement.querySelector('input');
-      if (!el) throw new Error('input not mounted');
-      return el as HTMLInputElement;
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('O separador tem papel próprio, não é enfeite escondido', async () => {
+      const separadores = canvas.getAllByRole('separator');
+      await expect(separadores).toHaveLength(1);
     });
-    const slots = canvasElement.querySelectorAll('[data-slot="input-otp-slot"]');
-    await expect(slots.length).toBe(6);
+
+    await step('O separador afasta os dois blocos, e só eles', async () => {
+      // Efeito computado, não nome de classe: o respiro é margem do separador.
+      const todas = caixas(canvasElement);
+      const separador = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="input-otp-separator"]',
+      )!;
+      const folga = (a: Element, b: Element) =>
+        Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
+      await expect(folga(todas[0], todas[1])).toBe(0);
+      await expect(folga(todas[2], separador)).toBeGreaterThan(0);
+      await expect(folga(separador, todas[3])).toBeGreaterThan(0);
+    });
+
+    await step('Os seis dígitos se distribuem entre os dois blocos', async () => {
+      const input = campo(canvasElement);
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.type(input, '123456');
+      await waitFor(() => expect(textos(canvasElement).join('')).toBe('123456'));
+    });
   },
 };
 
@@ -178,7 +213,7 @@ export const Alphanumeric: Story = {
     docs: {
       description: {
         story:
-          'pattern=REGEXP_ONLY_DIGITS_AND_CHARS e inputMode=text. Útil para auth codes do GitHub/Google.',
+          'Conjunto alfanumérico e teclado de texto — códigos de autenticação que misturam letras e dígitos.',
       },
     },
   },
@@ -189,14 +224,10 @@ export const Alphanumeric: Story = {
       return { value, pattern: REGEXP_ONLY_DIGITS_AND_CHARS };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP
-          :max-length="6"
-          :pattern="pattern"
-          v-model="value"
-          inputmode="text"
-          aria-label="Código alfanumérico"
-        >
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-alpha" class="nds-text-label">Código de autenticação</label>
+        <InputOTP id="otp-alpha" :max-length="6" :pattern="pattern" v-model="value"
+                  autocomplete="one-time-code" inputmode="text">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -206,12 +237,17 @@ export const Alphanumeric: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const input = await waitFor(() => {
-      const el = canvasElement.querySelector('input');
-      if (!el) throw new Error('input not mounted');
-      return el as HTMLInputElement;
+  play: async ({ canvasElement, step }) => {
+    await step('O teclado do dispositivo passa a ser de texto', async () => {
+      await expect(campo(canvasElement)).toHaveAttribute('inputmode', 'text');
     });
-    await expect(input).toHaveAttribute('inputmode', 'text');
+
+    await step('Letra e dígito são aceitos', async () => {
+      const input = campo(canvasElement);
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.type(input, 'a9');
+      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['a', '9']));
+    });
   },
 };

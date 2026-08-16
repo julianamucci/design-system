@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, userEvent, expect, waitFor } from 'storybook/test';
+import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
 import {
   InputOTP,
   InputOTPGroup,
@@ -19,35 +19,80 @@ const meta = {
       page: withAutoDocsTab(InputOTPDocs),
       description: {
         component:
-          'InputOTP (vue-input-otp) é um campo de código de verificação OTP/PIN com slots individuais. Renderiza um <input> real internamente (visualmente oculto via clip-path) e distribui caracteres digitados/colados nos slots. Suporta autoComplete one-time-code para autofill SMS, paste, navegação por setas e Backspace.',
+          'Campo de código de verificação (OTP/PIN) com uma caixa por dígito. Renderiza um input real recortado por trás das caixas e distribui nelas o que for digitado ou colado. Suporta o pedido de código de uso único ao sistema, navegação por setas e Backspace.',
       },
     },
   },
   argTypes: {
     maxLength: {
-      control: { type: 'number', min: 1, max: 12, step: 1 },
-      description: 'Total de slots/caracteres do código.',
+      control: { type: 'number', min: 4, max: 8, step: 1 },
+      description: 'Número total de slots/caracteres do código.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '6' } },
     },
     disabled: {
       control: 'boolean',
-      description: 'Bloqueia interação e aplica opacity-50.',
+      description: 'Bloqueia a interação e esmaece o campo.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     autoFocus: {
       control: 'boolean',
-      description: 'Foca o primeiro slot automaticamente ao montar.',
+      description: 'Foca o campo automaticamente ao montar.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onComplete: {
+      control: false,
+      description: 'Chamado quando todos os slots estão preenchidos.',
+      table: {
+        type: { summary: '(value: string) => void' },
+        defaultValue: { summary: '—' },
+      },
     },
   },
   args: {
     maxLength: 6,
     disabled: false,
     autoFocus: false,
+    onComplete: fn(),
   },
 } satisfies Meta<any>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * O `<input>` da lib é único e fica recortado atrás das caixas. Conferir só o
+ * valor dele foi exatamente o que deixou esta story verde enquanto o campo
+ * montava com ZERO caixas: `:max-length` caía em `$attrs` e a lista de slots
+ * chegava vazia. Toda asserção daqui olha as CAIXAS.
+ */
+function campo(canvasElement: HTMLElement): HTMLInputElement {
+  const el = canvasElement.querySelector<HTMLInputElement>(
+    'input[autocomplete="one-time-code"]',
+  );
+  if (!el) throw new Error('input do OTP não encontrado');
+  return el;
+}
+
+const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
+  ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+];
+
+const textos = (canvasElement: HTMLElement): string[] =>
+  caixas(canvasElement).map((c) => c.textContent?.trim() ?? '');
+
+const caixaAtiva = (canvasElement: HTMLElement): number =>
+  caixas(canvasElement).findIndex(
+    (c) => c.hasAttribute('data-active') && c.getAttribute('data-active') !== 'false',
+  );
+
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3',
+      'functional.item4', 'functional.item5',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
+    ],
+  },
   render: (args) => ({
     components: { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot },
     setup() {
@@ -55,16 +100,18 @@ export const Playground: Story = {
       return { args, value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-playground" class="nds-text-label">Código de verificação</label>
         <InputOTP
           :key="String(args.maxLength) + String(args.disabled) + String(args.autoFocus)"
+          id="otp-playground"
           :max-length="args.maxLength"
           :disabled="args.disabled"
           :auto-focus="args.autoFocus"
           v-model="value"
           autocomplete="one-time-code"
           inputmode="numeric"
-          aria-label="Código de verificação"
+          @complete="args.onComplete"
         >
           <template #default="{ slots }">
             <InputOTPGroup>
@@ -75,27 +122,52 @@ export const Playground: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    const total = (args.maxLength as number) ?? 6;
+    const input = campo(canvasElement);
 
-    await step('1. Input interno renderizado com aria-label', async () => {
-      const input = await waitFor(() =>
-        canvas.getByLabelText(/código de verificação/i),
-      );
-      await expect(input).toBeInTheDocument();
+    await step('O campo tem nome e uma caixa por dígito', async () => {
+      await expect(canvas.getByLabelText('Código de verificação')).toBe(input);
+      await expect(caixas(canvasElement)).toHaveLength(total);
     });
 
-    await step('2. Digitar caracteres distribui pelos slots', async () => {
-      const input = canvas.getByLabelText(/código de verificação/i);
-      await userEvent.click(input);
-      await userEvent.type(input, '123');
-      await waitFor(() => expect((input as HTMLInputElement).value).toBe('123'));
+    await step('O campo pede o código de uso único ao sistema', async () => {
+      await expect(input).toHaveAttribute('autocomplete', 'one-time-code');
+      await expect(input).toHaveAttribute('inputmode', 'numeric');
     });
 
-    await step('3. Backspace limpa o último slot', async () => {
-      const input = canvas.getByLabelText(/código de verificação/i);
-      await userEvent.type(input, '{Backspace}');
-      await waitFor(() => expect((input as HTMLInputElement).value).toBe('12'));
+    await step('Digitar preenche a caixa e move o cursor para a seguinte', async () => {
+      // Precondição própria: o painel Interactions reexecuta a play no mesmo
+      // DOM, e limpar antes é o que torna o passo repetível.
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.type(input, '12');
+      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['1', '2']));
+      await expect(caixaAtiva(canvasElement)).toBe(2);
+    });
+
+    await step('Setas movem o cursor sem alterar o valor', async () => {
+      await userEvent.keyboard('{ArrowLeft}');
+      await waitFor(() => expect(caixaAtiva(canvasElement)).toBe(1));
+      await expect(input).toHaveValue('12');
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(caixaAtiva(canvasElement)).toBe(2));
+    });
+
+    await step('Backspace apaga a última caixa preenchida', async () => {
+      await userEvent.keyboard('{Backspace}');
+      await waitFor(() => expect(input).toHaveValue('1'));
+      await expect(textos(canvasElement)[1]).toBe('');
+    });
+
+    await step('Colar distribui o código inteiro e dispara o evento de conclusão', async () => {
+      const codigo = '123456'.slice(0, total);
+      input.focus();
+      await userEvent.clear(input);
+      await userEvent.paste(codigo);
+      await waitFor(() => expect(textos(canvasElement).join('')).toBe(codigo));
+      await expect(args.onComplete).toHaveBeenCalledWith(codigo);
     });
   },
 };

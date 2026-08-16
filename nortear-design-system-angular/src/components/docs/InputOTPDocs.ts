@@ -143,16 +143,21 @@ const PROPS_MAP: { chave: string; nome: string; tipo: string; padrao: string }[]
 ];
 
 /** Chave de token do conteúdo → custom property e seletor reais do CSS. */
-const TOKENS_MAP: { chave: string; token: string; seletor: string }[] = [
-  { chave: 'slotSize', token: '--spacing-9',  seletor: '.nds-input-otp-slot' },
-  { chave: 'border',   token: '--input',      seletor: '.nds-input-otp-slot' },
-  { chave: 'rounded',  token: '--radius',     seletor: '.nds-input-otp-slot' },
-  { chave: 'active',   token: '--ring',       seletor: '.nds-input-otp-slot:focus' },
-  { chave: 'invalid',  token: '--destructive', seletor: '.nds-input-otp-slot[aria-invalid]' },
+// O seletor sai do conteúdo compartilhado (`tokens.table.<chave>.class`), que
+// desde esta rodada guarda o seletor REAL e não mais uma classe utilitária sem
+// prefixo. Aqui fica só a custom property, que é o que a pessoa sobrescreve.
+const TOKENS_MAP: { chave: string; token: string }[] = [
+  { chave: 'slotSize',  token: '--spacing-9' },
+  { chave: 'border',    token: '--input' },
+  { chave: 'rounded',   token: '--radius' },
+  { chave: 'hover',     token: '--ring' },
+  { chave: 'active',    token: '--ring' },
+  { chave: 'invalid',   token: '--destructive' },
   // Desabilitado é só opacidade: nenhuma custom property entra na regra, e
   // inventar uma aqui daria à pessoa um token que não sobrescreve nada.
-  { chave: 'disabled', token: '—',            seletor: '.nds-input-otp-slot:disabled' },
-  { chave: 'caret',    token: '--foreground', seletor: '.nds-input-otp-caret' },
+  { chave: 'disabled',  token: '—' },
+  { chave: 'caret',     token: '--foreground' },
+  { chave: 'separator', token: '--muted-foreground' },
 ];
 
 @Component({
@@ -604,9 +609,9 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return TOKENS_MAP.map(({ chave, token, seletor }) => ({
+    return TOKENS_MAP.map(({ chave, token }) => ({
       token,
-      value: seletor,
+      value: toPlainText(t(`tokens.table.${chave}.class`)),
       description: toPlainText(t(`tokens.table.${chave}.part`)),
     }));
   });

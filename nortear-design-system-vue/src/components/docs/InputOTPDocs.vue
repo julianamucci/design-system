@@ -313,13 +313,15 @@ const inputOtpPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: 'size-8',                  value: tContent('tokens.table.slotSize.class'), description: tContent('tokens.table.slotSize.part') },
-  { token: '--input',                 value: tContent('tokens.table.border.class'),   description: tContent('tokens.table.border.part')   },
-  { token: '--radius',                value: tContent('tokens.table.rounded.class'),  description: tContent('tokens.table.rounded.part')  },
-  { token: '--ring',                  value: tContent('tokens.table.active.class'),   description: tContent('tokens.table.active.part')   },
-  { token: '--destructive',           value: tContent('tokens.table.invalid.class'),  description: tContent('tokens.table.invalid.part')  },
-  { token: 'opacity',                 value: tContent('tokens.table.disabled.class'), description: tContent('tokens.table.disabled.part') },
-  { token: 'animation',               value: tContent('tokens.table.caret.class'),    description: tContent('tokens.table.caret.part')    },
+  { token: '--spacing-9',       value: tContent('tokens.table.slotSize.class'),  description: tContent('tokens.table.slotSize.part')  },
+  { token: '--input',           value: tContent('tokens.table.border.class'),    description: tContent('tokens.table.border.part')    },
+  { token: '--radius',          value: tContent('tokens.table.rounded.class'),   description: tContent('tokens.table.rounded.part')   },
+  { token: '--ring',            value: tContent('tokens.table.hover.class'),     description: tContent('tokens.table.hover.part')     },
+  { token: '--ring',            value: tContent('tokens.table.active.class'),    description: tContent('tokens.table.active.part')    },
+  { token: '--destructive',     value: tContent('tokens.table.invalid.class'),   description: tContent('tokens.table.invalid.part')   },
+  { token: '—',                 value: tContent('tokens.table.disabled.class'),  description: tContent('tokens.table.disabled.part')  },
+  { token: '--foreground',      value: tContent('tokens.table.caret.class'),     description: tContent('tokens.table.caret.part')     },
+  { token: '--muted-foreground', value: tContent('tokens.table.separator.class'), description: tContent('tokens.table.separator.part') },
 ]);
 
 const accessibilityItems = computed(() => [

@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 
+/**
+ * Formatos de código. Cada story afirma o RESULTADO do que a diferencia —
+ * número de slots, teclado, separador —, e não a aparência: o factory renderiza
+ * com os defaults quando a opção não chega, e uma story que só olha a tela
+ * passaria do mesmo jeito.
+ */
 const meta: Meta = {
   tags: ['form'],
   title: 'UI/InputOTP/Variants',
@@ -12,7 +18,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do InputOTP no Vanilla: SeisDigitos (padrão SMS), QuatroDigitos (PIN) e ComSeparator (3+3). Divergência idiomática: o factory Vanilla aceita apenas dígitos (regex \\D no paste) — não há suporte a `pattern` alfanumérico nem a `inputMode=text`. A variante Alfanumerico é documentada mas omitida visualmente neste stack.',
+          'Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação). Divergência idiomática deste stack: o conjunto aceito vem da opção mode, e não de uma expressão regular passada de fora.',
       },
     },
   },
@@ -45,74 +51,121 @@ function withLabel(label: string, child: HTMLElement): HTMLElement {
   return col;
 }
 
+const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
+  ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
+];
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const SixDigits: Story = {
   name: 'Six digits (SMS)',
-  render: () => wrap(withLabel('maxLength=6', createInputOTP({ length: 6 }))),
+  render: () =>
+    wrap(withLabel('Código enviado por SMS', createInputOTP({ length: 6 }))),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Renderiza 6 inputs', async () => {
-      const inputs = canvas.getAllByRole('textbox');
-      await expect(inputs).toHaveLength(6);
+    await step('Seis slots, teclado numérico', async () => {
+      const slots = slotsDe(canvasElement);
+      await expect(slots).toHaveLength(6);
+      await expect(slots[0]).toHaveAttribute('inputmode', 'numeric');
+    });
+
+    await step('Letra não entra no modo numérico', async () => {
+      const slots = slotsDe(canvasElement);
+      slots[0].focus();
+      await userEvent.keyboard('a');
+      await expect(slots[0].value).toBe('');
+      await userEvent.keyboard('7');
+      await expect(slots[0].value).toBe('7');
     });
   },
 };
 
 export const FourDigits: Story = {
   name: 'Four digits (PIN)',
-  render: () => wrap(withLabel('maxLength=4', createInputOTP({ length: 4 }))),
+  render: () => wrap(withLabel('PIN do aplicativo', createInputOTP({ length: 4 }))),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Renderiza 4 inputs', async () => {
-      const inputs = canvas.getAllByRole('textbox');
-      await expect(inputs).toHaveLength(4);
+    await step('O comprimento pedido chega ao componente', async () => {
+      // Quatro e não seis: se a opção não chegasse, o default renderizaria seis
+      // slots e nada no visual denunciaria.
+      await expect(slotsDe(canvasElement)).toHaveLength(4);
+    });
+
+    await step('O quinto caractere não estoura o comprimento', async () => {
+      // Um `<input maxlength="1">` por dígito: chegado ao fim, o foco fica no
+      // último slot e o toque seguinte é ignorado — o código para em quatro
+      // caracteres em vez de crescer ou de sobrescrever o que já estava lá.
+      const slots = slotsDe(canvasElement);
+      slots[0].focus();
+      await userEvent.keyboard('12345');
+      await expect(slots.map((s) => s.value).join('')).toBe('1234');
     });
   },
 };
 
 export const WithSeparator: Story = {
   name: 'With separator (3+3)',
+  parameters: { covers: ['accessibility.item4', 'visual.item5'] },
   render: () =>
     wrap(
       withLabel(
-        'separator antes do índice 3',
-        createInputOTP({ length: 6, separator: [3] }),
+        'Código de recuperação',
+        createInputOTP({ length: 6, separatorAt: [3] }),
       ),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Renderiza 6 inputs com separator visual', async () => {
-      const inputs = canvas.getAllByRole('textbox');
-      await expect(inputs).toHaveLength(6);
-      const sep = canvasElement.querySelector('[aria-hidden="true"]');
-      await expect(sep).toBeTruthy();
+
+    await step('O separador tem papel próprio, não é enfeite escondido', async () => {
+      // `role="separator"` é o que informa ao leitor que o código vem em dois
+      // blocos de três — seis dígitos ditos de enfiada são mais difíceis de
+      // conferir contra a mensagem recebida.
+      const separadores = canvas.getAllByRole('separator');
+      await expect(separadores).toHaveLength(1);
+    });
+
+    await step('O separador fica entre o terceiro e o quarto slot', async () => {
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="input-otp"]')!;
+      const filhos = [...raiz.children];
+      const posicao = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
+      await expect(posicao).toBe(3);
+      await expect(slotsDe(canvasElement)).toHaveLength(6);
+    });
+
+    await step('O separador afasta os dois blocos, e só eles', async () => {
+      // Efeito computado, não nome de classe: o respiro é margem do separador.
+      // Enquanto era `gap` do contêiner, ele caía também entre cada par de
+      // slots e abria as caixas do meio, que não têm borda esquerda.
+      const slots = slotsDe(canvasElement);
+      const separador = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="input-otp-separator"]',
+      )!;
+      const folga = (a: Element, b: Element) =>
+        Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
+      await expect(folga(slots[0], slots[1])).toBe(0);
+      await expect(folga(slots[2], separador)).toBeGreaterThan(0);
+      await expect(folga(separador, slots[3])).toBeGreaterThan(0);
     });
   },
 };
 
 export const Alphanumeric: Story = {
-  name: 'Alphanumeric (not supported)',
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-max-w-md';
-    wrapper.dataset.spacing = 'sm';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.textAlign = 'center';
-    const note = document.createElement('p');
-    note.className = 'nds-text-caption nds-text-muted-foreground';
-    note.textContent =
-      'O factory Vanilla aceita apenas dígitos (inputMode=numeric, paste com regex \\D). Para códigos alfanuméricos use a variante das stacks React/Vue/Svelte ou estenda o factory.';
-    const fallback = createInputOTP({ length: 6 });
-    wrapper.append(note, fallback);
-    return wrap(wrapper);
-  },
+  render: () =>
+    wrap(
+      withLabel(
+        'Código de autenticação',
+        createInputOTP({ length: 6, mode: 'alphanumeric' }),
+      ),
+    ),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Renderiza fallback numérico com nota de divergência', async () => {
-      const inputs = canvas.getAllByRole('textbox');
-      await expect(inputs).toHaveLength(6);
-      await expect(canvasElement.textContent).toMatch(/apenas dígitos/);
+    await step('O teclado do dispositivo passa a ser de texto', async () => {
+      await expect(slotsDe(canvasElement)[0]).toHaveAttribute('inputmode', 'text');
+    });
+
+    await step('Letra e dígito são aceitos', async () => {
+      const slots = slotsDe(canvasElement);
+      slots[0].focus();
+      await userEvent.keyboard('a9');
+      await expect(slots[0].value).toBe('a');
+      await expect(slots[1].value).toBe('9');
     });
   },
 };

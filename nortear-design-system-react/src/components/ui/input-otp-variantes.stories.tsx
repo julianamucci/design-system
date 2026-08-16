@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { userEvent, expect, waitFor } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import {
   InputOTP,
@@ -16,10 +16,11 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Variantes do InputOTP: SeisDigitos (default SMS), QuatroDigitos (PIN), ComSeparator (3+3) e Alfanumerico.",
+          "Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação).",
       },
     },
   },
@@ -28,20 +29,27 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof InputOTP>;
 
-function findOtpInput(canvasElement: HTMLElement): HTMLInputElement {
-  const input = canvasElement.querySelector(
+function campo(canvasElement: HTMLElement): HTMLInputElement {
+  const el = canvasElement.querySelector<HTMLInputElement>(
     'input[autocomplete="one-time-code"]'
-  ) as HTMLInputElement | null;
-  if (!input) throw new Error("OTP input não encontrado");
-  return input;
+  );
+  if (!el) throw new Error("input do OTP não encontrado");
+  return el;
 }
+
+const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
+  ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+];
+
+const textos = (canvasElement: HTMLElement): string[] =>
+  caixas(canvasElement).map((c) => c.textContent?.trim() ?? "");
 
 export const SixDigits: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          "6 dígitos — padrão para códigos OTP por SMS/email; inputMode=numeric e autoComplete=one-time-code.",
+          "6 dígitos — padrão para códigos enviados por SMS/email; teclado numérico e pedido de código de uso único.",
       },
     },
   },
@@ -50,8 +58,8 @@ export const SixDigits: Story = {
       const [value, setValue] = useState("");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-six" className="nds-text-body nds-font-medium">
-            Código de 6 dígitos
+          <label htmlFor="otp-six" className="nds-text-label">
+            Código enviado por SMS
           </label>
           <InputOTP
             id="otp-six"
@@ -60,7 +68,6 @@ export const SixDigits: Story = {
             onChange={setValue}
             autoComplete="one-time-code"
             inputMode="numeric"
-            aria-label="Código de 6 dígitos"
           >
             <InputOTPGroup>
               {Array.from({ length: 6 }).map((_, i) => (
@@ -74,11 +81,19 @@ export const SixDigits: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Aceita 6 dígitos numéricos", async () => {
-      const input = findOtpInput(canvasElement);
+    await step("Seis caixas, teclado numérico", async () => {
+      await expect(caixas(canvasElement)).toHaveLength(6);
+      await expect(campo(canvasElement)).toHaveAttribute("inputmode", "numeric");
+    });
+
+    await step("Letra não entra no modo numérico", async () => {
+      const input = campo(canvasElement);
       input.focus();
-      await userEvent.type(input, "123456");
-      await waitFor(() => expect(input).toHaveValue("123456"));
+      await userEvent.clear(input);
+      await userEvent.type(input, "a");
+      await expect(input).toHaveValue("");
+      await userEvent.type(input, "7");
+      await waitFor(() => expect(textos(canvasElement)[0]).toBe("7"));
     });
   },
 };
@@ -87,7 +102,7 @@ export const FourDigits: Story = {
   parameters: {
     docs: {
       description: {
-        story: "PIN de 4 dígitos — usado para PINs locais (carteira, app travado).",
+        story: "PIN de 4 dígitos — PINs locais (carteira, conta, app travado).",
       },
     },
   },
@@ -96,8 +111,8 @@ export const FourDigits: Story = {
       const [value, setValue] = useState("");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-four" className="nds-text-body nds-font-medium">
-            PIN de 4 dígitos
+          <label htmlFor="otp-four" className="nds-text-label">
+            PIN do aplicativo
           </label>
           <InputOTP
             id="otp-four"
@@ -106,7 +121,6 @@ export const FourDigits: Story = {
             onChange={setValue}
             autoComplete="one-time-code"
             inputMode="numeric"
-            aria-label="PIN de 4 dígitos"
           >
             <InputOTPGroup>
               {Array.from({ length: 4 }).map((_, i) => (
@@ -120,21 +134,29 @@ export const FourDigits: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Aceita 4 dígitos", async () => {
-      const input = findOtpInput(canvasElement);
+    await step("O comprimento pedido chega ao componente", async () => {
+      // Quatro e não seis: renderizar com o default passaria despercebido.
+      await expect(caixas(canvasElement)).toHaveLength(4);
+    });
+
+    await step("O quinto caractere não entra", async () => {
+      const input = campo(canvasElement);
       input.focus();
-      await userEvent.type(input, "1234");
+      await userEvent.clear(input);
+      await userEvent.type(input, "12345");
       await waitFor(() => expect(input).toHaveValue("1234"));
+      await expect(textos(canvasElement).join("")).toBe("1234");
     });
   },
 };
 
 export const WithSeparator: Story = {
   parameters: {
+    covers: ["accessibility.item4", "visual.item5"],
     docs: {
       description: {
         story:
-          "Dois grupos de 3 slots separados por InputOTPSeparator (role=separator) — formato xxx-xxx para códigos de backup.",
+          "Dois grupos de 3 caixas com um separador entre eles — formato xxx-xxx de códigos de recuperação.",
       },
     },
   },
@@ -143,8 +165,8 @@ export const WithSeparator: Story = {
       const [value, setValue] = useState("");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-sep" className="nds-text-body nds-font-medium">
-            Código com separator (3+3)
+          <label htmlFor="otp-sep" className="nds-text-label">
+            Código de recuperação
           </label>
           <InputOTP
             id="otp-sep"
@@ -153,7 +175,6 @@ export const WithSeparator: Story = {
             onChange={setValue}
             autoComplete="one-time-code"
             inputMode="numeric"
-            aria-label="Código de backup"
           >
             <InputOTPGroup>
               <InputOTPSlot index={0} />
@@ -173,15 +194,34 @@ export const WithSeparator: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Separator possui role=separator", async () => {
-      const sep = canvasElement.querySelector('[role="separator"]');
-      await expect(sep).toBeTruthy();
+    const canvas = within(canvasElement);
+
+    await step("O separador tem papel próprio, não é enfeite escondido", async () => {
+      // `role="separator"` é o que informa ao leitor que o código vem em dois
+      // blocos de três — seis dígitos de enfiada são mais difíceis de conferir.
+      const separadores = canvas.getAllByRole("separator");
+      await expect(separadores).toHaveLength(1);
     });
-    await step("Aceita 6 dígitos distribuídos entre grupos", async () => {
-      const input = findOtpInput(canvasElement);
+
+    await step("O separador afasta os dois blocos, e só eles", async () => {
+      // Efeito computado, não nome de classe: o respiro é margem do separador.
+      const todas = caixas(canvasElement);
+      const separador = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="input-otp-separator"]'
+      )!;
+      const folga = (a: Element, b: Element) =>
+        Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
+      await expect(folga(todas[0], todas[1])).toBe(0);
+      await expect(folga(todas[2], separador)).toBeGreaterThan(0);
+      await expect(folga(separador, todas[3])).toBeGreaterThan(0);
+    });
+
+    await step("Os seis dígitos se distribuem entre os dois blocos", async () => {
+      const input = campo(canvasElement);
       input.focus();
+      await userEvent.clear(input);
       await userEvent.type(input, "123456");
-      await waitFor(() => expect(input).toHaveValue("123456"));
+      await waitFor(() => expect(textos(canvasElement).join("")).toBe("123456"));
     });
   },
 };
@@ -191,7 +231,7 @@ export const Alphanumeric: Story = {
     docs: {
       description: {
         story:
-          "pattern=REGEXP_ONLY_DIGITS_AND_CHARS, inputMode=text — auth codes alfanuméricos (ex: GitHub).",
+          "Conjunto alfanumérico e teclado de texto — códigos de autenticação que misturam letras e dígitos.",
       },
     },
   },
@@ -200,8 +240,8 @@ export const Alphanumeric: Story = {
       const [value, setValue] = useState("");
       return (
         <div className="nds-stack" data-spacing="sm">
-          <label htmlFor="otp-alpha" className="nds-text-body nds-font-medium">
-            Código alfanumérico
+          <label htmlFor="otp-alpha" className="nds-text-label">
+            Código de autenticação
           </label>
           <InputOTP
             id="otp-alpha"
@@ -211,7 +251,6 @@ export const Alphanumeric: Story = {
             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
             autoComplete="one-time-code"
             inputMode="text"
-            aria-label="Código alfanumérico"
           >
             <InputOTPGroup>
               {Array.from({ length: 6 }).map((_, i) => (
@@ -225,14 +264,16 @@ export const Alphanumeric: Story = {
     return <Demo />;
   },
   play: async ({ canvasElement, step }) => {
-    await step("Aceita caracteres alfanuméricos", async () => {
-      const input = findOtpInput(canvasElement);
+    await step("O teclado do dispositivo passa a ser de texto", async () => {
+      await expect(campo(canvasElement)).toHaveAttribute("inputmode", "text");
+    });
+
+    await step("Letra e dígito são aceitos", async () => {
+      const input = campo(canvasElement);
       input.focus();
-      await userEvent.type(input, "AB12CD");
-      await waitFor(() =>
-        expect(input.value.toUpperCase()).toMatch(/^[A-Z0-9]{6}$/)
-      );
+      await userEvent.clear(input);
+      await userEvent.type(input, "a9");
+      await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(["a", "9"]));
     });
   },
 };
-

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect } from "storybook/test";
+import { within, expect, userEvent } from "storybook/test";
 import {
   InputOTP,
   InputOTPGroup,
@@ -16,6 +16,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -159,7 +160,10 @@ export const WithErrorMessage: Story = {
               ))}
             </InputOTPGroup>
           </InputOTP>
-          <p id="otp-err-msg" role="alert" className="nds-text-caption nds-text-destructive">
+          {/* Sem `role="alert"`: a mensagem já está no DOM quando a página
+              carrega, e uma live region em conteúdo estático faz o leitor
+              anunciar o erro sem que nada tenha acontecido. */}
+          <p id="otp-err-msg" className="nds-text-caption nds-text-destructive">
             Código incorreto. Verifique e tente novamente.
           </p>
         </div>
@@ -209,9 +213,12 @@ export const WithResendButton: Story = {
               </InputOTPGroup>
             </InputOTP>
           </div>
-          <Button variant="outline" size="sm" type="button">
-            Reenviar código
-          </Button>
+          <div className="nds-cluster" data-spacing="xs" data-align="center">
+            <span className="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
+            <Button variant="link" size="sm" type="button">
+              Reenviar código
+            </Button>
+          </div>
         </div>
       );
     };
@@ -219,11 +226,16 @@ export const WithResendButton: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step("Label associado e botão Reenviar acessível", async () => {
-      const label = canvas.getByText(/Código de verificação/i);
-      await expect(label).toHaveAttribute("for", "otp-resend");
-      const btn = canvas.getByRole("button", { name: /Reenviar código/i });
-      await expect(btn).toBeVisible();
+
+    await step("O reenvio é alcançável pelo teclado depois do campo", async () => {
+      // O botão vem DEPOIS do campo na ordem do DOM: quem chega ao fim do
+      // código encontra o reenvio no próximo Tab, sem voltar pelo caminho.
+      const input = canvasElement.querySelector<HTMLInputElement>(
+        'input[autocomplete="one-time-code"]'
+      )!;
+      input.focus();
+      await userEvent.tab();
+      await expect(canvas.getByRole("button", { name: "Reenviar código" })).toHaveFocus();
     });
   },
 };

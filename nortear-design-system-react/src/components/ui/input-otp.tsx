@@ -1,5 +1,5 @@
 import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
+import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from "input-otp"
 
 import { cn } from "@/lib/utils"
 import { MinusIcon } from "lucide-react"
@@ -7,6 +7,13 @@ import { MinusIcon } from "lucide-react"
 function InputOTP({
   className,
   containerClassName,
+  // A lib não filtra caractere nenhum sem `pattern`, e `inputMode="numeric"` é
+  // só uma dica de teclado de software: num teclado físico a letra entrava num
+  // código de seis DÍGITOS sem nada recusá-la. O conteúdo compartilhado já
+  // documentava "apenas dígitos" como padrão, e as stacks sem lib filtram —
+  // aqui o default agora cumpre o que está escrito. Quem quer alfanumérico
+  // continua passando o próprio `pattern`.
+  pattern = REGEXP_ONLY_DIGITS,
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string
@@ -16,6 +23,7 @@ function InputOTP({
       data-slot="input-otp"
       containerClassName={cn("nds-input-otp-container", containerClassName)}
       spellCheck={false}
+      pattern={pattern}
       className={cn("nds-input-otp-input", className)}
       {...props}
     />

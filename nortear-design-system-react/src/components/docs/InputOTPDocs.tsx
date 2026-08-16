@@ -809,7 +809,7 @@ interface InputOTPProps {
         }}
         items={[
           {
-            token: "size",
+            token: "--spacing-9",
             value: tContent("tokens.table.slotSize.class"),
             description: tContent("tokens.table.slotSize.part"),
           },
@@ -825,6 +825,11 @@ interface InputOTPProps {
           },
           {
             token: "--ring",
+            value: tContent("tokens.table.hover.class"),
+            description: tContent("tokens.table.hover.part"),
+          },
+          {
+            token: "--ring",
             value: tContent("tokens.table.active.class"),
             description: tContent("tokens.table.active.part"),
           },
@@ -834,14 +839,19 @@ interface InputOTPProps {
             description: tContent("tokens.table.invalid.part"),
           },
           {
-            token: "opacity",
+            token: "—",
             value: tContent("tokens.table.disabled.class"),
             description: tContent("tokens.table.disabled.part"),
           },
           {
-            token: "animation",
+            token: "--foreground",
             value: tContent("tokens.table.caret.class"),
             description: tContent("tokens.table.caret.part"),
+          },
+          {
+            token: "--muted-foreground",
+            value: tContent("tokens.table.separator.class"),
+            description: tContent("tokens.table.separator.part"),
           },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

@@ -5,6 +5,7 @@
     InputOTPSlot,
     InputOTPSeparator,
   } from './index';
+  import { Button } from '@/components/ui/button';
 
   type Variant =
     | 'default'
@@ -29,6 +30,8 @@
     helpText?: string;
     errorMessage?: string;
     variant?: Variant;
+    /** Chamado quando todas as caixas estão preenchidas. */
+    onComplete?: (value: string) => void;
   }
 
   let {
@@ -43,6 +46,7 @@
     helpText = '',
     errorMessage = '',
     variant = 'default',
+    onComplete = undefined,
   }: Props = $props();
 
   let value = $derived(defaultValue);
@@ -78,7 +82,7 @@
 
 <div class="nds-stack" data-spacing="sm" style="contain: layout">
   {#if showLabel && label}
-    <label for={fieldId} class="nds-text-body nds-font-medium nds-block">{label}</label>
+    <label for={fieldId} class="nds-text-label">{label}</label>
   {/if}
 
   {#key renderKey}
@@ -92,6 +96,7 @@
         {pattern}
         {inputmode}
         autocomplete="one-time-code"
+        {onComplete}
         aria-label={label}
         aria-invalid={hasError ? 'true' : undefined}
         aria-describedby={describedBy}
@@ -120,6 +125,7 @@
         {pattern}
         {inputmode}
         autocomplete="one-time-code"
+        {onComplete}
         aria-label={label}
         aria-invalid={hasError ? 'true' : undefined}
         aria-describedby={describedBy}
@@ -140,15 +146,16 @@
   {/if}
 
   {#if showErrorMessage && errorMessage}
-    <p id={errorId} class="nds-text-caption nds-text-destructive" role="alert">{errorMessage}</p>
+    <!-- Sem `role="alert"`: a mensagem já está no DOM quando a página carrega,
+         e uma live region em conteúdo estático faz o leitor anunciar o erro
+         sem que nada tenha acontecido. -->
+    <p id={errorId} class="nds-text-caption nds-text-destructive">{errorMessage}</p>
   {/if}
 
   {#if showResendButton}
-    <button
-      type="button"
-      class="nds-text-caption nds-text-primary underline-offset-4 nds-hover-underline"
-    >
-      Reenviar código
-    </button>
+    <div class="nds-cluster" data-align="center" data-spacing="xs">
+      <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
+      <Button variant="link" size="sm" type="button">Reenviar código</Button>
+    </div>
   {/if}
 </div>

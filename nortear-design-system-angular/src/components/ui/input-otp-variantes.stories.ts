@@ -65,6 +65,16 @@ export const FourDigits: Story = {
       // renderizaria seis slots e nada no visual denunciaria.
       await expect(slotsDe(canvasElement)).toHaveLength(4);
     });
+
+    await step('O quinto caractere não estoura o comprimento', async () => {
+      // Um `<input maxlength="1">` por dígito: chegado ao fim, o foco fica no
+      // último slot e o toque seguinte é ignorado — o código para em quatro
+      // caracteres em vez de crescer ou de sobrescrever o que já estava lá.
+      const slots = slotsDe(canvasElement);
+      slots[0].focus();
+      await userEvent.keyboard('12345');
+      await expect(slots.map((s) => s.value).join('')).toBe('1234');
+    });
   },
 };
 
@@ -100,6 +110,21 @@ export const WithSeparator: Story = {
       const posicao = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
       await expect(posicao).toBe(3);
       await expect(slotsDe(canvasElement)).toHaveLength(6);
+    });
+
+    await step('O separador afasta os dois blocos, e só eles', async () => {
+      // Efeito computado, não nome de classe: o respiro é margem do separador.
+      // Enquanto era `gap` do contêiner, ele caía também entre cada par de
+      // slots e abria as caixas do meio, que não têm borda esquerda.
+      const slots = slotsDe(canvasElement);
+      const separador = canvasElement.querySelector<HTMLElement>(
+        '[data-slot="input-otp-separator"]',
+      )!;
+      const folga = (a: Element, b: Element) =>
+        Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
+      await expect(folga(slots[0], slots[1])).toBe(0);
+      await expect(folga(slots[2], separador)).toBeGreaterThan(0);
+      await expect(folga(separador, slots[3])).toBeGreaterThan(0);
     });
   },
 };

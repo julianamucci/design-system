@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent } from 'storybook/test';
+import { razao } from '@shared/testing/cor';
 import { NdsInputOtp } from './input-otp';
 
 const meta: Meta = {
@@ -15,21 +16,6 @@ type Story = StoryObj;
 const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
   ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),
 ];
-
-/** Contraste WCAG entre duas cores `rgb(...)` já computadas pelo navegador. */
-function contraste(corA: string, corB: string): number {
-  const luminancia = (cor: string): number => {
-    const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
-    const canal = (v: number): number => {
-      const s = v / 255;
-      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-    };
-    return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
-  };
-  const a = luminancia(corA);
-  const b = luminancia(corB);
-  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-}
 
 export const Empty: Story = {
   parameters: { covers: ['visual.item1'] },
@@ -79,10 +65,12 @@ export const Filling: Story = {
 
     await step('O dígito digitado tem contraste suficiente contra o slot', async () => {
       // Um slot é uma caixa pequena com um caractere só: se o contraste cair,
-      // não há palavra em volta para compensar pelo contexto.
-      const slot = slotsDe(canvasElement)[0];
-      const cs = getComputedStyle(slot);
-      await expect(contraste(cs.color, cs.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      // não há palavra em volta para compensar pelo contexto. A conta WCAG vem
+      // do colhedor compartilhado — a cópia local que morava aqui era o começo
+      // de um segundo colhedor com as mesmas armadilhas para redescobrir.
+      const cs = getComputedStyle(slotsDe(canvasElement)[0]);
+      const medida = razao(cs.color, cs.backgroundColor);
+      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

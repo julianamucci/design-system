@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import { within, expect, waitFor } from 'storybook/test';
+import { userEvent, expect } from 'storybook/test';
+import { razao } from '@shared/testing/cor';
 import {
   InputOTP,
   InputOTPGroup,
@@ -18,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Estados canônicos do InputOTP: Vazio (sem caracteres), Preenchendo (parcial), Completo (todos os slots), Desabilitado (disabled=true) e Erro (aria-invalid=true).',
+          'Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.',
       },
     },
   },
@@ -29,21 +30,39 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSlot };
 
+function campo(raiz: HTMLElement): HTMLInputElement {
+  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
+  // `globalThis.Error`, e não `Error`: este arquivo exporta uma story chamada
+  // `Error` — o estado de erro do componente —, e o nome dela sombreia o
+  // construtor global no escopo do módulo. Escrito `new Error(...)`, o TypeScript
+  // acusa "expression is not constructable" e em runtime a linha só quebraria no
+  // dia em que o campo faltasse, que é justamente o dia em que ela precisa falar.
+  if (!el) throw new globalThis.Error('input do OTP não encontrado');
+  return el;
+}
+
+const caixas = (raiz: HTMLElement): HTMLElement[] => [
+  ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),
+];
+
+const textos = (raiz: HTMLElement): string[] =>
+  caixas(raiz).map((c) => c.textContent?.trim() ?? '');
+
 export const Empty: Story = {
   parameters: {
-    docs: {
-      description: { story: 'Nenhum slot preenchido. Estado inicial.' },
-    },
+    covers: ['visual.item1'],
+    docs: { description: { story: 'Nenhuma caixa preenchida, com o campo já em foco.' } },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const value = ref('');
-      return { value };
+      return { value: ref('') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP :max-length="6" v-model="value" aria-label="Código vazio" inputmode="numeric">
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-empty" class="nds-text-label">Código de verificação</label>
+        <InputOTP id="otp-empty" :max-length="6" v-model="value" :auto-focus="true"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -53,28 +72,30 @@ export const Empty: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/vazio/i));
-    await expect((input as HTMLInputElement).value).toBe('');
+  play: async ({ canvasElement, step }) => {
+    await step('Nasce vazio com o campo pronto para receber', async () => {
+      await expect(caixas(canvasElement)).toHaveLength(6);
+      await expect(textos(canvasElement).join('')).toBe('');
+      await expect(campo(canvasElement)).toHaveFocus();
+    });
   },
 };
 
 export const Filling: Story = {
   parameters: {
-    docs: {
-      description: { story: 'Três de seis slots preenchidos. Foco no slot 4.' },
-    },
+    covers: ['visual.item2', 'accessibility.item6'],
+    docs: { description: { story: 'Parcialmente preenchido — 3 de 6 caixas.' } },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const value = ref('123');
-      return { value };
+      return { value: ref('123') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP :max-length="6" v-model="value" aria-label="Código preenchendo" inputmode="numeric">
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-filling" class="nds-text-label">Código de verificação</label>
+        <InputOTP id="otp-filling" :max-length="6" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -84,28 +105,37 @@ export const Filling: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/preenchendo/i));
-    await expect((input as HTMLInputElement).value).toBe('123');
+  play: async ({ canvasElement, step }) => {
+    await step('O valor inicial se distribui da esquerda para a direita', async () => {
+      await expect(textos(canvasElement)).toEqual(['1', '2', '3', '', '', '']);
+    });
+
+    await step('O dígito tem contraste suficiente contra a caixa', async () => {
+      // Uma caixa pequena com um caractere só: se o contraste cair, não há
+      // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
+      // compartilhado, não olhômetro nem nome de token.
+      const cs = getComputedStyle(caixas(canvasElement)[0]);
+      const medida = razao(cs.color, cs.backgroundColor);
+      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+    });
   },
 };
 
 export const Complete: Story = {
   parameters: {
-    docs: {
-      description: { story: 'Todos os slots preenchidos. onComplete dispara.' },
-    },
+    covers: ['visual.item3'],
+    docs: { description: { story: 'Todas as 6 caixas preenchidas.' } },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const value = ref('123456');
-      return { value };
+      return { value: ref('482913') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP :max-length="6" v-model="value" aria-label="Código completo" inputmode="numeric">
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-complete" class="nds-text-label">Código de verificação</label>
+        <InputOTP id="otp-complete" :max-length="6" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -115,29 +145,28 @@ export const Complete: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/completo/i));
-    await expect((input as HTMLInputElement).value).toBe('123456');
-    await expect((input as HTMLInputElement).value).toHaveLength(6);
+  play: async ({ canvasElement, step }) => {
+    await step('Todas as caixas preenchidas, na ordem do código', async () => {
+      await expect(textos(canvasElement).join('')).toBe('482913');
+    });
   },
 };
 
 export const Disabled: Story = {
   parameters: {
-    docs: {
-      description: { story: 'disabled=true aplica has-disabled:opacity-50 no container.' },
-    },
+    covers: ['functional.item6'],
+    docs: { description: { story: 'Bloqueado: não aceita foco nem digitação, e o campo esmaece.' } },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const value = ref('12');
-      return { value };
+      return { value: ref('4829') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;">
-        <InputOTP :max-length="6" :disabled="true" v-model="value" aria-label="Código desabilitado" inputmode="numeric">
+      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-disabled" class="nds-text-label">Código de verificação</label>
+        <InputOTP id="otp-disabled" :max-length="6" :disabled="true" v-model="value"
+                  autocomplete="one-time-code" inputmode="numeric">
           <template #default="{ slots }">
             <InputOTPGroup>
               <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
@@ -147,51 +176,92 @@ export const Disabled: Story = {
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/desabilitado/i));
-    await expect(input).toBeDisabled();
+  play: async ({ canvasElement, step }) => {
+    await step('O campo não aceita foco nem digitação', async () => {
+      const input = campo(canvasElement);
+      await expect(input).toBeDisabled();
+      await userEvent.click(input);
+      await expect(input).not.toHaveFocus();
+      await expect(textos(canvasElement).join('')).toBe('4829');
+    });
+
+    await step('O bloqueio também se vê', async () => {
+      // Efeito computado: a folha esmaece o campo inteiro. Medir a opacidade é
+      // o que prova que a cascata chegou — nome de classe não prova nada.
+      const container = canvasElement.querySelector<HTMLElement>('.nds-input-otp-container')!;
+      await expect(Number(getComputedStyle(container).opacity)).toBeLessThan(1);
+    });
   },
 };
 
 export const Error: Story = {
   parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
     docs: {
       description: {
-        story: 'aria-invalid=true aplica border-destructive e ring vermelho ao grupo.',
+        story:
+          'Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.',
       },
     },
   },
   render: () => ({
     components: sharedComponents,
     setup() {
-      const value = ref('123');
-      return { value };
+      return { comErro: ref('482913'), semErro: ref('482913') };
     },
     template: `
-      <div style="contain: layout; min-height: 100px;" class="nds-stack" data-spacing="sm">
-        <InputOTP
-          :max-length="6"
-          v-model="value"
-          aria-label="Código com erro"
-          aria-invalid="true"
-          aria-describedby="otp-error"
-          inputmode="numeric"
-        >
-          <template #default="{ slots }">
-            <InputOTPGroup>
-              <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" aria-invalid="true" />
-            </InputOTPGroup>
-          </template>
-        </InputOTP>
-        <p id="otp-error" class="nds-text-caption nds-text-destructive">Código incorreto. Verifique e tente novamente.</p>
+      <div style="contain: layout; min-height: 160px;" class="nds-stack" data-spacing="sm">
+        <label for="otp-error" class="nds-text-label">Código de verificação</label>
+        <div data-testid="com-erro">
+          <InputOTP id="otp-error" :max-length="6" v-model="comErro"
+                    aria-invalid="true" aria-describedby="otp-error-msg"
+                    autocomplete="one-time-code" inputmode="numeric">
+            <template #default="{ slots }">
+              <InputOTPGroup>
+                <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+        </div>
+        <p id="otp-error-msg" class="nds-text-caption nds-text-destructive">
+          Código incorreto. Verifique e tente novamente.
+        </p>
+
+        <p id="otp-ok-label" class="nds-text-caption nds-text-muted-foreground">
+          Comparação — sem erro
+        </p>
+        <div data-testid="sem-erro">
+          <InputOTP id="otp-ok" aria-labelledby="otp-ok-label" :max-length="6" v-model="semErro"
+                    autocomplete="one-time-code" inputmode="numeric">
+            <template #default="{ slots }">
+              <InputOTPGroup>
+                <InputOTPSlot v-for="(slot, index) in slots" :key="index" :index="index" />
+              </InputOTPGroup>
+            </template>
+          </InputOTP>
+        </div>
       </div>
     `,
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const input = await waitFor(() => canvas.getByLabelText(/com erro/i));
-    await expect(input).toHaveAttribute('aria-invalid', 'true');
-    await expect(canvas.getByText(/Código incorreto/i)).toBeVisible();
+  play: async ({ canvasElement, step }) => {
+    const comErro = canvasElement.querySelector<HTMLElement>('[data-testid="com-erro"]')!;
+    const semErro = canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!;
+
+    await step('O erro é anunciado por ARIA, não só pela borda', async () => {
+      await expect(campo(comErro)).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    await step('A mensagem de erro está ligada ao campo', async () => {
+      await expect(campo(comErro)).toHaveAttribute('aria-describedby', 'otp-error-msg');
+      await expect(canvasElement.querySelector('#otp-error-msg')).toBeTruthy();
+    });
+
+    await step('A borda da caixa troca para a cor de erro', async () => {
+      // Comparação contra uma SEGUNDA instância sem erro: mexer no atributo da
+      // primeira deixaria a asserção medindo o mesmo estado dos dois lados.
+      const bordaComErro = getComputedStyle(caixas(comErro)[0]).borderTopColor;
+      const bordaSemErro = getComputedStyle(caixas(semErro)[0]).borderTopColor;
+      await expect(bordaComErro).not.toBe(bordaSemErro);
+    });
   },
 };
