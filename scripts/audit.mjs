@@ -79,6 +79,29 @@ function globStack(stack, subpath, ext) {
  * sobrescrever uma variável inerte, e nada no runtime avisa.
  */
 let _definedTokens = null;
+/**
+ * Tokens visíveis DE DENTRO de uma stack: o compartilhado mais o `src/styles`
+ * dela. `definedTokens()` é a UNIÃO das cinco, e por isso não serve para julgar
+ * documentação: `--shadow-md` existe no `globals.css` de react e svelte, e o
+ * que o documenta na tabela de tokens é o vanilla, onde ele não existe. Union
+ * responde "alguém define?"; aqui a pergunta é "quem lê esta página consegue
+ * usar?".
+ */
+const _tokensPorStack = new Map();
+function definedTokensForStack(stack) {
+  if (_tokensPorStack.has(stack)) return _tokensPorStack.get(stack);
+  const set = new Set();
+  const files = [
+    ...walkDir(join(ROOT, 'docs', 'shared'), ['.css']),
+    ...walkDir(join(ROOT, stackDir(stack), 'src', 'styles'), ['.css']),
+  ];
+  for (const f of files) {
+    for (const m of (readFile(f) || '').matchAll(/(--[a-z0-9-]+)\s*:/gi)) set.add(m[1].toLowerCase());
+  }
+  _tokensPorStack.set(stack, set);
+  return set;
+}
+
 function definedTokens() {
   if (_definedTokens) return _definedTokens;
   const files = [
@@ -3320,6 +3343,46 @@ function auditQuality(slug) {
         rule: 'unknown_token_reference',
         message: `token "${token}" documentado mas não definido em nenhum CSS do projeto — customização seria inerte`,
       });
+    }
+
+    // 5b. A MESMA pergunta, na coluna `token` que as docs pages montam em
+    // código. O check acima só lê o `translations.json`, e a tabela de tokens é
+    // um array local em cada `*Docs.*` — foi por isso que `--foreground/10`,
+    // `--shadow`, `--shadow-md` e `--radius-lg` sobreviveram ali no
+    // dropdown-menu enquanto o conteúdo compartilhado estava limpo.
+    //
+    // O julgamento é POR STACK: o que vale é o que a pessoa lendo aquela página
+    // consegue redefinir, não se alguma outra stack por acaso define o token.
+    for (const stack of STACKS) {
+      const conhecidos = definedTokensForStack(stack);
+      const vistos = new Set();
+      for (const file of filesForSlug(slug, stack).docs) {
+        const conteudo = readFile(file);
+        if (!conteudo) continue;
+        // Token DEFINIDO dentro da própria página conta como existente. É o que
+        // separa os dois casos: no sonner, `--normal-bg` é gancho real da lib de
+        // terceiro e a página mostra `--normal-bg: var(--popover)` no exemplo de
+        // customização — sobrescrever funciona. No dropdown-menu, `--shadow` só
+        // aparecia na coluna `token:`, sem definição em canto nenhum, e a
+        // customização era inerte. Sem esta distinção a regra acusaria os dois.
+        const definidosAqui = new Set(
+          [...conteudo.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map((m) => m[1].toLowerCase()),
+        );
+        // `token:` seguido de string — a forma que as cinco usam para montar a
+        // linha. Sufixo de alfa (`/10`) é separado antes: `--foreground/10` é
+        // uma composição, e o que precisa existir é `--foreground`.
+        for (const m of conteudo.matchAll(/token:\s*["'`](--[a-z0-9-]+)(\/[0-9.]+)?["'`]/gi)) {
+          const token = m[1].toLowerCase();
+          if (conhecidos.has(token) || definidosAqui.has(token) || vistos.has(token)) continue;
+          vistos.add(token);
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: relative(ROOT, file),
+            rule: 'unknown_token_reference',
+            message: `token "${token}" na tabela de tokens desta página não existe no CSS visível desta stack — quem copiar a customização não muda nada`,
+          });
+        }
+      }
     }
   }
 
