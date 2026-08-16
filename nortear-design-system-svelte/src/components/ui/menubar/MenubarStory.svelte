@@ -5,7 +5,8 @@
     MenubarTrigger,
     MenubarContent,
     MenubarItem,
-    MenubarLabel,
+    MenubarGroup,
+    MenubarGroupHeading,
     MenubarSeparator,
     MenubarShortcut,
     MenubarCheckboxItem,
@@ -24,121 +25,119 @@
     | 'checkbox'
     | 'radio'
     | 'itemDisabled'
+    | 'destructive'
     | 'editor';
 
   interface Props {
     defaultValue?: string;
-    /** Estado controlado; inicia com `defaultValue`. */
-    value?: string;
     loop?: boolean;
     variant?: Variant;
     demonstration?: Demonstration;
+    /** Espião de escolha de item — a story o passa para a aba Actions. */
+    onSelect?: (label: string) => void;
   }
 
   let {
+    // O arg da story chama-se `defaultValue` por paridade com as outras
+    // stacks; nesta lib o menu aberto é o `value`, e é para ele que vai.
     defaultValue = undefined,
-    // `defaultValue` nao existe no bits-ui: a prop era ignorada e nenhum menu
-    // abria. A API e `value` (bindable). Inicializar com `defaultValue`
-    // preserva o uso das stories e mantem a interatividade.
-    value = $bindable(defaultValue),
     loop = true,
     variant = 'default',
     demonstration = 'default',
+    onSelect = () => {},
   }: Props = $props();
 
-  // estado para variantes interativas
-  let showStatusBar = $state(true);
-  let showActivityBar = $state(false);
-  let showFullscreen = $state(false);
-  let zoom = $state('100');
+  // Os mesmos dados das outras quatro stacks: a story é o que o Chromatic
+  // fotografa, e um exemplo diferente por stack protegeria coisas diferentes.
+  const MENUS = [
+    { valor: 'file', label: 'Arquivo', itens: ['Novo', 'Abrir', 'Salvar'] },
+    { valor: 'edit', label: 'Editar', itens: ['Desfazer', 'Refazer', 'Copiar'] },
+    { valor: 'view', label: 'Exibir', itens: ['Aproximar', 'Afastar', 'Tela cheia'] },
+    { valor: 'help', label: 'Ajuda', itens: ['Documentação', 'Atalhos de teclado'] },
+  ];
+
+  const ATALHOS = [
+    { label: 'Desfazer', atalho: '⌘Z' },
+    { label: 'Refazer', atalho: '⇧⌘Z' },
+    { label: 'Copiar', atalho: '⌘C' },
+  ];
+
+  const EXPORTACOES = ['PDF', 'CSV', 'PNG'];
+
+  const ITENS_COM_BLOQUEIO = [
+    { label: 'Novo', disabled: false },
+    { label: 'Salvar', disabled: false },
+    { label: 'Enviar para revisão', disabled: true },
+  ];
+
+  const TEMAS = [
+    { valor: 'light', label: 'Claro' },
+    { valor: 'dark', label: 'Escuro' },
+    { valor: 'system', label: 'Do sistema' },
+  ];
+
+  let regua = $state(true);
+  let barraLateral = $state(false);
+  let grade = $state(false);
+  let tema = $state('light');
 </script>
 
 <div style="contain: layout">
   {#key `${defaultValue}-${loop}-${variant}-${demonstration}`}
-    <Menubar bind:value {loop}>
+    <Menubar value={defaultValue ?? ''} {loop}>
       {#if demonstration === 'shortcuts'}
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
-              Desfazer
-              <MenubarShortcut>⌘Z</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Refazer
-              <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>
-              Recortar
-              <MenubarShortcut>⌘X</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Copiar
-              <MenubarShortcut>⌘C</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Colar
-              <MenubarShortcut>⌘V</MenubarShortcut>
-            </MenubarItem>
+            {#each ATALHOS as a (a.label)}
+              <MenubarItem>
+                {a.label}
+                <MenubarShortcut>{a.atalho}</MenubarShortcut>
+              </MenubarItem>
+            {/each}
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'submenu'}
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Novo arquivo</MenubarItem>
-            <MenubarItem>Abrir...</MenubarItem>
-            <MenubarSeparator />
+            <MenubarItem>Novo</MenubarItem>
             <MenubarSub>
-              <MenubarSubTrigger>Exportar como</MenubarSubTrigger>
+              <MenubarSubTrigger>Exportar</MenubarSubTrigger>
               <MenubarSubContent>
-                <MenubarItem>PDF</MenubarItem>
-                <MenubarItem>CSV</MenubarItem>
-                <MenubarItem>JSON</MenubarItem>
+                {#each EXPORTACOES as e (e)}
+                  <MenubarItem>{e}</MenubarItem>
+                {/each}
               </MenubarSubContent>
             </MenubarSub>
-            <MenubarSeparator />
-            <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'checkbox'}
         <MenubarMenu value="view">
           <MenubarTrigger>Exibir</MenubarTrigger>
           <MenubarContent>
-            <MenubarLabel>Visualização</MenubarLabel>
-            <MenubarSeparator />
-            <MenubarCheckboxItem
-              checked={showStatusBar}
-              onCheckedChange={(v) => (showStatusBar = v)}
-            >
-              Status bar
-            </MenubarCheckboxItem>
-            <MenubarCheckboxItem
-              checked={showActivityBar}
-              onCheckedChange={(v) => (showActivityBar = v)}
-            >
-              Activity bar
-            </MenubarCheckboxItem>
-            <MenubarCheckboxItem
-              checked={showFullscreen}
-              onCheckedChange={(v) => (showFullscreen = v)}
-            >
-              Tela cheia
-            </MenubarCheckboxItem>
+            <!--
+              `Group` + `GroupHeading`: nesta lib o cabeçalho vira o
+              `aria-labelledby` do grupo, então o par é o que dá nome ao
+              conjunto de alternadores para quem usa leitor de tela.
+            -->
+            <MenubarGroup>
+              <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
+              <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={barraLateral}>Barra lateral</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
+            </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'radio'}
-        <MenubarMenu value="tools">
-          <MenubarTrigger>Ferramentas</MenubarTrigger>
+        <MenubarMenu value="theme">
+          <MenubarTrigger>Aparência</MenubarTrigger>
           <MenubarContent>
-            <MenubarLabel>Zoom</MenubarLabel>
-            <MenubarSeparator />
-            <MenubarRadioGroup bind:value={zoom}>
-              <MenubarRadioItem value="50">50%</MenubarRadioItem>
-              <MenubarRadioItem value="100">100%</MenubarRadioItem>
-              <MenubarRadioItem value="150">150%</MenubarRadioItem>
-              <MenubarRadioItem value="200">200%</MenubarRadioItem>
+            <MenubarRadioGroup bind:value={tema}>
+              <MenubarGroupHeading>Tema</MenubarGroupHeading>
+              {#each TEMAS as t (t.valor)}
+                <MenubarRadioItem value={t.valor}>{t.label}</MenubarRadioItem>
+              {/each}
             </MenubarRadioGroup>
           </MenubarContent>
         </MenubarMenu>
@@ -146,137 +145,71 @@
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>Novo arquivo</MenubarItem>
-            <MenubarItem disabled>Salvar (indisponível)</MenubarItem>
-            <MenubarItem>Abrir...</MenubarItem>
+            {#each ITENS_COM_BLOQUEIO as i (i.label)}
+              <MenubarItem disabled={i.disabled} onSelect={() => onSelect(i.label)}>
+                {i.label}
+              </MenubarItem>
+            {/each}
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'editor'}
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
-              Novo
-              <MenubarShortcut>⌘N</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Abrir...
-              <MenubarShortcut>⌘O</MenubarShortcut>
-            </MenubarItem>
+            <MenubarGroup>
+              <MenubarGroupHeading>Documento</MenubarGroupHeading>
+              <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+              <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>
+            </MenubarGroup>
             <MenubarSeparator />
-            <MenubarSub>
-              <MenubarSubTrigger>Exportar</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem>PDF</MenubarItem>
-                <MenubarItem>CSV</MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
-            <MenubarSeparator />
-            <MenubarItem variant="destructive">
-              Excluir
-              <MenubarShortcut>⌫</MenubarShortcut>
-            </MenubarItem>
+            <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
-              Desfazer
-              <MenubarShortcut>⌘Z</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Refazer
-              <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>
-              Copiar
-              <MenubarShortcut>⌘C</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Colar
-              <MenubarShortcut>⌘V</MenubarShortcut>
-            </MenubarItem>
+            <MenubarItem>Desfazer <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>
+            <MenubarItem>Refazer <MenubarShortcut>⇧⌘Z</MenubarShortcut></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu value="view">
           <MenubarTrigger>Exibir</MenubarTrigger>
           <MenubarContent>
-            <MenubarCheckboxItem
-              checked={showStatusBar}
-              onCheckedChange={(v) => (showStatusBar = v)}
-            >
-              Status bar
-            </MenubarCheckboxItem>
-            <MenubarCheckboxItem
-              checked={showActivityBar}
-              onCheckedChange={(v) => (showActivityBar = v)}
-            >
-              Activity bar
-            </MenubarCheckboxItem>
+            <MenubarGroup>
+              <MenubarGroupHeading>Mostrar na tela</MenubarGroupHeading>
+              <MenubarCheckboxItem bind:checked={regua}>Régua</MenubarCheckboxItem>
+              <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
+            </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
-        <MenubarMenu value="tools">
-          <MenubarTrigger>Ferramentas</MenubarTrigger>
+        <MenubarMenu value="help">
+          <MenubarTrigger>Ajuda</MenubarTrigger>
           <MenubarContent>
-            <MenubarLabel>Zoom</MenubarLabel>
-            <MenubarSeparator />
-            <MenubarRadioGroup bind:value={zoom}>
-              <MenubarRadioItem value="50">50%</MenubarRadioItem>
-              <MenubarRadioItem value="100">100%</MenubarRadioItem>
-              <MenubarRadioItem value="150">150%</MenubarRadioItem>
-            </MenubarRadioGroup>
+            <MenubarItem>Documentação</MenubarItem>
+            <MenubarItem>Atalhos de teclado</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
-      {:else}
-        <!-- default: 4 menus File/Edit/View/Tools -->
+      {:else if demonstration === 'destructive'}
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
-              Novo
-              <MenubarShortcut>⌘N</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Abrir...
-              <MenubarShortcut>⌘O</MenubarShortcut>
-            </MenubarItem>
+            <MenubarItem>Salvar</MenubarItem>
             <MenubarSeparator />
-            {#if variant === 'destructive'}
-              <MenubarItem variant="destructive">
-                Excluir arquivo
-                <MenubarShortcut>⌫</MenubarShortcut>
-              </MenubarItem>
-            {:else}
-              <MenubarItem>Salvar como...</MenubarItem>
-            {/if}
+            <MenubarItem variant="destructive">Descartar alterações</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
-        <MenubarMenu value="edit">
-          <MenubarTrigger>Editar</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Desfazer</MenubarItem>
-            <MenubarItem>Refazer</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Copiar</MenubarItem>
-            <MenubarItem>Colar</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu value="view">
-          <MenubarTrigger>Exibir</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Zoom in</MenubarItem>
-            <MenubarItem>Zoom out</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu value="tools">
-          <MenubarTrigger>Ferramentas</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Configurações</MenubarItem>
-            <MenubarItem>Extensões</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
+      {:else}
+        <!-- default: as quatro categorias clássicas -->
+        {#each MENUS as m (m.valor)}
+          <MenubarMenu value={m.valor}>
+            <MenubarTrigger>{m.label}</MenubarTrigger>
+            <MenubarContent>
+              {#each m.itens as item (item)}
+                <MenubarItem {variant}>{item}</MenubarItem>
+              {/each}
+            </MenubarContent>
+          </MenubarMenu>
+        {/each}
       {/if}
     </Menubar>
   {/key}

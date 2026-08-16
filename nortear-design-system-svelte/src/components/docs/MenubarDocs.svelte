@@ -167,8 +167,7 @@
 
   const interfaceCode = `// Menubar (Root)
 interface MenubarProps {
-  value?: string;
-  defaultValue?: string;
+  value?: string; // também é o valor inicial, sem bind
   onValueChange?: (value: string) => void;
   loop?: boolean; // default true
 }
@@ -458,7 +457,7 @@ interface MenubarRadioGroupProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <Menubar defaultValue="file">
+      <Menubar value="file">
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
@@ -477,7 +476,7 @@ interface MenubarRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <Menubar defaultValue="file">
+      <Menubar value="file">
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
@@ -518,7 +517,7 @@ interface MenubarRadioGroupProps {
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),
-        code: `<Menubar defaultValue="edit">
+        code: `<Menubar value="edit">
   <MenubarMenu value="edit">
     <MenubarTrigger>Editar</MenubarTrigger>
     <MenubarContent>
@@ -536,7 +535,7 @@ interface MenubarRadioGroupProps {
         name: $tStore('variants.items.withCheckbox.name'),
         description: $tStore('variants.items.withCheckbox.description'),
         useWhen: $tStore('variants.items.withCheckbox.use'),
-        code: `<Menubar defaultValue="view">
+        code: `<Menubar value="view">
   <MenubarMenu value="view">
     <MenubarTrigger>Exibir</MenubarTrigger>
     <MenubarContent>
@@ -551,7 +550,7 @@ interface MenubarRadioGroupProps {
         name: $tStore('variants.items.withRadio.name'),
         description: $tStore('variants.items.withRadio.description'),
         useWhen: $tStore('variants.items.withRadio.use'),
-        code: `<Menubar defaultValue="theme">
+        code: `<Menubar value="theme">
   <MenubarMenu value="theme">
     <MenubarTrigger>Tema</MenubarTrigger>
     <MenubarContent>
@@ -604,7 +603,7 @@ interface MenubarRadioGroupProps {
 
   {#snippet variantDefault()}
     <div style="contain: layout">
-      <Menubar defaultValue="file">
+      <Menubar value="file">
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
@@ -618,7 +617,7 @@ interface MenubarRadioGroupProps {
   {/snippet}
   {#snippet variantDestructive()}
     <div style="contain: layout">
-      <Menubar defaultValue="file">
+      <Menubar value="file">
         <MenubarMenu value="file">
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
@@ -633,7 +632,7 @@ interface MenubarRadioGroupProps {
 
   {#snippet variantWithShortcuts()}
     <div style="contain: layout">
-      <Menubar defaultValue="edit">
+      <Menubar value="edit">
         <MenubarMenu value="edit">
           <MenubarTrigger>Editar</MenubarTrigger>
           <MenubarContent>
@@ -650,7 +649,7 @@ interface MenubarRadioGroupProps {
 
   {#snippet variantWithCheckbox()}
     <div style="contain: layout">
-      <Menubar defaultValue="view">
+      <Menubar value="view">
         <MenubarMenu value="view">
           <MenubarTrigger>Exibir</MenubarTrigger>
           <MenubarContent>
@@ -664,7 +663,7 @@ interface MenubarRadioGroupProps {
 
   {#snippet variantWithRadio()}
     <div style="contain: layout">
-      <Menubar defaultValue="theme">
+      <Menubar value="theme">
         <MenubarMenu value="theme">
           <MenubarTrigger>Tema</MenubarTrigger>
           <MenubarContent>
@@ -742,7 +741,6 @@ interface MenubarRadioGroupProps {
         items: [
           { name: 'value',         type: $tStore('props.table.value.type'),         defaultValue: $tStore('props.table.value.default'),         required: $tStore('props.table.value.required'),         description: $tStore('props.table.value.description')         },
           { name: 'onValueChange', type: $tStore('props.table.onValueChange.type'), defaultValue: $tStore('props.table.onValueChange.default'), required: $tStore('props.table.onValueChange.required'), description: $tStore('props.table.onValueChange.description') },
-          { name: 'defaultValue',  type: $tStore('props.table.defaultValue.type'),  defaultValue: $tStore('props.table.defaultValue.default'),  required: $tStore('props.table.defaultValue.required'),  description: $tStore('props.table.defaultValue.description')  },
           { name: 'loop',          type: $tStore('props.table.loop.type'),          defaultValue: $tStore('props.table.loop.default'),          required: $tStore('props.table.loop.required'),          description: $tStore('props.table.loop.description')          },
           { name: 'side',          type: $tStore('props.table.side.type'),          defaultValue: $tStore('props.table.side.default'),          required: $tStore('props.table.side.required'),          description: $tStore('props.table.side.description')          },
           { name: 'align',         type: $tStore('props.table.align.type'),         defaultValue: $tStore('props.table.align.default'),         required: $tStore('props.table.align.required'),         description: $tStore('props.table.align.description')         },

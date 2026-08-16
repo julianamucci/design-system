@@ -85,7 +85,10 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
-    covers: ['functional.item3', 'accessibility.item4'],
+    // Sem `functional.item3` aqui: este item do contrato fala de ABRIR por
+    // teclado, e esta story nasce aberta por `defaultOpen`, sem interação
+    // nenhuma. A declaração era honesta na intenção e vazia no efeito.
+    covers: ['accessibility.item4'],
   },
   render: () => ({
     props: { menus: MENUS_FECHADOS },

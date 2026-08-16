@@ -3,7 +3,9 @@ import {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
+  MenubarGroup,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   MenubarRadioGroup,
   MenubarRadioItem,
@@ -167,6 +169,7 @@ export function MenubarDocs() {
   MenubarSubContent,
   MenubarSeparator,
   MenubarShortcut,
+  MenubarGroup,
   MenubarLabel,
 } from "@/components/ui/menubar";`;
 
@@ -301,18 +304,21 @@ interface MenubarItemProps {
               <MenubarMenu defaultOpen>
                 <MenubarTrigger>Exibir</MenubarTrigger>
                 <MenubarContent>
-                  <MenubarCheckboxItem
-                    checked={showSidebar}
-                    onCheckedChange={setShowSidebar}
-                  >
-                    Sidebar
-                  </MenubarCheckboxItem>
-                  <MenubarCheckboxItem
-                    checked={showGrid}
-                    onCheckedChange={setShowGrid}
-                  >
-                    Grid
-                  </MenubarCheckboxItem>
+                  <MenubarGroup>
+                    <MenubarLabel>Mostrar na tela</MenubarLabel>
+                    <MenubarCheckboxItem
+                      checked={showSidebar}
+                      onCheckedChange={setShowSidebar}
+                    >
+                      Barra lateral
+                    </MenubarCheckboxItem>
+                    <MenubarCheckboxItem
+                      checked={showGrid}
+                      onCheckedChange={setShowGrid}
+                    >
+                      Grade
+                    </MenubarCheckboxItem>
+                  </MenubarGroup>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
@@ -841,7 +847,7 @@ interface MenubarItemProps {
             description: tContent("tokens.table.contentBg.part"),
           },
           {
-            token: "--foreground/10",
+            token: "--border",
             value: tContent("tokens.table.contentBorder.class"),
             description: tContent("tokens.table.contentBorder.part"),
           },

@@ -18,13 +18,18 @@ import { within, waitFor } from "storybook/test";
 export const REGRA_GUARDA_DE_FOCO = { id: "aria-hidden-focus", enabled: false } as const;
 
 /**
- * Regra do axe desligada nas stories que terminam com um SUBMENU aberto.
+ * Regra do axe desligada nas stories que terminam com um MENU ANINHADO aberto.
  *
- * Ao abrir um submenu, o `@base-ui/react` deixa no menu pai um
- * `<span aria-owns="…">` — é ele que amarra o popup do submenu, que vive em
- * portal, ao item que o dispara. Essa associação é justamente o que faz o leitor
- * de tela anunciar a relação; o axe, porém, só olha a lista de filhos permitidos
- * de `role="menu"` (`aria-required-children`) e vê um `<span>` estranho ali.
+ * Ao abrir um popup filho, o `@base-ui/react` deixa no menu pai um
+ * `<span aria-owns="…">` — é ele que amarra o popup, que vive em portal, ao item
+ * que o dispara. Essa associação é justamente o que faz o leitor de tela
+ * anunciar a relação; o axe, porém, só olha a lista de filhos permitidos do
+ * papel do pai (`aria-required-children`) e vê um `<span>` estranho ali.
+ *
+ * Vale para submenu dentro de `role="menu"` E para o menubar: a lib trata cada
+ * menu da barra como popup filho, então o `<span>` aparece dentro do
+ * `role="menubar"` sempre que QUALQUER menu está aberto — não só quando há
+ * submenu. Foi essa segunda forma que reprovou sete stories de uma vez.
  *
  * Não há saída pelo nosso lado: tirar o span quebraria a associação, e fechar o
  * submenu no fim da story contrariaria `testes.visual.item3`, que descreve o

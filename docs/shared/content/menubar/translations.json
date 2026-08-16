@@ -33,7 +33,8 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Arquivo',\n    items: [\n      { label: 'Novo', shortcut: '⌘N' },\n      { label: 'Abrir', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Desfazer', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);"
       }
     },
     "usage": {
@@ -148,7 +149,7 @@
         "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menu com shortcuts",
-          "description": "Menu com items que exibem atalhos de teclado à direita via <code>Shortcut</code>. O texto fica alinhado à esquerda e o atalho à direita com cor <code>muted-foreground</code>.",
+          "description": "Menu com items que exibem atalhos de teclado à direita via <code>Shortcut</code>. O texto fica alinhado à esquerda e o atalho à direita, em cor secundária.",
           "use": "Editores e ferramentas com ações frequentes (Salvar, Desfazer, Copiar). O atalho exibido é puramente visual — registre o handler real no consumidor (ex.: <code>useHotkeys</code>)."
         },
         "withCheckbox": {
@@ -168,8 +169,8 @@
         }
       },
       "styles": {
-        "default": "Item neutro com hover <code>bg-accent</code>; padrão para a maioria das ações.",
-        "destructive": "Item de ação irreversível com <code>text-destructive</code> e <code>bg-destructive/10</code> no hover."
+        "default": "Item neutro: recebe o fundo de destaque sob o ponteiro ou com o foco de teclado. Padrão para a maioria das ações.",
+        "destructive": "Item de ação irreversível: texto na cor de perigo e, sob o ponteiro ou com o foco, fundo de perigo esmaecido."
       }
     },
     "states": {
@@ -192,7 +193,7 @@
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+        "behavior": "CheckboxItem ou RadioItem anuncia <code>aria-checked=\"true\"</code> e exibe o ícone de seleção."
       },
       "cols": {
         "state": "Estado",
@@ -212,25 +213,25 @@
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Menu ativo controlado (Menubar Root)."
+          "description": "Menu aberto, em modo controlado."
         },
         "onValueChange": {
           "type": "(value: string) => void",
           "default": "—",
           "required": "Não",
-          "description": "Callback ao alternar menu ativo."
+          "description": "Callback disparado quando o menu aberto muda."
         },
         "defaultValue": {
           "type": "string",
           "default": "—",
           "required": "Não",
-          "description": "Menu ativo inicial em modo não-controlado."
+          "description": "Menu aberto ao montar, em modo não-controlado."
         },
         "loop": {
           "type": "boolean",
           "default": "true",
           "required": "Não",
-          "description": "Loop de navegação por setas (do último para o primeiro e vice-versa)."
+          "description": "Dá a volta do último gatilho para o primeiro na navegação por setas, e vice-versa."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -247,47 +248,50 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Menubar controlado com loop desabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<!-- Menubar controlado com loop desabilitado -->\n<nds-menubar [(value)]=\"activeMenu\" [loop]=\"false\">\n  <nds-menubar-menu value=\"file\">\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "react": "// Menu controlado, sem dar a volta do último gatilho para o primeiro\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vue": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vanilla": "// Menu aberto ao montar, sem dar a volta do último gatilho para o primeiro\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "angular": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Classe",
+        "class": "Seletor",
         "part": "Aplicação",
         "menubarBg": {
-          "class": "bg-background",
+          "class": ".nds-menubar",
           "part": "Fundo da barra horizontal"
         },
         "menubarBorder": {
-          "class": "border-border",
-          "part": "Borda da barra"
+          "class": ".nds-menubar",
+          "part": "Borda de 1px da barra"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Trigger ativo (com menu aberto)"
+          "class": ".nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Gatilho do menu aberto, em destaque na barra"
         },
         "contentBg": {
-          "class": "bg-popover",
-          "part": "Fundo do MenubarContent"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Fundo do painel do menu"
         },
         "contentBorder": {
-          "class": "ring-foreground/10",
-          "part": "Borda sutil do Content (ring 1px)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Borda de 1px do painel"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Cantos arredondados do Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Cantos arredondados do painel"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/foco em Item default"
+          "class": ".nds-dropdown-menu-item:hover",
+          "part": "Item sob o ponteiro ou com o foco de teclado"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Item de ação irreversível"
         }
       },
       "customizationTitle": "Customização",
@@ -355,8 +359,8 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordenado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sem submenu nativo.",
-      "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
+      "item1": "<strong>Lib upstream</strong>: a coordenação entre menus, o portal e o posicionamento vêm da lib de menu adotada nesta stack; o design system aplica as classes <code>.nds-*</code> e o teclado documentado aqui.",
+      "item2": "<strong>Portal</strong>: o painel do menu pode ser renderizado em portal, fora da árvore do exemplo. Em previews, aplique <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (ex: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar em telas pequenas vira sub-ótimo — considere alternar para Sidebar ou DropdownMenu acima de breakpoint.",
       "item5": "<strong>Submenus</strong>: limite a 1 nível. Submenu aninhado em submenu confunde navegação por setas.",
@@ -421,7 +425,7 @@
         "item4": "Content tem role=menu (WCAG 4.1.2)",
         "item5": "Items têm role=menuitem/menuitemcheckbox/menuitemradio corretos",
         "item6": "Foco retorna ao Trigger ao fechar (WCAG 2.4.3)",
-        "item7": "Contraste mínimo 4.5:1 entre texto e bg-popover (WCAG 1.4.3)"
+        "item7": "Contraste mínimo 4.5:1 entre o texto do item e o fundo do painel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -505,7 +509,8 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'File',\n    items: [\n      { label: 'New', shortcut: '⌘N' },\n      { label: 'Open', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Export',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Edit',\n    items: [{ label: 'Undo', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);"
       }
     },
     "usage": {
@@ -620,7 +625,7 @@
         "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menu with shortcuts",
-          "description": "Menu with items that display keyboard shortcuts on the right via <code>Shortcut</code>. The label aligns left while the shortcut sits on the right with <code>muted-foreground</code> color.",
+          "description": "Menu with items that display keyboard shortcuts on the right via <code>Shortcut</code>. The label aligns left while the shortcut sits on the right in a secondary colour.",
           "use": "Editors and tools with frequent actions (Save, Undo, Copy). The displayed shortcut is visual only — register the real handler in the consumer (e.g., <code>useHotkeys</code>)."
         },
         "withCheckbox": {
@@ -640,8 +645,8 @@
         }
       },
       "styles": {
-        "default": "Neutral item with <code>bg-accent</code> hover; default for most actions.",
-        "destructive": "Irreversible action item with <code>text-destructive</code> and <code>bg-destructive/10</code> on hover."
+        "default": "Neutral item: takes the highlight background under the pointer or with keyboard focus. Default for most actions.",
+        "destructive": "Irreversible action item: danger-coloured text and, under the pointer or with focus, a faded danger background."
       }
     },
     "states": {
@@ -664,7 +669,7 @@
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+        "behavior": "CheckboxItem or RadioItem announces <code>aria-checked=\"true\"</code> and shows the selection icon."
       },
       "cols": {
         "state": "State",
@@ -684,25 +689,25 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Controlled active menu (Menubar Root)."
+          "description": "Open menu, in controlled mode."
         },
         "onValueChange": {
           "type": "(value: string) => void",
           "default": "—",
           "required": "No",
-          "description": "Callback when active menu changes."
+          "description": "Callback fired when the open menu changes."
         },
         "defaultValue": {
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Initial active menu in uncontrolled mode."
+          "description": "Menu open on mount, in uncontrolled mode."
         },
         "loop": {
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Arrow-key loop navigation (last to first and vice versa)."
+          "description": "Wraps from the last trigger to the first during arrow navigation, and vice versa."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -719,47 +724,50 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Controlled Menubar with disabled loop\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<!-- Controlled Menubar with loop disabled -->\n<nds-menubar [(value)]=\"activeMenu\" [loop]=\"false\">\n  <nds-menubar-menu value=\"file\">\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "react": "// Controlled menu, no wrap from the last trigger back to the first\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vue": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vanilla": "// Menu open on mount, no wrap from the last trigger back to the first\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "angular": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>File</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Class",
+        "class": "Selector",
         "part": "Application",
         "menubarBg": {
-          "class": "bg-background",
+          "class": ".nds-menubar",
           "part": "Horizontal bar background"
         },
         "menubarBorder": {
-          "class": "border-border",
-          "part": "Bar border"
+          "class": ".nds-menubar",
+          "part": "1px bar border"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Active Trigger (with menu open)"
+          "class": ".nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Trigger of the open menu, highlighted on the bar"
         },
         "contentBg": {
-          "class": "bg-popover",
-          "part": "MenubarContent background"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Menu panel background"
         },
         "contentBorder": {
-          "class": "ring-foreground/10",
-          "part": "Content subtle border (1px ring)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "1px panel border"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Content rounded corners"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Panel rounded corners"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/focus on default Item"
+          "class": ".nds-dropdown-menu-item:hover",
+          "part": "Item under the pointer or with keyboard focus"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Irreversible action item"
         }
       },
       "customizationTitle": "Customization",
@@ -827,8 +835,8 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: Menubar uses coordinated <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory without native submenu.",
-      "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
+      "item1": "<strong>Upstream lib</strong>: menu coordination, the portal and positioning come from the menu library adopted in this stack; the design system applies the <code>.nds-*</code> classes and the keyboard behaviour documented here.",
+      "item2": "<strong>Portal</strong>: the menu panel may render in a portal, outside the example tree. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (e.g., <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar on small screens becomes sub-optimal — consider switching to Sidebar or DropdownMenu above breakpoint.",
       "item5": "<strong>Submenus</strong>: limit to 1 level. Submenu nested in submenu confuses arrow-key navigation.",
@@ -893,7 +901,7 @@
         "item4": "Content has role=menu (WCAG 4.1.2)",
         "item5": "Items have correct role=menuitem/menuitemcheckbox/menuitemradio",
         "item6": "Focus returns to Trigger on close (WCAG 2.4.3)",
-        "item7": "Minimum 4.5:1 contrast between text and bg-popover (WCAG 1.4.3)"
+        "item7": "Minimum 4.5:1 contrast between item text and panel background (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Visual Regression",
@@ -977,7 +985,8 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>⌘O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst barra = createMenubar([\n  {\n    label: 'Archivo',\n    items: [\n      { label: 'Nuevo', shortcut: '⌘N' },\n      { label: 'Abrir', shortcut: '⌘O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Deshacer', shortcut: '⌘Z' }],\n  },\n]);\n\ndocument.body.appendChild(barra);"
       }
     },
     "usage": {
@@ -1092,7 +1101,7 @@
         "destructive": "Destructive",
         "withShortcuts": {
           "name": "Menú con shortcuts",
-          "description": "Menú con items que muestran atajos de teclado a la derecha vía <code>Shortcut</code>. El texto se alinea a la izquierda y el atajo a la derecha con color <code>muted-foreground</code>.",
+          "description": "Menú con items que muestran atajos de teclado a la derecha vía <code>Shortcut</code>. El texto se alinea a la izquierda y el atajo a la derecha, en color secundario.",
           "use": "Editores y herramientas con acciones frecuentes (Guardar, Deshacer, Copiar). El atajo mostrado es solo visual — registra el handler real en el consumidor (ej.: <code>useHotkeys</code>)."
         },
         "withCheckbox": {
@@ -1112,8 +1121,8 @@
         }
       },
       "styles": {
-        "default": "Item neutro con hover <code>bg-accent</code>; predeterminado para la mayoría de las acciones.",
-        "destructive": "Item de acción irreversible con <code>text-destructive</code> y <code>bg-destructive/10</code> en hover."
+        "default": "Item neutro: recibe el fondo de realce bajo el puntero o con el foco de teclado. Predeterminado para la mayoría de las acciones.",
+        "destructive": "Item de acción irreversible: texto en el color de peligro y, bajo el puntero o con el foco, fondo de peligro atenuado."
       }
     },
     "states": {
@@ -1136,7 +1145,7 @@
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+        "behavior": "CheckboxItem o RadioItem anuncia <code>aria-checked=\"true\"</code> y muestra el icono de selección."
       },
       "cols": {
         "state": "Estado",
@@ -1156,25 +1165,25 @@
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Menú activo controlado (Menubar Root)."
+          "description": "Menú abierto, en modo controlado."
         },
         "onValueChange": {
           "type": "(value: string) => void",
           "default": "—",
           "required": "No",
-          "description": "Callback al cambiar menú activo."
+          "description": "Callback disparado cuando cambia el menú abierto."
         },
         "defaultValue": {
           "type": "string",
           "default": "—",
           "required": "No",
-          "description": "Menú activo inicial en modo no-controlado."
+          "description": "Menú abierto al montar, en modo no controlado."
         },
         "loop": {
           "type": "boolean",
           "default": "true",
           "required": "No",
-          "description": "Loop de navegación por flechas (del último al primero y viceversa)."
+          "description": "Da la vuelta del último disparador al primero en la navegación por flechas, y viceversa."
         },
         "side": {
           "type": "'top' | 'bottom' | 'left' | 'right'",
@@ -1191,47 +1200,50 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Menubar controlado con loop deshabilitado\n<Menubar value={activeMenu} onValueChange={setActiveMenu} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<!-- Menubar controlado con loop deshabilitado -->\n<nds-menubar [(value)]=\"activeMenu\" [loop]=\"false\">\n  <nds-menubar-menu value=\"file\">\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
+        "react": "// Menú controlado, sin volver del último disparador al primero\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vue": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "svelte": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
+        "vanilla": "// Menú abierto al montar, sin volver del último disparador al primero\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "angular": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>Archivo</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
     "tokens": {
       "title": "Design Tokens",
       "table": {
         "token": "Token",
-        "class": "Clase",
+        "class": "Selector",
         "part": "Aplicación",
         "menubarBg": {
-          "class": "bg-background",
+          "class": ".nds-menubar",
           "part": "Fondo de la barra horizontal"
         },
         "menubarBorder": {
-          "class": "border-border",
-          "part": "Borde de la barra"
+          "class": ".nds-menubar",
+          "part": "Borde de 1px de la barra"
         },
         "triggerHover": {
-          "class": "data-[state=open]:bg-accent",
-          "part": "Trigger activo (con menú abierto)"
+          "class": ".nds-menubar-trigger[data-state=\"open\"]",
+          "part": "Disparador del menú abierto, destacado en la barra"
         },
         "contentBg": {
-          "class": "bg-popover",
-          "part": "Fondo del MenubarContent"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Fondo del panel del menú"
         },
         "contentBorder": {
-          "class": "ring-foreground/10",
-          "part": "Borde sutil del Content (ring 1px)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Borde de 1px del panel"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Esquinas redondeadas del Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Esquinas redondeadas del panel"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/foco en Item default"
+          "class": ".nds-dropdown-menu-item:hover",
+          "part": "Item bajo el puntero o con el foco de teclado"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Item de acción irreversible"
         }
       },
       "customizationTitle": "Personalización",
@@ -1299,8 +1311,8 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: Menubar usa <code>base-ui/menu</code> coordinado (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sin submenú nativo.",
-      "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
+      "item1": "<strong>Lib upstream</strong>: la coordinación entre menús, el portal y el posicionamiento vienen de la librería de menú adoptada en este stack; el design system aplica las clases <code>.nds-*</code> y el teclado documentado aquí.",
+      "item2": "<strong>Portal</strong>: el panel del menú puede renderizarse en portal, fuera del árbol del ejemplo. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (ej.: <code>useHotkeys</code>).",
       "item4": "<strong>Mobile</strong>: Menubar en pantallas pequeñas se vuelve subóptimo — considera cambiar a Sidebar o DropdownMenu por encima de un breakpoint.",
       "item5": "<strong>Submenús</strong>: limita a 1 nivel. Submenú anidado en submenú confunde navegación por flechas.",
@@ -1365,7 +1377,7 @@
         "item4": "Content tiene role=menu (WCAG 4.1.2)",
         "item5": "Items tienen role=menuitem/menuitemcheckbox/menuitemradio correctos",
         "item6": "Foco vuelve al Trigger al cerrar (WCAG 2.4.3)",
-        "item7": "Contraste mínimo 4.5:1 entre texto y bg-popover (WCAG 1.4.3)"
+        "item7": "Contraste mínimo 4.5:1 entre el texto del item y el fondo del panel (WCAG 1.4.3)"
       },
       "visual": {
         "title": "Regresión Visual",

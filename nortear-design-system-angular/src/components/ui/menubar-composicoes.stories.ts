@@ -7,9 +7,9 @@ import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
 const ATALHOS = [
-  { label: 'Desfazer', atalho: 'Ctrl Z' },
-  { label: 'Refazer', atalho: 'Ctrl Y' },
-  { label: 'Copiar', atalho: 'Ctrl C' },
+  { label: 'Desfazer', atalho: '⌘Z' },
+  { label: 'Refazer', atalho: '⇧⌘Z' },
+  { label: 'Copiar', atalho: '⌘C' },
 ] as const;
 
 const EXPORTACOES = ['PDF', 'CSV', 'PNG'] as const;
@@ -281,8 +281,8 @@ export const EditorCompleto: Story = {
           <ng-template ndsMenubarContent>
             <div ndsMenubarGroup>
               <div ndsMenubarLabel>Documento</div>
-              <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl N</span></div>
-              <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl O</span></div>
+              <div ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></div>
+              <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></div>
             </div>
             <div ndsMenubarSeparator></div>
             <div ndsMenubarItem variant="destructive">Descartar alterações</div>
@@ -292,8 +292,8 @@ export const EditorCompleto: Story = {
         <nds-menubar-menu>
           <button ndsMenubarTrigger>Editar</button>
           <ng-template ndsMenubarContent>
-            <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl Z</span></div>
-            <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>Ctrl Y</span></div>
+            <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>⌘Z</span></div>
+            <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>⇧⌘Z</span></div>
           </ng-template>
         </nds-menubar-menu>
 

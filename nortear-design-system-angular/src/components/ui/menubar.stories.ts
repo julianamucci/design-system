@@ -19,17 +19,17 @@ const MENUS: MenuDemo[] = [
   {
     label: 'Arquivo',
     itens: [
-      { label: 'Novo', atalho: 'Ctrl N' },
-      { label: 'Abrir', atalho: 'Ctrl O' },
-      { label: 'Salvar', atalho: 'Ctrl S' },
+      { label: 'Novo', atalho: '⌘N' },
+      { label: 'Abrir', atalho: '⌘O' },
+      { label: 'Salvar', atalho: '⌘S' },
     ],
   },
   {
     label: 'Editar',
     itens: [
-      { label: 'Desfazer', atalho: 'Ctrl Z' },
-      { label: 'Refazer', atalho: 'Ctrl Y' },
-      { label: 'Copiar', atalho: 'Ctrl C' },
+      { label: 'Desfazer', atalho: '⌘Z' },
+      { label: 'Refazer', atalho: '⇧⌘Z' },
+      { label: 'Copiar', atalho: '⌘C' },
     ],
   },
   {
@@ -89,8 +89,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<MenubarArgs> })
         <button ndsMenubarTrigger>Arquivo</button>
 
         ${content}
-          <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl N</span></div>
-          <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl O</span></div>
+          <div ndsMenubarItem>Novo <span ndsMenubarShortcut>⌘N</span></div>
+          <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>⌘O</span></div>
         </ng-template>
       </nds-menubar-menu>
 
@@ -98,8 +98,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<MenubarArgs> })
         <button ndsMenubarTrigger>Editar</button>
 
         ${content}
-          <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>Ctrl Z</span></div>
-          <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>Ctrl Y</span></div>
+          <div ndsMenubarItem>Desfazer <span ndsMenubarShortcut>⌘Z</span></div>
+          <div ndsMenubarItem>Refazer <span ndsMenubarShortcut>⇧⌘Z</span></div>
         </ng-template>
       </nds-menubar-menu>
     </nds-menubar>
@@ -167,7 +167,6 @@ export const Playground: Story = {
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
-      'accessibility.item5',
       'accessibility.item6',
     ],
   },
@@ -222,10 +221,15 @@ export const Playground: Story = {
       await expect(gatilhos.filter((g) => g.tabIndex === 0)).toHaveLength(1);
     });
 
-    await step('Clicar no gatilho abre o menu com foco no primeiro item', async () => {
-      // Idempotente: o clique só acontece com o menu fechado, então o replay
-      // parte do mesmo estado da primeira rodada.
-      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+    await step('Enter no gatilho abre o menu com foco no primeiro item', async () => {
+      // Teclado, e não clique: o item do contrato fala de Enter/Space/Seta-baixo,
+      // e um passo que clicava deixava a declaração sem verificação nenhuma.
+      // Idempotente: só digita com o menu fechado, então o replay parte do
+      // mesmo estado da primeira rodada.
+      if (arquivo.getAttribute('aria-expanded') !== 'true') {
+        arquivo.focus();
+        await userEvent.keyboard('{Enter}');
+      }
 
       const menu = await esperarPortal('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('true');

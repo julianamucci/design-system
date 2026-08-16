@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   Menubar,
   MenubarContent,
@@ -8,7 +8,12 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from './index';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+
+// Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
+// número escrito à mão no play.
+const ITENS_NEUTROS = ['Novo', 'Abrir', 'Salvar'];
+const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'];
 
 const meta = {
   title: 'UI/Menubar/Variants',
@@ -16,12 +21,14 @@ const meta = {
   tags: ['navigation'],
   parameters: {
     layout: 'centered',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         component:
-          'Variantes do MenubarItem: default (item neutro com hover bg-accent) e destructive (text-destructive + bg-destructive/10 no hover) para ações irreversíveis.',
+          'As duas ênfases de item dentro de um menu da barra. `default` é o item neutro; `destructive` marca a ação irreversível com a cor de perigo, e existe para que "Descartar alterações" não pareça "Salvar".',
       },
     },
   },
@@ -30,76 +37,114 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sharedComponents = {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-};
+const pecas = { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger };
+
+// ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: {
-    docs: { description: { story: 'Item neutro padrão — hover/foco aplicam bg-accent.' } },
-  },
+  parameters: { covers: ['accessibility.item7'] },
   render: () => ({
-    components: sharedComponents,
+    components: pecas,
+    setup: () => ({ itens: ITENS_NEUTROS }),
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div style="contain: layout; min-height: 260px;">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Novo</MenubarItem>
-              <MenubarItem>Abrir</MenubarItem>
-              <MenubarItem>Salvar</MenubarItem>
+              <MenubarItem v-for="i in itens" :key="i">{{ i }}</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu value="edit">
+            <MenubarTrigger>Editar</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>Desfazer</MenubarItem>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    await expect(menu).toBeVisible();
-    const items = await body.findAllByRole('menuitem');
-    // 1 trigger + 3 items
-    await expect(items.length).toBeGreaterThanOrEqual(3);
+    const itens = within(menu).getAllByRole('menuitem');
+
+    await step('A variante default é escrita no markup', async () => {
+      await expect(itens).toHaveLength(ITENS_NEUTROS.length);
+      for (const item of itens) {
+        await expect(item.getAttribute('data-variant')).toBe('default');
+        await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
+      }
+    });
+
+    await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
+      // O item destacado troca de cor de propósito — a comparação tem que ser
+      // com um item em repouso, senão ela mede o realce e não a variante.
+      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(emRepouso.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+    });
+
+    await step('O painel é opaco', async () => {
+      // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
+      // painel só significa alguma coisa se o fundo for opaco: sobre um painel
+      // translúcido a razão medida é a do que estiver por baixo.
+      const fundo = getComputedStyle(menu).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo.startsWith('rgba(')).toBe(false);
+    });
   },
 };
 
+// ─── Destructive ──────────────────────────────────────────────────────────────
+
 export const Destructive: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Item destrutivo — text-destructive e fundo bg-destructive/10 no hover. Usar apenas para ações irreversíveis (excluir, sair).',
-      },
-    },
-  },
+  parameters: { covers: ['visual.item5'] },
   render: () => ({
-    components: sharedComponents,
+    components: pecas,
+    setup: () => ({ perigo: ITENS_COM_PERIGO }),
     template: `
-      <div style="contain: layout; min-height: 240px;">
+      <div style="contain: layout; min-height: 260px;">
         <Menubar default-value="file">
           <MenubarMenu value="file">
             <MenubarTrigger>Arquivo</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Salvar</MenubarItem>
+              <MenubarItem>{{ perigo[0] }}</MenubarItem>
               <MenubarSeparator />
-              <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
+              <MenubarItem variant="destructive">{{ perigo[1] }}</MenubarItem>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
       </div>
     `,
   }),
-  play: async () => {
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    await expect(menu).toBeVisible();
-    const destructive = await waitForPortal('menuitem', { name: /Excluir arquivo/i });
-    await expect(destructive).toHaveAttribute('data-variant', 'destructive');
+    const canvas = within(menu);
+    const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
+    const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });
+
+    await step('A variante chega ao markup', async () => {
+      await expect(perigoso.getAttribute('data-variant')).toBe('destructive');
+      await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
+    });
+
+    await step('A cor do texto distingue a ação irreversível', async () => {
+      // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
+      // chegasse, esta asserção pegaria a mesma cor do item neutro.
+      await expect(getComputedStyle(perigoso).color).not.toBe(getComputedStyle(neutro).color);
+    });
+
+    await step('O destaque não depende só da cor: o realce pinta o fundo', async () => {
+      // Critério 1.4.1 na prática — quem não distingue matiz precisa do fundo.
+      // O ponteiro é o que realça: o primitivo marca `data-highlighted` no
+      // `pointermove`, e é esse atributo (não `:hover`) que o CSS usa.
+      const antes = getComputedStyle(perigoso).backgroundColor;
+      await userEvent.hover(perigoso);
+      await waitFor(async () => {
+        await expect(perigoso.hasAttribute('data-highlighted')).toBe(true);
+        await expect(getComputedStyle(perigoso).backgroundColor).not.toBe(antes);
+      });
+    });
   },
 };

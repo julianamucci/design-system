@@ -1,14 +1,40 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { within, expect, fn, userEvent, waitFor } from "storybook/test"
+import {
+  waitForPortal,
+  REGRA_GUARDA_DE_FOCO,
+  REGRA_FILHOS_DE_MENU,
+} from "@/lib/wait-for-portal"
 import {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
+  MenubarGroup,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   MenubarTrigger,
-} from "./menubar";
+} from "./menubar"
+
+// As stories que TERMINAM com um menu aberto desligam duas regras do axe, e as
+// duas descrevem defeitos da lib, não do design system — ver os comentários em
+// `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
+// "sem violações no estado padrão" vale inteiro.
+const AXE_COM_MENU_ABERTO = {
+  config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] },
+} as const
+
+const MENUS_FECHADOS = ["Arquivo", "Editar", "Exibir", "Ajuda"] as const
+
+// Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
+// pelo `play`, e a aba Actions abriria vazia.
+const espiaoDeSelecao = fn()
+
+const ITENS_COM_BLOQUEIO = [
+  { label: "Novo", disabled: false },
+  { label: "Salvar", disabled: false },
+  { label: "Enviar para revisão", disabled: true },
+] as const
 
 const meta = {
   title: "UI/Menubar/States",
@@ -16,41 +42,89 @@ const meta = {
   component: Menubar,
   parameters: {
     layout: "centered",
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          "Estados canônicos do Menubar: Fechado (apenas barra), Aberto (defaultOpen no menu), ItemDesabilitado e CheckboxChecked.",
+          "Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.",
       },
     },
   },
-} satisfies Meta<typeof Menubar>;
+} satisfies Meta<typeof Menubar>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
   minHeight: 280,
   position: "relative",
-};
+}
+
+// ─── Closed ───────────────────────────────────────────────────────────────────
+//
+// A única story que termina sem nada portalizado — e por isso a única em que o
+// axe roda com TODAS as regras, inclusive a das âncoras de foco que o resto da
+// família precisa desligar. É aqui que "sem violações no estado padrão" vale.
 
 export const Closed: Story = {
   parameters: {
-    docs: {
-      description: {
-        story:
-          "Estado padrão — apenas a barra com Triggers visíveis; nenhum role=menu no DOM.",
-      },
-    },
+    covers: ["accessibility.item1", "accessibility.item2", "visual.item1"],
   },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar>
-        <MenubarMenu>
+        {MENUS_FECHADOS.map((m) => (
+          <MenubarMenu key={m}>
+            <MenubarTrigger>{m}</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>{m} — primeira ação</MenubarItem>
+              <MenubarItem>{m} — segunda ação</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        ))}
+      </Menubar>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const barra = canvas.getByRole("menubar")
+    const gatilhos = within(barra).getAllByRole("menuitem")
+
+    await step("A barra publica o papel e a orientação", async () => {
+      await expect(barra.getAttribute("data-slot")).toBe("menubar")
+      await expect(barra.getAttribute("aria-orientation")).toBe("horizontal")
+      await expect(gatilhos).toHaveLength(MENUS_FECHADOS.length)
+    })
+
+    await step("Fechado é ausência: nenhum painel existe no DOM", async () => {
+      for (const gatilho of gatilhos) {
+        await expect(gatilho.getAttribute("aria-expanded")).toBe("false")
+      }
+      // Portal desmontado, não escondido: um painel só oculto continuaria
+      // sendo lido por leitor de tela e encontrável pela busca da página.
+      await expect(within(document.body).queryAllByRole("menu")).toHaveLength(0)
+    })
+  },
+}
+
+// ─── Open ─────────────────────────────────────────────────────────────────────
+
+export const Open: Story = {
+  parameters: {
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["accessibility.item4"],
+  },
+  render: () => (
+    <div style={wrapperStyle}>
+      <Menubar modal={false}>
+        <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>Novo</MenubarItem>
+            <MenubarItem>Abrir</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
@@ -63,120 +137,141 @@ export const Closed: Story = {
     </div>
   ),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step("Triggers visíveis e nenhum menu aberto", async () => {
-      const triggers = canvas.getAllByRole("menuitem");
-      await expect(triggers.length).toBeGreaterThanOrEqual(2);
-      const menu = within(document.body).queryByRole("menu");
-      await expect(menu).toBeNull();
-    });
-  },
-};
+    const canvas = within(canvasElement)
+    const barra = canvas.getByRole("menubar")
+    const [arquivo, editar] = within(barra).getAllByRole("menuitem")
+    const menu = await waitForPortal("menu")
 
-export const Open: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Menu Arquivo aberto via defaultOpen — popup com role=menu, Items com role=menuitem.",
-      },
-    },
+    await step("O gatilho aberto se distingue dos vizinhos", async () => {
+      await expect(arquivo.getAttribute("aria-expanded")).toBe("true")
+      await expect(editar.getAttribute("aria-expanded")).toBe("false")
+      // O realce do gatilho aberto é fundo, não só cor de texto: o CSS
+      // compartilhado casa por `[data-popup-open]` nesta stack.
+      await expect(getComputedStyle(arquivo).backgroundColor).not.toBe(
+        getComputedStyle(editar).backgroundColor
+      )
+    })
+
+    await step("O painel é um menu de verdade, ancorado abaixo do gatilho", async () => {
+      await expect(menu.getAttribute("data-slot")).toBe("menubar-content")
+      await waitFor(async () => {
+        // O positioner mede DEPOIS de o painel entrar no DOM: no primeiro
+        // quadro o retângulo ainda é (0,0), e ler daí é corrida.
+        const barraRect = barra.getBoundingClientRect()
+        const menuRect = menu.getBoundingClientRect()
+        await expect(menuRect.top).toBeGreaterThanOrEqual(barraRect.bottom - 1)
+      })
+    })
   },
-  render: () => (
-    <div style={wrapperStyle}>
-      <Menubar>
-        <MenubarMenu defaultOpen>
-          <MenubarTrigger>Arquivo</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Novo</MenubarItem>
-            <MenubarItem>Abrir</MenubarItem>
-            <MenubarItem>Salvar</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Editar</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Desfazer</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-    </div>
-  ),
-  play: async ({ step }) => {
-    await step("Menu aberto com role=menu", async () => {
-      const menu = await waitForPortal("menu");
-      await expect(menu).toBeVisible();
-    });
-  },
-};
+}
+
+// ─── ItemDisabled ─────────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
   parameters: {
-    docs: {
-      description: {
-        story:
-          "Item com prop disabled — bloqueia interação, recebe data-disabled e aria-disabled=true.",
-      },
-    },
+    a11y: AXE_COM_MENU_ABERTO,
   },
   render: () => (
-    <div style={wrapperStyle}>
-      <Menubar>
-        <MenubarMenu defaultOpen>
-          <MenubarTrigger>Arquivo</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Novo</MenubarItem>
-            <MenubarItem disabled>Salvar (em breve)</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-    </div>
+      <div style={wrapperStyle}>
+        <Menubar modal={false}>
+          <MenubarMenu defaultOpen>
+            <MenubarTrigger>Arquivo</MenubarTrigger>
+            <MenubarContent>
+              {ITENS_COM_BLOQUEIO.map((i) => (
+                <MenubarItem
+                  key={i.label}
+                  disabled={i.disabled}
+                  onClick={() => espiaoDeSelecao(i.label)}
+                >
+                  {i.label}
+                </MenubarItem>
+              ))}
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </div>
   ),
   play: async ({ step }) => {
-    await step("Pelo menos um item com data-disabled", async () => {
-      await waitForPortal("menu");
-      const items = document.querySelectorAll("[data-slot='menubar-item']");
-      const disabled = Array.from(items).find(
-        (el) =>
-          el.hasAttribute("data-disabled") ||
-          el.getAttribute("aria-disabled") === "true"
-      );
-      await expect(disabled).toBeTruthy();
-    });
+    const menu = await waitForPortal("menu")
+    const itens = within(menu).getAllByRole("menuitem")
+    const bloqueado = itens[ITENS_COM_BLOQUEIO.findIndex((i) => i.disabled)]
+
+    await step("O item bloqueado se anuncia como tal", async () => {
+      await expect(itens).toHaveLength(ITENS_COM_BLOQUEIO.length)
+      await expect(bloqueado.getAttribute("aria-disabled")).toBe("true")
+      // `aria-disabled`, e não o atributo `disabled`: o item continua
+      // alcançável pela seta, para ser ANUNCIADO como indisponível em vez de
+      // sumir sem explicação de quem navega por teclado.
+      await expect(bloqueado.hasAttribute("disabled")).toBe(false)
+    })
+
+    await step("O bloqueio é visível sem depender de cor", async () => {
+      await expect(Number(getComputedStyle(bloqueado).opacity)).toBeLessThan(
+        Number(getComputedStyle(itens[0]).opacity)
+      )
+    })
+
+    await step("Escolher o item bloqueado não executa nada", async () => {
+      await userEvent.click(bloqueado, { pointerEventsCheck: 0 })
+      await expect(espiaoDeSelecao).not.toHaveBeenCalledWith(
+        bloqueado.textContent?.trim()
+      )
+    })
   },
-};
+}
+
+// ─── CheckboxChecked ──────────────────────────────────────────────────────────
 
 export const CheckboxChecked: Story = {
   parameters: {
-    docs: {
-      description: {
-        story:
-          "CheckboxItem com checked=true — role=menuitemcheckbox e aria-checked=true; ícone Check exibido no slot esquerdo.",
-      },
-    },
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["functional.item7"],
   },
   render: () => (
     <div style={wrapperStyle}>
-      <Menubar>
+      <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Exibir</MenubarTrigger>
           <MenubarContent>
-            <MenubarCheckboxItem checked>Sidebar</MenubarCheckboxItem>
-            <MenubarCheckboxItem checked={false}>Toolbar</MenubarCheckboxItem>
+            <MenubarGroup>
+              <MenubarLabel>Mostrar na tela</MenubarLabel>
+              <MenubarCheckboxItem defaultChecked>Régua</MenubarCheckboxItem>
+              <MenubarCheckboxItem defaultChecked={false}>Grade</MenubarCheckboxItem>
+            </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
     </div>
   ),
   play: async ({ step }) => {
-    await step("CheckboxItem com aria-checked=true", async () => {
-      await waitForPortal("menu");
-      const checkboxes = within(document.body).getAllByRole("menuitemcheckbox");
-      await expect(checkboxes.length).toBe(2);
-      const checked = checkboxes.find(
-        (el) => el.getAttribute("aria-checked") === "true"
-      );
-      await expect(checked).toBeTruthy();
-    });
+    const menu = await waitForPortal("menu")
+    const canvas = within(menu)
+    const regua = canvas.getByRole("menuitemcheckbox", { name: "Régua" })
+    const grade = canvas.getByRole("menuitemcheckbox", { name: "Grade" })
+
+    await step("O estado inicial chega marcado ao markup", async () => {
+      await expect(regua.getAttribute("aria-checked")).toBe("true")
+      await expect(grade.getAttribute("aria-checked")).toBe("false")
+    })
+
+    await step("O marcado mostra o tique; o desmarcado, não", async () => {
+      // O visual do estado não pode depender só de cor: o tique é o que a
+      // pessoa vê, e o `aria-checked` é o que ela ouve.
+      const tique = (item: HTMLElement) =>
+        item.querySelector(".nds-dropdown-menu-item-indicator svg") !== null
+      await expect(tique(regua)).toBe(true)
+      await expect(tique(grade)).toBe(false)
+    })
+
+    await step("Desmarcar o que estava marcado mantém o menu aberto", async () => {
+      // Idempotente: o clique só acontece com a caixa ainda marcada.
+      if (regua.getAttribute("aria-checked") !== "false") {
+        await userEvent.click(regua)
+      }
+      await waitFor(async () => {
+        await expect(regua.getAttribute("aria-checked")).toBe("false")
+      })
+      await expect(document.body.contains(menu)).toBe(true)
+    })
   },
-};
+}

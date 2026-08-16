@@ -11,7 +11,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
@@ -39,16 +38,21 @@ function MenubarMenu({ ...props }: React.ComponentProps<typeof DropdownMenu>) {
   return <DropdownMenu data-slot="menubar-menu" {...props} />
 }
 
+/**
+ * Agrupa itens relacionados — e é OBRIGATÓRIO em volta de um `MenubarLabel`.
+ *
+ * O rótulo desta stack é o `Menu.GroupLabel` do Base UI, que existe para virar
+ * o `aria-labelledby` do grupo: sem um `Menu.Group` ancestral ele não encontra
+ * o contexto e LANÇA em tempo de render, derrubando a página inteira. Não é
+ * detalhe de estilo — é a diferença entre a docs page abrir e não abrir.
+ *
+ * (Nem toda stack exige o par: onde a lib aceita rótulo solto, ele é solto. A
+ * divergência é de API de framework, e fica registrada aqui.)
+ */
 function MenubarGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuGroup>) {
   return <DropdownMenuGroup data-slot="menubar-group" {...props} />
-}
-
-function MenubarPortal({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPortal>) {
-  return <DropdownMenuPortal data-slot="menubar-portal" {...props} />
 }
 
 function MenubarTrigger({
@@ -258,7 +262,6 @@ function MenubarSubContent({
 
 export {
   Menubar,
-  MenubarPortal,
   MenubarMenu,
   MenubarTrigger,
   MenubarContent,

@@ -1,18 +1,26 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+
+// Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
+// número escrito à mão no play.
+const ITENS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
+const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
   tags: ['navigation'],
   title: 'UI/Menubar/Variants',
   parameters: {
-    actions: { disable: true },
     layout: 'padded',
+    // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes do MenubarItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: a factory createMenubar (Vanilla) não tem prop `variant` nativo — o item destructive é montado manualmente com classes .nds-* aplicadas no <li role="menuitem">.',
+          'As duas ênfases de item dentro de um menu da barra. `default` é o item neutro; ' +
+          '`destructive` marca a ação irreversível com a cor de perigo, e existe para que ' +
+          '"Descartar alterações" não pareça "Salvar".',
       },
     },
   },
@@ -21,111 +29,115 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
+function embrulhar(filho: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.style.contain = 'layout';
   wrapper.className = 'nds-cluster nds-w-full nds-p-2';
   wrapper.dataset.justify = 'center';
   wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = '220px';
-  wrapper.appendChild(child);
+  wrapper.style.minHeight = '240px';
+  wrapper.appendChild(filho);
   return wrapper;
 }
 
-async function closeAfter(): Promise<void> {
-  await userEvent.keyboard('{Escape}');
-  await waitFor(() => {
-    if (document.querySelector('[data-slot="menubar"] button[aria-expanded="true"]')) {
-      throw new Error('menu ainda aberto');
-    }
+async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await waitFor(() => {
+    const p = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="menubar-content"]:not([hidden])',
+    );
+    if (!p) throw new Error('painel não abriu');
+    return p;
   });
 }
 
-function openFirstMenu(bar: HTMLElement): void {
-  queueMicrotask(() => {
-    const trigger = bar.querySelector<HTMLButtonElement>('button[aria-haspopup]');
-    trigger?.click();
-  });
-}
-
-// ─── Stories ──────────────────────────────────────────────────────────────────
+// ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => {
-    const bar = createMenubar([
-      {
-        label: 'Arquivo',
-        items: [
-          { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-          { type: 'item', label: 'Abrir',   shortcut: '⌘O' },
-          { type: 'item', label: 'Salvar',  shortcut: '⌘S' },
+  parameters: { covers: ['accessibility.item7'] },
+  render: () =>
+    embrulhar(
+      createMenubar(
+        [
+          { label: 'Arquivo', items: ITENS_NEUTROS.map((i) => ({ label: i })) },
+          { label: 'Editar', items: [{ label: 'Desfazer' }] },
         ],
-      },
-    ]);
-    bar.dataset.slot = 'menubar';
-    openFirstMenu(bar);
-    return wrap(bar);
-  },
-  play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Items default visíveis com role=menuitem', async () => {
-      await waitFor(async () => {
-        const menu = body.queryAllByRole('menu');
-        if (!menu.length) throw new Error('menu não aberto');
-      });
-      const items = document.querySelectorAll('[role="menu"] [role="menuitem"]');
-      await expect(items.length).toBe(3);
+        { defaultOpen: 0 },
+      ),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const painel = await esperarPainel(canvasElement);
+    const itens = within(painel).getAllByRole('menuitem');
+
+    await step('A variante default é escrita no markup', async () => {
+      await expect(itens).toHaveLength(ITENS_NEUTROS.length);
+      for (const item of itens) {
+        await expect(item.getAttribute('data-variant')).toBe('default');
+        await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
+      }
     });
-    await step('Limpa via ESC', closeAfter);
+
+    await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
+      await expect(getComputedStyle(itens[0]).color).toBe(getComputedStyle(painel).color);
+    });
+
+    await step('O painel é opaco', async () => {
+      // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
+      // painel só significa alguma coisa se o fundo for opaco: sobre um painel
+      // translúcido a razão medida é a do que estiver por baixo.
+      const fundo = getComputedStyle(painel).backgroundColor;
+      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
+      await expect(fundo.startsWith('rgba(')).toBe(false);
+    });
   },
 };
 
+// ─── Destructive ──────────────────────────────────────────────────────────────
+
 export const Destructive: Story = {
-  render: () => {
-    // Factory Vanilla não tem `variant` — adicionamos um item destructive
-    // após criar a barra, anexando o <li> manualmente ao panel do menu.
-    const bar = createMenubar([
-      {
-        label: 'Arquivo',
-        items: [
-          { type: 'item', label: 'Novo',    shortcut: '⌘N' },
-          { type: 'separator' },
+  parameters: { covers: ['visual.item5'] },
+  render: () =>
+    embrulhar(
+      createMenubar(
+        [
+          {
+            label: 'Arquivo',
+            items: [
+              { label: ITENS_COM_PERIGO[0] },
+              { type: 'separator' },
+              { label: ITENS_COM_PERIGO[1], variant: 'destructive' },
+            ],
+          },
         ],
-      },
-    ]);
-    bar.dataset.slot = 'menubar';
+        { defaultOpen: 0 },
+      ),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const painel = await esperarPainel(canvasElement);
+    const canvas = within(painel);
+    const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
+    const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });
 
-    // Localiza o panel (filho do trigger wrapper) e injeta item destructive.
-    const panel = bar.querySelector<HTMLElement>('[role="menu"]');
-    if (panel) {
-      const li = document.createElement('div');
-      li.setAttribute('role', 'menuitem');
-      li.setAttribute('tabindex', '0');
-      li.className = [
-        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
-        'text-destructive focus:bg-destructive/10 focus:text-destructive hover:bg-destructive/10 hover:text-destructive',
-      ].join(' ');
-      const text = document.createElement('span');
-      text.textContent = 'Excluir arquivo';
-      li.appendChild(text);
-      panel.appendChild(li);
-    }
-
-    openFirstMenu(bar);
-    return wrap(bar);
-  },
-  play: async ({ step }) => {
-    await step('Item destructive presente com classe text-destructive', async () => {
-      await waitFor(() => {
-        const panel = document.querySelector('[role="menu"]:not(.hidden)');
-        if (!panel) throw new Error('menu não aberto');
-      });
-      const items = document.querySelectorAll('[role="menu"]:not(.hidden) [role="menuitem"]');
-      const last = items[items.length - 1] as HTMLElement;
-      await expect(last).toHaveClass(/text-destructive/);
+    await step('A variante chega ao markup', async () => {
+      await expect(perigoso.getAttribute('data-variant')).toBe('destructive');
+      await expect(perigoso.getAttribute('data-slot')).toBe('menubar-item');
     });
-    await step('Limpa via ESC', closeAfter);
+
+    await step('A cor do texto distingue a ação irreversível', async () => {
+      // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
+      // chegasse, esta asserção pegaria a mesma cor do item neutro.
+      await expect(getComputedStyle(perigoso).color).not.toBe(getComputedStyle(neutro).color);
+    });
+
+    await step('O destaque não depende só da cor: o realce pinta o fundo', async () => {
+      // Critério 1.4.1 na prática — quem não distingue matiz precisa do fundo.
+      // O realce vem pelo FOCO, e não pelo ponteiro: `:hover` depende da posição
+      // real do mouse, que evento sintético não move — a asserção mediria sempre
+      // o estado de repouso. O teclado é o caminho que o CSS desta stack desenha.
+      const antes = getComputedStyle(perigoso).backgroundColor;
+      perigoso.focus();
+      await waitFor(async () => {
+        await expect(getComputedStyle(perigoso).backgroundColor).not.toBe(antes);
+      });
+    });
   },
 };

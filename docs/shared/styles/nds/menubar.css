@@ -1,24 +1,36 @@
 /*
  * ─── nds-menubar ────────────────────────────────────────────────────────────
  * Barra horizontal de menus suspensos (ex.: macOS / aplicativos desktop).
- * Cada trigger abre um panel ancorado abaixo.
+ * Cada gatilho abre um painel ancorado ao lado indicado por `data-side`.
  *
  *   <div class="nds-menubar" role="menubar">
  *     <div class="nds-menubar-menu">
  *       <button class="nds-menubar-trigger" role="menuitem"
- *               aria-haspopup="true" aria-expanded="false" data-state="closed">File</button>
- *       <div class="nds-menubar-panel" role="menu">
- *         <div class="nds-menubar-item" role="menuitem">
+ *               aria-haspopup="menu" aria-expanded="false" data-state="closed">File</button>
+ *       <div class="nds-menubar-panel nds-dropdown-menu-content" role="menu"
+ *            data-side="bottom" data-align="start">
+ *         <div class="nds-dropdown-menu-item" role="menuitem">
  *           <span>New</span>
- *           <span class="nds-menubar-shortcut">⌘N</span>
+ *           <span class="nds-dropdown-menu-shortcut">⌘N</span>
  *         </div>
- *         <div class="nds-menubar-separator" role="separator"></div>
+ *         <div class="nds-dropdown-menu-separator" role="separator"></div>
  *       </div>
  *     </div>
  *   </div>
  *
- * Tokens: --background, --popover, --popover-foreground, --accent,
- *         --accent-foreground, --muted, --muted-foreground, --border, --radius
+ * O MIOLO DO PAINEL NÃO MORA AQUI. Item, rótulo, separador, atalho, marcação,
+ * escolha única, recuo e variante destrutiva são os mesmos de qualquer menu do
+ * sistema e vivem em `dropdown-menu.css` — as cinco stacks compõem
+ * `.nds-dropdown-menu-*` dentro do painel do menubar. Uma segunda família de
+ * classes aqui significaria duas cópias do mesmo CSS, e uma delas sempre
+ * atrasada: foi assim que o calendar acumulou dois vocabulários paralelos.
+ *
+ * O que sobra neste arquivo é o que só o menubar tem: a barra, o gatilho na
+ * barra e a ANCORAGEM do painel — porque a stack sem lib headless posiciona o
+ * painel por CSS, e não por um positioner em JavaScript.
+ *
+ * Tokens: --background, --accent, --accent-foreground, --border, --radius,
+ *         --radius-sm, --spacing-*, --text-control, --z-popover
  */
 
 .nds-menubar {
@@ -39,7 +51,8 @@
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
 }
 
-/* ── Menu (wrapper de cada trigger + panel) ──────────────────────────────── */
+/* ── Menu (wrapper de cada gatilho + painel) ─────────────────────────────── */
+/* Também embrulha sub-gatilho + subpainel: é o bloco de referência da âncora. */
 .nds-menubar-menu {
   position: relative;
 }
@@ -84,83 +97,57 @@
   color: hsl(var(--accent-foreground));
 }
 
-/* ── Panel ───────────────────────────────────────────────────────────────── */
+/* ── Ancoragem do painel ─────────────────────────────────────────────────── */
+/*
+ * Só posição. O desenho do painel (fundo, borda, raio, sombra, recuo interno)
+ * vem de `.nds-dropdown-menu-content`, composto junto — nenhuma propriedade é
+ * declarada duas vezes, então não existe disputa de cascata entre os arquivos.
+ */
 .nds-menubar-panel {
   position: absolute;
-  top: 100%;
-  left: 0;
   z-index: var(--z-popover);
-  margin-top: var(--spacing-1);
-
-  min-width: 8rem;
-  padding: var(--spacing-1);
-  overflow: hidden;
-
-  background-color: hsl(var(--popover));
-  color: hsl(var(--popover-foreground));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
-  box-shadow: var(--elevation-md);
 }
 
-/* ── Item ────────────────────────────────────────────────────────────────── */
-.nds-menubar-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1-5, 0.375rem);
-
-  border-radius: var(--radius-sm); /* Ri = Re − inset (p-1) */
-  font-size: var(--text-control);
-  cursor: pointer;
-  user-select: none;
-  outline: 0;
-  transition: background-color var(--duration-fast), color var(--duration-fast);
+/*
+ * O painel do menubar HOSPEDA o submenu dentro de si.
+ *
+ * Nas stacks com lib headless o submenu vai para um portal; aqui a ancoragem é
+ * relativa, então o subpainel nasce como filho absoluto DESTE painel e sai da
+ * caixa dele. O `overflow-y: auto` que o painel de menu herda transforma isso
+ * em região rolável — e o axe reprova com `scrollable-region-focusable`, uma
+ * área que rola e cujos itens não são alcançáveis pelo Tab. Além do relatório,
+ * o submenu ficaria RECORTADO.
+ *
+ * Duas classes no seletor de propósito: a regra precisa vencer a de
+ * `dropdown-menu.css` independentemente da ordem em que as folhas entram.
+ */
+.nds-menubar-panel.nds-dropdown-menu-content {
+  overflow: visible;
 }
 
-.nds-menubar-item:focus,
-.nds-menubar-item:hover {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
+.nds-menubar-panel[data-side="bottom"] { top: 100%;    margin-top: var(--spacing-1); }
+.nds-menubar-panel[data-side="top"]    { bottom: 100%; margin-bottom: var(--spacing-1); }
+.nds-menubar-panel[data-side="right"]  { left: 100%;   margin-left: var(--spacing-1); }
+.nds-menubar-panel[data-side="left"]   { right: 100%;  margin-right: var(--spacing-1); }
 
-.nds-menubar-item[aria-disabled="true"] {
-  pointer-events: none;
-  opacity: 0.5;
-}
+/* Alinhamento no eixo PERPENDICULAR ao lado: horizontal para um painel que
+ * nasce acima ou abaixo, vertical para um que nasce à esquerda ou à direita. */
+.nds-menubar-panel[data-side="bottom"][data-align="start"],
+.nds-menubar-panel[data-side="top"][data-align="start"]   { left: 0; }
+.nds-menubar-panel[data-side="bottom"][data-align="center"],
+.nds-menubar-panel[data-side="top"][data-align="center"]  { left: 50%; transform: translateX(-50%); }
+.nds-menubar-panel[data-side="bottom"][data-align="end"],
+.nds-menubar-panel[data-side="top"][data-align="end"]     { right: 0; }
 
-/* ── Shortcut (atalho de teclado à direita) ──────────────────────────────── */
-.nds-menubar-shortcut {
-  margin-left: auto;
-  padding-left: var(--spacing-2);
-  font-size: var(--text-control-sm);
-  letter-spacing: 0.1em;
-  color: hsl(var(--muted-foreground));
-  opacity: 0.6;
-}
-
-/* ── Label (não-interativo) ──────────────────────────────────────────────── */
-.nds-menubar-label {
-  padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1-5, 0.375rem);
-  font-size: var(--text-control);
-  font-weight: var(--font-weight-semi-bold, 600);
-  color: hsl(var(--muted-foreground));
-}
-
-/* ── Separator ───────────────────────────────────────────────────────────── */
-.nds-menubar-separator {
-  height: 1px;
-  margin-inline: calc(var(--spacing-1) * -1);
-  margin-block: var(--spacing-1);
-  background-color: hsl(var(--muted));
-}
+.nds-menubar-panel[data-side="right"][data-align="start"],
+.nds-menubar-panel[data-side="left"][data-align="start"]  { top: 0; }
+.nds-menubar-panel[data-side="right"][data-align="center"],
+.nds-menubar-panel[data-side="left"][data-align="center"] { top: 50%; transform: translateY(-50%); }
+.nds-menubar-panel[data-side="right"][data-align="end"],
+.nds-menubar-panel[data-side="left"][data-align="end"]    { bottom: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .nds-menubar-trigger,
-  .nds-menubar-item {
+  .nds-menubar-trigger {
     transition: none;
   }
 }

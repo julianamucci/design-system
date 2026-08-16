@@ -8,11 +8,17 @@ import {
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<MenubarItemProps & {
-  class?: HTMLAttributes['class']
-  inset?: boolean
-  variant?: 'default' | 'destructive'
-}>()
+// `variant` com padrão explícito: sem ele o `data-variant` só aparecia no item
+// destrutivo, e o item neutro saía sem marcador nenhum — divergindo do markup
+// das outras stacks e deixando o CSS sem seletor para o estado padrão.
+const props = withDefaults(
+  defineProps<MenubarItemProps & {
+    class?: HTMLAttributes['class']
+    inset?: boolean
+    variant?: 'default' | 'destructive'
+  }>(),
+  { variant: 'default' },
+)
 
 const emits = defineEmits<MenubarItemEmits>()
 

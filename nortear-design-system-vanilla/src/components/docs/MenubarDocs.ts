@@ -62,6 +62,15 @@ function buildDemoMenubar(): HTMLElement {
         { type: 'item', label: 'Abrir',    shortcut: '⌘O' },
         { type: 'item', label: 'Salvar',   shortcut: '⌘S' },
         { type: 'separator' },
+        {
+          type: 'submenu',
+          label: 'Exportar',
+          items: [
+            { type: 'item', label: 'PDF' },
+            { type: 'item', label: 'CSV' },
+          ],
+        },
+        { type: 'separator' },
         { type: 'item', label: 'Sair',     shortcut: '⌘Q' },
       ],
     },
@@ -79,10 +88,11 @@ function buildDemoMenubar(): HTMLElement {
     {
       label: 'Exibir',
       items: [
-        { type: 'label', label: 'Aparência' },
-        { type: 'item',  label: 'Modo escuro' },
+        { type: 'label',    label: 'Aparência' },
+        { type: 'checkbox', label: 'Modo escuro' },
+        { type: 'checkbox', label: 'Mostrar régua', checked: true },
         { type: 'separator' },
-        { type: 'item',  label: 'Tela cheia', shortcut: 'F11' },
+        { type: 'item',     label: 'Tela cheia', shortcut: 'F11' },
       ],
     },
     {
@@ -90,6 +100,16 @@ function buildDemoMenubar(): HTMLElement {
       items: [
         { type: 'item', label: 'Buscar',     shortcut: '⌘F' },
         { type: 'item', label: 'Substituir', shortcut: '⌘H' },
+        { type: 'separator' },
+        {
+          type: 'radio-group',
+          value: 'system',
+          options: [
+            { value: 'light',  label: 'Tema claro' },
+            { value: 'dark',   label: 'Tema escuro' },
+            { value: 'system', label: 'Tema do sistema' },
+          ],
+        },
       ],
     },
   ]);
