@@ -69,7 +69,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TableArgs> }): 
             <th ndsTableHead>Fatura</th>
             <th ndsTableHead>Status</th>
             <th ndsTableHead>Método</th>
-            <th ndsTableHead>Valor</th>
+            <th ndsTableHead class="nds-text-right">Valor</th>
           </tr>
         </thead>
         <tbody ndsTableBody>
@@ -159,7 +159,7 @@ export const Playground: Story = {
               <th ndsTableHead>Fatura</th>
               <th ndsTableHead>Status</th>
               <th ndsTableHead>Método</th>
-              <th ndsTableHead>Valor</th>
+              <th ndsTableHead class="nds-text-right">Valor</th>
             </tr>
           </thead>
           <tbody ndsTableBody>

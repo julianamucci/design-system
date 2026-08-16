@@ -24,17 +24,20 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
-      <TableHead scope="col" class="w-[80px]">Ações</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
+      <!-- Sem largura cravada: a coluna se ajusta ao botão. `w-[80px]` era
+           classe morta, e uma medida em px não acompanharia o crescimento do
+           botão quando a pessoa aumenta a fonte do navegador. -->
+      <TableHead scope="col">Ações</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell class="text-right">{invoice.amount}</TableCell>
+        <TableCell class="nds-text-right">{invoice.amount}</TableCell>
         <TableCell>
           <Button
             variant="ghost"

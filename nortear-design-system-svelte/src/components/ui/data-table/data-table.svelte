@@ -495,6 +495,12 @@
                         class="nds-data-table-filter-input"
                       />
                     {/if}
+                  {:else}
+                    <!-- axe empty-table-header: o valor de um campo não entra no
+                         nome acessível da célula, então a coluna sem filtro
+                         chegaria ao leitor de tela como cabeçalho vazio. Vue,
+                         Vanilla e Angular já traziam este rótulo. -->
+                    <span class="nds-sr-only">Sem filtro</span>
                   {/if}
                 </TableHead>
               {/each}

@@ -23,16 +23,16 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow data-state={invoice.selected ? 'selected' : undefined}>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell class="text-right">{invoice.amount}</TableCell>
+        <TableCell class="nds-text-right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>

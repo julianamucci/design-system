@@ -60,10 +60,15 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+// `scope` nasce em "col" porque é o caso de longe mais comum e porque uma tabela
+// sem `scope` é uma grade muda: o leitor de tela lê os valores sem dizer de que
+// coluna vieram (WCAG 1.3.1). Quem tem cabeçalho de linha passa `scope="row"` e
+// sobrescreve — a forma nativa continua sendo a forma certa de escrever.
+function TableHead({ className, scope = "col", ...props }: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
+      scope={scope}
       className={cn(className)}
       {...props}
     />

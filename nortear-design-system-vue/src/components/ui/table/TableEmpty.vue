@@ -17,8 +17,11 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 <template>
   <TableRow>
+    <!-- `nds-table-empty`, e não a regra homônima do DataTable: são dois slugs,
+         e o empty state desta tabela é regra do `table.css`. A daqui já reserva
+         a altura, centraliza e apaga a cor. -->
     <TableCell
-      :class="cn( 'nds-data-table-empty', props.class, )"
+      :class="cn('nds-table-empty', props.class)"
       v-bind="delegatedProps"
     >
       <div

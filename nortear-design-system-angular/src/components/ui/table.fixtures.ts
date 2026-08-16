@@ -4,9 +4,11 @@
 // story: `export const FATURAS` dentro de um `*.stories.ts` viraria uma story
 // "Faturas" que não renderiza nada.
 //
-// São as mesmas cinco faturas das outras stacks de propósito: a regressão
-// visual do Chromatic compara a mesma tabela em cinco portas, e um dado
-// diferente viraria diff sem que nada tivesse mudado.
+// São cinco faturas com a mesma FORMA das outras stacks (mesmos identificadores,
+// mesma sequência de status), para a regressão visual comparar tabelas
+// equivalentes. Método de pagamento e o valor da última linha divergem de
+// propósito: a composição `FilterToolbar` busca por "boleto" esperando zero
+// resultados, e a `SortableHeaders` depende de o maior valor ser o #INV-004.
 
 export interface Fatura {
   id: string;

@@ -19,13 +19,17 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#if invoices.length === 0}
       <TableRow>
-        <TableCell colspan={4} class="h-24 text-center nds-text-muted-foreground">
+        <!-- `.nds-table-empty` é a regra compartilhada do estado vazio: reserva
+             a altura, centraliza e apaga a cor. Antes eram três classes soltas
+             (`h-24 text-center`) que não existem no CSS — a mensagem saía
+             encostada à esquerda e sem caixa. -->
+        <TableCell colspan={4} class="nds-table-empty">
           Nenhuma fatura encontrada.
         </TableCell>
       </TableRow>

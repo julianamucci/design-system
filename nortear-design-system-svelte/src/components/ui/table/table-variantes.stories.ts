@@ -6,13 +6,16 @@ import TableVarianteBasica from './TableVarianteBasica.svelte';
 import TableVarianteComRodape from './TableVarianteComRodape.svelte';
 import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
+import TableVarianteRolagemHorizontal from './TableVarianteRolagemHorizontal.svelte';
 
 const meta: Meta = {
   title: 'UI/Table/Variants',
   component: Table,
   tags: ['tables'],
   parameters: {
+    // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
+    actions: { disable: true },
   },
 };
 
@@ -20,74 +23,177 @@ export default meta;
 type Story = StoryObj;
 
 export const Basic: Story = {
+  parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => ({
     Component: TableVarianteBasica,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
-    await step('table presente com thead e tbody', async () => {
-      await expect(canvasElement.querySelector('table')).toBeInTheDocument();
-      await expect(canvasElement.querySelector('thead')).toBeInTheDocument();
-      await expect(canvasElement.querySelector('tbody')).toBeInTheDocument();
+    const canvas = within(canvasElement);
+
+    await step('A tabela é uma tabela, com as seções semânticas no lugar', async () => {
+      // functional.item1 — o que faz um leitor de tela anunciar "tabela, 4
+      // colunas" é a tag, não a classe. Uma grade montada com div passaria
+      // visualmente e sumiria da árvore de acessibilidade.
+      const tabela = canvas.getByRole('table');
+      await expect(tabela.tagName).toBe('TABLE');
+      await expect(tabela).toHaveClass('nds-table');
+      await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
+      await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
     });
-    await step('TableHead tem scope="col"', async () => {
-      const ths = canvasElement.querySelectorAll('th');
-      for (const th of ths) {
-        await expect(th).toHaveAttribute('scope', 'col');
+
+    await step('Uma linha por registro, quatro colunas por linha', async () => {
+      const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
+      await expect(linhas.length).toBe(5);
+      for (const linha of linhas) {
+        await expect(linha).toHaveAttribute('data-slot', 'table-row');
+        await expect(linha.querySelectorAll('td').length).toBe(4);
       }
+    });
+
+    await step('A coluna de valores alinha à direita, rótulo junto com os números', async () => {
+      // visual.item1 — é o caso de uso central de `nds-text-right`: número se lê
+      // pela unidade, alinhado à direita, e o rótulo tem de acompanhar. A
+      // asserção é do alinhamento COMPUTADO, não da classe: por muito tempo o
+      // seletor de `th` do CSS compartilhado vencia a utilitária e a classe era
+      // inerte — verde no markup, torto na tela.
+      const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
+      const valorTh = ths[ths.length - 1];
+      await expect(valorTh).toHaveTextContent('Valor');
+      await expect(getComputedStyle(valorTh).textAlign).toBe('right');
+      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      // A coluna descritiva continua à esquerda: o alinhamento é escolha por
+      // coluna, não estilo da tabela.
+      await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
+    });
+
+    await step('A legenda visível é o nome acessível da tabela', async () => {
+      const tabela = canvas.getByRole('table', { name: /faturas recentes/ });
+      const caption = tabela.querySelector<HTMLElement>('caption')!;
+      await expect(caption.classList.contains('nds-sr-only')).toBe(false);
     });
   },
 };
 
 export const WithFooter: Story = {
+  parameters: { covers: ['functional.item3', 'visual.item3'] },
   render: () => ({
     Component: TableVarianteComRodape,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
-    await step('tfoot presente', async () => {
-      const tfoot = canvasElement.querySelector('tfoot');
-      await expect(tfoot).toBeInTheDocument();
+    await step('O rodapé fica depois do corpo e cobre as três primeiras colunas', async () => {
+      // functional.item3 — o `colspan` é o que faz o rótulo "Total" ocupar a
+      // largura das colunas descritivas e o valor cair sob a coluna certa.
+      const tabela = canvasElement.querySelector<HTMLElement>('table')!;
+      const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
+      await expect(tfoot).toHaveAttribute('data-slot', 'table-footer');
+      const posicao = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
+      // O total é a soma das linhas do corpo — número escrito à mão que não
+      // fecha é defeito que só a conta pega.
+      await expect(tfoot).toHaveTextContent('R$ 1.400,00');
+      await expect(tabela.querySelectorAll('tbody tr').length).toBe(5);
     });
-    await step('Total visível no rodapé', async () => {
-      const canvas = within(canvasElement);
-      await expect(canvas.getByText('Total')).toBeVisible();
+
+    await step('O rodapé se distingue do corpo por fundo próprio', async () => {
+      // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
+      // a distinção o sumário some no meio dos registros.
+      const linhaRodape = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
+      const linhaCorpo = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
+        getComputedStyle(linhaCorpo).backgroundColor,
+      );
     });
   },
 };
 
 export const CaptionSrOnly: Story = {
+  parameters: { covers: ['functional.item6', 'accessibility.item2'] },
   render: () => ({
     Component: TableVarianteCaptionSrOnly,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
-    await step('caption fica no leitor de tela mas fora da tela', async () => {
-      const caption = canvasElement.querySelector('caption')!;
-      await expect(caption).toBeInTheDocument();
-      // Antes assertava toHaveClass('sr-only') — classe que nao existe no CSS.
-      // A assercao passava enquanto a caption estava VISIVEL, guardando o bug.
-      // Agora verifica o efeito: continua no DOM (logo, anunciada) e ocupa area
-      // desprezivel na tela.
+    const canvas = within(canvasElement);
+
+    await step('A legenda está no DOM e fora da tela', async () => {
+      // functional.item6 — `display: none` tiraria também da árvore de
+      // acessibilidade; `nds-sr-only` recorta a caixa e mantém a leitura.
+      // A asserção é do EFEITO: assertar a classe deixava passar o caso em que
+      // ela existe no markup e não existe no CSS.
+      const caption = canvasElement.querySelector<HTMLElement>('caption')!;
+      await expect(caption).toHaveTextContent('Lista de faturas recentes');
+      await expect(getComputedStyle(caption).position).toBe('absolute');
       const r = caption.getBoundingClientRect();
-      await expect(caption).toHaveTextContent(/Lista de faturas/);
       await expect(Math.max(r.width, r.height)).toBeLessThanOrEqual(2);
+    });
+
+    await step('A tabela continua nomeada para o leitor de tela', async () => {
+      // accessibility.item2 — é isto que a legenda invisível existe para
+      // garantir; sem ela o leitor anuncia só "tabela".
+      await expect(canvas.getByRole('table', { name: /Lista de faturas recentes/ })).toBeTruthy();
     });
   },
 };
 
 export const WithRowActions: Story = {
+  parameters: { covers: ['accessibility.item3', 'visual.item4'] },
   render: () => ({
     Component: TableVarianteComAcoes,
     props: {},
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Botões de ação com aria-label contextual', async () => {
-      const buttons = canvasElement.querySelectorAll('button[aria-label]');
-      await expect(buttons.length).toBeGreaterThan(0);
-      for (const btn of buttons) {
-        await expect(btn.getAttribute('aria-label')).toMatch(/fatura/i);
+    const canvas = within(canvasElement);
+
+    await step('Cada ação diz a qual fatura pertence', async () => {
+      // accessibility.item3 — três botões chamados "Ações" seriam três
+      // controles indistinguíveis na lista de elementos do leitor de tela.
+      const botoes = canvas.getAllByRole('button');
+      await expect(botoes.length).toBe(3);
+      for (const botao of botoes) {
+        await expect(botao.getAttribute('aria-label')).toMatch(/Ações para fatura #INV-\d{3}/);
+        // O botão mora dentro da própria linha do registro que ele edita.
+        const id = botao.getAttribute('aria-label')!.replace('Ações para fatura ', '');
+        await expect(botao.closest('tr')).toHaveTextContent(id);
       }
+    });
+
+    await step('O botão de ação é discreto (variante ghost)', async () => {
+      // visual.item4 — a coluna de ações não pode competir com o dado; o ghost
+      // é o que o conteúdo compartilhado documenta para ação por linha.
+      const botao = canvas.getAllByRole('button')[0];
+      await expect(botao).toHaveClass('nds-button', 'nds-button-ghost');
+    });
+  },
+};
+
+export const HorizontalScroll: Story = {
+  parameters: { covers: ['functional.item5'] },
+  render: () => ({
+    Component: TableVarianteRolagemHorizontal,
+    props: {},
+  }),
+  play: async ({ canvasElement, step }) => {
+    await step('Quem rola é o container, e ele aceita foco', async () => {
+      // functional.item5 — sem o wrapper a tabela empurraria a página inteira
+      // para o lado; sem o tabindex a rolagem existiria só para o mouse
+      // (axe scrollable-region-focusable, WCAG 2.1.1).
+      const wrapper = canvasElement.querySelector<HTMLElement>('[data-slot="table-container"]')!;
+      await expect(wrapper).toHaveClass('nds-table-wrapper');
+      await expect(wrapper).toHaveAttribute('tabindex', '0');
+      await expect(getComputedStyle(wrapper).overflowX).toBe('auto');
+      await expect(wrapper.scrollWidth).toBeGreaterThan(wrapper.clientWidth);
+    });
+
+    await step('A rolagem chega ao fim da tabela', async () => {
+      const wrapper = canvasElement.querySelector<HTMLElement>('[data-slot="table-container"]')!;
+      wrapper.focus();
+      await expect(wrapper).toHaveFocus();
+      wrapper.scrollLeft = wrapper.scrollWidth;
+      await expect(wrapper.scrollLeft).toBeGreaterThan(0);
     });
   },
 };

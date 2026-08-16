@@ -147,7 +147,7 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" style="text-align: right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
@@ -156,7 +156,7 @@
         <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell style="text-align: right">{invoice.amount}</TableCell>
+        <TableCell class="nds-text-right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>
@@ -169,7 +169,7 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" style="text-align: right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
@@ -178,14 +178,14 @@
         <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell style="text-align: right">{invoice.amount}</TableCell>
+        <TableCell class="nds-text-right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>
   <TableFooter>
     <TableRow>
       <TableCell colspan={3}>Total</TableCell>
-      <TableCell style="text-align: right">R$ 1.000,00</TableCell>
+      <TableCell class="nds-text-right">R$ 1.000,00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>`;
@@ -235,7 +235,7 @@
   const codeEmptyState = `<TableBody>
   {#if invoices.length === 0}
     <TableRow>
-      <TableCell colspan={4} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
+      <TableCell colspan={4} class="nds-table-empty">
         Nenhuma fatura encontrada.
       </TableCell>
     </TableRow>
@@ -253,10 +253,10 @@
   const codeLoading = `<TableBody>
   {#each skeletonRows as row (row)}
     <TableRow>
-      <TableCell><Skeleton style="height: 1rem; width: 5rem" /></TableCell>
-      <TableCell><Skeleton style="height: 1rem; width: 4rem" /></TableCell>
-      <TableCell><Skeleton style="height: 1rem; width: 8rem" /></TableCell>
-      <TableCell><Skeleton style="height: 1rem; width: 4rem; margin-left: auto" /></TableCell>
+      <TableCell><Skeleton data-shape="text" data-width="1-2" /></TableCell>
+      <TableCell><Skeleton data-shape="text" data-width="1-3" /></TableCell>
+      <TableCell><Skeleton data-shape="text" data-width="3-4" /></TableCell>
+      <TableCell><Skeleton class="nds-spacer-start" data-shape="text" data-width="1-3" /></TableCell>
     </TableRow>
   {/each}
 </TableBody>`;
@@ -317,7 +317,7 @@ interface TableRowProps {
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
-              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -326,14 +326,14 @@ interface TableRowProps {
                 <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
                 <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
                 <TableCell>{$tStore(`demonstration.labels.${invoices[i].method}`)}</TableCell>
-                <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                <TableCell class="nds-text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
               </TableRow>
             {/each}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colspan={3}>{$tStore('demonstration.labels.total')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -485,7 +485,7 @@ interface TableRowProps {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colspan={2} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
+              <TableCell colspan={2} class="nds-table-empty">
                 {$tStore('demonstration.labels.emptyState')}
               </TableCell>
             </TableRow>
@@ -532,19 +532,19 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount002')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -557,25 +557,25 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
               <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>{$tStore('demonstration.labels.pending')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.amount002')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount002')}</TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colspan={2}>{$tStore('demonstration.labels.total')}</TableCell>
-              <TableCell style="text-align: right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
+              <TableCell class="nds-text-right">{$tStore('demonstration.labels.totalAmount')}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -590,14 +590,14 @@ interface TableRowProps {
               <TableRow>
                 <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
                 <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-                <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+                <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
                 <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>{$tStore('demonstration.labels.paid')}</TableCell>
-                <TableCell style="text-align: right">{$tStore('demonstration.labels.amount001')}</TableCell>
+                <TableCell class="nds-text-right">{$tStore('demonstration.labels.amount001')}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -611,8 +611,8 @@ interface TableRowProps {
             <TableRow>
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
-              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
-              <TableHead scope="col" style="width: 80px">{$tStore('demonstration.labels.actions')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col">{$tStore('demonstration.labels.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -620,7 +620,7 @@ interface TableRowProps {
               <TableRow>
                 <TableCell class="nds-font-medium">{$tStore(`demonstration.labels.${key}`)}</TableCell>
                 <TableCell>{$tStore(`demonstration.labels.${invoices[i].status}`)}</TableCell>
-                <TableCell style="text-align: right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
+                <TableCell class="nds-text-right">{$tStore(`demonstration.labels.${invoices[i].amount}`)}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -644,12 +644,12 @@ interface TableRowProps {
               <TableHead scope="col">{$tStore('demonstration.labels.invoice')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.status')}</TableHead>
               <TableHead scope="col">{$tStore('demonstration.labels.method')}</TableHead>
-              <TableHead scope="col" style="text-align: right">{$tStore('demonstration.labels.amount')}</TableHead>
+              <TableHead scope="col" class="nds-text-right">{$tStore('demonstration.labels.amount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colspan={4} class="nds-text-muted-foreground" style="height: 6rem; text-align: center">
+              <TableCell colspan={4} class="nds-table-empty">
                 {$tStore('demonstration.labels.emptyState')}
               </TableCell>
             </TableRow>
@@ -677,7 +677,7 @@ interface TableRowProps {
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
         <TableHead scope="col">Status</TableHead>
-        <TableHead scope="col" style="text-align: right">Valor</TableHead>
+        <TableHead scope="col" class="nds-text-right">Valor</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -685,7 +685,7 @@ interface TableRowProps {
         <TableRow>
           <TableCell>{invoice.id}</TableCell>
           <TableCell>{invoice.status}</TableCell>
-          <TableCell style="text-align: right">{invoice.amount}</TableCell>
+          <TableCell class="nds-text-right">{invoice.amount}</TableCell>
         </TableRow>
       {/each}
     </TableBody>
@@ -698,7 +698,7 @@ interface TableRowProps {
             description: $tStore('variants.compositions.sortableHeaders.description'),
             useWhen: $tStore('variants.compositions.sortableHeaders.use'),
             code: `<TableHead scope="col" aria-sort="ascending">
-  <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
+  <Button variant="ghost" size="sm">
     Fatura
     <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
   </Button>
@@ -757,19 +757,19 @@ interface TableRowProps {
               <TableRow>
                 <TableHead scope="col">Fatura</TableHead>
                 <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" style="text-align: right">Valor</TableHead>
+                <TableHead scope="col" class="nds-text-right">Valor</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
                 <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell style="text-align: right">R$ 250,00</TableCell>
+                <TableCell class="nds-text-right">R$ 250,00</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell class="nds-font-medium">#INV-002</TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell style="text-align: right">R$ 150,00</TableCell>
+                <TableCell class="nds-text-right">R$ 150,00</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -782,19 +782,19 @@ interface TableRowProps {
           <TableHeader>
             <TableRow>
               <TableHead scope="col" aria-sort="ascending">
-                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
+                <Button variant="ghost" size="sm">
                   Fatura
                   <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
               </TableHead>
               <TableHead scope="col" aria-sort="none">
-                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
+                <Button variant="ghost" size="sm">
                   Status
                   <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
               </TableHead>
-              <TableHead scope="col" aria-sort="none" style="text-align: right">
-                <Button variant="ghost" size="sm" style="margin-left: -0.5rem; height: 2rem">
+              <TableHead scope="col" aria-sort="none" class="nds-text-right">
+                <Button variant="ghost" size="sm">
                   Valor
                   <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
                 </Button>
@@ -805,12 +805,12 @@ interface TableRowProps {
             <TableRow>
               <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell style="text-align: right">R$ 250,00</TableCell>
+              <TableCell class="nds-text-right">R$ 250,00</TableCell>
             </TableRow>
             <TableRow>
               <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell style="text-align: right">R$ 150,00</TableCell>
+              <TableCell class="nds-text-right">R$ 150,00</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -821,12 +821,12 @@ interface TableRowProps {
           <TableCaption class="nds-sr-only">Faturas com seleção</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col" style="width: 2.5rem">
+              <TableHead scope="col">
                 <Checkbox aria-label="Selecionar todas as linhas" />
               </TableHead>
               <TableHead scope="col">Fatura</TableHead>
               <TableHead scope="col">Status</TableHead>
-              <TableHead scope="col" style="text-align: right">Valor</TableHead>
+              <TableHead scope="col" class="nds-text-right">Valor</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -836,7 +836,7 @@ interface TableRowProps {
               </TableCell>
               <TableCell class="nds-font-medium">#INV-001</TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell style="text-align: right">R$ 250,00</TableCell>
+              <TableCell class="nds-text-right">R$ 250,00</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
@@ -844,7 +844,7 @@ interface TableRowProps {
               </TableCell>
               <TableCell class="nds-font-medium">#INV-002</TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell style="text-align: right">R$ 150,00</TableCell>
+              <TableCell class="nds-text-right">R$ 150,00</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -858,19 +858,19 @@ interface TableRowProps {
               <TableRow>
                 <TableHead scope="col">Fatura</TableHead>
                 <TableHead scope="col">Status</TableHead>
-                <TableHead scope="col" style="text-align: right">Valor</TableHead>
+                <TableHead scope="col" class="nds-text-right">Valor</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
                 <TableCell class="nds-font-medium">#INV-001</TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell style="text-align: right">R$ 250,00</TableCell>
+                <TableCell class="nds-text-right">R$ 250,00</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell class="nds-font-medium">#INV-002</TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell style="text-align: right">R$ 150,00</TableCell>
+                <TableCell class="nds-text-right">R$ 150,00</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -1008,14 +1008,14 @@ interface TableRowProps {
           description: $tStore('tokens.table.description'),
         }}
         items={[
-          { token: 'border-b',                          value: 'TableHeader / TableBody', description: $tStore('tokens.items.borderB')          },
-          { token: 'nds-bg-muted-50',                       value: 'TableFooter / TableRow',  description: $tStore('tokens.items.bgMuted')           },
-          { token: 'data-[state=selected]:bg-muted',    value: 'TableRow',                description: $tStore('tokens.items.bgMutedSelected')   },
-          { token: 'nds-text-muted-foreground',             value: 'TableCaption',            description: $tStore('tokens.items.textMuted')         },
-          { token: 'font-medium',                       value: 'TableHead / TableFooter', description: $tStore('tokens.items.fontMedium')        },
-          { token: 'h-10',                              value: 'TableHead',               description: $tStore('tokens.items.h10')               },
-          { token: 'p-2',                               value: 'TableCell',               description: $tStore('tokens.items.p2')                },
-          { token: 'caption-bottom',                    value: 'Table',                   description: $tStore('tokens.items.captionBottom')     },
+          { token: '--border',                          value: 'TableHeader / TableBody', description: $tStore('tokens.items.borderB')          },
+          { token: '--muted',                       value: 'TableFooter / TableRow',  description: $tStore('tokens.items.bgMuted')           },
+          { token: '--muted',    value: 'TableRow',                description: $tStore('tokens.items.bgMutedSelected')   },
+          { token: '--muted-foreground',             value: 'TableCaption',            description: $tStore('tokens.items.textMuted')         },
+          { token: '--font-weight-medium',                       value: 'TableHead / TableFooter', description: $tStore('tokens.items.fontMedium')        },
+          { token: '--spacing-10',                              value: 'TableHead',               description: $tStore('tokens.items.h10')               },
+          { token: '--spacing-2',                               value: 'TableCell',               description: $tStore('tokens.items.p2')                },
+          { token: 'caption-side',                    value: 'Table',                   description: $tStore('tokens.items.captionBottom')     },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeTokenCustomization}

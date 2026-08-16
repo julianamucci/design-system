@@ -46,9 +46,22 @@ export function createTableRow(extraClass?: string): HTMLTableRowElement {
   return tr;
 }
 
-export function createTableHead(text: string, extraClass?: string): HTMLTableCellElement {
+/**
+ * @param scope Relação que o cabeçalho declara. Nasce em `'col'` porque uma
+ * tabela sem `scope` é uma grade muda: o leitor de tela lê os valores sem dizer
+ * de que coluna vieram (WCAG 1.3.1). Cabeçalho de linha passa `'row'`.
+ *
+ * O default está na factory, e não em cada chamada, porque era exatamente o que
+ * cada story tinha de lembrar de escrever à mão — e a docs page não lembrava.
+ */
+export function createTableHead(
+  text: string,
+  extraClass?: string,
+  scope: 'col' | 'row' | 'colgroup' | 'rowgroup' = 'col',
+): HTMLTableCellElement {
   const th = document.createElement('th');
   if (extraClass) th.className = extraClass;
+  th.setAttribute('scope', scope);
   th.textContent = text;
   return th;
 }

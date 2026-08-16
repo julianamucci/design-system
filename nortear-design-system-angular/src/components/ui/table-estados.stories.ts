@@ -148,7 +148,7 @@ export const SelectedRow: Story = {
               <th ndsTableHead>Fatura</th>
               <th ndsTableHead>Status</th>
               <th ndsTableHead>Método</th>
-              <th ndsTableHead>Valor</th>
+              <th ndsTableHead class="nds-text-right">Valor</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
@@ -210,6 +210,7 @@ const LINHAS_ESQUELETO = [1, 2, 3];
 
 export const Loading: Story = {
   parameters: {
+    covers: ['functional.item7', 'visual.item6'],
     docs: {
       description: {
         story:

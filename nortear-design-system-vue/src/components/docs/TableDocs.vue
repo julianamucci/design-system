@@ -167,14 +167,14 @@ const codeBasic = `<Table>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
-      <TableHead scope="col" style="text-align: right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell class="nds-font-medium">#INV-001</TableCell>
       <TableCell>Pago</TableCell>
-      <TableCell style="text-align: right">R$ 250,00</TableCell>
+      <TableCell class="nds-text-right">R$ 250,00</TableCell>
     </TableRow>
   </TableBody>
 </Table>`;
@@ -184,19 +184,19 @@ const codeWithFooter = `<Table>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
-      <TableHead scope="col" style="text-align: right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell>#INV-001</TableCell>
-      <TableCell style="text-align: right">R$ 250,00</TableCell>
+      <TableCell class="nds-text-right">R$ 250,00</TableCell>
     </TableRow>
   </TableBody>
   <TableFooter>
     <TableRow>
       <TableCell>Total</TableCell>
-      <TableCell style="text-align: right">R$ 250,00</TableCell>
+      <TableCell class="nds-text-right">R$ 250,00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>`;
@@ -206,13 +206,13 @@ const codeWithSrOnlyCaption = `<Table>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
-      <TableHead scope="col" style="text-align: right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell>#INV-001</TableCell>
-      <TableCell style="text-align: right">R$ 250,00</TableCell>
+      <TableCell class="nds-text-right">R$ 250,00</TableCell>
     </TableRow>
   </TableBody>
 </Table>`;
@@ -222,13 +222,13 @@ const codeWithActions = `<Table>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>
-      <TableHead scope="col" style="text-align: right">Ações</TableHead>
+      <TableHead scope="col" class="nds-text-right">Ações</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell>#INV-001</TableCell>
-      <TableCell style="text-align: right">
+      <TableCell class="nds-text-right">
         <Button variant="ghost" size="sm" aria-label="Ações para fatura #INV-001">
           Ações
         </Button>
@@ -324,14 +324,14 @@ const codeCompFilterableToolbar = `<div class="nds-stack" data-spacing="sm">
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
         <TableHead scope="col">Status</TableHead>
-        <TableHead scope="col" style="text-align: right">Valor</TableHead>
+        <TableHead scope="col" class="nds-text-right">Valor</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       <TableRow v-for="invoice in filtered" :key="invoice.id">
         <TableCell>{{ invoice.id }}</TableCell>
         <TableCell>{{ invoice.status }}</TableCell>
-        <TableCell style="text-align: right">{{ invoice.amount }}</TableCell>
+        <TableCell class="nds-text-right">{{ invoice.amount }}</TableCell>
       </TableRow>
     </TableBody>
   </Table>
@@ -341,13 +341,13 @@ const codeCompSortableHeaders = `<Table>
   <TableHeader>
     <TableRow>
       <TableHead scope="col" aria-sort="ascending">
-        <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
+        <Button variant="ghost" size="sm">
           Fatura
           <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
       <TableHead scope="col" aria-sort="none">
-        <Button variant="ghost" size="sm" style="margin-left: -0.5rem">
+        <Button variant="ghost" size="sm">
           Valor
           <ArrowUpDown class="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
@@ -360,7 +360,7 @@ const codeCompSortableHeaders = `<Table>
 const codeCompSelectableRows = `<Table>
   <TableHeader>
     <TableRow>
-      <TableHead scope="col" style="width: 2.5rem">
+      <TableHead scope="col">
         <Checkbox aria-label="Selecionar todas as linhas" />
       </TableHead>
       <TableHead scope="col">Fatura</TableHead>
@@ -477,14 +477,14 @@ const tableEmptyPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: 'border-b',                       value: 'TableHeader / TableBody', description: stripHtml(tContent('tokens.items.borderB'))       },
-  { token: 'nds-bg-muted-50',                    value: 'TableFooter / TableRow',  description: stripHtml(tContent('tokens.items.bgMuted'))        },
-  { token: 'data-[state=selected]:bg-muted', value: 'TableRow',               description: stripHtml(tContent('tokens.items.bgMutedSelected')) },
-  { token: 'nds-text-muted-foreground',          value: 'TableCaption',            description: stripHtml(tContent('tokens.items.textMuted'))       },
-  { token: 'font-medium',                    value: 'TableHead / TableFooter', description: stripHtml(tContent('tokens.items.fontMedium'))      },
-  { token: 'h-10',                           value: 'TableHead',               description: stripHtml(tContent('tokens.items.h10'))             },
-  { token: 'p-2',                            value: 'TableCell',               description: stripHtml(tContent('tokens.items.p2'))              },
-  { token: 'caption-bottom',                 value: 'TableCaption',            description: stripHtml(tContent('tokens.items.captionBottom'))   },
+  { token: '--border',                       value: 'TableHeader / TableBody', description: stripHtml(tContent('tokens.items.borderB'))       },
+  { token: '--muted',                    value: 'TableFooter / TableRow',  description: stripHtml(tContent('tokens.items.bgMuted'))        },
+  { token: '--muted', value: 'TableRow',               description: stripHtml(tContent('tokens.items.bgMutedSelected')) },
+  { token: '--muted-foreground',          value: 'TableCaption',            description: stripHtml(tContent('tokens.items.textMuted'))       },
+  { token: '--font-weight-medium',                    value: 'TableHead / TableFooter', description: stripHtml(tContent('tokens.items.fontMedium'))      },
+  { token: '--spacing-10',                           value: 'TableHead',               description: stripHtml(tContent('tokens.items.h10'))             },
+  { token: '--spacing-2',                            value: 'TableCell',               description: stripHtml(tContent('tokens.items.p2'))              },
+  { token: 'caption-side',                 value: 'TableCaption',            description: stripHtml(tContent('tokens.items.captionBottom'))   },
 ]);
 
 const keyboardItems = computed(() => [
@@ -579,7 +579,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 {{ tContent('demonstration.labels.amount') }}
               </TableHead>
@@ -592,7 +592,7 @@ const visualTestItems = computed(() => [
               </TableCell>
               <TableCell>{{ tContent('demonstration.labels.paid') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.creditCard') }}</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.amount001') }}
               </TableCell>
             </TableRow>
@@ -602,7 +602,7 @@ const visualTestItems = computed(() => [
               </TableCell>
               <TableCell>{{ tContent('demonstration.labels.pending') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.bankTransfer') }}</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.amount002') }}
               </TableCell>
             </TableRow>
@@ -612,7 +612,7 @@ const visualTestItems = computed(() => [
               </TableCell>
               <TableCell>{{ tContent('demonstration.labels.canceled') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.pix') }}</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.amount003') }}
               </TableCell>
             </TableRow>
@@ -622,7 +622,7 @@ const visualTestItems = computed(() => [
               </TableCell>
               <TableCell>{{ tContent('demonstration.labels.paid') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.creditCard') }}</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.amount004') }}
               </TableCell>
             </TableRow>
@@ -632,17 +632,17 @@ const visualTestItems = computed(() => [
               </TableCell>
               <TableCell>{{ tContent('demonstration.labels.pending') }}</TableCell>
               <TableCell>{{ tContent('demonstration.labels.pix') }}</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.amount005') }}
               </TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell :col-span="3">
+              <TableCell colspan="3">
                 {{ tContent('demonstration.labels.total') }}
               </TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 {{ tContent('demonstration.labels.totalAmount') }}
               </TableCell>
             </TableRow>
@@ -724,7 +724,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Valor
               </TableHead>
@@ -733,7 +733,7 @@ const visualTestItems = computed(() => [
           <TableBody>
             <TableRow>
               <TableCell>#INV-001</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -745,7 +745,7 @@ const visualTestItems = computed(() => [
           <TableHeader>
             <TableRow>
               <TableHead>Fatura</TableHead>
-              <TableHead style="text-align: right">
+              <TableHead class="nds-text-right">
                 Valor
               </TableHead>
             </TableRow>
@@ -753,7 +753,7 @@ const visualTestItems = computed(() => [
           <TableBody>
             <TableRow>
               <TableCell>#INV-001</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -817,7 +817,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Valor
               </TableHead>
@@ -829,7 +829,7 @@ const visualTestItems = computed(() => [
                 #INV-001
               </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -838,7 +838,7 @@ const visualTestItems = computed(() => [
                 #INV-002
               </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 150,00
               </TableCell>
             </TableRow>
@@ -856,7 +856,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Valor
               </TableHead>
@@ -867,7 +867,7 @@ const visualTestItems = computed(() => [
               <TableCell class="nds-font-medium">
                 #INV-001
               </TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -875,7 +875,7 @@ const visualTestItems = computed(() => [
               <TableCell class="nds-font-medium">
                 #INV-002
               </TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 150,00
               </TableCell>
             </TableRow>
@@ -883,7 +883,7 @@ const visualTestItems = computed(() => [
           <TableFooter>
             <TableRow>
               <TableCell>Total</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 400,00
               </TableCell>
             </TableRow>
@@ -907,7 +907,7 @@ const visualTestItems = computed(() => [
                 </TableHead>
                 <TableHead
                   scope="col"
-                  style="text-align: right"
+                  class="nds-text-right"
                 >
                   Valor
                 </TableHead>
@@ -918,7 +918,7 @@ const visualTestItems = computed(() => [
                 <TableCell class="nds-font-medium">
                   #INV-001
                 </TableCell>
-                <TableCell style="text-align: right">
+                <TableCell class="nds-text-right">
                   R$ 250,00
                 </TableCell>
               </TableRow>
@@ -937,7 +937,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Ações
               </TableHead>
@@ -948,7 +948,7 @@ const visualTestItems = computed(() => [
               <TableCell class="nds-font-medium">
                 #INV-001
               </TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -962,7 +962,7 @@ const visualTestItems = computed(() => [
               <TableCell class="nds-font-medium">
                 #INV-002
               </TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -989,7 +989,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Valor
               </TableHead>
@@ -1053,7 +1053,7 @@ const visualTestItems = computed(() => [
                 </TableHead>
                 <TableHead
                   scope="col"
-                  style="text-align: right"
+                  class="nds-text-right"
                 >
                   Valor
                 </TableHead>
@@ -1065,7 +1065,7 @@ const visualTestItems = computed(() => [
                   #INV-001
                 </TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell style="text-align: right">
+                <TableCell class="nds-text-right">
                   R$ 250,00
                 </TableCell>
               </TableRow>
@@ -1074,7 +1074,7 @@ const visualTestItems = computed(() => [
                   #INV-002
                 </TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell style="text-align: right">
+                <TableCell class="nds-text-right">
                   R$ 150,00
                 </TableCell>
               </TableRow>
@@ -1097,7 +1097,7 @@ const visualTestItems = computed(() => [
                 <Button
                   variant="ghost"
                   size="sm"
-                  style="margin-left: -0.5rem; height: 2rem"
+                 
                 >
                   Fatura
                   <ArrowUpDown
@@ -1113,7 +1113,7 @@ const visualTestItems = computed(() => [
                 <Button
                   variant="ghost"
                   size="sm"
-                  style="margin-left: -0.5rem; height: 2rem"
+                 
                 >
                   Status
                   <ArrowUpDown
@@ -1125,12 +1125,12 @@ const visualTestItems = computed(() => [
               <TableHead
                 scope="col"
                 aria-sort="none"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 <Button
                   variant="ghost"
                   size="sm"
-                  style="margin-left: -0.5rem; height: 2rem"
+                 
                 >
                   Valor
                   <ArrowUpDown
@@ -1147,7 +1147,7 @@ const visualTestItems = computed(() => [
                 #INV-001
               </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -1156,7 +1156,7 @@ const visualTestItems = computed(() => [
                 #INV-002
               </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 150,00
               </TableCell>
             </TableRow>
@@ -1173,7 +1173,7 @@ const visualTestItems = computed(() => [
             <TableRow>
               <TableHead
                 scope="col"
-                style="width: 2.5rem"
+               
               >
                 <Checkbox aria-label="Selecionar todas as linhas" />
               </TableHead>
@@ -1185,7 +1185,7 @@ const visualTestItems = computed(() => [
               </TableHead>
               <TableHead
                 scope="col"
-                style="text-align: right"
+                class="nds-text-right"
               >
                 Valor
               </TableHead>
@@ -1203,7 +1203,7 @@ const visualTestItems = computed(() => [
                 #INV-001
               </TableCell>
               <TableCell>Pago</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 250,00
               </TableCell>
             </TableRow>
@@ -1215,7 +1215,7 @@ const visualTestItems = computed(() => [
                 #INV-002
               </TableCell>
               <TableCell>Pendente</TableCell>
-              <TableCell style="text-align: right">
+              <TableCell class="nds-text-right">
                 R$ 150,00
               </TableCell>
             </TableRow>
@@ -1242,7 +1242,7 @@ const visualTestItems = computed(() => [
                 </TableHead>
                 <TableHead
                   scope="col"
-                  style="text-align: right"
+                  class="nds-text-right"
                 >
                   Valor
                 </TableHead>
@@ -1254,7 +1254,7 @@ const visualTestItems = computed(() => [
                   #INV-001
                 </TableCell>
                 <TableCell>Pago</TableCell>
-                <TableCell style="text-align: right">
+                <TableCell class="nds-text-right">
                   R$ 250,00
                 </TableCell>
               </TableRow>
@@ -1263,7 +1263,7 @@ const visualTestItems = computed(() => [
                   #INV-002
                 </TableCell>
                 <TableCell>Pendente</TableCell>
-                <TableCell style="text-align: right">
+                <TableCell class="nds-text-right">
                   R$ 150,00
                 </TableCell>
               </TableRow>

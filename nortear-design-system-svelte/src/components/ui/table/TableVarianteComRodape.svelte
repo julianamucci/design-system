@@ -15,7 +15,7 @@
     { id: '#INV-002', status: 'Pendente', method: 'Boleto bancário',   amount: 'R$ 150,00' },
     { id: '#INV-003', status: 'Cancelado',method: 'Pix',               amount: 'R$ 350,00' },
     { id: '#INV-004', status: 'Pago',     method: 'Cartão de débito',  amount: 'R$ 450,00' },
-    { id: '#INV-005', status: 'Pendente', method: 'Transferência',     amount: 'R$ 50,00'  },
+    { id: '#INV-005', status: 'Pendente', method: 'Transferência',     amount: 'R$ 200,00' },
   ];
 </script>
 
@@ -26,23 +26,25 @@
       <TableHead scope="col">Fatura</TableHead>
       <TableHead scope="col">Status</TableHead>
       <TableHead scope="col">Método</TableHead>
-      <TableHead scope="col" class="text-right">Valor</TableHead>
+      <TableHead scope="col" class="nds-text-right">Valor</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     {#each invoices as invoice (invoice.id)}
       <TableRow>
-        <TableCell class="font-medium">{invoice.id}</TableCell>
+        <TableCell class="nds-font-medium">{invoice.id}</TableCell>
         <TableCell>{invoice.status}</TableCell>
         <TableCell>{invoice.method}</TableCell>
-        <TableCell class="text-right">{invoice.amount}</TableCell>
+        <TableCell class="nds-text-right">{invoice.amount}</TableCell>
       </TableRow>
     {/each}
   </TableBody>
   <TableFooter>
     <TableRow>
       <TableCell colspan={3}>Total</TableCell>
-      <TableCell class="text-right">R$ 1.000,00</TableCell>
+      <!-- O total é a soma das cinco linhas acima. Estava em R$ 1.000,00, que
+           não fechava com nenhum conjunto de dados desta tabela. -->
+      <TableCell class="nds-text-right">R$ 1.400,00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>

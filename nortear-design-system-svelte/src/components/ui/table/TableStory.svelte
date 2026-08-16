@@ -20,14 +20,18 @@
   interface Props {
     caption?: string;
     showFooter?: boolean;
-    captionClass?: string;
+    /**
+     * Legenda visível ou apenas para leitor de tela. Ela nunca sai do DOM — é o
+     * nome da tabela; o que muda é ficar ou não visível.
+     */
+    captionVisivel?: boolean;
     invoices?: Invoice[];
   }
 
   let {
     caption = 'Lista de faturas recentes',
-    showFooter = false,
-    captionClass = '',
+    showFooter = true,
+    captionVisivel = false,
     invoices = [
       { id: '#INV-001', status: 'Pago',      method: 'Cartão de crédito',  amount: 'R$ 250,00' },
       { id: '#INV-002', status: 'Pendente',   method: 'Boleto bancário',    amount: 'R$ 150,00' },
@@ -39,7 +43,7 @@
 </script>
 
 <Table>
-  <TableCaption class={captionClass}>{caption}</TableCaption>
+  <TableCaption class={captionVisivel ? '' : 'nds-sr-only'}>{caption}</TableCaption>
   <TableHeader>
     <TableRow>
       <TableHead scope="col">Fatura</TableHead>

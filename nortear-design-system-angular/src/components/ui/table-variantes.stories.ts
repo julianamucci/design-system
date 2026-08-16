@@ -56,12 +56,14 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// O cabeçalho NÃO recebe `nds-text-right` junto com a célula, embora as outras
-// stacks escrevam a classe ali: `.nds-table th { text-align: left }` tem
-// especificidade maior que a utilitária, então a classe seria inerte. O
-// desalinhamento entre o rótulo "Valor" e os números é do CSS compartilhado, e
-// está reportado — escrever uma classe que não pinta nada só esconderia o
-// defeito de quem lê o markup depois.
+// O cabeçalho da coluna numérica recebe `nds-text-right` junto com as células.
+//
+// Este arquivo carregava a nota oposta — que a classe seria inerte no `<th>`,
+// porque `.nds-table th` tinha especificidade maior que a utilitária. Era
+// verdade até o CSS compartilhado rebaixar o seletor para `:where(.nds-table) th`
+// (0,0,1): a utilitária (0,1,0) passou a vencer, e `utilities.css` ainda é o
+// último import. A nota sobreviveu à correção e deixou esta stack como a única
+// com o rótulo "Valor" à esquerda dos próprios números.
 
 // ─── Básica ───────────────────────────────────────────────────────────────────
 
@@ -86,7 +88,7 @@ export const Basic: Story = {
               <th ndsTableHead>Fatura</th>
               <th ndsTableHead>Status</th>
               <th ndsTableHead>Método</th>
-              <th ndsTableHead>Valor</th>
+              <th ndsTableHead class="nds-text-right">Valor</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
@@ -116,6 +118,22 @@ export const Basic: Story = {
         await expect(linha.querySelectorAll('td').length).toBe(4);
         await expect(linha).toHaveTextContent(FATURAS[i].id);
       }
+    });
+
+    await step('A coluna de valores alinha à direita, rótulo junto com os números', async () => {
+      // visual.item1 — é o caso de uso central de `nds-text-right`: número se lê
+      // pela unidade, alinhado à direita, e o rótulo tem de acompanhar. A
+      // asserção é do alinhamento COMPUTADO, não da classe: enquanto o seletor
+      // de `th` do CSS compartilhado vencia a utilitária, escrever a classe não
+      // pintava nada — e era exatamente isso que estava acontecendo aqui.
+      const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
+      await expect(ths[3]).toHaveTextContent('Valor');
+      await expect(getComputedStyle(ths[3]).textAlign).toBe('right');
+      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      // A coluna descritiva continua à esquerda: o alinhamento é escolha por
+      // coluna, não estilo da tabela.
+      await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
     });
 
     await step('A legenda visível é o nome acessível da tabela', async () => {
@@ -149,7 +167,7 @@ export const WithFooter: Story = {
               <th ndsTableHead>Fatura</th>
               <th ndsTableHead>Status</th>
               <th ndsTableHead>Método</th>
-              <th ndsTableHead>Valor</th>
+              <th ndsTableHead class="nds-text-right">Valor</th>
             </tr>
           </thead>
           <tbody ndsTableBody>
@@ -223,7 +241,7 @@ export const CaptionSrOnly: Story = {
               <tr ndsTableRow>
                 <th ndsTableHead>Fatura</th>
                 <th ndsTableHead>Status</th>
-                <th ndsTableHead>Valor</th>
+                <th ndsTableHead class="nds-text-right">Valor</th>
               </tr>
             </thead>
             <tbody ndsTableBody>
@@ -283,7 +301,7 @@ export const WithRowActions: Story = {
             <tr ndsTableRow>
               <th ndsTableHead>Fatura</th>
               <th ndsTableHead>Status</th>
-              <th ndsTableHead>Valor</th>
+              <th ndsTableHead class="nds-text-right">Valor</th>
               <!-- O cabeçalho da coluna de ações não é decorativo: sem ele a
                    coluna existe para quem vê e some para quem navega por
                    cabeçalhos. O rótulo fica só para leitor de tela porque a

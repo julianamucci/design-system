@@ -393,7 +393,7 @@ export function createTableDocs(): HTMLElement {
 
         const codeRodape = `const tfoot = createTableFooter();\nconst footerRow = createTableRow();\nconst totalLabel = createTableCell('Total');\ntotalLabel.setAttribute('colspan', '3');\nfooterRow.appendChild(totalLabel);\nfooterRow.appendChild(createTableCell('R$ 1.250,00'));\ntfoot.appendChild(footerRow);\ntable.appendChild(tfoot);`;
 
-        const codeSrOnly = `table.appendChild(createTableCaption('Lista de faturas recentes', 'sr-only'));`;
+        const codeSrOnly = `table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));`;
 
         const codeAcoes = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  ariaLabel: \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
 
@@ -472,7 +472,7 @@ export function createTableDocs(): HTMLElement {
               code: codeSrOnly,
               previewFactory: () => {
                 const { wrapper, table } = createTable();
-                table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+                table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'nds-sr-only'));
                 const thead = createTableHeader();
                 const tr = createTableRow();
                 for (const key of ['invoice', 'status', 'method', 'amount'] as const) {
@@ -609,7 +609,7 @@ container.appendChild(pagination);`;
           container.appendChild(toolbar);
 
           const { wrapper, table } = createTable();
-          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'nds-sr-only'));
           const thead = createTableHeader();
           const headerRow = createTableRow();
           for (const key of ['invoice', 'status', 'amount'] as const) {
@@ -634,7 +634,7 @@ container.appendChild(pagination);`;
 
         function buildSortableHeadersPreview(): HTMLElement {
           const { wrapper, table } = createTable();
-          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'nds-sr-only'));
           const thead = createTableHeader();
           const headerRow = createTableRow();
           const colDefs: Array<{ label: string; sort: 'ascending' | 'none' }> = [
@@ -668,7 +668,7 @@ container.appendChild(pagination);`;
 
         function buildSelectableRowsPreview(): HTMLElement {
           const { wrapper, table } = createTable();
-          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'nds-sr-only'));
           const thead = createTableHeader();
           const headerRow = createTableRow();
           const masterCell = createTableHead('');
@@ -704,7 +704,7 @@ container.appendChild(pagination);`;
           container.className = 'nds-stack nds-w-full';
           container.dataset.spacing = 'sm';
           const { wrapper, table } = createTable();
-          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'sr-only'));
+          table.appendChild(createTableCaption(t('demonstration.labels.caption'), 'nds-sr-only'));
           const thead = createTableHeader();
           const headerRow = createTableRow();
           for (const key of ['invoice', 'status', 'amount'] as const) {
@@ -885,14 +885,14 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
             description: t('tokens.table.description'),
           },
           items: [
-            { token: 'border-b',                        value: 'TableHeader / TableBody rows', description: DOMPurify.sanitize(t('tokens.items.borderB')) },
-            { token: 'nds-bg-muted-50',                     value: 'TableFooter / TableRow hover', description: DOMPurify.sanitize(t('tokens.items.bgMuted')) },
-            { token: 'data-[state=selected]:bg-muted',  value: 'TableRow selected',            description: DOMPurify.sanitize(t('tokens.items.bgMutedSelected')) },
-            { token: 'nds-text-muted-foreground',           value: 'TableCaption / empty state',   description: DOMPurify.sanitize(t('tokens.items.textMuted')) },
-            { token: 'font-medium',                     value: 'TableHead / TableFooter',      description: DOMPurify.sanitize(t('tokens.items.fontMedium')) },
-            { token: 'h-10',                            value: 'TableHead',                    description: DOMPurify.sanitize(t('tokens.items.h10')) },
-            { token: 'p-2',                             value: 'TableCell',                    description: DOMPurify.sanitize(t('tokens.items.p2')) },
-            { token: 'caption-bottom',                  value: 'TableCaption',                 description: DOMPurify.sanitize(t('tokens.items.captionBottom')) },
+            { token: '--border',                        value: 'TableHeader / TableBody rows', description: DOMPurify.sanitize(t('tokens.items.borderB')) },
+            { token: '--muted',                     value: 'TableFooter / TableRow hover', description: DOMPurify.sanitize(t('tokens.items.bgMuted')) },
+            { token: '--muted',  value: 'TableRow selected',            description: DOMPurify.sanitize(t('tokens.items.bgMutedSelected')) },
+            { token: '--muted-foreground',           value: 'TableCaption / empty state',   description: DOMPurify.sanitize(t('tokens.items.textMuted')) },
+            { token: '--font-weight-medium',                     value: 'TableHead / TableFooter',      description: DOMPurify.sanitize(t('tokens.items.fontMedium')) },
+            { token: '--spacing-10',                            value: 'TableHead',                    description: DOMPurify.sanitize(t('tokens.items.h10')) },
+            { token: '--spacing-2',                             value: 'TableCell',                    description: DOMPurify.sanitize(t('tokens.items.p2')) },
+            { token: 'caption-side',                  value: 'TableCaption',                 description: DOMPurify.sanitize(t('tokens.items.captionBottom')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

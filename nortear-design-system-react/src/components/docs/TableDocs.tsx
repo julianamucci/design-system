@@ -289,7 +289,7 @@ export function TableDocs() {
     <TableRow>
       <TableCell
         colSpan={4}
-        className="nds-text-muted-foreground" style={{ height: "6rem", textAlign: "center" }}
+        className="nds-table-empty"
       >
         Nenhum dado encontrado.
       </TableCell>
@@ -353,7 +353,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                 <TableHead scope="col">{tContent("demonstration.labels.invoice")}</TableHead>
                 <TableHead scope="col">{tContent("demonstration.labels.status")}</TableHead>
                 <TableHead scope="col">{tContent("demonstration.labels.method")}</TableHead>
-                <TableHead scope="col" style={{ textAlign: "right" }}>
+                <TableHead scope="col" className="nds-text-right">
                   {tContent("demonstration.labels.amount")}
                 </TableHead>
               </TableRow>
@@ -364,14 +364,14 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                   <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                   <TableCell>{invoice.status}</TableCell>
                   <TableCell>{invoice.method}</TableCell>
-                  <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                  <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>{tContent("demonstration.labels.total")}</TableCell>
-                <TableCell style={{ textAlign: "right" }}>
+                <TableCell className="nds-text-right">
                   {tContent("demonstration.labels.totalAmount")}
                 </TableCell>
               </TableRow>
@@ -543,7 +543,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                     <TableRow>
                       <TableCell
                         colSpan={2}
-                        className="nds-text-muted-foreground" style={{ height: "4rem", textAlign: "center" }}
+                        className="nds-table-empty"
                       >
                         Nenhuma fatura encontrada.
                       </TableCell>
@@ -596,7 +596,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -605,7 +605,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -626,7 +626,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -635,14 +635,14 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow>
                       <TableCell colSpan={3}>Total</TableCell>
-                      <TableCell style={{ textAlign: "right" }}>R$ 1.400,00</TableCell>
+                      <TableCell className="nds-text-right">R$ 1.400,00</TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
@@ -662,7 +662,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -671,7 +671,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -692,8 +692,8 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
-                      <TableHead scope="col" style={{ width: "2.5rem" }}>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
+                      <TableHead scope="col">
                         <span className="nds-sr-only">Ações</span>
                       </TableHead>
                     </TableRow>
@@ -704,7 +704,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
                         <TableCell>{invoice.method}</TableCell>
-                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                         <TableCell>
                           <Button
                             variant="ghost"
@@ -734,14 +734,14 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
                       <TableHead scope="col">Método</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        className="nds-text-muted-foreground" style={{ height: "6rem", textAlign: "center" }}
+                        className="nds-table-empty"
                       >
                         Nenhum dado encontrado.
                       </TableCell>
@@ -778,7 +778,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
       <TableRow>
         <TableHead scope="col">Fatura</TableHead>
         <TableHead scope="col">Status</TableHead>
-        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+        <TableHead scope="col" className="nds-text-right">Valor</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -786,7 +786,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
         <TableRow key={invoice.id}>
           <TableCell>{invoice.id}</TableCell>
           <TableCell>{invoice.status}</TableCell>
-          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+          <TableCell className="nds-text-right">{invoice.amount}</TableCell>
         </TableRow>
       ))}
     </TableBody>
@@ -808,7 +808,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableRow>
                         <TableHead scope="col">Fatura</TableHead>
                         <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                        <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -816,7 +816,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableRow key={invoice.id}>
                           <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                           <TableCell>{invoice.status}</TableCell>
-                          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                          <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -833,13 +833,13 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
   <TableHeader>
     <TableRow>
       <TableHead scope="col" aria-sort="ascending">
-        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
+        <Button variant="ghost" size="sm">
           Fatura
           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
       </TableHead>
       <TableHead scope="col" aria-sort="none">
-        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem" }}>
+        <Button variant="ghost" size="sm">
           Valor
           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
         </Button>
@@ -855,19 +855,19 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                   <TableHeader>
                     <TableRow>
                       <TableHead scope="col" aria-sort="ascending">
-                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
+                        <Button variant="ghost" size="sm">
                           Fatura
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
                       <TableHead scope="col" aria-sort="none">
-                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
+                        <Button variant="ghost" size="sm">
                           Status
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
                       </TableHead>
-                      <TableHead scope="col" aria-sort="none" style={{ textAlign: "right" }}>
-                        <Button variant="ghost" size="sm" style={{ marginLeft: "-0.5rem", height: "2rem" }}>
+                      <TableHead scope="col" aria-sort="none" className="nds-text-right">
+                        <Button variant="ghost" size="sm">
                           Valor
                           <ArrowUpDown className="nds-ml-2 nds-icon" aria-hidden="true" />
                         </Button>
@@ -879,7 +879,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableRow key={invoice.id}>
                         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                         <TableCell>{invoice.status}</TableCell>
-                        <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                        <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -894,7 +894,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
             code: `<Table>
   <TableHeader>
     <TableRow>
-      <TableHead scope="col" style={{ width: "2.5rem" }}>
+      <TableHead scope="col">
         <Checkbox aria-label="Selecionar todas as linhas" />
       </TableHead>
       <TableHead scope="col">Fatura</TableHead>
@@ -923,12 +923,12 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                   <TableCaption className="nds-sr-only">Faturas com seleção</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead scope="col" style={{ width: "2.5rem" }}>
+                      <TableHead scope="col">
                         <Checkbox aria-label="Selecionar todas as linhas" />
                       </TableHead>
                       <TableHead scope="col">Fatura</TableHead>
                       <TableHead scope="col">Status</TableHead>
-                      <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                      <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -938,7 +938,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       </TableCell>
                       <TableCell className="nds-font-medium">#INV-001</TableCell>
                       <TableCell>Pago</TableCell>
-                      <TableCell style={{ textAlign: "right" }}>R$ 250,00</TableCell>
+                      <TableCell className="nds-text-right">R$ 250,00</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -946,7 +946,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       </TableCell>
                       <TableCell className="nds-font-medium">#INV-002</TableCell>
                       <TableCell>Pendente</TableCell>
-                      <TableCell style={{ textAlign: "right" }}>R$ 150,00</TableCell>
+                      <TableCell className="nds-text-right">R$ 150,00</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -954,7 +954,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       </TableCell>
                       <TableCell className="nds-font-medium">#INV-003</TableCell>
                       <TableCell>Cancelado</TableCell>
-                      <TableCell style={{ textAlign: "right" }}>R$ 350,00</TableCell>
+                      <TableCell className="nds-text-right">R$ 350,00</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -990,7 +990,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                       <TableRow>
                         <TableHead scope="col">Fatura</TableHead>
                         <TableHead scope="col">Status</TableHead>
-                        <TableHead scope="col" style={{ textAlign: "right" }}>Valor</TableHead>
+                        <TableHead scope="col" className="nds-text-right">Valor</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -998,7 +998,7 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
                         <TableRow key={invoice.id}>
                           <TableCell className="nds-font-medium">{invoice.id}</TableCell>
                           <TableCell>{invoice.status}</TableCell>
-                          <TableCell style={{ textAlign: "right" }}>{invoice.amount}</TableCell>
+                          <TableCell className="nds-text-right">{invoice.amount}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -1188,14 +1188,14 @@ interface TableCaptionProps extends React.ComponentProps<"caption"> {}`;
           description: tContent("tokens.table.description"),
         }}
         items={[
-          { token: "border-b",                       value: "TableHeader / TableBody / TableRow", description: tContent("tokens.items.borderB") },
-          { token: "nds-bg-muted-50",                    value: "TableFooter / TableRow (hover)",     description: tContent("tokens.items.bgMuted") },
-          { token: "data-[state=selected]:bg-muted", value: "TableRow",                           description: tContent("tokens.items.bgMutedSelected") },
-          { token: "nds-text-muted-foreground",           value: "TableCaption / empty state",         description: tContent("tokens.items.textMuted") },
-          { token: "font-medium",                    value: "TableHead / TableFooter",             description: tContent("tokens.items.fontMedium") },
-          { token: "h-10",                           value: "TableHead",                           description: tContent("tokens.items.h10") },
-          { token: "p-2",                            value: "TableCell",                           description: tContent("tokens.items.p2") },
-          { token: "caption-bottom",                 value: "Table (caption)",                     description: tContent("tokens.items.captionBottom") },
+          { token: "--border",                       value: "TableHeader / TableBody / TableRow", description: tContent("tokens.items.borderB") },
+          { token: "--muted",                    value: "TableFooter / TableRow (hover)",     description: tContent("tokens.items.bgMuted") },
+          { token: "--muted", value: "TableRow",                           description: tContent("tokens.items.bgMutedSelected") },
+          { token: "--muted-foreground",           value: "TableCaption / empty state",         description: tContent("tokens.items.textMuted") },
+          { token: "--font-weight-medium",                    value: "TableHead / TableFooter",             description: tContent("tokens.items.fontMedium") },
+          { token: "--spacing-10",                           value: "TableHead",                           description: tContent("tokens.items.h10") },
+          { token: "--spacing-2",                            value: "TableCell",                           description: tContent("tokens.items.p2") },
+          { token: "caption-side",                 value: "Table (caption)",                     description: tContent("tokens.items.captionBottom") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
       />
