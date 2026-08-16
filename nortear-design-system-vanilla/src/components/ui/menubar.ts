@@ -16,6 +16,7 @@
 // aparecia na tela sem estilo nenhum e o teste afirmava a classe morta.
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { Check, ChevronRight } from 'lucide';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -136,7 +137,7 @@ function criarRotuloEAtalho(el: HTMLElement, item: MenubarItem): void {
 
 // ─── createMenubar ────────────────────────────────────────────────────────────
 
-export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): HTMLElement {
+export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): DestroyableElement {
   const id = ++_menubarCounter;
   const loop = options?.loop ?? true;
   const side: MenubarSide = options?.side ?? 'bottom';
@@ -547,14 +548,25 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): H
     }
   });
 
-  document.addEventListener('click', (e) => {
+  /*
+   * Fechar ao clicar fora. Este ouvinte era anônimo e registrado NA MONTAGEM,
+   * sem par: ele nunca era removido, e nada podia removê-lo, porque não havia
+   * referência à função. Cada barra criada somava mais um ouvinte de `click`
+   * permanente no `document`, com a closure inteira da barra presa junto.
+   */
+  function aoClicarFora(e: MouseEvent): void {
     if (aberto && !root.contains(e.target as Node)) fecharTudo();
-  });
+  }
+
+  document.addEventListener('click', aoClicarFora);
 
   if (options?.defaultOpen !== undefined) {
     // Depois da montagem: o painel precisa estar no DOM para receber o foco.
     queueMicrotask(() => abrirMenu(options.defaultOpen!, 'nenhum'));
   }
 
-  return root;
+  return tornarDestruivel(root, root, () => {
+    fecharTudo();
+    document.removeEventListener('click', aoClicarFora);
+  });
 }

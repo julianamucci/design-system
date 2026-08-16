@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
+import { tornarDestruivel } from '@/lib/destroy';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -132,6 +133,12 @@ export const Destructive: Story = {
     trigger.addEventListener('click', () => (panel ? close() : open()));
 
     queueMicrotask(() => trigger.click());
+
+    // Menu montado à mão (a factory não tem variante destrutiva), mas com o
+    // mesmo arranjo: painel portalado no `body` e `keydown` no `document`. Sem
+    // limpeza na saída, o menu ficava aberto para a story seguinte.
+    tornarDestruivel(wrapper, wrapper, close);
+
     return wrap(wrapper);
   },
   play: async ({ step }) => {

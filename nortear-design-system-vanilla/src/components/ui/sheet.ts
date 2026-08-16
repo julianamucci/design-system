@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
@@ -82,7 +83,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 // ─── createSheet ──────────────────────────────────────────────────────────────
 
-export function createSheet(options: SheetOptions): HTMLElement {
+export function createSheet(options: SheetOptions): DestroyableElement {
   const { trigger, side = 'right', title, description, content, footer, onOpenChange, onClose } = options;
 
   const sheetId = ++_sheetCounter;
@@ -248,26 +249,11 @@ export function createSheet(options: SheetOptions): HTMLElement {
    * conviver com a pilha. O `dialog.ts` já tinha esta guarda; o `sheet.ts`
    * ficou sem ela.
    */
-  if (typeof MutationObserver !== 'undefined') {
-    // `jaConectou` é a guarda que separa "saiu do documento" de "ainda não
-    // entrou". A factory devolve o wrapper e quem chama o insere DEPOIS: quem
-    // abre o painel no mesmo tique da criação (as stories que nascem abertas
-    // fazem isso) dispara a primeira mutação com o wrapper ainda solto, e sem
-    // esta guarda o painel era desmontado no quadro seguinte ao de abrir.
-    let jaConectou = false;
-    const observador = new MutationObserver(() => {
-      if (wrapper.isConnected) {
-        jaConectou = true;
-        return;
-      }
-      if (!jaConectou) return;
-      registro.fechar();
-      observador.disconnect();
-    });
-    const observar = () => observador.observe(document.body, { childList: true, subtree: true });
-    if (document.body) observar();
-    else queueMicrotask(observar);
-  }
-
-  return wrapper;
+  // A guarda de "ainda não entrou" mora na forma compartilhada: a factory
+  // devolve o wrapper e quem chama o insere DEPOIS, e quem abre o painel no
+  // mesmo tique da criação (as stories que nascem abertas fazem isso) dispara a
+  // primeira mutação com o wrapper ainda solto.
+  return tornarDestruivel(wrapper, wrapper, () => {
+    registro.fechar();
+  });
 }

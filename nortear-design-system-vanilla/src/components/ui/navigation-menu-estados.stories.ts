@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import { abrir, esperarPainel, painelAberto } from './navigation-menu.fixtures';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -160,6 +161,54 @@ export const Active: Story = {
       await expect(getComputedStyle(atual).backgroundColor).not.toBe(
         getComputedStyle(outro).backgroundColor,
       );
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: a barra é montada, um painel é aberto e a barra sai da página.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => createNavigationMenu([
+          {
+            label: 'Produtos',
+            children: [
+              { label: 'Visão geral', href: '#visao' },
+              { label: 'Preços', href: '#precos' },
+            ],
+          },
+          { label: 'Suporte', href: '#suporte' },
+        ]),
+        exercitar: (no) => no.querySelector<HTMLElement>('[data-slot="navigation-menu-trigger"]')?.click(),
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

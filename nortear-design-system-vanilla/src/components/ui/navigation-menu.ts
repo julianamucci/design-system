@@ -25,6 +25,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type NavigationMenuChild = {
   label: string;
@@ -84,7 +85,7 @@ let _navCounter = 0;
 export function createNavigationMenu(
   items: NavigationMenuItem[],
   options?: NavigationMenuOptions
-): HTMLElement {
+): DestroyableElement {
   const id = ++_navCounter;
   const orientation: NavigationMenuOrientation = options?.orientation ?? 'horizontal';
   const vertical = orientation === 'vertical';
@@ -297,21 +298,40 @@ export function createNavigationMenu(
     ul.appendChild(li);
   });
 
-  // Guardados por `nav.isConnected`: uma story remontada deixa a barra antiga
-  // no ar, e sem a guarda o Escape de uma fecharia o painel da outra.
-  document.addEventListener('click', (e) => {
+  /*
+   * Os dois eram anônimos e registrados NA MONTAGEM, sem par. A guarda por
+   * `nav.isConnected` deixava o ouvinte de uma barra removida INERTE — que é
+   * outra coisa de estar removido: ele continuava no `document`, sendo chamado
+   * a cada clique e a cada tecla da página, e segurando na closure a barra
+   * inteira que deveria ter sido coletada. Uma story remontada dez vezes
+   * chegava ao fim com vinte ouvintes vivos.
+   *
+   * A guarda fica onde estava: `destroy()` cobre a remoção da barra, mas o
+   * `isConnected` ainda protege a janela entre a saída do nó e a varredura do
+   * observador, que é assíncrona.
+   */
+  function aoClicarFora(e: MouseEvent): void {
     if (!nav.isConnected) return;
     if (openItem && !nav.contains(e.target as Node)) closeAll();
-  });
-  document.addEventListener('keydown', (e) => {
+  }
+
+  function aoTeclarNoDocumento(e: KeyboardEvent): void {
     if (!nav.isConnected) return;
     if (e.key === 'Escape' && openItem) {
       const triggerToFocus = openItem.trigger;
       closeAll();
       triggerToFocus.focus();
     }
-  });
+  }
+
+  document.addEventListener('click', aoClicarFora);
+  document.addEventListener('keydown', aoTeclarNoDocumento);
 
   nav.appendChild(ul);
-  return nav;
+
+  return tornarDestruivel(nav, nav, () => {
+    closeAll();
+    document.removeEventListener('click', aoClicarFora);
+    document.removeEventListener('keydown', aoTeclarNoDocumento);
+  });
 }

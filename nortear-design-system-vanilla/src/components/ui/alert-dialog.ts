@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 // ─── Alert Dialog — Vanilla factory (portal manual) ──────────────────────────
 //
 // Visual: classes .nds-alert-dialog-* (standalone .nds-*).
@@ -66,7 +67,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 // ─── createAlertDialog ───────────────────────────────────────────────────────
 
-export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
+export function createAlertDialog(options: AlertDialogOptions): DestroyableElement {
   const { trigger, title, description, media, cancelButton, actionButton, onOpenChange } = options;
 
   const id = ++_alertDialogCounter;
@@ -256,25 +257,16 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
 
   trigger.addEventListener('click', open);
 
-  // Cleanup ao remover o wrapper (Storybook remount).
-  /* v8 ignore next -- guarda de ambiente: o browser sempre tem
-     MutationObserver, e a suíte roda em browser. Existe para render em
-     ambiente sem DOM completo. */
-  if (typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(() => {
-      if (!wrapper.isConnected) {
-        if (panelEl) close();
-        observer.disconnect();
-      }
-    });
-    const startObserve = () => {
-      observer.observe(document.body, { childList: true, subtree: true });
-    };
-    /* v8 ignore next 2 -- no browser o body já existe quando a factory roda; o
-       fallback cobre montagem em documento ainda sem body. */
-    if (document.body) startObserve();
-    else queueMicrotask(startObserve);
-  }
+  // Limpeza ao remover o wrapper (troca de story, desmonte de página).
+  //
+  // O observador anterior morava aqui e se desligava na PRIMEIRA mutação vista
+  // com o wrapper ainda solto — `disconnect()` ficava fora do `if (panelEl)`.
+  // Bastava o consumidor mexer no `body` entre criar e inserir para a guarda
+  // deixar de existir, e aí o painel portalado sobrevivia com o `keydown`
+  // preso. A forma compartilhada só conta a saída depois de ter visto a entrada.
+  const destruivel = tornarDestruivel(wrapper, wrapper, () => {
+    if (panelEl) close();
+  });
 
   // O wrapper só entra na página depois que a factory retorna: o microtask
   // espera a montagem para o painel portalado e o foco encontrarem a árvore
@@ -286,5 +278,5 @@ export function createAlertDialog(options: AlertDialogOptions): HTMLElement {
     });
   }
 
-  return wrapper;
+  return destruivel;
 }

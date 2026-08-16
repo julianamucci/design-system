@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
 
@@ -85,7 +86,7 @@ function createCloseIcon(): SVGSVGElement {
 
 // ─── createDialog ─────────────────────────────────────────────────────────────
 
-export function createDialog(options: DialogOptions): HTMLElement {
+export function createDialog(options: DialogOptions): DestroyableElement {
   const { trigger, title, description, content, footer, onOpenChange, onClose } = options;
   const showCloseButton = options.showCloseButton !== false;
 
@@ -218,18 +219,11 @@ export function createDialog(options: DialogOptions): HTMLElement {
 
   trigger.addEventListener('click', open);
 
-  // PATCH: cleanup quando wrapper sai do DOM (Storybook remount).
-  if (typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(() => {
-      if (!wrapper.isConnected) {
-        if (panelEl) closeWithReason('action');
-        observer.disconnect();
-      }
-    });
-    const startObserve = () => observer.observe(document.body, { childList: true, subtree: true });
-    if (document.body) startObserve();
-    else queueMicrotask(startObserve);
-  }
-
-  return wrapper;
+  // Limpeza quando o wrapper sai do DOM (troca de story, desmonte de página).
+  // Forma compartilhada: `destroy()` público, idempotente e disparado sozinho.
+  // O observador anterior se desligava na primeira mutação vista com o wrapper
+  // ainda solto, e a guarda deixava de existir antes de servir para algo.
+  return tornarDestruivel(wrapper, wrapper, () => {
+    if (panelEl) closeWithReason('action');
+  });
 }

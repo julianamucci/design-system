@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type ResizablePanel = {
   content: HTMLElement;
@@ -20,10 +21,13 @@ export type ResizablePanelOptions = {
 
 // ─── createResizablePanel ─────────────────────────────────────────────────────
 
-export function createResizablePanel(options: ResizablePanelOptions): HTMLElement {
+export function createResizablePanel(options: ResizablePanelOptions): DestroyableElement {
   const { direction = 'horizontal', panels } = options;
   const isHorizontal = direction === 'horizontal';
   const count = panels.length;
+
+  /** Encerra o arraste em curso, se houver. `null` fora de arraste. */
+  let soltarArrasto: (() => void) | null = null;
 
   const root = document.createElement('div');
   root.dataset.slot = 'resizable';
@@ -128,10 +132,16 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
           dragging = false;
           document.removeEventListener('mousemove', onMove);
           document.removeEventListener('mouseup', onUp);
+          soltarArrasto = null;
         };
 
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
+        // O par só se desfaz no `mouseup`. Quem tirasse o grupo da página com o
+        // botão ainda pressionado — arrastar e a tela trocar debaixo do
+        // ponteiro — deixava `mousemove` e `mouseup` vivos no `document`,
+        // recalculando larguras de painéis que já não existiam.
+        soltarArrasto = onUp;
       });
 
       // Keyboard resize
@@ -160,5 +170,7 @@ export function createResizablePanel(options: ResizablePanelOptions): HTMLElemen
     }
   });
 
-  return root;
+  return tornarDestruivel(root, root, () => {
+    soltarArrasto?.();
+  });
 }

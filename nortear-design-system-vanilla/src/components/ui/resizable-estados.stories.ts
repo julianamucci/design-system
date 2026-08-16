@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -128,6 +129,59 @@ export const Disabled: Story = {
       await expect(handle).toHaveAttribute('aria-disabled', 'true');
       await expect(handle).toHaveAttribute('tabindex', '-1');
       await expect(handle).toHaveAttribute('data-disabled', '');
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o arraste começa e a página é trocada com o botão ainda pressionado.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => {
+          const painel = (texto: string) => {
+            const el = document.createElement('div');
+            el.textContent = texto;
+            return el;
+          };
+          return createResizablePanel({
+            direction: 'horizontal',
+            panels: [{ content: painel('Esquerda') }, { content: painel('Direita') }],
+          });
+        },
+        exercitar: (no) => {
+          const alca = no.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
+          alca?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: 100, clientY: 40 }));
+          document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: 140, clientY: 40 }));
+        },
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

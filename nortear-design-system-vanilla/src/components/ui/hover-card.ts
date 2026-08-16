@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
 
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
@@ -33,7 +34,7 @@ export type HoverCardOptions = {
  * por fora era despachar um `mouseenter` falso no gatilho — o que testava o
  * evento, não o estado.
  */
-export type HoverCardElement = HTMLElement & {
+export type HoverCardElement = HTMLElement & Destroyable & {
   abrir: () => void;
   fechar: () => void;
 };
@@ -202,6 +203,18 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
 
   wrapper.abrir = show;
   wrapper.fechar = hide;
+
+  /*
+   * O painel mora no `document.body` e o `keydown` de Escape vive no
+   * `document` — os dois só enquanto o cartão está EXIBIDO, e os dois soltos
+   * por `hide()`. Quem removia o wrapper com o cartão aberto não passava por
+   * `hide()`: sobravam o painel órfão e o ouvinte preso a um nó desanexado.
+   *
+   * `hide()` também derruba os dois temporizadores. Sem isso, um `show()`
+   * agendado dispararia DEPOIS da remoção e poria um painel novo na página,
+   * junto com um ouvinte novo — vazamento criado pela própria saída.
+   */
+  tornarDestruivel(wrapper, wrapper, hide);
 
   if (defaultOpen) {
     // `requestAnimationFrame` e não `queueMicrotask`: posicionar exige o

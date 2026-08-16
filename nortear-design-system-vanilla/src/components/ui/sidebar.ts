@@ -19,6 +19,7 @@
 // compara. Este arquivo emitia só o primeiro.
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
 import { createButton } from './button';
 import { createInput, type InputOptions } from './input';
 import { createSkeleton } from './skeleton';
@@ -81,7 +82,7 @@ export type SidebarGroupOptions = {
   items: SidebarMenuItemOptions[];
 };
 
-export type SidebarInstance = {
+export type SidebarInstance = Destroyable & {
   element: HTMLElement;
   toggle: () => void;
   open: () => void;
@@ -91,8 +92,6 @@ export type SidebarInstance = {
   isMobile: () => boolean;
   /** Se a gaveta sobreposta está aberta. Fora do modo estreito é sempre `false`. */
   isMobileOpen: () => boolean;
-  /** Solta os ouvintes de documento. Chamado sozinho quando a raiz sai do documento. */
-  destroy: () => void;
 };
 
 export function createSidebarProvider(
@@ -343,50 +342,31 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
   mql.addEventListener('change', aplicarModo);
   aplicarModo();
 
-  function destroy(): void {
-    fecharGaveta(false);
-    document.removeEventListener('keydown', handleKeydown);
-    mql.removeEventListener('change', aplicarModo);
-  }
-
   /*
    * Quem tira a barra do documento não chama `destroy`.
    *
    * O ouvinte de `keydown` era registrado no `document` e nunca removido: cada
    * story montada deixava para trás mais um Ctrl+B vivo, alternando barras já
-   * desmontadas. É o mesmo cuidado que `sheet.ts` e `dialog.ts` já tomam.
-   *
-   * `jaConectou` separa "saiu do documento" de "ainda não entrou": a fábrica
-   * devolve a raiz e quem chama a insere depois.
+   * desmontadas. Enquanto a gaveta está aberta a raiz continua conectada — é o
+   * painel que vive no `body` —, então a saída da raiz é o sinal certo.
    */
-  if (typeof MutationObserver !== 'undefined') {
-    let jaConectou = false;
-    const observador = new MutationObserver(() => {
-      // Enquanto a gaveta está aberta, a raiz continua conectada — é o painel
-      // que vive no `body`. O conteúdo é que sai da raiz, e isso não conta.
-      if (root.isConnected) {
-        jaConectou = true;
-        return;
-      }
-      if (!jaConectou) return;
-      destroy();
-      observador.disconnect();
-    });
-    const observar = () => observador.observe(document.body, { childList: true, subtree: true });
-    if (document.body) observar();
-    else queueMicrotask(observar);
-  }
-
-  return {
-    element: root,
-    toggle: alternar,
-    open: () => (movel ? abrirGaveta() : setState(true)),
-    close: () => (movel ? fecharGaveta() : setState(false)),
-    getState: () => (isOpen ? 'expanded' : 'collapsed'),
-    isMobile: () => movel,
-    isMobileOpen: () => gavetaAberta,
-    destroy,
-  };
+  return tornarDestruivel(
+    root,
+    {
+      element: root,
+      toggle: alternar,
+      open: () => (movel ? abrirGaveta() : setState(true)),
+      close: () => (movel ? fecharGaveta() : setState(false)),
+      getState: () => (isOpen ? 'expanded' : 'collapsed') as SidebarState,
+      isMobile: () => movel,
+      isMobileOpen: () => gavetaAberta,
+    },
+    () => {
+      fecharGaveta(false);
+      document.removeEventListener('keydown', handleKeydown);
+      mql.removeEventListener('change', aplicarModo);
+    },
+  );
 }
 
 /** Ícone PanelLeft, montado com createElementNS (sem innerHTML). */

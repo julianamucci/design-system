@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverAlign = 'start' | 'center' | 'end';
@@ -89,7 +90,7 @@ function positionFloating(
 
 // ─── createPopover ────────────────────────────────────────────────────────────
 
-export function createPopover(options: PopoverOptions): HTMLElement {
+export function createPopover(options: PopoverOptions): DestroyableElement {
   const {
     trigger,
     content,
@@ -103,6 +104,7 @@ export function createPopover(options: PopoverOptions): HTMLElement {
 
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
+  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'popover';
@@ -171,8 +173,13 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     (getFocusable(panelEl)[0] ?? panelEl).focus();
 
     document.addEventListener('keydown', handleKeydown);
-    // Defer so this open click doesn't immediately trigger the outside-click close
-    setTimeout(() => document.addEventListener('click', handleOutsideClick), 0);
+    // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
+    // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
+    // registrado DEPOIS da limpeza e ficava para sempre.
+    timerCliqueFora = setTimeout(() => {
+      timerCliqueFora = null;
+      document.addEventListener('click', handleOutsideClick);
+    }, 0);
 
     onOpenChange?.(true);
   }
@@ -194,6 +201,10 @@ export function createPopover(options: PopoverOptions): HTMLElement {
     trigger.dataset.state = 'closed';
     isOpen = false;
 
+    if (timerCliqueFora !== null) {
+      clearTimeout(timerCliqueFora);
+      timerCliqueFora = null;
+    }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
@@ -225,18 +236,9 @@ export function createPopover(options: PopoverOptions): HTMLElement {
 
   // O painel mora em portal no body: quando o wrapper sai do DOM — troca de
   // story no Storybook, desmonte de página — nada removeria o painel, e ele
-  // sobreviveria por cima do conteúdo seguinte. Mesmo mecanismo do dialog.
-  if (typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(() => {
-      if (!wrapper.isConnected) {
-        if (panelEl) close();
-        observer.disconnect();
-      }
-    });
-    const startObserve = () => observer.observe(document.body, { childList: true, subtree: true });
-    if (document.body) startObserve();
-    else queueMicrotask(startObserve);
-  }
-
-  return wrapper;
+  // sobreviveria por cima do conteúdo seguinte junto com o `keydown` e o
+  // `click` de fora. Mesma forma do dialog e do sheet.
+  return tornarDestruivel(wrapper, wrapper, () => {
+    if (isOpen) close();
+  });
 }

@@ -12,6 +12,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type ContextMenuItemDef = {
   /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
@@ -106,7 +107,7 @@ function fillItemContent(li: HTMLElement, item: ContextMenuItemDef): void {
 
 // ─── createContextMenu ────────────────────────────────────────────────────────
 
-export function createContextMenu(options: ContextMenuOptions): HTMLElement {
+export function createContextMenu(options: ContextMenuOptions): DestroyableElement {
   const { trigger, items, onOpenChange } = options;
 
   const id = ++_contextMenuCounter;
@@ -117,7 +118,7 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
   let subTriggerEl: HTMLElement | null = null;
   let isOpen = false;
   let radioValue = options.radioValue;
-  let observadorDeSaida: MutationObserver | null = null;
+  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
 
   /** Definição por sub-gatilho — procurar pelo texto do rótulo quebra na tradução. */
   const defPorSubGatilho = new WeakMap<HTMLElement, ContextMenuItemDef>();
@@ -343,17 +344,13 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
     menuItems[0]?.focus();
 
     document.addEventListener('keydown', handleKeydown);
-    setTimeout(() => document.addEventListener('click', handleOutsideClick), 0);
-
-    // O painel vive no `<body>`, fora da árvore de quem montou o componente.
-    // Quem troca de tela remove o gatilho e o painel FICA — nas stories isso
-    // significa o menu de uma sobrando por cima da seguinte, e a foto do
-    // Chromatic saindo com dois. Nas outras stacks quem desmonta é o framework;
-    // aqui é este observador.
-    observadorDeSaida = new MutationObserver(() => {
-      if (!trigger.isConnected) close(false);
-    });
-    observadorDeSaida.observe(document.body, { childList: true, subtree: true });
+    // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
+    // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
+    // registrado DEPOIS da limpeza e ficava para sempre.
+    timerCliqueFora = setTimeout(() => {
+      timerCliqueFora = null;
+      document.addEventListener('click', handleOutsideClick);
+    }, 0);
 
     onOpenChange?.(true);
   }
@@ -371,10 +368,12 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
     panelEl = null;
     isOpen = false;
 
+    if (timerCliqueFora !== null) {
+      clearTimeout(timerCliqueFora);
+      timerCliqueFora = null;
+    }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
-    observadorDeSaida?.disconnect();
-    observadorDeSaida = null;
 
     if (devolverFoco && trigger.isConnected) trigger.focus();
 
@@ -457,5 +456,12 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
     open(e.clientX, e.clientY);
   });
 
-  return wrapper;
+  // O painel vive no `<body>`, fora da árvore de quem montou o componente. Quem
+  // troca de tela remove o gatilho e o painel FICA — nas stories isso significa
+  // o menu de uma sobrando por cima da seguinte, e a foto do Chromatic saindo
+  // com dois. Nas outras stacks quem desmonta é o framework; aqui é a forma
+  // compartilhada de limpeza, que antes era um observador montado por abertura.
+  return tornarDestruivel(wrapper, wrapper, () => {
+    if (isOpen) close(false);
+  });
 }

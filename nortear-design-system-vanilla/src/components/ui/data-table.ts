@@ -5,6 +5,7 @@
 // redimensionamento, reordenação, fixação, edição inline e virtualização.
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import {
   createTable as createTanstackTable,
   type ColumnDef,
@@ -221,7 +222,7 @@ function appendCellContent<TData>(
 
 export function createDataTable<TData extends RowData>(
   options: DataTableOptions<TData>,
-): HTMLElement {
+): DestroyableElement {
   const {
     columns,
     data,
@@ -520,6 +521,9 @@ export function createDataTable<TData extends RowData>(
   // letra caía fora do campo e limpar a busca deixava de funcionar. Nada aqui
   // depende do estado da tabela — o menu de colunas se reconstrói ao abrir.
   let toolbarMontada = false;
+  /** Solta o ouvinte de clique fora do menu de colunas do render anterior. */
+  let soltarCliqueForaDoMenu: (() => void) | null = null;
+
   function renderToolbar() {
     if (toolbarMontada) return;
     toolbarMontada = true;
@@ -621,11 +625,30 @@ export function createDataTable<TData extends RowData>(
         if (willOpen) rebuildMenu();
         menu.hidden = !willOpen;
       });
-      document.addEventListener('click', (e) => {
+
+      /*
+       * Fechar o menu de colunas ao clicar fora.
+       *
+       * Este ouvinte era anônimo e registrado aqui dentro — e `renderToolbar()`
+       * roda a CADA mudança de estado da tabela: ordenar, filtrar, virar
+       * página, marcar linha. Não era um ouvinte por tabela que sobrava no fim:
+       * era um ouvinte NOVO por interação, empilhado no `document` enquanto a
+       * pessoa usava a tabela, cada um segurando o menu daquele render. O pior
+       * do conjunto, e o único que crescia sem a tabela sair da página.
+       *
+       * Agora a barra solta o ouvinte anterior antes de pendurar o seu.
+       */
+      soltarCliqueForaDoMenu?.();
+      const fecharMenuDeColunas = (e: MouseEvent): void => {
         if (!menu.contains(e.target as Node) && e.target !== visBtn) {
           menu.hidden = true;
         }
-      });
+      };
+      document.addEventListener('click', fecharMenuDeColunas);
+      soltarCliqueForaDoMenu = () => {
+        document.removeEventListener('click', fecharMenuDeColunas);
+        soltarCliqueForaDoMenu = null;
+      };
 
       const wrap = document.createElement('div');
       wrap.className = 'nds-data-table-columns-wrap';
@@ -1136,5 +1159,7 @@ export function createDataTable<TData extends RowData>(
   // Expose table on root for play functions / advanced consumers.
   (root as HTMLElement & { __table?: TanstackTable<TData> }).__table = table;
 
-  return root;
+  return tornarDestruivel(root, root, () => {
+    soltarCliqueForaDoMenu?.();
+  });
 }

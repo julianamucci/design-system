@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { createButton } from './button';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -170,6 +171,52 @@ export const ItemDisabled: Story = {
     });
     await step('Limpa via ESC', async () => {
       await closeAfter();
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o menu é montado, aberto e removido da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => createDropdownMenu({
+          trigger: createButton({ variant: 'outline', label: 'Ações' }),
+          items: [
+            { type: 'item', label: 'Editar', value: 'edit' },
+            { type: 'item', label: 'Excluir', value: 'delete' },
+          ],
+        }),
+        exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
+        seletorDePortal: '[data-slot="dropdown-menu-content"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

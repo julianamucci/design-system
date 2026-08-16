@@ -22,6 +22,7 @@
 // `.nds-sheet-description`, que o próprio CSS compartilhado manda reusar.
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -69,7 +70,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 // ─── createDrawer ─────────────────────────────────────────────────────────────
 
-export function createDrawer(options: DrawerOptions): HTMLElement {
+export function createDrawer(options: DrawerOptions): DestroyableElement {
   const {
     trigger,
     direction = 'bottom',
@@ -207,15 +208,27 @@ export function createDrawer(options: DrawerOptions): HTMLElement {
     onOpenChange?.(true);
   }
 
-  function closeWithReason(reason: DrawerCloseReason): void {
-    if (!isOpen()) return;
-
+  /**
+   * Tira o painel do documento e solta o que ele prendeu.
+   *
+   * Separado do fechamento por vontade de quem usa — mesma divisão do Sheet:
+   * aqui não se devolve foco (o elemento anterior pode ter saído do DOM junto)
+   * nem se anuncia motivo, porque não houve motivo nenhum: a gaveta não foi
+   * fechada, ela deixou de existir.
+   */
+  function desmontarPainel(): void {
     overlayEl?.remove();
     panelEl?.remove();
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
     if (modal) document.body.style.overflow = previousBodyOverflow;
+  }
+
+  function closeWithReason(reason: DrawerCloseReason): void {
+    if (!isOpen()) return;
+
+    desmontarPainel();
     previousFocus?.focus();
     onClose?.(reason);
     onOpenChange?.(false);
@@ -251,5 +264,18 @@ export function createDrawer(options: DrawerOptions): HTMLElement {
   }
 
   trigger.addEventListener('click', open);
-  return wrapper;
+
+  /*
+   * Painel e overlay moram no `document.body`, e o `keydown` de Escape/Tab vive
+   * no `document` enquanto a gaveta está aberta. Fechar solta os dois — mas só
+   * quem fecha. Quem removia o wrapper com a gaveta ABERTA deixava para trás o
+   * painel órfão, a trava de rolagem do modo modal e o ouvinte de teclado,
+   * agora preso a um nó fora do documento. Não havia nada a chamar: esta era a
+   * única fábrica de sobreposição portalada sem guarda de saída.
+   */
+  return tornarDestruivel(wrapper, wrapper, () => {
+    const estavaAberta = isOpen();
+    desmontarPainel();
+    if (estavaAberta) onOpenChange?.(false);
+  });
 }

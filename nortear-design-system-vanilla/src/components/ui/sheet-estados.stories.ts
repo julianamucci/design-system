@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { createButton } from './button';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -214,6 +215,55 @@ export const Controlled: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(externo).toHaveAttribute('data-open', 'false');
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o painel lateral é montado, aberto e removido da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => {
+          const conteudo = document.createElement('p');
+          conteudo.textContent = 'Conteúdo do painel.';
+          return createSheet({
+            trigger: createButton({ variant: 'outline', label: 'Abrir' }),
+            title: 'Título',
+            description: 'Descrição do painel.',
+            content: conteudo,
+          });
+        },
+        exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
+        seletorDePortal: '[data-slot="sheet-content"], [data-slot="sheet-overlay"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

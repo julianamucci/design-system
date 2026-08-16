@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois da espera interna) e aberto por foco (na hora). A
@@ -248,6 +249,53 @@ export const PersistenceInBubble: Story = {
     await step('Cleanup antes do postVisit', async () => {
       gatilho.blur();
       limparPortal();
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o balão é montado, exibido por foco e removido da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => createTooltip({
+          trigger: createButton({ variant: 'outline', label: 'Ajuda' }),
+          content: 'Texto de ajuda.',
+        }),
+        exercitar: (no) => {
+          const gatilho = no.querySelector<HTMLElement>('button');
+          gatilho?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+          gatilho?.dispatchEvent(new FocusEvent('focus'));
+        },
+        seletorDePortal: '[data-slot="tooltip-content"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

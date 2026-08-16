@@ -11,6 +11,7 @@ import {
 import { createHoverCard, type HoverCardElement } from './hover-card';
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
@@ -198,6 +199,51 @@ export const Controlled: Story = {
       await esperarFechado();
       await expect(painelAberto()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o cartão é montado, exibido e removido da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => {
+          const conteudo = document.createElement('p');
+          conteudo.textContent = 'Prévia do perfil.';
+          const trigger = createButton({ variant: 'outline', label: 'Perfil' });
+          return createHoverCard({ trigger, content: conteudo, openDelay: 0, closeDelay: 0 });
+        },
+        exercitar: (no) => (no as HTMLElement & { abrir?: () => void }).abrir?.(),
+        seletorDePortal: '[data-slot="hover-card-content"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

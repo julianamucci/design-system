@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
+import { tornarDestruivel } from '@/lib/destroy';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -94,6 +95,13 @@ function buildCustomMenu(
   }
   trigger.addEventListener('click', () => (panel ? close() : open()));
   queueMicrotask(() => trigger.click());
+
+  // Este menu é montado à mão porque a factory não tem item de marcação — mas o
+  // arranjo é o mesmo dela: painel portalado no `body` e `keydown` no
+  // `document`. Sem limpeza na saída, cada story destas deixava o próprio menu
+  // aberto na página, e a seguinte encontrava DOIS `role="menu"`.
+  tornarDestruivel(wrapper, wrapper, close);
+
   return wrapper;
 }
 

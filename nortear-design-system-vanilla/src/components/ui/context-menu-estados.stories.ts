@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import {
   abrirPorGesto,
   brilho,
@@ -194,6 +195,59 @@ export const DarkPalette: Story = {
       const menu = await abrirPorGesto(area());
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: o menu de contexto é montado, aberto e removido da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => {
+          const trigger = document.createElement('div');
+          trigger.textContent = 'Área com menu de contexto';
+          return createContextMenu({
+            trigger,
+            items: [
+              { type: 'item', label: 'Copiar', value: 'copy' },
+              { type: 'item', label: 'Colar', value: 'paste' },
+            ],
+          });
+        },
+        exercitar: (no) => {
+          const alvo = no.querySelector<HTMLElement>('[data-slot="context-menu-trigger"]');
+          alvo?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 20, clientY: 20 }));
+        },
+        seletorDePortal: '[data-slot="context-menu-content"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

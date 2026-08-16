@@ -4,6 +4,7 @@
 // Render via portal (body) com posicionamento absoluto via JS.
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
@@ -68,7 +69,7 @@ function positionTooltip(
   panel.style.left = `${left}px`;
 }
 
-export function createTooltip(options: TooltipOptions): HTMLElement {
+export function createTooltip(options: TooltipOptions): DestroyableElement {
   const { trigger, content, side = 'top' } = options;
 
   const id = ++_tooltipCounter;
@@ -192,12 +193,40 @@ export function createTooltip(options: TooltipOptions): HTMLElement {
 
   trigger.addEventListener('mouseenter', scheduleShow);
   trigger.addEventListener('mouseleave', aoSairDoPonteiro);
+  /**
+   * Solta o `pointerup` de `{ once: true }` que ainda não disparou.
+   *
+   * `once` remove sozinho AO DISPARAR — não ao sair da página. Quem removia o
+   * gatilho com o ponteiro ainda pressionado (arrastar para fora e soltar lá
+   * fora, tela trocada por um clique) deixava o ouvinte esperando um evento que
+   * podia nunca chegar.
+   */
+  let soltarPonteiro: (() => void) | null = null;
+
   trigger.addEventListener('pointerdown', () => {
     ponteiroPressionado = true;
-    document.addEventListener('pointerup', () => { ponteiroPressionado = false; }, { once: true });
+    const aoSoltar = () => {
+      ponteiroPressionado = false;
+      soltarPonteiro = null;
+    };
+    soltarPonteiro = () => {
+      document.removeEventListener('pointerup', aoSoltar);
+      soltarPonteiro = null;
+    };
+    document.addEventListener('pointerup', aoSoltar, { once: true });
   });
   trigger.addEventListener('focus', aoFocar);
   trigger.addEventListener('blur', hide);
 
-  return wrapper;
+  /*
+   * `mousemove` e `keydown` no `document` vivem só enquanto o balão está na
+   * tela, e `hide()` solta os dois junto com os temporizadores. Quem removia o
+   * wrapper com o balão ABERTO não passava por `hide()`: sobravam o balão órfão
+   * no `body` e dois ouvintes presos a um nó desanexado — e o `mousemove` é o
+   * mais caro do conjunto, porque roda a cada pixel do ponteiro.
+   */
+  return tornarDestruivel(wrapper, wrapper, () => {
+    hide();
+    soltarPonteiro?.();
+  });
 }

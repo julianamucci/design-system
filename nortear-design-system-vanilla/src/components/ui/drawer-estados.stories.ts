@@ -4,6 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -284,6 +285,55 @@ export const NotDismissible: Story = {
     await step('A saída explícita do rodapé continua funcionando', async () => {
       await expect(within(painel).getByRole('button', { name: /cancelar/i })).toBeVisible();
       await expect(painel).toHaveAccessibleName(/confirmação obrigatória/i);
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: a gaveta é montada, aberta e removida da página pela play.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => {
+          const conteudo = document.createElement('p');
+          conteudo.textContent = 'Conteúdo da gaveta.';
+          return createDrawer({
+            trigger: createButton({ variant: 'outline', label: 'Abrir' }),
+            title: 'Título',
+            description: 'Descrição da gaveta.',
+            content: conteudo,
+          });
+        },
+        exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
+        seletorDePortal: '[data-slot="drawer-content"], [data-slot="drawer-overlay"]',
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };

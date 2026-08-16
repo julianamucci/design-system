@@ -5,6 +5,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 
 export type DropdownMenuItemDef = {
   type?: 'item' | 'separator' | 'label';
@@ -35,7 +36,7 @@ function positionDropdown(anchor: HTMLElement, panel: HTMLElement): void {
 
 // ─── createDropdownMenu ───────────────────────────────────────────────────────
 
-export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
+export function createDropdownMenu(options: DropdownMenuOptions): DestroyableElement {
   const { trigger, items, onOpenChange } = options;
 
   const id = ++_dropdownCounter;
@@ -43,6 +44,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
 
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
+  let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'dropdown-menu';
@@ -126,7 +128,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
     menuItems[0]?.focus();
 
     document.addEventListener('keydown', handleKeydown);
-    setTimeout(() => document.addEventListener('click', handleOutsideClick), 0);
+    // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
+    // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
+    // registrado DEPOIS da limpeza e ficava para sempre.
+    timerCliqueFora = setTimeout(() => {
+      timerCliqueFora = null;
+      document.addEventListener('click', handleOutsideClick);
+    }, 0);
 
     onOpenChange?.(true);
   }
@@ -137,6 +145,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
     trigger.setAttribute('aria-expanded', 'false');
     isOpen = false;
 
+    if (timerCliqueFora !== null) {
+      clearTimeout(timerCliqueFora);
+      timerCliqueFora = null;
+    }
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
 
@@ -187,5 +199,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement {
     if (isOpen) close(); else open();
   });
 
-  return wrapper;
+  // O menu mora em portal no `body`, e os ouvintes de `keydown`/`click` vivem no
+  // `document` só enquanto ele está aberto. Quem removia o wrapper com o menu
+  // ABERTO — troca de story, desmonte de tela — deixava painel órfão no body e
+  // dois ouvintes presos a um nó que já não estava em lugar nenhum.
+  return tornarDestruivel(wrapper, wrapper, () => {
+    if (isOpen) close();
+  });
 }

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createDataTable } from './data-table';
-import { type Invoice, baseColumns } from './data-table.fixtures';
+import { type Invoice, baseColumns, invoices } from './data-table.fixtures';
+import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 // ─── Meta ──────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,55 @@ export const NoResults: Story = {
       await expect(canvasElement.querySelector("[role='status']")).toHaveTextContent(
         '0 de 0 linha(s) selecionada(s).',
       );
+    });
+  },
+};
+
+// ─── Limpeza de ouvintes ──────────────────────────────────────────────────────
+//
+// A fábrica registra ouvinte em `document`. Quem tira o nó da página com o
+// componente nesse estado não passa por caminho de fechamento nenhum, e antes
+// não havia o que chamar. A prova aqui NÃO é "`destroy()` rodou" — isso passaria
+// com um `destroy()` vazio. É a contagem de ouvintes do livro-caixa fechando em
+// zero, confirmada por uma bateria de eventos disparada no documento depois da
+// saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
+
+export const ListenerCleanup: Story = {
+  parameters: {
+    controls: { disable: true },
+    // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
+    // sempre a mesma legenda.
+    chromatic: { disable: true },
+  },
+  render: () => hospedeiroDeSonda(
+    'Sonda de limpeza: a tabela é montada, o menu de colunas é aberto, o estado muda duas vezes e a tabela sai da página.',
+  ),
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('[data-testid="cleanup-host"]');
+    await expect(host).not.toBeNull();
+
+    let sonda!: ResultadoDaSonda;
+
+    await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      sonda = await sondarOuvintes({
+        host: host as HTMLElement,
+        montar: () => createDataTable<Invoice>({
+          columns: baseColumns,
+          data: invoices.slice(0, 3),
+          enableColumnVisibility: true,
+          enablePagination: false,
+        }),
+        exercitar: (no) => {
+          const tabela = (no as HTMLElement & { __table?: { setGlobalFilter: (v: string) => void } }).__table;
+          no.querySelector<HTMLElement>('.nds-data-table-columns-btn')?.click();
+          tabela?.setGlobalFilter('a');
+          tabela?.setGlobalFilter('');
+        },
+      });
+    });
+
+    await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
+      await conferirLimpeza(sonda);
     });
   },
 };
