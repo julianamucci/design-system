@@ -48,6 +48,11 @@ const { t, dict } = useTranslation(sidebarTranslations as Record<string, unknown
     // O conteúdo compartilhado descreve a prop na API de outra lib. Aqui o
     // input chama `active` — `isActive` é convenção de React, não de Angular.
     'props.menuButton.isActive': 'Marca o item como página atual (`data-active` e `aria-current`).',
+    // A capacidade é a mesma nas cinco stacks; a FORMA é que diverge por
+    // linguagem de framework. Aqui o ponto de virada não é prop de componente:
+    // é um token de injeção, trocável por `providers` em qualquer nível da
+    // árvore. Só o nome muda — a descrição compartilhada continua valendo.
+    'props.provider.mobileQueryName': 'NDS_SIDEBAR_MOBILE_QUERY',
   },
 });
 
@@ -711,6 +716,14 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
           linha('defaultOpen', 'props.provider.defaultOpen', 'boolean', 'true'),
           linha('open', 'props.provider.open', 'model<boolean | undefined>', '—'),
           linha('openChange', 'props.provider.onOpenChange', 'output<boolean>', '—'),
+          // Não é input: é token de injeção, e o nome vem do conteúdo
+          // compartilhado justamente para poder divergir aqui.
+          linha(
+            t('props.provider.mobileQueryName'),
+            'props.provider.mobileQuery',
+            'InjectionToken<string>',
+            `'(max-width: 767px)'`,
+          ),
         ],
       },
       {
@@ -724,6 +737,13 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
             'props.sidebar.collapsible',
             `'offcanvas' | 'icon' | 'none'`,
             `'offcanvas'`,
+          ),
+          linha('mobileTitle', 'props.sidebar.mobileTitle', 'string', `'Barra lateral'`),
+          linha(
+            'mobileDescription',
+            'props.sidebar.mobileDescription',
+            'string',
+            `'Exibe a barra lateral como gaveta sobreposta.'`,
           ),
         ],
       },

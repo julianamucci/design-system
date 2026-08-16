@@ -5,16 +5,23 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
 import SheetDescription from '@/components/ui/sheet/SheetDescription.vue'
 import SheetHeader from '@/components/ui/sheet/SheetHeader.vue'
 import SheetTitle from '@/components/ui/sheet/SheetTitle.vue'
+import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels'
 import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils'
 
 defineOptions({
   inheritAttrs: false,
 })
 
+// `mobileTitle` e `mobileDescription` nomeiam a gaveta para quem usa leitor de
+// tela — um diálogo sem nome é anunciado como "diálogo" e mais nada. O padrão
+// vem do conteúdo compartilhado, em português; são props porque o texto é do
+// produto, não do design system.
 const props = withDefaults(defineProps<SidebarProps>(), {
   side: 'left',
   variant: 'sidebar',
   collapsible: 'offcanvas',
+  mobileTitle: () => ROTULOS_SIDEBAR_PADRAO.tituloMovel,
+  mobileDescription: () => ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
 })
 
 const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
@@ -62,8 +69,8 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
       v-bind="$attrs"
     >
       <SheetHeader class="nds-sr-only">
-        <SheetTitle>Sidebar</SheetTitle>
-        <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+        <SheetTitle>{{ props.mobileTitle }}</SheetTitle>
+        <SheetDescription>{{ props.mobileDescription }}</SheetDescription>
       </SheetHeader>
       <div class="nds-sidebar-mobile-inner">
         <slot />

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, waitFor, within, expect } from "storybook/test";
+import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   LayoutDashboard,
   Blocks,
@@ -245,7 +246,7 @@ export const CollapsedIcon: Story = {
     await step("O gatilho expande — e recolhe de volta", async () => {
       // Par idempotente: uma inversão só faria a segunda rodada do painel
       // Interactions afirmar o oposto.
-      const gatilho = canvas.getByRole("button", { name: /toggle sidebar/i });
+      const gatilho = canvas.getByRole("button", { name: /alternar barra lateral/i });
       await userEvent.click(gatilho);
       await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "expanded"));
       await userEvent.click(gatilho);
@@ -270,7 +271,7 @@ export const Offcanvas: Story = {
     });
 
     await step("O gatilho abre — e fecha de volta", async () => {
-      const gatilho = canvas.getByRole("button", { name: /toggle sidebar/i });
+      const gatilho = canvas.getByRole("button", { name: /alternar barra lateral/i });
       await userEvent.click(gatilho);
       await waitFor(() => expect(raiz()).toHaveAttribute("data-state", "expanded"));
       await userEvent.click(gatilho);
@@ -349,7 +350,7 @@ export const Mobile: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole("button", { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
     // A gaveta vive num portal no fim do <body>, fora do canvasElement.
     const gaveta = () =>
       document.querySelector<HTMLElement>("[data-slot='sidebar'][data-mobile='true']");
@@ -384,7 +385,10 @@ export const Mobile: Story = {
       await expect(dialogo).toHaveAttribute("aria-modal", "true");
       const rotuladoPor = dialogo.getAttribute("aria-labelledby");
       await expect(rotuladoPor).toBeTruthy();
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe("Sidebar");
+      // Nome em português por padrão: era "Sidebar", cravado no componente.
+      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe(
+        "Barra lateral",
+      );
     });
 
     await step("A navegação inteira foi para dentro da gaveta, e só ali", async () => {
@@ -426,6 +430,24 @@ export const Mobile: Story = {
       await waitFor(() => expect(gaveta()).not.toBeNull());
       await userEvent.keyboard("{Control>}b{/Control}");
       await waitFor(() => expect(gaveta()).toBeNull());
+    });
+
+    await step("Termina ABERTA: é este o estado que a foto registra", async () => {
+      // `visual.item5` promete "gaveta sobreposta ABERTA", e o Chromatic
+      // fotografa o estado final da play. Enquanto ela terminava fechada, o
+      // item estava coberto no papel e em foto nenhuma — a captura mostrava a
+      // página sem barra.
+      //
+      // O replay continua honesto: o primeiro passo fecha o que encontrar
+      // aberto, e os pares abrir/fechar acima já provaram que os cliques
+      // acontecem NESTA rodada. Este passo prova só o estado final.
+      await userEvent.click(gatilho());
+      // `waitForPortal` gateia na opacidade computada: `toBeVisible()` do
+      // jest-dom só reprova em opacidade exatamente 0, e a gaveta entra com
+      // animação — sem o gate, a foto poderia sair no meio do fade.
+      const painel = await waitForPortal("dialog", { name: /barra lateral/i });
+      await expect(painel).toBeVisible();
+      await expect(painel).toBe(gaveta());
     });
   },
 };

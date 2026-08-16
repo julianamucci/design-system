@@ -11,6 +11,13 @@ type SidebarArgs = {
   variant: 'sidebar' | 'floating' | 'inset';
   collapsible: 'offcanvas' | 'icon' | 'none';
   defaultOpen: boolean;
+  /**
+   * Ponto de virada entre coluna e gaveta. Declarado aqui só para existir na
+   * tabela da aba API Reference: nesta stack ele é token de injeção, entra por
+   * `providers` e nunca por `args` — por isso o argType é `control: false` e
+   * não há valor inicial.
+   */
+  NDS_SIDEBAR_MOBILE_QUERY?: never;
 };
 
 /** Ver a nota em separator.stories.ts. */
@@ -57,7 +64,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<SidebarArgs> })
       </div>
 
       <main ndsSidebarInset>
-        <button ndsSidebarTrigger aria-label="Alternar barra lateral">☰</button>
+        <button ndsSidebarTrigger>☰</button>
       </main>
     </div>
   \`,
@@ -74,18 +81,48 @@ const meta: Meta<SidebarArgs> = {
     docs: { page: withAutoDocsTab(NdsSidebarDocs) },
   },
   argTypes: {
-    side: { control: 'inline-radio', options: ['left', 'right'], description: 'Lado da tela.' },
+    side: {
+      control: 'inline-radio',
+      options: ['left', 'right'],
+      description: 'Lado da tela.',
+      table: { type: { summary: `'left' | 'right'` }, defaultValue: { summary: `'left'` } },
+    },
     variant: {
       control: 'inline-radio',
       options: ['sidebar', 'floating', 'inset'],
       description: 'Tratamento visual do painel.',
+      table: {
+        type: { summary: `'sidebar' | 'floating' | 'inset'` },
+        defaultValue: { summary: `'sidebar'` },
+      },
     },
     collapsible: {
       control: 'inline-radio',
       options: ['offcanvas', 'icon', 'none'],
       description: 'Como a sidebar recolhe.',
+      table: {
+        type: { summary: `'offcanvas' | 'icon' | 'none'` },
+        defaultValue: { summary: `'offcanvas'` },
+      },
     },
-    defaultOpen: { control: 'boolean', description: 'Estado inicial.' },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Estado inicial.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    // DOCUMENTAÇÃO, e não controle: aqui o ponto de virada não é input de
+    // componente, é token de injeção — trocá-lo exige `providers`, que se
+    // resolve na montagem do módulo da story e não a cada mudança de arg. Um
+    // control aqui seria um controle que não faz nada.
+    NDS_SIDEBAR_MOBILE_QUERY: {
+      control: false,
+      description:
+        'Ponto de virada entre coluna e gaveta sobreposta. Fornecido por `providers`; uma consulta sempre verdadeira, como (min-width: 0px), força a gaveta em qualquer largura.',
+      table: {
+        type: { summary: 'InjectionToken<string>' },
+        defaultValue: { summary: `'(max-width: 767px)'` },
+      },
+    },
   },
   args: { side: 'left', variant: 'sidebar', collapsible: 'offcanvas', defaultOpen: true },
 };
@@ -146,7 +183,9 @@ export const Playground: Story = {
         </div>
 
         <main ndsSidebarInset>
-          <button ndsSidebarTrigger aria-label="Alternar barra lateral">Alternar</button>
+          <!-- Sem rótulo explícito: o nome acessível tem padrão em português,
+               e é ele que a asserção guarda. O texto visível fica de reforço. -->
+          <button ndsSidebarTrigger>Alternar</button>
         </main>
       </div>
     `,
@@ -181,6 +220,18 @@ export const Playground: Story = {
       // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
       const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
       await expect(ativo.getAttribute('aria-current')).toBe('page');
+    });
+
+    await step('O gatilho tem nome acessível, e em português', async () => {
+      // Nome EXATO, e não presença: sem o padrão, o gatilho era anunciado pelo
+      // que houvesse dentro dele — aqui, o glifo "Alternar" — e nas outras
+      // stacks pelo "Toggle Sidebar" cravado no componente.
+      const gatilho = canvas.getByRole('button', { name: 'Alternar barra lateral' });
+      await expect(gatilho).toHaveAccessibleName('Alternar barra lateral');
+      // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
+      // Era a única das cinco implementações sem dica nenhuma.
+      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-slot="sidebar-rail"]')!;
+      await expect(faixa.title).toBe('Alternar barra lateral');
     });
 
     await step('O gatilho alterna, e diz em qual estado está', async () => {

@@ -2,15 +2,21 @@
 	import { Button } from "@/components/ui/button/index.js";
 	import PanelLeftIcon from '@lucide/svelte/icons/panel-left';
 	import { cn } from "@/lib/utils.js";
+	import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels";
 	import type { ComponentProps } from "svelte";
 	import { useSidebar } from "./context.svelte.js";
 
+	// `label` é o nome acessível: o botão carrega só um ícone, e o ícone é
+	// `aria-hidden`. O padrão vem do conteúdo compartilhado, em português — o
+	// controle principal do componente anunciava "Toggle Sidebar" até aqui.
 	let {
 		ref = $bindable(null),
 		class: className,
+		label = ROTULOS_SIDEBAR_PADRAO.alternar,
 		onclick,
 		...restProps
 	}: ComponentProps<typeof Button> & {
+		label?: string;
 		onclick?: (e: MouseEvent) => void;
 	} = $props();
 
@@ -32,5 +38,5 @@
 	{...restProps}
 >
 	<PanelLeftIcon  />
-	<span class="nds-sr-only">Toggle Sidebar</span>
+	<span class="nds-sr-only">{label}</span>
 </Button>

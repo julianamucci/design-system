@@ -2,14 +2,21 @@
 	import * as Sheet from "@/components/ui/sheet/index.js";
 	import { cn, type WithElementRef } from "@/lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
+	import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels";
 	import { SIDEBAR_WIDTH_MOBILE } from "./constants.js";
 	import { useSidebar } from "./context.svelte.js";
 
+	// `mobileTitle` e `mobileDescription` nomeiam a gaveta para quem usa leitor
+	// de tela — um diálogo sem nome é anunciado como "diálogo" e mais nada. O
+	// padrão vem do conteúdo compartilhado, em português; são props porque o
+	// texto é do produto, não do design system.
 	let {
 		ref = $bindable(null),
 		side = "left",
 		variant = "sidebar",
 		collapsible = "offcanvas",
+		mobileTitle = ROTULOS_SIDEBAR_PADRAO.tituloMovel,
+		mobileDescription = ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
 		class: className,
 		children,
 		...restProps
@@ -17,6 +24,8 @@
 		side?: "left" | "right";
 		variant?: "sidebar" | "floating" | "inset";
 		collapsible?: "offcanvas" | "icon" | "none";
+		mobileTitle?: string;
+		mobileDescription?: string;
 	} = $props();
 
 	const sidebar = useSidebar();
@@ -45,8 +54,8 @@
 			{side}
 		>
 			<Sheet.Header class="nds-sr-only">
-				<Sheet.Title>Sidebar</Sheet.Title>
-				<Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
+				<Sheet.Title>{mobileTitle}</Sheet.Title>
+				<Sheet.Description>{mobileDescription}</Sheet.Description>
 			</Sheet.Header>
 			<div class="nds-sidebar-mobile-inner">
 				{@render children?.()}

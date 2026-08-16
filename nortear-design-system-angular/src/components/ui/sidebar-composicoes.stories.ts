@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { esperarPortal } from '@/lib/wait-for-portal';
 import { NDS_SIDEBAR, NDS_SIDEBAR_MOBILE_QUERY } from './sidebar';
 import { NdsSeparator } from './separator';
 import { NDS_TOOLTIP } from './tooltip';
@@ -195,7 +196,9 @@ export const Mobile: Story = {
   render: () => ({
     template: `
       <div ndsSidebarProvider>
-        <div ndsSidebar data-testid="sb" mobileTitle="Barra lateral">
+        <!-- Sem o input de título: o nome da gaveta tem padrão em português
+             vindo do conteúdo compartilhado, e é ele que a asserção guarda. -->
+        <div ndsSidebar data-testid="sb">
           <div ndsSidebarContent>
             <nav aria-label="Navegação principal">
               <div ndsSidebarGroup>
@@ -269,6 +272,22 @@ export const Mobile: Story = {
       await waitFor(() => expect(painel()).toBeNull());
       // O foco volta depois da animação de saída, não junto com a desmontagem.
       await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+    });
+
+    await step('Termina ABERTA: é este o estado que a foto registra', async () => {
+      // `visual.item5` promete "gaveta sobreposta ABERTA", e o Chromatic
+      // fotografa o estado final da play. Enquanto ela terminava fechada, o
+      // item estava coberto no papel e em foto nenhuma.
+      //
+      // O replay continua honesto: o passo de abertura acima parte da gaveta
+      // fechada e o Escape a fechou de novo, então o clique daqui acontece
+      // NESTA rodada. Este passo prova só o estado final.
+      await userEvent.click(gatilho());
+      // `esperarPortal` gateia na opacidade computada: afirmar no primeiro
+      // quadro leria a gaveta no meio do fade de entrada.
+      const dialogo = await esperarPortal('dialog', { name: /barra lateral/i });
+      await expect(dialogo).toBeVisible();
+      await expect(dialogo).toBe(painel());
     });
   },
 };

@@ -413,9 +413,11 @@ export const WithGroupActions: Story = {
       const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-sidebar="rail"]')!;
       await expect(faixa.getAttribute('aria-hidden')).toBe('true');
       await expect(faixa.tabIndex).toBe(-1);
-      await expect(faixa.title).toBe('Toggle sidebar');
+      // Dica de ponteiro em português, e o mesmo texto do gatilho: a ação é a
+      // mesma. Era "Toggle sidebar", cravado.
+      await expect(faixa.title).toBe('Alternar barra lateral');
       // Um único controle na ordem de tabulação para a mesma ação.
-      await expect(canvas.getAllByRole('button', { name: /toggle sidebar/i }).length).toBe(1);
+      await expect(canvas.getAllByRole('button', { name: /alternar barra lateral/i }).length).toBe(1);
     });
 
     await step('A faixa alterna a barra — e devolve ao estado de partida', async () => {

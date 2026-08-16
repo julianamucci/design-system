@@ -1057,6 +1057,11 @@ export function createSidebarDocs(): HTMLElement {
                 { name: 'side',          type: '"left" | "right"',                      defaultValue: '"left"',       required: 'Não', description: stripHtml(t('props.sidebar.side')) },
                 { name: 'variant',       type: '"sidebar" | "floating" | "inset"',       defaultValue: '"sidebar"',    required: 'Não', description: stripHtml(t('props.sidebar.variant')) },
                 { name: 'onOpenChange',  type: '(open: boolean) => void',               defaultValue: '—',            required: 'Não', description: stripHtml(t('props.provider.onOpenChange')) },
+                // O NOME sai do conteúdo compartilhado porque a forma diverge
+                // por linguagem de framework; tipo e padrão são desta stack.
+                { name: t('props.provider.mobileQueryName'), type: 'string', defaultValue: `'(max-width: 767px)'`, required: 'Não', description: stripHtml(t('props.provider.mobileQuery')) },
+                { name: 'mobileTitle',       type: 'string', defaultValue: `'Barra lateral'`,                                required: 'Não', description: stripHtml(t('props.sidebar.mobileTitle')) },
+                { name: 'mobileDescription', type: 'string', defaultValue: `'Exibe a barra lateral como gaveta sobreposta.'`, required: 'Não', description: stripHtml(t('props.sidebar.mobileDescription')) },
               ],
             },
             {

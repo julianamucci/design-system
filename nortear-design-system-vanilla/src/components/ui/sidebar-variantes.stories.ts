@@ -136,7 +136,7 @@ export const VariantSidebar: Story = {
     const canvas = within(canvasElement);
 
     await step('O gatilho tem nome acessível', async () => {
-      await expect(canvas.getByRole('button', { name: /toggle sidebar/i })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: /alternar barra lateral/i })).toBeInTheDocument();
     });
 
     await step('A variante padrão não arredonda o painel interno', async () => {

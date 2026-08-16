@@ -17,6 +17,7 @@ import {
   type OnInit,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels';
 import {
   NdsSheet,
   NdsSheetContent,
@@ -262,13 +263,14 @@ export class NdsSidebar {
   readonly collapsible = input<SidebarCollapsible>('offcanvas');
 
   /**
-   * Nome do painel na versão móvel, só para leitor de tela.
+   * Nome e descrição do painel na versão móvel, só para leitor de tela.
    *
-   * Default em inglês para bater com o que as outras quatro stacks já escrevem
-   * — lá é literal cravado no componente; aqui pelo menos dá para traduzir.
+   * O padrão vem do conteúdo compartilhado, em português, e é o mesmo nas cinco
+   * stacks: era o inglês cravado no componente que fazia a gaveta ser anunciada
+   * como "Sidebar / Displays the mobile sidebar." num produto em português.
    */
-  readonly mobileTitle = input('Sidebar');
-  readonly mobileDescription = input('Displays the mobile sidebar.');
+  readonly mobileTitle = input(ROTULOS_SIDEBAR_PADRAO.tituloMovel);
+  readonly mobileDescription = input(ROTULOS_SIDEBAR_PADRAO.descricaoMovel);
 
   protected readonly store = inject(NdsSidebarStore);
 
@@ -312,7 +314,18 @@ export class NdsSidebar {
   );
 }
 
-/** Botão que alterna a sidebar. */
+/**
+ * Botão que alterna a sidebar.
+ *
+ * O nome acessível tem padrão em português, vindo do conteúdo compartilhado: um
+ * gatilho só de ícone sem nome é anunciado pelo que houver dentro dele — e nas
+ * outras quatro stacks esse texto era "Toggle Sidebar", cravado.
+ *
+ * O input é APELIDADO como `aria-label`, e não exposto como `label`: assim o
+ * `aria-label="Abrir navegação"` que quem compõe já escrevia continua sendo a
+ * forma de trocá-lo, em vez de virar um atributo que a ligação de host
+ * sobrescreveria em silêncio.
+ */
 @Directive({
   selector: 'button[ndsSidebarTrigger]',
   standalone: true,
@@ -321,10 +334,13 @@ export class NdsSidebar {
     'data-sidebar': 'trigger',
     '[attr.data-slot]': '"sidebar-trigger"',
     '[attr.aria-expanded]': 'store.open()',
+    '[attr.aria-label]': 'ariaLabel()',
     '(click)': 'store.alternar()',
   },
 })
 export class NdsSidebarTrigger {
+  readonly ariaLabel = input(ROTULOS_SIDEBAR_PADRAO.alternar, { alias: 'aria-label' });
+
   protected readonly store = inject(NdsSidebarStore);
 }
 
@@ -335,6 +351,11 @@ export class NdsSidebarTrigger {
  * ordem de tabulação. Duas paradas de teclado para uma ação só é ruído para
  * quem navega sem mouse — e o `aria-hidden` completa, tirando a duplicata
  * também do leitor de tela.
+ *
+ * O `title` é a dica de ponteiro, para quem a faixa existe: sem ela, a faixa é
+ * uma tira de 1rem que reage ao clique e não se explica. As outras quatro
+ * stacks já a emitiam; esta era a única sem — divergência de markup, e o Vanilla
+ * é a referência. O texto é o mesmo do gatilho, porque a ação é a mesma.
  */
 @Directive({
   selector: 'button[ndsSidebarRail]',
@@ -346,10 +367,13 @@ export class NdsSidebarTrigger {
     'aria-hidden': 'true',
     'data-sidebar': 'rail',
     '[attr.data-slot]': '"sidebar-rail"',
+    '[attr.title]': 'title()',
     '(click)': 'store.alternar()',
   },
 })
 export class NdsSidebarRail {
+  readonly title = input(ROTULOS_SIDEBAR_PADRAO.alternar);
+
   protected readonly store = inject(NdsSidebarStore);
 }
 

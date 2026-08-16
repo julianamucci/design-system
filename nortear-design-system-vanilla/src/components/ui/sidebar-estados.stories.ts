@@ -170,7 +170,7 @@ export const Expanded: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: /toggle sidebar/i });
+    const trigger = canvas.getByRole('button', { name: /alternar barra lateral/i });
 
     await step('SidebarTrigger está presente e acessível', async () => {
       await expect(trigger).toBeInTheDocument();
@@ -343,7 +343,7 @@ export const WithoutToggle: Story = {
 
     await step('Não há gatilho de alternância na página', async () => {
       await expect(canvasElement.querySelector('[data-sidebar="trigger"]')).toBeNull();
-      await expect(canvas.queryByRole('button', { name: /toggle sidebar/i })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: /alternar barra lateral/i })).toBeNull();
     });
 
     await step('A navegação continua inteira e visível', async () => {
@@ -381,7 +381,7 @@ export const MobileOverlay: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
     const gaveta = () => document.querySelector<HTMLElement>('[data-slot="sidebar"][data-mobile="true"]');
 
     await step('Na largura estreita a coluna não ocupa lugar no fluxo', async () => {
@@ -401,7 +401,8 @@ export const MobileOverlay: Story = {
 
     await step('O gatilho abre a gaveta como diálogo modal nomeado', async () => {
       await userEvent.click(gatilho());
-      const painel = await waitForPortal('dialog', { name: 'Sidebar' });
+      // Nome em português por padrão: era "Sidebar", cravado na fábrica.
+      const painel = await waitForPortal('dialog', { name: 'Barra lateral' });
       await expect(painel.getAttribute('aria-modal')).toBe('true');
       await expect(painel.dataset.mobile).toBe('true');
       // A navegação inteira mudou de lugar: é a MESMA barra, não uma cópia.
@@ -443,6 +444,23 @@ export const MobileOverlay: Story = {
       // não encontra o item que o atributo achou.
       await expect(within(canvasElement).queryByRole('link', { name: 'Dashboard' })).toBeNull();
     });
+
+    await step('Termina ABERTA: é este o estado que a foto registra', async () => {
+      // `visual.item5` promete "gaveta sobreposta ABERTA", e o Chromatic
+      // fotografa o estado final da play. Enquanto ela terminava fechada, o
+      // item estava coberto no papel e em foto nenhuma — a captura mostrava a
+      // página sem barra nenhuma.
+      //
+      // O replay continua honesto: o primeiro passo fecha o que encontrar
+      // aberto, e o par abrir/fechar acima já provou que o clique acontece
+      // NESTA rodada. Este passo prova só o estado final.
+      await userEvent.click(gatilho());
+      // `waitForPortal` gateia na opacidade computada: `toBeVisible()` só
+      // reprova em opacidade exatamente 0, e a gaveta entra com animação.
+      const painel = await waitForPortal('dialog', { name: 'Barra lateral' });
+      await expect(painel).toBeVisible();
+      await expect(painel).toBe(gaveta());
+    });
   },
 };
 
@@ -465,7 +483,7 @@ export const MobileOff: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = canvas.getByRole('button', { name: /alternar barra lateral/i });
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
 
     await step('A coluna está no fluxo e não há diálogo', async () => {

@@ -11,9 +11,15 @@
 	} from "./constants.js";
 	import { setSidebar } from "./context.svelte.js";
 
+	// `defaultOpen` existia no conteúdo compartilhado, na tabela de props desta
+	// stack e em dezesseis exemplos da docs page — e em lugar nenhum no
+	// componente. Prop que não existe é aceita e ignorada em silêncio: o exemplo
+	// "recolhida" nascia expandido, e nenhum teste reprovava. É o estado inicial
+	// de quem não controla `open` de fora.
 	let {
 		ref = $bindable(null),
-		open = $bindable(true),
+		defaultOpen = true,
+		open = $bindable(defaultOpen),
 		onOpenChange = () => {},
 		mobileQuery = SIDEBAR_MOBILE_QUERY,
 		class: className,
@@ -21,6 +27,7 @@
 		children,
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+		defaultOpen?: boolean;
 		open?: boolean;
 		onOpenChange?: (open: boolean) => void;
 		/**

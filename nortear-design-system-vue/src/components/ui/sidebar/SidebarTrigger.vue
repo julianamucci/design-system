@@ -4,11 +4,18 @@ import type { HTMLAttributes } from 'vue'
 import { PanelLeftIcon } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels'
 import { useSidebar } from './utils'
 
-const props = defineProps<{
+// `label` é o nome acessível: o botão carrega só um ícone, e o ícone é
+// `aria-hidden`. O padrão vem do conteúdo compartilhado, em português — o
+// controle principal do componente anunciava "Toggle Sidebar" até aqui.
+const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
-}>()
+  label?: string
+}>(), {
+  label: () => ROTULOS_SIDEBAR_PADRAO.alternar,
+})
 
 const { toggleSidebar } = useSidebar()
 </script>
@@ -23,6 +30,6 @@ const { toggleSidebar } = useSidebar()
     @click="toggleSidebar"
   >
     <PanelLeftIcon />
-    <span class="nds-sr-only">Toggle Sidebar</span>
+    <span class="nds-sr-only">{{ props.label }}</span>
   </Button>
 </template>

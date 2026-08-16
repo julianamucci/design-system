@@ -6,6 +6,10 @@ export interface SidebarProps {
   side?: 'left' | 'right'
   variant?: 'sidebar' | 'floating' | 'inset'
   collapsible?: 'offcanvas' | 'icon' | 'none'
+  /** Nome da gaveta sobreposta, só para leitor de tela. */
+  mobileTitle?: string
+  /** Descrição da gaveta sobreposta, só para leitor de tela. */
+  mobileDescription?: string
   class?: HTMLAttributes['class']
 }
 

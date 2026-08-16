@@ -331,12 +331,17 @@ const providerPropItems = computed(() => [
   { name: 'defaultOpen',   type: 'boolean',            defaultValue: 'true',      required: 'Não', description: tContent('props.provider.defaultOpen')   },
   { name: 'open',          type: 'boolean',            defaultValue: 'undefined', required: 'Não', description: stripHtml(tContent('props.provider.open'))          },
   { name: 'onOpenChange',  type: '(v: boolean) => void', defaultValue: '—',       required: 'Não', description: tContent('props.provider.onOpenChange')  },
+  // O NOME sai do conteúdo compartilhado porque a forma diverge por linguagem
+  // de framework; tipo e padrão são desta stack e ficam aqui, como nas demais.
+  { name: tContent('props.provider.mobileQueryName'), type: 'string', defaultValue: '"(max-width: 767px)"', required: 'Não', description: stripHtml(tContent('props.provider.mobileQuery')) },
 ]);
 
 const sidebarPropItems = computed(() => [
   { name: 'side',        type: '"left" | "right"',                       defaultValue: '"left"',      required: 'Não', description: stripHtml(tContent('props.sidebar.side'))        },
   { name: 'variant',     type: '"sidebar" | "floating" | "inset"',       defaultValue: '"sidebar"',   required: 'Não', description: stripHtml(tContent('props.sidebar.variant'))     },
   { name: 'collapsible', type: '"offcanvas" | "icon" | "none"',          defaultValue: '"offcanvas"', required: 'Não', description: stripHtml(tContent('props.sidebar.collapsible')) },
+  { name: 'mobileTitle',       type: 'string', defaultValue: '"Barra lateral"',                          required: 'Não', description: stripHtml(tContent('props.sidebar.mobileTitle'))       },
+  { name: 'mobileDescription', type: 'string', defaultValue: '"Exibe a barra lateral como gaveta sobreposta."', required: 'Não', description: stripHtml(tContent('props.sidebar.mobileDescription')) },
 ]);
 
 const menuButtonPropItems = computed(() => [

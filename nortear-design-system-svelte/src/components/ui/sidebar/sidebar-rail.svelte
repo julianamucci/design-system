@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cn, type WithElementRef } from "@/lib/utils.js";
+	import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels";
 	import type { HTMLAttributes } from "svelte/elements";
 	import { useSidebar } from "./context.svelte.js";
 
@@ -18,7 +19,10 @@
 	// ordem de tabulação — duas paradas de teclado para uma ação só é ruído para
 	// quem navega sem mouse. O `aria-hidden` completa o par: sem ele, o leitor de
 	// tela lista dois botões com o mesmo nome para a mesma ação, e um deles nem
-	// recebe foco. O `title` fica: é a dica de ponteiro, para quem a faixa existe.
+	// recebe foco. O `title` fica: é a dica de ponteiro, para quem a faixa existe
+	// — e vem do conteúdo compartilhado, em português, com o mesmo texto do
+	// gatilho, porque a ação é a mesma. Vai ANTES do spread: um `title` de quem
+	// compõe ainda ganha.
 </script>
 
 <button
@@ -28,7 +32,7 @@
 	aria-hidden="true"
 	tabindex={-1}
 	onclick={sidebar.toggle}
-	title="Toggle Sidebar"
+	title={ROTULOS_SIDEBAR_PADRAO.alternar}
 	class={cn("nds-sidebar-rail", className)}
 	{...restProps}
 >

@@ -21,6 +21,8 @@ type SidebarArgs = {
   variant: SidebarVariant;
   side: SidebarSide;
   defaultOpen: boolean;
+  /** Ponto de virada entre coluna e gaveta — opção da fábrica da barra. */
+  mobileQuery: string;
 };
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -37,21 +39,34 @@ const meta: Meta<SidebarArgs> = {
       control: 'select',
       options: ['sidebar', 'floating', 'inset'],
       description: 'Estilo visual da sidebar',
+      table: {
+        type: { summary: `'sidebar' | 'floating' | 'inset'` },
+        defaultValue: { summary: `'sidebar'` },
+      },
     },
     side: {
       control: 'select',
       options: ['left', 'right'],
       description: 'Posição da sidebar na tela',
+      table: { type: { summary: `'left' | 'right'` }, defaultValue: { summary: `'left'` } },
     },
     defaultOpen: {
       control: 'boolean',
       description: 'Estado inicial: expandida (true) ou recolhida (false)',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    mobileQuery: {
+      control: 'text',
+      description:
+        'Ponto de virada entre coluna e gaveta sobreposta. Uma consulta sempre verdadeira, como (min-width: 0px), força a gaveta em qualquer largura.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: `'(max-width: 767px)'` } },
     },
   },
   args: {
     variant: 'sidebar',
     side: 'left',
     defaultOpen: true,
+    mobileQuery: '(max-width: 767px)',
   },
 };
 
@@ -65,6 +80,7 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
     defaultOpen: args.defaultOpen,
     side: args.side,
     variant: args.variant,
+    mobileQuery: args.mobileQuery,
   });
 
   const inner = instance.element.querySelector('[data-sidebar="sidebar"]')!;
@@ -180,7 +196,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const raiz = () => canvasElement.querySelector<HTMLElement>('.nds-sidebar-root')!;
-    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
 
     await step('A navegação tem nome acessível', async () => {
       // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
@@ -207,8 +223,11 @@ export const Playground: Story = {
       await expect(icone.getAttribute('aria-hidden')).toBe('true');
     });
 
-    await step('O gatilho tem nome acessível', async () => {
-      await expect(gatilho()).toBeInTheDocument();
+    await step('O gatilho tem nome acessível, e em português', async () => {
+      // Nome EXATO, e não presença: o gatilho é só um ícone, e o nome dele é a
+      // única coisa que quem usa leitor de tela recebe. Enquanto o texto era
+      // "Toggle sidebar", nenhuma asserção reprovava.
+      await expect(gatilho()).toHaveAccessibleName('Alternar barra lateral');
     });
 
     await step('O gatilho alterna o estado — e volta', async () => {

@@ -39,11 +39,18 @@ const meta: Meta = {
         defaultValue: { summary: 'offcanvas' },
       },
     },
+    mobileQuery: {
+      control: 'text',
+      description:
+        'Ponto de virada entre coluna e gaveta sobreposta. Uma consulta sempre verdadeira, como (min-width: 0px), força a gaveta em qualquer largura.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '(max-width: 767px)' } },
+    },
   },
   args: {
     side: 'left',
     variant: 'sidebar',
     collapsible: 'offcanvas',
+    mobileQuery: '(max-width: 767px)',
   },
 };
 
@@ -65,13 +72,16 @@ export const Playground: Story = {
       side: args.side,
       variant: args.variant,
       collapsible: args.collapsible,
+      // Vai para o Provider dentro do andaime: o ponto de virada é dele, não
+      // da barra.
+      mobileQuery: args.mobileQuery,
       defaultOpen: true,
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const raiz = () => canvasElement.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
-    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
 
     await step('A navegação tem nome acessível', async () => {
       // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
@@ -93,8 +103,14 @@ export const Playground: Story = {
       await expect(icone.getAttribute('aria-hidden')).toBe('true');
     });
 
-    await step('O gatilho tem nome acessível', async () => {
-      await expect(gatilho()).toBeInTheDocument();
+    await step('O gatilho tem nome acessível, e em português', async () => {
+      // Nome EXATO, e não presença: o gatilho é só um ícone, e o nome dele é a
+      // única coisa que quem usa leitor de tela recebe. Enquanto o texto era
+      // "Toggle Sidebar", nenhuma asserção reprovava.
+      await expect(gatilho()).toHaveAccessibleName('Alternar barra lateral');
+      // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
+      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-slot="sidebar-rail"]')!;
+      await expect(faixa.title).toBe('Alternar barra lateral');
     });
 
     await step('O gatilho alterna o estado — e volta', async () => {

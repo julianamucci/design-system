@@ -1064,6 +1064,16 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 required: "Sim",
                 description: tContent("props.provider.children"),
               },
+              {
+                // O NOME sai do conteúdo compartilhado porque a forma diverge
+                // por linguagem de framework; o tipo e o padrão são desta
+                // stack e ficam aqui, como nas demais linhas.
+                name: tContent("props.provider.mobileQueryName"),
+                type: "string",
+                defaultValue: '"(max-width: 767px)"',
+                required: "Não",
+                description: stripHtml(tContent("props.provider.mobileQuery")),
+              },
             ],
           },
           {
@@ -1096,6 +1106,20 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
                 defaultValue: '"offcanvas"',
                 required: "Não",
                 description: stripHtml(tContent("props.sidebar.collapsible")),
+              },
+              {
+                name: "mobileTitle",
+                type: "string",
+                defaultValue: '"Barra lateral"',
+                required: "Não",
+                description: stripHtml(tContent("props.sidebar.mobileTitle")),
+              },
+              {
+                name: "mobileDescription",
+                type: "string",
+                defaultValue: '"Exibe a barra lateral como gaveta sobreposta."',
+                required: "Não",
+                description: stripHtml(tContent("props.sidebar.mobileDescription")),
               },
             ],
           },

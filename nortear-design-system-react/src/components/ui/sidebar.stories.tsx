@@ -36,11 +36,13 @@ interface SidebarStoryProps {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
   defaultOpen?: boolean;
+  /** Ponto de virada entre coluna e gaveta — prop do Provider, não da barra. */
+  mobileQuery?: string;
 }
 
-function SidebarStory({ side, variant, collapsible, defaultOpen }: SidebarStoryProps) {
+function SidebarStory({ side, variant, collapsible, defaultOpen, mobileQuery }: SidebarStoryProps) {
   return (
-    <SidebarProvider defaultOpen={defaultOpen ?? true}>
+    <SidebarProvider defaultOpen={defaultOpen ?? true} mobileQuery={mobileQuery}>
       <nav aria-label="Navegação principal">
         <Sidebar side={side} variant={variant} collapsible={collapsible}>
           <SidebarHeader className="nds-p-2">
@@ -146,24 +148,45 @@ const meta = {
       control: "select",
       options: ["left", "right"],
       description: "Posição da sidebar",
+      table: { type: { summary: '"left" | "right"' }, defaultValue: { summary: '"left"' } },
     },
     variant: {
       control: "select",
       options: ["sidebar", "floating", "inset"],
       description: "Estilo visual da sidebar",
+      table: {
+        type: { summary: '"sidebar" | "floating" | "inset"' },
+        defaultValue: { summary: '"sidebar"' },
+      },
     },
     collapsible: {
       control: "select",
       options: ["offcanvas", "icon", "none"],
       description: "Comportamento ao recolher",
+      table: {
+        type: { summary: '"offcanvas" | "icon" | "none"' },
+        defaultValue: { summary: '"offcanvas"' },
+      },
+    },
+    mobileQuery: {
+      control: "text",
+      description:
+        "Ponto de virada entre coluna e gaveta sobreposta. Uma consulta sempre verdadeira, como (min-width: 0px), força a gaveta em qualquer largura.",
+      table: {
+        type: { summary: "string" },
+        defaultValue: { summary: '"(max-width: 767px)"' },
+      },
     },
   },
   args: {
     side: "left",
     variant: "sidebar",
     collapsible: "offcanvas",
+    mobileQuery: "(max-width: 767px)",
   },
-} satisfies Meta<typeof Sidebar>;
+  // O tipo é o do andaime, e não `typeof Sidebar`: `mobileQuery` é prop do
+  // Provider, não da barra, e a aba API Reference precisa dela declarada.
+} satisfies Meta<SidebarStoryProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -181,16 +204,17 @@ export const Playground: Story = {
   },
   render: (args) => (
     <SidebarStory
-      key={`${args.side}-${args.variant}-${args.collapsible}`}
+      key={`${args.side}-${args.variant}-${args.collapsible}-${args.mobileQuery}`}
       side={args.side}
       variant={args.variant}
       collapsible={args.collapsible}
+      mobileQuery={args.mobileQuery}
     />
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const raiz = () => canvasElement.querySelector<HTMLElement>("[data-slot='sidebar']")!;
-    const gatilho = () => canvas.getByRole("button", { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole("button", { name: /alternar barra lateral/i });
 
     await step("A navegação tem nome acessível", async () => {
       // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
@@ -212,8 +236,15 @@ export const Playground: Story = {
       await expect(icone.getAttribute("aria-hidden")).toBe("true");
     });
 
-    await step("O gatilho tem nome acessível", async () => {
-      await expect(gatilho()).toBeInTheDocument();
+    await step("O gatilho tem nome acessível, e em português", async () => {
+      // Nome EXATO, e não presença: o gatilho é só um ícone, e o nome dele é a
+      // única coisa que quem usa leitor de tela recebe. Enquanto o texto era
+      // "Toggle Sidebar", nenhuma asserção reprovava — a consulta por papel
+      // casava o inglês tão bem quanto casaria qualquer outra coisa.
+      await expect(gatilho()).toHaveAccessibleName("Alternar barra lateral");
+      // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
+      const faixa = canvasElement.querySelector<HTMLButtonElement>("[data-slot='sidebar-rail']")!;
+      await expect(faixa.title).toBe("Alternar barra lateral");
     });
 
     await step("O gatilho alterna o estado — e volta", async () => {
@@ -242,7 +273,7 @@ export const Playground: Story = {
       // ela seria um segundo botão com o mesmo nome, para a mesma ação, sem foco.
       // A prova é o gatilho continuar sendo o único elemento com esse nome.
       await expect(faixa).toHaveAttribute("aria-hidden", "true");
-      await expect(canvas.getAllByRole("button", { name: /toggle sidebar/i })).toHaveLength(1);
+      await expect(canvas.getAllByRole("button", { name: /alternar barra lateral/i })).toHaveLength(1);
 
       const antes = raiz().getAttribute("data-state");
       faixa.click();

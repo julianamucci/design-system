@@ -1143,6 +1143,9 @@ interface SidebarMenuButtonProps {
           { name: 'open',         type: 'boolean',    defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.provider.open'))          },
           { name: 'onOpenChange', type: '(v: boolean) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.provider.onOpenChange')) },
           { name: 'children',     type: 'Snippet',    defaultValue: '—',         required: 'Sim', description: stripHtml($tStore('props.provider.children'))      },
+          // O NOME sai do conteúdo compartilhado porque a forma diverge por
+          // linguagem de framework; tipo e padrão são desta stack.
+          { name: $tStore('props.provider.mobileQueryName'), type: 'string', defaultValue: '"(max-width: 767px)"', required: 'Não', description: stripHtml($tStore('props.provider.mobileQuery')) },
         ],
       },
       {
@@ -1158,6 +1161,8 @@ interface SidebarMenuButtonProps {
           { name: 'side',        type: '"left" | "right"',                  defaultValue: '"left"',      required: 'Não', description: stripHtml($tStore('props.sidebar.side'))        },
           { name: 'variant',     type: '"sidebar" | "floating" | "inset"',  defaultValue: '"sidebar"',   required: 'Não', description: stripHtml($tStore('props.sidebar.variant'))     },
           { name: 'collapsible', type: '"offcanvas" | "icon" | "none"',     defaultValue: '"offcanvas"', required: 'Não', description: stripHtml($tStore('props.sidebar.collapsible')) },
+          { name: 'mobileTitle',       type: 'string', defaultValue: '"Barra lateral"',                               required: 'Não', description: stripHtml($tStore('props.sidebar.mobileTitle'))       },
+          { name: 'mobileDescription', type: 'string', defaultValue: '"Exibe a barra lateral como gaveta sobreposta."', required: 'Não', description: stripHtml($tStore('props.sidebar.mobileDescription')) },
         ],
       },
       {

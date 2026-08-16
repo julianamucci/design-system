@@ -6,6 +6,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { SIDEBAR_MOBILE_QUERY, useIsMobile } from "@/hooks/use-mobile"
+import { ROTULOS_SIDEBAR_PADRAO } from "@shared/primitives/sidebar-a11y-labels"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -167,6 +168,8 @@ function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
+  mobileTitle = ROTULOS_SIDEBAR_PADRAO.tituloMovel,
+  mobileDescription = ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
   className,
   children,
   dir,
@@ -175,6 +178,17 @@ function Sidebar({
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
+  /**
+   * Nome e descrição da gaveta sobreposta, só para leitor de tela.
+   *
+   * O padrão vem do conteúdo compartilhado, em português. São props e não
+   * literais porque o texto pertence ao produto: uma aplicação em outro idioma
+   * — ou que chame a barra de outra coisa — precisa poder trocá-lo sem editar o
+   * componente. Ficam DESESTRUTURADOS de propósito: no `...props` virariam
+   * atributos desconhecidos no elemento.
+   */
+  mobileTitle?: string
+  mobileDescription?: string
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
@@ -219,8 +233,8 @@ function Sidebar({
           {...restante}
         >
           <SheetHeader className="nds-sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetTitle>{mobileTitle}</SheetTitle>
+            <SheetDescription>{mobileDescription}</SheetDescription>
           </SheetHeader>
           <div className="nds-sidebar-mobile-inner">{children}</div>
         </SheetContent>
@@ -257,11 +271,21 @@ function Sidebar({
   )
 }
 
+/**
+ * Botão que alterna a barra.
+ *
+ * `label` é o nome acessível: o botão carrega só um ícone, e o ícone é
+ * `aria-hidden`. O padrão vem do conteúdo compartilhado, em português — quem
+ * ouve o controle principal do componente ouvia "Toggle Sidebar" até aqui.
+ * Continua trocável para o caso em que o rótulo depende do contexto ("Abrir
+ * navegação do produto").
+ */
 function SidebarTrigger({
   className,
   onClick,
+  label = ROTULOS_SIDEBAR_PADRAO.alternar,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { label?: string }) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -278,7 +302,7 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeftIcon />
-      <span className="nds-sr-only">Toggle Sidebar</span>
+      <span className="nds-sr-only">{label}</span>
     </Button>
   )
 }
@@ -290,7 +314,10 @@ function SidebarTrigger({
  * ordem de tabulação — duas paradas de teclado para uma ação só é ruído para
  * quem navega sem mouse. `aria-hidden` completa o par: sem ele, o leitor de
  * tela lista dois botões com o mesmo nome para a mesma ação, e um deles nem
- * recebe foco. O `title` fica: é a dica de ponteiro, para quem a faixa existe.
+ * recebe foco. O `title` fica: é a dica de ponteiro, para quem a faixa existe —
+ * e vem do conteúdo compartilhado, em português, com o mesmo texto do gatilho,
+ * porque a ação é a mesma. Vai ANTES do spread: um `title` de quem compõe ainda
+ * ganha.
  */
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
@@ -302,7 +329,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       aria-hidden="true"
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={ROTULOS_SIDEBAR_PADRAO.alternar}
       className={cn("nds-sidebar-rail", className)}
       {...props}
     />

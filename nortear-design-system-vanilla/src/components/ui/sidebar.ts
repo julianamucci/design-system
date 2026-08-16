@@ -19,6 +19,7 @@
 // compara. Este arquivo emitia só o primeiro.
 
 import { cn } from '@/lib/utils';
+import { ROTULOS_SIDEBAR_PADRAO } from '@shared/primitives/sidebar-a11y-labels';
 import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
 import { createButton } from './button';
 import { createInput, type InputOptions } from './input';
@@ -128,10 +129,11 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     variant = 'sidebar',
     onOpenChange,
     mobileQuery = SIDEBAR_MOBILE_QUERY,
-    // Padrão em inglês para bater com o que as outras stacks de navegador já
-    // emitem — lá o texto é literal cravado no componente; aqui dá para trocar.
-    mobileTitle = 'Sidebar',
-    mobileDescription = 'Displays the mobile sidebar.',
+    // Padrão em português, vindo do conteúdo compartilhado: é texto que o
+    // usuário final OUVE, e num produto em português a gaveta anunciava
+    // "Sidebar / Displays the mobile sidebar." Continua trocável.
+    mobileTitle = ROTULOS_SIDEBAR_PADRAO.tituloMovel,
+    mobileDescription = ROTULOS_SIDEBAR_PADRAO.descricaoMovel,
     onMobileOpenChange,
   } = options;
   let isOpen = defaultOpen;
@@ -393,14 +395,22 @@ function panelLeftIcon(): SVGElement {
   return svg;
 }
 
+/**
+ * Botão que alterna a barra.
+ *
+ * `label` é o nome acessível: o botão carrega só o ícone, e o ícone é
+ * `aria-hidden`. O padrão vem do conteúdo compartilhado, em português — o
+ * controle principal do componente anunciava "Toggle sidebar" até aqui. Continua
+ * trocável para o caso em que o rótulo depende do contexto.
+ */
 export function createSidebarTrigger(
   toggleFn: () => void,
-  options: { class?: string } = {}
+  options: { class?: string; label?: string } = {}
 ): HTMLButtonElement {
   const btn = createButton({ variant: 'ghost', size: 'icon', class: options.class });
   btn.dataset.slot = 'sidebar-trigger';
   btn.setAttribute('data-sidebar', 'trigger');
-  btn.setAttribute('aria-label', 'Toggle sidebar');
+  btn.setAttribute('aria-label', options.label ?? ROTULOS_SIDEBAR_PADRAO.alternar);
   btn.appendChild(panelLeftIcon());
   btn.addEventListener('click', toggleFn);
   return btn;
@@ -414,7 +424,8 @@ export function createSidebarTrigger(
  * ordem de tabulação. Duas paradas de teclado para uma ação só é ruído para
  * quem navega sem mouse, e sem o `aria-hidden` o leitor de tela listaria dois
  * controles com o mesmo nome — um deles inalcançável. O `title` fica: é a dica
- * de ponteiro, para quem a faixa existe.
+ * de ponteiro, para quem a faixa existe — e vem do conteúdo compartilhado, em
+ * português, com o mesmo texto do gatilho, porque a ação é a mesma.
  *
  * Vai DENTRO do painel (irmã de header/content/footer): o posicionamento é
  * absoluto e o bloco que o contém é `.nds-sidebar-panel`, que é fixo.
@@ -430,7 +441,7 @@ export function createSidebarRail(
   btn.setAttribute('data-sidebar', 'rail');
   btn.setAttribute('aria-hidden', 'true');
   btn.tabIndex = -1;
-  btn.title = options.title ?? 'Toggle sidebar';
+  btn.title = options.title ?? ROTULOS_SIDEBAR_PADRAO.alternar;
   btn.addEventListener('click', toggleFn);
   return btn;
 }

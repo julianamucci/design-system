@@ -29,6 +29,14 @@ import {
   User,
 } from 'lucide-vue-next';
 
+/** Props da barra mais o ponto de virada, que pertence ao Provider. */
+interface SidebarPlaygroundArgs {
+  side?: 'left' | 'right';
+  variant?: 'sidebar' | 'floating' | 'inset';
+  collapsible?: 'offcanvas' | 'icon' | 'none';
+  mobileQuery?: string;
+}
+
 const meta = {
   title: 'UI/Sidebar',
   component: Sidebar,
@@ -48,35 +56,46 @@ const meta = {
       control: 'select',
       options: ['left', 'right'],
       description: 'Posição da sidebar na viewport.',
-      table: { defaultValue: { summary: 'left' } },
+      table: { type: { summary: `'left' | 'right'` }, defaultValue: { summary: 'left' } },
     },
     variant: {
       control: 'select',
       options: ['sidebar', 'floating', 'inset'],
       description: 'Estilo visual da sidebar.',
-      table: { defaultValue: { summary: 'sidebar' } },
+      table: { type: { summary: `'sidebar' | 'floating' | 'inset'` }, defaultValue: { summary: 'sidebar' } },
     },
     collapsible: {
       control: 'select',
       options: ['offcanvas', 'icon', 'none'],
       description: 'Comportamento ao recolher.',
-      table: { defaultValue: { summary: 'offcanvas' } },
+      table: { type: { summary: `'offcanvas' | 'icon' | 'none'` }, defaultValue: { summary: 'offcanvas' } },
+    },
+    mobileQuery: {
+      control: 'text',
+      description:
+        'Ponto de virada entre coluna e gaveta sobreposta. Uma consulta sempre verdadeira, como (min-width: 0px), força a gaveta em qualquer largura.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: '(max-width: 767px)' } },
     },
   },
   args: {
     side: 'left',
     variant: 'sidebar',
     collapsible: 'offcanvas',
+    mobileQuery: '(max-width: 767px)',
   },
   decorators: [
     () => ({
       template: '<div class="nds-cluster nds-min-h-100 nds-w-full"><story /></div>',
     }),
   ],
-} satisfies Meta<typeof Sidebar>;
+  // O tipo é o do andaime, e não `typeof Sidebar`: `mobileQuery` é prop do
+  // Provider, não da barra, e a aba API Reference precisa dela declarada.
+} satisfies Meta<SidebarPlaygroundArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+// Tipado pelo andaime, e não por `typeof meta`: a inferência a partir de
+// `component` só enxerga as props da barra, e `mobileQuery` é do Provider.
+type Story = StoryObj<SidebarPlaygroundArgs>;
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', isActive: true },
@@ -91,6 +110,7 @@ export const Playground: Story = {
     side: 'left',
     variant: 'sidebar',
     collapsible: 'offcanvas',
+    mobileQuery: '(max-width: 767px)',
   },
   parameters: {
     covers: [
@@ -112,9 +132,15 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <SidebarProvider :key="args.collapsible + args.variant + args.side">
+      <SidebarProvider
+        :key="args.collapsible + args.variant + args.side + args.mobileQuery"
+        :mobile-query="args.mobileQuery"
+      >
         <nav aria-label="Navegação principal">
-          <Sidebar v-bind="args">
+          <!-- Props explícitas, e não v-bind de args inteiro: a consulta de
+               mídia é do Provider, e por queda de atributos ela viraria um
+               atributo desconhecido no painel da barra. -->
+          <Sidebar :side="args.side" :variant="args.variant" :collapsible="args.collapsible">
             <SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-foreground">Design System</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
@@ -181,7 +207,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const raiz = () => canvasElement.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
-    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
 
     await step('A navegação tem nome acessível', async () => {
       // Sem nome no <nav>, a barra é só "navegação" na lista de marcos do
@@ -203,8 +229,14 @@ export const Playground: Story = {
       await expect(icone.getAttribute('aria-hidden')).toBe('true');
     });
 
-    await step('O gatilho tem nome acessível', async () => {
-      await expect(gatilho()).toBeInTheDocument();
+    await step('O gatilho tem nome acessível, e em português', async () => {
+      // Nome EXATO, e não presença: o gatilho é só um ícone, e o nome dele é a
+      // única coisa que quem usa leitor de tela recebe. Enquanto o texto era
+      // "Toggle Sidebar", nenhuma asserção reprovava.
+      await expect(gatilho()).toHaveAccessibleName('Alternar barra lateral');
+      // A faixa repete a ação com o ponteiro, e a dica dela é o mesmo texto.
+      const faixa = canvasElement.querySelector<HTMLButtonElement>('[data-slot="sidebar-rail"]')!;
+      await expect(faixa.title).toBe('Alternar barra lateral');
     });
 
     await step('O gatilho alterna o estado — e volta', async () => {

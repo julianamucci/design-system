@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import SidebarStory from './SidebarStory.svelte';
 import SidebarIconStory from './SidebarIconStory.svelte';
 import SidebarFixedStory from './SidebarFixedStory.svelte';
@@ -157,7 +158,7 @@ export const Fixed: Story = {
     });
 
     await step('Não há gatilho de alternância na página', async () => {
-      await expect(canvas.queryByRole('button', { name: /toggle sidebar/i })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: /alternar barra lateral/i })).toBeNull();
     });
 
     await step('A navegação continua inteira e acessível', async () => {
@@ -195,7 +196,7 @@ export const Mobile: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const gatilho = () => canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = () => canvas.getByRole('button', { name: /alternar barra lateral/i });
     // A gaveta vive num portal no fim do <body>, fora do canvasElement.
     const gaveta = () => document.querySelector<HTMLElement>('.nds-sidebar-mobile');
 
@@ -228,7 +229,8 @@ export const Mobile: Story = {
       // sr-only: existe para quem ouve, não para quem vê.
       const rotuladoPor = dialogo.getAttribute('aria-labelledby');
       await expect(rotuladoPor).toBeTruthy();
-      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe('Sidebar');
+      // Nome em português por padrão: era "Sidebar", cravado no componente.
+      await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe('Barra lateral');
     });
 
     await step('A navegação inteira mudou de lugar junto com a gaveta', async () => {
@@ -266,8 +268,34 @@ export const Mobile: Story = {
       await waitFor(() => expect(gaveta()).not.toBeNull());
       await userEvent.keyboard('{Control>}b{/Control}');
       await waitFor(() => expect(gaveta()).toBeNull());
-      // DOM devolvido ao estado de entrada: gaveta fechada, foco no gatilho.
       await waitFor(() => expect(document.activeElement).toBe(gatilho()));
+    });
+
+    await step('Termina ABERTA: é este o estado que a foto registra', async () => {
+      // `visual.item5` promete "gaveta sobreposta ABERTA", e o Chromatic
+      // fotografa o estado final da play. Enquanto ela terminava fechada, o
+      // item estava coberto no papel e em foto nenhuma.
+      //
+      // O replay continua honesto: o primeiro passo fecha o que encontrar
+      // aberto, e os pares abrir/fechar acima já provaram que os cliques
+      // acontecem NESTA rodada. Este passo prova só o estado final.
+      //
+      // A espera abaixo NÃO é decorativa. Enquanto a gaveta sai, o primitivo
+      // desta stack mantém a página travada com `pointer-events: none`, e só a
+      // devolve no fim da animação de saída — o `gaveta()` já é nulo e o foco
+      // já voltou ao gatilho, mas o clique ainda é recusado com "element has
+      // pointer-events: none". É espera que falta, não defeito do componente:
+      // a propriedade é herdada, então medi-la no próprio gatilho enxerga a
+      // trava onde quer que ela tenha sido posta.
+      await waitFor(() =>
+        expect(getComputedStyle(gatilho()).pointerEvents).not.toBe('none'),
+      );
+      await userEvent.click(gatilho());
+      // `waitForPortal` gateia na opacidade computada: `toBeVisible()` só
+      // reprova em opacidade exatamente 0, e a gaveta entra com animação.
+      const painel = await waitForPortal('dialog', { name: /barra lateral/i });
+      await expect(painel).toBeVisible();
+      await expect(painel).toBe(gaveta());
     });
   },
 };

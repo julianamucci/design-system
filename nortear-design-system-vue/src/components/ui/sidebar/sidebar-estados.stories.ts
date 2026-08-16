@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import {
   Sidebar,
   SidebarContent,
@@ -322,7 +323,7 @@ export const CollapsibleNone: Story = {
     });
 
     await step('Não há gatilho de alternância na página', async () => {
-      await expect(canvas.queryByRole('button', { name: /toggle sidebar/i })).toBeNull();
+      await expect(canvas.queryByRole('button', { name: /alternar barra lateral/i })).toBeNull();
     });
 
     await step('A navegação continua inteira e acessível', async () => {
@@ -479,7 +480,7 @@ export const MobileOverlay: Story = {
     const gaveta = () => document.querySelector<HTMLElement>('[data-slot="sidebar"][data-mobile="true"]');
     // Guardado antes de qualquer abertura: com a gaveta aberta o resto da página
     // fica `aria-hidden`, e o gatilho deixa de ser alcançável por papel.
-    const gatilho = canvas.getByRole('button', { name: /toggle sidebar/i });
+    const gatilho = canvas.getByRole('button', { name: /alternar barra lateral/i });
 
     await step('Precondição: a gaveta começa fechada', async () => {
       // O replay do painel Interactions reexecuta os passos sobre o DOM que
@@ -507,7 +508,8 @@ export const MobileOverlay: Story = {
     await step('O gatilho abre um diálogo modal, com nome e com a navegação dentro', async () => {
       await userEvent.click(gatilho);
       // `findByRole` já espera a animação de entrada — sem tempo fixo.
-      const painel = await corpo.findByRole('dialog', { name: /sidebar/i });
+      // Nome em português por padrão: era "Sidebar", cravado no componente.
+      const painel = await corpo.findByRole('dialog', { name: /barra lateral/i });
       await expect(painel).toHaveAttribute('aria-modal', 'true');
       const dentro = within(painel);
       await expect(dentro.getByRole('button', { name: /dashboard/i })).toBeInTheDocument();
@@ -545,9 +547,23 @@ export const MobileOverlay: Story = {
       await userEvent.keyboard('{Control>}b{/Control}');
       await waitFor(() => expect(gaveta()).not.toBeNull());
       await userEvent.keyboard('{Control>}b{/Control}');
-      // Fecha ao sair: o DOM volta ao estado de entrada, e o passo seguinte de
-      // um replay encontra o mesmo cenário que este encontrou.
       await waitFor(() => expect(gaveta()).toBeNull());
+    });
+
+    await step('Termina ABERTA: é este o estado que a foto registra', async () => {
+      // `visual.item5` promete "gaveta sobreposta ABERTA", e o Chromatic
+      // fotografa o estado final da play. Enquanto ela terminava fechada, o
+      // item estava coberto no papel e em foto nenhuma.
+      //
+      // O replay continua honesto: o primeiro passo fecha o que encontrar
+      // aberto, e os pares abrir/fechar acima já provaram que os cliques
+      // acontecem NESTA rodada. Este passo prova só o estado final.
+      await userEvent.click(gatilho);
+      // `waitForPortal` gateia na opacidade computada: `toBeVisible()` só
+      // reprova em opacidade exatamente 0, e a gaveta entra com animação.
+      const painel = await waitForPortal('dialog', { name: /barra lateral/i });
+      await expect(painel).toBeVisible();
+      await expect(painel).toBe(gaveta());
     });
   },
 };

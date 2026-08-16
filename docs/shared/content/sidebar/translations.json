@@ -216,12 +216,16 @@
         "defaultOpen": "Estado inicial da sidebar (não controlado).",
         "open": "Estado controlado. Use junto com o callback de mudança.",
         "onOpenChange": "Callback chamado ao alternar estado. Habilita controle externo.",
-        "children": "Conteúdo do layout — deve incluir Sidebar e SidebarInset."
+        "children": "Conteúdo do layout — deve incluir Sidebar e SidebarInset.",
+        "mobileQueryName": "mobileQuery",
+        "mobileQuery": "Consulta de mídia que decide o ponto de virada entre coluna e gaveta sobreposta. É ajustável porque a largura em que a coluna deixa de caber é do produto, e não do design system — uma aplicação com barra mais estreita vira mais tarde."
       },
       "sidebar": {
         "side": "Posição: <code>\"left\"</code> (padrão) ou <code>\"right\"</code>.",
         "variant": "Estilo visual: <code>\"sidebar\"</code>, <code>\"floating\"</code> ou <code>\"inset\"</code>.",
-        "collapsible": "Comportamento ao recolher: <code>\"offcanvas\"</code>, <code>\"icon\"</code> ou <code>\"none\"</code>."
+        "collapsible": "Comportamento ao recolher: <code>\"offcanvas\"</code>, <code>\"icon\"</code> ou <code>\"none\"</code>.",
+        "mobileTitle": "Nome da gaveta sobreposta, só para leitor de tela. Um diálogo sem nome é anunciado como \"diálogo\" e mais nada.",
+        "mobileDescription": "Descrição da gaveta sobreposta, só para leitor de tela."
       },
       "menuButton": {
         "isActive": "Marca o item como ativo. Aplica estilos de destaque e define <code>data-active</code>.",
@@ -265,8 +269,8 @@
       "item1": "<strong>nav com aria-label</strong> — envolva o Sidebar com <code>&lt;nav aria-label=\"Navegação principal\"&gt;</code> para que leitores de tela identifiquem o landmark de navegação.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplique no <code>SidebarMenuButton</code> do item ativo. Anuncia ao leitor de tela qual seção está selecionada.",
       "item3": "<strong>Tooltip no modo icon</strong> — defina <code>tooltip</code> em cada <code>SidebarMenuButton</code>. O tooltip só aparece quando <code>state === \"collapsed\"</code> e exibe o nome da seção.",
-      "item4": "<strong>SidebarTrigger acessível</strong> — o botão inclui <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Substitua por aria-label contextual em produção.",
-      "item5": "<strong>SidebarRail</strong> — possui <code>aria-label=\"Toggle Sidebar\"</code> nativo. Elemento com <code>tabIndex={-1}</code>; não entra no fluxo de Tab.",
+      "item4": "<strong>Gatilho com nome acessível</strong> — o botão carrega só um ícone, então o nome vem de um texto exclusivo para leitor de tela. O padrão é \"Alternar barra lateral\", em português, e é trocável por um rótulo do contexto (\"Abrir navegação do produto\").",
+      "item5": "<strong>Faixa da borda</strong> — repete a ação do gatilho para quem usa ponteiro. Traz a mesma dica de texto no ponteiro, fica fora do fluxo de Tab e sai da árvore de acessibilidade: anunciada, seria um segundo controle com o mesmo nome, para a mesma ação, e sem foco.",
       "item6": "<strong>Mobile Sheet</strong> — o SheetHeader possui título e descrição visíveis apenas para leitores de tela (<code>sr-only</code>).",
       "item7": "<strong>Skip link</strong> — a aplicação deve ter skip link apontando para <code>#main-content</code>, pulando a sidebar.",
       "keyboard": {
@@ -289,8 +293,8 @@
         "navLandmark": "O elemento nav com aria-label aparece como landmark de navegação na lista de regiões do leitor.",
         "activeItem": "Item ativo anunciado como 'página atual' quando aria-current=\"page\" está presente.",
         "collapsedTooltip": "No modo icon, o tooltip é anunciado ao focar o botão, comunicando o nome da seção.",
-        "mobileSheet": "O Sheet é anunciado com título e descrição sr-only ao abrir em mobile.",
-        "toggleButton": "O SidebarTrigger anuncia 'Toggle Sidebar' — personalize com aria-label descritivo em produção."
+        "mobileSheet": "A gaveta é anunciada como diálogo, com o nome \"Barra lateral\" e a descrição lidos ao abrir; os dois existem só para quem ouve.",
+        "toggleButton": "O gatilho anuncia \"Alternar barra lateral\" — troque pelo rótulo do contexto quando a barra tiver um nome próprio na aplicação."
       }
     },
     "related": {
@@ -407,9 +411,9 @@
           "how": "Inspecionar atributos SVG no DOM"
         },
         "item4": {
-          "criterion": "SidebarTrigger com texto acessível",
+          "criterion": "Gatilho com nome acessível em português",
           "level": "AA",
-          "how": "getByRole('button', { name: /toggle sidebar/i })"
+          "how": "getByRole('button', { name: /alternar barra lateral/i })"
         },
         "item5": {
           "criterion": "Sem violações axe-core no estado expanded",
@@ -690,12 +694,16 @@
         "defaultOpen": "Initial sidebar state (uncontrolled).",
         "open": "Controlled state. Use together with the change callback.",
         "onOpenChange": "Callback fired on state toggle. Enables external control.",
-        "children": "Layout content — must include Sidebar and SidebarInset."
+        "children": "Layout content — must include Sidebar and SidebarInset.",
+        "mobileQueryName": "mobileQuery",
+        "mobileQuery": "Media query that decides the switch point between column and overlay drawer. It is adjustable because the width at which the column stops fitting belongs to the product, not to the design system — an application with a narrower bar switches later."
       },
       "sidebar": {
         "side": "Position: <code>\"left\"</code> (default) or <code>\"right\"</code>.",
         "variant": "Visual style: <code>\"sidebar\"</code>, <code>\"floating\"</code>, or <code>\"inset\"</code>.",
-        "collapsible": "Collapse behavior: <code>\"offcanvas\"</code>, <code>\"icon\"</code>, or <code>\"none\"</code>."
+        "collapsible": "Collapse behavior: <code>\"offcanvas\"</code>, <code>\"icon\"</code>, or <code>\"none\"</code>.",
+        "mobileTitle": "Name of the overlay drawer, for screen readers only. A dialog without a name is announced as \"dialog\" and nothing else.",
+        "mobileDescription": "Description of the overlay drawer, for screen readers only."
       },
       "menuButton": {
         "isActive": "Marks the item as active. Applies highlight styles and sets <code>data-active</code>.",
@@ -739,8 +747,8 @@
       "item1": "<strong>nav with aria-label</strong> — wrap Sidebar in <code>&lt;nav aria-label=\"Main navigation\"&gt;</code> so screen readers identify the navigation landmark.",
       "item2": "<strong>aria-current=\"page\"</strong> — apply to the active <code>SidebarMenuButton</code>. Announces to screen readers which section is selected.",
       "item3": "<strong>Tooltip in icon mode</strong> — set <code>tooltip</code> on each <code>SidebarMenuButton</code>. The tooltip only appears when <code>state === \"collapsed\"</code> and shows the section name.",
-      "item4": "<strong>Accessible SidebarTrigger</strong> — button includes <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Replace with a contextual aria-label in production.",
-      "item5": "<strong>SidebarRail</strong> — has native <code>aria-label=\"Toggle Sidebar\"</code>. Element uses <code>tabIndex={-1}</code>; does not enter the Tab flow.",
+      "item4": "<strong>Trigger with an accessible name</strong> — the button carries only an icon, so its name comes from screen-reader-only text. The default is \"Alternar barra lateral\", in Portuguese, and it can be swapped for a contextual label (\"Open product navigation\").",
+      "item5": "<strong>Edge rail</strong> — repeats the trigger's action for pointer users. It carries the same pointer hint text, stays out of the Tab flow and out of the accessibility tree: announced, it would be a second control with the same name, for the same action, and without focus.",
       "item6": "<strong>Mobile Sheet</strong> — SheetHeader has title and description visible only to screen readers (<code>sr-only</code>).",
       "item7": "<strong>Skip link</strong> — the application must have a skip link pointing to <code>#main-content</code>, bypassing the sidebar.",
       "keyboard": {
@@ -763,8 +771,8 @@
         "navLandmark": "The nav element with aria-label appears as a navigation landmark in the reader's regions list.",
         "activeItem": "Active item announced as 'current page' when aria-current=\"page\" is present.",
         "collapsedTooltip": "In icon mode, the tooltip is announced on button focus, communicating the section name.",
-        "mobileSheet": "The Sheet is announced with sr-only title and description when opened on mobile.",
-        "toggleButton": "SidebarTrigger announces 'Toggle Sidebar' — customize with a descriptive aria-label in production."
+        "mobileSheet": "The drawer is announced as a dialog, with the name \"Barra lateral\" and the description read out on open; both exist only for people who listen.",
+        "toggleButton": "The trigger announces \"Alternar barra lateral\" — swap it for a contextual label when the bar has its own name in the application."
       }
     },
     "related": {
@@ -881,9 +889,9 @@
           "how": "Inspect SVG attributes in DOM"
         },
         "item4": {
-          "criterion": "SidebarTrigger with accessible text",
+          "criterion": "Trigger with an accessible name in Portuguese",
           "level": "AA",
-          "how": "getByRole('button', { name: /toggle sidebar/i })"
+          "how": "getByRole('button', { name: /alternar barra lateral/i })"
         },
         "item5": {
           "criterion": "No axe-core violations in expanded state",
@@ -1164,12 +1172,16 @@
         "defaultOpen": "Estado inicial del sidebar (no controlado).",
         "open": "Estado controlado. Úsalo junto con el callback de cambio.",
         "onOpenChange": "Callback llamado al alternar estado. Habilita control externo.",
-        "children": "Contenido del layout — debe incluir Sidebar y SidebarInset."
+        "children": "Contenido del layout — debe incluir Sidebar y SidebarInset.",
+        "mobileQueryName": "mobileQuery",
+        "mobileQuery": "Consulta de medios que decide el punto de cambio entre columna y panel superpuesto. Es ajustable porque el ancho en el que la columna deja de caber es del producto, no del sistema de diseño — una aplicación con barra más estrecha cambia más tarde."
       },
       "sidebar": {
         "side": "Posición: <code>\"left\"</code> (predeterminado) o <code>\"right\"</code>.",
         "variant": "Estilo visual: <code>\"sidebar\"</code>, <code>\"floating\"</code> o <code>\"inset\"</code>.",
-        "collapsible": "Comportamiento al colapsar: <code>\"offcanvas\"</code>, <code>\"icon\"</code> o <code>\"none\"</code>."
+        "collapsible": "Comportamiento al colapsar: <code>\"offcanvas\"</code>, <code>\"icon\"</code> o <code>\"none\"</code>.",
+        "mobileTitle": "Nombre del panel superpuesto, solo para lector de pantalla. Un diálogo sin nombre se anuncia como \"diálogo\" y nada más.",
+        "mobileDescription": "Descripción del panel superpuesto, solo para lector de pantalla."
       },
       "menuButton": {
         "isActive": "Marca el ítem como activo. Aplica estilos de destacado y define <code>data-active</code>.",
@@ -1213,8 +1225,8 @@
       "item1": "<strong>nav con aria-label</strong> — envuelve el Sidebar con <code>&lt;nav aria-label=\"Navegación principal\"&gt;</code> para que los lectores de pantalla identifiquen el landmark de navegación.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplica en el <code>SidebarMenuButton</code> del ítem activo. Anuncia al lector de pantalla qué sección está seleccionada.",
       "item3": "<strong>Tooltip en modo icon</strong> — define <code>tooltip</code> en cada <code>SidebarMenuButton</code>. El tooltip aparece solo cuando <code>state === \"collapsed\"</code> y muestra el nombre de la sección.",
-      "item4": "<strong>SidebarTrigger accesible</strong> — el botón incluye <code>&lt;span className=\"sr-only\"&gt;Toggle Sidebar&lt;/span&gt;</code>. Reemplaza con aria-label contextual en producción.",
-      "item5": "<strong>SidebarRail</strong> — tiene <code>aria-label=\"Toggle Sidebar\"</code> nativo. Elemento con <code>tabIndex={-1}</code>; no entra en el flujo de Tab.",
+      "item4": "<strong>Disparador con nombre accesible</strong> — el botón lleva solo un icono, así que su nombre viene de un texto exclusivo para lector de pantalla. El valor por defecto es \"Alternar barra lateral\", en portugués, y se puede cambiar por una etiqueta del contexto (\"Abrir la navegación del producto\").",
+      "item5": "<strong>Franja del borde</strong> — repite la acción del disparador para quien usa puntero. Lleva la misma pista de texto en el puntero, queda fuera del flujo de Tab y fuera del árbol de accesibilidad: anunciada, sería un segundo control con el mismo nombre, para la misma acción, y sin foco.",
       "item6": "<strong>Mobile Sheet</strong> — el SheetHeader tiene título y descripción visibles solo para lectores de pantalla (<code>sr-only</code>).",
       "item7": "<strong>Skip link</strong> — la aplicación debe tener un skip link apuntando a <code>#main-content</code>, saltando el sidebar.",
       "keyboard": {
@@ -1237,8 +1249,8 @@
         "navLandmark": "El elemento nav con aria-label aparece como landmark de navegación en la lista de regiones del lector.",
         "activeItem": "Ítem activo anunciado como 'página actual' cuando aria-current=\"page\" está presente.",
         "collapsedTooltip": "En modo icon, el tooltip se anuncia al hacer foco en el botón, comunicando el nombre de la sección.",
-        "mobileSheet": "El Sheet se anuncia con título y descripción sr-only al abrirse en mobile.",
-        "toggleButton": "SidebarTrigger anuncia 'Toggle Sidebar' — personaliza con aria-label descriptivo en producción."
+        "mobileSheet": "El panel se anuncia como diálogo, con el nombre \"Barra lateral\" y la descripción leídos al abrir; ambos existen solo para quien escucha.",
+        "toggleButton": "El disparador anuncia \"Alternar barra lateral\" — cámbialo por la etiqueta del contexto cuando la barra tenga un nombre propio en la aplicación."
       }
     },
     "related": {
@@ -1355,9 +1367,9 @@
           "how": "Inspeccionar atributos SVG en el DOM"
         },
         "item4": {
-          "criterion": "SidebarTrigger con texto accesible",
+          "criterion": "Disparador con nombre accesible en portugués",
           "level": "AA",
-          "how": "getByRole('button', { name: /toggle sidebar/i })"
+          "how": "getByRole('button', { name: /alternar barra lateral/i })"
         },
         "item5": {
           "criterion": "Sin violaciones axe-core en estado expandido",
