@@ -826,12 +826,12 @@ interface DropdownMenuItemProps {
             description: tContent("tokens.table.foreground.part"),
           },
           {
-            token: "--foreground/10",
+            token: "--border",
             value: tContent("tokens.table.border.class"),
             description: tContent("tokens.table.border.part"),
           },
           {
-            token: "shadow",
+            token: "--elevation-md",
             value: tContent("tokens.table.shadow.class"),
             description: tContent("tokens.table.shadow.part"),
           },

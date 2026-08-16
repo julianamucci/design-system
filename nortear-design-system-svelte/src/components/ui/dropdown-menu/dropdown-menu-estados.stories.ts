@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
@@ -11,10 +11,12 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados canônicos do DropdownMenu: fechado, aberto (defaultOpen), controlado externamente e item desabilitado.',
+          'Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio ' +
+          'vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',
       },
     },
   },
@@ -23,108 +25,122 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-async function waitForClose() {
-  const body = within(document.body);
-  await waitFor(
-    () => {
-      const menu = body.queryByRole('menu');
-      if (menu && menu.getAttribute('data-state') !== 'closed') {
-        throw new Error('menu still open');
-      }
-    },
-    { timeout: 1500 }
-  );
-}
-
 export const Closed: Story = {
-  args: {
-    defaultOpen: false,
-    variant: 'default',
-    triggerLabel: 'Mais ações',
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Estado padrão — apenas o trigger renderizado; portal vazio.',
-      },
-    },
-  },
+  args: { defaultOpen: false, variant: 'default', triggerLabel: 'Mais ações' },
+  parameters: { covers: ['accessibility.item2'] },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const trigger = canvas.getByRole('button', { name: /Mais ações/i });
-    await expect(trigger).toBeVisible();
-    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-    await expect(body.queryByRole('menu')).not.toBeInTheDocument();
+    const gatilho = canvas.getByRole('button', { name: /Mais ações/i });
+
+    await expect(gatilho).toBeVisible();
+    await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
+    await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    // O portal desmonta o popup ao fechar: fechado não é "escondido com
+    // display:none", é ausente do DOM. Um popup só escondido continuaria no
+    // percurso do leitor de tela.
+    await expect(body.queryAllByRole('menu')).toHaveLength(0);
+    await expect(body.queryAllByRole('menuitem')).toHaveLength(0);
   },
 };
 
 export const Open: Story = {
-  args: {
-    defaultOpen: true,
-    variant: 'withLabel',
-    triggerLabel: 'Conta',
-  },
+  args: { defaultOpen: true, variant: 'default', triggerLabel: 'Mais ações' },
   parameters: {
-    docs: {
-      description: {
-        story: 'Menu aberto via defaultOpen=true. Captura visual no Chromatic.',
-      },
+    covers: ['functional.item2', 'accessibility.item3'],
+    // Medido pela sonda desta rodada: a busca por digitação do primitivo não
+    // move o foco neste stack, com o menu aberto e o foco num item. Não há prop
+    // nossa que ligue — declarar cobertura aqui faria o auditor mentir.
+    coversNotApplicable: {
+      'accessibility.item4':
+        'a busca por digitação do primitivo não responde neste stack; setas e Home/End são verificados aqui',
     },
   },
-  play: async () => {
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    await expect(menu).toBeVisible();
+    const itens = within(menu).getAllByRole('menuitem');
+
+    await step('O menu abre com os três itens', async () => {
+      await expect(itens).toHaveLength(3);
+    });
+
+    await step('As setas descem e sobem um item por vez', async () => {
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(itens[1]);
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(document.activeElement).toBe(itens[0]);
+    });
+
+    await step('Home e End vão ao primeiro e ao último', async () => {
+      await userEvent.keyboard('{End}');
+      await expect(document.activeElement).toBe(itens[2]);
+      await userEvent.keyboard('{Home}');
+      await expect(document.activeElement).toBe(itens[0]);
+    });
+
+    await step('O item em foco é o único destacado', async () => {
+      // O realce é o que diz onde o teclado está: sem ele a navegação por setas
+      // é invisível para quem enxerga.
+      const destacados = itens.filter((i) => i.hasAttribute('data-highlighted'));
+      await expect(destacados).toHaveLength(1);
+      await expect(destacados[0]).toBe(document.activeElement);
+    });
   },
 };
 
 export const Controlled: Story = {
-  args: {
-    open: false,
-    variant: 'default',
-    triggerLabel: 'Abrir via estado externo',
-  },
+  args: { open: false, variant: 'default', triggerLabel: 'Abrir via estado externo' },
   parameters: {
-    docs: {
-      description: {
-        story: 'Abertura controlada via open + onOpenChange (bind:open).',
-      },
-    },
+    docs: { description: { story: 'Abertura controlada via open + onOpenChange (bind:open).' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Abrir via estado externo/i });
 
     await step('Click no trigger abre menu controlado', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-      await userEvent.click(trigger);
+      // Idempotente: só clica quando o estado atual não é o desejado.
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
     });
 
-    await step('ESC fecha o menu controlado', async () => {
+    await step('ESC fecha e o estado de fora acompanha', async () => {
       await userEvent.keyboard('{Escape}');
-      await waitForClose();
+      await waitForPortalGone('menu');
+      // O `aria-expanded` é lido do mesmo estado ligado por `bind:open`: se ele
+      // não tivesse voltado, o gatilho continuaria dizendo "true".
+      await waitFor(async () => {
+        await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      });
     });
   },
 };
 
 export const ItemDisabled: Story = {
-  args: {
-    defaultOpen: true,
-    variant: 'itemDisabled',
-    triggerLabel: 'Ações',
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Item com prop disabled. data-disabled aplicado, aria-disabled=true e cursor not-allowed; teclado ignora item desabilitado.',
-      },
-    },
-  },
-  play: async () => {
+  args: { defaultOpen: true, variant: 'itemDisabled', triggerLabel: 'Ações' },
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    const disabledItem = menu.querySelector('[data-disabled]');
-    await expect(disabledItem).not.toBeNull();
+    const itens = within(menu).getAllByRole('menuitem');
+    const desabilitado = within(menu).getByRole('menuitem', { name: /Arquivar/i });
+
+    await step('O item se anuncia desabilitado', async () => {
+      await expect(desabilitado).toHaveAttribute('aria-disabled', 'true');
+      await expect(desabilitado.hasAttribute('data-disabled')).toBe(true);
+    });
+
+    await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
+      // `pointer-events: none` é o que impede o clique de chegar; sem ele o item
+      // continuaria clicável e o bloqueio dependeria de cada consumidor.
+      await expect(getComputedStyle(desabilitado).pointerEvents).toBe('none');
+    });
+
+    await step('A seta pula o item desabilitado', async () => {
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).not.toBe(desabilitado);
+      await expect(document.activeElement).toBe(itens[2]);
+    });
   },
 };

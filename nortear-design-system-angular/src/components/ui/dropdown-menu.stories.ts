@@ -100,6 +100,9 @@ const meta: Meta<DropdownMenuArgs> = {
 export default meta;
 type Story = StoryObj<DropdownMenuArgs>;
 
+/** Spy de escopo de módulo — dentro do `render` a `play` não o alcançaria. */
+const escolhaDeItem = fn();
+
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
@@ -116,7 +119,9 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args },
+    // O spy do item é de escopo de módulo: criado aqui dentro, seria inalcançável
+    // pela `play` e a aba Actions ficaria vazia.
+    props: { ...args, onSelect: escolhaDeItem },
     template: `
       <nds-dropdown-menu
         [modal]="modal"
@@ -126,11 +131,13 @@ export const Playground: Story = {
         <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
 
         <ng-template ndsDropdownMenuContent [side]="side" [align]="align">
-          <div ndsDropdownMenuLabel>Conta</div>
-          <div ndsDropdownMenuItem>Perfil</div>
-          <div ndsDropdownMenuItem>Configurações</div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem variant="destructive">Sair</div>
+          <div ndsDropdownMenuGroup>
+            <div ndsDropdownMenuLabel>Conta</div>
+            <div ndsDropdownMenuItem (onSelect)="onSelect('perfil')">Perfil</div>
+            <div ndsDropdownMenuItem>Configurações</div>
+            <div ndsDropdownMenuSeparator></div>
+            <div ndsDropdownMenuItem variant="destructive">Sair</div>
+          </div>
         </ng-template>
       </nds-dropdown-menu>
     `,
@@ -161,7 +168,11 @@ export const Playground: Story = {
     });
 
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
+      // "Item é ativado" era a metade não verificada deste item de contrato: o
+      // menu fechar não prova que a ação disparou — o Escape também fecha.
+      escolhaDeItem.mockClear();
       await userEvent.keyboard('{Enter}');
+      await expect(escolhaDeItem).toHaveBeenCalledTimes(1);
       await esperarPortalSumir('menu');
       await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado

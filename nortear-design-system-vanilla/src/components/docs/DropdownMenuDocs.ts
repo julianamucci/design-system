@@ -307,43 +307,64 @@ createDropdownMenu({
   ],
 });`;
 
-        const codeDestructive = `// Item destrutivo: classes aplicadas manualmente no <li>
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitem');
-li.className = 'nds-dropdown-menu-item nds-text-destructive';
-li.textContent = 'Excluir';`;
+        const codeDestructive = `createDropdownMenu({
+  trigger,
+  items: [
+    { type: 'item', label: 'Editar', value: 'edit' },
+    { type: 'separator' },
+    { type: 'item', label: 'Excluir conta', value: 'delete', variant: 'destructive' },
+  ],
+});`;
 
+        // As peças abaixo montam a PRÉVIA estática de cada variante — o menu de
+        // verdade abre em portal, e uma prévia que abre não caberia no cartão.
+        // Elas usam as mesmas classes `.nds-dropdown-menu-*` da fábrica: sem
+        // isso a prévia mostraria uma aparência que o componente não tem.
         function makeLabelItem(text: string): HTMLLIElement {
           const li = document.createElement('li');
           li.setAttribute('role', 'presentation');
-          li.className = 'nds-text-caption nds-font-semibold nds-text-muted-foreground';
-          li.style.padding = 'var(--spacing-1) var(--spacing-2)';
+          li.className = 'nds-dropdown-menu-label';
           li.textContent = text;
           return li;
         }
         function makeSeparator(): HTMLLIElement {
           const li = document.createElement('li');
           li.setAttribute('role', 'separator');
-          li.style.margin = 'var(--spacing-1) calc(var(--spacing-1) * -1)';
-          li.style.height = '1px';
-          li.style.background = 'hsl(var(--muted))';
+          li.className = 'nds-dropdown-menu-separator';
           return li;
         }
-        function makeItem(label: string, shortcut?: string): HTMLLIElement {
+        function makeIndicator(marcado: boolean): HTMLSpanElement {
+          const span = document.createElement('span');
+          span.className = 'nds-dropdown-menu-item-indicator';
+          span.setAttribute('aria-hidden', 'true');
+          if (marcado) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+            svg.setAttribute('stroke-linecap', 'round');
+            svg.setAttribute('stroke-linejoin', 'round');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M20 6 9 17l-5-5');
+            svg.appendChild(path);
+            span.appendChild(svg);
+          }
+          return span;
+        }
+        function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HTMLLIElement {
           const li = document.createElement('li');
           li.setAttribute('role', 'menuitem');
           li.setAttribute('tabindex', '-1');
           li.className = 'nds-dropdown-menu-item';
+          li.dataset.variant = variant ?? 'default';
           const text = document.createElement('span');
-          text.className = 'nds-flex-1';
           text.textContent = label;
           li.appendChild(text);
           if (shortcut) {
             const sc = document.createElement('span');
-            sc.className = 'nds-text-caption nds-text-muted-foreground';
-            sc.style.marginLeft = 'auto';
-            sc.style.letterSpacing = '0.1em';
-            sc.setAttribute('aria-hidden', 'true');
+            sc.className = 'nds-dropdown-menu-shortcut';
+            // Sem `aria-hidden`: o atalho é informação, não decoração.
             sc.textContent = shortcut;
             li.appendChild(sc);
           }
@@ -354,18 +375,10 @@ li.textContent = 'Excluir';`;
           li.setAttribute('role', 'menuitemcheckbox');
           li.setAttribute('aria-checked', String(checked));
           li.setAttribute('tabindex', '-1');
-          if (checked) li.dataset.state = 'checked';
-          li.className = 'nds-dropdown-menu-item';
-          const indicator = document.createElement('span');
-          indicator.className = 'nds-icon-sm nds-rounded';
-          indicator.style.display = 'inline-flex';
-          indicator.style.alignItems = 'center';
-          indicator.style.justifyContent = 'center';
-          indicator.setAttribute('aria-hidden', 'true');
-          if (checked) indicator.textContent = '✓';
+          li.className = 'nds-dropdown-menu-checkbox-item';
           const text = document.createElement('span');
           text.textContent = label;
-          li.append(indicator, text);
+          li.append(makeIndicator(checked), text);
           return li;
         }
         function makeRadioItem(label: string, checked: boolean): HTMLLIElement {
@@ -373,30 +386,19 @@ li.textContent = 'Excluir';`;
           li.setAttribute('role', 'menuitemradio');
           li.setAttribute('aria-checked', String(checked));
           li.setAttribute('tabindex', '-1');
-          if (checked) li.dataset.state = 'checked';
-          li.className = 'nds-dropdown-menu-item';
-          const indicator = document.createElement('span');
-          indicator.className = 'nds-icon-sm nds-rounded';
-          indicator.style.display = 'inline-flex';
-          indicator.style.alignItems = 'center';
-          indicator.style.justifyContent = 'center';
-          indicator.setAttribute('aria-hidden', 'true');
-          if (checked) indicator.textContent = '●';
+          li.className = 'nds-dropdown-menu-radio-item';
           const text = document.createElement('span');
           text.textContent = label;
-          li.append(indicator, text);
+          li.append(makeIndicator(checked), text);
           return li;
         }
         function makeStaticMenu(build: (ul: HTMLUListElement) => void): HTMLElement {
           const ul = document.createElement('ul');
           ul.setAttribute('role', 'menu');
-          ul.className =
-            'nds-overflow-hidden nds-rounded-md nds-border-default nds-shadow-md';
-          ul.style.zIndex = '50';
-          ul.style.minWidth = '12rem';
-          ul.style.padding = 'var(--spacing-1)';
-          ul.style.background = 'hsl(var(--popover))';
-          ul.style.color = 'hsl(var(--popover-foreground))';
+          ul.className = 'nds-dropdown-menu-content';
+          // A prévia não é posicionada por gatilho nenhum: o `position` da
+          // classe é o que a tiraria do fluxo do cartão.
+          ul.style.position = 'static';
           build(ul);
           return ul;
         }
@@ -462,18 +464,16 @@ const menu = createDropdownMenu({
               trackId: 'withCheckboxItems',
               description: stripHtml(t('variants.items.withCheckboxItems.description')),
               useWhen: stripHtml(t('variants.items.withCheckboxItems.use')),
-              code: `// Nortear: factory padrão não tem checkbox-item; monte manualmente.
-const li = document.createElement('li');
-li.setAttribute('role', 'menuitemcheckbox');
-li.setAttribute('aria-checked', 'true');
-li.dataset.state = 'checked';
-li.className = 'nds-cluster relative nds-px-2 nds-py-1.5 nds-text-body nds-rounded-sm focus:bg-accent';
-// indicator + texto…
-li.addEventListener('click', () => {
-  const next = li.getAttribute('aria-checked') !== 'true';
-  li.setAttribute('aria-checked', String(next));
-  li.dataset.state = next ? 'checked' : 'unchecked';
-});`,
+              code: `createDropdownMenu({
+  trigger,
+  items: [
+    { type: 'label',    label: 'Colunas visíveis' },
+    { type: 'checkbox', label: 'Nome',   value: 'nome',  checked: true  },
+    { type: 'checkbox', label: 'E-mail', value: 'email', checked: false,
+      onCheckedChange: (checked) => console.log('e-mail', checked) },
+  ],
+});
+// Alternar não fecha o menu: quem marca uma coluna costuma marcar a próxima.`,
               previewFactory: () => makeStaticMenu((ul) => {
                 ul.append(
                   makeLabelItem('Colunas visíveis'),
@@ -488,19 +488,16 @@ li.addEventListener('click', () => {
               trackId: 'withRadioGroup',
               description: stripHtml(t('variants.items.withRadioGroup.description')),
               useWhen: stripHtml(t('variants.items.withRadioGroup.use')),
-              code: `// Nortear: monte radio-items manualmente; gerencie exclusividade no click.
-function makeRadio(label, checked, group) {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitemradio');
-  li.setAttribute('aria-checked', String(checked));
-  li.addEventListener('click', () => {
-    group.querySelectorAll('[role="menuitemradio"]').forEach(el => {
-      el.setAttribute('aria-checked', 'false');
-    });
-    li.setAttribute('aria-checked', 'true');
-  });
-  return li;
-}`,
+              code: `createDropdownMenu({
+  trigger,
+  items: [
+    { type: 'label', label: 'Aparência' },
+    { type: 'radio', label: 'Claro',   value: 'light',  group: 'tema', checked: true },
+    { type: 'radio', label: 'Escuro',  value: 'dark',   group: 'tema' },
+    { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+  ],
+});
+// O 'group' é o que torna a escolha única: marcar um desmarca os irmãos.`,
               previewFactory: () => makeStaticMenu((ul) => {
                 ul.append(
                   makeLabelItem('Aparência'),
@@ -515,25 +512,17 @@ function makeRadio(label, checked, group) {
               trackId: 'withShortcuts',
               description: stripHtml(t('variants.items.withShortcuts.description')),
               useWhen: stripHtml(t('variants.items.withShortcuts.use')),
-              code: `// Nortear: factory padrão não exibe shortcut. Adicione um <span aria-hidden>
-function makeItem(label, shortcut) {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitem');
-  li.className = 'nds-dropdown-menu-item';
-  const text = document.createElement('span');
-  text.className = 'nds-flex-1';
-  text.textContent = label;
-  li.appendChild(text);
-  if (shortcut) {
-    const sc = document.createElement('span');
-    sc.className = 'ml-auto nds-text-caption tracking-widest nds-text-muted-foreground';
-    sc.setAttribute('aria-hidden', 'true');
-    sc.textContent = shortcut;
-    li.appendChild(sc);
-  }
-  return li;
-}
-// O atalho real precisa ser registrado pelo consumidor (useHotkeys / tinykeys).`,
+              code: `createDropdownMenu({
+  trigger,
+  items: [
+    { type: 'item', label: 'Desfazer', value: 'undo',  shortcut: 'Ctrl Z' },
+    { type: 'item', label: 'Copiar',   value: 'copy',  shortcut: 'Ctrl C' },
+    { type: 'separator' },
+    { type: 'item', label: 'Colar',    value: 'paste', shortcut: 'Ctrl V' },
+  ],
+});
+// O atalho integra o nome acessível do item, para que quem usa leitor de tela
+// também saiba que a tecla existe. Registrar a tecla real é do consumidor.`,
               previewFactory: () => makeStaticMenu((ul) => {
                 ul.append(
                   makeItem('Desfazer', '⌘Z'),
@@ -629,7 +618,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
             { token: '--popover',            value: t('tokens.table.background.class'),  description: t('tokens.table.background.part')  },
             { token: '--popover-foreground', value: t('tokens.table.foreground.class'),  description: t('tokens.table.foreground.part')  },
             { token: '--border',             value: t('tokens.table.border.class'),      description: t('tokens.table.border.part')      },
-            { token: '--shadow-md',          value: t('tokens.table.shadow.class'),      description: t('tokens.table.shadow.part')      },
+            { token: '--elevation-md',          value: t('tokens.table.shadow.class'),      description: t('tokens.table.shadow.part')      },
             { token: '--radius',             value: t('tokens.table.rounded.class'),     description: t('tokens.table.rounded.part')     },
             { token: '--accent',             value: t('tokens.table.itemHover.class'),   description: t('tokens.table.itemHover.part')   },
             { token: '--destructive',        value: t('tokens.table.destructive.class'), description: t('tokens.table.destructive.part') },

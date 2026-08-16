@@ -346,8 +346,8 @@ const tokenRows = computed(() => [
   { token: '--popover',            value: tContent('tokens.table.background.class'),  description: tContent('tokens.table.background.part')  },
   { token: '--popover-foreground', value: tContent('tokens.table.foreground.class'),  description: tContent('tokens.table.foreground.part')  },
   { token: '--border',             value: tContent('tokens.table.border.class'),      description: tContent('tokens.table.border.part')      },
-  { token: '--shadow',             value: tContent('tokens.table.shadow.class'),      description: tContent('tokens.table.shadow.part')      },
-  { token: '--radius-lg',          value: tContent('tokens.table.rounded.class'),     description: tContent('tokens.table.rounded.part')     },
+  { token: '--elevation-md',             value: tContent('tokens.table.shadow.class'),      description: tContent('tokens.table.shadow.part')      },
+  { token: '--radius',          value: tContent('tokens.table.rounded.class'),     description: tContent('tokens.table.rounded.part')     },
   { token: '--accent',             value: tContent('tokens.table.itemHover.class'),   description: tContent('tokens.table.itemHover.part')   },
   { token: '--destructive',        value: tContent('tokens.table.destructive.class'), description: tContent('tokens.table.destructive.part') },
 ]);

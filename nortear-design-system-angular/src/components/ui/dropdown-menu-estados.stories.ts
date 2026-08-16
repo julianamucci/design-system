@@ -80,17 +80,23 @@ export const Open: Story = {
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('Só o item destacado está no percurso do Tab', async () => {
-      // Roving tabindex: os demais saem do percurso para que o Tab escape do
-      // menu inteiro de uma vez, e não item por item.
+      // Roving tabindex: EXATAMENTE um item no percurso, e os demais fora, para
+      // que o Tab escape do menu inteiro de uma vez e não item por item.
+      // `toBeLessThanOrEqual(1)`, como estava, passava também com ZERO — ou
+      // seja, com o menu inteiro fora do percurso do Tab, que é o defeito.
       const noPercurso = itens.filter((i) => i.getAttribute('tabindex') === '0');
-      await expect(noPercurso.length).toBeLessThanOrEqual(1);
+      await expect(noPercurso).toHaveLength(1);
     });
 
-    await step('A seta para baixo desce um item por vez', async () => {
+    await step('As setas descem e sobem um item por vez', async () => {
       itens[0].focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(document.activeElement).toBe(itens[1]);
       await expect(itens[1].getAttribute('data-highlighted')).toBe('');
+      // A volta não é simetria gratuita: o item documenta "setas Cima/Baixo", e
+      // só a descida estava verificada.
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(document.activeElement).toBe(itens[0]);
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {

@@ -14,6 +14,7 @@
     DropdownMenuSubTrigger,
     DropdownMenuSubContent,
     DropdownMenuGroup,
+    DropdownMenuGroupHeading,
   } from './index';
   import { Button } from '@/components/ui/button';
 
@@ -33,7 +34,6 @@
     side?: Side;
     align?: Align;
     sideOffset?: number;
-    modal?: boolean;
     defaultOpen?: boolean;
     open?: boolean;
     triggerLabel?: string;
@@ -48,7 +48,6 @@
     side = 'bottom',
     align = 'start',
     sideOffset = 4,
-    modal = true,
     defaultOpen = false,
     open = $bindable(defaultOpen),
     triggerLabel = 'Mais ações',
@@ -62,8 +61,14 @@
 </script>
 
 <div style="contain: layout">
-  {#key `${side}-${align}-${defaultOpen}-${modal}-${variant}`}
-      <DropdownMenu bind:open {modal}>
+  {#key `${side}-${align}-${defaultOpen}-${variant}`}
+      <!--
+        Sem `modal`: a prop não existe na API deste primitivo — era passada,
+        aceita e ignorada em silêncio, e o control do Storybook não mudava nada.
+        Divergência de API de framework não se alinha: fica registrada aqui, e o
+        control saiu junto, porque control morto é pior que control ausente.
+      -->
+      <DropdownMenu bind:open>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{triggerLabel}</Button>
@@ -75,11 +80,23 @@
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
           {:else if variant === 'withLabel'}
-            <DropdownMenuLabel>Conta</DropdownMenuLabel>
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <!--
+              `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o
+              heading vira o `aria-labelledby` do grupo, e sem ele o leitor de
+              tela anuncia "grupo" sem dizer de qual bloco se trata. Um `Label`
+              solto rotula visualmente e não nomeia nada.
+            -->
+            <DropdownMenuGroup>
+              <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+              <DropdownMenuItem>Perfil</DropdownMenuItem>
+              <DropdownMenuItem>Configurações</DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
+              <DropdownMenuItem>Documentação</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+            </DropdownMenuGroup>
           {:else if variant === 'withCheckbox'}
             <DropdownMenuLabel>Visualização</DropdownMenuLabel>
             <DropdownMenuSeparator />

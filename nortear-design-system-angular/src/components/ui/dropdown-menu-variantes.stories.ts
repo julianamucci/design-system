@@ -4,6 +4,7 @@ import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { NdsButton } from './button';
 import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/Variants',
@@ -69,14 +70,17 @@ export const Default: Story = {
       await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
     });
 
-    await step('O popup é opaco', async () => {
-      // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
-      // popup só significa alguma coisa se o fundo for opaco: sobre um painel
-      // translúcido a razão medida é a do que estiver por baixo.
-      const fundo = getComputedStyle(menu).backgroundColor;
-      await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
-      await expect(fundo).not.toBe('transparent');
-      await expect(fundo.startsWith('rgba(')).toBe(false);
+    await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
+      // Antes daqui este passo só afirmava que o painel era OPACO, e declarava
+      // cobrir o item de contraste — declaração falsa: opacidade é pré-condição
+      // da conta, não a conta. O item dizia "verificar por axe-core", e o axe do
+      // test-runner mede o que está na tela sem nunca comparar estes dois. A
+      // razão é aritmética. 14px em peso normal é texto normal pela WCAG: o
+      // limite é 4.5, não 3.
+      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const medida = contrasteDoItem(emRepouso[0]);
+      await expect(medida).not.toBeNull();
+      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

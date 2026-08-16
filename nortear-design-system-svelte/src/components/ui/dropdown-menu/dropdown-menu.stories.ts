@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
@@ -31,10 +31,9 @@ const meta: Meta = {
       options: ['start', 'center', 'end'],
       description: 'Alinhamento horizontal do Content.',
     },
-    modal: {
-      control: 'boolean',
-      description: 'Quando true, bloqueia interação com o resto da página.',
-    },
+    // Sem `modal`: a prop não existe na API deste primitivo. Manter o control
+    // seria oferecer um botão que não faz nada — o `render` não tinha para onde
+    // encaminhá-lo.
     defaultOpen: {
       control: 'boolean',
       description: 'Estado inicial em modo não-controlado.',
@@ -61,7 +60,6 @@ const meta: Meta = {
   args: {
     side: 'bottom',
     align: 'start',
-    modal: true,
     defaultOpen: false,
     triggerLabel: 'Mais ações',
     variant: 'default',
@@ -72,43 +70,73 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1',
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item3',
+      'accessibility.item5',
+    ],
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const body = within(document.body);
+    const gatilho = canvas.getByRole('button', { name: /Mais ações/i });
 
-    const waitForClose = async () => {
-      await waitFor(
-        () => {
-          const menu = body.queryByRole('menu');
-          if (menu && menu.getAttribute('data-state') !== 'closed') {
-            throw new Error('menu still open');
-          }
-        },
-        { timeout: 1500 }
-      );
-    };
-
-    await step('1. Trigger renderiza com aria-haspopup=menu', async () => {
-      const trigger = canvas.getByRole('button', { name: /Mais ações/i });
-      await expect(trigger).toBeInTheDocument();
-      await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+    await step('O gatilho anuncia que abre um menu, e que está fechado', async () => {
+      await expect(gatilho).toBeInTheDocument();
+      await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('2. Click abre o menu (role=menu)', async () => {
-      const trigger = canvas.getByRole('button', { name: /Mais ações/i });
-      await userEvent.click(trigger);
+    await step('Clicar abre o menu com papel de menu e o foco entra nele', async () => {
+      // Idempotente: o clique só acontece com o menu fechado, então o replay do
+      // painel Interactions parte do mesmo estado da primeira rodada.
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+
       const menu = await waitForPortal('menu');
       await expect(menu).toBeVisible();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+      // O foco tem que ENTRAR no menu: se ficasse no gatilho, a seta seguinte
+      // não acharia item nenhum e o menu seria inoperável por teclado.
+      await waitFor(async () => {
+        await expect(menu.contains(document.activeElement)).toBe(true);
+      });
     });
 
-    await step('3. Items têm role=menuitem', async () => {
-      const items = await body.findAllByRole('menuitem');
-      await expect(items.length).toBeGreaterThan(0);
+    await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await userEvent.keyboard('{Enter}');
+      await waitForPortalGone('menu');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      // O foco não pode cair no corpo do documento: quem navega por teclado
+      // teria de percorrer a página inteira de novo para voltar ao ponto.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(gatilho);
+      });
     });
 
-    await step('4. ESC fecha o menu', async () => {
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      // A camada dismissível do primitivo prende `pointer-events: none` no
+      // gatilho enquanto o menu desmonta, e só devolve depois. Clicar no tick
+      // seguinte ao fechamento estoura "element has pointer-events: none" — o
+      // que falta é esperar a limpeza, não afrouxar a asserção.
+      await waitFor(async () => {
+        await expect(getComputedStyle(gatilho).pointerEvents).not.toBe('none');
+      });
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      await waitForPortal('menu');
+
       await userEvent.keyboard('{Escape}');
-      await waitForClose();
+      await waitForPortalGone('menu');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(gatilho);
+      });
     });
   },
 };

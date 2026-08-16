@@ -148,7 +148,7 @@
         "destructive": "Destructive",
         "withLabel": {
           "name": "Com Label",
-          "description": "Menu agrupado por seções: <code>Label</code> rotula cada grupo (papel <code>presentation</code>) e <code>Separator</code> divide blocos. Útil quando há contextos distintos no mesmo menu.",
+          "description": "Menu agrupado por seções: <code>Label</code> nomeia cada grupo — o grupo recebe o texto do rótulo como nome acessível — e <code>Separator</code> divide blocos. Útil quando há contextos distintos no mesmo menu.",
           "use": "Menu de conta com seções como \"Conta\" e \"Suporte\", ou painéis administrativos com 5+ ações agrupáveis por contexto."
         },
         "withCheckboxItems": {
@@ -163,13 +163,13 @@
         },
         "withShortcuts": {
           "name": "Com Shortcuts",
-          "description": "Item exibe atalho de teclado alinhado à direita via elemento com <code>aria-hidden=\"true\"</code>. O atalho é apenas visual — registre o handler real no consumidor.",
+          "description": "Item exibe o atalho de teclado alinhado à direita. O texto do atalho integra o nome acessível do item, para que quem usa leitor de tela também saiba que a tecla existe. O atalho é apenas exibição — registre o handler real no consumidor.",
           "use": "Menus de edição (Desfazer/Copiar/Colar), comandos rápidos em apps desktop-like onde o usuário deve aprender os atalhos."
         }
       },
       "styles": {
-        "default": "Item neutro com hover <code>bg-accent</code> e foco visível.",
-        "destructive": "Item de ação irreversível com cor <code>text-destructive</code> e fundo <code>bg-destructive/10</code> no hover."
+        "default": "Item neutro: em repouso herda a cor do popup e, em realce por ponteiro ou teclado, troca fundo e texto pelo par de destaque.",
+        "destructive": "Item de ação irreversível: o texto assume a cor de perigo e o realce pinta o fundo com a mesma cor esmaecida."
       }
     },
     "states": {
@@ -182,17 +182,17 @@
       "open": {
         "label": "Aberto",
         "trigger": "click no trigger",
-        "behavior": "Popup visível com focus no primeiro item; setas navegam, ESC fecha."
+        "behavior": "Popup visível e foco dentro do menu; setas navegam entre os itens, ESC fecha."
       },
       "disabled": {
         "label": "Desabilitado",
         "trigger": "item.disabled=true",
-        "behavior": "<code>disabled</code> em Item bloqueia interação; <code>aria-disabled=\"true\"</code> e cursor <code>not-allowed</code>."
+        "behavior": "Item desabilitado se anuncia com <code>aria-disabled=\"true\"</code>, perde opacidade e deixa de receber ponteiro — o clique não chega ao item."
       },
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem ou RadioItem com <code>data-state=\"checked\"</code>; ícone Check exibido."
+        "behavior": "CheckboxItem ou RadioItem com <code>aria-checked=\"true\"</code>; o indicador de marcação fica visível."
       },
       "cols": {
         "state": "Estado",
@@ -258,32 +258,32 @@
         "class": "Classe",
         "part": "Aplicação",
         "background": {
-          "class": "bg-popover",
-          "part": "Fundo do Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Fundo do Content (background-color)"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Cor do texto no Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Cor do texto no Content (color)"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Borda sutil do Content (ring 1px)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Borda de 1px do Content (border-color)"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Sombra do popup"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Sombra do popup (box-shadow)"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Cantos arredondados do Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Cantos arredondados do Content (border-radius)"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/foco em Item default"
+          "class": ".nds-dropdown-menu-item",
+          "part": "Fundo do item em realce, por ponteiro ou teclado"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive (texto + hover)"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Item de ação irreversível: cor do texto e fundo do realce"
         }
       },
       "customizationTitle": "Customização",
@@ -296,15 +296,15 @@
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via role=menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code> automáticos.",
-        "item2": "<code>DropdownMenuContent</code> tem <code>role=\"menu\"</code> com focus trap e foco no primeiro item ao abrir.",
+        "item2": "<code>DropdownMenuContent</code> tem <code>role=\"menu\"</code>, prende o foco enquanto está aberto e recebe o foco ao abrir, de onde as setas alcançam os itens.",
         "item3": "<code>DropdownMenuItem</code> tem <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tem <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tem <code>role=\"menuitemradio\"</code>.",
         "item4": "Setas (cima/baixo) navegam entre itens; Home/End vão ao primeiro/último; letras digitadas movem o foco para item correspondente (typeahead).",
         "item5": "ESC fecha o menu e retorna foco ao trigger; clique fora também fecha.",
-        "item6": "<code>DropdownMenuShortcut</code> é apenas visual — atalho real precisa ser implementado no consumidor (ex: useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> apenas exibe o atalho — a tecla real precisa ser registrada no consumidor (ex: useHotkeys)."
       },
       "keyboard": {
         "title": "Navegação por Teclado",
-        "tab": "Tab — abre o menu (no trigger) ou move foco para o trigger (fora do menu).",
+        "tab": "Tab — leva o foco ao gatilho quando o menu está fechado; com o menu aberto, sai do menu e o fecha.",
         "arrows": "Setas Cima/Baixo — navega entre itens; Setas Direita/Esquerda — abre/fecha submenu.",
         "enter": "Enter/Space — ativa Item (executa ação ou alterna checkbox/radio).",
         "escape": "ESC — fecha menu (e submenu se aplicável); retorna foco ao trigger.",
@@ -354,7 +354,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sem submenu nativo.",
+      "item1": "<strong>Lib upstream</strong>: o menu é construído sobre a lib headless desta stack, que fornece portal, foco e teclado. Onde não há lib, a fábrica própria entrega o mesmo contrato de papéis ARIA, sem submenu aninhado.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
       "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
@@ -371,12 +371,12 @@
         "description": "O que deve acontecer em cada interação.",
         "item1": {
           "action": "Clicar no DropdownMenuTrigger",
-          "result": "Menu abre com role=menu e foco no primeiro item",
+          "result": "Menu abre com role=menu e o foco entra no painel do menu",
           "priority": "high"
         },
         "item2": {
           "action": "Pressionar setas Cima/Baixo no menu aberto",
-          "result": "Foco move entre itens em roving tabindex",
+          "result": "O foco percorre os itens, um por tecla, sem sair do menu",
           "priority": "high"
         },
         "item3": {
@@ -391,7 +391,7 @@
         },
         "item5": {
           "action": "Clicar em CheckboxItem",
-          "result": "data-state alterna entre checked/unchecked; aria-checked reflete",
+          "result": "aria-checked alterna entre true e false e o indicador acompanha",
           "priority": "high"
         },
         "item6": {
@@ -400,8 +400,8 @@
           "priority": "high"
         },
         "item7": {
-          "action": "Hover/foco em SubTrigger",
-          "result": "SubContent abre à direita (ou esquerda em RTL)",
+          "action": "Abrir o submenu pelo SubTrigger (ponteiro ou seta)",
+          "result": "SubContent abre ao lado do menu pai, sem cobrir os irmãos do item",
           "priority": "medium"
         }
       },
@@ -612,7 +612,7 @@
         "destructive": "Destructive",
         "withLabel": {
           "name": "With Label",
-          "description": "Menu grouped by sections: <code>Label</code> titles each group (role <code>presentation</code>) and <code>Separator</code> divides blocks. Useful when distinct contexts share the same menu.",
+          "description": "Menu grouped into sections: <code>Label</code> names each group — the group takes the label text as its accessible name — and <code>Separator</code> divides blocks. Useful when distinct contexts share the same menu.",
           "use": "Account menus with sections like \"Account\" and \"Support\", or admin panels with 5+ actions groupable by context."
         },
         "withCheckboxItems": {
@@ -627,13 +627,13 @@
         },
         "withShortcuts": {
           "name": "With Shortcuts",
-          "description": "Item shows a keyboard shortcut aligned to the right via an element with <code>aria-hidden=\"true\"</code>. The shortcut is visual only — register the actual handler in the consumer.",
+          "description": "The item shows its keyboard shortcut aligned to the right. The shortcut text is part of the item accessible name, so screen reader users learn the key exists too. The shortcut is display only — register the real handler in the consumer.",
           "use": "Edit menus (Undo/Copy/Paste), quick commands in desktop-like apps where users should learn the shortcuts."
         }
       },
       "styles": {
-        "default": "Neutral item with <code>bg-accent</code> hover and visible focus.",
-        "destructive": "Irreversible action item with <code>text-destructive</code> color and <code>bg-destructive/10</code> background on hover."
+        "default": "Neutral item: at rest it inherits the popup colour and, when highlighted by pointer or keyboard, swaps background and text for the highlight pair.",
+        "destructive": "Irreversible-action item: the text takes the danger colour and the highlight paints the background with the same colour, softened."
       }
     },
     "states": {
@@ -646,17 +646,17 @@
       "open": {
         "label": "Open",
         "trigger": "click on trigger",
-        "behavior": "Visible popup with focus on first item; arrows navigate, ESC closes."
+        "behavior": "Visible popup with focus inside the menu; arrows navigate the items, ESC closes."
       },
       "disabled": {
         "label": "Disabled",
         "trigger": "item.disabled=true",
-        "behavior": "<code>disabled</code> on Item blocks interaction; <code>aria-disabled=\"true\"</code> and <code>not-allowed</code> cursor."
+        "behavior": "A disabled Item announces itself with <code>aria-disabled=\"true\"</code>, loses opacity and stops receiving pointer events — the click never reaches it."
       },
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem or RadioItem with <code>data-state=\"checked\"</code>; Check icon shown."
+        "behavior": "CheckboxItem or RadioItem with <code>aria-checked=\"true\"</code>; the check indicator becomes visible."
       },
       "cols": {
         "state": "State",
@@ -722,32 +722,32 @@
         "class": "Class",
         "part": "Application",
         "background": {
-          "class": "bg-popover",
-          "part": "Content background"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Content background (background-color)"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Text color in Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Text color in Content (color)"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Subtle Content border (1px ring)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "1px Content border (border-color)"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Popup shadow"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Popup shadow (box-shadow)"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Content rounded corners"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Content rounded corners (border-radius)"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/focus on default Item"
+          "class": ".nds-dropdown-menu-item",
+          "part": "Item highlight background, by pointer or keyboard"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive (text + hover)"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Irreversible-action item: text colour and highlight background"
         }
       },
       "customizationTitle": "Customization",
@@ -760,15 +760,15 @@
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via role=menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> automatically gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>.",
-        "item2": "<code>DropdownMenuContent</code> has <code>role=\"menu\"</code> with focus trap and focus on first item when opened.",
+        "item2": "<code>DropdownMenuContent</code> has <code>role=\"menu\"</code>, traps focus while open and receives focus on open, from where the arrows reach the items.",
         "item3": "<code>DropdownMenuItem</code> has <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> has <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> has <code>role=\"menuitemradio\"</code>.",
         "item4": "Up/Down arrows navigate between items; Home/End go to first/last; typed letters move focus to matching item (typeahead).",
         "item5": "ESC closes the menu and returns focus to trigger; outside click also closes.",
-        "item6": "<code>DropdownMenuShortcut</code> is visual only — actual shortcut needs to be implemented by the consumer (e.g., useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> only displays the shortcut — the real key must be registered by the consumer (e.g., useHotkeys)."
       },
       "keyboard": {
         "title": "Keyboard Navigation",
-        "tab": "Tab — opens the menu (on trigger) or moves focus to trigger (outside menu).",
+        "tab": "Tab — moves focus to the trigger when the menu is closed; with the menu open, it leaves the menu and closes it.",
         "arrows": "Up/Down arrows — navigate between items; Right/Left arrows — open/close submenu.",
         "enter": "Enter/Space — activates Item (executes action or toggles checkbox/radio).",
         "escape": "ESC — closes menu (and submenu if applicable); returns focus to trigger.",
@@ -818,7 +818,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: DropdownMenu uses <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory without native submenu.",
+      "item1": "<strong>Upstream lib</strong>: the menu is built on this stack's headless library, which provides the portal, focus and keyboard handling. Where there is no library, the in-house factory delivers the same ARIA role contract, without nested submenus.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
       "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
@@ -835,12 +835,12 @@
         "description": "What should happen on each interaction.",
         "item1": {
           "action": "Click DropdownMenuTrigger",
-          "result": "Menu opens with role=menu and focus on first item",
+          "result": "Menu opens with role=menu and focus lands inside the menu panel",
           "priority": "high"
         },
         "item2": {
           "action": "Press Up/Down arrows in open menu",
-          "result": "Focus moves between items in roving tabindex",
+          "result": "Focus walks the items, one per key press, without leaving the menu",
           "priority": "high"
         },
         "item3": {
@@ -855,7 +855,7 @@
         },
         "item5": {
           "action": "Click CheckboxItem",
-          "result": "data-state toggles between checked/unchecked; aria-checked reflects",
+          "result": "aria-checked toggles between true and false and the indicator follows",
           "priority": "high"
         },
         "item6": {
@@ -864,8 +864,8 @@
           "priority": "high"
         },
         "item7": {
-          "action": "Hover/focus on SubTrigger",
-          "result": "SubContent opens to the right (or left in RTL)",
+          "action": "Open the submenu from the SubTrigger (pointer or arrow key)",
+          "result": "SubContent opens beside the parent menu, without covering the item siblings",
           "priority": "medium"
         }
       },
@@ -1076,7 +1076,7 @@
         "destructive": "Destructive",
         "withLabel": {
           "name": "Con Label",
-          "description": "Menú agrupado por secciones: <code>Label</code> titula cada grupo (rol <code>presentation</code>) y <code>Separator</code> divide bloques. Útil cuando hay contextos distintos en el mismo menú.",
+          "description": "Menú agrupado por secciones: <code>Label</code> nombra cada grupo — el grupo toma el texto del rótulo como nombre accesible — y <code>Separator</code> divide bloques. Útil cuando hay contextos distintos en el mismo menú.",
           "use": "Menú de cuenta con secciones como \"Cuenta\" y \"Soporte\", o paneles administrativos con 5+ acciones agrupables por contexto."
         },
         "withCheckboxItems": {
@@ -1091,13 +1091,13 @@
         },
         "withShortcuts": {
           "name": "Con Shortcuts",
-          "description": "Item muestra atajo de teclado alineado a la derecha vía elemento con <code>aria-hidden=\"true\"</code>. El atajo es solo visual — registra el handler real en el consumidor.",
+          "description": "El ítem muestra el atajo de teclado alineado a la derecha. El texto del atajo forma parte del nombre accesible del ítem, para que quien usa lector de pantalla también sepa que la tecla existe. El atajo es solo visual — registra el handler real en el consumidor.",
           "use": "Menús de edición (Deshacer/Copiar/Pegar), comandos rápidos en apps tipo desktop donde el usuario debe aprender los atajos."
         }
       },
       "styles": {
-        "default": "Item neutro con hover <code>bg-accent</code> y foco visible.",
-        "destructive": "Item de acción irreversible con color <code>text-destructive</code> y fondo <code>bg-destructive/10</code> en hover."
+        "default": "Ítem neutro: en reposo hereda el color del popup y, al resaltarse por puntero o teclado, cambia fondo y texto por el par de resaltado.",
+        "destructive": "Ítem de acción irreversible: el texto toma el color de peligro y el resaltado pinta el fondo con ese mismo color atenuado."
       }
     },
     "states": {
@@ -1110,17 +1110,17 @@
       "open": {
         "label": "Abierto",
         "trigger": "clic en el trigger",
-        "behavior": "Popup visible con foco en el primer item; flechas navegan, ESC cierra."
+        "behavior": "Popup visible y foco dentro del menú; las flechas navegan entre los ítems, ESC cierra."
       },
       "disabled": {
         "label": "Deshabilitado",
         "trigger": "item.disabled=true",
-        "behavior": "<code>disabled</code> en Item bloquea interacción; <code>aria-disabled=\"true\"</code> y cursor <code>not-allowed</code>."
+        "behavior": "El ítem deshabilitado se anuncia con <code>aria-disabled=\"true\"</code>, pierde opacidad y deja de recibir puntero — el clic no llega al ítem."
       },
       "checked": {
         "label": "Checked",
         "trigger": "aria-checked=\"true\"",
-        "behavior": "CheckboxItem o RadioItem con <code>data-state=\"checked\"</code>; icono Check mostrado."
+        "behavior": "CheckboxItem o RadioItem con <code>aria-checked=\"true\"</code>; el indicador de marcado queda visible."
       },
       "cols": {
         "state": "Estado",
@@ -1186,32 +1186,32 @@
         "class": "Clase",
         "part": "Aplicación",
         "background": {
-          "class": "bg-popover",
-          "part": "Fondo del Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Fondo del Content (background-color)"
         },
         "foreground": {
-          "class": "text-popover-foreground",
-          "part": "Color del texto en el Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Color del texto en el Content (color)"
         },
         "border": {
-          "class": "ring-foreground/10",
-          "part": "Borde sutil del Content (ring 1px)"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Borde de 1px del Content (border-color)"
         },
         "shadow": {
-          "class": "shadow-md",
-          "part": "Sombra del popup"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Sombra del popup (box-shadow)"
         },
         "rounded": {
-          "class": "rounded-lg",
-          "part": "Esquinas redondeadas del Content"
+          "class": ".nds-dropdown-menu-content",
+          "part": "Esquinas redondeadas del Content (border-radius)"
         },
         "itemHover": {
-          "class": "bg-accent",
-          "part": "Hover/foco en Item default"
+          "class": ".nds-dropdown-menu-item",
+          "part": "Fondo del ítem resaltado, por puntero o teclado"
         },
         "destructive": {
-          "class": "text-destructive bg-destructive/10",
-          "part": "Item variant=destructive (texto + hover)"
+          "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
+          "part": "Ítem de acción irreversible: color del texto y fondo del resaltado"
         }
       },
       "customizationTitle": "Personalización",
@@ -1224,15 +1224,15 @@
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía role=menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value vía aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code> automáticos.",
-        "item2": "<code>DropdownMenuContent</code> tiene <code>role=\"menu\"</code> con focus trap y foco en el primer item al abrir.",
+        "item2": "<code>DropdownMenuContent</code> tiene <code>role=\"menu\"</code>, atrapa el foco mientras está abierto y lo recibe al abrir, desde donde las flechas alcanzan los ítems.",
         "item3": "<code>DropdownMenuItem</code> tiene <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tiene <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tiene <code>role=\"menuitemradio\"</code>.",
         "item4": "Flechas Arriba/Abajo navegan entre items; Home/End van al primero/último; letras tipeadas mueven foco al item correspondiente (typeahead).",
         "item5": "ESC cierra el menú y devuelve foco al trigger; clic fuera también cierra.",
-        "item6": "<code>DropdownMenuShortcut</code> es solo visual — atajo real debe ser implementado por el consumidor (ej: useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> solo muestra el atajo — la tecla real debe registrarse en el consumidor (ej: useHotkeys)."
       },
       "keyboard": {
         "title": "Navegación por Teclado",
-        "tab": "Tab — abre el menú (en el trigger) o mueve foco al trigger (fuera del menú).",
+        "tab": "Tab — lleva el foco al trigger con el menú cerrado; con el menú abierto, sale del menú y lo cierra.",
         "arrows": "Flechas Arriba/Abajo — navega entre items; Flechas Derecha/Izquierda — abre/cierra submenú.",
         "enter": "Enter/Space — activa Item (ejecuta acción o alterna checkbox/radio).",
         "escape": "ESC — cierra menú (y submenú si aplica); devuelve foco al trigger.",
@@ -1282,7 +1282,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: DropdownMenu usa <code>base-ui/menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom sin submenu nativo.",
+      "item1": "<strong>Lib upstream</strong>: el menú se construye sobre la librería headless de este stack, que aporta portal, foco y teclado. Donde no hay librería, la factory propia entrega el mismo contrato de roles ARIA, sin submenú anidado.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
       "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
@@ -1299,12 +1299,12 @@
         "description": "Lo que debe ocurrir en cada interacción.",
         "item1": {
           "action": "Hacer clic en DropdownMenuTrigger",
-          "result": "Menú abre con role=menu y foco en el primer item",
+          "result": "El menú abre con role=menu y el foco entra en el panel del menú",
           "priority": "high"
         },
         "item2": {
           "action": "Presionar flechas Arriba/Abajo en menú abierto",
-          "result": "Foco se mueve entre items en roving tabindex",
+          "result": "El foco recorre los ítems, uno por tecla, sin salir del menú",
           "priority": "high"
         },
         "item3": {
@@ -1319,7 +1319,7 @@
         },
         "item5": {
           "action": "Hacer clic en CheckboxItem",
-          "result": "data-state alterna entre checked/unchecked; aria-checked refleja",
+          "result": "aria-checked alterna entre true y false y el indicador acompaña",
           "priority": "high"
         },
         "item6": {
@@ -1328,8 +1328,8 @@
           "priority": "high"
         },
         "item7": {
-          "action": "Hover/foco en SubTrigger",
-          "result": "SubContent abre a la derecha (o izquierda en RTL)",
+          "action": "Abrir el submenú desde el SubTrigger (puntero o flecha)",
+          "result": "SubContent abre al lado del menú padre, sin cubrir los hermanos del ítem",
           "priority": "medium"
         }
       },

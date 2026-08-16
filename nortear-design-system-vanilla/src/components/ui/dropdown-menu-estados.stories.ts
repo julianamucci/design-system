@@ -73,29 +73,78 @@ async function closeAfter(): Promise<void> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Closed: Story = {
+  parameters: { covers: ['accessibility.item2'] },
   render: () => buildBase({ triggerLabel: 'Abrir menu' }).wrapper,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    await step('Apenas o trigger é renderizado', async () => {
+    await step('Só o gatilho está na tela', async () => {
       const trigger = canvas.getByRole('button', { name: /abrir menu/i });
       await expect(trigger).toBeVisible();
+      await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(body.queryByRole('menu')).not.toBeInTheDocument();
+      // O portal desmonta o popup ao fechar: fechado não é "escondido com
+      // display:none", é ausente do DOM. Um popup só escondido continuaria no
+      // percurso do leitor de tela.
+      await expect(body.queryAllByRole('menu')).toHaveLength(0);
+      await expect(body.queryAllByRole('menuitem')).toHaveLength(0);
     });
   },
 };
 
 export const Open: Story = {
-  render: () => buildBase({ triggerLabel: 'Abrir menu', openInitially: true }).wrapper,
-  play: async ({ step }) => {
+  parameters: { covers: ['functional.item1', 'functional.item2', 'accessibility.item3'] },
+  // O menu abre pelo CLIQUE da `play`, não por um `.click()` na montagem: é o
+  // caminho de quem usa, e é o único em que dá para afirmar onde o foco pousa.
+  render: () => buildBase({ triggerLabel: 'Abrir menu' }).wrapper,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
     const body = within(document.body);
-    await step('Menu renderiza visível com role=menu', async () => {
+    const gatilho = canvas.getByRole('button', { name: /abrir menu/i });
+    const itensDoMenu = async () =>
+      within(await body.findByRole('menu')).getAllByRole('menuitem');
+
+    await step('Clicar abre o menu e o foco entra no painel', async () => {
+      // Idempotente: o clique só acontece com o menu fechado, então o replay do
+      // painel Interactions parte do mesmo estado da primeira rodada.
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       const menu = await body.findByRole('menu');
       await expect(menu).toBeVisible();
-      const items = menu.querySelectorAll('[role="menuitem"]');
-      await expect(items.length).toBeGreaterThan(0);
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+      // O foco tem que ENTRAR no menu: se ficasse no gatilho, a seta seguinte
+      // não acharia item nenhum e o menu seria inoperável por teclado.
+      await waitFor(async () => {
+        await expect(menu.contains(document.activeElement)).toBe(true);
+      });
     });
+
+    await step('As setas descem e sobem um item por vez', async () => {
+      const itens = await itensDoMenu();
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(itens[1]);
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(document.activeElement).toBe(itens[0]);
+    });
+
+    await step('Home e End vão ao primeiro e ao último', async () => {
+      const itens = await itensDoMenu();
+      await userEvent.keyboard('{End}');
+      await expect(document.activeElement).toBe(itens[2]);
+      await userEvent.keyboard('{Home}');
+      await expect(document.activeElement).toBe(itens[0]);
+    });
+
+    await step('Digitar uma letra salta para o item que começa com ela', async () => {
+      // Typeahead: numa lista de ações longa é o que evita percorrer item por
+      // item. Sem ele a letra não faz nada e o foco fica onde estava — por isso
+      // a asserção compara com OUTRO item, e não com "mudou de lugar".
+      const itens = await itensDoMenu();
+      await userEvent.keyboard('s');
+      await expect(document.activeElement).toBe(itens[2]);
+    });
+
     await step('Limpa via ESC antes do postVisit', async () => {
       await closeAfter();
     });
@@ -141,16 +190,24 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    const botaoExterno = canvas.getByRole('button', { name: /open programmatically/i });
 
-    await step('Click externo abre o menu', async () => {
-      const trigger = canvas.getByRole('button', { name: /open programmatically/i });
-      await userEvent.click(trigger);
+    await step('O botão externo abre o menu', async () => {
+      // Idempotente: só clica quando o estado atual não é o desejado, então o
+      // replay do painel Interactions chega ao mesmo lugar.
+      if (botaoExterno.dataset.open !== 'true') await userEvent.click(botaoExterno);
       const menu = await body.findByRole('menu');
       await expect(menu).toBeVisible();
+      // O `data-open` do botão de fora é escrito pelo `onOpenChange`: se o
+      // callback não tivesse voltado, o estado externo ficaria dessincronizado
+      // do menu e um segundo clique não abriria nada.
+      await expect(botaoExterno.dataset.open).toBe('true');
     });
 
-    await step('ESC fecha menu controlado', async () => {
+    await step('ESC fecha e o estado de fora acompanha', async () => {
       await closeAfter();
+      await expect(botaoExterno.dataset.open).toBe('false');
+      await expect(body.queryAllByRole('menu')).toHaveLength(0);
     });
   },
 };
@@ -163,12 +220,30 @@ export const ItemDisabled: Story = {
   }).wrapper,
   play: async ({ step }) => {
     const body = within(document.body);
-    await step('Item disabled tem aria-disabled=true', async () => {
-      const menu = await body.findByRole('menu');
-      const disabled = menu.querySelector('[aria-disabled="true"]');
-      await expect(disabled).toBeTruthy();
-      await expect(disabled?.textContent).toMatch(/arquivar/i);
+    const menu = await body.findByRole('menu');
+    const desabilitado = within(menu).getByRole('menuitem', { name: 'Arquivar' });
+
+    await step('O item se anuncia desabilitado', async () => {
+      await expect(desabilitado).toHaveAttribute('aria-disabled', 'true');
     });
+
+    await step('O clique é bloqueado pelo CSS, não só pelo callback', async () => {
+      // `pointer-events: none` é o que impede o clique de chegar; sem ele o item
+      // continuaria clicável e o bloqueio dependeria de cada consumidor.
+      await expect(getComputedStyle(desabilitado).pointerEvents).toBe('none');
+    });
+
+    await step('A seta pula o item desabilitado', async () => {
+      // Aqui a navegação NÃO pousa no item bloqueado: ele fica fora do percurso
+      // das setas, e por isso também não tem `tabindex`.
+      const itens = within(menu).getAllByRole('menuitem');
+      await expect(desabilitado.hasAttribute('tabindex')).toBe(false);
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).not.toBe(desabilitado);
+      await expect(document.activeElement).toBe(itens[2]);
+    });
+
     await step('Limpa via ESC', async () => {
       await closeAfter();
     });

@@ -167,10 +167,9 @@
 
   const interfaceCode = `// DropdownMenu (Root)
 interface DropdownMenuProps {
-  open?: boolean;
-  defaultOpen?: boolean;
+  open?: boolean;               // bindável: também define o estado inicial
   onOpenChange?: (open: boolean) => void;
-  modal?: boolean;
+  dir?: 'ltr' | 'rtl';
 }
 
 // DropdownMenuContent
@@ -409,7 +408,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Conta</Button>
@@ -429,7 +428,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Tudo</Button>
@@ -448,7 +447,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Ações</Button>
@@ -464,7 +463,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Ações</Button>
@@ -593,7 +592,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantDefault()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Default</Button>
@@ -609,7 +608,7 @@ interface DropdownMenuRadioGroupProps {
   {/snippet}
   {#snippet variantDestructive()}
     <div style="contain: layout">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>Destructive</Button>
@@ -626,7 +625,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithLabel()}
     <div style="contain: layout; min-height: 240px;">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Conta</Button>
@@ -647,7 +646,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithCheckboxItems()}
     <div style="contain: layout; min-height: 200px;">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Colunas</Button>
@@ -680,7 +679,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithRadioGroup()}
     <div style="contain: layout; min-height: 200px;">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Tema</Button>
@@ -700,7 +699,7 @@ interface DropdownMenuRadioGroupProps {
 
   {#snippet variantWithShortcuts()}
     <div style="contain: layout; min-height: 220px;">
-      <DropdownMenu defaultOpen={true}>
+      <DropdownMenu open={true}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" size="sm" {...props}>Editar</Button>
@@ -754,8 +753,11 @@ interface DropdownMenuRadioGroupProps {
         items: [
           { name: 'open',         type: $tStore('props.table.open.type'),         defaultValue: $tStore('props.table.open.default'),         required: $tStore('props.table.open.required'),         description: $tStore('props.table.open.description')         },
           { name: 'onOpenChange', type: $tStore('props.table.onOpenChange.type'), defaultValue: $tStore('props.table.onOpenChange.default'), required: $tStore('props.table.onOpenChange.required'), description: $tStore('props.table.onOpenChange.description') },
-          { name: 'defaultOpen',  type: $tStore('props.table.defaultOpen.type'),  defaultValue: $tStore('props.table.defaultOpen.default'),  required: $tStore('props.table.defaultOpen.required'),  description: $tStore('props.table.defaultOpen.description')  },
-          { name: 'modal',        type: $tStore('props.table.modal.type'),        defaultValue: $tStore('props.table.modal.default'),        required: $tStore('props.table.modal.required'),        description: $tStore('props.table.modal.description')        },
+          // `defaultOpen` e `modal` não entram: não existem na API deste stack —
+          // eram aceitos e ignorados em silêncio. O estado inicial sai do
+          // próprio `open`, que é bindável, e o bloqueio de interação não é
+          // configurável aqui. Documentar prop que o componente ignora é
+          // prometer o que o produto não cumpre.
           { name: 'side',         type: $tStore('props.table.side.type'),         defaultValue: $tStore('props.table.side.default'),         required: $tStore('props.table.side.required'),         description: $tStore('props.table.side.description')         },
           { name: 'align',        type: $tStore('props.table.align.type'),        defaultValue: $tStore('props.table.align.default'),        required: $tStore('props.table.align.required'),        description: $tStore('props.table.align.description')        },
         ],
@@ -778,7 +780,7 @@ interface DropdownMenuRadioGroupProps {
       { token: '--popover',            value: $tStore('tokens.table.background.class'),  description: $tStore('tokens.table.background.part')  },
       { token: '--popover-foreground', value: $tStore('tokens.table.foreground.class'),  description: $tStore('tokens.table.foreground.part')  },
       { token: '--border',             value: $tStore('tokens.table.border.class'),      description: $tStore('tokens.table.border.part')      },
-      { token: '--shadow',             value: $tStore('tokens.table.shadow.class'),      description: $tStore('tokens.table.shadow.part')      },
+      { token: '--elevation-md',             value: $tStore('tokens.table.shadow.class'),      description: $tStore('tokens.table.shadow.part')      },
       { token: '--radius',             value: $tStore('tokens.table.rounded.class'),     description: $tStore('tokens.table.rounded.part')     },
       { token: '--accent',             value: $tStore('tokens.table.itemHover.class'),   description: $tStore('tokens.table.itemHover.part')   },
       { token: '--destructive',        value: $tStore('tokens.table.destructive.class'), description: $tStore('tokens.table.destructive.part') },

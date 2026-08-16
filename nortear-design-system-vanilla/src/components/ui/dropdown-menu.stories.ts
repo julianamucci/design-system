@@ -75,6 +75,22 @@ function buildMenuEl(args: DropdownArgs): { el: HTMLElement; trigger: HTMLButton
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item3',
+      'functional.item4',
+      'accessibility.item1',
+      'accessibility.item2',
+      'accessibility.item5',
+    ],
+    // A fábrica não tem submenu aninhado nem posicionamento por `side`: o que
+    // ela entrega é o menu plano. Declarar cobertura desses itens aqui seria
+    // fazer o auditor mentir.
+    coversNotApplicable: {
+      'functional.item7': 'a fábrica não expõe submenu aninhado — não há SubTrigger para abrir',
+      'visual.item4': 'sem submenu na fábrica, não existe estado para o Chromatic fotografar',
+    },
+  },
   render: (args) => {
     const container = document.createElement('div');
     container.style.contain = 'layout';
@@ -101,23 +117,47 @@ export const Playground: Story = {
       }, { timeout: 800 });
     };
 
-    if (!args.defaultOpen) {
-      await step('Abre ao clicar no trigger', async () => {
-        const trigger = canvas.getByRole('button', { name: triggerRe });
-        await userEvent.click(trigger);
-        const menu = await body.findByRole('menu');
-        await expect(menu).toBeVisible();
-      });
-    } else {
-      await step('Renderiza aberto via defaultOpen', async () => {
-        const menu = await body.findByRole('menu');
-        await expect(menu).toBeVisible();
-      });
-    }
+    const gatilho = canvas.getByRole('button', { name: triggerRe });
 
-    await step('Fecha via ESC e retorna foco ao trigger', async () => {
+    await step('O gatilho anuncia que abre um menu, e que está fechado', async () => {
+      await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
+      // `aria-controls` aponta para o painel que ainda não existe: é o que liga
+      // o gatilho ao menu quando ele abrir.
+      await expect(gatilho.getAttribute('aria-controls')).toMatch(/^dropdown-menu-\d+$/);
+    });
+
+    await step('Clicar abre o menu com papel de menu', async () => {
+      // Idempotente: o clique só acontece com o menu fechado, então o replay do
+      // painel Interactions parte do mesmo estado da primeira rodada — vale
+      // igual para `defaultOpen`, que já abriu na montagem.
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      const menu = await body.findByRole('menu');
+      await expect(menu).toBeVisible();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+      await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+    });
+
+    await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
+      const menu = await body.findByRole('menu');
+      const perfil = within(menu).getByRole('menuitem', { name: 'Perfil' });
+      perfil.focus();
+      await userEvent.keyboard('{Enter}');
+      await waitForClose();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+      if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+      await body.findByRole('menu');
+
       await userEvent.keyboard('{Escape}');
       await waitForClose();
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
+      // O foco não pode cair no corpo do documento: quem navega por teclado
+      // teria de percorrer a página inteira de novo para voltar ao ponto.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(gatilho);
+      });
     });
   },
 };

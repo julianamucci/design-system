@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createDropdownMenu } from './dropdown-menu';
-import { tornarDestruivel } from '@/lib/destroy';
+import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -14,7 +13,10 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes do DropdownMenu: ComLabel, ComCheckboxItems, ComRadioGroup e ComShortcuts. NOTA: a factory createDropdownMenu (Vanilla) não tem submenu nativo — a composição "ComSubmenu" foi omitida intencionalmente. Para hierarquia, monte o Sub manualmente ou prefira menus planos.',
+          'As composições canônicas: grupos com rótulo, alternadores, escolha única e atalhos. ' +
+          'Todas partem das mesmas peças — o que muda é o papel ARIA do item e o indicador que o ' +
+          'acompanha. NOTA: a fábrica não tem submenu aninhado, e a composição "ComSubmenu" é ' +
+          'omitida de propósito; para hierarquia, prefira menus planos.',
       },
     },
   },
@@ -35,302 +37,196 @@ function wrap(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-async function closeAfter(): Promise<void> {
+/**
+ * Monta o menu e o abre pelo gatilho. A abertura fica no `queueMicrotask` para
+ * a foto do Chromatic sair com o painel na tela; as `play` que dependem de foco
+ * abrem de novo pelo clique real, que é o caminho de quem usa.
+ */
+function montar(rotulo: string, items: DropdownMenuItemDef[]): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: rotulo });
+  const menu = createDropdownMenu({ trigger, items });
+  queueMicrotask(() => trigger.click());
+  return wrap(menu);
+}
+
+async function fecharNoFim(): Promise<void> {
   const body = within(document.body);
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {
-    if (body.queryByRole('menu')) throw new Error('still open');
+    if (body.queryByRole('menu')) throw new Error('menu ainda aberto');
   });
 }
 
-// Custom factory builder for composições que precisam de roles específicos
-// (menuitemcheckbox, menuitemradio, menuitem com shortcut). A factory padrão
-// só renderiza role="menuitem" simples.
-function buildCustomMenu(
-  triggerLabel: string,
-  build: (menu: HTMLUListElement) => void,
-): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: triggerLabel });
-  const wrapper = document.createElement('div');
-  wrapper.dataset.slot = 'dropdown-menu';
-  wrapper.style.display = 'contents';
-  wrapper.appendChild(trigger);
-
-  const menuId = `dropdown-comp-${Math.random().toString(36).slice(2, 8)}`;
-  trigger.setAttribute('aria-haspopup', 'menu');
-  trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-controls', menuId);
-
-  let panel: HTMLUListElement | null = null;
-
-  function close(): void {
-    panel?.remove();
-    panel = null;
-    trigger.setAttribute('aria-expanded', 'false');
-    document.removeEventListener('keydown', onKeydown);
-  }
-  function onKeydown(e: KeyboardEvent): void {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      close();
-      trigger.focus();
-    }
-  }
-  function open(): void {
-    const menu = document.createElement('ul');
-    menu.id = menuId;
-    menu.setAttribute('role', 'menu');
-    menu.className =
-      'z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    menu.style.position = 'absolute';
-    const rect = trigger.getBoundingClientRect();
-    menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
-    menu.style.left = `${rect.left + window.scrollX}px`;
-    build(menu);
-    document.body.appendChild(menu);
-    panel = menu;
-    trigger.setAttribute('aria-expanded', 'true');
-    (menu.querySelector('[role^="menuitem"]') as HTMLElement | null)?.focus();
-    document.addEventListener('keydown', onKeydown);
-  }
-  trigger.addEventListener('click', () => (panel ? close() : open()));
-  queueMicrotask(() => trigger.click());
-
-  // Este menu é montado à mão porque a factory não tem item de marcação — mas o
-  // arranjo é o mesmo dela: painel portalado no `body` e `keydown` no
-  // `document`. Sem limpeza na saída, cada story destas deixava o próprio menu
-  // aberto na página, e a seguinte encontrava DOIS `role="menu"`.
-  tornarDestruivel(wrapper, wrapper, close);
-
-  return wrapper;
-}
-
-function makeLabel(text: string): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'presentation');
-  li.className = 'nds-dropdown-menu-label';
-  li.textContent = text;
-  return li;
-}
-
-function makeSeparator(): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'separator');
-  li.className = 'nds-dropdown-menu-separator';
-  return li;
-}
-
-function makeMenuitem(label: string, shortcut?: string): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitem');
-  li.setAttribute('tabindex', '-1');
-  li.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-  const text = document.createElement('span');
-  text.className = 'flex-1';
-  text.textContent = label;
-  li.appendChild(text);
-  if (shortcut) {
-    const sc = document.createElement('span');
-    sc.className = 'nds-dropdown-menu-shortcut';
-    sc.setAttribute('aria-hidden', 'true');
-    sc.textContent = shortcut;
-    li.appendChild(sc);
-  }
-  return li;
-}
-
-function makeCheckboxItem(label: string, checked: boolean): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitemcheckbox');
-  li.setAttribute('aria-checked', String(checked));
-  li.setAttribute('tabindex', '-1');
-  if (checked) li.dataset.state = 'checked';
-  li.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-  const indicator = document.createElement('span');
-  indicator.className = 'nds-inline-center nds-icon';
-  indicator.setAttribute('aria-hidden', 'true');
-  if (checked) {
-    const svgNs = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(svgNs, 'svg');
-    svg.setAttribute('width', '14');
-    svg.setAttribute('height', '14');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('fill', 'none');
-    svg.setAttribute('stroke', 'currentColor');
-    svg.setAttribute('stroke-width', '2');
-    svg.setAttribute('stroke-linecap', 'round');
-    svg.setAttribute('stroke-linejoin', 'round');
-    const path = document.createElementNS(svgNs, 'path');
-    path.setAttribute('d', 'M20 6 9 17l-5-5');
-    svg.appendChild(path);
-    indicator.appendChild(svg);
-  }
-  const text = document.createElement('span');
-  text.textContent = label;
-  li.append(indicator, text);
-  li.addEventListener('click', () => {
-    const next = li.getAttribute('aria-checked') !== 'true';
-    li.setAttribute('aria-checked', String(next));
-    li.dataset.state = next ? 'checked' : 'unchecked';
-  });
-  return li;
-}
-
-function makeRadioItem(label: string, checked: boolean, group: HTMLUListElement): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitemradio');
-  li.setAttribute('aria-checked', String(checked));
-  li.setAttribute('tabindex', '-1');
-  if (checked) li.dataset.state = 'checked';
-  li.className =
-    'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-  const indicator = document.createElement('span');
-  indicator.className = 'nds-inline-center nds-icon';
-  indicator.setAttribute('aria-hidden', 'true');
-  if (checked) {
-    const svgNs = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(svgNs, 'svg');
-    svg.setAttribute('width', '8');
-    svg.setAttribute('height', '8');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('fill', 'currentColor');
-    const circle = document.createElementNS(svgNs, 'circle');
-    circle.setAttribute('cx', '12');
-    circle.setAttribute('cy', '12');
-    circle.setAttribute('r', '8');
-    svg.appendChild(circle);
-    indicator.appendChild(svg);
-  }
-  const text = document.createElement('span');
-  text.textContent = label;
-  li.append(indicator, text);
-  li.addEventListener('click', () => {
-    group.querySelectorAll<HTMLElement>('[role="menuitemradio"]').forEach((el) => {
-      el.setAttribute('aria-checked', 'false');
-      el.dataset.state = 'unchecked';
-    });
-    li.setAttribute('aria-checked', 'true');
-    li.dataset.state = 'checked';
-  });
-  return li;
-}
-
-// ─── Stories ──────────────────────────────────────────────────────────────────
+// ─── Com Label ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
-  render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Conta' });
-    const menu = createDropdownMenu({
-      trigger,
-      items: [
-        { type: 'label', label: 'Conta' },
-        { type: 'item',  label: 'Perfil',         value: 'profile'  },
-        { type: 'item',  label: 'Configuracoes',  value: 'settings' },
-        { type: 'separator' },
-        { type: 'label', label: 'Suporte' },
-        { type: 'item',  label: 'Documentação',   value: 'docs'     },
-        { type: 'item',  label: 'Sair',           value: 'logout'   },
-      ],
-    });
-    menu.dataset.slot = 'dropdown-menu';
-    queueMicrotask(() => trigger.click());
-    return wrap(menu);
-  },
+  parameters: { covers: ['visual.item1'] },
+  render: () =>
+    montar('Conta', [
+      { type: 'label', label: 'Conta' },
+      { type: 'item', label: 'Perfil', value: 'profile' },
+      { type: 'item', label: 'Configuracoes', value: 'settings' },
+      { type: 'separator' },
+      { type: 'label', label: 'Suporte' },
+      { type: 'item', label: 'Documentação', value: 'docs' },
+      { type: 'item', label: 'Sair', value: 'logout' },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Menu com label e separator visíveis', async () => {
-      const menu = await body.findByRole('menu');
-      const labels = menu.querySelectorAll('[role="presentation"]');
-      const seps = menu.querySelectorAll('[role="separator"]');
-      await expect(labels.length).toBeGreaterThanOrEqual(2);
-      await expect(seps.length).toBeGreaterThanOrEqual(1);
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+
+    await step('O rótulo não é item de menu', async () => {
+      // Rótulo dentro de `role="menu"` não pode ser navegável: a seta o pousaria
+      // como se fosse ação, e o typeahead o traria como resultado.
+      await expect(canvas.getAllByRole('menuitem')).toHaveLength(4);
+      const rotulos = menu.querySelectorAll('.nds-dropdown-menu-label');
+      await expect(rotulos).toHaveLength(2);
+      for (const r of rotulos) await expect(r.getAttribute('role')).toBe('presentation');
     });
+
+    await step('O separador divide os grupos', async () => {
+      await expect(canvas.getAllByRole('separator')).toHaveLength(1);
+    });
+
     await step('Limpa via ESC', async () => {
-      await closeAfter();
+      await fecharNoFim();
     });
   },
 };
+
+// ─── Com CheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  render: () => wrap(
-    buildCustomMenu('Mostrar colunas', (menu) => {
-      menu.append(
-        makeLabel('Colunas visíveis'),
-        makeCheckboxItem('Status', true),
-        makeCheckboxItem('Email', true),
-        makeCheckboxItem('Função', false),
-      );
-    }),
-  ),
+  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
+  render: () =>
+    montar('Colunas', [
+      { type: 'label', label: 'Colunas visíveis' },
+      { type: 'checkbox', label: 'Nome', value: 'nome', checked: true },
+      { type: 'checkbox', label: 'E-mail', value: 'email', checked: false },
+      { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Menu contém menuitemcheckbox', async () => {
-      const menu = await body.findByRole('menu');
-      const items = menu.querySelectorAll('[role="menuitemcheckbox"]');
-      await expect(items.length).toBe(3);
-      const firstChecked = items[0].getAttribute('aria-checked');
-      await expect(firstChecked).toBe('true');
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+    const nome = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+
+    await step('O papel e o estado inicial chegam ao markup', async () => {
+      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(3);
+      await expect(nome.getAttribute('aria-checked')).toBe('true');
+      await expect(email.getAttribute('aria-checked')).toBe('false');
     });
+
+    await step('O indicador só aparece no item marcado', async () => {
+      // O estado não pode depender só do texto: o Check é o que a pessoa vê e o
+      // `aria-checked` é o que ela ouve.
+      const marca = (item: HTMLElement) =>
+        item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
+      await expect(marca(nome)).toBe(true);
+      await expect(marca(email)).toBe(false);
+    });
+
+    await step('Clicar alterna o item e mantém o menu aberto', async () => {
+      // Idempotente: leva o e-mail a marcado só se ainda não estiver, então o
+      // replay do painel Interactions termina no mesmo estado.
+      if (email.getAttribute('aria-checked') !== 'true') await userEvent.click(email);
+
+      await waitFor(async () => {
+        await expect(email.getAttribute('aria-checked')).toBe('true');
+      });
+      // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      // Independentes entre si — é o que separa checkbox de escolha única.
+      await expect(nome.getAttribute('aria-checked')).toBe('true');
+    });
+
     await step('Limpa via ESC', async () => {
-      await closeAfter();
+      await fecharNoFim();
     });
   },
 };
+
+// ─── Com RadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  render: () => wrap(
-    buildCustomMenu('Tema', (menu) => {
-      const group = menu;
-      group.append(
-        makeLabel('Aparência'),
-        makeRadioItem('Claro', false, group),
-        makeRadioItem('Escuro', true, group),
-        makeRadioItem('Sistema', false, group),
-      );
-    }),
-  ),
+  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  render: () =>
+    montar('Tema', [
+      { type: 'label', label: 'Aparência' },
+      { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
+      { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
+      { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Menu contém menuitemradio com apenas um checked', async () => {
-      const menu = await body.findByRole('menu');
-      const items = menu.querySelectorAll('[role="menuitemradio"]');
-      await expect(items.length).toBe(3);
-      const checked = menu.querySelectorAll('[role="menuitemradio"][aria-checked="true"]');
-      await expect(checked.length).toBe(1);
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+    const claro = canvas.getByRole('menuitemradio', { name: 'Claro' });
+    const escuro = canvas.getByRole('menuitemradio', { name: 'Escuro' });
+
+    await step('Um item por vez se anuncia escolhido', async () => {
+      await expect(canvas.getAllByRole('menuitemradio')).toHaveLength(3);
+      await expect(claro.getAttribute('aria-checked')).toBe('true');
+      await expect(escuro.getAttribute('aria-checked')).toBe('false');
     });
+
+    await step('Escolher outro desmarca o anterior', async () => {
+      // Idempotente: só clica se "Escuro" ainda não for o escolhido.
+      if (escuro.getAttribute('aria-checked') !== 'true') await userEvent.click(escuro);
+
+      await waitFor(async () => {
+        await expect(escuro.getAttribute('aria-checked')).toBe('true');
+        await expect(claro.getAttribute('aria-checked')).toBe('false');
+      });
+      // O indicador acompanha a troca, senão o estado só existiria para o leitor.
+      await expect(escuro.querySelector('.nds-dropdown-menu-item-indicator svg')).not.toBeNull();
+      await expect(claro.querySelector('.nds-dropdown-menu-item-indicator svg')).toBeNull();
+    });
+
     await step('Limpa via ESC', async () => {
-      await closeAfter();
+      await fecharNoFim();
     });
   },
 };
 
+// ─── Com atalhos ──────────────────────────────────────────────────────────────
+
 export const WithShortcuts: Story = {
-  render: () => wrap(
-    buildCustomMenu('Editar', (menu) => {
-      menu.append(
-        makeMenuitem('Desfazer', '⌘Z'),
-        makeMenuitem('Refazer', '⇧⌘Z'),
-        makeSeparator(),
-        makeMenuitem('Recortar', '⌘X'),
-        makeMenuitem('Copiar', '⌘C'),
-        makeMenuitem('Colar', '⌘V'),
-      );
-    }),
-  ),
+  render: () =>
+    montar('Editar', [
+      { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },
+      { type: 'item', label: 'Copiar', value: 'copy', shortcut: 'Ctrl C' },
+      { type: 'separator' },
+      { type: 'item', label: 'Colar', value: 'paste', shortcut: 'Ctrl V' },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Items exibem shortcut hint visualmente', async () => {
-      const menu = await body.findByRole('menu');
-      const items = menu.querySelectorAll('[role="menuitem"]');
-      await expect(items.length).toBe(5);
-      const firstItem = items[0] as HTMLElement;
-      const shortcut = firstItem.querySelector('[aria-hidden="true"]');
-      await expect(shortcut?.textContent).toMatch(/⌘Z/);
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+
+    await step('O atalho faz parte do nome do item', async () => {
+      // Sem isso o leitor de tela anunciaria "Copiar" e a pessoa nunca saberia
+      // que existe uma tecla — o atalho é informação, não decoração.
+      await expect(canvas.getByRole('menuitem', { name: 'Copiar Ctrl C' })).toBeTruthy();
     });
+
+    await step('O texto do atalho não some para o leitor de tela', async () => {
+      const atalho = menu.querySelector('[data-slot="dropdown-menu-shortcut"]')!;
+      await expect(atalho.getAttribute('aria-hidden')).toBe(null);
+    });
+
+    await step('O atalho fica encostado na borda direita do item', async () => {
+      // `margin-left: auto` é o mecanismo, mas num item flex o valor computado
+      // já vem resolvido em pixels — o que dá para afirmar é o resultado.
+      const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
+      const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
+      const caixaDoItem = item.getBoundingClientRect();
+      const caixaDoAtalho = atalho.getBoundingClientRect();
+      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
+        caixaDoAtalho.left - caixaDoItem.left,
+      );
+    });
+
     await step('Limpa via ESC', async () => {
-      await closeAfter();
+      await fecharNoFim();
     });
   },
 };

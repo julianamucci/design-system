@@ -81,7 +81,11 @@ export const WithLabel: Story = {
 // ─── Com CheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item2'] },
+  // `accessibility.item4` fala dos TRÊS papéis de item. A variante Default só
+  // alcança `menuitem`; quem verifica `menuitemcheckbox` é esta story, e quem
+  // verifica `menuitemradio` é a de escolha única. Declarar tudo lá era
+  // declaração deslocada: a story vizinha é que verificava.
+  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
   render: () => ({
     props: { nome: true, email: false },
     template: `
@@ -148,7 +152,7 @@ export const WithCheckboxItems: Story = {
 // ─── Com RadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
   render: () => ({
     props: { tema: 'light' },
     template: `
@@ -240,11 +244,16 @@ export const WithSubmenu: Story = {
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
       const submenu = corpo.getAllByRole('menu')[1];
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
-      // `side="right"` é o padrão do submenu neste stack: um submenu que nasce
-      // embaixo cobriria os irmãos do item que o abriu.
-      await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-        menu.getBoundingClientRect().left,
-      );
+      // A comparação é com a borda DIREITA do pai. Comparar com a ESQUERDA —
+      // como estava — passa com os dois painéis perfeitamente empilhados, que é
+      // exatamente o defeito que a asserção deveria pegar. O posicionador
+      // coloca o popup em passo assíncrono, daí o `waitFor` em volta da medida:
+      // ler a caixa no tick da abertura devolve a posição de partida.
+      await waitFor(async () => {
+        await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+          menu.getBoundingClientRect().right - 8,
+        );
+      });
     });
   },
 };

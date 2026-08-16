@@ -1,11 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { expect, within } from "storybook/test";
-import { waitForPortal } from "@/lib/wait-for-portal";
+import { expect, userEvent, waitFor, within } from "storybook/test";
+import {
+  waitForPortal,
+  REGRA_GUARDA_DE_FOCO,
+  REGRA_FILHOS_DE_MENU,
+} from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
@@ -26,10 +31,17 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: { disable: true },
+    actions: { disable: true },
+    // Estas stories terminam com o menu ABERTO, de propósito: é o estado que o
+    // Chromatic precisa fotografar. As duas regras do axe que isso acende são
+    // da lib, e o motivo de cada uma está em `wait-for-portal.ts`.
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] } },
     docs: {
       description: {
         component:
-          "Composicoes típicas: ComLabel (grupo + separador), ComCheckboxItems (toggles), ComRadioGroup (seleção única), ComSubmenu (hierarquia) e ComShortcuts (atalhos visuais).",
+          "As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e " +
+          "atalhos. Todas partem das mesmas peças — o que muda é o papel ARIA do item e o " +
+          "indicador que o acompanha.",
       },
     },
   },
@@ -44,89 +56,81 @@ const wrapperStyle: React.CSSProperties = {
   position: "relative",
 };
 
+/*
+ * O rótulo mora DENTRO do grupo que ele nomeia — é o que dá nome acessível ao
+ * bloco e, neste primitivo, é também o que impede o menu de não renderizar:
+ * fora de um `Group`/`RadioGroup` o rótulo lança "MenuGroupContext is missing".
+ */
+
 export const WithLabel: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Menu com Label (cabeçalho de grupo) + Items + Separator + Items. Padrão para agrupar ações relacionadas.",
-      },
-    },
-  },
+  parameters: { covers: ["visual.item1"] },
   render: () => (
     <div style={wrapperStyle}>
-      <DropdownMenu defaultOpen>
+      <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Abrir</Button>
+          <Button variant="outline">Conta</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Conta</DropdownMenuLabel>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Conta</DropdownMenuLabel>
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel>Equipe</DropdownMenuLabel>
-          <DropdownMenuItem>Convidar membros</DropdownMenuItem>
-          <DropdownMenuItem>Permissões</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+            <DropdownMenuItem>Documentação</DropdownMenuItem>
+            <DropdownMenuItem>Sair</DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   ),
   play: async ({ step }) => {
-    await step("Menu com Label e Separator", async () => {
-      await waitForPortal("menu");
-      const labels = document.querySelectorAll(
-        "[data-slot='dropdown-menu-label']"
-      );
-      const separators = document.querySelectorAll(
-        "[data-slot='dropdown-menu-separator']"
-      );
-      await expect(labels.length).toBe(2);
-      await expect(separators.length).toBe(1);
+    const menu = await waitForPortal("menu");
+    const canvas = within(menu);
+
+    await step("Cada grupo é nomeado pelo próprio rótulo", async () => {
+      // É o que o rótulo entrega além do texto: sem o `aria-labelledby`, o
+      // leitor anuncia "grupo" e a pessoa não sabe de qual bloco se trata.
+      await expect(canvas.getByRole("group", { name: "Conta" })).toBeTruthy();
+      await expect(canvas.getByRole("group", { name: "Suporte" })).toBeTruthy();
+    });
+
+    await step("O rótulo não é item de menu", async () => {
+      // Rótulo dentro de `role="menu"` não pode ser navegável: a seta o pousaria
+      // como se fosse ação, e o typeahead o traria como resultado.
+      await expect(canvas.getAllByRole("menuitem")).toHaveLength(4);
+    });
+
+    await step("O separador divide os grupos", async () => {
+      await expect(canvas.getAllByRole("separator")).toHaveLength(1);
     });
   },
 };
 
 export const WithCheckboxItems: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "3 CheckboxItems com state useState — toggles para mostrar/ocultar colunas. role=menuitemcheckbox e aria-checked refletem estado.",
-      },
-    },
-  },
+  parameters: { covers: ["functional.item5", "accessibility.item4", "visual.item2"] },
   render: () => {
     const Demo = () => {
-      const [showName, setShowName] = useState(true);
-      const [showEmail, setShowEmail] = useState(true);
-      const [showRole, setShowRole] = useState(false);
+      const [nome, setNome] = useState(true);
+      const [email, setEmail] = useState(false);
       return (
         <div style={wrapperStyle}>
-          <DropdownMenu defaultOpen>
+          <DropdownMenu defaultOpen modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Colunas</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Mostrar colunas</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem
-                checked={showName}
-                onCheckedChange={setShowName}
-              >
-                Nome
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={showEmail}
-                onCheckedChange={setShowEmail}
-              >
-                E-mail
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={showRole}
-                onCheckedChange={setShowRole}
-              >
-                Cargo
-              </DropdownMenuCheckboxItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+                <DropdownMenuCheckboxItem checked={nome} onCheckedChange={setNome}>
+                  Nome
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>
+                  E-mail
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -135,41 +139,56 @@ export const WithCheckboxItems: Story = {
     return <Demo />;
   },
   play: async ({ step }) => {
-    await step("3 itens com role=menuitemcheckbox", async () => {
-      await waitForPortal("menu");
-      const checkboxes = within(document.body).getAllByRole("menuitemcheckbox");
-      await expect(checkboxes.length).toBe(3);
-      // Pelo menos um marcado, pelo menos um desmarcado
-      const checked = checkboxes.filter(
-        (el) => el.getAttribute("aria-checked") === "true"
-      );
-      await expect(checked.length).toBeGreaterThanOrEqual(1);
+    const menu = await waitForPortal("menu");
+    const canvas = within(menu);
+    const nome = canvas.getByRole("menuitemcheckbox", { name: "Nome" });
+    const email = canvas.getByRole("menuitemcheckbox", { name: "E-mail" });
+
+    await step("O papel e o estado inicial chegam ao markup", async () => {
+      await expect(canvas.getAllByRole("menuitemcheckbox")).toHaveLength(2);
+      await expect(nome).toHaveAttribute("aria-checked", "true");
+      await expect(email).toHaveAttribute("aria-checked", "false");
+    });
+
+    await step("O indicador só aparece no item marcado", async () => {
+      // O estado não pode depender só do texto: o Check é o que a pessoa vê e o
+      // `aria-checked` é o que ela ouve.
+      const marca = (item: HTMLElement) =>
+        item.querySelector(".nds-dropdown-menu-item-indicator svg") !== null;
+      await expect(marca(nome)).toBe(true);
+      await expect(marca(email)).toBe(false);
+    });
+
+    await step("Clicar alterna o item e mantém o menu aberto", async () => {
+      // Idempotente: leva o e-mail a marcado só se ainda não estiver, então o
+      // replay do painel Interactions termina no mesmo estado.
+      if (email.getAttribute("aria-checked") !== "true") await userEvent.click(email);
+
+      await waitFor(async () => {
+        await expect(email).toHaveAttribute("aria-checked", "true");
+      });
+      // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
+      await expect(within(document.body).queryAllByRole("menu")).toHaveLength(1);
+      // Independentes entre si — é o que separa checkbox de escolha única.
+      await expect(nome).toHaveAttribute("aria-checked", "true");
     });
   },
 };
 
 export const WithRadioGroup: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "RadioGroup com value useState — seleção única de tema (light/dark/system). role=menuitemradio.",
-      },
-    },
-  },
+  parameters: { covers: ["functional.item6", "accessibility.item4", "visual.item3"] },
   render: () => {
     const Demo = () => {
-      const [theme, setTheme] = useState("system");
+      const [tema, setTema] = useState("light");
       return (
         <div style={wrapperStyle}>
-          <DropdownMenu defaultOpen>
+          <DropdownMenu defaultOpen modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Tema</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Tema</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+              <DropdownMenuRadioGroup value={tema} onValueChange={(v) => setTema(v as string)}>
+                <DropdownMenuLabel>Aparência</DropdownMenuLabel>
                 <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
@@ -182,35 +201,39 @@ export const WithRadioGroup: Story = {
     return <Demo />;
   },
   play: async ({ step }) => {
-    await step("RadioItems com role=menuitemradio e apenas um checked", async () => {
-      await waitForPortal("menu");
-      const radios = within(document.body).getAllByRole("menuitemradio");
-      await expect(radios.length).toBe(3);
-      const checked = radios.filter(
-        (el) => el.getAttribute("aria-checked") === "true"
-      );
-      await expect(checked.length).toBe(1);
+    const menu = await waitForPortal("menu");
+    const canvas = within(menu);
+    const claro = canvas.getByRole("menuitemradio", { name: "Claro" });
+    const escuro = canvas.getByRole("menuitemradio", { name: "Escuro" });
+
+    await step("Um item por vez se anuncia escolhido", async () => {
+      await expect(canvas.getAllByRole("menuitemradio")).toHaveLength(3);
+      await expect(claro).toHaveAttribute("aria-checked", "true");
+      await expect(escuro).toHaveAttribute("aria-checked", "false");
+    });
+
+    await step("Escolher outro desmarca o anterior", async () => {
+      // Idempotente: só clica se "Escuro" ainda não for o escolhido.
+      if (escuro.getAttribute("aria-checked") !== "true") await userEvent.click(escuro);
+
+      await waitFor(async () => {
+        await expect(escuro).toHaveAttribute("aria-checked", "true");
+        await expect(claro).toHaveAttribute("aria-checked", "false");
+      });
     });
   },
 };
 
 export const WithSubmenu: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Submenu aninhado — Sub + SubTrigger + SubContent. Hover/focus no SubTrigger abre o SubContent à direita.",
-      },
-    },
-  },
+  parameters: { covers: ["functional.item7", "visual.item4"] },
   render: () => (
     <div style={wrapperStyle}>
-      <DropdownMenu defaultOpen>
+      <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Abrir</Button>
+          <Button variant="outline">Arquivo</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>Salvar</DropdownMenuItem>
+          <DropdownMenuItem>Renomear</DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
@@ -218,63 +241,98 @@ export const WithSubmenu: Story = {
               <DropdownMenuItem>CSV</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   ),
   play: async ({ step }) => {
-    await step("SubTrigger renderizado no menu principal", async () => {
-      await waitForPortal("menu");
-      const subTrigger = document.querySelector(
-        "[data-slot='dropdown-menu-sub-trigger']"
-      ) as HTMLElement | null;
-      await expect(subTrigger).not.toBeNull();
-      await expect(subTrigger?.textContent).toMatch(/Exportar/i);
+    const corpo = within(document.body);
+    const menu = await waitForPortal("menu");
+    const subGatilho = within(menu).getByRole("menuitem", { name: "Exportar" });
+
+    await step("O sub-gatilho anuncia que abre um menu", async () => {
+      await expect(subGatilho).toHaveAttribute("aria-haspopup", "menu");
+      await expect(subGatilho).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("A seta para a direita abre o submenu", async () => {
+      // Idempotente: a seta só é enviada com o submenu fechado.
+      if (subGatilho.getAttribute("aria-expanded") !== "true") {
+        subGatilho.focus();
+        await userEvent.keyboard("{ArrowRight}");
+      }
+      await waitFor(async () => {
+        await expect(subGatilho).toHaveAttribute("aria-expanded", "true");
+        await expect(corpo.getAllByRole("menu")).toHaveLength(2);
+      });
+    });
+
+    await step("O submenu abre AO LADO, não por cima do menu pai", async () => {
+      const submenu = corpo.getAllByRole("menu")[1];
+      await expect(within(submenu).getAllByRole("menuitem")).toHaveLength(2);
+      // Um submenu que nasce sobre o pai cobre os irmãos do item que o abriu.
+      // A comparação é com a borda DIREITA do pai — comparar com a esquerda
+      // passaria com os dois painéis empilhados. O posicionador coloca o popup
+      // em passo assíncrono, daí o `waitFor` em volta da medida.
+      await waitFor(async () => {
+        await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+          menu.getBoundingClientRect().right - 8,
+        );
+      });
     });
   },
 };
 
 export const WithShortcuts: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Items com DropdownMenuShortcut — exibição visual dos atalhos. O atalho real precisa ser registrado no consumidor (useHotkeys).",
-      },
-    },
-  },
   render: () => (
     <div style={wrapperStyle}>
-      <DropdownMenu defaultOpen>
+      <DropdownMenu defaultOpen modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Abrir</Button>
+          <Button variant="outline">Editar</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>
-            Buscar
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+            Desfazer
+            <DropdownMenuShortcut>Ctrl Z</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             Copiar
-            <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+            <DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem>
             Colar
-            <DropdownMenuShortcut>⌘V</DropdownMenuShortcut>
+            <DropdownMenuShortcut>Ctrl V</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   ),
   play: async ({ step }) => {
-    await step("3 shortcuts renderizados ao lado dos items", async () => {
-      await waitForPortal("menu");
-      const shortcuts = document.querySelectorAll(
-        "[data-slot='dropdown-menu-shortcut']"
+    const menu = await waitForPortal("menu");
+    const canvas = within(menu);
+
+    await step("O atalho faz parte do nome do item", async () => {
+      // Sem isso o leitor de tela anunciaria "Copiar" e a pessoa nunca saberia
+      // que existe uma tecla — o atalho é informação, não decoração.
+      await expect(canvas.getByRole("menuitem", { name: "Copiar Ctrl C" })).toBeTruthy();
+    });
+
+    await step("O texto do atalho não some para o leitor de tela", async () => {
+      const atalho = menu.querySelector("[data-slot='dropdown-menu-shortcut']")!;
+      await expect(atalho.getAttribute("aria-hidden")).toBe(null);
+    });
+
+    await step("O atalho fica encostado na borda direita do item", async () => {
+      // `margin-left: auto` é o mecanismo, mas num item flex o valor computado
+      // já vem resolvido em pixels — o que dá para afirmar é o resultado.
+      const item = canvas.getByRole("menuitem", { name: "Colar Ctrl V" });
+      const atalho = item.querySelector<HTMLElement>("[data-slot='dropdown-menu-shortcut']")!;
+      const caixaDoItem = item.getBoundingClientRect();
+      const caixaDoAtalho = atalho.getBoundingClientRect();
+      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
+        caixaDoAtalho.left - caixaDoItem.left,
       );
-      await expect(shortcuts.length).toBe(3);
     });
   },
 };

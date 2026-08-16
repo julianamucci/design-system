@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from './index';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { Button } from '@/components/ui/button';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta = {
   title: 'UI/DropdownMenu/Variants',
@@ -17,10 +19,13 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         component:
-          'Variantes do DropdownMenuItem: default (item neutro com hover bg-accent) e destructive (text-destructive + bg-destructive/10 no hover) para ações irreversíveis.',
+          'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
+          'irreversível com a cor de perigo, e existe para que "Excluir conta" não pareça ' +
+          '"Editar perfil".',
       },
     },
   },
@@ -29,58 +34,77 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sharedComponents = {
+const componentes = {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Button,
 };
 
 export const Default: Story = {
-  parameters: {
-    docs: { description: { story: 'Item neutro padrão — hover/foco aplicam bg-accent.' } },
-  },
+  parameters: { covers: ['accessibility.item4', 'accessibility.item6'] },
   render: () => ({
-    components: sharedComponents,
+    components: componentes,
     template: `
-      <div style="contain: layout; min-height: 220px;">
+      <div style="contain: layout; min-height: 300px;">
         <DropdownMenu :default-open="true" :modal="false">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">Conta</Button>
+          </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem>Editar</DropdownMenuItem>
-            <DropdownMenuItem>Duplicar</DropdownMenuItem>
-            <DropdownMenuItem>Compartilhar</DropdownMenuItem>
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+            <DropdownMenuItem>Equipe</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     `,
   }),
-  play: async () => {
-    const body = within(document.body);
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    await expect(menu).toBeVisible();
-    const items = await body.findAllByRole('menuitem');
-    await expect(items.length).toBe(3);
+    const itens = within(menu).getAllByRole('menuitem');
+
+    await step('A variante default é escrita no markup', async () => {
+      await expect(itens).toHaveLength(3);
+      for (const item of itens) {
+        await expect(item).toHaveAttribute('data-variant', 'default');
+        await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
+      }
+    });
+
+    await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
+      // O item destacado troca de cor de propósito — a comparação tem que ser
+      // com um item em repouso, senão ela mede o realce e não a variante.
+      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(emRepouso.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+    });
+
+    await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
+      // O item de contrato dizia "verificar por axe-core" — verificação que
+      // ninguém rodava. A razão é aritmética, e é ela que responde. 14px em peso
+      // normal é texto normal pela WCAG: o limite é 4.5, não 3.
+      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const medida = contrasteDoItem(emRepouso[0]);
+      await expect(medida).not.toBeNull();
+      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
+    });
   },
 };
 
 export const Destructive: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Item destrutivo — text-destructive e fundo bg-destructive/10 no hover. Usar apenas para ações irreversíveis (excluir, sair).',
-      },
-    },
-  },
+  parameters: { covers: ['visual.item5'] },
   render: () => ({
-    components: sharedComponents,
+    components: componentes,
     template: `
-      <div style="contain: layout; min-height: 220px;">
+      <div style="contain: layout; min-height: 300px;">
         <DropdownMenu :default-open="true" :modal="false">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">Conta</Button>
+          </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuLabel>Conta</DropdownMenuLabel>
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
@@ -89,10 +113,32 @@ export const Destructive: Story = {
       </div>
     `,
   }),
-  play: async () => {
+  play: async ({ step }) => {
     const menu = await waitForPortal('menu');
-    await expect(menu).toBeVisible();
-    const destructive = await waitForPortal('menuitem', { name: /Excluir conta/i });
-    await expect(destructive).toHaveAttribute('data-variant', 'destructive');
+    const canvas = within(menu);
+    const neutro = canvas.getByRole('menuitem', { name: 'Perfil' });
+    const perigoso = canvas.getByRole('menuitem', { name: 'Excluir conta' });
+
+    await step('A variante chega ao markup', async () => {
+      await expect(perigoso).toHaveAttribute('data-variant', 'destructive');
+    });
+
+    await step('A cor do texto distingue a ação irreversível', async () => {
+      // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
+      // chegasse, esta asserção pegaria a mesma cor do item neutro.
+      await expect(getComputedStyle(perigoso).color).not.toBe(getComputedStyle(neutro).color);
+    });
+
+    await step('O destaque não depende só da cor: o realce pinta o fundo', async () => {
+      // Critério 1.4.1 na prática — quem não distingue matiz precisa do fundo.
+      // O ponteiro é o que realça: o primitivo marca `data-highlighted`, e é
+      // esse atributo (não `:hover`) que o CSS usa.
+      const antes = getComputedStyle(perigoso).backgroundColor;
+      await userEvent.hover(perigoso);
+      await waitFor(async () => {
+        await expect(perigoso.hasAttribute('data-highlighted')).toBe(true);
+        await expect(getComputedStyle(perigoso).backgroundColor).not.toBe(antes);
+      });
+    });
   },
 };

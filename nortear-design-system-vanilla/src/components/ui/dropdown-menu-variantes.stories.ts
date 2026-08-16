@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
-import { createDropdownMenu } from './dropdown-menu';
-import { tornarDestruivel } from '@/lib/destroy';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { createButton } from './button';
+import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -14,7 +14,9 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do DropdownMenuItem: Default (neutro com hover de accent) e Destructive (cor destructive). NOTA: factory Vanilla aplica essas variantes via classes manuais no <li> com role="menuitem".',
+          'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
+          'irreversível com a cor de perigo, e existe para que "Excluir conta" não pareça ' +
+          '"Editar perfil".',
       },
     },
   },
@@ -35,122 +37,107 @@ function wrap(child: HTMLElement): HTMLElement {
   return wrapper;
 }
 
-// ─── Stories ──────────────────────────────────────────────────────────────────
+function montar(rotulo: string, items: DropdownMenuItemDef[]): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: rotulo });
+  const menu = createDropdownMenu({ trigger, items });
+  queueMicrotask(() => trigger.click());
+  return wrap(menu);
+}
+
+async function fecharNoFim(): Promise<void> {
+  const body = within(document.body);
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => {
+    if (body.queryByRole('menu')) throw new Error('menu ainda aberto');
+  });
+}
+
+// ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Ações' });
-    const menu = createDropdownMenu({
-      trigger,
-      items: [
-        { type: 'item', label: 'Editar',    value: 'edit'      },
-        { type: 'item', label: 'Duplicar',  value: 'duplicate' },
-        { type: 'item', label: 'Compartilhar', value: 'share' },
-      ],
-    });
-    queueMicrotask(() => trigger.click());
-    return wrap(menu);
-  },
+  parameters: { covers: ['accessibility.item4', 'accessibility.item6'] },
+  render: () =>
+    montar('Ações', [
+      { type: 'item', label: 'Editar', value: 'edit' },
+      { type: 'item', label: 'Duplicar', value: 'duplicate' },
+      { type: 'item', label: 'Compartilhar', value: 'share' },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Menu aberto com items default', async () => {
-      const menu = await body.findByRole('menu');
-      await expect(menu).toBeVisible();
-      const items = menu.querySelectorAll('[role="menuitem"]');
-      await expect(items.length).toBe(3);
+    const menu = await within(document.body).findByRole('menu');
+    const itens = within(menu).getAllByRole('menuitem');
+
+    await step('A variante default é escrita no markup', async () => {
+      await expect(itens).toHaveLength(3);
+      for (const item of itens) {
+        await expect(item.dataset.variant).toBe('default');
+        await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
+      }
     });
+
+    await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
+      // O item em foco troca de cor de propósito — a comparação tem que ser com
+      // um item em repouso, senão mede o realce e não a variante.
+      const emRepouso = itens.filter((i) => i !== document.activeElement);
+      await expect(emRepouso.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+    });
+
+    await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
+      // O item de contrato dizia "verificar por axe-core" — verificação que
+      // ninguém rodava: o axe do test-runner mede o que está na tela, e comparar
+      // nome de token não responde a pergunta. A razão é aritmética. 14px em
+      // peso normal é texto normal pela WCAG: o limite é 4.5, não 3.
+      const emRepouso = itens.filter((i) => i !== document.activeElement);
+      const medida = contrasteDoItem(emRepouso[0]);
+      await expect(medida).not.toBeNull();
+      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
+    });
+
     await step('Limpa via ESC', async () => {
-      await userEvent.keyboard('{Escape}');
+      await fecharNoFim();
     });
   },
 };
 
+// ─── Destructive ──────────────────────────────────────────────────────────────
+
 export const Destructive: Story = {
-  render: () => {
-    // A factory atual não tem prop `variant` — montamos um menu manual com
-    // as classes destructive aplicadas no item de exclusão.
-    const trigger = createButton({ variant: 'outline', label: 'Mais ações' });
-    const wrapper = document.createElement('div');
-    wrapper.dataset.slot = 'dropdown-menu';
-    wrapper.style.display = 'contents';
-    wrapper.appendChild(trigger);
-
-    const menuId = 'dropdown-variantes-destructive';
-    trigger.setAttribute('aria-haspopup', 'menu');
-    trigger.setAttribute('aria-expanded', 'false');
-    trigger.setAttribute('aria-controls', menuId);
-
-    let panel: HTMLElement | null = null;
-
-    function close() {
-      panel?.remove();
-      panel = null;
-      trigger.setAttribute('aria-expanded', 'false');
-      document.removeEventListener('keydown', onKeydown);
-    }
-    function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        close();
-        trigger.focus();
-      }
-    }
-    function open() {
-      const menu = document.createElement('ul');
-      menu.id = menuId;
-      menu.setAttribute('role', 'menu');
-      menu.className =
-        'z-50 min-w-[10rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-      menu.style.position = 'absolute';
-      const rect = trigger.getBoundingClientRect();
-      menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
-      menu.style.left = `${rect.left + window.scrollX}px`;
-
-      function item(label: string, destructive = false): HTMLLIElement {
-        const li = document.createElement('li');
-        li.setAttribute('role', 'menuitem');
-        li.setAttribute('tabindex', '-1');
-        li.className = [
-          'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
-          destructive
-            ? 'text-destructive focus:bg-destructive/10 focus:text-destructive'
-            : 'focus:bg-accent focus:text-accent-foreground',
-        ].join(' ');
-        li.textContent = label;
-        return li;
-      }
-      const sep = document.createElement('li');
-      sep.setAttribute('role', 'separator');
-      sep.className = 'nds-dropdown-menu-separator';
-
-      menu.append(item('Editar'), item('Duplicar'), sep, item('Excluir', true));
-      document.body.appendChild(menu);
-      panel = menu;
-      trigger.setAttribute('aria-expanded', 'true');
-      (menu.querySelector('[role="menuitem"]') as HTMLElement | null)?.focus();
-      document.addEventListener('keydown', onKeydown);
-    }
-    trigger.addEventListener('click', () => (panel ? close() : open()));
-
-    queueMicrotask(() => trigger.click());
-
-    // Menu montado à mão (a factory não tem variante destrutiva), mas com o
-    // mesmo arranjo: painel portalado no `body` e `keydown` no `document`. Sem
-    // limpeza na saída, o menu ficava aberto para a story seguinte.
-    tornarDestruivel(wrapper, wrapper, close);
-
-    return wrap(wrapper);
-  },
+  parameters: { covers: ['visual.item5'] },
+  render: () =>
+    montar('Mais ações', [
+      { type: 'item', label: 'Editar', value: 'edit' },
+      { type: 'separator' },
+      { type: 'item', label: 'Excluir conta', value: 'delete', variant: 'destructive' },
+    ]),
   play: async ({ step }) => {
-    const body = within(document.body);
-    await step('Menu aberto com item destructive', async () => {
-      const menu = await body.findByRole('menu');
-      const items = menu.querySelectorAll('[role="menuitem"]');
-      const last = items[items.length - 1] as HTMLElement;
-      await expect(last).toHaveClass(/text-destructive/);
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+    const neutro = canvas.getByRole('menuitem', { name: 'Editar' });
+    const perigoso = canvas.getByRole('menuitem', { name: 'Excluir conta' });
+
+    await step('A variante chega ao markup', async () => {
+      await expect(perigoso.dataset.variant).toBe('destructive');
     });
+
+    await step('A cor do texto distingue a ação irreversível', async () => {
+      // O seletor do CSS é `[data-variant="destructive"]`: se o atributo não
+      // chegasse, esta asserção pegaria a mesma cor do item neutro. O neutro tem
+      // que estar em repouso para a comparação medir a variante, não o realce.
+      neutro.blur();
+      await expect(getComputedStyle(perigoso).color).not.toBe(getComputedStyle(neutro).color);
+    });
+
+    await step('O destaque não depende só da cor: o realce pinta o fundo', async () => {
+      // Critério 1.4.1 na prática — quem não distingue matiz precisa do fundo.
+      const antes = getComputedStyle(perigoso).backgroundColor;
+      perigoso.focus();
+      await waitFor(async () => {
+        await expect(getComputedStyle(perigoso).backgroundColor).not.toBe(antes);
+      });
+    });
+
     await step('Limpa via ESC', async () => {
-      await userEvent.keyboard('{Escape}');
+      await fecharNoFim();
     });
   },
 };

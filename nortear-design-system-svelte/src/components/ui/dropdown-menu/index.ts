@@ -1,6 +1,5 @@
 import Root from "./dropdown-menu.svelte";
 import Sub from "./dropdown-menu-sub.svelte";
-import CheckboxGroup from "./dropdown-menu-checkbox-group.svelte";
 import CheckboxItem from "./dropdown-menu-checkbox-item.svelte";
 import Content from "./dropdown-menu-content.svelte";
 import Group from "./dropdown-menu-group.svelte";
@@ -17,12 +16,10 @@ import GroupHeading from "./dropdown-menu-group-heading.svelte";
 import Portal from "./dropdown-menu-portal.svelte";
 
 export {
-	CheckboxGroup,
 	CheckboxItem,
 	Content,
 	Portal,
 	Root as DropdownMenu,
-	CheckboxGroup as DropdownMenuCheckboxGroup,
 	CheckboxItem as DropdownMenuCheckboxItem,
 	Content as DropdownMenuContent,
 	Portal as DropdownMenuPortal,
